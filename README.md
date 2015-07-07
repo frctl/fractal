@@ -1,2 +1,3 @@
-# fractal
+# Fractal
+
 [WIP]

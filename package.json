@@ -1,0 +1,31 @@
+{
+  "name": "fractal",
+  "version": "0.0.1",
+  "description": "A better component library.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/frctl/fractal.git"
+  },
+  "author": "Mark Perkins",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/frctl/fractal/issues"
+  },
+  "homepage": "https://github.com/frctl/fractal",
+  "dependencies": {
+    "absolute": "0.0.1",
+    "bluebird": "^2.9.32",
+    "deepmerge": "^0.2.10",
+    "faker": "^2.1.5",
+    "gray-matter": "^2.0.0",
+    "handlebars": "^3.0.3",
+    "is-utf8": "^0.2.0",
+    "lodash": "^3.10.0",
+    "recursive-readdir": "^1.2.1",
+    "rimraf": "^2.4.1"
+  }
+}
