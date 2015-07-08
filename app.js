@@ -1,7 +1,15 @@
+var _ = require('lodash');
 var Fractal = require('./app/fractal.js');
 
-var build = Fractal('src').build();
+var frctl = Fractal(__dirname + '/src');
+var tree = frctl.build();
 
-build.then(function(files){
-    // console.log(files);
+tree.then(function(files){
+    
+    // console.log(_.filter(files, function(file){
+    //     return file.isComponent;
+    // }));
+
+    frctl.exportComponents(__dirname + '/build', files);
+
 });

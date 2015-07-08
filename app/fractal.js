@@ -6,9 +6,11 @@ var rm = require('rimraf');
 var utf8 = require('is-utf8');
 var Promise = require("bluebird");
 var fs = Promise.promisifyAll(require("fs"));
+var mkdirp = Promise.promisifyAll(require('mkdirp'));
 var _ = require('lodash');
 var merge = require('deepmerge');
 var crypto = require('crypto');
+var hbs = require('handlebars');
 
 /**
  * Export Fractal
@@ -27,7 +29,6 @@ function Fractal(directory){
     assert(directory, 'You must pass a working directory path.');
     this.directory = directory || 'src';
     this.componentExtensions = ['.html', '.hbs'];
-    this.previewDataFile = [];
 };
 
 /**
@@ -36,10 +37,34 @@ function Fractal(directory){
 
 Fractal.prototype.build = function(){
     var frctl = this;
-    return this.read().then(function(files){
+    return this.read(this.directory).then(function(files){
        var files = frctl.decorateComponents(files);
        return files;
     });
+};
+
+Fractal.prototype.exportComponents = function(path, files){
+
+    var frctl = this;
+    files.forEach(function(file) {
+        if (file.isComponent) {
+            hbs.registerPartial(file.id, file.content);
+            hbs.registerPartial(file.path, file.content);
+        }
+    });
+
+    rmDir(path);
+
+    return files.forEach(function(file){
+        if (file.isComponent) {
+            var dirPath = Path.join(path, file.dir, '../');
+            return mkdirp.mkdirpAsync(dirPath).then(function(){
+                var tpl = hbs.compile(file.content);
+                return fs.writeFileAsync(Path.join(dirPath, file.name + '.html'), tpl(file.data));
+            });    
+        }
+    });
+
 };
 
 /**
@@ -54,9 +79,7 @@ Fractal.prototype.decorateComponents = function(files){
     // [first pass] - build metadata etc
     files.map(function(file){
         if (_.contains(frctl.componentExtensions, file.ext)) { // only decorate files that have a matching extension
-
             file.isComponent = true;
-            
             file.data = merge(file.data, frctl.fetchData(files, file, 'preview')); // fetch preview data from file, if it exists
             file.meta = merge(file.meta, frctl.fetchData(files, file, 'meta')); // fetch metadata from file, if it exists
         }
@@ -91,10 +114,6 @@ Fractal.prototype.decorateComponents = function(files){
         }
     
     });
-    // console.log(files);
-    console.log(_.filter(files, function(file){
-        return file.isComponent;
-    }));
     return files;
 };
 
@@ -122,7 +141,7 @@ Fractal.prototype.fetchData = function(files, file, type){
  * Read all the files from the source dir
  */
 
-Fractal.prototype.read = function(){
+Fractal.prototype.read = function(dir){
 
     var frctl = this;
     var parseDir = function(dirName) {
@@ -136,7 +155,7 @@ Fractal.prototype.read = function(){
         }, []);
     };
 
-    return parseDir(this.directory);
+    return parseDir(dir);
 };
 
 /**
@@ -155,11 +174,10 @@ Fractal.prototype.readFile = function(file, stat){
         };
         var parsed = matter(buffer.toString());
         var fileInfo = Path.parse(file);
-
         var previewData = parsed.data.preview || {};
         delete parsed.data.preview;
 
-        item.content = parsed.content;
+        item.content = parsed.content.trim() + "\n";
         item.meta = parsed.data;
         item.data = previewData;
         item = merge(item, fileInfo);
@@ -168,4 +186,20 @@ Fractal.prototype.readFile = function(file, stat){
 
         return item; 
     });
+};
+
+var rmDir = function(dirPath, removeSelf) {
+    removeSelf = removeSelf || true;
+    try { var files = fs.readdirSync(dirPath); }
+    catch(e) { return; }
+  if (files.length > 0)
+    for (var i = 0; i < files.length; i++) {
+      var filePath = dirPath + '/' + files[i];
+      if (fs.statSync(filePath).isFile())
+        fs.unlinkSync(filePath);
+      else
+        rmDir(filePath);
+    }
+  if (removeSelf)
+    fs.rmdirSync(dirPath);
 };
