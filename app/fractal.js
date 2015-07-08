@@ -8,6 +8,7 @@ var Promise = require("bluebird");
 var fs = Promise.promisifyAll(require("fs"));
 var _ = require('lodash');
 var merge = require('deepmerge');
+var crypto = require('crypto');
 
 /**
  * Export Fractal
@@ -33,11 +34,10 @@ function Fractal(directory){
  * Get everything up and running
  */
 
-Fractal.prototype.run = function(){
+Fractal.prototype.build = function(){
     var frctl = this;
-    this.read().then(function(files){
+    return this.read().then(function(files){
        var files = frctl.decorateComponents(files);
-       // console.log(files);
        return files;
     });
 };
@@ -50,31 +50,72 @@ Fractal.prototype.run = function(){
 
 Fractal.prototype.decorateComponents = function(files){
     var frctl = this;
+
+    // [first pass] - build metadata etc
     files.map(function(file){
-        if (_.contains(frctl.componentExtensions, file.meta.ext)) {
+        if (_.contains(frctl.componentExtensions, file.ext)) { // only decorate files that have a matching extension
 
             file.isComponent = true;
-
-            // fetch data from file, if it exists
-            var data = {};
-            var previewFile = _.find(files, function(file) {
-                return file.path == Path.join(file.meta.dir, 'preview.json') || file.path == Path.join(file.meta.dir, 'preview.js');
-            });
-
-            console.log(file.path);
-            if (previewFile) {
-                data = previewFile.meta.ext == '.json' ? JSON.parse(previewFile.content) : require(previewFile.absPath);
-            }
-
-            file.data = merge(data, file.data);
-
-            // use
-            file.id = file.data.id || Path.join(file.meta.dir, file.meta.name);
-
+            
+            file.data = merge(file.data, frctl.fetchData(files, file, 'preview')); // fetch preview data from file, if it exists
+            file.meta = merge(file.meta, frctl.fetchData(files, file, 'meta')); // fetch metadata from file, if it exists
         }
+
+        file.uuid = (function(path){
+            var shasum = crypto.createHash('sha1')
+            shasum.update(path);
+            return shasum.digest('hex').slice(0, 6); 
+        })(file.path);
+
+        // set or generate the ID for the file
+        file.id = file.meta.id || file.uuid;
+        
         return file;
     });
+       
+    // [second pass] - build relationships between files
+    files.map(function(file){
+
+        if (file.isComponent) {
+            file.related = [];
+            // get files related by filesystem location
+             _.each(files, function(item){
+                if (item.dir == file.dir && item.srcPath != file.srcPath) {
+                    file.related.push(item.id);
+                }
+            });
+            // get files related via author-defined relationships
+            if ( typeof file.meta.uses !== 'undefined' ) {
+                file.related = merge(file.related, file.meta.uses);
+            }
+        }
+    
+    });
+    // console.log(files);
+    console.log(_.filter(files, function(file){
+        return file.isComponent;
+    }));
     return files;
+};
+
+Fractal.prototype.resolveRelation = function(files, val){
+    return _.find(files, 'id', val) || _.find(files, 'path', val);
+};
+
+Fractal.prototype.fetchData = function(files, file, type){
+    var data = {};
+    var dataFile = _.find(files, function(item) {
+        return item.path == Path.join(file.dir, type + '.json') || item.path == Path.join(file.dir, type + '.js');
+    });
+    if (dataFile) {
+        try {
+            data = dataFile.ext == '.json' ? JSON.parse(dataFile.content) : require(dataFile.absPath);    
+        } catch(e) {
+            // TODO: handle parsing error
+            console.error('Error loading file - ' + dataFile.path);
+        }
+    }
+    return data;
 };
 
 /**
@@ -107,18 +148,24 @@ Fractal.prototype.readFile = function(file, stat){
     var frctl = this;
     return fs.readFileAsync(file).then(function(buffer) {
 
-        var parsed = matter(buffer.toString());
-        var meta = Path.parse(file);
-        meta.modified = stat.mtime;
-        meta.dir = meta.dir.replace(new RegExp('^(' + frctl.directory + '\.)'),"");
-
-        return {
-            data: parsed.data,
-            path: file.replace(new RegExp('^(' + frctl.directory + '\.)'),""),
+        var item = {
             srcPath: file,
             absPath: Path.resolve(file),
-            content: parsed.content,
-            meta: meta
+            path: file.replace(new RegExp('^(' + frctl.directory + '\.)'),"")
         };
+        var parsed = matter(buffer.toString());
+        var fileInfo = Path.parse(file);
+
+        var previewData = parsed.data.preview || {};
+        delete parsed.data.preview;
+
+        item.content = parsed.content;
+        item.meta = parsed.data;
+        item.data = previewData;
+        item = merge(item, fileInfo);
+        item.modified = stat.mtime;
+        item.dir = item.dir.replace(new RegExp('^(' + frctl.directory + '\.)'),"");
+
+        return item; 
     });
 };
