@@ -82,6 +82,8 @@ Fractal.prototype.decorateComponents = function(files){
             file.isComponent = true;
             file.data = merge(file.data, frctl.fetchData(files, file, 'preview')); // fetch preview data from file, if it exists
             file.meta = merge(file.meta, frctl.fetchData(files, file, 'meta')); // fetch metadata from file, if it exists
+        } else {
+            file.isComponent = false;
         }
 
         file.uuid = (function(path){
@@ -168,7 +170,7 @@ Fractal.prototype.readFile = function(file, stat){
     return fs.readFileAsync(file).then(function(buffer) {
 
         var item = {
-            srcPath: file,
+            srcPath: file.replace(new RegExp('^(' + process.cwd() + '\.)'),""),
             absPath: Path.resolve(file),
             path: file.replace(new RegExp('^(' + frctl.directory + '\.)'),"")
         };

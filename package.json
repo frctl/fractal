@@ -20,6 +20,7 @@
     "absolute": "0.0.1",
     "bluebird": "^2.9.32",
     "deepmerge": "^0.2.10",
+    "express": "^4.13.1",
     "faker": "^2.1.5",
     "gray-matter": "^2.0.0",
     "handlebars": "^3.0.3",
@@ -27,6 +28,7 @@
     "lodash": "^3.10.0",
     "mkdirp": "^0.5.1",
     "recursive-readdir": "^1.2.1",
-    "rimraf": "^2.4.1"
+    "rimraf": "^2.4.1",
+    "watch": "^0.16.0"
   }
 }
