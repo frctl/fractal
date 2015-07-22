@@ -1,3 +1,3 @@
 # Fractal
 
-[WIP]
+Fractal tool build - work in progress.
