@@ -1,6 +1,6 @@
 
-module.exports = function(config){
+module.exports = function(config, files){
 
-    console.log('Building exports...');
+    console.log('Exporting components...');
 
 };

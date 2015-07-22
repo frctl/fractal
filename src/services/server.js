@@ -1,10 +1,10 @@
 var express = require('express');
 var app = express();
 
-module.exports = function(config){
+module.exports = function(config, files){
 
     app.get('/', function (req, res) {
-        res.send('Fractal is up and running!');
+        res.send('<p><strong>Fractal</strong> is up and running!</p>');
     });
 
     app.listen(config.port, function () {
