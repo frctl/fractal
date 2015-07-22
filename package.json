@@ -2,7 +2,7 @@
   "name": "fractal",
   "version": "0.0.1",
   "description": "A better component library.",
-  "main": "app.js",
+  "main": "fractal.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/frctl/fractal.git"
