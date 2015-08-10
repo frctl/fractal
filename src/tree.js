@@ -12,12 +12,16 @@ function Tree(config){
     if (!(this instanceof Tree)) return new Tree(config);
     this.config = config;
     this.tree = null;
+    // this.componentExtensions = 
 };
 
 Tree.prototype.build = function(){
-    this.tree = this.readDir(this.config.dir);
-    this.tree.then(function(item){
-        console.log(item);
+    var self = this;
+    this.files = this.readDir(this.config.dir);
+    this.files.then(function(files){
+        return self.decorateFiles(files);
+        // console.log("\n ---- \n");
+        // console.log(tree);
     });
 };
 
@@ -51,8 +55,8 @@ Tree.prototype.readDir = function(dir){
 
 Tree.prototype.readFile = function(file, stat){
     
-     var self = this;
-
+    var self = this;
+    
     return fs.readFileAsync(file).then(function(buffer) {
         var item = {
             rootPath: file.replace(new RegExp('^(' + process.cwd() + '\.)'),""),
@@ -73,4 +77,43 @@ Tree.prototype.readFile = function(file, stat){
 
         return item; 
     });
+};
+
+Tree.prototype.decorateFiles = function(files){
+     var self = this;
+
+    // 1. run through tree, for each component/view fetch preview data and metadata from associated (by proximity) files, if they exist.
+    // 2. generate a UUID for the component/view if one is not set
+
+
+
+
+    // files.map(function(file){
+    //     if (_.contains(frctl.componentExtensions, file.ext)) { // only decorate files that have a matching extension
+    //         file.isComponent = true;
+    //         file.data = merge(file.data, frctl.fetchData(files, file, 'preview')); // fetch preview data from file, if it exists
+    //         file.meta = merge(file.meta, frctl.fetchData(files, file, 'meta')); // fetch metadata from file, if it exists
+    //     } else {
+    //         file.isComponent = false;
+    //     }
+
+    //     file.uuid = (function(path){
+    //         var shasum = crypto.createHash('sha1')
+    //         shasum.update(path);
+    //         return shasum.digest('hex').slice(0, 6); 
+    //     })(file.path);
+
+    //     // set or generate the ID for the file
+    //     file.id = file.meta.id || file.uuid;
+        
+    //     return file;
+    // });
+};
+
+Tree.prototype.fetchDataForFile = function(files, file, dataType){
+
+};
+
+Tree.prototype.isRenderable = function(files, file, dataType){
+
 };
