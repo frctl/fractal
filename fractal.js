@@ -1,7 +1,7 @@
-var merge = require('deepmerge');
-var Tree = require('./src/tree.js');
-var _ = require('lodash');
-var path = require('path');
+var merge   = require('deepmerge');
+var Tree    = require('./src/tree.js');
+var _       = require('lodash');
+var path    = require('path');
 
 module.exports = new Fractal;
 
@@ -28,7 +28,6 @@ Fractal.prototype.configure = function(config){
 Fractal.prototype.run = function(){
     var self = this;
     this.theme = this.loadTheme(this.config.theme);
-    console.log(this.theme);
     this.treeKeys.forEach(function(treeKey){
         if (self.config[treeKey]) {
             self.trees[treeKey] = new Tree(self.config[treeKey]);
@@ -37,8 +36,7 @@ Fractal.prototype.run = function(){
         self.trees[treeKey] = null;
     });
 
-    // var fileTree = new Tree(this.config);
-    // return this.getService(process.argv[2], this.config, fileTree);
+    return this.getService(process.argv[2]);
 };
 
 Fractal.prototype.expandConfig = function(config){
@@ -53,19 +51,16 @@ Fractal.prototype.expandConfig = function(config){
     });
 };
 
-Fractal.prototype.getService = function(serviceName, config, fileTree){
+Fractal.prototype.getService = function(serviceName){
     var service = (typeof serviceName === 'undefined' || serviceName == 'server') ? 'server' : 'export';
-    return require('./src/services/' +  service + '.js')(config, fileTree);
+    return require('./src/services/' +  service + '.js')(this);
 };
 
 Fractal.prototype.loadTheme = function(themeName){
     var theme = {};
     var dir = path.parse(require.resolve(themeName)).dir;
     var themeJSON = require(themeName);
-    theme.assets = _.mapValues(themeJSON.assets, function(assets, key){
-        return _.map(assets, function(assetPath){
-            return path.join(dir, assetPath);
-        });
-    });
+    theme.views = path.join(dir, themeJSON.views);
+    theme.assets = path.join(dir, themeJSON.assets);
     return theme;
 };

@@ -1,5 +1,5 @@
 
-module.exports = function(config, files){
+module.exports = function(fractal){
 
     console.log('Exporting components...');
 
