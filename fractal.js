@@ -36,7 +36,7 @@ Fractal.prototype.run = function(){
         self.trees[treeKey] = null;
     });
 
-    return this.getService(process.argv[2]);
+    // return this.getService(process.argv[2]);
 };
 
 Fractal.prototype.expandConfig = function(config){

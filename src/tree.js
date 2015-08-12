@@ -5,6 +5,7 @@ var _ = require('lodash');
 var matter = require('gray-matter');
 var absolute = require('absolute');
 var merge = require('deepmerge');
+var Ffile = require('../src/files/file');
 
 module.exports = Tree;
 
@@ -12,17 +13,16 @@ function Tree(config){
     if (!(this instanceof Tree)) return new Tree(config);
     this.config = config;
     this.tree = null;
-    // this.componentExtensions = 
 };
 
 Tree.prototype.build = function(){
     var self = this;
     this.files = this.readDir(this.config.dir);
-    this.files.then(function(files){
-        return self.decorateFiles(files);
-        // console.log("\n ---- \n");
-        // console.log(tree);
-    });
+    // this.files.then(function(files){
+    //     return self.decorateFiles(files);
+    //     // console.log("\n ---- \n");
+    //     // console.log(tree);
+    // });
 };
 
 Tree.prototype.refresh = function(){
@@ -39,7 +39,7 @@ Tree.prototype.readDir = function(dir){
         return fs.readdirAsync(dirName).map(function (fileName) {
             var filePath = path.join(dirName, fileName);
             return fs.statAsync(filePath).then(function(stat) {
-                return stat.isDirectory() ? parseDir(filePath) : self.readFile(filePath, stat);
+                return stat.isDirectory() ? parseDir(filePath) : new Ffile(filePath);
             });
         }).reduce(function (a, b) {
             return a.concat(b);
@@ -53,30 +53,32 @@ Tree.prototype.readDir = function(dir){
  * including parsing any frontmatter if it exists.
  */
 
-Tree.prototype.readFile = function(file, stat){
+Tree.prototype.readFile = function(filePath, stat){
     
     var self = this;
     
-    return fs.readFileAsync(file).then(function(buffer) {
-        var item = {
-            rootPath: file.replace(new RegExp('^(' + process.cwd() + '\.)'),""),
-            absPath: path.resolve(file),
-            relPath: file.replace(new RegExp('^(' + self.config.dir + '\.)'),"")
-        };
-        var parsed = matter(buffer.toString());
-        var fileInfo = path.parse(file);
-        var previewData = parsed.data.preview || {};
-        delete parsed.data.preview;
+    return new Ffile(filePath, stat);
 
-        item.content = parsed.content.trim() + "\n";
-        item.meta = parsed.data;
-        item.data = previewData;
-        item = merge(item, fileInfo);
-        item.modified = stat.mtime;
-        item.dir = item.dir.replace(new RegExp('^(' + self.config.dir + '\.)'),"");
+    // return fs.readFileAsync(file).then(function(buffer) {
+    //     var item = {
+    //         rootPath: file.replace(new RegExp('^(' + process.cwd() + '\.)'),""),
+    //         absPath: path.resolve(file),
+    //         relPath: file.replace(new RegExp('^(' + self.config.dir + '\.)'),"")
+    //     };
+    //     var parsed = matter(buffer.toString());
+    //     var fileInfo = path.parse(file);
+    //     var previewData = parsed.data.preview || {};
+    //     delete parsed.data.preview;
 
-        return item; 
-    });
+    //     item.content = parsed.content.trim() + "\n";
+    //     item.meta = parsed.data;
+    //     item.data = previewData;
+    //     item = merge(item, fileInfo);
+    //     item.modified = stat.mtime;
+    //     item.dir = item.dir.replace(new RegExp('^(' + self.config.dir + '\.)'),"");
+
+    //     return item; 
+    // });
 };
 
 Tree.prototype.decorateFiles = function(files){
