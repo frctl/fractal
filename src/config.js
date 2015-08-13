@@ -2,17 +2,7 @@ var merge   = require('deepmerge');
 var path    = require('path');
 var _       = require('lodash');
 
-var config = {
-    port:       '3000',
-    assets:     null,
-    components: null,
-    views:      null,
-    pages:      null,
-    build:      null,
-    theme:      'fractal-theme-default',
-    tasks:      [],
-};
-
+var config =  require('../config.json');
 var directories = ['assets','components','views','pages'];
 
 module.exports = {

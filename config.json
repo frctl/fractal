@@ -1,0 +1,23 @@
+{
+    "port":       3000,
+    "assets":     null,
+    "components": null,
+    "views":      null,
+    "pages":      null,
+    "build":      null,
+    "theme":      "fractal-theme-default",
+    "tasks":      [],
+    "parsers": [
+        {
+            "name": "frontmatter",
+            "priority": 0,
+            "matches": [".hbs",".handlebars",".html",".md",".markdown"]
+        },
+        {
+            "name": "markdown",
+            "priority": 1,
+            "matches": [".md", ".markdown"]
+        }
+    ]
+    
+}

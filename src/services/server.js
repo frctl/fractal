@@ -19,7 +19,12 @@ module.exports = function(){
     app.set('view engine', 'hbs');
 
     fractal.getComponents().then(function(components){
-        console.log(components);
+        components.forEach(function(component){
+            if (component.ext == '.md') {
+                console.log("\n\n");
+                console.log(component.content);
+            }
+        });
     });
 
     app.get('/', function (req, res) {
@@ -30,9 +35,9 @@ module.exports = function(){
 
     app.use(express.static(config.get('theme.assets')));
 
-    // app.listen(port, function () {
-    //     console.log('Fractal server is running at http://localhost:%s', port);
-    // });
+    app.listen(port, function () {
+        console.log('Fractal server is running at http://localhost:%s', port);
+    });
 
     return app;
 };
