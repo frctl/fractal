@@ -1,18 +1,18 @@
 {
-  "name": "fractal",
+  "name": "fractal-core",
   "version": "0.0.1",
-  "description": "A better component library.",
+  "description": "An unopinionated UI component library and styleguide generator.",
   "main": "fractal.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/frctl/fractal.git"
+    "url": "https://github.com/frctl/core.git"
   },
   "author": "Mark Perkins",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/frctl/fractal/issues"
+    "url": "https://github.com/frctl/core/issues"
   },
-  "homepage": "https://github.com/frctl/fractal",
+  "homepage": "https://github.com/frctl/core",
   "dependencies": {
     "absolute": "0.0.1",
     "bluebird": "^2.9.32",
