@@ -16,16 +16,15 @@ module.exports = {
 
     run: function(){
         config.set('root', process.cwd());
-        this.getData().then(function(data){
+        this.getStructure().then(function(data){
             return getService(process.argv[2]);
         });
     },
 
-    getData: function(){
+    getStructure: function(){
         return this.getAllSourceFiles().then(function(files){
             // TODO: need to cache data building if the underlying file trees have not changed
             return {
-                config: config.all(),
                 components: {
                     files: files.components
                 },

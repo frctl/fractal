@@ -71,6 +71,8 @@ File.prototype.parse = function(){
             self.preview = {};
 
             runParsers(self);
+            
+            self.title = generateTitle(self);
 
             return self;
         });
@@ -97,4 +99,10 @@ function generateUUID(path){
     var shasum = crypto.createHash('sha1')
     shasum.update(path);
     return shasum.digest('hex').slice(0, 6); 
+}
+
+function generateTitle(file){
+    return file.meta.title || (function(){
+        return file.name === 'index' ? (_.last(file.parentDirs) || 'Overview') : file.name;
+    })();
 }

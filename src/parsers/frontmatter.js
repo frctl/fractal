@@ -11,7 +11,7 @@ FrontMatterParser.prototype.parse = function(file){
     var parsed = matter(file.raw.toString());
     var previewData = parsed.data.preview || {};
     delete parsed.data.preview;
-    file.content = parsed.content.trim() + "\n";
+    file.raw = file.content = parsed.content.trim() + "\n";
     file.meta = merge(file.meta, parsed.data);
     file.preview = merge(file.preview, previewData);
 };

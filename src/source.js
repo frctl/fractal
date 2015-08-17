@@ -27,17 +27,17 @@ Source.prototype.build = function(){
 
             monitor.on("created", function (f, stat) {
                 self.files = self.readDir(self.config.dir);
-                console.log('new files in ' + self.name);
+                console.log('--> New files in ' + self.name);
             });
 
             monitor.on("changed", function (f, curr, prev) {
                 self.files = self.readDir(self.config.dir);
-                console.log('changes in ' + self.name);
+                console.log('--> Changes in ' + self.name);
             });
 
             monitor.on("removed", function (f, stat) {
               self.files = self.readDir(self.config.dir);
-              console.log('deletions in ' + self.name);
+              console.log('--> Deletions in ' + self.name);
             });
 
             self.monitor = monitor;
