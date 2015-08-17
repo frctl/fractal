@@ -1,9 +1,8 @@
-var merge   = require('deepmerge');
-var path    = require('path');
-var _       = require('lodash');
+var merge       = require('deepmerge');
+var path        = require('path');
+var _           = require('lodash');
 
 var config =  require('../config.json');
-var directories = ['assets','components','views','pages'];
 
 module.exports = {
 
@@ -17,7 +16,7 @@ module.exports = {
 
     set: function(key, val){
         config[key] = val;
-        if (key == 'theme' || _.includes(directories, key)) {
+        if (key == 'theme' || _.includes(this.get('sources'), key)) {
             config = expandConfig(config);
         }
     },
@@ -30,10 +29,10 @@ module.exports = {
 
 function expandConfig(conf){
     var self = this;
-
+    
     // expand directory configs
     conf = _.mapValues(conf, function(item, key){
-        if (_.includes(directories, key) && ! _.isObject(item)) {
+        if (_.includes(conf.sources, key) && _.isString(item) ) {
             return {
                 dir: item
             };

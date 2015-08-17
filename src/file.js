@@ -10,12 +10,12 @@ var parserObjs = {};
 
 module.exports = File;
 
-function File(rootPath, relDir){
+function File(rootPath, sourceDir){
+    if (!(this instanceof File)) return new File(rootPath, sourceDir);
     var self = this;
     var content = '';
-    if (!(this instanceof File)) return new File(rootPath, relDir);
     this.rootPath = rootPath;
-    this.relDir = relDir;
+    this.sourceDir = sourceDir;
     this.stat = {};
     this.raw = '';
 
@@ -57,9 +57,13 @@ File.prototype.parse = function(){
             self.base       = fileInfo.base;
             self.ext        = fileInfo.ext;
             self.name       = fileInfo.name;
+            self.dir        = fileInfo.dir;
             self.absPath    = path.resolve(self.rootPath);
-            self.relPath    = self.rootPath.replace(new RegExp('^(' + self.relDir + '\.)'),"");
-            self.dir        = fileInfo.dir.replace(new RegExp('^(' + self.relDir + '\.)'),"");
+            self.relPath    = self.rootPath.replace(new RegExp('^(' + self.sourceDir + '\.)'),"");
+            self.relDir     = self.dir.replace(new RegExp('^(' + self.sourceDir + '\.?)'),"");
+
+            self.parentDirs = _.compact(self.relDir.split('/'))
+            self.depth = self.parentDirs.length;
 
             self.modified = stat.mtime;
 
@@ -71,6 +75,10 @@ File.prototype.parse = function(){
             return self;
         });
     });
+};
+
+File.prototype.toString = function(){
+    return JSON.stringify(this);
 };
 
 function runParsers(file){

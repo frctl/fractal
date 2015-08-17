@@ -1,12 +1,12 @@
 {
-    "port":       3000,
-    "assets":     null,
-    "components": null,
-    "views":      null,
-    "pages":      null,
-    "build":      null,
-    "theme":      "fractal-theme-default",
-    "tasks":      [],
+    "title":            "Fractal",
+    "port":             3000,
+    "assets":           null,
+    "components":       null,
+    "views":            null,
+    "pages":            null,
+    "theme":            "fractal-theme-default",
+    "sources":          ["assets","components","views","pages"],
     "parsers": [
         {
             "name": "frontmatter",

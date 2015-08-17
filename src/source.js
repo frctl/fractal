@@ -1,19 +1,48 @@
 var path    = require('path');
 var promise = require("bluebird");
 var fs      = promise.promisifyAll(require("fs"));
+var watch   = require('watch');
+
 var File    = require('../src/file');
 
 module.exports = Source;
 
-function Source(conf){
+function Source(conf, name){
     if (!(this instanceof Source)) return new Source(conf);
+    this.name = name;
     this.config = conf;
     this.files = null;
+    this.monitor = null;
 };
 
 Source.prototype.build = function(){
     var self = this;
     this.files = this.files || this.readDir(this.config.dir);
+    if (!this.monitor){
+        // TODO: just a first POC of a watch task, need to make much more clever as to what gets re-parsed
+        var monitorOpts = {
+            ignoreDotFiles: true
+        };
+        watch.createMonitor(this.config.dir, monitorOpts, function (monitor) {
+
+            monitor.on("created", function (f, stat) {
+                self.files = self.readDir(self.config.dir);
+                console.log('new files in ' + self.name);
+            });
+
+            monitor.on("changed", function (f, curr, prev) {
+                self.files = self.readDir(self.config.dir);
+                console.log('changes in ' + self.name);
+            });
+
+            monitor.on("removed", function (f, stat) {
+              self.files = self.readDir(self.config.dir);
+              console.log('deletions in ' + self.name);
+            });
+
+            self.monitor = monitor;
+        });
+    }
     return this.files;
 };
 
@@ -38,4 +67,10 @@ Source.prototype.readDir = function(dir){
         }, []);
     };
     return parseDir(dir);
+};
+
+Source.prototype.toString = function(){
+    this.files.then(function(files){
+        return resolve(JSON.stringify(files));
+    });
 };
