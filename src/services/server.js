@@ -29,53 +29,58 @@ module.exports = function(){
     app.use(express.static(config.get('theme.assets')));
 
     app.get('/components', function (req, res) {
-        fractal.getStructure().then(function(data){
+        fractal.getStructure().then(function(structure){
             res.render('components', {
+                sectionName: 'UI Components',
                 config: config.all(),
-                req:  req,
-                structure: data
+                req: getRequest(req),
+                structure: structure
             });
         });
     });
 
     app.get('/components/*', function (req, res) {
-        fractal.getStructure().then(function(data){
+        fractal.getStructure().then(function(structure){
             res.render('components/component', {
+                sectionName: 'UI Components',
                 config: config.all(),
-                req:  req,
-                structure: data
+                req: getRequest(req),
+                structure: structure
             });
         });
     });
 
 
     app.get('/assets', function (req, res) {
-        fractal.getStructure().then(function(data){
+        fractal.getStructure().then(function(structure){
             res.render('assets', {
+                sectionName: 'Assets',
                 config: config.all(),
-                req:  req,
-                structure: data
+                req: getRequest(req),
+                structure: structure
             });
         });
     });
 
     app.get('/assets/*', function (req, res) {
-        fractal.getStructure().then(function(data){
+        fractal.getStructure().then(function(structure){
             res.render('assets/asset', {
+                sectionName: 'Assets',
                 config: config.all(),
-                req:  req,
-                structure: data
+                req: getRequest(req),
+                structure: structure
             });
         });
     });
 
     // page request
     app.get('(/*)?', function (req, res) {
-        fractal.getStructure().then(function(data){
+        fractal.getStructure().then(function(structure){
             var page = null;
-            if (data.pages.files.length) {
+            
+            if (structure.pages.files.length) {
                 var matcher = getPathMatcher(req.originalUrl, 'md');
-                var page = _.find(data.pages.files, function(p){
+                var page = _.find(structure.pages.files, function(p){
                     return p.relPath.match(matcher);
                 });
             }
@@ -84,11 +89,14 @@ module.exports = function(){
                 return throw404(req, res);
             }
 
-            res.render('pages/page', {
+            var newReq = getRequest(req);
+
+            res.render(req.originalUrl === '/' ? 'index' : 'pages/page', {
                 page: page,
+                sectionName: newReq.segments[0],
                 config: config.all(),
-                req:  req,
-                structure: data
+                req: newReq,
+                structure: structure
             });
 
         });
@@ -103,38 +111,16 @@ module.exports = function(){
 
 function throw404(req, res){
     res.render('404', {
-        req: req
+        req: getRequest(req)
     });
 };
-
-function getCurrentItem(req, data){
-    // TODO: move this into a dedicated class? Need a router class perhaps.
-    var pathParts = _.compact(req.originalUrl.split('/'));
-    var trigger = pathParts[0];
-    var current = {};
-    switch(trigger) {
-        case 'assets':
-
-        break;
-        case 'components':
-
-        break;
-        default:
-            if (data.pages.files.length) {
-                var matcher = getPathMatcher(req.originalUrl, 'md');
-                var page = _.find(data.pages.files, function(p){
-                    return p.relPath.match(matcher);
-                });
-                if (page) {
-                    current = page;
-                }
-            }
-        break;
-    }
-    return _.isEmpty(current) ? null : current;
-}
 
 function getPathMatcher(urlPath, ext){
     urlPath = urlPath.replace('/','');
     return _.trim(urlPath) ? new RegExp('^(' + urlPath + '(\/index)?\.' + ext + ')') : new RegExp('^(' + 'index.' + ext + ')');
+}
+
+function getRequest(req){
+    req.segments = _.compact(req.originalUrl.split('/'));
+    return req;
 }
