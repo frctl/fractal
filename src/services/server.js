@@ -17,10 +17,17 @@ module.exports = function(){
         extname: 'hbs',
         partialsDir: [
             config.get('theme.views')
-        ]
+        ],
+        helpers: {
+            nav: navHelper,
+        }
     });
 
     swag.registerHelpers(hbs.handlebars);
+
+    var tplData = {
+        config: config.all(),
+    };
 
     app.engine('hbs', hbs.engine);
     app.set('views', config.get('theme.views'))
@@ -28,78 +35,57 @@ module.exports = function(){
 
     app.use(express.static(config.get('theme.assets')));
 
+    app.use(function (req, res, next) {
+        req.segments = _.compact(req.originalUrl.split('/'));
+        tplData.req = req;
+        fractal.getStructure().then(function(structure){
+            tplData.structure = structure;
+            next();
+        });
+    });
+
     app.get('/components', function (req, res) {
-        fractal.getStructure().then(function(structure){
-            res.render('components', {
-                sectionName: 'UI Components',
-                config: config.all(),
-                req: getRequest(req),
-                structure: structure
-            });
-        });
+        res.render('components', merge(tplData, {
+            sectionName: 'UI Components'
+        }));
     });
 
-    app.get('/components/*', function (req, res) {
-        fractal.getStructure().then(function(structure){
-            res.render('components/component', {
-                sectionName: 'UI Components',
-                config: config.all(),
-                req: getRequest(req),
-                structure: structure
-            });
-        });
+    app.get('/components/*', function (req, res) {    
+        res.render('components/component', merge(tplData, {
+            sectionName: 'UI Components'
+        }));
     });
-
 
     app.get('/assets', function (req, res) {
-        fractal.getStructure().then(function(structure){
-            res.render('assets', {
-                sectionName: 'Assets',
-                config: config.all(),
-                req: getRequest(req),
-                structure: structure
-            });
-        });
+        res.render('assets', merge(tplData, {
+            sectionName: 'Assets'
+        }));
     });
 
     app.get('/assets/*', function (req, res) {
-        fractal.getStructure().then(function(structure){
-            res.render('assets/asset', {
-                sectionName: 'Assets',
-                config: config.all(),
-                req: getRequest(req),
-                structure: structure
-            });
-        });
+        res.render('assets/asset', merge(tplData, {
+            sectionName: 'Assets'
+        }));
     });
 
-    // page request
+    // Page request
     app.get('(/*)?', function (req, res) {
-        fractal.getStructure().then(function(structure){
-            var page = null;
-            
-            if (structure.pages.files.length) {
-                var matcher = getPathMatcher(req.originalUrl, 'md');
-                var page = _.find(structure.pages.files, function(p){
-                    return p.relPath.match(matcher);
-                });
-            }
-
-            if (!page) {
-                return throw404(req, res);
-            }
-
-            var newReq = getRequest(req);
-
-            res.render(req.originalUrl === '/' ? 'index' : 'pages/page', {
-                page: page,
-                sectionName: newReq.segments[0],
-                config: config.all(),
-                req: newReq,
-                structure: structure
+        if (tplData.structure.pages.files.length) {
+            var page = _.find(tplData.structure.pages.files, function(p){
+                return p.urlPath == req.originalUrl;
             });
-
-        });
+            if (page) {
+                return res.render(req.originalUrl === '/' ? 'index' : 'pages/page', merge(tplData, {
+                    page: page,
+                    sectionName: req.segments[0],
+                    sectionPages: _.filter(tplData.structure.pages.files, function(file){
+                        return file.parentUrlDirs[0] == req.segments[0];
+                    })
+                }));
+            }
+        }
+        res.render('404', merge(tplData, {
+        }));      
     });
 
     app.listen(port, function () {
@@ -109,18 +95,44 @@ module.exports = function(){
     return app;
 };
 
-function throw404(req, res){
-    res.render('404', {
-        req: getRequest(req)
+function navHelper(context, options){
+    // return 'foo';
+}
+
+/******
+
+test.md
+another.html
+/foo/bar/baz.md
+/foo/bar/index.md
+/foo/test/index.md
+/foo/test/bar.md
+/foo/index.md
+
+******/
+
+function getSectionPages(files){
+    var tree = [];
+    files.forEach(function(file){
+
     });
-};
-
-function getPathMatcher(urlPath, ext){
-    urlPath = urlPath.replace('/','');
-    return _.trim(urlPath) ? new RegExp('^(' + urlPath + '(\/index)?\.' + ext + ')') : new RegExp('^(' + 'index.' + ext + ')');
 }
 
-function getRequest(req){
-    req.segments = _.compact(req.originalUrl.split('/'));
-    return req;
-}
+// Handlebars.registerHelper('list', function(context, options) {
+//   var out = "<ul>", data;
+
+//   if (options.data) {
+//     data = Handlebars.createFrame(options.data);
+//   }
+
+//   for (var i=0; i<context.length; i++) {
+//     if (data) {
+//       data.index = i;
+//     }
+
+//     out += "<li>" + options.fn(context[i], { data: data }) + "</li>";
+//   }
+
+//   out += "</ul>";
+//   return out;
+// });

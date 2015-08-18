@@ -1,6 +1,7 @@
 var path    = require('path');
 var promise = require("bluebird");
 var fs      = promise.promisifyAll(require("fs"));
+var _       = require('lodash');
 var watch   = require('watch');
 
 var File    = require('../src/file');
@@ -17,7 +18,9 @@ function Source(conf, name){
 
 Source.prototype.build = function(){
     var self = this;
-    this.files = this.files || this.readDir(this.config.dir);
+    this.files = this.files || this.readDir(this.config.dir).then(function(files){
+        return _.sortByAll(files, ['relDir', 'order']);
+    });
     if (!this.monitor){
         // TODO: just a first POC of a watch task, need to make much more clever as to what gets re-parsed
         var monitorOpts = {

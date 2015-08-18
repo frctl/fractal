@@ -54,21 +54,33 @@ File.prototype.parse = function(){
             // keep the raw contents
             self.raw = buffer;
 
-            self.base       = fileInfo.base;
+            self.rawBase    = fileInfo.base;
+            self.rawName    = fileInfo.name;
             self.ext        = fileInfo.ext;
-            self.name       = fileInfo.name;
+
+            var nameParts   = fileInfo.name.match(/^(\d+)\.(.*)/,'');
+            
+            self.name       = nameParts ? nameParts[2] : self.rawName;
+            self.base       = fileInfo.base.replace(/^(\d+\.)/,'');
+            self.order      = parseInt(nameParts ? nameParts[1] : (self.name == 'index' ? '1' : null), 10);
+            
             self.dir        = fileInfo.dir;
             self.absPath    = path.resolve(self.rootPath);
             self.relPath    = self.rootPath.replace(new RegExp('^(' + self.sourceDir + '\.)'),"");
             self.relDir     = self.dir.replace(new RegExp('^(' + self.sourceDir + '\.?)'),"");
 
-            self.parentDirs = _.compact(self.relDir.split('/'))
-            self.depth = self.parentDirs.length;
+            self.dirUrlPath = ('/' + self.relDir).replace(/(\/\d+\.)/g,'/');
+            self.urlPath    = (self.name != 'index' ? path.join(self.dirUrlPath, self.name) : self.dirUrlPath);
 
-            self.modified = stat.mtime;
+            self.parentDirs = _.compact(self.relDir.split('/'));
+            self.parentUrlDirs = _.compact(self.dirUrlPath.split('/'));
 
-            self.meta = {};
-            self.preview = {};
+            self.depth      = self.parentDirs.length;
+
+            self.modified   = stat.mtime;
+            
+            self.meta       = {};
+            self.preview    = {};
 
             runParsers(self);
             
@@ -103,6 +115,7 @@ function generateUUID(path){
 
 function generateTitle(file){
     return file.meta.title || (function(){
-        return file.name === 'index' ? (_.last(file.parentDirs) || 'Overview') : file.name;
+        return file.name === 'index' ? 'Overview' : file.name;
+        // return file.name === 'index' ? (_.last(file.parentDirs) || 'Overview') : file.name;
     })();
 }

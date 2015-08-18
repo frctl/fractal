@@ -93,7 +93,7 @@ function getService(serviceName){
 function getPageSets(files){
     if (!files) return {};
     var sets = _.map(files, function(file){
-        return file.parentDirs[0] || null;        
+        return file.parentUrlDirs[0] || null;        
     });
     return _.map(_.unique(_.compact(sets)), function(key){
         return {
