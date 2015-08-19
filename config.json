@@ -6,8 +6,8 @@
     "views":            null,
     "pages":            null,
     "theme":            "fractal-theme-default",
-    "sources":          ["assets","components","views","pages"],
-    "parsers": [
+    "sources":          ["pages","assets","components","views"],
+    "pipes": [
         {
             "name": "frontmatter",
             "priority": 0,
