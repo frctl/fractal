@@ -74,13 +74,16 @@ module.exports = function(){
             var page = _.find(tplData.structure.pages.files, function(p){
                 return p.urlPath == req.originalUrl;
             });
+            return res.json(makeFileTree(_.filter(tplData.structure.pages.files, function(file){
+                                    return file.parentUrlDirs[0] == req.segments[0];
+                                })));
             if (page) {
                 return res.render(req.originalUrl === '/' ? 'index' : 'pages/page', merge(tplData, {
                     page: page,
                     sectionName: req.segments[0],
-                    sectionPages: _.filter(tplData.structure.pages.files, function(file){
+                    sectionPages: makeFileTree(_.filter(tplData.structure.pages.files, function(file){
                         return file.parentUrlDirs[0] == req.segments[0];
-                    })
+                    }))
                 }));
             }
         }
@@ -96,7 +99,21 @@ module.exports = function(){
 };
 
 function navHelper(context, options){
-    // return 'foo';
+    var ret = "";
+    var nestedItems = {};
+    // context = _.sortByAll(files, ['relDir', 'order']);
+
+    // context.forEach(function(){
+
+    // });
+
+
+    for(var i=0, j=context.length; i<j; i++) {
+
+        ret = ret + options.fn(context[i]);
+    }
+
+    return ret;
 }
 
 /******
@@ -111,28 +128,98 @@ another.html
 
 ******/
 
-function getSectionPages(files){
-    var tree = [];
-    files.forEach(function(file){
+// {
+//     name: 'implementation'
+//     files: [
+//         {
+//             ...
+//         },
+//         {
+//             ...
+//         }
+//     ],
+//     children: [
+//         {
+//             name: 'client-side',
+//             files: [
+//                 {
+//                     ...
+//                 },
+//                 {
+//                     ...
+//                 }
+//             ],
+//             children: [
 
-    });
+//             ]
+//         },
+//         {
+//             name: 'server-side',
+//             files: [
+//                 {
+//                     ...
+//                 },
+//                 {
+//                     ...
+//                 }
+//             ],
+//             children: [
+                
+//             ]
+//         }
+//     ]
+// }
+// 
+
+function makeFileTree(files){
+    var tree = {};
+    
+    return convertToHierarchy([["1","2"], ["1"], ["1","2","3"]]);
 }
 
-// Handlebars.registerHelper('list', function(context, options) {
-//   var out = "<ul>", data;
+function convertToHierarchy(arry) 
+{
+    var item, path;
 
-//   if (options.data) {
-//     data = Handlebars.createFrame(options.data);
-//   }
+    // Discard duplicates and set up parent/child relationships
+    var children = {};
+    var hasParent = {};
+    for (var i = 0; i < arry.length; i++) 
+    {
+        var path = arry[i];
+        var parent = null;
+        for (var j = 0; j < path.length; j++) 
+        {
+            var item = path[j];
+            if (!children[item]) {
+                children[item] = {};
+            }
+            if (parent) {
+                children[parent][item] = true; /* dummy value */
+                hasParent[item] = true;
+            }
+            parent = item;
+        }
+    }
 
-//   for (var i=0; i<context.length; i++) {
-//     if (data) {
-//       data.index = i;
-//     }
+    // Now build the hierarchy
+    var result = [];
+    for (item in children) {
+        if (!hasParent[item]) {
+            result.push(buildNodeRecursive(item, children));
+        }
+    }
+    return result;
+}
 
-//     out += "<li>" + options.fn(context[i], { data: data }) + "</li>";
-//   }
+function buildNodeRecursive(item, children)
+{
+    var node = {id:item, children:[]};
+    for (var child in children[item]) {
+        node.children.push(buildNodeRecursive(child, children));
+    }
+    return node;
+}
 
-//   out += "</ul>";
-//   return out;
-// });
+
+
