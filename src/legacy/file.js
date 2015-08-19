@@ -92,7 +92,10 @@ File.prototype.parse = function(){
 };
 
 File.prototype.toString = function(){
-    return JSON.stringify(this);
+    var self = _.clone(this);
+    self.raw = self.raw.toString();
+    self.content = self.content.toString();
+    return JSON.stringify(self);
 };
 
 function runParsers(file){

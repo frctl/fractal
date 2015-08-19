@@ -40,6 +40,7 @@ module.exports = function(){
         tplData.req = req;
         fractal.getStructure().then(function(structure){
             tplData.structure = structure;
+            // TODO add avialble main nav items here
             next();
         });
     });
@@ -70,25 +71,22 @@ module.exports = function(){
 
     // Page request
     app.get('(/*)?', function (req, res) {
-        if (tplData.structure.pages.files.length) {
-            var page = _.find(tplData.structure.pages.files, function(p){
-                return p.urlPath == req.originalUrl;
-            });
-            return res.json(makeFileTree(_.filter(tplData.structure.pages.files, function(file){
-                                    return file.parentUrlDirs[0] == req.segments[0];
-                                })));
+        if (tplData.structure.pages.files) {
+            var page = tplData.structure.pages.findFileBy('', req.originalUrl);
             if (page) {
-                return res.render(req.originalUrl === '/' ? 'index' : 'pages/page', merge(tplData, {
-                    page: page,
-                    sectionName: req.segments[0],
-                    sectionPages: makeFileTree(_.filter(tplData.structure.pages.files, function(file){
-                        return file.parentUrlDirs[0] == req.segments[0];
-                    }))
-                }));
+
+                // TODO!!!
+                
+                // return res.render(req.originalUrl === '/' ? 'index' : 'pages/page', merge(tplData, {
+                //     page: page,
+                //     sectionName: req.segments[0],
+                //     sectionPages: makeFileTree(_.filter(tplData.structure.pages.files, function(file){
+                //         return file.parentUrlDirs[0] == req.segments[0];
+                //     }))
+                // }));
             }
         }
-        res.render('404', merge(tplData, {
-        }));      
+        res.render('404', tplData);
     });
 
     app.listen(port, function () {
@@ -99,127 +97,9 @@ module.exports = function(){
 };
 
 function navHelper(context, options){
-    var ret = "";
-    var nestedItems = {};
-    // context = _.sortByAll(files, ['relDir', 'order']);
 
-    // context.forEach(function(){
-
-    // });
-
-
-    for(var i=0, j=context.length; i<j; i++) {
-
-        ret = ret + options.fn(context[i]);
-    }
-
-    return ret;
 }
 
-/******
-
-test.md
-another.html
-/foo/bar/baz.md
-/foo/bar/index.md
-/foo/test/index.md
-/foo/test/bar.md
-/foo/index.md
-
-******/
-
-// {
-//     name: 'implementation'
-//     files: [
-//         {
-//             ...
-//         },
-//         {
-//             ...
-//         }
-//     ],
-//     children: [
-//         {
-//             name: 'client-side',
-//             files: [
-//                 {
-//                     ...
-//                 },
-//                 {
-//                     ...
-//                 }
-//             ],
-//             children: [
-
-//             ]
-//         },
-//         {
-//             name: 'server-side',
-//             files: [
-//                 {
-//                     ...
-//                 },
-//                 {
-//                     ...
-//                 }
-//             ],
-//             children: [
-                
-//             ]
-//         }
-//     ]
-// }
-// 
-
-function makeFileTree(files){
-    var tree = {};
-    
-    return convertToHierarchy([["1","2"], ["1"], ["1","2","3"]]);
-}
-
-function convertToHierarchy(arry) 
-{
-    var item, path;
-
-    // Discard duplicates and set up parent/child relationships
-    var children = {};
-    var hasParent = {};
-    for (var i = 0; i < arry.length; i++) 
-    {
-        var path = arry[i];
-        var parent = null;
-        for (var j = 0; j < path.length; j++) 
-        {
-            var item = path[j];
-            if (!children[item]) {
-                children[item] = {};
-            }
-            if (parent) {
-                children[parent][item] = true; /* dummy value */
-                hasParent[item] = true;
-            }
-            parent = item;
-        }
-    }
-
-    // Now build the hierarchy
-    var result = [];
-    for (item in children) {
-        if (!hasParent[item]) {
-            result.push(buildNodeRecursive(item, children));
-        }
-    }
-    return result;
-}
-
-function buildNodeRecursive(item, children)
-{
-    var node = {id:item, children:[]};
-    for (var child in children[item]) {
-        node.children.push(buildNodeRecursive(child, children));
-    }
-    return node;
-}
 
 
 
