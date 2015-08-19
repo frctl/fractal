@@ -172,54 +172,31 @@ another.html
 // 
 
 function makeFileTree(files){
+    var arr = files //your array;
     var tree = {};
-    
-    return convertToHierarchy([["1","2"], ["1"], ["1","2","3"]]);
-}
 
-function convertToHierarchy(arry) 
-{
-    var item, path;
-
-    // Discard duplicates and set up parent/child relationships
-    var children = {};
-    var hasParent = {};
-    for (var i = 0; i < arry.length; i++) 
-    {
-        var path = arry[i];
-        var parent = null;
-        for (var j = 0; j < path.length; j++) 
-        {
-            var item = path[j];
-            if (!children[item]) {
-                children[item] = {};
+    function addnode(obj){
+        var splitpath = obj.parentUrlDirs;
+        var ptr = tree;
+        for (i=0;i<splitpath.length;i++) {
+            node = {
+                name: splitpath[i],
+            };
+            if (i == splitpath.length-1) {
+                node.relPath = obj.relPath;
             }
-            if (parent) {
-                children[parent][item] = true; /* dummy value */
-                hasParent[item] = true;
-            }
-            parent = item;
+            ptr[splitpath[i]] = ptr[splitpath[i]] || node;
+            ptr[splitpath[i]].children = ptr[splitpath[i]].children || {};
+            ptr = ptr[splitpath[i]].children;
         }
     }
 
-    // Now build the hierarchy
-    var result = [];
-    for (item in children) {
-        if (!hasParent[item]) {
-            result.push(buildNodeRecursive(item, children));
-        }
-    }
-    return result;
+    arr.map(addnode);
+    return tree;
 }
 
-function buildNodeRecursive(item, children)
-{
-    var node = {id:item, children:[]};
-    for (var child in children[item]) {
-        node.children.push(buildNodeRecursive(child, children));
-    }
-    return node;
-}
+
+
 
 
 
