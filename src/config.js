@@ -11,11 +11,11 @@ module.exports = {
     },
 
     get: function(key, fallback){
-        return key.split('.').reduce(index, config) || fallback || null;
+        return _.get(config, key) || fallback || null;
     },
 
     set: function(key, val){
-        config[key] = val;
+        _.set(config, key, val);
         if (key == 'theme' || _.includes(this.get('sources'), key)) {
             config = expandConfig(config);
         }

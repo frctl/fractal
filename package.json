@@ -16,6 +16,7 @@
   "dependencies": {
     "absolute": "0.0.1",
     "bluebird": "^2.9.32",
+    "chokidar": "^1.0.5",
     "deepmerge": "^0.2.10",
     "express": "^4.13.1",
     "express-handlebars": "^2.0.1",
@@ -28,7 +29,6 @@
     "mkdirp": "^0.5.1",
     "recursive-readdir": "^1.2.1",
     "rimraf": "^2.4.1",
-    "swag": "^0.7.0",
-    "watch": "^0.16.0"
+    "swag": "^0.7.0"
   }
 }

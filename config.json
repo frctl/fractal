@@ -18,6 +18,9 @@
             "priority": 1,
             "matches": [".md", ".markdown"]
         }
-    ]
+    ],
+    "ui": {
+        
+    }
     
 }

@@ -1,6 +1,7 @@
 var _           = require('lodash');
 var p           = require('path');
 var crypto      = require('crypto');
+var swag        = require('swag');
 
 var File        = require('./file');
 var Directory   = require('./directory');
@@ -13,42 +14,52 @@ var pipeCache   = {};
 module.exports = function(){
 
     this.init = function(){
-
         var self = this;
+        if (! this.isRoot) {
 
-        var fileInfo = p.parse(this.path);
-        var nameParts   = fileInfo.name.match(/^(\d+)\-(.*)/,'');
+            var fileInfo = p.parse(this.relPath);
+            var fauxAbs = makeFauxPath(this.path);
+            var fauxInfo = p.parse(fauxAbs);
+            var nameParts   = fileInfo.name.match(/^(\d+)\-(.*)/,'');
 
-        this.id         = generateUUID(this.path);
-        this.ext        = this.isFile() ? fileInfo.ext : null;
-        this.modified   = this.stat.mtime;
+            this.id         = generateUUID(this.path);
+            this.ext        = this.isFile() ? fileInfo.ext : null;
+            this.modified   = this.stat.mtime;
 
-        this.fileInfo = {
-            absolute:   this.path,
-            relative:   this.relPath,
-            name:       fileInfo.name,
-            base:       fileInfo.base,
-            ext:        this.ext,
-        };
+            this.fileInfo = {
+                absolute:   this.path,
+                relative:   this.relPath,
+                name:       fileInfo.name,
+                base:       fileInfo.base,
+                dir:        fileInfo.dir,
+                relDir:     this.relPath.replace(new RegExp('(\/?' + fileInfo.base + ')$'),''),
+                ext:        this.ext,
+            };
+            
+            this.fauxInfo = {
+                absolute:       fauxAbs,
+                relative:       makeFauxPath(this.fileInfo.relative),
+                name:           nameParts ? nameParts[2] : fauxInfo.name,
+                base:           fauxInfo.base,
+                dir:            fauxInfo.dir,
+                relDir:         makeFauxPath(this.fileInfo.relDir),
+                ext:            this.ext,
+            };
+            this.fauxInfo.urlStylePath = this.fauxInfo.name == 'index' ? this.fauxInfo.relDir : p.join(this.fauxInfo.relDir, this.fauxInfo.name);
 
-        this.fauxInfo = {
-            absolute:   makeFauxPath(this.fileInfo.absolute),
-            relative:   makeFauxPath(this.fileInfo.relative),
-            name:       nameParts ? nameParts[2] : fileInfo.name,
-            base:       makeFauxPath(this.fileInfo.base),
-            ext:        this.ext,
-        };
+            this.order = parseInt(nameParts ? nameParts[1] : (this.fauxInfo.name == 'index' ? '1' : null), 10);
 
-        this.order = parseInt(nameParts ? nameParts[1] : (this.fauxInfo.name == 'index' ? '1' : null), 10);
+            this.applyPipes();
 
-        this.applyPipes();
+            this.title = (function(){
+                if (self.isDirectory()) {
+                    return titleize(self.fauxInfo.name);
+                }
+                return titleize(self.meta.title || (self.fauxInfo.name === 'index' ? 'Overview' : self.fauxInfo.name));
+            })();
+        }
 
-        this.title = (function(){
-            if (self.isDirectory()) {
-                return self.fauxInfo.name;
-            }
-            return self.meta.title || (self.fauxInfo.name === 'index' ? 'Overview' : self.fauxInfo.name);
-        })();
+        return self;
     };
 
     this.isDirectory = function(){
@@ -89,4 +100,8 @@ function generateUUID(path){
     var shasum = crypto.createHash('sha1')
     shasum.update(path);
     return shasum.digest('hex').slice(0, 6); 
+}
+
+function titleize(str){
+    return swag.helpers['titleize'](str);
 }

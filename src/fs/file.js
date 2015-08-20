@@ -21,20 +21,6 @@ function File(opts){
     this.content    = this.raw = opts.content;
     this.meta       = {};
     this.previewData = {};
-
-    // Object.defineProperty(this, 'content', {
-    //     get: function() {
-    //         if (_.isFunction(content)) {
-    //             content = content(this.raw);
-    //         }
-    //         return content;
-    //     },
-    //     set: function(value) {
-    //         content = value;
-    //     }
-    // });
-
-    this.init();
 };
 
 mixin.call(File.prototype);
@@ -48,7 +34,7 @@ File.fromPath = function(path, relativeTo){
             relPath:    _.trimLeft(path.replace(new RegExp('^(' + relativeTo + ')'),""),['/']),
             stat:       stat,
             content:    content,
-        });
+        }).init();
     });
 };
 

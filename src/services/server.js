@@ -1,4 +1,5 @@
 var promise = require("bluebird");
+var fs      = promise.promisifyAll(require("fs"));
 var merge   = require("deepmerge");
 var _       = require("lodash");
 var express = require('express');
@@ -36,11 +37,23 @@ module.exports = function(){
     app.use(express.static(config.get('theme.assets')));
 
     app.use(function (req, res, next) {
+        if ( req.originalUrl === '/favicon.ico') {
+            // TODO: send favicon
+            return res.status(404).render('404', tplData);
+        }
         req.segments = _.compact(req.originalUrl.split('/'));
         tplData.req = req;
         fractal.getStructure().then(function(structure){
             tplData.structure = structure;
-            // TODO add avialble main nav items here
+            tplData.navigation = generatePrimaryNav(structure);
+
+            // TEMP LOGGING ----
+            // var output = JSON.stringify(structure, null, 4)
+            // fs.writeFileAsync(path.join(__dirname, "/output.json"), output, function(err) {
+            //   console.log('file saved');
+            // }); 
+            // TEMP LOGGING ----
+
             next();
         });
     });
@@ -71,22 +84,20 @@ module.exports = function(){
 
     // Page request
     app.get('(/*)?', function (req, res) {
-        if (tplData.structure.pages.files) {
-            var page = tplData.structure.pages.findFileBy('', req.originalUrl);
+        var pages = tplData.structure.pages;
+        if (pages) {
+            var urlPath = _.trim(req.originalUrl, '/');
+            var page = pages.findFileBy('fauxInfo.urlStylePath', urlPath);
             if (page) {
-
-                // TODO!!!
-                
-                // return res.render(req.originalUrl === '/' ? 'index' : 'pages/page', merge(tplData, {
-                //     page: page,
-                //     sectionName: req.segments[0],
-                //     sectionPages: makeFileTree(_.filter(tplData.structure.pages.files, function(file){
-                //         return file.parentUrlDirs[0] == req.segments[0];
-                //     }))
-                // }));
+                var dir = req.segments.length ? pages.findDirBy('fauxInfo.urlStylePath', req.segments[0]) : pages;
+                return res.render(req.originalUrl === '/' ? 'index' : 'pages/page', merge(tplData, {
+                    page: page,
+                    sectionName: req.segments[0],
+                    sectionPages: _.get(dir, 'children', [])
+                }));
             }
         }
-        res.render('404', tplData);
+        res.status(404).render('404', tplData);
     });
 
     app.listen(port, function () {
@@ -100,7 +111,30 @@ function navHelper(context, options){
 
 }
 
-
+function generatePrimaryNav(structure)
+{
+    var nav = [
+        {
+            title: "UI Components",
+            url: "/components",
+        },
+        {
+            title: "Assets",
+            url: "/assets",
+        }
+    ];
+    if (structure.pages) {
+        structure.pages.children.forEach(function(child){
+            if (child.isDirectory() && child.hasChildren()) {
+                nav.push({
+                    title: child.title,
+                    url: path.join('/', child.fauxInfo.relative)
+                });
+            }
+        });
+    }
+    return nav;
+}
 
 
 
