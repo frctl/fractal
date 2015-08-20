@@ -23,7 +23,7 @@ module.exports = function(){
             var nameParts   = fileInfo.name.match(/^(\d+)\-(.*)/,'');
 
             this.id         = generateUUID(this.path);
-            this.ext        = this.isFile() ? fileInfo.ext : null;
+            this.ext        = (this.isFile() ? fileInfo.ext : null).toLowerCase();
             this.modified   = this.stat.mtime;
 
             this.fileInfo = {

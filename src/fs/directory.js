@@ -44,7 +44,7 @@ Directory.fromPath = function(path, relativeTo, root){
             path:       p.resolve(path),
             relPath:    _.trimLeft(path.replace(new RegExp('^(' + relativeTo + ')'),""),['/']),
             stat:       stat,
-        }, _.sortByAll(children, ['order','path']), root).init();
+        }, _.sortByOrder(children, ['type','order','path'], ['desc','asc','asc']), root).init();
     });
 };
 
