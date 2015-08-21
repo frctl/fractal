@@ -10,3 +10,9 @@ function Assets(config, dir){
 };
 
 mixin.call(Assets.prototype);
+
+Assets.prototype.init = function(){
+
+    var self = this;
+
+};

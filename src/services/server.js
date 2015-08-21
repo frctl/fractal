@@ -19,10 +19,7 @@ module.exports = function(){
         partialsDir: [
             config.get('theme.views')
         ],
-        helpers: {
-            nav: navHelper,
-        },
-        cache: false
+        helpers: {}
     });
 
     swag.registerHelpers(hbs.handlebars);
@@ -50,10 +47,10 @@ module.exports = function(){
             tplData.navigation = generatePrimaryNav(sources);
 
             // TEMP LOGGING ----
-            var output = JSON.stringify(sources.docs, null, 4)
-            fs.writeFileAsync(path.join(__dirname, "/output.json"), output, function(err) {
-              console.log('file saved');
-            }); 
+            // var output = JSON.stringify(sources.docs, null, 4)
+            // fs.writeFileAsync(path.join(__dirname, "/output.json"), output, function(err) {
+            //   console.log('file saved');
+            // }); 
             // TEMP LOGGING ----
 
             next();
@@ -65,8 +62,8 @@ module.exports = function(){
         var viewSource = tplData.sources.views;
         res.render('ui', merge(tplData, {
             sectionName: 'UI Components',
-            components: compSource ? compSource.getFiles() : null,
-            views: viewSource ? viewSource.getFiles() : null,
+            components: compSource ? compSource.getComponents() : null,
+            views: viewSource ? viewSource.getViews() : null,
         }));
     });
 
@@ -107,15 +104,11 @@ module.exports = function(){
     });
 
     app.listen(port, function () {
-        console.log('Fractal server is running at http://localhost:%s', port);
+        console.log('Fractal server is now running at http://localhost:%s', port);
     });
 
     return app;
 };
-
-function navHelper(context, options){
-
-}
 
 function generatePrimaryNav(sources)
 {

@@ -5,14 +5,8 @@ var Directory   = require('../fs/directory');
 
 // Mixin for Source objects
 module.exports = function(){
-
-    this.init = function(){
-
-        var self = this;
-        
-        this.directory = filterFiles(this.directory, self.config.matches);
-        
-    };
+    
+    
 
     this.getFiles = function(){
         return this.directory.children;
@@ -28,10 +22,3 @@ module.exports = function(){
 
     return this;
 };
-
-function filterFiles(dir, matches){
-    Directory.filterFiles(dir, function(file){
-        return minimatch(file.fileInfo.base, matches);
-    });
-    return dir;
-}

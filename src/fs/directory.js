@@ -113,7 +113,9 @@ Directory.prototype.findDirectory = function(key, value, maxDepth){
 
 Directory.prototype.toJSON = function(){
     // TODO: do any conversion here?
-    return this;
+    var self = _.clone(this);
+    delete self['finderCache'];
+    return self;
 };
 
 Directory.prototype.toString = function(){
