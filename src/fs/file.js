@@ -5,15 +5,10 @@ var crypto      = require('crypto');
 var _           = require('lodash');
 
 var mixin       = require('./mixin');
-// var config  = require('./config');
-// var parsers = _.sortBy(config.get('parsers'), 'priority');
-// var parserObjs = {};
 
 module.exports = File;
 
 function File(opts){
-    var content;
-
     this.type       = 'file';
     this.path       = opts.path;
     this.relPath    = opts.relPath;

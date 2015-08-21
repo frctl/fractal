@@ -23,7 +23,7 @@ module.exports = function(){
             var nameParts   = fileInfo.name.match(/^(\d+)\-(.*)/,'');
 
             this.id         = generateUUID(this.path);
-            this.ext        = (this.isFile() ? fileInfo.ext : null).toLowerCase();
+            this.ext        = this.isFile() ? fileInfo.ext.toLowerCase() : null;
             this.modified   = this.stat.mtime;
 
             this.fileInfo = {
@@ -63,11 +63,15 @@ module.exports = function(){
     };
 
     this.isDirectory = function(){
-        return this.type == 'directory';
+        return this.type === 'directory';
     };
 
     this.isFile = function(){
-        return this.type == 'file';
+        return this.type === 'file';
+    };
+
+    this.isType = function(type){
+        return this.type === type;
     };
 
     this.extMatches = function(extensions){

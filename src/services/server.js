@@ -34,21 +34,22 @@ module.exports = function(){
     app.set('views', config.get('theme.views'))
     app.set('view engine', 'hbs');
 
-    app.use(express.static(config.get('theme.assets')));
+    app.use('/_theme', express.static(config.get('theme.assets')));
 
     app.use(function (req, res, next) {
         if ( req.originalUrl === '/favicon.ico') {
-            // TODO: send favicon
+            // TODO: send favicon rather than 404 :-)
             return res.status(404).render('404', tplData);
         }
         req.segments = _.compact(req.originalUrl.split('/'));
         tplData.req = req;
-        fractal.getStructure().then(function(structure){
-            tplData.structure = structure;
-            tplData.navigation = generatePrimaryNav(structure);
+        fractal.getSources().then(function(sources){
+            
+            tplData.sources = sources;
+            tplData.navigation = generatePrimaryNav(sources);
 
             // TEMP LOGGING ----
-            // var output = JSON.stringify(structure, null, 4)
+            // var output = JSON.stringify(sources, null, 4)
             // fs.writeFileAsync(path.join(__dirname, "/output.json"), output, function(err) {
             //   console.log('file saved');
             // }); 
@@ -58,14 +59,18 @@ module.exports = function(){
         });
     });
 
-    app.get('/components', function (req, res) {
-        res.render('components', merge(tplData, {
-            sectionName: 'UI Components'
+    app.get('/ui', function (req, res) {
+        var compSource = tplData.sources.components;
+        var viewSource = tplData.sources.views;
+        res.render('ui', merge(tplData, {
+            sectionName: 'UI Components',
+            components: compSource ? compSource.getFiles() : null,
+            views: viewSource ? viewSource.getFiles() : null,
         }));
     });
 
-    app.get('/components/*', function (req, res) {    
-        res.render('components/component', merge(tplData, {
+    app.get('/ui/*', function (req, res) {    
+        res.render('ui/item', merge(tplData, {
             sectionName: 'UI Components'
         }));
     });
@@ -84,12 +89,12 @@ module.exports = function(){
 
     // Page request
     app.get('(/*)?', function (req, res) {
-        var pages = tplData.structure.pages;
-        if (pages) {
+        var docs = tplData.sources.docs;
+        if (docs) {
             var urlPath = _.trim(req.originalUrl, '/');
-            var page = pages.findFileBy('fauxInfo.urlStylePath', urlPath);
+            var page = docs.findFile('fauxInfo.urlStylePath', urlPath);
             if (page) {
-                var dir = req.segments.length ? pages.findDirBy('fauxInfo.urlStylePath', req.segments[0]) : pages;
+                var dir = req.segments.length ? docs.findDirectory('fauxInfo.urlStylePath', req.segments[0]) : docs.dir;
                 return res.render(req.originalUrl === '/' ? 'index' : 'pages/page', merge(tplData, {
                     page: page,
                     sectionName: req.segments[0],
@@ -111,20 +116,20 @@ function navHelper(context, options){
 
 }
 
-function generatePrimaryNav(structure)
+function generatePrimaryNav(sources)
 {
     var nav = [
         {
-            title: "UI Components",
-            url: "/components",
+            title: "UI Library",
+            url: "/ui",
         },
         {
             title: "Assets",
             url: "/assets",
         }
     ];
-    if (structure.pages) {
-        structure.pages.children.forEach(function(child){
+    if (sources.docs) {
+        sources.docs.getFiles().forEach(function(child){
             if (child.isDirectory() && child.hasChildren()) {
                 nav.push({
                     title: child.title,

@@ -1,12 +1,23 @@
 {
-    "title":            "Fractal",
-    "port":             3000,
-    "assets":           null,
-    "components":       null,
-    "views":            null,
-    "pages":            null,
-    "theme":            "fractal-theme-default",
-    "sources":          ["pages","assets","components","views"],
+    "title": "Fractal",
+    "port": 3000,
+    "source": {
+        "assets": {
+            "dir": "assets"
+        },
+        "components": {
+            "dir": "src/components"
+        },
+        "views": {
+            "dir": "src/views"
+        },
+        "docs": {
+            "dir": "docs"
+        }
+    },
+    "theme": {
+        "name": "fractal-theme-default"
+    },
     "pipes": [
         {
             "name": "frontmatter",
@@ -19,7 +30,7 @@
             "matches": [".md", ".markdown"]
         }
     ],
-    "ui": {
+    "lang": {
         
     }
     

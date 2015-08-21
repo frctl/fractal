@@ -7,8 +7,10 @@ var _           = require('lodash');
 var File        = require('./file');
 var mixin       = require('./mixin');
 
-var finderFileCache = {};
-var finderDirCache = {};
+var finderCache = {
+    file: {},
+    directory: {},
+};
 
 module.exports = Directory;
 
@@ -19,9 +21,6 @@ function Directory(opts, children, root){
     this.relPath    = opts.relPath;
     this.stat       = opts.stat;
     this.children   = children;
-    if (this.isRoot) {
-        // TODO: watch filesystem for changes, rebuild array of children
-    }
 };
 
 mixin.call(Directory.prototype);
@@ -48,54 +47,12 @@ Directory.fromPath = function(path, relativeTo, root){
     });
 };
 
-Directory.prototype.findFileBy = function(key, value, maxDepth){
-    var searchId = key + value;
-    if (_.isEmpty(finderFileCache[searchId])) {
-        var currentDepth = 0;
-        maxDepth = maxDepth || 10000000;
-        var found = null;
-        function checkChildren(children){
-            if (found) return found;
-            for (var i = 0; i < children.length; i++) {
-                var child = children[i];
-                if ( child.isFile() && _.get(child, key) === value) {
-                    found = child;
-                    break;
-                } else if (child.isDirectory() && currentDepth < maxDepth) {
-                    currentDepth++;
-                    checkChildren(child.children);
-                }
-            };
-            return found;
-        }
-        finderFileCache[searchId] = checkChildren(this.children);
-    }
-    return finderFileCache[searchId];
+Directory.prototype.findFile = function(key, value, maxDepth){
+    return this.find('file', key, value, maxDepth);
 };
 
-Directory.prototype.findDirBy = function(key, value, maxDepth){
-    var searchId = key + value;
-    if (_.isEmpty(finderDirCache[searchId])) {
-        var currentDepth = 0;
-        maxDepth = maxDepth || 10000000;
-        var found = null;
-        function checkChildren(children){
-            if (found) return found;
-            for (var i = 0; i < children.length; i++) {
-                var child = children[i];
-                if (child.isDirectory() && _.get(child, key) === value) {
-                    found = child;
-                    break;
-                } else if (child.isDirectory() && currentDepth < maxDepth) {
-                    currentDepth++;
-                    checkChildren(child.children);
-                }
-            };
-            return found;
-        }
-        finderDirCache[searchId] = checkChildren(this.children);
-    }
-    return finderDirCache[searchId];
+Directory.prototype.findDirectory = function(key, value, maxDepth){
+    return this.find('directory', key, value, maxDepth);
 };
 
 Directory.prototype.hasChildren = function(){
@@ -111,4 +68,27 @@ Directory.prototype.toString = function(){
     return this.toJSON();
 };
 
-// function findBy)
+Directory.prototype.find = function(type, key, value, maxDepth) {
+    var searchId = key + value;
+    if (_.isEmpty(finderCache[type][searchId])) {
+        var currentDepth = 0;
+        maxDepth = maxDepth || 10000000;
+        var found = null;
+        function checkChildren(children){
+            if (found) return found;
+            for (var i = 0; i < children.length; i++) {
+                var child = children[i];
+                if (child.isType(type) && _.get(child, key) === value) {
+                    found = child;
+                    break;
+                } else if (child.isDirectory() && currentDepth < maxDepth) {
+                    currentDepth++;
+                    checkChildren(child.children);
+                }
+            };
+            return found;
+        }
+        finderCache[type][searchId] = checkChildren(this.children);
+    }
+    return finderCache[type][searchId];
+}

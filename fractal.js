@@ -3,33 +3,37 @@ var merge   = require('deepmerge');
 var _       = require('lodash');
 var path    = require('path');
 
-// var Source  = require('./src/source');
-var Directory  = require('./src/fs/directory');
+var Source  = require('./src/source');
 var config  = require('./src/config');
 
-var structure = null;
+var sources = null;
 
 module.exports = {
 
-    configure: function(userConfig){
-        config.merge(userConfig);
+    set: function(){
+        if (arguments.length === 1) {
+            config.merge(arguments[0]);
+        } else if (arguments.length === 2) {
+            config.set(arguments[0], arguments[1]);
+        } else {
+            throw 'Invalid configuration';
+        }
     },
 
     run: function(){
+        var theme = config.get('theme');
         config.set('root', process.cwd());
+        config.set('theme', merge(theme, getThemeConfig(theme.name)));
         return getService(process.argv[2]);
     },
 
-    getStructure: function(){
-        if (!structure) {
-            structure = promise.props({
-                pages:      config.get('pages') ? Directory.fromPath(config.get('pages').dir, null, true) : null,
-                views:      config.get('views') ? Directory.fromPath(config.get('views').dir, null, true) : null,
-                assets:     config.get('assets') ? Directory.fromPath(config.get('assets').dir, null, true) : null,
-                components: config.get('components') ? Directory.fromPath(config.get('components').dir, null, true) : null,
-            });
+    getSources: function(){
+        if (!sources) {
+            sources = promise.props(_.mapValues(config.get('source'), function(conf){
+                return Source.fromConfig(conf);
+            }));
         }
-        return structure;
+        return sources;
     },
 
     getConfig: function(){
@@ -41,4 +45,13 @@ module.exports = {
 function getService(serviceName){
     var service = (typeof serviceName === 'undefined' || serviceName == 'server') ? 'server' : 'export';
     return require('./src/services/' +  service)();
+}
+
+function getThemeConfig(themeName){
+    var dir = path.parse(require.resolve(themeName)).dir;
+    var themeJSON = require(themeName);
+    return {
+        views: path.join(dir, themeJSON.views),
+        assets: path.join(dir, themeJSON.assets),
+    };
 }
