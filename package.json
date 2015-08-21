@@ -26,6 +26,7 @@
     "handlebars": "^3.0.3",
     "lodash": "^3.10.0",
     "marked": "^0.3.5",
+    "minimatch": "^2.0.10",
     "mkdirp": "^0.5.1",
     "recursive-readdir": "^1.2.1",
     "rimraf": "^2.4.1",

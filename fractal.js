@@ -1,12 +1,14 @@
-var promise = require("bluebird");
-var merge   = require('deepmerge');
-var _       = require('lodash');
-var path    = require('path');
+var promise         = require("bluebird");
+var merge           = require('deepmerge');
+var _               = require('lodash');
+var p               = require('path');
+var chokidar        = require('chokidar');
 
-var Source  = require('./src/source');
-var config  = require('./src/config');
+var SourceFactory   = require('./src/sources/factory');
+var config          = require('./src/config');
 
-var sources = null;
+var sources         = {};
+var monitors        = {};
 
 module.exports = {
 
@@ -24,16 +26,27 @@ module.exports = {
         var theme = config.get('theme');
         config.set('root', process.cwd());
         config.set('theme', merge(theme, getThemeConfig(theme.name)));
+
+        _.each(config.get('source'), function(conf, key){
+            sources[key] = null;
+            monitors[key] = chokidar.watch(p.resolve(conf.dir), {ignored: /[\/\\]\./});
+            monitors[key].on('ready', function(){
+                monitors[key].on('all', function(event, path) {
+                    sources[key] = null;
+                });
+            });
+        });
+
         return getService(process.argv[2]);
     },
 
     getSources: function(){
-        if (!sources) {
-            sources = promise.props(_.mapValues(config.get('source'), function(conf){
-                return Source.fromConfig(conf);
-            }));
-        }
-        return sources;
+        return promise.props(_.mapValues(config.get('source'), function(conf, key){
+            if (!sources[key]) {
+                sources[key] = SourceFactory.getSource(key, conf);
+            }
+            return sources[key];
+        }));
     },
 
     getConfig: function(){
@@ -48,10 +61,10 @@ function getService(serviceName){
 }
 
 function getThemeConfig(themeName){
-    var dir = path.parse(require.resolve(themeName)).dir;
+    var dir = p.parse(require.resolve(themeName)).dir;
     var themeJSON = require(themeName);
     return {
-        views: path.join(dir, themeJSON.views),
-        assets: path.join(dir, themeJSON.assets),
+        views: p.join(dir, themeJSON.views),
+        assets: p.join(dir, themeJSON.assets),
     };
 }

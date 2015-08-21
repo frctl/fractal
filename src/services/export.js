@@ -5,11 +5,8 @@ var fs = require('fs');
 
 module.exports = function(){
 
-    fractal.getStructure().then(function(structure){
-
-        var output = JSON.stringify(structure, null, 4)
-        // console.log(output);
-        
+    fractal.getSources().then(function(sources){
+        var output = JSON.stringify(sources.docs, null, 4)
         fs.writeFile(path.join(__dirname, "/output.json"), output, function(err) {
           console.log('file saved');
         }); 

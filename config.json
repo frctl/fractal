@@ -3,16 +3,20 @@
     "port": 3000,
     "source": {
         "assets": {
-            "dir": "assets"
+            "dir": "assets",
+            "matches": "*"
         },
         "components": {
-            "dir": "src/components"
+            "dir": "src/components",
+            "matches": "*.+(html|hbs)"
         },
         "views": {
-            "dir": "src/views"
+            "dir": "src/views",
+            "matches": "*.+(html|hbs)"
         },
         "docs": {
-            "dir": "docs"
+            "dir": "docs",
+            "matches": "*.+(html|md|markdown)"
         }
     },
     "theme": {
@@ -22,12 +26,12 @@
         {
             "name": "frontmatter",
             "priority": 0,
-            "matches": [".hbs",".handlebars",".html",".md",".markdown"]
+            "matches": "*.+(html|hbs|md|markdown)"
         },
         {
             "name": "markdown",
             "priority": 1,
-            "matches": [".md", ".markdown"]
+            "matches": "*.+(md|markdown)"
         }
     ],
     "lang": {

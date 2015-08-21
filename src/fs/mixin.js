@@ -2,6 +2,7 @@ var _           = require('lodash');
 var p           = require('path');
 var crypto      = require('crypto');
 var swag        = require('swag');
+var minimatch   = require('minimatch');
 
 var File        = require('./file');
 var Directory   = require('./directory');
@@ -21,7 +22,7 @@ module.exports = function(){
             var fauxAbs = makeFauxPath(this.path);
             var fauxInfo = p.parse(fauxAbs);
             var nameParts   = fileInfo.name.match(/^(\d+)\-(.*)/,'');
-
+            
             this.id         = generateUUID(this.path);
             this.ext        = this.isFile() ? fileInfo.ext.toLowerCase() : null;
             this.modified   = this.stat.mtime;
@@ -49,7 +50,9 @@ module.exports = function(){
 
             this.order = parseInt(nameParts ? nameParts[1] : (this.fauxInfo.name == 'index' ? '1' : null), 10);
 
-            this.applyPipes();
+            if (this.isFile()){
+                this.applyPipes();    
+            }
 
             this.title = (function(){
                 if (self.isDirectory()) {
@@ -61,7 +64,7 @@ module.exports = function(){
 
         return self;
     };
-
+    
     this.isDirectory = function(){
         return this.type === 'directory';
     };
@@ -74,14 +77,10 @@ module.exports = function(){
         return this.type === type;
     };
 
-    this.extMatches = function(extensions){
-        return this.ext ? _.contains(extensions, this.ext) : false;
-    };
-
     this.applyPipes = function(){
         var self = this;
         pipes.forEach(function(pipeInfo){
-            if (self.extMatches(pipeInfo.matches)) {
+            if (minimatch(self.fileInfo.base, pipeInfo.matches)) {
                 pipeCache[pipeInfo.name] = pipeCache[pipeInfo.name] || (function(){
                     var P = require('./pipes/' +  pipeInfo.name);
                     return new P();

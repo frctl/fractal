@@ -11,7 +11,7 @@ var fractal = require('../../fractal');
 var config  = fractal.getConfig();
 
 module.exports = function(){
-
+    
     var port = config.get('port');
     var app = express();
     var hbs = exphbs.create({
@@ -21,7 +21,8 @@ module.exports = function(){
         ],
         helpers: {
             nav: navHelper,
-        }
+        },
+        cache: false
     });
 
     swag.registerHelpers(hbs.handlebars);
@@ -49,10 +50,10 @@ module.exports = function(){
             tplData.navigation = generatePrimaryNav(sources);
 
             // TEMP LOGGING ----
-            // var output = JSON.stringify(sources, null, 4)
-            // fs.writeFileAsync(path.join(__dirname, "/output.json"), output, function(err) {
-            //   console.log('file saved');
-            // }); 
+            var output = JSON.stringify(sources.docs, null, 4)
+            fs.writeFileAsync(path.join(__dirname, "/output.json"), output, function(err) {
+              console.log('file saved');
+            }); 
             // TEMP LOGGING ----
 
             next();
