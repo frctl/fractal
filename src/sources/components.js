@@ -21,9 +21,57 @@ Components.prototype.init = function(){
 Components.prototype.getComponents = function(){
     if (!this.components) {
         var self = this;
-        this.components = Directory.filterFiles(this.directory, function(file){
-            return minimatch(file.fileInfo.base, self.config.matches);
-        });
+        var getComponents = function(dir){
+            var components = [];
+            dir.children.forEach(function(item){
+                if (item.isFile()) {
+                    if (item.matches('fauxInfo.base', self.config.matches.markup)) {
+                        // it's a component
+                        components.push(makeComponent(item, _.filter(dir.children, 'type', 'file')));
+                    }
+                } else if (item.isDirectory() && item.hasChildren()) {
+                    var childComponent = item.findFile('fauxInfo.base', getFileMatcher(item.fauxInfo.name, self.config.matches.markup));
+                    if (childComponent) {
+                        // it's a component
+                        components.push(makeComponent(item, _.filter(item.children, 'type', 'file')));
+                    } else {
+                        components.push({
+                            title: item.title,
+                            type: 'directory',
+                            children: getComponents(item)
+                        });
+                    }
+                }
+            });
+            return components;
+        };
+        this.components = getComponents(this.directory);
     }
     return this.components;
 };
+
+function getFileMatcher(name, match){
+    return match.replace('__name__', name);
+}
+
+function makeComponent(file, related){
+    return {
+        title: file.title,
+        type: 'component',
+        related: related.length
+    };
+}
+
+    // function filter(dir){
+    //     var filtered = [];
+    //     dir.children.forEach(function(item){
+    //         if (item.isFile()) {
+    //             filtered.push(item);
+    //         } else if (item.isDirectory() && item.hasChildren()) {
+    //             filtered.push(Directory.removeEmptyDirectories(item));
+    //         }
+    //     });
+    //     dir.children = filtered;
+    // }
+    // filter(directory);
+    // return directory;

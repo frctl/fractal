@@ -1,0 +1,28 @@
+[
+    {
+        "title": "Simple",
+        "type": "component",
+        "related": 1
+    },
+    {
+        "title": "Nested",
+        "type": "directory",
+        "children": [
+            {
+                "title": "Foo",
+                "type": "component",
+                "related": 1
+            },
+            {
+                "title": "Complex",
+                "type": "component",
+                "related": 6
+            }
+        ]
+    },
+    {
+        "title": "Complex",
+        "type": "component",
+        "related": 6
+    }
+]

@@ -3,6 +3,7 @@ var fs          = promise.promisifyAll(require("fs"));
 var p           = require('path');
 var crypto      = require('crypto');
 var _           = require('lodash');
+var minimatch   = require('minimatch');
 
 var File        = require('./file');
 var mixin       = require('./mixin');
@@ -78,21 +79,53 @@ Directory.prototype.hasChildren = function(){
     return !! this.children.length;
 };
 
+Directory.prototype.each = function(callback, maxDepth, filter){
+    var startingDepth = this.depth || 0;
+    filter = filter || 'all';
+    maxDepth = _.isUndefined(maxDepth) ? 10000000 : maxDepth;
+    function doForEach(dir){
+        _.each(dir.children, function(item){
+            if (filter === 'all') {
+                callback(item);
+            } else {
+                if (filter === 'file' && item.isFile()) {
+                    callback(item);
+                } else if (item.isDirectory()) {
+                    if (filter === 'directory') {
+                        callback(item);    
+                    }
+                }
+            }
+            if ((item.depth - startingDepth) < maxDepth) {
+                doForEach(item, callback);
+            }
+        });
+    }
+    return doForEach(this);
+};
+
+Directory.prototype.eachFile = function(callback, maxDepth){
+    return this.each(this, maxDepth, 'file');
+};
+
+Directory.prototype.eachDirectory = function(callback, maxDepth){
+    return this.each(this, maxDepth, 'directory');
+};
+
 Directory.prototype.find = function(type, key, value, maxDepth) {
     var searchId = this.path + key + value;
+    var startingDepth = this.depth;
     if (_.isEmpty(this.finderCache[type][searchId])) {
-        var currentDepth = 0;
-        maxDepth = maxDepth || 10000000;
+        maxDepth = _.isUndefined(maxDepth) ? 10000000 : maxDepth;
         var found = null;
         function checkChildren(children){
             if (found) return found;
             for (var i = 0; i < children.length; i++) {
                 var child = children[i];
-                if (child.isType(type) && _.get(child, key) === value) {
+                if (child.isType(type) && (_.get(child, key) === value || minimatch(_.get(child, key), value))) {
                     found = child;
                     break;
-                } else if (child.isDirectory() && currentDepth < maxDepth) {
-                    currentDepth++;
+                } else if (child.isDirectory() && (child.depth - startingDepth) < maxDepth) {
                     checkChildren(child.children);
                 }
             };

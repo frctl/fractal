@@ -8,7 +8,15 @@
         },
         "components": {
             "dir": "src/components",
-            "matches": "*.+(html|hbs)"
+            "matches": {
+                "markup": "__name__.+(hbs|html)",
+                "metaData": "(meta|metadata).+(json|js|yml|yaml)",
+                "previewData": "preview.+(json|js|yml|yaml)",
+                "previewImage": "__name__.+(png|gif|jpeg|jpg|webp)",
+                "readme": "(README|readme).+(md|markdown)",
+                "behaviour": "__name__.+(js|coffee)",
+                "styles": "__name__.+(css|scss|less)"
+            }
         },
         "views": {
             "dir": "src/views",
