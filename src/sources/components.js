@@ -2,7 +2,8 @@ var _           = require('lodash');
 var minimatch   = require('minimatch');
 
 var Directory   = require('../fs/directory');
-var File   = require('../fs/file');
+var File        = require('../fs/file');
+var Component   = require('../component');
 var mixin       = require('./mixin');
 
 module.exports = Components;
@@ -43,40 +44,6 @@ Components.prototype.getComponents = function(){
 
         var self = this;
 
-        // TODO: refactor this into standalone component.js class
-        function makeComponent(component){
-
-            var ret = {
-                path:   component.fauxInfo.urlStylePath,
-                order:  component.order,
-                title:  component.title,
-                id:     component.id,
-                type:   'component',
-                isComponent: true,
-                files: {
-                    markup: component
-                }
-            };
-
-            if (component.isDirectory()) {
-                // get the main component
-                var main = _.find(component.children, function(child){
-                    return minimatch(child.fauxInfo.base, getFileMatcher(child.fauxInfo.name, self.config.matches.markup));
-                });
-                ret.title = main.title;
-                ret.files.markup = main;
-
-                var metaDataFile = _.find(component.children, function(child){
-                    return minimatch(child.fauxInfo.base, getFileMatcher(child.fauxInfo.name, self.config.matches.metaData));
-                });
-                if (metaDataFile) {
-                    
-                }
-
-            }
-            return ret;
-        }
-
         function getComponents(dir){
             var ret = [];
             var directories = _.filter(dir.children, 'type', 'directory');
@@ -90,10 +57,10 @@ Components.prototype.getComponents = function(){
                 if (!dir.isRoot) {
                     if (file.fauxInfo.name === dir.fauxInfo.name) {
                         // matches parent directory name so this whole directory is a component
-                        return makeComponent(dir);
+                        return Component.fromDirectory(dir, self.config);
                     }
                 }
-                ret.push(makeComponent(file));
+                ret.push(Component.fromFile(file, self.config));
             };
 
             for (var i = directories.length - 1; i >= 0; i--) {
@@ -123,23 +90,4 @@ Components.prototype.getComponents = function(){
     return this.components;
 };
 
-function getFileMatcher(name, match){
-    return match.replace('__name__', name);
-}
 
-
-
-
-    // function filter(dir){
-    //     var filtered = [];
-    //     dir.children.forEach(function(item){
-    //         if (item.isFile()) {
-    //             filtered.push(item);
-    //         } else if (item.isDirectory() && item.hasChildren()) {
-    //             filtered.push(Directory.removeEmptyDirectories(item));
-    //         }
-    //     });
-    //     dir.children = filtered;
-    // }
-    // filter(directory);
-    // return directory;
