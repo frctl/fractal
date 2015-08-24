@@ -1,28 +1,57 @@
 [
     {
-        "title": "Simple",
+        "path": "another",
+        "order": null,
+        "title": "Another",
+        "id": "c8fdd0",
         "type": "component",
-        "related": 1
+        "isComponent": true,
+        "files": {}
     },
     {
+        "path": "simple",
+        "order": null,
+        "title": "Simple",
+        "id": "cfefa6",
+        "type": "component",
+        "isComponent": true,
+        "files": {}
+    },
+    {
+        "path": "complex",
+        "order": null,
+        "title": "This Is The Title",
+        "id": "b90e85",
+        "type": "component",
+        "isComponent": true,
+        "files": {}
+    },
+    {
+        "name": "nested",
         "title": "Nested",
+        "order": null,
+        "id": "052a71",
+        "isDirectory": true,
         "type": "directory",
         "children": [
             {
+                "path": "nested/foo",
+                "order": null,
                 "title": "Foo",
+                "id": "6bbd14",
                 "type": "component",
-                "related": 1
+                "isComponent": true,
+                "files": {}
             },
             {
-                "title": "Complex",
+                "path": "nested/complex",
+                "order": null,
+                "title": "This Is The Title",
+                "id": "41d41b",
                 "type": "component",
-                "related": 6
+                "isComponent": true,
+                "files": {}
             }
         ]
-    },
-    {
-        "title": "Complex",
-        "type": "component",
-        "related": 6
     }
 ]

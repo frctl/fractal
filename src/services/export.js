@@ -11,7 +11,7 @@ module.exports = function(){
 
         var output = JSON.stringify(sources.components.getComponents(), null, 4)
 
-        console.log(output);
+        // console.log(output);
         fs.writeFile(path.join(__dirname, "/output.json"), output, function(err) {
           console.log('file saved');
         }); 

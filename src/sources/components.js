@@ -2,6 +2,7 @@ var _           = require('lodash');
 var minimatch   = require('minimatch');
 
 var Directory   = require('../fs/directory');
+var File   = require('../fs/file');
 var mixin       = require('./mixin');
 
 module.exports = Components;
@@ -10,6 +11,7 @@ function Components(config, dir){
     this.config = config;
     this.directory = dir;
     this.components = null;
+    this.finderCache = [];
 };
 
 mixin.call(Components.prototype);
@@ -18,32 +20,103 @@ Components.prototype.init = function(){
     var self = this;
 };
 
+Components.prototype.findComponent = function(key, value) {
+    var found = null;
+    function checkChildren(children){
+        if (found) return found;
+        for (var i = 0; i < children.length; i++) {
+            var child = children[i];
+            if (child.type === 'component' && (_.get(child, key) === value || minimatch(_.get(child, key), value))) {
+                found = child;
+                break;
+            } else if (child.type == 'directory') {
+                checkChildren(child.children);
+            }
+        };
+        return found;
+    }
+    return checkChildren(this.getComponents());
+};
+
 Components.prototype.getComponents = function(){
     if (!this.components) {
+
         var self = this;
-        var getComponents = function(dir){
-            var components = [];
-            dir.children.forEach(function(item){
-                if (item.isFile()) {
-                    if (item.matches('fauxInfo.base', self.config.matches.markup)) {
-                        // it's a component
-                        components.push(makeComponent(item, _.filter(dir.children, 'type', 'file')));
+
+        // TODO: refactor this into standalone component.js class
+        function makeComponent(component){
+
+            var ret = {
+                path:   component.fauxInfo.urlStylePath,
+                order:  component.order,
+                title:  component.title,
+                id:     component.id,
+                type:   'component',
+                isComponent: true,
+                files: {
+                    markup: component
+                }
+            };
+
+            if (component.isDirectory()) {
+                // get the main component
+                var main = _.find(component.children, function(child){
+                    return minimatch(child.fauxInfo.base, getFileMatcher(child.fauxInfo.name, self.config.matches.markup));
+                });
+                ret.title = main.title;
+                ret.files.markup = main;
+
+                var metaDataFile = _.find(component.children, function(child){
+                    return minimatch(child.fauxInfo.base, getFileMatcher(child.fauxInfo.name, self.config.matches.metaData));
+                });
+                if (metaDataFile) {
+                    
+                }
+
+            }
+            return ret;
+        }
+
+        function getComponents(dir){
+            var ret = [];
+            var directories = _.filter(dir.children, 'type', 'directory');
+            var files = _.filter(dir.children, 'type', 'file');
+            var markupFiles = _.filter(files, function(file){
+                return file.matches('fauxInfo.base', self.config.matches.markup);
+            });
+
+            for (var i = markupFiles.length - 1; i >= 0; i--) {
+                var file = markupFiles[i];
+                if (!dir.isRoot) {
+                    if (file.fauxInfo.name === dir.fauxInfo.name) {
+                        // matches parent directory name so this whole directory is a component
+                        return makeComponent(dir);
                     }
-                } else if (item.isDirectory() && item.hasChildren()) {
-                    var childComponent = item.findFile('fauxInfo.base', getFileMatcher(item.fauxInfo.name, self.config.matches.markup));
-                    if (childComponent) {
-                        // it's a component
-                        components.push(makeComponent(item, _.filter(item.children, 'type', 'file')));
+                }
+                ret.push(makeComponent(file));
+            };
+
+            for (var i = directories.length - 1; i >= 0; i--) {
+                var directory = directories[i];
+                if ( directory.hasChildren()) {
+                    var children = getComponents(directory);
+                    if (!_.isArray(children)) {
+                        ret.push(children);
                     } else {
-                        components.push({
-                            title: item.title,
+                        ret.push({
+                            name: directory.fauxInfo.name,
+                            title: directory.title,
+                            order: directory.order,
+                            id: directory.id,
+                            isDirectory: true,
                             type: 'directory',
-                            children: getComponents(item)
+                            children: children
                         });
                     }
                 }
-            });
-            return components;
+            };
+
+            return ret;
         };
         this.components = getComponents(this.directory);
     }
@@ -54,13 +127,8 @@ function getFileMatcher(name, match){
     return match.replace('__name__', name);
 }
 
-function makeComponent(file, related){
-    return {
-        title: file.title,
-        type: 'component',
-        related: related.length
-    };
-}
+
+
 
     // function filter(dir){
     //     var filtered = [];

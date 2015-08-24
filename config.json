@@ -9,7 +9,7 @@
         "components": {
             "dir": "src/components",
             "matches": {
-                "markup": "__name__.+(hbs|html)",
+                "markup": "*.+(hbs|html)",
                 "metaData": "(meta|metadata).+(json|js|yml|yaml)",
                 "previewData": "preview.+(json|js|yml|yaml)",
                 "previewImage": "__name__.+(png|gif|jpeg|jpg|webp)",

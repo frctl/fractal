@@ -20,10 +20,11 @@ Views.prototype.init = function(){
 
 Views.prototype.getViews = function(){
     if (!this.views) {
-        var self = this;
-        this.views = Directory.filterFiles(this.directory, function(file){
-            return minimatch(file.fileInfo.base, self.config.matches);
-        });
+        this.views = [];
+        // var self = this;
+        // this.views = Directory.filterFiles(this.directory, function(file){
+        //     return minimatch(file.fileInfo.base, self.config.matches);
+        // });
     }
     return this.views;
 };

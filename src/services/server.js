@@ -47,7 +47,7 @@ module.exports = function(){
             tplData.navigation = generatePrimaryNav(sources);
 
             // TEMP LOGGING ----
-            // var output = JSON.stringify(sources.docs, null, 4)
+            // var output = JSON.stringify(sources.components.getComponents(), null, 4)
             // fs.writeFileAsync(path.join(__dirname, "/output.json"), output, function(err) {
             //   console.log('file saved');
             // }); 
@@ -62,15 +62,26 @@ module.exports = function(){
         var viewSource = tplData.sources.views;
         res.render('ui', merge(tplData, {
             sectionName: 'UI Components',
+            baseUrl: '/ui',
             components: compSource ? compSource.getComponents() : null,
             views: viewSource ? viewSource.getViews() : null,
         }));
     });
 
-    app.get('/ui/*', function (req, res) {    
-        res.render('ui/item', merge(tplData, {
-            sectionName: 'UI Components'
-        }));
+    app.get('/ui/components/*', function (req, res) {
+        var compSource = tplData.sources.components;
+        var viewSource = tplData.sources.views;
+        var component = compSource.findComponent('path', req.originalUrl.replace(new RegExp('^\/ui\/components\/'), ''));
+        if (component) {
+            return res.render('ui/component', merge(tplData, {
+                sectionName: 'UI Components',
+                baseUrl: '/ui',
+                component: component,
+                components: compSource ? compSource.getComponents() : null,
+                views: viewSource ? viewSource.getViews() : null,
+            }));
+        }
+        res.status(404).render('404', tplData);
     });
 
     app.get('/assets', function (req, res) {
