@@ -25,7 +25,7 @@ module.exports = function(){
     });
 
     swag.registerHelpers(hbs.handlebars);
-    
+
     var tplData = {
         config: config.all(),
     };
@@ -74,6 +74,7 @@ module.exports = function(){
         if (component) {
             var viewType = req.query.view || 'component';
             var variant = req.query.variant || 'default';
+            var variants = component.getVariants() || [];
             var data = merge(tplData, {
                 component: {
                     title:      component.title,
@@ -83,7 +84,7 @@ module.exports = function(){
                     template:   component.getTemplateMarkup(),
                     data:       JSON.stringify(component.getPreviewData(variant), null, 4),
                     variant:    variant,
-                    variants:   component.getVariants()
+                    variants:   variants.length > 1 ? variants : null 
                 }
             });
             
