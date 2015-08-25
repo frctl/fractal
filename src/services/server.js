@@ -58,7 +58,7 @@ module.exports = function(){
             next();
         });
     });
-
+    
     app.get('/ui', function (req, res) {
         var compSource = tplData.sources.components;
         res.render('ui', merge(tplData, {
@@ -67,7 +67,7 @@ module.exports = function(){
             components: compSource ? compSource.getComponents() : null
         }));
     });
-
+    
     app.get('/ui/*', function (req, res) {
         var compSource = tplData.sources.components;
         var component = compSource.findComponent('path', req.path.replace(new RegExp('^\/ui\/'), ''));

@@ -24,12 +24,12 @@ function Component(file){
     this.from           = file;
     this.type           = 'component';
     this.files          = {};
-    this.previewData    = {};
+    this.previewData    = file.previewData || {};
+    this.layout         = null;
 };
 
 Component.fromFile = function(file, config){
     var comp = new Component(file);
-    comp.previewData = file.previewData;
     comp.files.markup = file;
     return comp;
 };
@@ -39,22 +39,29 @@ Component.fromDirectory = function(dir){
     var main            = findRelated(dir, dir.children, 'markup');
     var meta            = data.fetchFromFile(findRelated(main, dir.children, 'metaData'));
     var previewData     = data.fetchFromFile(findRelated(main, dir.children, 'previewData'));
-
+    
     comp.meta           = merge(meta || {}, main.meta);
     comp.previewData    = merge(previewData || {}, main.previewData);
-
+    
     comp.title          = titleize(comp.meta.title || main.title);
     comp.files.markup   = main;
     
     return comp;
 };
 
-Component.prototype.render = function(dataKey){
+Component.prototype.render = function(dataKey, withoutLayout){
     var compiled = Handlebars.compile(this.getTemplateMarkup());
-    return beautifyHTML(compiled(this.getPreviewData(dataKey)), {
+    var output = beautifyHTML(compiled(this.getPreviewData(dataKey)), {
         "preserve_newlines": false,
         "indent_size": 4
     });
+    if (!withoutLayout && this.layout) {
+        var layout = Handlebars.compile(this.layout.content.toString());
+        output = layout({
+            "content": output
+        });
+    }
+    return output;
 };
 
 Component.prototype.getPreviewData = function(key){
