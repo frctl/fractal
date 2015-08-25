@@ -114,7 +114,7 @@ Directory.prototype.eachDirectory = function(callback, maxDepth){
 
 Directory.prototype.find = function(type, key, value, maxDepth) {
     var searchId = this.path + key + value;
-    var startingDepth = this.depth;
+    var startingDepth = this.depth || 0;
     if (_.isEmpty(this.finderCache[type][searchId])) {
         maxDepth = _.isUndefined(maxDepth) ? 10000000 : maxDepth;
         var found = null;
@@ -126,6 +126,7 @@ Directory.prototype.find = function(type, key, value, maxDepth) {
                     found = child;
                     break;
                 } else if (child.isDirectory() && (child.depth - startingDepth) < maxDepth) {
+
                     checkChildren(child.children);
                 }
             };
@@ -145,7 +146,6 @@ Directory.prototype.findDirectory = function(key, value, maxDepth){
 };
 
 Directory.prototype.toJSON = function(){
-    // TODO: do any conversion here?
     var self = _.clone(this);
     delete self['finderCache'];
     return self;

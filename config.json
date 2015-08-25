@@ -3,24 +3,19 @@
     "port": 3000,
     "source": {
         "assets": {
-            "dir": "assets",
-            "matches": "*"
+            
         },
         "components": {
             "dir": "src/components",
             "matches": {
-                "markup": "*.+(hbs|html)",
-                "metaData": "(meta|metadata).+(json|js|yml|yaml)",
+                "markup": "*.+(hbs|handlebars|html)",
+                "metaData": "+(meta|metadata).+(json|js|yml|yaml)",
                 "previewData": "preview.+(json|js|yml|yaml)",
                 "previewImage": "__name__.+(png|gif|jpeg|jpg|webp)",
-                "readme": "(README|readme).+(md|markdown)",
+                "readme": "+(README|readme).+(md|markdown)",
                 "behaviour": "__name__.+(js|coffee)",
                 "styles": "__name__.+(css|scss|less)"
             }
-        },
-        "views": {
-            "dir": "src/views",
-            "matches": "*.+(html|hbs)"
         },
         "docs": {
             "dir": "docs",

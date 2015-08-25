@@ -90,4 +90,8 @@ Components.prototype.getComponents = function(){
     return this.components;
 };
 
-
+Components.prototype.toJSON = function(){
+    var self = _.clone(this);
+    delete self['finderCache'];
+    return self;
+};

@@ -35,11 +35,11 @@ module.exports = function(){
     app.use('/_theme', express.static(config.get('theme.assets')));
 
     app.use(function (req, res, next) {
-        if ( req.originalUrl === '/favicon.ico') {
+        if ( req.path === '/favicon.ico') {
             // TODO: send favicon rather than 404 :-)
             return res.status(404).render('404', tplData);
         }
-        req.segments = _.compact(req.originalUrl.split('/'));
+        req.segments = _.compact(req.path.split('/'));
         tplData.req = req;
         fractal.getSources().then(function(sources){
             
@@ -59,27 +59,39 @@ module.exports = function(){
 
     app.get('/ui', function (req, res) {
         var compSource = tplData.sources.components;
-        var viewSource = tplData.sources.views;
         res.render('ui', merge(tplData, {
             sectionName: 'UI Components',
             baseUrl: '/ui',
-            components: compSource ? compSource.getComponents() : null,
-            views: viewSource ? viewSource.getViews() : null,
+            components: compSource ? compSource.getComponents() : null
         }));
     });
 
-    app.get('/ui/components/*', function (req, res) {
+    app.get('/ui/*', function (req, res) {
         var compSource = tplData.sources.components;
-        var viewSource = tplData.sources.views;
-        var component = compSource.findComponent('path', req.originalUrl.replace(new RegExp('^\/ui\/components\/'), ''));
+        var component = compSource.findComponent('path', req.path.replace(new RegExp('^\/ui\/'), ''));
         if (component) {
-            return res.render('ui/component', merge(tplData, {
-                sectionName: 'UI Components',
-                baseUrl: '/ui',
-                component: component,
-                components: compSource ? compSource.getComponents() : null,
-                views: viewSource ? viewSource.getViews() : null,
-            }));
+
+            var viewType = 'component';
+            ['preview'].forEach(function(type){
+                if (!_.isUndefined(req.query[type])) {
+                    viewType = type;
+                }
+            });
+
+            switch(viewType) {
+                case 'preview':
+                    return res.render('ui/preview', merge(tplData, {
+                        component: component,
+                    }));
+                default:
+                    return res.render('ui/component', merge(tplData, {
+                        sectionName: 'UI Components',
+                        baseUrl: '/ui',
+                        component: component,
+                        components: compSource ? compSource.getComponents() : null
+                    }));
+                break;
+            }
         }
         res.status(404).render('404', tplData);
     });
@@ -100,11 +112,10 @@ module.exports = function(){
     app.get('(/*)?', function (req, res) {
         var docs = tplData.sources.docs;
         if (docs) {
-            var urlPath = _.trim(req.originalUrl, '/');
-            var page = docs.findFile('fauxInfo.urlStylePath', urlPath);
+            var page = docs.findFile('fauxInfo.urlStylePath', req.params[1]);
             if (page) {
                 var dir = req.segments.length ? docs.findDirectory('fauxInfo.urlStylePath', req.segments[0]) : docs.dir;
-                return res.render(req.originalUrl === '/' ? 'index' : 'pages/page', merge(tplData, {
+                return res.render(req.path === '/' ? 'index' : 'pages/page', merge(tplData, {
                     page: page,
                     sectionName: req.segments[0],
                     sectionPages: _.get(dir, 'children', [])
