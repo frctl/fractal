@@ -1,12 +1,16 @@
 var _           = require('lodash');
 var minimatch   = require('minimatch');
 var Handlebars  = require('handlebars');
-var yaml        = require('js-yaml');
 var merge       = require('deepmerge');
 var swag        = require('swag');
+var beautifyJS  = require('js-beautify').js;
+var beautifyCSS = require('js-beautify').css;
+var beautifyHTML = require('js-beautify').html;
 
 var Directory   = require('./fs/directory');
 var File        = require('./fs/file');
+var data        = require('./data');
+var config      = require('./config');
 
 module.exports = Component;
 
@@ -21,27 +25,6 @@ function Component(file){
     this.type           = 'component';
     this.files          = {};
     this.previewData    = {};
-
-    Object.defineProperty(this, 'template', {
-        get: this.getTemplateMarkup
-    });
-
-    Object.defineProperty(this, 'rendered', {
-        get: this.render
-    });
-
-    Object.defineProperty(this, 'jsonData', {
-        get: function() {
-            return JSON.stringify(self.getPreviewData(), null, 2);
-        }
-    });
-
-    Object.defineProperty(this, 'jsonMeta', {
-        get: function() {
-            return JSON.stringify(self.meta, null, 2);
-        }
-    });
-
 };
 
 Component.fromFile = function(file, config){
@@ -51,54 +34,45 @@ Component.fromFile = function(file, config){
     return comp;
 };
 
-Component.fromDirectory = function(dir, config){
-    var comp = new Component(dir);
-    var main = _.find(dir.children, function(child){
-        return minimatch(child.fauxInfo.base, getFileMatcher(child.fauxInfo.name, config.matches.markup));
-    });
-    comp.meta           = main.meta;
-    comp.previewData    = main.previewData;
+Component.fromDirectory = function(dir){
+    var comp            = new Component(dir);
+    var main            = findRelated(dir, dir.children, 'markup');
+    var meta            = data.fetchFromFile(findRelated(main, dir.children, 'metaData'));
+    var previewData     = data.fetchFromFile(findRelated(main, dir.children, 'previewData'));
+
+    comp.meta           = merge(meta || {}, main.meta);
+    comp.previewData    = merge(previewData || {}, main.previewData);
+
+    comp.title          = titleize(comp.meta.title || main.title);
     comp.files.markup   = main;
-
-    var metaDataFile = _.find(dir.children, function(child){
-        return minimatch(child.fauxInfo.base, config.matches.metaData);
-    });
-    if (metaDataFile) {
-        var meta = {};
-        switch(metaDataFile.fileInfo.ext) {
-            case ".js":
-                meta = require(metaDataFile.fileInfo.absolute);
-                break;
-            case ".json":
-                meta = JSON.parse(metaDataFile.content);
-                break;
-            case ".yml":
-            case ".yaml":
-                meta = yaml.safeLoad(metaDataFile.content);
-                break;
-        }
-        comp.meta = merge(meta, comp.meta);
-    }
-
-    comp.title = titleize(comp.meta.title || main.title);
-
-    // var previewDataFile = _.find(dir.children, function(child){
-    //     return minimatch(child.fauxInfo.base, getFileMatcher(child.fauxInfo.name, config.matches.previewData));
-    // });
-    // if (previewDataFile) {
-    //     // TODO
-    // }
     
     return comp;
 };
 
-Component.prototype.render = function(){
+Component.prototype.render = function(dataKey){
     var compiled = Handlebars.compile(this.getTemplateMarkup());
-    return compiled(this.getPreviewData());
+    return beautifyHTML(compiled(this.getPreviewData(dataKey)), {
+        "preserve_newlines": false,
+        "indent_size": 4
+    });
 };
 
-Component.prototype.getPreviewData = function(){
-    return this.previewData;
+Component.prototype.getPreviewData = function(key){
+    key = key || 'default';
+    var data = _.get(this.previewData, key, null);
+    if (!data && key === 'default') {
+        return this.previewData;
+    } else if (!data) {
+        return this.getPreviewData();
+    }
+    return data;
+};
+
+Component.prototype.getVariants = function(){
+    if (!_.isUndefined(this.previewData.default)){
+        return _.keys(this.previewData);
+    }
+    return null;
 };
 
 Component.prototype.getTemplateMarkup = function(){
@@ -115,4 +89,11 @@ function getFileMatcher(name, match){
 
 function titleize(str){
     return swag.helpers['titleize'](str);
+}
+
+function findRelated(file, files, matches) {
+    var name = _.get(file, 'name');
+    return _.find(files, function(f){
+        return minimatch(f.fauxInfo.base, getFileMatcher(name, config.get('source.components.matches.' + matches)));
+    })
 }

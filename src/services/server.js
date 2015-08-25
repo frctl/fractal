@@ -1,13 +1,15 @@
-var promise = require("bluebird");
-var fs      = promise.promisifyAll(require("fs"));
-var merge   = require("deepmerge");
-var _       = require("lodash");
-var express = require('express');
-var exphbs  = require('express-handlebars');
-var path    = require('path');
-var swag    = require('swag');
-var fractal = require('../../fractal');
+var promise         = require("bluebird");
+var fs              = promise.promisifyAll(require("fs"));
+var merge           = require("deepmerge");
+var _               = require("lodash");
+var express         = require('express');
+var exphbs          = require('express-handlebars');
+var path            = require('path');
+var swag            = require('swag');
+var Handlebars      = require('handlebars');
+var beautifyHTML    = require('js-beautify').html;
 
+var fractal = require('../../fractal');
 var config  = fractal.getConfig();
 
 module.exports = function(){
@@ -23,7 +25,7 @@ module.exports = function(){
     });
 
     swag.registerHelpers(hbs.handlebars);
-
+    
     var tplData = {
         config: config.all(),
     };
@@ -70,24 +72,28 @@ module.exports = function(){
         var compSource = tplData.sources.components;
         var component = compSource.findComponent('path', req.path.replace(new RegExp('^\/ui\/'), ''));
         if (component) {
-
-            var viewType = 'component';
-            ['preview'].forEach(function(type){
-                if (!_.isUndefined(req.query[type])) {
-                    viewType = type;
+            var viewType = req.query.view || 'component';
+            var variant = req.query.variant || 'default';
+            var data = merge(tplData, {
+                component: {
+                    title:      component.title,
+                    path:       component.path,
+                    meta:       JSON.stringify(component.meta, null, 4),
+                    rendered:   component.render(variant),
+                    template:   component.getTemplateMarkup(),
+                    data:       JSON.stringify(component.getPreviewData(variant), null, 4),
+                    variant:    variant,
+                    variants:   component.getVariants()
                 }
             });
-
+            
             switch(viewType) {
                 case 'preview':
-                    return res.render('ui/preview', merge(tplData, {
-                        component: component,
-                    }));
+                    return res.render('ui/preview', data);
                 default:
-                    return res.render('ui/component', merge(tplData, {
+                    return res.render('ui/component', merge(data, {
                         sectionName: 'UI Components',
                         baseUrl: '/ui',
-                        component: component,
                         components: compSource ? compSource.getComponents() : null
                     }));
                 break;

@@ -24,6 +24,7 @@
     "fractal-theme-default": "frctl/fractal-theme-default",
     "gray-matter": "^2.0.0",
     "handlebars": "^3.0.3",
+    "js-beautify": "^1.5.10",
     "js-yaml": "^3.4.0",
     "lodash": "^3.10.0",
     "marked": "^0.3.5",

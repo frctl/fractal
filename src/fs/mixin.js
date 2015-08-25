@@ -16,9 +16,10 @@ module.exports = function(){
 
     this.init = function(){
         var self = this;
-        if (! this.isRoot) {
-
-            var fileInfo = p.parse(this.relPath);
+        var fileInfo = p.parse(this.relPath);
+        this.name = fileInfo.name;
+        
+        if (! this.isRoot) {    
             var fauxAbs = makeFauxPath(this.path);
             var fauxInfo = p.parse(fauxAbs);
             var nameParts   = fileInfo.name.match(/^(\d+)\-(.*)/,'');
@@ -26,7 +27,7 @@ module.exports = function(){
             this.id         = generateUUID(this.path);
             this.ext        = this.isFile() ? fileInfo.ext.toLowerCase() : null;
             this.modified   = this.stat.mtime;
-
+            
             this.fileInfo = {
                 absolute:   this.path,
                 relative:   this.relPath,
