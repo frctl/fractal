@@ -49,6 +49,7 @@ module.exports = function(){
             this.fauxInfo.urlStylePath = this.fauxInfo.name == 'index' ? this.fauxInfo.relDir : p.join(this.fauxInfo.relDir, this.fauxInfo.name);
 
             this.order = parseInt(nameParts ? nameParts[1] : (this.fauxInfo.name == 'index' ? '1' : null), 10);
+            this.order = isNaN(this.order) ? null : this.order;
             this.depth = (_.compact(this.relPath.split('/'))).length - 1;
 
             if (this.isFile()){
@@ -56,6 +57,8 @@ module.exports = function(){
             }
 
             this.id = _.get(this.meta, 'id', generateUUID(this.path));
+            
+            this.meta = this.meta || {};
 
             this.title = (function(){
                 if (self.isDirectory()) {
@@ -63,6 +66,16 @@ module.exports = function(){
                 }
                 return titleize(self.meta.title || (self.fauxInfo.name === 'index' ? 'Overview' : self.fauxInfo.name));
             })();
+
+            if (typeof this.meta.hidden === 'undefined') {
+                self.meta.hidden = false;
+                _.compact(self.fauxInfo.relative.split('/')).forEach(function(part){
+                    if (part.charAt(0) === '_') {
+                        self.meta.hidden = true;
+                    }
+                });
+            }
+            this.hidden = this.meta.hidden;
         }
 
         return self;

@@ -6,8 +6,6 @@ var Directory   = require('../fs/directory');
 // Mixin for Source objects
 module.exports = function(){
     
-    
-
     this.getFiles = function(){
         return this.directory.children;
     };

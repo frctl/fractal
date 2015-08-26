@@ -1,3 +1,4 @@
+var promise     = require("bluebird");
 var _           = require('lodash');
 var minimatch   = require('minimatch');
 var Handlebars  = require('handlebars');
@@ -11,6 +12,7 @@ var Directory   = require('./fs/directory');
 var File        = require('./fs/file');
 var data        = require('./data');
 var config      = require('./config');
+var fractal     = require('../fractal');
 
 module.exports = Component;
 
@@ -21,21 +23,20 @@ function Component(file){
     this.title          = file.title;
     this.id             = file.id;
     this.meta           = file.meta;
-    this.from           = file;
     this.type           = 'component';
     this.files          = {};
     this.previewData    = file.previewData || {};
     this.layout         = null;
 };
 
-Component.fromFile = function(file, componentDirectory){
+Component.fromFile = function(file){
     var comp = new Component(file);
     comp.files.markup = file;
-    comp.layout = getLayout(comp, componentDirectory);
+    comp.hidden = file.hidden;
     return comp;
 };
 
-Component.fromDirectory = function(dir, componentDirectory){
+Component.fromDirectory = function(dir){
     var comp            = new Component(dir);
     var main            = findRelated(dir, dir.children, 'markup');
     var meta            = data.fetchFromFile(findRelated(main, dir.children, 'metaData'));
@@ -46,26 +47,31 @@ Component.fromDirectory = function(dir, componentDirectory){
     
     comp.id             = comp.meta.id || main.id;
     comp.title          = titleize(comp.meta.title || main.title);
+    comp.hidden         = main.hidden;
     comp.files.markup   = main;
-    
-    comp.layout = getLayout(comp, componentDirectory);
+    comp.files.styles   = findAllRelated(main, dir.children, 'styles');
 
     return comp;
 };
 
 Component.prototype.render = function(dataKey, withoutLayout){
-    var compiled = Handlebars.compile(this.getTemplateMarkup());
-    var output = beautifyHTML(compiled(this.getPreviewData(dataKey)), {
-        "preserve_newlines": false,
-        "indent_size": 4
-    });
-    if (!withoutLayout && this.layout) {
-        var layout = Handlebars.compile(this.getLayoutMarkup());
-        output = layout({
-            "content": output
+    var self            = this;
+    var templateMarkup  = this.getTemplateMarkup();
+    var layoutMarkup    = withoutLayout ? null : this.getLayoutMarkup();
+    return promise.join(templateMarkup, layoutMarkup, function(tpl, layout){
+        var compiled = Handlebars.compile(tpl);
+        var output = beautifyHTML(compiled(self.getPreviewData(dataKey)), {
+            "preserve_newlines": false,
+            "indent_size": 4
         });
-    }
-    return output;
+        if (layout) {
+            var layout = Handlebars.compile(layout);
+            output = layout({
+                "content": output
+            });
+        }
+        return output;
+    });
 };
 
 Component.prototype.getMetaData = function(){
@@ -73,6 +79,20 @@ Component.prototype.getMetaData = function(){
         id: this.id,
         title: this.title
     });
+};
+
+Component.prototype.getStyles = function(){
+    var styleFiles = _.get(this, 'files.styles');
+    if (styleFiles) {
+        if (styleFiles.length === 1) {
+            return styleFiles[0].content.toString();
+        } else {
+            return styleFiles.map(function(file){
+                return "/* " + file.fauxInfo.base + " *\/\n\n" + file.content.toString() + "\n\n";
+            }).join("\n")
+        }
+    }
+    return null;
 };
 
 Component.prototype.getPreviewData = function(key){
@@ -94,21 +114,38 @@ Component.prototype.getVariants = function(){
 };
 
 Component.prototype.getTemplateMarkup = function(){
-    return this.files.markup.content.toString();
+    return promise.resolve(this.files.markup.content.toString());
 };
 
 Component.prototype.getLayoutMarkup = function(){
-    if (!this.layout) {
-        return '{{{content}}}';
-    }
-    if (_.isString(this.layout)) {
-        return this.layout;
-    }
-    return this.layout.content.toString();
+    return this.getLayout().then(function(layout){
+        if (!layout) {
+            return '{{{content}}}';
+        }
+        if (_.isString(layout)) {
+            return layout;
+        }
+        return layout.files.markup.content.toString();
+    });
 };
 
 Component.prototype.isComponent = function(){
     return true;
+};
+
+Component.prototype.getLayout = function(){
+    var self = this;
+    if (!this.layout) {
+        this.layout = fractal.getSources().then(function(sources){
+            var layout = null;
+            var checkLayout = self.meta.layout || config.get('source.components.layout');
+            if (checkLayout && checkLayout !== self.id && checkLayout !== self.path ) {
+                layout = sources.components.tryFindComponent(checkLayout);
+            }
+            return layout;
+        });
+    }
+    return this.layout;
 };
 
 function getFileMatcher(name, match){
@@ -119,19 +156,21 @@ function titleize(str){
     return swag.helpers['titleize'](str);
 }
 
-function findRelated(file, files, matches) {
+function findRelated(file, files, matches, multiple) {
     var name = _.get(file, 'name');
-    return _.find(files, function(f){
+    var results = _.filter(files, function(f){
         return minimatch(f.fauxInfo.base, getFileMatcher(name, config.get('source.components.matches.' + matches)));
-    })
+    });
+    if (results.length) {
+        if (multiple) {
+            return results;
+        } else {
+            return _.first(results);
+        }
+    }
+    return null;
 }
 
-function getLayout(component, componentDirectory){
-    var layout = null;
-    if (component.meta.layout) {
-        layout = componentDirectory.tryFindFile(component.meta.layout);
-    } else if (config.get('source.components.layout')) {
-        layout = componentDirectory.tryFindFile(config.get('source.components.layout'));
-    }
-    return layout;
+function findAllRelated(file, files, matches) {
+    return findRelated(file, files, matches, true);
 }

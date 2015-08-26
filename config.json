@@ -3,7 +3,7 @@
     "port": 3000,
     "source": {
         "assets": {
-            
+            "dir": "src/assets"
         },
         "components": {
             "dir": "src/components",
@@ -12,10 +12,10 @@
                 "markup": "*.+(hbs|handlebars|html)",
                 "metaData": "+(meta|metadata).+(json|js|yml|yaml)",
                 "previewData": "preview.+(json|js|yml|yaml)",
-                "previewImage": "__name__.+(png|gif|jpeg|jpg|webp)",
+                "previewImage": "preview.+(png|gif|jpeg|jpg|webp)",
                 "readme": "+(README|readme).+(md|markdown)",
-                "behaviour": "__name__.+(js|coffee)",
-                "styles": "__name__.+(css|scss|less)"
+                "behaviour": "*.+(js|coffee)",
+                "styles": "*.+(css|scss|less)"
             }
         },
         "docs": {

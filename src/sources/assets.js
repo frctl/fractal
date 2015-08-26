@@ -4,15 +4,20 @@ var mixin       = require('./mixin');
 
 module.exports = Assets;
 
-function Assets(config, dir){
+function Assets(dir, config){
     this.config = config;
     this.directory = dir;
 };
 
-mixin.call(Assets.prototype);
+Assets.fromDirectory = function(directory, config){
+    return directory.then(function(dir){
+        return new Assets(dir, config);
+    });
+};
+
+// mixin.call(Assets.prototype);
 
 Assets.prototype.init = function(){
-
     var self = this;
-
+    return this;
 };

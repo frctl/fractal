@@ -48,7 +48,7 @@ module.exports = {
             return sources[key];
         }));
     },
-
+    
     getConfig: function(){
         return config;
     }

@@ -6,12 +6,9 @@ function SourceFactory(){};
 
 SourceFactory.getSource = function(key, config){
     if (config) {
-        var Source = require('./' + key.replace(/\s$/,''));
-        return Directory.fromPath(config.dir, null, true).then(function(dir){
-            var src = new Source(config, dir);
-            src.init();
-            return src;
-        });
+        var Source = require('./' + key.replace(/\s$/,''));   
+        var dir = Directory.fromPath(config.dir, null, true);
+        return Source.fromDirectory(dir, config);
     }
     return null;
 };

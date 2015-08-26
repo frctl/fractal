@@ -1,5 +1,4 @@
 var promise         = require("bluebird");
-var fs              = promise.promisifyAll(require("fs"));
 var merge           = require("deepmerge");
 var _               = require("lodash");
 var express         = require('express');
@@ -62,61 +61,67 @@ module.exports = function(){
 
     // UI LIBRARY -----------------------------------------------------------------------
 
-    app.get('/ui/?*', function (req, res, next) {
+    app.get('/components/?*', function (req, res, next) {
         tplData = merge(tplData, {
-            sectionTitle: _.find(tplData.navigation, 'url', '/ui').title,
-            baseUrl: '/ui'
+            sectionTitle: _.find(tplData.navigation, 'url', '/components').title,
+            baseUrl: '/components'
         });
         next();
     });
     
-    app.get('/ui', function (req, res) {
+    app.get('/components', function (req, res) {
         var compSource = tplData.sources.components;
         res.render('ui', merge(tplData, {
             components: compSource ? compSource.getComponents() : null
         }));
     });
     
-    app.get('/ui/*', function (req, res) {
+    app.get('/components/*', function (req, res) {
         var compSource = tplData.sources.components;
-        var component = compSource.findComponent('path', req.path.replace(new RegExp('^\/ui\/'), ''));
+        var component = compSource.findComponent('path', req.path.replace(new RegExp('^\/components\/'), ''));
         if (component) {
-            var viewType    = req.query.view || 'component';
-            var variant     = req.query.variant || 'default';
-            var variants    = component.getVariants() || [];
-            var data = merge(tplData, {
-                links: {
-                    preview:    queryString.stringify(merge(req.query, {view:'preview'})),
-                    highlight:  queryString.stringify(merge(req.query, {view:'highlight'})),
-                    raw:        queryString.stringify(merge(req.query, {view:'raw'})),
-                },
-                component: {
-                    title:              component.title,
-                    id:                 component.id,
-                    path:               component.path,
-                    meta:               JSON.stringify(component.getMetaData(), null, 4),
-                    rendered:           component.render(variant, true),
-                    renderedWithLayout: component.render(variant),
-                    template:           component.getTemplateMarkup(),
-                    data:               JSON.stringify(component.getPreviewData(variant), null, 4),
-                    variant:            variant,
-                    variants:           variants.length > 1 ? variants : null
+            var viewType            = req.query.view || 'component';
+            var variant             = req.query.variant || 'default';
+            var variants            = component.getVariants() || [];
+            var rendered            = component.render(variant, true);
+            var renderedWithLayout  = component.render(variant);
+            var template            = component.getTemplateMarkup();
+            return promise.join(rendered, renderedWithLayout, template, function(rend, rendWL, tpl){
+                var data = merge(tplData, {
+                    links: {
+                        preview:    queryString.stringify(merge(req.query, {view:'preview'})),
+                        highlight:  queryString.stringify(merge(req.query, {view:'highlight'})),
+                        raw:        queryString.stringify(merge(req.query, {view:'raw'})),
+                    },
+                    component: {
+                        title:              component.title,
+                        id:                 component.id,
+                        path:               component.path,
+                        meta:               JSON.stringify(component.getMetaData(), null, 4),
+                        rendered:           rend,
+                        renderedWithLayout: rendWL,
+                        template:           tpl,
+                        data:               JSON.stringify(component.getPreviewData(variant), null, 4),
+                        variant:            variant,
+                        variants:           variants.length > 1 ? variants : null,
+                        styles:             component.getStyles()
+                    }
+                });
+                switch(viewType) {
+                    case 'preview':
+                        return res.render('ui/preview', data);
+                    case 'raw':
+                        // res.setHeader("Content-Type", "text/plain");
+                        return res.render('ui/raw', data);
+                    case 'highlight':
+                        return res.render('ui/highlight', data);
+                    default:
+                        return res.render('ui/component', merge(data, {
+                            components: compSource ? compSource.getComponents() : null
+                        }));
+                    break;
                 }
             });
-            switch(viewType) {
-                case 'preview':
-                    return res.render('ui/preview', data);
-                case 'raw':
-                    res.set ("Content-Type", "text/plain");
-                    return res.render('ui/raw', data);
-                case 'highlight':
-                    return res.render('ui/highlight', data);
-                default:
-                    return res.render('ui/component', merge(data, {
-                        components: compSource ? compSource.getComponents() : null
-                    }));
-                break;
-            }
         }
         res.status(404).render('404', tplData);
     });
@@ -125,13 +130,13 @@ module.exports = function(){
 
     app.get('/assets', function (req, res) {
         res.render('assets', merge(tplData, {
-            sectionName: 'Assets'
+            sectionTitle: _.find(tplData.navigation, 'url', '/assets').title
         }));
     });
 
     app.get('/assets/*', function (req, res) {
         res.render('assets/asset', merge(tplData, {
-            sectionName: 'Assets'
+            sectionTitle: _.find(tplData.navigation, 'url', '/assets').title
         }));
     });
 
@@ -140,12 +145,12 @@ module.exports = function(){
     app.get('(/*)?', function (req, res) {
         var docs = tplData.sources.docs;
         if (docs) {
-            var page = docs.findFile('fauxInfo.urlStylePath', req.params[1]);
+            var page = docs.findByUrlPath(req.params[1]);
             if (page) {
-                var dir = req.segments.length ? docs.findDirectory('fauxInfo.urlStylePath', req.segments[0]) : docs.dir;
+                var dir = req.segments.length ? docs.findDirectoryByUrlPath(req.segments[0]) : docs.dir;
                 return res.render(req.path === '/' ? 'index' : 'pages/page', merge(tplData, {
                     page: page,
-                    sectionName: req.segments[0],
+                    sectionTitle: req.segments[0],
                     sectionPages: _.get(dir, 'children', [])
                 }));
             }
@@ -164,8 +169,8 @@ function generatePrimaryNav(sources)
 {
     var nav = [
         {
-            title: "UI Library",
-            url: "/ui",
+            title: "Components",
+            url: "/components",
         },
         {
             title: "Assets",
@@ -173,13 +178,11 @@ function generatePrimaryNav(sources)
         }
     ];
     if (sources.docs) {
-        sources.docs.getFiles().forEach(function(child){
-            if (child.isDirectory() && child.hasChildren()) {
-                nav.push({
-                    title: child.title,
-                    url: path.join('/', child.fauxInfo.relative)
-                });
-            }
+        sources.docs.getTopLevelSets().forEach(function(child){
+            nav.push({
+                title: child.title,
+                url: path.join('/', child.fauxInfo.urlStylePath)
+            });
         });
     }
     return nav;
