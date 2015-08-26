@@ -28,13 +28,14 @@ function Component(file){
     this.layout         = null;
 };
 
-Component.fromFile = function(file, config){
+Component.fromFile = function(file, componentDirectory){
     var comp = new Component(file);
     comp.files.markup = file;
+    comp.layout = getLayout(comp, componentDirectory);
     return comp;
 };
 
-Component.fromDirectory = function(dir){
+Component.fromDirectory = function(dir, componentDirectory){
     var comp            = new Component(dir);
     var main            = findRelated(dir, dir.children, 'markup');
     var meta            = data.fetchFromFile(findRelated(main, dir.children, 'metaData'));
@@ -43,9 +44,12 @@ Component.fromDirectory = function(dir){
     comp.meta           = merge(meta || {}, main.meta);
     comp.previewData    = merge(previewData || {}, main.previewData);
     
+    comp.id             = comp.meta.id || main.id;
     comp.title          = titleize(comp.meta.title || main.title);
     comp.files.markup   = main;
     
+    comp.layout = getLayout(comp, componentDirectory);
+
     return comp;
 };
 
@@ -56,12 +60,19 @@ Component.prototype.render = function(dataKey, withoutLayout){
         "indent_size": 4
     });
     if (!withoutLayout && this.layout) {
-        var layout = Handlebars.compile(this.layout.content.toString());
+        var layout = Handlebars.compile(this.getLayoutMarkup());
         output = layout({
             "content": output
         });
     }
     return output;
+};
+
+Component.prototype.getMetaData = function(){
+    return merge(this.meta, {
+        id: this.id,
+        title: this.title
+    });
 };
 
 Component.prototype.getPreviewData = function(key){
@@ -86,6 +97,16 @@ Component.prototype.getTemplateMarkup = function(){
     return this.files.markup.content.toString();
 };
 
+Component.prototype.getLayoutMarkup = function(){
+    if (!this.layout) {
+        return '{{{content}}}';
+    }
+    if (_.isString(this.layout)) {
+        return this.layout;
+    }
+    return this.layout.content.toString();
+};
+
 Component.prototype.isComponent = function(){
     return true;
 };
@@ -103,4 +124,14 @@ function findRelated(file, files, matches) {
     return _.find(files, function(f){
         return minimatch(f.fauxInfo.base, getFileMatcher(name, config.get('source.components.matches.' + matches)));
     })
+}
+
+function getLayout(component, componentDirectory){
+    var layout = null;
+    if (component.meta.layout) {
+        layout = componentDirectory.tryFindFile(component.meta.layout);
+    } else if (config.get('source.components.layout')) {
+        layout = componentDirectory.tryFindFile(config.get('source.components.layout'));
+    }
+    return layout;
 }

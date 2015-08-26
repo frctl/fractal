@@ -112,6 +112,17 @@ Directory.prototype.eachDirectory = function(callback, maxDepth){
     return this.each(this, maxDepth, 'directory');
 };
 
+Directory.prototype.tryFindFile = function(value){
+    var guesses = ['id', 'fauxInfo.urlStylePath', 'fauxInfo.relPath', 'fileInfo.relPath'];
+    for (var i = 0; i < guesses.length; i++) {
+        var check = this.findFile(guesses[i], value);
+        if (check) {
+            return check;
+        }
+    };
+    return null;
+};
+
 Directory.prototype.find = function(type, key, value, maxDepth) {
     var searchId = this.path + key + value;
     var startingDepth = this.depth || 0;
@@ -122,11 +133,10 @@ Directory.prototype.find = function(type, key, value, maxDepth) {
             if (found) return found;
             for (var i = 0; i < children.length; i++) {
                 var child = children[i];
-                if (child.isType(type) && (_.get(child, key) === value || minimatch(_.get(child, key), value))) {
+                if (child.isType(type) && (_.get(child, key) === value || minimatch(_.get(child, key, ''), value))) {
                     found = child;
                     break;
                 } else if (child.isDirectory() && (child.depth - startingDepth) < maxDepth) {
-
                     checkChildren(child.children);
                 }
             };

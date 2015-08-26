@@ -7,6 +7,7 @@ var exphbs          = require('express-handlebars');
 var path            = require('path');
 var swag            = require('swag');
 var Handlebars      = require('handlebars');
+var queryString     = require('query-string')
 var beautifyHTML    = require('js-beautify').html;
 
 var fractal = require('../../fractal');
@@ -58,12 +59,20 @@ module.exports = function(){
             next();
         });
     });
+
+    // UI LIBRARY -----------------------------------------------------------------------
+
+    app.get('/ui/?*', function (req, res, next) {
+        tplData = merge(tplData, {
+            sectionTitle: _.find(tplData.navigation, 'url', '/ui').title,
+            baseUrl: '/ui'
+        });
+        next();
+    });
     
     app.get('/ui', function (req, res) {
         var compSource = tplData.sources.components;
         res.render('ui', merge(tplData, {
-            sectionName: 'UI Components',
-            baseUrl: '/ui',
             components: compSource ? compSource.getComponents() : null
         }));
     });
@@ -72,29 +81,38 @@ module.exports = function(){
         var compSource = tplData.sources.components;
         var component = compSource.findComponent('path', req.path.replace(new RegExp('^\/ui\/'), ''));
         if (component) {
-            var viewType = req.query.view || 'component';
-            var variant = req.query.variant || 'default';
-            var variants = component.getVariants() || [];
+            var viewType    = req.query.view || 'component';
+            var variant     = req.query.variant || 'default';
+            var variants    = component.getVariants() || [];
             var data = merge(tplData, {
+                links: {
+                    preview:    queryString.stringify(merge(req.query, {view:'preview'})),
+                    highlight:  queryString.stringify(merge(req.query, {view:'highlight'})),
+                    raw:        queryString.stringify(merge(req.query, {view:'raw'})),
+                },
                 component: {
-                    title:      component.title,
-                    path:       component.path,
-                    meta:       JSON.stringify(component.meta, null, 4),
-                    rendered:   component.render(variant),
-                    template:   component.getTemplateMarkup(),
-                    data:       JSON.stringify(component.getPreviewData(variant), null, 4),
-                    variant:    variant,
-                    variants:   variants.length > 1 ? variants : null 
+                    title:              component.title,
+                    id:                 component.id,
+                    path:               component.path,
+                    meta:               JSON.stringify(component.getMetaData(), null, 4),
+                    rendered:           component.render(variant, true),
+                    renderedWithLayout: component.render(variant),
+                    template:           component.getTemplateMarkup(),
+                    data:               JSON.stringify(component.getPreviewData(variant), null, 4),
+                    variant:            variant,
+                    variants:           variants.length > 1 ? variants : null
                 }
             });
-            
             switch(viewType) {
                 case 'preview':
                     return res.render('ui/preview', data);
+                case 'raw':
+                    res.set ("Content-Type", "text/plain");
+                    return res.render('ui/raw', data);
+                case 'highlight':
+                    return res.render('ui/highlight', data);
                 default:
                     return res.render('ui/component', merge(data, {
-                        sectionName: 'UI Components',
-                        baseUrl: '/ui',
                         components: compSource ? compSource.getComponents() : null
                     }));
                 break;
@@ -102,6 +120,8 @@ module.exports = function(){
         }
         res.status(404).render('404', tplData);
     });
+
+    // ASSETS -----------------------------------------------------------------------
 
     app.get('/assets', function (req, res) {
         res.render('assets', merge(tplData, {
@@ -115,7 +135,8 @@ module.exports = function(){
         }));
     });
 
-    // Page request
+    // PAGES -----------------------------------------------------------------------
+    
     app.get('(/*)?', function (req, res) {
         var docs = tplData.sources.docs;
         if (docs) {

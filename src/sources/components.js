@@ -57,10 +57,10 @@ Components.prototype.getComponents = function(){
                 if (!dir.isRoot) {
                     if (file.fauxInfo.name === dir.fauxInfo.name) {
                         // matches parent directory name so this whole directory is a component
-                        return Component.fromDirectory(dir);
+                        return Component.fromDirectory(dir, self.directory);
                     }
                 }
-                ret.push(Component.fromFile(file));
+                ret.push(Component.fromFile(file, self.directory));
             };
 
             for (var i = directories.length - 1; i >= 0; i--) {

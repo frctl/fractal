@@ -24,7 +24,6 @@ module.exports = function(){
             var fauxInfo = p.parse(fauxAbs);
             var nameParts   = fileInfo.name.match(/^(\d+)\-(.*)/,'');
             
-            this.id         = generateUUID(this.path);
             this.ext        = this.isFile() ? fileInfo.ext.toLowerCase() : null;
             this.modified   = this.stat.mtime;
             
@@ -55,6 +54,8 @@ module.exports = function(){
             if (this.isFile()){
                 this.applyPipes();    
             }
+
+            this.id = _.get(this.meta, 'id', generateUUID(this.path));
 
             this.title = (function(){
                 if (self.isDirectory()) {
