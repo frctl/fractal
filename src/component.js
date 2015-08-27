@@ -114,10 +114,13 @@ Component.prototype.getVariants = function(){
     base.name = 'base';
     base.title = 'Base';
     variants = _.map(variants, function(variant, key){
-        variant.name = key;
-        variant.title = variant.title || titleize(variant.name);
-        variant.id = base.id + '--' + key;
-        return merge(base, variant);
+        if (!variant.hidden) {
+            variant.name = key;
+            variant.title = variant.title || titleize(variant.name);
+            variant.id = base.id + '--' + key;
+            variant.status = variant.status || base.status;
+            return variant;
+        }
     });
     if (!_.find(variants, 'name', 'base')) {
         variants.unshift(base);    
