@@ -84,9 +84,11 @@ module.exports = function(){
             var variant             = req.query.variant || 'default';
             var variants            = component.getVariants() || [];
             var rendered            = component.render(variant, true);
+            var renderedHighlighted = component.render(variant, true, true);
             var renderedWithLayout  = component.render(variant);
             var template            = component.getTemplateMarkup();
-            return promise.join(rendered, renderedWithLayout, template, function(rend, rendWL, tpl){
+            var templateHighlighted = component.getTemplateMarkup(true);
+            return promise.join(rendered, renderedWithLayout, renderedHighlighted, template, templateHighlighted, function(rend, rendWL, rendHL, tpl, tplHL){
                 var data = merge(tplData, {
                     links: {
                         preview:    queryString.stringify(merge(req.query, {view:'preview'})),
@@ -97,21 +99,27 @@ module.exports = function(){
                         title:              component.title,
                         id:                 component.id,
                         path:               component.path,
-                        meta:               JSON.stringify(component.getMetaData(), null, 4),
-                        rendered:           rend,
-                        renderedWithLayout: rendWL,
+                        meta:               component.getMetaData(),
+                        markup:             rend,
+                        markupWithLayout:   rendWL,
                         template:           tpl,
-                        data:               JSON.stringify(component.getPreviewData(variant), null, 4),
                         variant:            variant,
                         variants:           variants.length > 1 ? variants : null,
-                        styles:             component.getStyles()
+                        notes:              component.getNotes(),
+                        highlighted: {
+                            styles: component.getStyles(true),
+                            data:   component.getPreviewData(variant, true),
+                            meta:   component.getMetaData(true),
+                            markup: rendHL,
+                            template: tplHL,
+                        }
                     }
                 });
                 switch(viewType) {
                     case 'preview':
                         return res.render('ui/preview', data);
                     case 'raw':
-                        // res.setHeader("Content-Type", "text/plain");
+                        res.setHeader("Content-Type", "text/plain");
                         return res.render('ui/raw', data);
                     case 'highlight':
                         return res.render('ui/highlight', data);

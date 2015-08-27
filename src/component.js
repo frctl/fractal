@@ -4,6 +4,8 @@ var minimatch   = require('minimatch');
 var Handlebars  = require('handlebars');
 var merge       = require('deepmerge');
 var swag        = require('swag');
+var cheerio     = require('cheerio');
+var Highlights  = require('highlights');
 var beautifyJS  = require('js-beautify').js;
 var beautifyCSS = require('js-beautify').css;
 var beautifyHTML = require('js-beautify').html;
@@ -14,6 +16,11 @@ var data        = require('./data');
 var config      = require('./config');
 var renderer    = require('./renderer');
 var fractal     = require('../fractal');
+
+var highlighter = new Highlights();
+highlighter.requireGrammarsSync({
+    modulePath: require.resolve('atom-handlebars/package.json')
+});
 
 module.exports = Component;
 
@@ -50,45 +57,67 @@ Component.fromDirectory = function(dir){
     comp.title          = titleize(comp.meta.title || main.title);
     comp.hidden         = main.hidden;
     comp.files.markup   = main;
+    comp.files.readme   = findRelated(main, dir.children, 'readme');
     comp.files.styles   = findAllRelated(main, dir.children, 'styles');
 
     return comp;
 };
 
-Component.prototype.render = function(variant, withoutLayout){
-    return renderer.render(this, variant, withoutLayout);
-};
-
-Component.prototype.getMetaData = function(){
-    return merge(this.meta, {
-        id: this.id,
-        title: this.title
+Component.prototype.render = function(variant, withoutLayout, highlight){
+    return renderer.render(this, variant, withoutLayout).then(function(html){
+        return highlight ? highlighter.highlightSync({
+            fileContents: html,
+            scopeName: 'text.html.basic'
+        }) : html;
     });
 };
 
-Component.prototype.getStyles = function(){
-    var styleFiles = _.get(this, 'files.styles');
-    if (styleFiles) {
-        if (styleFiles.length === 1) {
-            return styleFiles[0].content.toString();
-        } else {
-            return styleFiles.map(function(file){
-                return "/* " + file.fauxInfo.base + " *\/\n\n" + file.content.toString() + "\n\n";
-            }).join("\n")
-        }
+Component.prototype.getMetaData = function(highlight){
+    var meta = merge(this.meta, {
+        id: this.id,
+        title: this.title
+    });
+    return highlight ? highlightObj(meta) : meta;
+};
+
+Component.prototype.getNotes = function(){
+    var readmeFile = _.get(this, 'files.readme');
+    if (readmeFile) {
+        console.log(cheerio);
+        var $ = cheerio.load(readmeFile.content.toString());
+        $('h1').remove();
+        return $.html();
     }
     return null;
 };
 
-Component.prototype.getPreviewData = function(key){
+Component.prototype.getStyles = function(highlight){
+    var styleFiles = _.get(this, 'files.styles');
+    if (styleFiles) {
+        if (styleFiles.length === 1) {
+            var content = styleFiles[0].content.toString();
+        } else {
+            var content = styleFiles.map(function(file){
+                return "/* " + file.fauxInfo.base + " *\/\n\n" + file.content.toString() + "\n\n";
+            }).join("\n")
+        }
+        return highlight ? highlighter.highlightSync({
+            fileContents: content,
+            scopeName: 'source.css.scss'
+        }) : content;
+    }
+    return null;
+};
+
+Component.prototype.getPreviewData = function(key, highlight){
     key = key || 'default';
     var data = _.get(this.previewData, key, null);
     if (!data && key === 'default') {
-        return this.previewData;
+        data = this.previewData;
     } else if (!data) {
-        return this.getPreviewData();
+        data = this.getPreviewData();
     }
-    return data;
+    return highlight ? highlightObj(data) : data;
 };
 
 Component.prototype.getVariants = function(){
@@ -98,8 +127,13 @@ Component.prototype.getVariants = function(){
     return null;
 };
 
-Component.prototype.getTemplateMarkup = function(){
-    return promise.resolve(this.files.markup.content.toString());
+Component.prototype.getTemplateMarkup = function(highlight){
+    return promise.resolve(this.files.markup.content.toString()).then(function(html){
+        return highlight ? highlighter.highlightSync({
+            fileContents: html,
+            scopeName: 'text.html.handlebars'
+        }) : html;
+    });
 };
 
 Component.prototype.getLayoutMarkup = function(){
@@ -158,4 +192,8 @@ function findRelated(file, files, matches, multiple) {
 
 function findAllRelated(file, files, matches) {
     return findRelated(file, files, matches, true);
+}
+
+function highlightObj(obj) {
+    return highlighter.highlightSync({fileContents: JSON.stringify(obj, null, 4), scopeName: 'source.json'});
 }
