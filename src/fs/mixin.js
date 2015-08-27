@@ -15,14 +15,17 @@ var pipeCache   = {};
 module.exports = function(){
 
     this.init = function(){
+
         var self = this;
         var fileInfo = p.parse(this.relPath);
+
         this.name = fileInfo.name;
-        
+        this.data = {};
+
         if (! this.isRoot) {    
             var fauxAbs = makeFauxPath(this.path);
             var fauxInfo = p.parse(fauxAbs);
-            var nameParts   = fileInfo.name.match(/^(\d+)\-(.*)/,'');
+            var nameParts   = fileInfo.name.match(/^_?(\d+)\-(.*)/,'');
             
             this.ext        = this.isFile() ? fileInfo.ext.toLowerCase() : null;
             this.modified   = this.stat.mtime;
@@ -30,6 +33,7 @@ module.exports = function(){
             this.fileInfo = {
                 absolute:   this.path,
                 relative:   this.relPath,
+                pathSegments: _.compact(this.relPath.split('/')),
                 name:       fileInfo.name,
                 base:       fileInfo.base,
                 dir:        fileInfo.dir,
@@ -47,6 +51,7 @@ module.exports = function(){
                 ext:            this.ext,
             };
             this.fauxInfo.urlStylePath = this.fauxInfo.name == 'index' ? this.fauxInfo.relDir : p.join(this.fauxInfo.relDir, this.fauxInfo.name);
+            this.fauxInfo.pathSegments = _.compact(this.fauxInfo.relative.split('/')),
 
             this.order = parseInt(nameParts ? nameParts[1] : (this.fauxInfo.name == 'index' ? '1' : null), 10);
             this.order = isNaN(this.order) ? null : this.order;
@@ -56,29 +61,50 @@ module.exports = function(){
                 this.applyPipes();    
             }
 
-            this.id = _.get(this.meta, 'id', generateUUID(this.path));
-            
-            this.meta = this.meta || {};
+            this.uuid = generateUUID(this.path);
 
-            this.title = (function(){
-                if (self.isDirectory()) {
-                    return titleize(self.fauxInfo.name);
-                }
-                return titleize(self.meta.title || (self.fauxInfo.name === 'index' ? 'Overview' : self.fauxInfo.name));
-            })();
+            this.data = this.data || {};
 
-            if (typeof this.meta.hidden === 'undefined') {
-                self.meta.hidden = false;
-                _.compact(self.fauxInfo.relative.split('/')).forEach(function(part){
-                    if (part.charAt(0) === '_') {
-                        self.meta.hidden = true;
-                    }
-                });
-            }
-            this.hidden = this.meta.hidden;
+            Object.defineProperty(this, 'id', {
+                get: this.getId
+            });
+
+            Object.defineProperty(this, 'title', {
+                get: this.getTitle
+            });
+
+            Object.defineProperty(this, 'hidden', {
+                get: this.isHidden
+            });
         }
 
         return self;
+    };
+
+    this.isHidden = function(){
+        var self = this;
+        var hidden = false;
+        if (_.isUndefined(this.data.hidden)) {
+            this.fauxInfo.pathSegments.forEach(function(part){
+                if (part.charAt(0) === '_') {
+                    hidden = true;
+                }
+            });
+        } else {
+            hidden = this.data.hidden;
+        }
+        return hidden;
+    };
+
+    this.getId = function(){
+        return _.get(this.data, 'id', this.uuid);
+    };
+
+    this.getTitle = function(){
+        if (this.isDirectory()) {
+            return titleize(this.fauxInfo.name);
+        }
+        return titleize(this.data.title || (this.fauxInfo.name === 'index' ? 'Overview' : this.fauxInfo.name));
     };
     
     this.isDirectory = function(){

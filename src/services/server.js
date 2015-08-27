@@ -9,8 +9,9 @@ var Handlebars      = require('handlebars');
 var queryString     = require('query-string')
 var beautifyHTML    = require('js-beautify').html;
 
-var fractal = require('../../fractal');
-var config  = fractal.getConfig();
+var output          = require('../output')
+var fractal         = require('../../fractal');
+var config          = fractal.getConfig();
 
 module.exports = function(){
     
@@ -84,11 +85,9 @@ module.exports = function(){
             var variant             = req.query.variant || 'default';
             var variants            = component.getVariants() || [];
             var rendered            = component.render(variant, true);
-            var renderedHighlighted = component.render(variant, true, true);
             var renderedWithLayout  = component.render(variant);
             var template            = component.getTemplateMarkup();
-            var templateHighlighted = component.getTemplateMarkup(true);
-            return promise.join(rendered, renderedWithLayout, renderedHighlighted, template, templateHighlighted, function(rend, rendWL, rendHL, tpl, tplHL){
+            return promise.join(rendered, renderedWithLayout, template, function(rend, rendWL, tpl){
                 var data = merge(tplData, {
                     links: {
                         preview:    queryString.stringify(merge(req.query, {view:'preview'})),
@@ -99,7 +98,7 @@ module.exports = function(){
                         title:              component.title,
                         id:                 component.id,
                         path:               component.path,
-                        meta:               component.getMetaData(),
+                        data:               component.getData(),
                         markup:             rend,
                         markupWithLayout:   rendWL,
                         template:           tpl,
@@ -107,11 +106,11 @@ module.exports = function(){
                         variants:           variants.length > 1 ? variants : null,
                         notes:              component.getNotes(),
                         highlighted: {
-                            styles: component.getStyles(true),
-                            data:   component.getPreviewData(variant, true),
-                            meta:   component.getMetaData(true),
-                            markup: rendHL,
-                            template: tplHL,
+                            styles:     output.highlight(component.getStyles(), 'scss'),
+                            context:    output.highlight(component.getTemplateContext(variant), 'json'),
+                            data:       output.highlight(component.getData(), 'json'),
+                            markup:     output.highlight(rend, 'html'),
+                            template:   output.highlight(tpl, 'hbs'),
                         }
                     }
                 });

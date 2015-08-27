@@ -5,79 +5,70 @@ var Handlebars  = require('handlebars');
 var merge       = require('deepmerge');
 var swag        = require('swag');
 var cheerio     = require('cheerio');
-var Highlights  = require('highlights');
-var beautifyJS  = require('js-beautify').js;
-var beautifyCSS = require('js-beautify').css;
-var beautifyHTML = require('js-beautify').html;
 
 var Directory   = require('./fs/directory');
 var File        = require('./fs/file');
-var data        = require('./data');
+var DataFetcher = require('./data');
 var config      = require('./config');
-var renderer    = require('./renderer');
+var output      = require('./output');
 var fractal     = require('../fractal');
-
-var highlighter = new Highlights();
-highlighter.requireGrammarsSync({
-    modulePath: require.resolve('atom-handlebars/package.json')
-});
 
 module.exports = Component;
 
-function Component(file){
-    var self            = this;
-    this.path           = file.fauxInfo.urlStylePath;
-    this.order          = file.order;
-    this.title          = file.title;
-    this.id             = file.id;
-    this.meta           = file.meta;
+function Component(config){
+    this.id             = config.id;
+    this.path           = config.path;
+    this.title          = config.title;
+    this.hidden         = config.hidden;
+    this.order          = config.order || 0;
+    this.data           = config.data || {};
     this.type           = 'component';
-    this.files          = {};
-    this.previewData    = file.previewData || {};
-    this.layout         = null;
+    this.files          = config.files || {};
+    this.layoutComponent = null;
 };
 
 Component.fromFile = function(file){
-    var comp = new Component(file);
-    comp.files.markup = file;
-    comp.hidden = file.hidden;
-    return comp;
+    return new Component({
+        id:     file.getId(),
+        title:  file.getTitle(),
+        path:   file.fauxInfo.urlStylePath,
+        order:  file.order,
+        hidden: file.isHidden(),
+        data:   file.data,
+        files: {
+            markup: file
+        }
+    });
 };
 
 Component.fromDirectory = function(dir){
-    var comp            = new Component(dir);
     var main            = findRelated(dir, dir.children, 'markup');
-    var meta            = data.fetchFromFile(findRelated(main, dir.children, 'metaData'));
-    var previewData     = data.fetchFromFile(findRelated(main, dir.children, 'previewData'));
-    
-    comp.meta           = merge(meta || {}, main.meta);
-    comp.previewData    = merge(previewData || {}, main.previewData);
-    
-    comp.id             = comp.meta.id || main.id;
-    comp.title          = titleize(comp.meta.title || main.title);
-    comp.hidden         = main.hidden;
-    comp.files.markup   = main;
-    comp.files.readme   = findRelated(main, dir.children, 'readme');
-    comp.files.styles   = findAllRelated(main, dir.children, 'styles');
-
-    return comp;
-};
-
-Component.prototype.render = function(variant, withoutLayout, highlight){
-    return renderer.render(this, variant, withoutLayout).then(function(html){
-        return highlight ? highlighter.highlightSync({
-            fileContents: html,
-            scopeName: 'text.html.basic'
-        }) : html;
+    var data            = merge(main.data, DataFetcher.fetchFromFile(findRelated(main, dir.children, 'data')) || {});    
+    return new Component({
+        id:     data.id || main.getId(),
+        title:  data.title || main.getTitle(),
+        path:   dir.fauxInfo.urlStylePath,
+        order:  dir.order,
+        hidden: data.hidden || main.isHidden(),
+        data:   data,
+        files: {
+            markup: main,
+            readme: findRelated(main, dir.children, 'readme'),
+            styles: findAllRelated(main, dir.children, 'styles')
+        }
     });
 };
 
-Component.prototype.getMetaData = function(highlight){
-    var meta = merge(this.meta, {
+Component.prototype.render = function(variant, withoutLayout){
+    return output.render(this, variant, withoutLayout);
+};
+
+Component.prototype.getData = function(){
+    return merge(this.data, {
         id: this.id,
-        title: this.title
+        title: this.title,
+        hidden: this.hidden
     });
-    return highlight ? highlightObj(meta) : meta;
 };
 
 Component.prototype.getNotes = function(){
@@ -91,7 +82,7 @@ Component.prototype.getNotes = function(){
     return null;
 };
 
-Component.prototype.getStyles = function(highlight){
+Component.prototype.getStyles = function(){
     var styleFiles = _.get(this, 'files.styles');
     if (styleFiles) {
         if (styleFiles.length === 1) {
@@ -101,39 +92,41 @@ Component.prototype.getStyles = function(highlight){
                 return "/* " + file.fauxInfo.base + " *\/\n\n" + file.content.toString() + "\n\n";
             }).join("\n")
         }
-        return highlight ? highlighter.highlightSync({
-            fileContents: content,
-            scopeName: 'source.css.scss'
-        }) : content;
+        return content;
     }
     return null;
 };
 
-Component.prototype.getPreviewData = function(key, highlight){
-    key = key || 'default';
-    var data = _.get(this.previewData, key, null);
-    if (!data && key === 'default') {
-        data = this.previewData;
-    } else if (!data) {
-        data = this.getPreviewData();
+Component.prototype.getTemplateContext = function(variant){
+    var variants = this.getVariants();
+    if (variant) {
+        var data = _.find(variants, 'name', variant) || variants[0];
+    } else {
+        data = variants[0];
     }
-    return highlight ? highlightObj(data) : data;
+    return data.context || {};
 };
 
 Component.prototype.getVariants = function(){
-    if (!_.isUndefined(this.previewData.default)){
-        return _.keys(this.previewData);
+    var base = _.clone(this.getData());
+    var variants = this.data.variants || {};
+    delete base.variants;
+    base.name = 'base';
+    base.title = 'Base';
+    variants = _.map(variants, function(variant, key){
+        variant.name = key;
+        variant.title = variant.title || titleize(variant.name);
+        variant.id = base.id + '--' + key;
+        return merge(base, variant);
+    });
+    if (!_.find(variants, 'name', 'base')) {
+        variants.unshift(base);    
     }
-    return null;
+    return variants;
 };
 
-Component.prototype.getTemplateMarkup = function(highlight){
-    return promise.resolve(this.files.markup.content.toString()).then(function(html){
-        return highlight ? highlighter.highlightSync({
-            fileContents: html,
-            scopeName: 'text.html.handlebars'
-        }) : html;
-    });
+Component.prototype.getTemplateMarkup = function(){
+    return promise.resolve(this.files.markup.content.toString());
 };
 
 Component.prototype.getLayoutMarkup = function(){
@@ -154,25 +147,21 @@ Component.prototype.isComponent = function(){
 
 Component.prototype.getLayout = function(){
     var self = this;
-    if (!this.layout) {
-        this.layout = fractal.getSources().then(function(sources){
+    if (!this.layoutComponent) {
+        this.layoutComponent = fractal.getSources().then(function(sources){
             var layout = null;
-            var checkLayout = self.meta.layout || config.get('source.components.layout');
+            var checkLayout = self.data.layout || config.get('source.components.layout');
             if (checkLayout && checkLayout !== self.id && checkLayout !== self.path ) {
                 layout = sources.components.tryFindComponent(checkLayout);
             }
             return layout;
         });
     }
-    return this.layout;
+    return this.layoutComponent;
 };
 
 function getFileMatcher(name, match){
     return match.replace('__name__', name);
-}
-
-function titleize(str){
-    return swag.helpers['titleize'](str);
 }
 
 function findRelated(file, files, matches, multiple) {
@@ -194,6 +183,6 @@ function findAllRelated(file, files, matches) {
     return findRelated(file, files, matches, true);
 }
 
-function highlightObj(obj) {
-    return highlighter.highlightSync({fileContents: JSON.stringify(obj, null, 4), scopeName: 'source.json'});
+function titleize(str){
+    return swag.helpers['titleize'](str);
 }

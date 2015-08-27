@@ -10,9 +10,7 @@
             "layout": null,
             "matches": {
                 "markup": "*.+(hbs|handlebars|html)",
-                "metaData": "+(meta|metadata).+(json|js|yml|yaml)",
-                "previewData": "preview.+(json|js|yml|yaml)",
-                "previewImage": "preview.+(png|gif|jpeg|jpg|webp)",
+                "data": "data.+(json|js|yml|yaml)",
                 "readme": "+(README|readme).+(md|markdown)",
                 "behaviour": "*.+(js|coffee)",
                 "styles": "*.+(css|scss|less)"

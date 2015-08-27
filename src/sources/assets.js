@@ -1,7 +1,5 @@
 var _           = require('lodash');
 
-var mixin       = require('./mixin');
-
 module.exports = Assets;
 
 function Assets(dir, config){
@@ -14,8 +12,6 @@ Assets.fromDirectory = function(directory, config){
         return new Assets(dir, config);
     });
 };
-
-// mixin.call(Assets.prototype);
 
 Assets.prototype.init = function(){
     var self = this;

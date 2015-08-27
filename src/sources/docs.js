@@ -2,7 +2,6 @@ var _           = require('lodash');
 var minimatch   = require('minimatch');
 
 var Directory   = require('../fs/directory');
-var mixin       = require('./mixin');
 
 module.exports = Docs;
 
@@ -11,7 +10,6 @@ function Docs(dir, config){
     this.directory = dir;
 };
 
-// mixin.call(Docs.prototype);
 
 Docs.fromDirectory = function(directory, config){
     return directory.then(function(dir){

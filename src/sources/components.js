@@ -14,8 +14,6 @@ function Components(components, config){
     this.finderCache = [];
 };
 
-// mixin.call(Components.prototype);
-
 Components.fromDirectory = function(directory, config){
     return directory.then(function(dir){
         return new Components(getComponents(dir), config);
@@ -136,9 +134,9 @@ function getComponents(dir){
             } else {
                 ret.push({
                     name: directory.fauxInfo.name,
-                    title: directory.title,
+                    title: directory.getTitle(),
                     order: directory.order,
-                    id: directory.id,
+                    id: directory.getId(),
                     isDirectory: true,
                     type: 'directory',
                     children: children

@@ -15,8 +15,6 @@ function File(opts){
     this.relPath    = opts.relPath;
     this.stat       = opts.stat;
     this.content    = this.raw = opts.content;
-    this.meta       = {};
-    this.previewData = {};
 };
 
 mixin.call(File.prototype);
