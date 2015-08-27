@@ -61,6 +61,29 @@ Components.prototype.getComponents = function(includeHidden){
     return this.components;
 };
 
+Components.prototype.each = function(callback, filter){
+    filter = filter || 'all';
+    function doForEach(components){
+        _.each(components, function(item){
+            if (filter === 'all') {
+                callback(item);
+            } else {
+                if (filter === 'component' && item.type === 'component') {
+                    callback(item);
+                } else if (item.type === 'directory') {
+                    if (filter === 'directory') {
+                        callback(item);    
+                    }
+                }
+            }
+            if (item.type === 'directory') {
+                doForEach(item.children, callback);
+            }
+        });
+    }
+    return doForEach(this.components);
+};
+
 Components.prototype.toJSON = function(){
     var self = _.clone(this);
     delete self['finderCache'];

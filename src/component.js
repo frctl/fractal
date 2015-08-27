@@ -12,6 +12,7 @@ var Directory   = require('./fs/directory');
 var File        = require('./fs/file');
 var data        = require('./data');
 var config      = require('./config');
+var renderer    = require('./renderer');
 var fractal     = require('../fractal');
 
 module.exports = Component;
@@ -54,24 +55,8 @@ Component.fromDirectory = function(dir){
     return comp;
 };
 
-Component.prototype.render = function(dataKey, withoutLayout){
-    var self            = this;
-    var templateMarkup  = this.getTemplateMarkup();
-    var layoutMarkup    = withoutLayout ? null : this.getLayoutMarkup();
-    return promise.join(templateMarkup, layoutMarkup, function(tpl, layout){
-        var compiled = Handlebars.compile(tpl);
-        var output = beautifyHTML(compiled(self.getPreviewData(dataKey)), {
-            "preserve_newlines": false,
-            "indent_size": 4
-        });
-        if (layout) {
-            var layout = Handlebars.compile(layout);
-            output = layout({
-                "content": output
-            });
-        }
-        return output;
-    });
+Component.prototype.render = function(variant, withoutLayout){
+    return renderer.render(this, variant, withoutLayout);
 };
 
 Component.prototype.getMetaData = function(){
