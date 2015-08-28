@@ -111,7 +111,7 @@ function getComponents(dir){
     var directories = _.filter(dir.children, 'type', 'directory');
     var files = _.filter(dir.children, 'type', 'file');
     var markupFiles = _.filter(files, function(file){
-        return file.matches('fauxInfo.base', config.get('source.components.matches.markup'));
+        return file.matches('fauxInfo.base', config.get('components.matches.markup'));
     });
 
     for (var i = markupFiles.length - 1; i >= 0; i--) {

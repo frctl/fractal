@@ -1,5 +1,6 @@
 var promise         = require("bluebird");
 var merge           = require('deepmerge');
+var fs              = require('fs');
 var _               = require('lodash');
 var p               = require('path');
 var chokidar        = require('chokidar');
@@ -26,31 +27,39 @@ module.exports = {
         var theme = config.get('theme');
         config.set('root', process.cwd());
         config.set('theme', merge(theme, getThemeConfig(theme.name)));
-
-        _.each(config.get('source'), function(conf, key){
-            sources[key] = null;
-            monitors[key] = chokidar.watch(p.resolve(conf.dir), {ignored: /[\/\\]\./});
-            monitors[key].on('ready', function(){
-                monitors[key].on('all', function(event, path) {
-                    sources[key] = null;
-                });
-            });
-        });
-
+        this.startMonitor();
         return getService(process.argv[2]);
     },
 
     getSources: function(){
-        return promise.props(_.mapValues(config.get('source'), function(conf, key){
-            if (!sources[key]) {
+        var src = _.mapValues(config.pick('components', 'docs'), function(conf, key){
+            if (!sources[key] && dirExists(conf.dir)) {
                 sources[key] = SourceFactory.getSource(key, conf);
             }
             return sources[key];
-        }));
+        });
+        src['assets'] = promise.resolve(false);
+        // TODO: add in assets source here
+        return promise.props(src);
     },
     
     getConfig: function(){
         return config;
+    },
+
+    startMonitor: function(){
+        var dirs = _.map(config.pick('components', 'docs'), function(conf, key){
+            var path = dirExists(conf.dir);
+            if (path) {
+                sources[key] = null;
+                monitors[key] = chokidar.watch(path, {ignored: /[\/\\]\./});
+                monitors[key].on('ready', function(){
+                    monitors[key].on('all', function(event, path) {
+                        sources[key] = null;
+                    });
+                });
+            }
+        });
     }
 
 };
@@ -67,4 +76,17 @@ function getThemeConfig(themeName){
         views: p.join(dir, themeJSON.views),
         assets: p.join(dir, themeJSON.assets),
     };
+}
+
+function dirExists(path){
+    if ( path ) {
+        try {
+            var path = p.resolve(path).toString();
+            var stats = fs.lstatSync(path);
+            if (stats.isDirectory()) {
+                return path;
+            }
+        } catch (e) {}
+    }
+    return false;
 }

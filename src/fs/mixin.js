@@ -53,8 +53,8 @@ module.exports = function(){
             this.fauxInfo.urlStylePath = this.fauxInfo.name == 'index' ? this.fauxInfo.relDir : p.join(this.fauxInfo.relDir, this.fauxInfo.name);
             this.fauxInfo.pathSegments = _.compact(this.fauxInfo.relative.split('/')),
 
-            this.order = parseInt(nameParts ? nameParts[1] : (this.fauxInfo.name == 'index' ? '1' : null), 10);
-            this.order = isNaN(this.order) ? null : this.order;
+            this.order = parseInt(nameParts ? nameParts[1] : (this.fauxInfo.name == 'index' ? '1' : 10000), 10);
+            this.order = isNaN(this.order) ? 10000 : this.order;
             this.depth = (_.compact(this.relPath.split('/'))).length - 1;
 
             if (this.isFile()){

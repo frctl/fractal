@@ -45,21 +45,31 @@ module.exports = {
         });
     },
 
-    render: function(component, variant, withoutLayout){       
-        
-        var templateMarkup  = component.getTemplateMarkup();
-        var layoutMarkup    = withoutLayout ? null : component.getLayoutMarkup();
+    renderComponent: function(component, variant){
         var partials        = this.registerPartials();
-        return promise.join(templateMarkup, layoutMarkup, partials, function(tpl, layout, reg){
+        var templateMarkup  = component.getTemplateMarkup();
+        return promise.join(templateMarkup, partials, function(tpl){
             var compiled = Handlebars.compile(tpl);
-            var output = beautifyHTML(compiled(component.getTemplateContext(variant)), htmlStyle);
-            if (layout) {
-                var layout = Handlebars.compile(layout);
-                output = layout({
-                    "content": output
+            var output = '';
+            if (_.isArray(variant)) {
+                var allVariants = component.getVariants();
+                variant.forEach(function(v){
+                    var v = _.find(allVariants, 'name', v);
+                    output += "<!-- " + v.title + " -->\n\n" + compiled(component.getTemplateContext(v.name)) + "\n\n";
                 });
+            } else {
+                output = compiled(component.getTemplateContext(variant));
             }
-            return output;
+            return beautifyHTML(output, htmlStyle);
+        });
+    },
+
+    wrapWithLayout: function(contentMarkup, layoutMarkup){
+        return promise.join(contentMarkup, layoutMarkup, function(content, layout){
+            var compiled = Handlebars.compile(layout);
+            return compiled({
+                "content": content
+            });
         });
     },
 

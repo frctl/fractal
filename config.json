@@ -1,25 +1,34 @@
 {
     "title": "Fractal",
     "port": 3000,
-    "source": {
-        "assets": {
-            "dir": "src/assets"
+    "assets": {
+        "dir": "src/assets"
+    },
+    "components": {
+        "dir": "src/components",
+        "layout": null,
+        "display": "switch",
+        "matches": {
+            "markup": "*.+(hbs|handlebars|html)",
+            "data": "data.+(json|js|yml|yaml)",
+            "readme": "+(README|readme).+(md|markdown)",
+            "behaviour": "*.+(js|coffee)",
+            "styles": "*.+(css|scss|less)"
         },
-        "components": {
-            "dir": "src/components",
-            "layout": null,
-            "matches": {
-                "markup": "*.+(hbs|handlebars|html)",
-                "data": "data.+(json|js|yml|yaml)",
-                "readme": "+(README|readme).+(md|markdown)",
-                "behaviour": "*.+(js|coffee)",
-                "styles": "*.+(css|scss|less)"
+        "statuses": {
+            "wip": {
+                "label": "In Progress",
+                "color": "yellow"
+            },
+            "final": {
+                "label": "Final",
+                "color": "green"
             }
-        },
-        "docs": {
-            "dir": "docs",
-            "matches": "*.+(html|md|markdown)"
         }
+    },
+    "docs": {
+        "dir": "docs",
+        "matches": "*.+(html|md|markdown)"
     },
     "theme": {
         "name": "fractal-theme-default"

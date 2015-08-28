@@ -72,7 +72,7 @@ module.exports = function(){
     
     app.get('/components', function (req, res) {
         var compSource = tplData.sources.components;
-        res.render('ui', merge(tplData, {
+        res.render('components/index', merge(tplData, {
             components: compSource ? compSource.getComponents() : null
         }));
     });
@@ -80,12 +80,13 @@ module.exports = function(){
     app.get('/components/*', function (req, res) {
         var compSource = tplData.sources.components;
         var component = compSource.findComponent('path', req.path.replace(new RegExp('^\/components\/'), ''));
-        if (component) {
+        if (component && ! component.hidden) {
+            var data                = component.getData();
             var viewType            = req.query.view || 'component';
-            var variant             = req.query.variant || 'default';
-            var variants            = component.getVariants() || [];
-            var rendered            = component.render(variant, true);
-            var renderedWithLayout  = component.render(variant);
+            var variant             = req.query.variant || (component.getDisplayStyle() === 'switch' ? 'base' : null);
+            var variants            = variant ? component.getVariants() || [] : [];
+            var rendered            = variant ? component.render(variant, true) : component.renderAll(true);
+            var renderedWithLayout  = variant ? component.render(variant) : component.renderAll();
             var template            = component.getTemplateMarkup();
             return promise.join(rendered, renderedWithLayout, template, function(rend, rendWL, tpl){
                 var data = merge(tplData, {
@@ -94,11 +95,12 @@ module.exports = function(){
                         highlight:  queryString.stringify(merge(req.query, {view:'highlight'})),
                         raw:        queryString.stringify(merge(req.query, {view:'raw'})),
                     },
+                    showVariantSwitcher:    (component.getDisplayStyle() === 'switch'),
                     component: {
                         title:              component.title,
                         id:                 component.id,
                         path:               component.path,
-                        data:               component.getData(),
+                        data:               data,
                         markup:             rend,
                         markupWithLayout:   rendWL,
                         template:           tpl,
@@ -107,7 +109,7 @@ module.exports = function(){
                         notes:              component.getNotes(),
                         highlighted: {
                             styles:     output.highlight(component.getStyles(), 'scss'),
-                            context:    output.highlight(component.getTemplateContext(variant), 'json'),
+                            context:    output.highlight(variant ? component.getTemplateContext(variant) : component.getAllTemplateContexts(), 'json'),
                             data:       output.highlight(component.getData(), 'json'),
                             markup:     output.highlight(rend, 'html'),
                             template:   output.highlight(tpl, 'hbs'),
@@ -116,14 +118,14 @@ module.exports = function(){
                 });
                 switch(viewType) {
                     case 'preview':
-                        return res.render('ui/preview', data);
+                        return res.render('components/preview', data);
                     case 'raw':
                         res.setHeader("Content-Type", "text/plain");
-                        return res.render('ui/raw', data);
+                        return res.render('components/raw', data);
                     case 'highlight':
-                        return res.render('ui/highlight', data);
+                        return res.render('components/highlight', data);
                     default:
-                        return res.render('ui/component', merge(data, {
+                        return res.render('components/component', merge(data, {
                             components: compSource ? compSource.getComponents() : null
                         }));
                     break;
@@ -174,16 +176,19 @@ module.exports = function(){
 
 function generatePrimaryNav(sources)
 {
-    var nav = [
-        {
+    var nav = [];
+    if (sources.components) {
+        nav.push({
             title: "Components",
             url: "/components",
-        },
-        {
+        });
+    }
+    if (sources.assets) {
+        nav.push({
             title: "Assets",
             url: "/assets",
-        }
-    ];
+        });
+    }
     if (sources.docs) {
         sources.docs.getTopLevelSets().forEach(function(child){
             nav.push({

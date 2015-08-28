@@ -60,13 +60,26 @@ Component.fromDirectory = function(dir){
 };
 
 Component.prototype.render = function(variant, withoutLayout){
-    return output.render(this, variant, withoutLayout);
+    var content = output.renderComponent(this, variant);
+    if (!withoutLayout) {
+        content = output.wrapWithLayout(content, this.getLayoutMarkup());
+    }
+    return content;
 };
+
+Component.prototype.renderAll = function(withoutLayout){
+    var content = output.renderComponent(this, _.pluck(this.getVariants(), 'name'));
+    if (!withoutLayout) {
+        content = output.wrapWithLayout(content, this.getLayoutMarkup());
+    }
+    return content;
+};
+
 
 Component.prototype.getData = function(){
     return merge(this.data, {
-        id: this.id,
-        title: this.title,
+        id:     this.id,
+        title:  this.title,
         hidden: this.hidden
     });
 };
@@ -74,12 +87,15 @@ Component.prototype.getData = function(){
 Component.prototype.getNotes = function(){
     var readmeFile = _.get(this, 'files.readme');
     if (readmeFile) {
-        console.log(cheerio);
         var $ = cheerio.load(readmeFile.content.toString());
         $('h1').remove();
         return $.html();
     }
     return null;
+};
+
+Component.prototype.getDisplayStyle = function(){
+    return _.get(this.data, 'display', config.get('components.display'));
 };
 
 Component.prototype.getStyles = function(){
@@ -97,12 +113,19 @@ Component.prototype.getStyles = function(){
     return null;
 };
 
+Component.prototype.getAllTemplateContexts = function(){
+    var self = this;
+    return _.map(this.getVariants(), function(variant){
+        return self.getTemplateContext(variant.name);
+    });
+};
+
 Component.prototype.getTemplateContext = function(variant){
     var variants = this.getVariants();
     if (variant) {
         var data = _.find(variants, 'name', variant) || variants[0];
     } else {
-        data = variants[0];
+        data = this.getData();
     }
     return data.context || {};
 };
@@ -111,9 +134,9 @@ Component.prototype.getVariants = function(){
     var base = _.clone(this.getData());
     var variants = this.data.variants || {};
     delete base.variants;
-    base.name = 'base';
-    base.title = 'Base';
-    variants = _.map(variants, function(variant, key){
+    base.name   = 'base';
+    base.title  = 'Base';
+    variants    = _.map(variants, function(variant, key){
         if (!variant.hidden) {
             variant.name = key;
             variant.title = variant.title || titleize(variant.name);
@@ -153,7 +176,7 @@ Component.prototype.getLayout = function(){
     if (!this.layoutComponent) {
         this.layoutComponent = fractal.getSources().then(function(sources){
             var layout = null;
-            var checkLayout = self.data.layout || config.get('source.components.layout');
+            var checkLayout = self.data.layout || config.get('components.layout');
             if (checkLayout && checkLayout !== self.id && checkLayout !== self.path ) {
                 layout = sources.components.tryFindComponent(checkLayout);
             }
@@ -170,7 +193,7 @@ function getFileMatcher(name, match){
 function findRelated(file, files, matches, multiple) {
     var name = _.get(file, 'name');
     var results = _.filter(files, function(f){
-        return minimatch(f.fauxInfo.base, getFileMatcher(name, config.get('source.components.matches.' + matches)));
+        return minimatch(f.fauxInfo.base, getFileMatcher(name, config.get('components.matches.' + matches)));
     });
     if (results.length) {
         if (multiple) {

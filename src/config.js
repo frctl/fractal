@@ -20,6 +20,12 @@ module.exports = {
 
     merge: function(toMerge){
         config = merge(config, toMerge);
+    },
+
+    pick: function(){
+        var args = Array.prototype.slice.call(arguments);
+        args.unshift(config);
+        return _.pick.apply(_, args);
     }
 
 };
