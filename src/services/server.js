@@ -8,7 +8,6 @@ var swag            = require('swag');
 var Handlebars      = require('handlebars');
 var queryString     = require('query-string')
 var beautifyHTML    = require('js-beautify').html;
-
 var output          = require('../output')
 var fractal         = require('../../fractal');
 var config          = fractal.getConfig();
@@ -24,7 +23,7 @@ module.exports = function(){
         ],
         helpers: {}
     });
-
+    
     swag.registerHelpers(hbs.handlebars);
 
     var tplData = {

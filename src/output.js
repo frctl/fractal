@@ -1,4 +1,3 @@
-var Handlebars  = require('handlebars');
 var _           = require('lodash');
 var promise     = require("bluebird");
 var beautifyJS  = require('js-beautify').js;
@@ -7,7 +6,7 @@ var beautifyHTML = require('js-beautify').html;
 var Highlights  = require('highlights');
 
 var fractal     = require('../fractal');
-var partials    = null;
+var compiler    = require('./compiler');
 
 var htmlStyle = {
     "preserve_newlines": false,
@@ -20,55 +19,32 @@ highlighter.requireGrammarsSync({
 });
 
 module.exports = {
-
-    registerPartials: function(){
-        // TODO: cache partial registration, add events to listen for component tree changes and refresh
-        return fractal.getSources().then(function(sources){
-            var comps = []
-            sources.components.each(function(item){
-                if (item.type === 'component') {
-                    comps.push(item.getTemplateMarkup().then(function(markup){
-                        return {
-                            id: item.id,
-                            path: item.path,
-                            markup: markup
-                        };
-                    }));
-                } 
-            });
-            return promise.all(comps).then(function(comps){
-                comps.forEach(function(comp){
-                    Handlebars.registerPartial(comp.id, comp.markup);
-                    Handlebars.registerPartial(comp.path, comp.markup);    
-                });
-            });
-        });
-    },
-
+    
     renderComponent: function(component, variant){
-        var partials        = this.registerPartials();
-        var templateMarkup  = component.getTemplateMarkup();
-        return promise.join(templateMarkup, partials, function(tpl){
-            var compiled = Handlebars.compile(tpl);
-            var output = '';
-            if (_.isArray(variant)) {
-                var allVariants = component.getVariants();
-                variant.forEach(function(v){
-                    var v = _.find(allVariants, 'name', v);
-                    output += "<!-- " + v.title + " -->\n\n" + compiled(component.getTemplateContext(v.name)) + "\n\n";
-                });
-            } else {
-                output = compiled(component.getTemplateContext(variant));
-            }
-            return beautifyHTML(output, htmlStyle);
+        var templateMarkup = component.getTemplateMarkup();
+        return promise.join(templateMarkup, function(tpl){
+            return compiler.compile(tpl).then(function(compiled){
+                var output = '';
+                if (_.isArray(variant)) {
+                    var allVariants = component.getVariants();
+                    variant.forEach(function(v){
+                        var v = _.find(allVariants, 'name', v);
+                        output += "<!-- " + v.title + " -->\n\n" + compiled(component.getTemplateContext(v.name)) + "\n\n";
+                    });
+                } else {
+                    output = compiled(component.getTemplateContext(variant));
+                }
+                return beautifyHTML(output, htmlStyle);
+            });
         });
     },
 
     wrapWithLayout: function(contentMarkup, layoutMarkup){
         return promise.join(contentMarkup, layoutMarkup, function(content, layout){
-            var compiled = Handlebars.compile(layout);
-            return compiled({
-                "content": content
+            return compiler.compile(layout).then(function(compiled){
+                return compiled({
+                    "content": content
+                });    
             });
         });
     },
@@ -92,7 +68,7 @@ module.exports = {
                 scopeName = 'source.css.scss';
                 break;
             case 'hbs':
-                scopeName = 'text.html.handlebars';
+                scopeName = 'text.html.hbs';
                 break;
         }
         if (!_.isString(content)) {

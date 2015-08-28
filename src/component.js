@@ -18,6 +18,7 @@ module.exports = Component;
 function Component(config){
     this.id             = config.id;
     this.path           = config.path;
+    this.fsPath         = config.fsPath;
     this.title          = config.title;
     this.hidden         = config.hidden;
     this.order          = config.order || 0;
@@ -32,6 +33,7 @@ Component.fromFile = function(file){
         id:     file.getId(),
         title:  file.getTitle(),
         path:   file.fauxInfo.urlStylePath,
+        fsPath: file.fileInfo.relative.replace(/\.(hbs|handlebars)$/,''),
         order:  file.order,
         hidden: file.isHidden(),
         data:   file.data,
@@ -48,6 +50,7 @@ Component.fromDirectory = function(dir){
         id:     data.id || main.getId(),
         title:  data.title || main.getTitle(),
         path:   dir.fauxInfo.urlStylePath,
+        fsPath: main.fileInfo.relative.replace(/\.(hbs|handlebars)$/,''),
         order:  dir.order,
         hidden: data.hidden || main.isHidden(),
         data:   data,
