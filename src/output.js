@@ -68,7 +68,7 @@ module.exports = {
                 scopeName = 'source.css.scss';
                 break;
             case 'hbs':
-                scopeName = 'text.html.hbs';
+                scopeName = 'text.html.handlebars';
                 break;
         }
         if (!_.isString(content)) {
