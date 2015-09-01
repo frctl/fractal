@@ -9,7 +9,7 @@ var fractal     = require('../fractal');
 var compiler    = require('./compiler');
 
 var htmlStyle = {
-    "preserve_newlines": false,
+    "preserve_newlines": true,
     "indent_size": 4
 };
 
@@ -29,12 +29,12 @@ module.exports = {
                     var allVariants = component.getVariants();
                     variant.forEach(function(v){
                         var v = _.find(allVariants, 'name', v);
-                        output += "<!-- " + v.title + " -->\n\n" + compiled(component.getTemplateContext(v.name)) + "\n\n";
+                        output += "<!-- " + v.title + " -->\n" + compiled(component.getTemplateContext(v.name)) + "\n";
                     });
                 } else {
                     output = compiled(component.getTemplateContext(variant));
                 }
-                return beautifyHTML(output, htmlStyle);
+                return beautifyHTML(output.trim(), htmlStyle);
             });
         });
     },

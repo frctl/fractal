@@ -42,9 +42,9 @@ module.exports = function(){
             return res.status(404).render('404', tplData);
         }
         req.segments = _.compact(req.path.split('/'));
-        tplData.req = req;
+        
         fractal.getSources().then(function(sources){
-            
+            tplData.req = req;    
             tplData.sources = sources;
             tplData.navigation = generatePrimaryNav(sources);
 
@@ -87,43 +87,60 @@ module.exports = function(){
             var rendered            = variant ? component.render(variant, true) : component.renderAll(true);
             var renderedWithLayout  = variant ? component.render(variant) : component.renderAll();
             var template            = component.getTemplateMarkup();
+            var raw                 = false;
             return promise.join(rendered, renderedWithLayout, template, function(rend, rendWL, tpl){
-                var data = merge(tplData, {
-                    links: {
-                        preview:    queryString.stringify(merge(req.query, {view:'preview'})),
-                        highlight:  queryString.stringify(merge(req.query, {view:'highlight'})),
-                        raw:        queryString.stringify(merge(req.query, {view:'raw'})),
-                    },
-                    showVariantSwitcher:    (component.getDisplayStyle() === 'switch'),
-                    component: {
-                        title:              component.title,
-                        id:                 component.id,
-                        path:               component.path,
-                        data:               data,
-                        markup:             rend,
-                        markupWithLayout:   rendWL,
-                        template:           tpl,
-                        variant:            variant,
-                        variants:           variants.length > 1 ? variants : null,
-                        notes:              component.getNotes(),
-                        highlighted: {
-                            styles:     output.highlight(component.getStyles(), 'scss'),
-                            context:    output.highlight(variant ? component.getTemplateContext(variant) : component.getAllTemplateContexts(), 'json'),
-                            data:       output.highlight(component.getData(), 'json'),
-                            markup:     output.highlight(rend, 'html'),
-                            template:   output.highlight(tpl, 'hbs'),
-                        }
-                    }
-                });
+                if (_.contains(['styles','markup','template'], viewType) && !_.isUndefined(req.query.raw)) {
+                    res.setHeader("Content-Type", "text/plain");
+                    raw = true;
+                }
                 switch(viewType) {
                     case 'preview':
-                        return res.render('components/preview', data);
-                    case 'raw':
-                        res.setHeader("Content-Type", "text/plain");
-                        return res.render('components/raw', data);
-                    case 'highlight':
-                        return res.render('components/highlight', data);
+                        return res.render('components/preview', merge(data, {
+                            content: rendWL,
+                            embedded: !_.isUndefined(req.query.embedded)
+                        }));
+                    case 'styles':
+                        return res.render(raw ? 'components/raw' : 'components/highlight', merge(data, {
+                            content: raw ? component.getStyles() : output.highlight(component.getStyles(), 'scss')
+                        }));
+                    case 'markup':
+                        return res.render(raw ? 'components/raw' : 'components/highlight', merge(data, {
+                            content: raw ? rend : output.highlight(rend, 'html')
+                        }));
+                    case 'template':
+                        return res.render(raw ? 'components/raw' : 'components/highlight', merge(data, {
+                            content:  raw ? tpl : output.highlight(tpl, 'html')
+                        }));
                     default:
+                        var data = merge(tplData, {
+                            external: {
+                                preview:    queryString.stringify(merge(req.query, {view:'preview'})),
+                                markup:     queryString.stringify(merge(req.query, {view:'markup'})),
+                                template:   queryString.stringify(merge(req.query, {view:'template'})),
+                                raw:        queryString.stringify(merge(req.query, {view:'raw'})),
+                                styles:     queryString.stringify(merge(req.query, {view:'styles'})),
+                            },
+                            showVariantSwitcher:    (component.getDisplayStyle() === 'switch'),
+                            component: {
+                                title:              component.title,
+                                id:                 component.id,
+                                path:               component.path,
+                                data:               data,
+                                markup:             rend,
+                                markupWithLayout:   rendWL,
+                                template:           tpl,
+                                variant:            variant,
+                                variants:           variants.length > 1 ? variants : null,
+                                notes:              component.getNotes(),
+                                highlighted: {
+                                    styles:     output.highlight(component.getStyles(), 'scss'),
+                                    context:    output.highlight(variant ? component.getTemplateContext(variant) : component.getAllTemplateContexts(), 'json'),
+                                    data:       output.highlight(component.getData(), 'json'),
+                                    markup:     output.highlight(rend, 'html'),
+                                    template:   output.highlight(tpl, 'hbs'),
+                                }
+                            }
+                        });
                         return res.render('components/component', merge(data, {
                             components: compSource ? compSource.getComponents() : null
                         }));
