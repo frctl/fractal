@@ -139,7 +139,7 @@ Component.prototype.getTemplateContext = function(variant){
     } else {
         data = this.getData();
     }
-    return data.context || {};
+    return data.context || null;
 };
 
 Component.prototype.getVariants = function(){
