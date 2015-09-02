@@ -14,21 +14,31 @@
             "readme": "+(README|readme).+(md|markdown)",
             "behaviour": "*.+(js|coffee)",
             "styles": "*.+(css|scss|less)"
-        },
-        "statuses": {
-            "wip": {
-                "label": "In Progress",
-                "color": "yellow"
-            },
-            "final": {
-                "label": "Final",
-                "color": "green"
-            }
         }
     },
     "docs": {
         "dir": "docs",
         "matches": "*.+(html|md|markdown)"
+    },
+    "statuses": {
+        "wip": {
+            "label": "WIP",
+            "notes": "Work in progress. Implemement with caution.",
+            "background": "orange",
+            "text": "white"
+        },
+        "complete": {
+            "label": "Ready",
+            "notes": "Ready for developer implementation.",
+            "background": "green",
+            "text": "white"
+        },
+        "prototpe": {
+            "label": "Prototype",
+            "notes": "Do not implement.",
+            "background": "red",
+            "text": "white"
+        }
     },
     "theme": {
         "name": "fractal-theme-default"

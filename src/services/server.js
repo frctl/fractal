@@ -131,13 +131,15 @@ module.exports = function(){
                             component: {
                                 title:              component.title,
                                 id:                 component.id,
+                                status:             component.status,
                                 path:               component.path,
                                 data:               data,
                                 markup:             rend,
                                 markupWithLayout:   rendWL,
                                 template:           tpl,
                                 variant:            variant,
-                                variants:           variants.length > 1 ? variants : null,
+                                variants:           variants.length > 0 ? variants : null,
+                                variantsCount:      variants.length,
                                 notes:              component.getNotes(),
                                 highlighted: {
                                     styles:     output.highlight(component.getStyles(), 'scss'),

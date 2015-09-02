@@ -9,9 +9,10 @@ var cheerio     = require('cheerio');
 var Directory   = require('./fs/directory');
 var File        = require('./fs/file');
 var DataFetcher = require('./data');
-var config      = require('./config');
+var conf        = require('./config');
 var output      = require('./output');
 var fractal     = require('../fractal');
+var status      = require('./status');
 
 module.exports = Component;
 
@@ -22,11 +23,13 @@ function Component(config){
     this.title          = config.title;
     this.hidden         = config.hidden;
     this.depth          = config.depth;
+    this.status         = config.status || status.getDefault();
     this.order          = config.order || 0;
     this.data           = config.data || {};
     this.type           = 'component';
     this.files          = config.files || {};
     this.layoutComponent = null;
+    this.variants       = null;
 };
 
 Component.fromFile = function(file){
@@ -39,6 +42,7 @@ Component.fromFile = function(file){
         depth:  file.depth,
         hidden: file.isHidden(),
         data:   file.data,
+        status: status.findStatus(file.data.status),
         files: {
             markup: file
         }
@@ -56,6 +60,7 @@ Component.fromDirectory = function(dir){
         fsPath: main.fileInfo.relative.replace(/\.(hbs|handlebars)$/,''),
         order:  dir.order,
         hidden: data.hidden || main.isHidden(),
+        status: status.findStatus(data.status),
         data:   data,
         files: {
             markup: main,
@@ -86,7 +91,8 @@ Component.prototype.getData = function(){
     return merge(this.data, {
         id:     this.id,
         title:  this.title,
-        hidden: this.hidden
+        hidden: this.hidden,
+        status: this.status
     });
 };
 
@@ -101,7 +107,7 @@ Component.prototype.getNotes = function(){
 };
 
 Component.prototype.getDisplayStyle = function(){
-    return _.get(this.data, 'display', config.get('components.display'));
+    return _.get(this.data, 'display', conf.get('components.display'));
 };
 
 Component.prototype.getStyles = function(){
@@ -137,24 +143,28 @@ Component.prototype.getTemplateContext = function(variant){
 };
 
 Component.prototype.getVariants = function(){
-    var base = _.clone(this.getData());
-    var variants = this.data.variants || {};
-    delete base.variants;
-    base.name   = 'base';
-    base.title  = 'Base';
-    variants    = _.map(variants, function(variant, key){
-        if (!variant.hidden) {
-            variant.name = key;
-            variant.title = variant.title || titleize(variant.name);
-            variant.id = base.id + '--' + key;
-            variant.status = variant.status || base.status;
-            return variant;
+    if (this.variants === null) {
+        var base = _.clone(this.getData());
+        var variants = this.data.variants || {};
+        delete base.variants;
+        base.name   = 'base';
+        base.title  = 'Base';
+        variants    = _.map(variants, function(variant, key){
+            if (!variant.hidden) {
+                variant.name = key;
+                variant.title = variant.title || titleize(variant.name);
+                variant.id = base.id + '--' + key;
+                variant.status = variant.status ? status.findStatus(variant.status) : base.status;
+                return variant;
+            }
+        });
+        if (!_.find(variants, 'name', 'base')) {
+            variants.unshift(base);    
         }
-    });
-    if (!_.find(variants, 'name', 'base')) {
-        variants.unshift(base);    
+        this.variants = variants;
     }
-    return variants;
+    // console.log(variants);
+    return this.variants;
 };
 
 Component.prototype.getTemplateMarkup = function(){
@@ -182,7 +192,7 @@ Component.prototype.getLayout = function(){
     if (!this.layoutComponent) {
         this.layoutComponent = fractal.getSources().then(function(sources){
             var layout = null;
-            var checkLayout = self.data.layout || config.get('components.layout');
+            var checkLayout = self.data.layout || conf.get('components.layout');
             if (checkLayout && checkLayout !== self.id && checkLayout !== self.path ) {
                 layout = sources.components.tryFindComponent(checkLayout);
             }
@@ -199,7 +209,7 @@ function getFileMatcher(name, match){
 function findRelated(file, files, matches, multiple) {
     var name = _.get(file, 'name');
     var results = _.filter(files, function(f){
-        return minimatch(f.fauxInfo.base, getFileMatcher(name, config.get('components.matches.' + matches)));
+        return minimatch(f.fauxInfo.base, getFileMatcher(name, conf.get('components.matches.' + matches)));
     });
     if (results.length) {
         if (multiple) {
