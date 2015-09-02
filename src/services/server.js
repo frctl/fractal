@@ -53,7 +53,7 @@ module.exports = function(){
         fractal.getSources().then(function(sources){
             tplData.req = req;    
             tplData.sources = sources;
-            tplData.navigation = generatePrimaryNav(sources);
+            tplData.navigation = generatePrimaryNav(sources, req);
 
             // TEMP LOGGING ----
             // var output = JSON.stringify(sources.components.getComponents(), null, 4)
@@ -199,9 +199,13 @@ module.exports = function(){
     return app;
 };
 
-function generatePrimaryNav(sources)
+function generatePrimaryNav(sources, req)
 {
     var nav = [];
+    nav.push({
+        title: "Overview",
+        url: "/",
+    });
     if (sources.components) {
         nav.push({
             title: "Components",
@@ -222,6 +226,11 @@ function generatePrimaryNav(sources)
             });
         });
     }
+    nav.forEach(function(item){
+        if ('/' + req.segments[0] === item.url || (req.segments.length === 0 && item.url == '/')) {
+            item.current = true;
+        }
+    });
     return nav;
 }
 
