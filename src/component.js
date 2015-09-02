@@ -21,6 +21,7 @@ function Component(config){
     this.fsPath         = config.fsPath;
     this.title          = config.title;
     this.hidden         = config.hidden;
+    this.depth          = config.depth;
     this.order          = config.order || 0;
     this.data           = config.data || {};
     this.type           = 'component';
@@ -35,6 +36,7 @@ Component.fromFile = function(file){
         path:   file.fauxInfo.urlStylePath,
         fsPath: file.fileInfo.relative.replace(/\.(hbs|handlebars)$/,''),
         order:  file.order,
+        depth:  file.depth,
         hidden: file.isHidden(),
         data:   file.data,
         files: {
@@ -49,6 +51,7 @@ Component.fromDirectory = function(dir){
     return new Component({
         id:     data.id || main.getId(),
         title:  data.title || main.getTitle(),
+        depth:  dir.depth,
         path:   dir.fauxInfo.urlStylePath,
         fsPath: main.fileInfo.relative.replace(/\.(hbs|handlebars)$/,''),
         order:  dir.order,

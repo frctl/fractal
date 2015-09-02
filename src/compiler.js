@@ -1,5 +1,6 @@
 var Handlebars  = require('handlebars');
 var promise     = require('bluebird');
+var swag        = require('swag');
 var _           = require('lodash');
 
 var fractal     = require('../fractal');
@@ -13,7 +14,6 @@ FractalCompiler.prototype.nameLookup = function(parent, name, type) {
     if (type === 'partial') {
         // convert name to ID
         var searches = ['path', 'fsPath'];
-        console.log(partials);
         for (var i = 0; i < searches.length; i++) {
             var component = _.find(partials, searches[i], name);
             if (component) {
@@ -26,6 +26,7 @@ FractalCompiler.prototype.nameLookup = function(parent, name, type) {
 };
 hbs = Handlebars.create();
 hbs.JavaScriptCompiler = FractalCompiler;
+swag.registerHelpers(hbs);
 
 var compiler = null;
 

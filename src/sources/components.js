@@ -136,6 +136,7 @@ function getComponents(dir){
                     name: directory.fauxInfo.name,
                     title: directory.getTitle(),
                     order: directory.order,
+                    depth: directory.depth,
                     id: directory.getId(),
                     isDirectory: true,
                     type: 'directory',

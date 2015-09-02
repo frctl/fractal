@@ -15,6 +15,9 @@ Docs.fromDirectory = function(directory, config){
     return directory.then(function(dir){
         var docs = new Docs(dir, config);
         docs.init();
+        docs.directory.each(function(item){
+            item.depth = item.depth -1;
+        });
         return docs;
     });
 };
