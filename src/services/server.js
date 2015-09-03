@@ -43,6 +43,10 @@ module.exports = function(){
 
     app.use('/_theme', express.static(config.get('theme.assets')));
 
+    if (config.get('static')) {
+        app.use(express.static(config.get('static')));    
+    }
+
     app.use(function (req, res, next) {
         if ( req.path === '/favicon.ico') {
             // TODO: send favicon rather than 404 :-)
