@@ -79,6 +79,7 @@ Component.prototype.render = function(variant, withoutLayout){
 };
 
 Component.prototype.renderAll = function(withoutLayout){
+    console.log('asdasd');
     var content = output.renderComponent(this, _.pluck(this.getVariants(), 'name'));
     if (!withoutLayout) {
         content = output.wrapWithLayout(content, this.getLayoutMarkup());
@@ -140,6 +141,11 @@ Component.prototype.getTemplateContext = function(variant){
         data = this.getData();
     }
     return data.context || null;
+};
+
+Component.prototype.getVariant = function(key){
+    if (!key) return null;
+    return _.find(this.getVariants(), 'name', key) || null;
 };
 
 Component.prototype.getVariants = function(){

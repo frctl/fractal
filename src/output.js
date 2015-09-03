@@ -49,6 +49,10 @@ module.exports = {
         });
     },
 
+    stringify: function(content){
+        return JSON.stringify(content, null, 4);
+    },
+
     highlight: function(content, scope){
         var scopeName = 'text.html.basic';
         if (!content) {

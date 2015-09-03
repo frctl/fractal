@@ -89,10 +89,10 @@ module.exports = function(){
         if (component && ! component.hidden) {
             var data                = component.getData();
             var viewType            = req.query.view || 'component';
-            var variant             = req.query.variant || (component.getDisplayStyle() === 'switch' ? 'base' : null);
+            var variant             = component.getVariant(req.query.variant) || (component.getDisplayStyle() === 'switch' ? component.getVariant('base') : null);
             var variants            = variant ? component.getVariants() || [] : [];
-            var rendered            = variant ? component.render(variant, true) : component.renderAll(true);
-            var renderedWithLayout  = variant ? component.render(variant) : component.renderAll();
+            var rendered            = component.getDisplayStyle() === 'concat' ? component.renderAll(true) : component.render(variant.name, true);
+            var renderedWithLayout  = component.getDisplayStyle() === 'concat' ? component.renderAll() : component.render(variant.name);
             var template            = component.getTemplateMarkup();
             var raw                 = false;
             return promise.join(rendered, renderedWithLayout, template, function(rend, rendWL, tpl){
@@ -118,16 +118,30 @@ module.exports = function(){
                         return res.render(raw ? 'components/raw' : 'components/highlight', merge(data, {
                             content:  raw ? tpl : output.highlight(tpl, 'html')
                         }));
+                    case 'context':
+                        var cont = (component.getDisplayStyle() === 'concat') ? component.getAllTemplateContexts() : component.getTemplateContext(variant.name);
+                        if (!_.isUndefined(req.query.raw)) {
+                            return res.json(cont);   
+                        } else {
+                            return res.render('components/highlight', merge(data, {
+                                content: output.highlight(cont, 'json')
+                            }));
+                        }
                     default:
+                        function makeUrl(viewKey) {
+                            return queryString.stringify(merge(req.query, {view:viewKey}));
+                        }
                         var data = merge(tplData, {
                             external: {
-                                preview:    queryString.stringify(merge(req.query, {view:'preview'})),
-                                markup:     queryString.stringify(merge(req.query, {view:'markup'})),
-                                template:   queryString.stringify(merge(req.query, {view:'template'})),
-                                raw:        queryString.stringify(merge(req.query, {view:'raw'})),
-                                styles:     queryString.stringify(merge(req.query, {view:'styles'})),
+                                preview:    makeUrl('preview'),
+                                markup:     makeUrl('markup'),
+                                template:   makeUrl('template'),
+                                raw:        makeUrl('raw'),
+                                styles:     makeUrl('styles'),
+                                context:    makeUrl('context'),
                             },
                             showVariantSwitcher:    (component.getDisplayStyle() === 'switch'),
+                            displayStyle:           component.getDisplayStyle(),
                             component: {
                                 title:              component.title,
                                 id:                 component.id,
@@ -143,7 +157,7 @@ module.exports = function(){
                                 notes:              component.getNotes(),
                                 highlighted: {
                                     styles:     output.highlight(component.getStyles(), 'scss'),
-                                    context:    output.highlight(variant ? component.getTemplateContext(variant) : component.getAllTemplateContexts(), 'json'),
+                                    context:    output.highlight(component.getDisplayStyle() === 'concat' ? component.getAllTemplateContexts() : component.getTemplateContext(variant.name), 'json'),
                                     data:       output.highlight(component.getData(), 'json'),
                                     markup:     output.highlight(rend, 'html'),
                                     template:   output.highlight(tpl, 'hbs'),
