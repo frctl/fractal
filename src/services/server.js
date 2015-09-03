@@ -90,9 +90,10 @@ module.exports = function(){
             var data                = component.getData();
             var viewType            = req.query.view || 'component';
             var variant             = component.getVariant(req.query.variant) || (component.getDisplayStyle() === 'switch' ? component.getVariant('base') : null);
+            var concat              = (component.getDisplayStyle() === 'concat' && ! variant);
             var variants            = variant ? component.getVariants() || [] : [];
-            var rendered            = component.getDisplayStyle() === 'concat' ? component.renderAll(true) : component.render(variant.name, true);
-            var renderedWithLayout  = component.getDisplayStyle() === 'concat' ? component.renderAll() : component.render(variant.name);
+            var rendered            = concat ? component.renderAll(true) : component.render(variant.name, true);
+            var renderedWithLayout  = concat ? component.renderAll() : component.render(variant.name);
             var template            = component.getTemplateMarkup();
             var raw                 = false;
             return promise.join(rendered, renderedWithLayout, template, function(rend, rendWL, tpl){
@@ -119,12 +120,12 @@ module.exports = function(){
                             content:  raw ? tpl : output.highlight(tpl, 'html')
                         }));
                     case 'context':
-                        var cont = (component.getDisplayStyle() === 'concat') ? component.getAllTemplateContexts() : component.getTemplateContext(variant.name);
+                        var cont = concat ? component.getAllTemplateContexts() : component.getTemplateContext(variant.name);
                         if (!_.isUndefined(req.query.raw)) {
                             return res.json(cont);   
                         } else {
                             return res.render('components/highlight', merge(data, {
-                                content: output.highlight(cont, 'json')
+                                content:  output.highlight(cont, 'json')
                             }));
                         }
                     default:
@@ -140,8 +141,8 @@ module.exports = function(){
                                 styles:     makeUrl('styles'),
                                 context:    makeUrl('context'),
                             },
-                            showVariantSwitcher:    (component.getDisplayStyle() === 'switch'),
-                            displayStyle:           component.getDisplayStyle(),
+                            concat:                 concat,
+                            "switch":               ! concat,
                             component: {
                                 title:              component.title,
                                 id:                 component.id,
@@ -157,7 +158,7 @@ module.exports = function(){
                                 notes:              component.getNotes(),
                                 highlighted: {
                                     styles:     output.highlight(component.getStyles(), 'scss'),
-                                    context:    output.highlight(component.getDisplayStyle() === 'concat' ? component.getAllTemplateContexts() : component.getTemplateContext(variant.name), 'json'),
+                                    context:    output.highlight(concat ? component.getAllTemplateContexts() : component.getTemplateContext(variant.name), 'json'),
                                     data:       output.highlight(component.getData(), 'json'),
                                     markup:     output.highlight(rend, 'html'),
                                     template:   output.highlight(tpl, 'hbs'),

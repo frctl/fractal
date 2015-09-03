@@ -79,7 +79,6 @@ Component.prototype.render = function(variant, withoutLayout){
 };
 
 Component.prototype.renderAll = function(withoutLayout){
-    console.log('asdasd');
     var content = output.renderComponent(this, _.pluck(this.getVariants(), 'name'));
     if (!withoutLayout) {
         content = output.wrapWithLayout(content, this.getLayoutMarkup());
