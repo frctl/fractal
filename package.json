@@ -25,7 +25,7 @@
     "express": "^4.13.1",
     "express-handlebars": "^2.0.1",
     "faker": "^2.1.5",
-    "fractal-theme-default": "git+ssh://git@github.com:frctl/fractal-theme-default",
+    "fractal-theme-default": "git+ssh://git@github.com:frctl/theme-default",
     "gray-matter": "^2.0.0",
     "handlebars": "^3.0.3",
     "highlights": "^1.2.0",
