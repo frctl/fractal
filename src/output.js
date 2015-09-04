@@ -29,27 +29,24 @@ var renderer = new marked.Renderer();
 
 renderer.code = function(code, lang, escaped) {
     var highlighted = false;
-  if (this.options.highlight) {
-    var out = this.options.highlight(code, lang);
-    if (out != null && out !== code) {
-      escaped = true;
-      code = out;
-      highlighted = true;
+    if (this.options.highlight) {
+        var out = this.options.highlight(code, lang);
+        if (out != null && out !== code) {
+            escaped = true;
+            code = out;
+            highlighted = true;
+        }
     }
-  }
-
-  var code = escaped ? code : escape(code, true);
-
-  if (!lang) {
-    return highlighted ? code : '<pre><code>' + code + '\n</code></pre>';
-  }
-
-  return highlighted ? code : '<pre><code class="'
-    + this.options.langPrefix
-    + escape(lang, true)
-    + '">'
-    + code
-    + '\n</code></pre>\n';
+    var code = escaped ? code : escape(code, true);
+    if (!lang) {
+        return highlighted ? code : '<pre><code>' + code + '\n</code></pre>';
+    }
+    return highlighted ? code : '<pre><code class="'
+        + this.options.langPrefix
+        + escape(lang, true)
+        + '">'
+        + code
+        + '\n</code></pre>\n';
 };
 
 module.exports = {

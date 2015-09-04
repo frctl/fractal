@@ -80,7 +80,7 @@ module.exports = function(){
         }));
     });
     
-    app.get('/components/*', function (req, res) {
+    app.get('/components/*', function (req, res, next) {
         var compSource = tplData.sources.components;
         var component = compSource.findComponent('path', req.path.replace(new RegExp('^\/components\/'), ''));
         if (component && ! component.hidden) {
@@ -167,41 +167,73 @@ module.exports = function(){
                         }));
                     break;
                 }
+            }).catch(function(e){
+                return res.render('components/error', merge(tplData, {
+                    components: compSource ? compSource.getComponents() : null,
+                    error: e.message,
+                    component: {
+                        title:              component.title,
+                        id:                 component.id,
+                        status:             component.status,
+                        path:               component.path
+                    }
+                }));
+                // next(error('Error rendering component - ' + e.message));
             });
+        } else {
+            return next(error('Component not found', 404));
         }
-        res.status(404).render('404', tplData);
+        next(error('Error rendering component'));
     });
 
     // ASSETS -----------------------------------------------------------------------
 
-    app.get('/assets', function (req, res) {
-        res.render('assets', merge(tplData, {
-            sectionTitle: _.find(tplData.navigation, 'url', '/assets').title
-        }));
-    });
+    // app.get('/assets', function (req, res) {
+    //     res.render('assets', merge(tplData, {
+    //         sectionTitle: _.find(tplData.navigation, 'url', '/assets').title
+    //     }));
+    // });
 
-    app.get('/assets/*', function (req, res) {
-        res.render('assets/asset', merge(tplData, {
-            sectionTitle: _.find(tplData.navigation, 'url', '/assets').title
-        }));
-    });
+    // app.get('/assets/*', function (req, res) {
+    //     res.render('assets/asset', merge(tplData, {
+    //         sectionTitle: _.find(tplData.navigation, 'url', '/assets').title
+    //     }));
+    // });
 
     // PAGES -----------------------------------------------------------------------
     
-    app.get('(/*)?', function (req, res) {
+    app.get('(/*)?', function (req, res, next) {
         var docs = tplData.sources.docs;
         if (docs) {
             var page = docs.findByUrlPath(req.params[1]);
             if (page) {
                 var dir = req.segments.length ? docs.findDirectoryByUrlPath(req.segments[0]) : docs.dir;
-                return res.render(req.path === '/' ? 'index' : 'pages/page', merge(tplData, {
+                res.render(req.path === '/' ? 'index' : 'pages/page', merge(tplData, {
                     page: page,
                     sectionTitle: req.segments[0],
                     sectionPages: _.get(dir, 'children', [])
                 }));
+                return;
+            } else {
+               return next(error('Page not found', 404));
             }
+        } else {
+            return next(error('No pages found', 404));
         }
-        res.status(404).render('404', tplData);
+        next(error('Error rendering page'));
+    });
+
+    app.use(function(err, req, res, next) {
+        var data = merge(tplData, {
+            message: err.message,
+            error: err
+        });
+        res.status(err.status || 500);
+        if (err.status === 404) {
+            res.render('404', data);
+        } else {
+            res.render('error', data);    
+        }
     });
 
     app.listen(port, function () {
@@ -246,5 +278,10 @@ function generatePrimaryNav(sources, req)
     return nav;
 }
 
+function error(msg, status) {
+    var e = new Error(msg);
+    e.status = status || 500;
+    return e;
+}
 
 

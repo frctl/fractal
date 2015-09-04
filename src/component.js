@@ -33,41 +33,51 @@ function Component(config){
 };
 
 Component.fromFile = function(file){
-    return new Component({
-        id:     file.getId(),
-        title:  file.getTitle(),
-        path:   file.fauxInfo.urlStylePath,
-        fsPath: file.fileInfo.relative.replace(/\.(hbs|handlebars)$/,''),
-        order:  file.order,
-        depth:  file.depth,
-        hidden: file.isHidden(),
-        data:   file.data,
-        status: status.findStatus(file.data.status),
-        files: {
-            markup: file
-        }
-    });
+    try {
+        return new Component({
+            id:     file.getId(),
+            title:  file.getTitle(),
+            path:   file.fauxInfo.urlStylePath,
+            fsPath: file.fileInfo.relative.replace(/\.(hbs|handlebars)$/,''),
+            order:  file.order,
+            depth:  file.depth,
+            hidden: file.isHidden(),
+            data:   file.data,
+            status: status.findStatus(file.data.status),
+            files: {
+                markup: file
+            }
+        });
+    } catch(e) {
+        console.log('[FRACTAL] Error loading component at ' + file.relPath + ': ' + e.message);
+        return null;
+    }
 };
 
 Component.fromDirectory = function(dir){
-    var main            = findRelated(dir, dir.children, 'markup');
-    var data            = merge(main.data, DataFetcher.fetchFromFile(findRelated(main, dir.children, 'data')) || {});    
-    return new Component({
-        id:     data.id || main.getId(),
-        title:  data.title || main.getTitle(),
-        depth:  dir.depth,
-        path:   dir.fauxInfo.urlStylePath,
-        fsPath: main.fileInfo.relative.replace(/\.(hbs|handlebars)$/,''),
-        order:  dir.order,
-        hidden: data.hidden || main.isHidden(),
-        status: status.findStatus(data.status),
-        data:   data,
-        files: {
-            markup: main,
-            readme: findRelated(main, dir.children, 'readme'),
-            styles: findAllRelated(main, dir.children, 'styles')
-        }
-    });
+    try {
+        var main            = findRelated(dir, dir.children, 'markup');
+        var data            = merge(main.data, DataFetcher.fetchFromFile(findRelated(main, dir.children, 'data')) || {});    
+        return new Component({
+            id:     data.id || main.getId(),
+            title:  data.title || main.getTitle(),
+            depth:  dir.depth,
+            path:   dir.fauxInfo.urlStylePath,
+            fsPath: main.fileInfo.relative.replace(/\.(hbs|handlebars)$/,''),
+            order:  dir.order,
+            hidden: data.hidden || main.isHidden(),
+            status: status.findStatus(data.status),
+            data:   data,
+            files: {
+                markup: main,
+                readme: findRelated(main, dir.children, 'readme'),
+                styles: findAllRelated(main, dir.children, 'styles')
+            }
+        });
+    } catch(e) {
+        console.log('[FRACTAL] Error loading component at ' + dir.relPath + ': ' + e.message);
+        return null;
+    }
 };
 
 Component.prototype.render = function(variant, withoutLayout){

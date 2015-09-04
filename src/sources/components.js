@@ -119,10 +119,17 @@ function getComponents(dir){
         if (!dir.isRoot) {
             if (file.fauxInfo.name === dir.fauxInfo.name) {
                 // matches parent directory name so this whole directory is a component
-                return Component.fromDirectory(dir);
+                var item = Component.fromDirectory(dir);
+                if (item) {
+                    return item;    
+                }
+                continue;
             }
         }
-        ret.push(Component.fromFile(file));
+        var item = Component.fromFile(file);
+        if (item) {
+            ret.push(item);    
+        }
     };
 
     for (var i = directories.length - 1; i >= 0; i--) {
