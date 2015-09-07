@@ -34,7 +34,7 @@
             "background": "green",
             "text": "white"
         },
-        "prototpe": {
+        "prototype": {
             "label": "Prototype",
             "notes": "Do not implement.",
             "background": "red",
