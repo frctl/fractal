@@ -14,7 +14,7 @@ var config          = fractal.getConfig();
 
 module.exports = function(){
     
-    var port = config.get('port');
+    var port = config.get('server.port') || process.env.PORT || 3000;
     var app = express();
     var hbs = exphbs.create({
         extname: 'hbs',
@@ -75,8 +75,10 @@ module.exports = function(){
     
     app.get('/components', function (req, res) {
         var compSource = tplData.sources.components;
+        var docs = tplData.sources.docs;
         res.render('components/index', merge(tplData, {
-            components: compSource ? compSource.getComponents() : null
+            components: compSource ? compSource.getComponents() : null,
+            page: docs ? docs.findByUrlPath('components') || null : null
         }));
     });
     
@@ -202,13 +204,20 @@ module.exports = function(){
 
     // PAGES -----------------------------------------------------------------------
     
-    app.get('(/*)?', function (req, res, next) {
+    app.get('/', function (req, res, next) {
+        var docs = tplData.sources.docs;
+        res.render('index', merge(tplData, {
+            page: docs ? docs.findByUrlPath('') || null : null
+        }));
+    });
+
+    app.get('(/*)', function (req, res, next) {
         var docs = tplData.sources.docs;
         if (docs) {
             var page = docs.findByUrlPath(req.params[1]);
             if (page) {
                 var dir = req.segments.length ? docs.findDirectoryByUrlPath(req.segments[0]) : docs.dir;
-                res.render(req.path === '/' ? 'index' : 'pages/page', merge(tplData, {
+                res.render('pages/page', merge(tplData, {
                     page: page,
                     sectionTitle: req.segments[0],
                     sectionPages: _.get(dir, 'children', [])
@@ -223,6 +232,7 @@ module.exports = function(){
         next(error('Error rendering page'));
     });
 
+    
     app.use(function(err, req, res, next) {
         var data = merge(tplData, {
             message: err.message,

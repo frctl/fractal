@@ -1,7 +1,9 @@
 {
     "title": "Fractal",
-    "port": 3000,
     "static": null,
+    "server": {
+        "port": null
+    },
     "assets": {
         "dir": "src/assets"
     },
