@@ -96,7 +96,7 @@ module.exports = function(){
             var template            = component.getTemplateMarkup();
             var raw                 = false;
             return promise.join(rendered, renderedWithLayout, template, function(rend, rendWL, tpl){
-                if (_.contains(['styles','markup','template'], viewType) && !_.isUndefined(req.query.raw)) {
+                if (_.contains(['styles','behaviour','markup','template'], viewType) && !_.isUndefined(req.query.raw)) {
                     res.setHeader("Content-Type", "text/plain");
                     raw = true;
                 }
@@ -109,6 +109,10 @@ module.exports = function(){
                     case 'styles':
                         return res.render(raw ? 'components/raw' : 'components/highlight', merge(data, {
                             content: raw ? component.getStyles() : output.highlight(component.getStyles(), 'scss')
+                        }));
+                    case 'behaviour':
+                        return res.render(raw ? 'components/raw' : 'components/highlight', merge(data, {
+                            content: raw ? component.getBehaviour() : output.highlight(component.getBehaviour(), 'js')
                         }));
                     case 'markup':
                         return res.render(raw ? 'components/raw' : 'components/highlight', merge(data, {
@@ -138,6 +142,7 @@ module.exports = function(){
                                 template:   makeUrl('template'),
                                 raw:        makeUrl('raw'),
                                 styles:     makeUrl('styles'),
+                                behaviour:  makeUrl('behaviour'),
                                 context:    makeUrl('context'),
                             },
                             concat:                 concat,
@@ -157,6 +162,7 @@ module.exports = function(){
                                 notes:              component.getNotes(),
                                 highlighted: {
                                     styles:     output.highlight(component.getStyles(), 'scss'),
+                                    behaviour:  output.highlight(component.getBehaviour(), 'js'),
                                     context:    output.highlight(concat ? component.getAllTemplateContexts() : component.getTemplateContext(variant.name), 'json'),
                                     data:       output.highlight(component.getData(), 'json'),
                                     markup:     output.highlight(rend, 'html'),

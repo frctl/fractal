@@ -69,9 +69,10 @@ Component.fromDirectory = function(dir){
             status: status.findStatus(data.status),
             data:   data,
             files: {
-                markup: main,
-                readme: findRelated(main, dir.children, 'readme'),
-                styles: findAllRelated(main, dir.children, 'styles')
+                markup:     main,
+                readme:     findRelated(main, dir.children, 'readme'),
+                styles:     findAllRelated(main, dir.children, 'styles'),
+                behaviour:  findAllRelatedBehaviourFiles(main, dir.children),
             }
         });
     } catch(e) {
@@ -121,18 +122,11 @@ Component.prototype.getDisplayStyle = function(){
 };
 
 Component.prototype.getStyles = function(){
-    var styleFiles = _.get(this, 'files.styles');
-    if (styleFiles) {
-        if (styleFiles.length === 1) {
-            var content = styleFiles[0].content.toString();
-        } else {
-            var content = styleFiles.map(function(file){
-                return "/* " + file.fauxInfo.base + " *\/\n\n" + file.content.toString() + "\n\n";
-            }).join("\n")
-        }
-        return content;
-    }
-    return null;
+    return getContentFromFiles(_.get(this, 'files.styles'));
+};
+
+Component.prototype.getBehaviour = function(){
+    return getContentFromFiles(_.get(this, 'files.behaviour'));
 };
 
 Component.prototype.getAllTemplateContexts = function(){
@@ -217,6 +211,20 @@ Component.prototype.getLayout = function(){
     return this.layoutComponent;
 };
 
+function getContentFromFiles(files){
+    if (files) {
+        if (files.length === 1) {
+            var content = files[0].content.toString();
+        } else {
+            var content = files.map(function(file){
+                return "/* " + file.fauxInfo.base + " *\/\n\n" + file.content.toString() + "\n\n";
+            }).join("\n")
+        }
+        return content;
+    }
+    return null;
+}
+
 function getFileMatcher(name, match){
     return match.replace('__name__', name);
 }
@@ -242,4 +250,13 @@ function findAllRelated(file, files, matches) {
 
 function titleize(str){
     return swag.helpers['titleize'](str);
+}
+
+function findAllRelatedBehaviourFiles(file, files){
+    var name = _.get(file, 'name');
+    var related = findAllRelated(file, files, 'behaviour');
+    // filter out data files
+    return _.filter(related, function(f){
+        return ! minimatch(f.fauxInfo.base, getFileMatcher(name, conf.get('components.matches.data')));
+    });
 }
