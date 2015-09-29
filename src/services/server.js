@@ -51,14 +51,6 @@ module.exports = function(){
             tplData.req = req;    
             tplData.sources = sources;
             tplData.navigation = generatePrimaryNav(sources, req);
-
-            // TEMP LOGGING ----
-            // var output = JSON.stringify(sources.components.getComponents(), null, 4)
-            // fs.writeFileAsync(path.join(__dirname, "/output.json"), output, function(err) {
-            //   console.log('file saved');
-            // }); 
-            // TEMP LOGGING ----
-
             next();
         });
     });
@@ -259,8 +251,7 @@ module.exports = function(){
     return app;
 };
 
-function generatePrimaryNav(sources, req)
-{
+function generatePrimaryNav(sources, req){
     var nav = [];
     nav.push({
         title: "Overview",

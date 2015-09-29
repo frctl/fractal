@@ -7,6 +7,7 @@ var chokidar        = require('chokidar');
 
 var SourceFactory   = require('./src/sources/factory');
 var config          = require('./src/config');
+var vc              = require('./src/vc');
 
 var sources         = {};
 var monitors        = {};
@@ -27,6 +28,13 @@ module.exports = {
         var theme = config.get('theme');
         config.set('root', process.cwd());
         config.set('theme', merge(theme, getThemeConfig(theme.name)));
+        vc.getCurrentBranchName().then(function(branchName){
+            console.log(branchName);
+        });
+        vc.getLatestCommits().then(function(commits){
+            console.log('COMMITS:');
+            console.log(commits[34].message());
+        });
         this.startMonitor();
         return getService(process.argv[2]);
     },
