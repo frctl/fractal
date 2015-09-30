@@ -5,6 +5,7 @@ var crypto      = require('crypto');
 var _           = require('lodash');
 var minimatch   = require('minimatch');
 
+var vc          = require('../vc');
 var mixin       = require('./mixin');
 
 module.exports = File;
@@ -22,12 +23,13 @@ mixin.call(File.prototype);
 File.fromPath = function(path, relativeTo){
     var stat = fs.statAsync(path);    
     var content = fs.readFileAsync(path);
+    var relPath = _.trimLeft(path.replace(new RegExp('^(' + relativeTo + ')'),""),['/']);
     return promise.join(stat, content, function(stat, content) {
         return new File({
             path:       p.resolve(path),
-            relPath:    _.trimLeft(path.replace(new RegExp('^(' + relativeTo + ')'),""),['/']),
+            relPath:    relPath,
             stat:       stat,
-            content:    content,
+            content:    content
         }).init();
     });
 };
@@ -46,4 +48,14 @@ File.prototype.toJSON = function(){
 
 File.prototype.toString = function(){
     return this.toJSON();
+};
+
+File.prototype.getHistory = function(){
+    return vc.getLatestCommitsForFile(this.relPath).then(function(commits){
+        return commits ? _.map(commits, function(commit){
+            return {
+                message: commit.message()
+            }
+        }) : null;
+    });
 };

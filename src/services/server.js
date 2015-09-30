@@ -86,8 +86,12 @@ module.exports = function(){
             var rendered            = concat ? component.renderAll(true) : component.render(variant.name, true);
             var renderedWithLayout  = concat ? component.renderAll() : component.render(variant.name);
             var template            = component.getTemplateMarkup();
+            var history             = promise.props({
+                markup: component.files.markup.getHistory()
+            });
             var raw                 = false;
-            return promise.join(rendered, renderedWithLayout, template, function(rend, rendWL, tpl){
+            return promise.join(rendered, renderedWithLayout, template, history, function(rend, rendWL, tpl, history){
+                console.log(history);
                 if (_.contains(['styles','behaviour','markup','template'], viewType) && !_.isUndefined(req.query.raw)) {
                     res.setHeader("Content-Type", "text/plain");
                     raw = true;
@@ -152,6 +156,7 @@ module.exports = function(){
                                 variants:           variants.length > 0 ? variants : null,
                                 variantsCount:      variants.length,
                                 notes:              component.getNotes(),
+                                history: history,
                                 highlighted: {
                                     styles:     output.highlight(component.getStyles(), 'scss'),
                                     behaviour:  output.highlight(component.getBehaviour(), 'js'),
