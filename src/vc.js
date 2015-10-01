@@ -1,6 +1,8 @@
 var nodegit     = require("nodegit");
 var Promise     = require("bluebird");
 var _           = require('lodash');
+var fs          = require('fs');
+var path        = require('path');
 
 var conf        = require('./config');
 var repo        = null;
@@ -9,6 +11,14 @@ var repo        = null;
 var filesCache = {};
 
 module.exports = {
+
+    hasVC: function(){
+        try {
+            return !! fs.statSync(path.join(conf.get('root'), '.git'));
+        } catch(e) {
+            return false;
+        }
+    },
 
     hasRepo: function(){
         return nodegit.Repository.open(conf.get('root'));

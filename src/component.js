@@ -13,6 +13,7 @@ var conf        = require('./config');
 var output      = require('./output');
 var fractal     = require('../fractal');
 var status      = require('./status');
+var vc          = require('./vc');
 
 module.exports = Component;
 
@@ -172,7 +173,6 @@ Component.prototype.getVariants = function(){
         }
         this.variants = variants;
     }
-    // console.log(variants);
     return this.variants;
 };
 
@@ -194,6 +194,52 @@ Component.prototype.getLayoutMarkup = function(){
 
 Component.prototype.isComponent = function(){
     return true;
+};
+
+Component.prototype.getHistory = function(){
+    if (!vc.hasVC()) {
+        return promise.resolve(null);
+    }
+    if (!this.history) {
+        var self = this;
+        var histories = {};
+        var relatedFiles = {};
+        _.each(this.files, function(fileSet, type){
+            if (!fileSet) return;
+            if ( !_.isArray(fileSet)) {
+                fileSet = [fileSet];
+            }
+            _.each(fileSet, function(file){
+                relatedFiles[file.uuid] = {
+                    type: type,
+                    file: file
+                };
+                histories[file.uuid] = file.getHistory();    
+            });
+        });
+        this.history = promise.props(histories).then(function(histories){
+            var mergedHistories = [];
+            _.each(histories, function(hist, key){
+                var relatedFile = relatedFiles[key];
+                var fileInfo = {
+                    type: relatedFile.type,
+                    name: relatedFile.file.fileInfo.base
+                };
+                _.each(hist, function(commit){
+                    var existing = _.find(mergedHistories, 'sha', commit.sha);
+                    if (existing) {
+                        existing.files.push(fileInfo);
+                        existing.files = _.sortBy(existing.files, 'name');
+                    } else {
+                        commit.files = [fileInfo];
+                        mergedHistories.push(commit);
+                    }
+                });
+            });
+            return _.sortByOrder(mergedHistories, ['date'], ['desc']);
+        });
+    }
+    return this.history;
 };
 
 Component.prototype.getLayout = function(){

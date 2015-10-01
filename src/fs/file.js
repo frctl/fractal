@@ -51,11 +51,20 @@ File.prototype.toString = function(){
 };
 
 File.prototype.getHistory = function(){
-    return vc.getLatestCommitsForFile(this.relPath).then(function(commits){
-        return commits ? _.map(commits, function(commit){
-            return {
-                message: commit.message()
-            }
-        }) : null;
-    });
+    if (vc.hasVC()) {
+        return vc.getLatestCommitsForFile(this.relPath).then(function(commits){
+            return commits ? _.map(commits, function(commit){
+                return {
+                    message: _.trim(commit.message()),
+                    sha: commit.sha(),
+                    date: commit.date(),
+                    author: {
+                        name: commit.author().name(),
+                        email: commit.author().email()
+                    }
+                }
+            }) : null;
+        });
+    }
+    return promise.resolve(null);
 };
