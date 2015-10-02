@@ -1,32 +1,14 @@
-var Handlebars  = require('handlebars');
-var _           = require('lodash');
-var tinycolor   = require("tinycolor2");
-var path        = require("path");
-var fs          = require("fs");
+var Handlebars          = require('handlebars');
+var fs                  = require('fs');
+var path                = require('path');
 
-var config      = require("../../config");
-var hbs         = Handlebars.create();
+var config              = require("../../config");
+var hbs                 = Handlebars.create();
 
 module.exports = Generators;
 
-var swatchesTemplate = hbs.compile(fs.readFileSync(path.join(config.get('theme.views'),'generators/swatches.hbs'), 'utf8'));
-hbs.registerHelper('swatches', function(colours) {
-    var output = '';
-    if (_.isString(colours)) {
-        colours = _.compact(_.map(colours.split('|'), function(colour){
-            return {
-                label: null,
-                color: _.trim(colour)
-            };
-        }));
-    }
-    colours = _.map(colours, function(col){
-        var c = tinycolor(col.color);
-        col.label = col.label || col.color;
-        col.textColor = c.isDark() ? 'white' : 'black';
-        return col;
-    });
-    return new Handlebars.SafeString(swatchesTemplate({colors: colours}));
+fs.readdirSync(path.join(__dirname, '../../generators')).forEach(function(fileName){
+    hbs.registerHelper(fileName.replace('\.js',''), require(path.join(__dirname, "../../generators", fileName))(hbs));    
 });
 
 function Generators(){
