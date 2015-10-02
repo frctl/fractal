@@ -39,6 +39,7 @@
     "query-string": "^2.4.0",
     "recursive-readdir": "^1.2.1",
     "rimraf": "^2.4.1",
-    "swag": "^0.7.0"
+    "swag": "^0.7.0",
+    "tinycolor2": "^1.1.2"
   }
 }
