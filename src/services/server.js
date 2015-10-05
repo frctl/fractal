@@ -8,9 +8,12 @@ var swag            = require('swag');
 var Handlebars      = require('handlebars');
 var queryString     = require('query-string')
 var beautifyHTML    = require('js-beautify').html;
+var lz              = require('lz-string');
+
 var output          = require('../output')
 var fractal         = require('../../fractal');
 var config          = fractal.getConfig();
+
 
 module.exports = function(){
     
@@ -201,6 +204,13 @@ module.exports = function(){
     //         sectionTitle: _.find(tplData.navigation, 'url', '/assets').title
     //     }));
     // });
+    
+    // EMBED
+    
+    app.get('/_embed', function (req, res) {
+        var content = lz.decompressFromEncodedURIComponent(req.query.content);
+        res.send(content);
+    });
 
     // PAGES -----------------------------------------------------------------------
     
@@ -232,7 +242,6 @@ module.exports = function(){
         next(error('Error rendering page'));
     });
 
-    
     app.use(function(err, req, res, next) {
         var data = merge(tplData, {
             message: err.message,
