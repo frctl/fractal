@@ -70,6 +70,13 @@ module.exports = {
         });
     },
 
+    renderString: function(str, context){
+        return compiler.compile(str).then(function(compiled){
+            var output = compiled(context);
+            return beautifyHTML(output.trim(), htmlStyle);
+        });
+    },
+
     wrapWithLayout: function(contentMarkup, layoutMarkup){
         return promise.join(contentMarkup, layoutMarkup, function(content, layout){
             return compiler.compile(layout).then(function(compiled){

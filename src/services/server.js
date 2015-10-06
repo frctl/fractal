@@ -208,8 +208,26 @@ module.exports = function(){
     // EMBED
     
     app.get('/_embed', function (req, res) {
+
         var content = lz.decompressFromEncodedURIComponent(req.query.content);
-        res.send(content);
+        var rendered = output.renderString(content, {}).then(function(str){
+            return str + "\n" + '<script src="/_theme/preview.js"></script>';
+        });
+
+        if (req.query.layout && req.query.layout != 0) {
+            var layout = tplData.sources.components.tryFindComponent(req.query.layout);
+            if (!layout) {
+                layout = '{{{content}}}';
+            }
+            if (!_.isString(layout)) {
+                layout = layout.files.markup.content.toString();
+            }
+            rendered = output.wrapWithLayout(rendered, promise.resolve(layout));
+        }
+
+        rendered.then(function(markup){
+            res.send(markup);
+        });
     });
 
     // PAGES -----------------------------------------------------------------------
