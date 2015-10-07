@@ -8,7 +8,9 @@ module.exports = function(hbs){
 
     var imageGridTemplate = hbs.compile(fs.readFileSync(path.join(config.get('theme.views'),'generators/image-grid.hbs'), 'utf8'));
 
-    return function(images) {
+    return function(images, options) {
+        var cols = parseInt(options.hash.cols || 3, 10);
+        var imageWidth = 100 / cols;
         images = _.map(images, function(image){
             return {
                 url: path.join('/', image)
@@ -36,7 +38,12 @@ module.exports = function(hbs){
         //     col.formats = {'hex': c.toHexString(), 'rgb': c.toRgbString()};
         //     return col;
         // });
-        return new hbs.SafeString(imageGridTemplate({images: images}));
+        // 
+        return new hbs.SafeString(imageGridTemplate({
+            images: images,
+            cols: cols,
+            imageWidth: imageWidth
+        }));
     };
 
 };
