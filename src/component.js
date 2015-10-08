@@ -197,6 +197,7 @@ Component.prototype.isComponent = function(){
 };
 
 Component.prototype.getHistory = function(){
+    // Get combined history of all related files
     if (!vc.hasVC()) {
         return promise.resolve(null);
     }
@@ -255,6 +256,89 @@ Component.prototype.getLayout = function(){
         });
     }
     return this.layoutComponent;
+};
+
+Component.prototype.getStaticSelf = function(){
+
+    var self = this;
+    var variants = this.getVariants();
+    var mergedContexts = this.getAllTemplateContexts();
+
+    // Promises
+    var toResolve = {};
+    toResolve.history = this.getHistory();
+    toResolve.template = this.getTemplateMarkup();
+
+    var rendered = {};
+    var contexts = {
+        _merged: {
+            raw: mergedContexts,
+            highlighted: output.highlight(mergedContexts, 'json')
+        }
+    };
+    _.each(variants, function(variant){
+        var raw = self.render(variant.name, true);
+        var wrapped = self.render(variant.name, false);
+        var context = self.getTemplateContext(variant.name);
+        rendered[variant.name] = promise.join(raw, wrapped, function(r, w){
+            return {
+                raw: r,
+                wrapped: w,
+                highlighted: output.highlight(r, 'html')
+            }
+        });
+        contexts[variant.name] = {
+            raw: context,
+            highlighted: output.highlight(context, 'json'),
+        }
+    });
+
+    var mergedRaw = this.renderAll(true);
+    var mergedWrapped = this.renderAll(false);
+    rendered._merged = promise.join(mergedRaw, mergedWrapped, function(r, w){
+        return {
+            raw: r,
+            wrapped: w,
+            highlighted: output.highlight(r, 'html')
+        }
+    });
+
+    toResolve.rendered = promise.props(rendered);
+
+    return promise.props(toResolve).then(function(props){
+
+        var behaviourContent = self.getBehaviour();
+        var stylesContent = self.getStyles();
+
+        var ret = {
+            title:              self.title,
+            id:                 self.id,
+            status:             self.status,
+            path:               self.path,
+            data:               self.getData(),
+            variants:           variants,
+            variantsCount:      variants.length,
+            rendered:           props.rendered,
+            template: {
+                raw:            props.template,
+                highlighted:    output.highlight(props.template, 'hbs'),
+            },
+            behaviour: behaviourContent ? {
+                raw: behaviourContent,
+                highlighted: output.highlight(behaviourContent, 'js'),
+            } : null,
+            styles: stylesContent ? {
+                raw: stylesContent,
+                highlighted: output.highlight(stylesContent, 'scss'),
+            } : null,
+            contexts: contexts,
+            notes: self.getNotes(),
+            history: props.history,
+        };  
+
+        return ret;
+
+    });
 };
 
 function getContentFromFiles(files){

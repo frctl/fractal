@@ -32,6 +32,9 @@ module.exports = function(){
     var tplData = {
         config: config.all(),
     };
+    var shared = {
+        
+    };
 
     app.engine('hbs', hbs.engine);
     app.set('views', config.get('theme.views'))
@@ -51,8 +54,8 @@ module.exports = function(){
         req.segments = _.compact(req.path.split('/'));
         
         fractal.getSources().then(function(sources){
-            tplData.req = req;    
-            tplData.sources = sources;
+            shared.req = req;    
+            shared.sources = sources;
             tplData.navigation = generatePrimaryNav(sources, req);
             next();
         });
@@ -69,8 +72,8 @@ module.exports = function(){
     });
     
     app.get('/components', function (req, res) {
-        var compSource = tplData.sources.components;
-        var docs = tplData.sources.docs;
+        var compSource = shared.sources.components;
+        var docs = shared.sources.docs;
         res.render('components/index', merge(tplData, {
             components: compSource ? compSource.getComponents() : null,
             page: docs ? docs.findByUrlPath('components') || null : null
@@ -78,113 +81,68 @@ module.exports = function(){
     });
     
     app.get('/components/*', function (req, res, next) {
-        var compSource = tplData.sources.components;
-        var component = compSource.findComponent('path', req.path.replace(new RegExp('^\/components\/'), ''));
-        if (component && ! component.hidden) {
-            var data                = component.getData();
-            var viewType            = req.query.view || 'component';
-            var variant             = component.getVariant(req.query.variant) || (component.getDisplayStyle() === 'switch' ? component.getVariant('base') : null);
-            var concat              = (component.getDisplayStyle() === 'concat' && ! variant);
-            var variants            = variant ? component.getVariants() || [] : [];
-            var rendered            = concat ? component.renderAll(true) : component.render(variant.name, true);
-            var renderedWithLayout  = concat ? component.renderAll() : component.render(variant.name);
-            var template            = component.getTemplateMarkup();
-            var history             = component.getHistory();
-            var raw                 = false;
-            return promise.join(rendered, renderedWithLayout, template, history, function(rend, rendWL, tpl, hist){
-                if (_.contains(['styles','behaviour','markup','template'], viewType) && !_.isUndefined(req.query.raw)) {
-                    res.setHeader("Content-Type", "text/plain");
-                    raw = true;
-                }
+
+        var compSource      = shared.sources.components;
+        var viewType        = req.query.view || 'component';
+        var raw             = ! _.isUndefined(req.query.raw);
+        var component       = compSource.findComponent('path', req.path.replace(new RegExp('^\/components\/'), ''));
+        var variantName     = req.query.variant || (component.getDisplayStyle() === 'switch' ? 'base' : '_merged');
+        var variant         = (variantName === '_merged') ? undefined : component.getVariant(variantName);
+
+        if (component && ! component.hidden && ! _.isNull(variant)) {
+
+            if (_.contains(['styles','behaviour','markup','template'], viewType) && raw) {
+                res.setHeader("Content-Type", "text/plain");
+            }
+                        
+            return component.getStaticSelf().then(function(c){
                 switch(viewType) {
+                    case 'styles':
+                    case 'behaviour':
+                    case 'template':
+                        if (! c[viewType] ) return next(error('Invalid view type', 404));
+                        return res.render(raw ? 'components/raw' : 'components/highlight', merge(tplData, {
+                            content: raw ? c[viewType].raw : c[viewType].highlighted
+                        }));
                     case 'preview':
-                        return res.render('components/preview', merge(data, {
-                            content: rendWL,
+                        return res.render('components/preview', merge(tplData, {
+                            content: c.rendered[variantName].wrapped,
                             embedded: !_.isUndefined(req.query.embedded)
                         }));
-                    case 'styles':
-                        return res.render(raw ? 'components/raw' : 'components/highlight', merge(data, {
-                            content: raw ? component.getStyles() : output.highlight(component.getStyles(), 'scss')
-                        }));
-                    case 'behaviour':
-                        return res.render(raw ? 'components/raw' : 'components/highlight', merge(data, {
-                            content: raw ? component.getBehaviour() : output.highlight(component.getBehaviour(), 'js')
-                        }));
                     case 'markup':
-                        return res.render(raw ? 'components/raw' : 'components/highlight', merge(data, {
-                            content: raw ? rend : output.highlight(rend, 'html')
-                        }));
-                    case 'template':
-                        return res.render(raw ? 'components/raw' : 'components/highlight', merge(data, {
-                            content:  raw ? tpl : output.highlight(tpl, 'html')
+                        return res.render(raw ? 'components/raw' : 'components/highlight', merge(tplData, {
+                            content: raw ? c.rendered[variantName].raw : c.rendered[variantName].highlighted
                         }));
                     case 'context':
-                        var cont = concat ? component.getAllTemplateContexts() : component.getTemplateContext(variant.name);
-                        if (!_.isUndefined(req.query.raw)) {
-                            return res.json(cont);   
+                        if (raw) {
+                            return res.json(c.contexts[variantName].raw);
                         } else {
-                            return res.render('components/highlight', merge(data, {
-                                content:  output.highlight(cont, 'json')
+                            return res.render('components/highlight', merge(tplData, {
+                                content: c.contexts[variantName].highlighted
                             }));
                         }
                     default:
-                        function makeUrl(viewKey) {
-                            return queryString.stringify(merge(req.query, {view:viewKey}));
-                        }
-                        var data = merge(tplData, {
-                            external: {
-                                preview:    makeUrl('preview'),
-                                markup:     makeUrl('markup'),
-                                template:   makeUrl('template'),
-                                raw:        makeUrl('raw'),
-                                styles:     makeUrl('styles'),
-                                behaviour:  makeUrl('behaviour'),
-                                context:    makeUrl('context'),
-                            },
-                            concat:                 concat,
-                            "switch":               ! concat,
-                            component: {
-                                title:              component.title,
-                                id:                 component.id,
-                                status:             component.status,
-                                path:               component.path,
-                                data:               data,
-                                markup:             rend,
-                                markupWithLayout:   rendWL,
-                                template:           tpl,
-                                variant:            variant,
-                                variants:           variants.length > 0 ? variants : null,
-                                variantsCount:      variants.length,
-                                notes:              component.getNotes(),
-                                history: hist,
-                                highlighted: {
-                                    styles:     output.highlight(component.getStyles(), 'scss'),
-                                    behaviour:  output.highlight(component.getBehaviour(), 'js'),
-                                    context:    output.highlight(concat ? component.getAllTemplateContexts() : component.getTemplateContext(variant.name), 'json'),
-                                    data:       output.highlight(component.getData(), 'json'),
-                                    markup:     output.highlight(rend, 'html'),
-                                    template:   output.highlight(tpl, 'hbs'),
-                                }
-                            }
-                        });
-                        return res.render('components/component', merge(data, {
-                            components: compSource ? compSource.getComponents() : null
+                        return res.render('components/component', merge(tplData, {
+                            component: c,
+                            components: compSource ? compSource.getComponents() : null,
+                            external: _.invert(_.mapKeys(['preview','markup','template','styles','behaviour','context'], function(val){
+                                return queryString.stringify(merge(req.query, {view:val}));
+                            })),
+                            merged: (variantName === '_merged'),
+                            variant: variant,
+                            variantMarkup: c.rendered[variantName].highlighted,
+                            variantContext: c.contexts[variantName].highlighted
                         }));
                     break;
                 }
+
             }).catch(function(e){
                 return res.render('components/error', merge(tplData, {
                     components: compSource ? compSource.getComponents() : null,
-                    error: e.message,
-                    component: {
-                        title:              component.title,
-                        id:                 component.id,
-                        status:             component.status,
-                        path:               component.path
-                    }
+                    error: e.message
                 }));
-                // next(error('Error rendering component - ' + e.message));
             });
+
         } else {
             return next(error('Component not found', 404));
         }
@@ -215,7 +173,7 @@ module.exports = function(){
         });
 
         if (req.query.layout && req.query.layout != 0) {
-            var layout = tplData.sources.components.tryFindComponent(req.query.layout);
+            var layout = shared.sources.components.tryFindComponent(req.query.layout);
             if (!layout) {
                 layout = '{{{content}}}';
             }
@@ -233,14 +191,14 @@ module.exports = function(){
     // PAGES -----------------------------------------------------------------------
     
     app.get('/', function (req, res, next) {
-        var docs = tplData.sources.docs;
+        var docs = shared.sources.docs;
         res.render('index', merge(tplData, {
             page: docs ? docs.findByUrlPath('') || null : null
         }));
     });
 
     app.get('(/*)', function (req, res, next) {
-        var docs = tplData.sources.docs;
+        var docs = shared.sources.docs;
         if (docs) {
             var page = docs.findByUrlPath(req.params[1]);
             if (page) {
