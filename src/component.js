@@ -20,8 +20,11 @@ module.exports = Component;
 function Component(config){
     this.id             = config.id;
     this.path           = config.path;
+    this.pathWithExt    = config.pathWithExt;
     this.fsPath         = config.fsPath;
+    this.fullFsPath     = config.fullFsPath;
     this.title          = config.title;
+    this.origin         = config.origin;
     this.hidden         = config.hidden;
     this.depth          = config.depth;
     this.status         = config.status || status.getDefault();
@@ -37,9 +40,12 @@ Component.fromFile = function(file){
     try {
         return new Component({
             id:     file.getId(),
+            origin:   'file',
             title:  file.getTitle(),
             path:   file.fauxInfo.urlStylePath,
+            pathWithExt: file.fauxInfo.relative,
             fsPath: file.fileInfo.relative.replace(/\.(hbs|handlebars)$/,''),
+            fullFsPath: file.fileInfo.relative,
             order:  file.order,
             depth:  file.depth,
             hidden: file.isHidden(),
@@ -61,10 +67,13 @@ Component.fromDirectory = function(dir){
         var data            = merge(main.data, DataFetcher.fetchFromFile(findRelated(main, dir.children, 'data')) || {});    
         return new Component({
             id:     data.id || main.getId(),
+            origin:   'directory',
             title:  data.title || main.getTitle(),
             depth:  dir.depth,
             path:   dir.fauxInfo.urlStylePath,
+            pathWithExt: dir.fauxInfo.urlStylePath,
             fsPath: main.fileInfo.relative.replace(/\.(hbs|handlebars)$/,''),
+            fullFsPath: main.fileInfo.relative,
             order:  dir.order,
             hidden: data.hidden || main.isHidden(),
             status: status.findStatus(data.status),
@@ -305,6 +314,15 @@ Component.prototype.getStaticSelf = function(){
 
     toResolve.rendered = promise.props(rendered);
 
+    var files = _.compact(_.flatten(_.map(this.files, function(files){
+        if (files) {
+            if (_.isArray(files)) {
+                return files
+            }
+            return [files];    
+        }
+    })));
+
     return promise.props(toResolve).then(function(props){
 
         var behaviourContent = self.getBehaviour();
@@ -313,12 +331,17 @@ Component.prototype.getStaticSelf = function(){
         var ret = {
             title:              self.title,
             id:                 self.id,
+            origin:             self.origin,
             status:             self.status,
             path:               self.path,
+            pathWithExt:        self.pathWithExt,
+            fsPath:             self.fsPath,
+            fullFsPath:         self.fullFsPath,
             data:               self.getData(),
             variants:           variants,
             variantsCount:      variants.length,
             rendered:           props.rendered,
+            files:              files,
             template: {
                 raw:            props.template,
                 highlighted:    output.highlight(props.template, 'hbs'),
