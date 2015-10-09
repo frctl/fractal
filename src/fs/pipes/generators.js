@@ -8,7 +8,11 @@ var hbs                 = Handlebars.create();
 module.exports = Generators;
 
 fs.readdirSync(path.join(__dirname, '../../generators')).forEach(function(fileName){
-    hbs.registerHelper(fileName.replace('\.js',''), require(path.join(__dirname, "../../generators", fileName))(hbs));    
+    var generator = require(path.join(__dirname, "../../generators", fileName))(hbs);
+    console.log(generator);
+    generator.then(function(func){
+        hbs.registerHelper(fileName.replace('\.js',''), func);    
+    });
 });
 
 function Generators(){

@@ -2,6 +2,7 @@ var _           = require('lodash');
 var tinycolor   = require("tinycolor2");
 var path        = require("path");
 var fs          = require("fs");
+var promise     = require("bluebird");
 
 var config      = require("../config");
 
@@ -9,7 +10,7 @@ module.exports = function(hbs){
 
     var swatchesTemplate = hbs.compile(fs.readFileSync(path.join(config.get('theme.views'),'generators/swatches.hbs'), 'utf8'));
 
-    return function(colours) {
+    return promise.resolve(function(colours) {
         var output = '';
         if (_.isString(colours)) {
             colours = _.compact(_.map(colours.split('|'), function(colour){
@@ -33,6 +34,6 @@ module.exports = function(hbs){
             return col;
         });
         return new hbs.SafeString(swatchesTemplate({colors: colours}));
-    };
+    });
 
 };

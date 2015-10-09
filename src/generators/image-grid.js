@@ -1,6 +1,7 @@
 var _           = require('lodash');
 var path        = require("path");
 var fs          = require("fs");
+var promise     = require("bluebird");
 
 var config      = require("../config");
 
@@ -8,7 +9,7 @@ module.exports = function(hbs){
 
     var imageGridTemplate = hbs.compile(fs.readFileSync(path.join(config.get('theme.views'),'generators/image-grid.hbs'), 'utf8'));
 
-    return function(images, options) {
+    return promise.resolve(function(images, options) {
         var cols = parseInt(options.hash.cols || 3, 10);
         var imageWidth = 100 / cols;
         images = _.map(images, function(image){
@@ -44,6 +45,6 @@ module.exports = function(hbs){
             cols: cols,
             imageWidth: imageWidth
         }));
-    };
+    });
 
 };
