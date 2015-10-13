@@ -17,12 +17,14 @@ module.exports = function(hbs){
             var comp = sources.components.tryFindComponent(componentName);
             if (comp) {
                 var variant = comp.getVariant(variantName) || _.first(comp.getVariants());
-                console.log(variant);
                 return comp.getStaticSelf().then(function(c){
                     return new hbs.SafeString(componentTemplate({
                         baseUrl: '/components',
                         component: c,
-                        variant: variant
+                        variant: variant,
+                        view: view,
+                        variantMarkup: c.rendered[variantName].highlighted,
+                        variantContext: c.contexts[variantName].highlighted
                     }).replace(/\r?\n|\r/g,'')); 
                 });
             }
