@@ -107,7 +107,6 @@ Component.prototype.renderAll = function(withoutLayout){
     return content;
 };
 
-
 Component.prototype.getData = function(){
     return merge(this.data, {
         id:     this.id,
@@ -173,6 +172,7 @@ Component.prototype.getVariants = function(){
                 variant.name = key;
                 variant.title = variant.title || titleize(variant.name);
                 variant.id = base.id + '--' + key;
+                variant.preview = merge(base.preview || {}, variant.preview || {});
                 variant.status = variant.status ? status.findStatus(variant.status) : base.status;
                 return variant;
             }
