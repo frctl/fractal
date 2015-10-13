@@ -37,6 +37,7 @@
     "minimatch": "^2.0.10",
     "mkdirp": "^0.5.1",
     "nodegit": "^0.5.0",
+    "promised-handlebars": "^1.0.0",
     "query-string": "^2.4.0",
     "recursive-readdir": "^1.2.1",
     "rimraf": "^2.4.1",

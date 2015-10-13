@@ -21,7 +21,7 @@ module.exports = function(){
 
         this.name = fileInfo.name;
         this.data = {};
-
+        
         if (! this.isRoot) {    
             var fauxAbs = makeFauxPath(this.path);
             var fauxInfo = p.parse(fauxAbs);
@@ -109,7 +109,7 @@ module.exports = function(){
     
     this.isDirectory = function(){
         return this.type === 'directory';
-    };
+    }; 
 
     this.isFile = function(){
         return this.type === 'file';

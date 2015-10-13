@@ -1,13 +1,20 @@
-var _           = require('lodash');
-var promise     = require("bluebird");
-var beautifyJS  = require('js-beautify').js;
-var beautifyCSS = require('js-beautify').css;
-var beautifyHTML = require('js-beautify').html;
-var Highlights  = require('highlights');
-var marked = require('marked');
+var _                           = require('lodash');
+var promise                     = require("bluebird");
+var beautifyJS                  = require('js-beautify').js;
+var beautifyCSS                 = require('js-beautify').css;
+var beautifyHTML                = require('js-beautify').html;
+var Highlights                  = require('highlights');
+var marked                      = require('marked');
+var promisedHandlebars          = require('promised-handlebars');
+var swag                        = require('swag');
+var fs                          = require('fs');
+var p                           = require('path');
+var asyncHbs                    = promisedHandlebars(require('handlebars'));
 
-var fractal     = require('../fractal');
-var compiler    = require('./compiler');
+var generatorsRegistered        = false;
+
+var fractal                     = require('../fractal');
+var compiler                    = require('./compiler');
 
 var htmlStyle = {
     "preserve_newlines": true,
@@ -26,6 +33,8 @@ marked.setOptions({
 });
 
 var renderer = new marked.Renderer();
+
+swag.registerHelpers(asyncHbs);
 
 renderer.code = function(code, lang, escaped) {
     var highlighted = false;
@@ -70,11 +79,26 @@ module.exports = {
         });
     },
 
-    renderString: function(str, context){
+    renderComponentContent: function(str, context){
         return compiler.compile(str).then(function(compiled){
             var output = compiled(context);
             return beautifyHTML(output.trim(), htmlStyle);
         });
+    },
+
+    render: function(content, context){
+        if (!generatorsRegistered) {
+            fs.readdirSync(p.join(__dirname, 'generators')).forEach(function(fileName){
+                var generator = require(p.join(__dirname, "generators", fileName))(hbs);
+                asyncHbs.registerHelper(fileName.replace('\.js',''), generator);
+            });
+            generatorsRegistered = true;
+        }
+        var tpl = asyncHbs.compile(content);
+        var self = this;
+        return tpl(context).then(function(str){
+            return self.markdown(str);
+        }); // a promise
     },
 
     wrapWithLayout: function(contentMarkup, layoutMarkup){

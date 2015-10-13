@@ -168,7 +168,7 @@ module.exports = function(){
     app.get('/_embed', function (req, res) {
 
         var content = lz.decompressFromEncodedURIComponent(req.query.content);
-        var rendered = output.renderString(content, {}).then(function(str){
+        var rendered = output.renderComponentContent(content, {}).then(function(str){
             return str + "\n" + '<script src="/_theme/preview.js"></script>';
         });
 
@@ -186,15 +186,27 @@ module.exports = function(){
         rendered.then(function(markup){
             res.send(markup);
         });
+        return;
     });
 
     // PAGES -----------------------------------------------------------------------
     
     app.get('/', function (req, res, next) {
         var docs = shared.sources.docs;
-        res.render('index', merge(tplData, {
-            page: docs ? docs.findByUrlPath('') || null : null
-        }));
+        var page = docs ? docs.findByUrlPath('') || null : null;
+        if (page) {
+            var content = page.render({
+                page: page.data || {},
+                config: tplData.config
+            });
+            return content.then(function(c){
+                res.render('index', merge(tplData, {
+                    page: page,
+                    content: c
+                }));
+            }); 
+        }
+        res.render('index', merge(tplData, {}));
     });
 
     app.get('(/*)', function (req, res, next) {
@@ -203,12 +215,18 @@ module.exports = function(){
             var page = docs.findByUrlPath(req.params[1]);
             if (page) {
                 var dir = req.segments.length ? docs.findDirectoryByUrlPath(req.segments[0]) : docs.dir;
-                res.render('pages/page', merge(tplData, {
-                    page: page,
-                    sectionTitle: req.segments[0],
-                    sectionPages: _.get(dir, 'children', [])
-                }));
-                return;
+                var content = page.render({
+                    page: page.data,
+                    config: tplData.config
+                });
+                return content.then(function(c){
+                    res.render('pages/page', merge(tplData, {
+                        page: page,
+                        content: c,
+                        sectionTitle: req.segments[0],
+                        sectionPages: _.get(dir, 'children', [])
+                    }));
+                }); 
             } else {
                return next(error('Page not found', 404));
             }

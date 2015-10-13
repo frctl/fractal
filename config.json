@@ -51,16 +51,6 @@
             "name": "frontmatter",
             "priority": 0,
             "matches": "*.+(html|hbs|md|markdown)"
-        },
-        {
-            "name": "markdown",
-            "priority": 2,
-            "matches": "*.+(md|markdown)"
-        },
-        {
-            "name": "generators",
-            "priority": 1,
-            "matches": "*.+(md|markdown)"
         }
     ]
 }

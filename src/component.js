@@ -272,7 +272,7 @@ Component.prototype.getStaticSelf = function(){
     var self = this;
     var variants = this.getVariants();
     var mergedContexts = this.getAllTemplateContexts();
-
+    
     // Promises
     var toResolve = {};
     toResolve.history = this.getHistory();

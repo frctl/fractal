@@ -20,7 +20,6 @@ Components.fromDirectory = function(directory, config){
     });
 };
 
-
 Components.prototype.findComponent = function(key, value) {
     var found = null;
     function checkChildren(children){

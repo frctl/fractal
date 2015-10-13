@@ -4,6 +4,8 @@ var p           = require('path');
 var crypto      = require('crypto');
 var _           = require('lodash');
 var minimatch   = require('minimatch');
+var fs          = require("fs");
+var output      = require("../output");
 
 var vc          = require('../vc');
 var mixin       = require('./mixin');
@@ -67,4 +69,8 @@ File.prototype.getHistory = function(){
         });
     }
     return promise.resolve(null);
+};
+
+File.prototype.render = function(data) {
+    return output.render(this.content.toString() || "", data);
 };

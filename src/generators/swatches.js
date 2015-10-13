@@ -10,7 +10,7 @@ module.exports = function(hbs){
 
     var swatchesTemplate = hbs.compile(fs.readFileSync(path.join(config.get('theme.views'),'generators/swatches.hbs'), 'utf8'));
 
-    return promise.resolve(function(colours) {
+    return function(colours) {
         var output = '';
         if (_.isString(colours)) {
             colours = _.compact(_.map(colours.split('|'), function(colour){
@@ -33,7 +33,7 @@ module.exports = function(hbs){
             col.formats = {'hex': c.toHexString(), 'rgb': c.toRgbString()};
             return col;
         });
-        return new hbs.SafeString(swatchesTemplate({colors: colours}));
-    });
+        return new hbs.SafeString(swatchesTemplate({colors: colours}).replace(/\r?\n|\r/g,''));
+    };
 
 };

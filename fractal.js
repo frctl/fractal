@@ -40,6 +40,7 @@ module.exports = {
             return sources[key];
         });
         src['assets'] = promise.resolve(false);
+        
         // TODO: add in assets source here
         return promise.props(src);
     },

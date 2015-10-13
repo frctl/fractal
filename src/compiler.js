@@ -3,7 +3,7 @@ var promise     = require('bluebird');
 var swag        = require('swag');
 var _           = require('lodash');
 
-var fractal     = require('../fractal');
+
 var partials    = [];
 
 var FractalCompiler = function(){
@@ -33,10 +33,13 @@ var compiler = null;
 module.exports = {
 
     getCompiler: function(){
+        var fractal     = require('../fractal');
         if (compiler !== null) {
             return promise.resolve(compiler);
         }
+        
         return fractal.getSources().then(function(sources){
+
             partials = [];
             sources.components.each(function(item){
                 if (item.type === 'component') {
