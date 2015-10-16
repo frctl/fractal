@@ -144,5 +144,5 @@ app.run = function(){
  */
 
 app.getComponents = function(){
-    return Components.fromPath(this.get('components:path'));
+    return Components.build(this.get('components'));
 };

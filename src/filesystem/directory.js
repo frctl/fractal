@@ -11,7 +11,7 @@ var File        = require('./file');
 var mixin       = require('./fs-item');
 
 /*
- * Export the component source.
+ * Export the directory.
  */
 
 module.exports = Directory;
@@ -32,6 +32,16 @@ function Directory(directoryPath, children, meta){
 };
 
 mixin.call(Directory.prototype);
+
+/*
+ * Check whether the directory contains files or subdirectories.
+ *
+ * @api public
+ */
+
+Directory.prototype.hasChildren = function(){
+    return !! this.children.length;
+};
 
 /*
  * Return a new Directory instance from a path.

@@ -13,6 +13,9 @@
 
     },
     "components": {
-        "path": "src/components"
+        "path": "src/components",
+        "markup": {
+            "matches": ".*\\.hbs"
+        }
     }
 }

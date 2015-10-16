@@ -8,10 +8,10 @@ var _           = require('lodash');
 var mixin       = require('./entity');
 
 /*
- * Export the component.
+ * Export the group.
  */
 
-module.exports = Component;
+module.exports = Group;
 
 /*
  * Group constructor.
@@ -19,8 +19,9 @@ module.exports = Component;
  * @api private
  */
 
-function Component(){
-    this.type = 'component';
+function Group(){
+    this.type = 'group';
 };
 
-mixin.call(Component.prototype);
+mixin.call(Group.prototype);
+

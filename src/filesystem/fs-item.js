@@ -11,7 +11,14 @@ var _           = require('lodash');
 
 module.exports = fsItem;
 
+
 function fsItem(){
+
+    /*
+     * Initialisation to set common properties.
+     *
+     * @api private
+     */
 
     this.init = function(){
         
@@ -20,11 +27,12 @@ function fsItem(){
         var nameParts           = fileInfo.name.match(/^_?(\d+)\-(.*)/,'');
 
         this.relativePath       = this.path;
-        this.name               = fileInfo.name;
-        this.base               = fileInfo.base;
+        this.ext                = fileInfo.ext;
+        this.name               = nameParts ? nameParts[2] : fileInfo.name;
+        this.base               = this.name + this.ext;
         this.dir                = fileInfo.dir;
         this.relativeDir        = relativefileInfo.dir;
-        this.ext                = fileInfo.ext;
+        
         this.pathSegments       = _.compact(this.path.split('/'));
 
         this.modified           = this.stat.mtime;
@@ -37,16 +45,45 @@ function fsItem(){
         return this;
     };
 
+    /*
+     * Directory test.
+     *
+     * @api public
+     */
+
     this.isDirectory = function(){
         return this.type === 'directory';
     }; 
+
+    /*
+     * File test.
+     *
+     * @api public
+     */
 
     this.isFile = function(){
         return this.type === 'file';
     };
 
+    /*
+     * Generic type test.
+     *
+     * @api public
+     */
+
     this.isType = function(type){
         return this.type === type;
+    };
+
+    /*
+     * Check if the file matches a matcher object
+     *
+     * @api public
+     */
+    
+    this.matches = function(matcher){
+        var tester = new RegExp(matcher);
+        return tester.test(this.base);
     };
 
 };
