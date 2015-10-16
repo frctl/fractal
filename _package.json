@@ -2,7 +2,7 @@
   "name": "fractal-core",
   "version": "0.0.1",
   "description": "An unopinionated UI component library and styleguide generator.",
-  "main": "src/fractal.js",
+  "main": "fractal.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/frctl/core.git"
@@ -25,7 +25,7 @@
     "express": "^4.13.1",
     "express-handlebars": "^2.0.1",
     "faker": "^2.1.5",
-    "fractal-theme-default": "frctl/theme-default",
+    "fractal-theme-default": "git+ssh://git@github.com:frctl/theme-default",
     "gray-matter": "^2.0.0",
     "handlebars": "^3.0.3",
     "highlights": "^1.2.0",
@@ -43,7 +43,6 @@
     "recursive-readdir": "^1.2.1",
     "rimraf": "^2.4.1",
     "swag": "^0.7.0",
-    "tinycolor2": "^1.1.2",
-    "winston": "^1.1.0"
+    "tinycolor2": "^1.1.2"
   }
 }

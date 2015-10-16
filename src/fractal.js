@@ -1,8 +1,16 @@
+/**
+ * Module dependencies.
+ */
+
 var app = require("./application");
 
-exports = module.exports = createApplication;
+/**
+ * Export boot() function.
+ */
 
-function createApplication(){
+exports = module.exports = boot;
+
+function boot(){
     app.init();
     return app;
 };
