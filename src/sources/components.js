@@ -5,6 +5,8 @@
 var _           = require('lodash');
 
 var Directory   = require('../filesystem/directory');
+var Component   = require('./entities/component');
+var Group       = require('./entities/group');
 var mixin       = require('./source');
 
 /*
@@ -33,9 +35,8 @@ mixin.call(ComponentSource.prototype);
 
 ComponentSource.build = function(config){
     return Directory.fromPath(config.path).then(function(dir){
-        ComponentSource.buildComponentTree(dir, config).then(function(tree){
-            return new ComponentSource(tree).init();    
-        });
+        var tree = ComponentSource.buildComponentTree(dir, config);
+        return new ComponentSource(tree).init();
     });
 };
 
@@ -54,46 +55,45 @@ ComponentSource.buildComponentTree = function(dir, config){
     var markupFiles = _.filter(files, function(file){
         return file.matches(config.markup.matches);
     });
-
     
-    // for (var i = markupFiles.length - 1; i >= 0; i--) {
-    //     var file = markupFiles[i];
-    //     if (!dir.isRoot) {
-    //         if (file.fauxInfo.name === dir.fauxInfo.name) {
-    //             // matches parent directory name so this whole directory is a component
-    //             var item = Component.fromDirectory(dir);
-    //             if (item) {
-    //                 return item;    
-    //             }
-    //             continue;
-    //         }
-    //     }
-    //     var item = Component.fromFile(file);
-    //     if (item) {
-    //         ret.push(item);    
-    //     }
-    // };
+    for (var i = markupFiles.length - 1; i >= 0; i--) {
+        var file = markupFiles[i];
+        if (!dir.isRoot && file.name === dir.name) {
+            // matches parent directory name so this whole directory is a component
+            var entity = new Component(dir);
+            if (entity) {
+                return entity;    
+            }
+            continue;
+        }
+        var entity = new Component(file);
+        if (entity) {
+            ret.push(entity);    
+        }
+    };
 
-    // for (var i = directories.length - 1; i >= 0; i--) {
-    //     var directory = directories[i];
-    //     if ( directory.hasChildren()) {
-    //         var children = getComponents(directory);
-    //         if (!_.isArray(children)) {
-    //             ret.push(children);
-    //         } else {
-    //             ret.push({
-    //                 name: directory.fauxInfo.name,
-    //                 title: directory.getTitle(),
-    //                 order: directory.order,
-    //                 depth: directory.depth,
-    //                 id: directory.getId(),
-    //                 isDirectory: true,
-    //                 type: 'directory',
-    //                 children: children
-    //             });
-    //         }
-    //     }
-    // };
+    for (var i = directories.length - 1; i >= 0; i--) {
+        var directory = directories[i];
+        if ( directory.hasChildren()) {
+            var children = ComponentSource.buildComponentTree(directory, config);
+            if (!_.isArray(children)) {
+                ret.push(children);
+            } else {
+                ret.push(new Group(directory, children));
+                // ret.push({
+                //     name: directory.fauxInfo.name,
+                //     title: directory.getTitle(),
+                //     order: directory.order,
+                //     depth: directory.depth,
+                //     id: directory.getId(),
+                //     isDirectory: true,
+                //     type: 'directory',
+                //     children: children
+                // });
+            }
+        }
+    };
 
+    return ret;
     // return _.isArray(ret) ? _.sortByOrder(ret, ['type','order','title'], ['desc','asc','asc']) : ret;
 };

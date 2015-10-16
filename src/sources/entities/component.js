@@ -19,8 +19,18 @@ module.exports = Component;
  * @api private
  */
 
-function Component(){
+function Component(source){
     this.type = 'component';
+    this.source = source;
+    this.files = {};
+    
+
+    // if (this.source.isFile()) {
+
+    // } else {
+
+    // }
 };
 
 mixin.call(Component.prototype);
+

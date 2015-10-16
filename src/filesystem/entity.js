@@ -9,10 +9,10 @@ var _           = require('lodash');
  * Export the mixin.
  */
 
-module.exports = fsItem;
+module.exports = entity;
 
 
-function fsItem(){
+function entity(){
 
     /*
      * Initialisation to set common properties.

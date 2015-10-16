@@ -6,7 +6,7 @@ var Promise     = require('bluebird');
 var path        = require('path');
 var fs          = Promise.promisifyAll(require('fs'));
 
-var mixin       = require('./fs-item');
+var mixin       = require('./entity');
 
 /*
  * Export the File.

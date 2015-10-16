@@ -8,7 +8,7 @@ var _           = require('lodash');
 var fs          = Promise.promisifyAll(require('fs'));
 
 var File        = require('./file');
-var mixin       = require('./fs-item');
+var mixin       = require('./entity');
 
 /*
  * Export the directory.
