@@ -11,5 +11,8 @@
     },
     "exporter": {
 
+    },
+    "components": {
+        "path": "src/components"
     }
 }

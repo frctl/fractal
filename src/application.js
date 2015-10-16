@@ -4,10 +4,13 @@
 
 var nconf       = require('nconf');
 var Path        = require('path');
+var Promise     = require('bluebird');
 var logger      = require('winston');
 
-var server      = require('./output/server/server');
-var exporter    = require('./output/exporter/exporter');
+var server      = require('./services/server/server');
+var exporter    = require('./services/exporter/exporter');
+var Components  = require('./sources/components');
+var Pages       = require('./sources/pages');
 
 /*
  * Export the app.
@@ -46,8 +49,8 @@ app.defaultConfig = function(){
     }).env().file({
         file: Path.join(__dirname + '/../config.json')
     });
-    this.server = server;
-    this.exporter = exporter;
+    // this.server = server;
+    // this.exporter = exporter;
 };
 
 /*
@@ -123,14 +126,23 @@ app.run = function(){
 
     if (this.enabled('run:exporter')) {
         logger.info('Running exporter...');
-        this.exporter.init(this.get('exporter')).export();
+        exporter.init(this).export();
     }
 
     if (this.enabled('run:server') || this.disabled('run:exporter')) {
         logger.info('Booting server...');
-        this.server.init(this.get('server')).listen();
+        server.init(this).listen();
     }
 
     return this;
+};
 
+/*
+ * Return a collection of components based on the config path.
+ *
+ * @api public
+ */
+
+app.getComponents = function(){
+    return Components.fromPath(this.get('components:path'));
 };

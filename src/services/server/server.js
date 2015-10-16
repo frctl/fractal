@@ -6,9 +6,9 @@ var express     = require('express')();
 var logger      = require('winston');
 var _           = require('lodash');
 
-var components  = require('./components');
-var pages       = require('./pages');
-var misc        = require('./misc');
+var components  = require('./handlers/components');
+var pages       = require('./handlers/pages');
+var misc        = require('./handlers/misc');
 
 /*
  * Export the server.
@@ -30,13 +30,14 @@ function Server(){
 /**
  * Build the initial set of routes and responses.
  *
- * @api private
+ * @api public
  */
 
-Server.prototype.init = function(options){
+Server.prototype.init = function(fractal){
 
-    options = options || {};
-    this.port = options.port || this.port;
+    this.port = fractal.get('server:port') || this.port;
+
+    express.locals.fractal = fractal;
     
     express.use(function (req, res, next) {
         req.segments = _.compact(req.path.split('/'));
