@@ -3,6 +3,7 @@
  */
 
 var _           = require('lodash');
+var matter      = require('gray-matter');
 
 /*
  * Export the mixin.

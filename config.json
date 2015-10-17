@@ -14,8 +14,30 @@
     },
     "components": {
         "path": "src/components",
-        "markup": {
-            "matches": ".*\\.hbs"
+        "files": {
+            "template": {
+                "primary": true,
+                "matches": ".*\\.hbs",
+                "title": "Template"
+            },
+            "data": {
+                "matches": "^data\\.(js|json|yaml|yml)$",
+                "title": "Data"
+            },
+            "styles": {
+                "multiple": true,
+                "matches": "^.*\\.(css|scss|less)$",
+                "title": "Styles"
+            },
+            "behaviour": {
+                "multiple": true,
+                "matches": "^(?!data).*\\.(js|coffee)$",
+                "title": "Behaviour"
+            },
+            "notes": {
+                "matches": "^readme\\.(md|markdown)$",
+                "title": "Notes"
+            }
         }
     }
 }

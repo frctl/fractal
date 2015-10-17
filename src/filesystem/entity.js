@@ -22,6 +22,9 @@ function entity(){
 
     this.init = function(){
         
+        this.absolutePath       = this.absolutePath.toLowerCase();
+        this.path               = this.path.toLowerCase();
+
         var fileInfo            = path.parse(this.absolutePath);
         var relativefileInfo    = path.parse(this.path);
         var nameParts           = fileInfo.name.match(/^_?(\d+)\-(.*)/,'');

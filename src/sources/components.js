@@ -51,22 +51,23 @@ ComponentSource.buildComponentTree = function(dir, config){
     var ret             = [];
     var directories     = _.filter(dir.children, 'type', 'directory');
     var files           = _.filter(dir.children, 'type', 'file');
+    var primaryMatcher  = _.find(config.files, 'primary', true).matches;
 
-    var markupFiles = _.filter(files, function(file){
-        return file.matches(config.markup.matches);
+    var primaryFiles = _.filter(files, function(file){
+        return file.matches(primaryMatcher);
     });
     
-    for (var i = markupFiles.length - 1; i >= 0; i--) {
-        var file = markupFiles[i];
+    for (var i = primaryFiles.length - 1; i >= 0; i--) {
+        var file = primaryFiles[i];
         if (!dir.isRoot && file.name === dir.name) {
             // matches parent directory name so this whole directory is a component
-            var entity = new Component(dir);
+            var entity = Component.createFromDirectory(dir, config);
             if (entity) {
                 return entity;    
             }
             continue;
         }
-        var entity = new Component(file);
+        var entity = Component.createFromFile(file, config);
         if (entity) {
             ret.push(entity);    
         }
