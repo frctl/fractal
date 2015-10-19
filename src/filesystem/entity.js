@@ -31,7 +31,7 @@ function entity(){
 
         this.relativePath       = this.path;
         this.ext                = this.isFile() ? fileInfo.ext : null;
-        this.name               = nameParts ? nameParts[2] : fileInfo.name;
+        this.name               = nameParts ? nameParts[2] : fileInfo.name; // remove order from filename
         this.base               = this.name + this.ext;
         this.dir                = fileInfo.dir;
         this.relativeDir        = relativefileInfo.dir;
@@ -91,11 +91,10 @@ function entity(){
     this.matches = function(matcher, replacements){
         if (replacements) {
             _.each(replacements, function(replacement, variable){
-                replacement = replacement.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-                matcher = matcher.replace('{{' + variable + '}}', replacement);
+                matcher = matcher.replace('{{' + variable + '}}', replacement.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"));
             });
         }
-        var tester = new RegExp(matcher);
+        var tester = new RegExp(matcher, 'i');
         return tester.test(this.base);
     };
 

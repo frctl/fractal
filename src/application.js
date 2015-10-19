@@ -6,6 +6,7 @@ var nconf       = require('nconf');
 var Path        = require('path');
 var Promise     = require('bluebird');
 var logger      = require('winston');
+var _           = require('lodash');
 
 var server      = require('./services/server/server');
 var exporter    = require('./services/exporter/exporter');
@@ -49,8 +50,6 @@ app.defaultConfig = function(){
     }).env().file({
         file: Path.join(__dirname + '/../config.json')
     });
-    // this.server = server;
-    // this.exporter = exporter;
 };
 
 /*
@@ -144,5 +143,26 @@ app.run = function(){
  */
 
 app.getComponents = function(){
-    return Components.build(this.get('components'));
+    return Components.build(this);
+};
+
+/*
+ * Return the set of available statuses.
+ *
+ * @api public
+ */
+
+app.getStatuses = function(){
+    return this.get('statuses');
+};
+
+/*
+ * Return a status object by key, or the default if not found.
+ *
+ * @api public
+ */
+
+app.getStatus = function(status){
+    var statuses = this.getStatuses();
+    return statuses[status] || _.find(statuses, 'default', true);
 };

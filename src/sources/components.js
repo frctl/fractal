@@ -21,8 +21,9 @@ module.exports = ComponentSource;
  * @api private
  */
 
-function ComponentSource(components){
+function ComponentSource(components, app){
     this.components = components;
+    this.app = app;
 };
 
 mixin.call(ComponentSource.prototype);
@@ -33,10 +34,10 @@ mixin.call(ComponentSource.prototype);
  * @api public
  */
 
-ComponentSource.build = function(config){
-    return Directory.fromPath(config.path).then(function(dir){
-        var tree = ComponentSource.buildComponentTree(dir, config);
-        return new ComponentSource(tree).init();
+ComponentSource.build = function(app){
+    return Directory.fromPath(app.get('components').path).then(function(dir){
+        var tree = ComponentSource.buildComponentTree(dir, app);
+        return new ComponentSource(tree, app).init();
     });
 };
 
@@ -46,8 +47,9 @@ ComponentSource.build = function(config){
  * @api public
  */
 
-ComponentSource.buildComponentTree = function(dir, config){
+ComponentSource.buildComponentTree = function(dir, app){
 
+    var config          = app.get('components');
     var ret             = [];
     var directories     = _.filter(dir.children, 'type', 'directory');
     var preview         = config.files['preview'] || null;
@@ -68,7 +70,7 @@ ComponentSource.buildComponentTree = function(dir, config){
             }
         };
         if (previewFile) {
-            var entity = Component.createFromDirectory(dir, config);
+            var entity = Component.createFromDirectory(dir, app);
             if (entity) {
                 return entity;
             }
@@ -78,7 +80,7 @@ ComponentSource.buildComponentTree = function(dir, config){
     for (var i = directories.length - 1; i >= 0; i--) {
         var directory = directories[i];
         if ( directory.hasChildren()) {
-            var children = ComponentSource.buildComponentTree(directory, config);
+            var children = ComponentSource.buildComponentTree(directory, app);
             if (!_.isArray(children)) {
                 ret.push(children);
             } else {

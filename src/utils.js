@@ -11,16 +11,35 @@ var matter  = require('gray-matter');
 
 module.exports = {
 
+    /*
+     * Convert a string to Start Case.
+     *
+     * @api public
+     */
+
     titlize: function(str){
         return _.startCase(str);
     },
 
-    parseFrontMatter: function(content){
-        content = _.isObject(content) ? content.toString() : content;
-        var parsed = matter(content);
+    /*
+     * Parse a string (or Buffer) to split into front matter (if any) and body content.
+     *
+     * @api public
+     */
+
+    parseFrontMatter: function(str){
+        str = _.isObject(str) ? str.toString() : str;
+        var parsed = matter(str);
         return {
             data: parsed.data || {},
             body: new Buffer(parsed.content.trim() + "\n", "utf-8")
         };
+    },
+
+    fauxPath: function(path){
+        return _.map(path.split('/'), function(segment){
+            return segment.replace(/^_/,'').replace(/^\d+\-/, '');
+        }).join('/');    
     }
+    
 };

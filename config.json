@@ -18,7 +18,7 @@
             "preview": {
                 "matches": "{{name}}\\.hbs",
                 "title": "Source",
-                "render": "handlebars"
+                "handler": "handlebars"
             },
             "data": {
                 "matches": "^data\\.(js|json|yaml|yml)$",
@@ -34,10 +34,29 @@
                 "matches": "^(?!data).*\\.(js|coffee)$",
                 "title": "Behaviour"
             },
-            "notes": {
+            "readme": {
                 "matches": "^readme\\.(md|markdown)$",
-                "title": "Notes"
+                "title": "Readme",
+                "handler": "markdown"
             }
+        }
+    },
+    "statuses": {
+        "prototype": {
+            "label": "Prototype",
+            "notes": "Do not implement.",
+            "color": "red"
+        },
+        "wip": {
+            "label": "WIP",
+            "notes": "Work in progress. Implemement with caution.",
+            "color": "orange"
+        },
+        "ready": {
+            "label": "Ready",
+            "notes": "Ready to implement.",
+            "color": "green",
+            "default": true
         }
     }
 }

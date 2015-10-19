@@ -26,10 +26,12 @@ function Exporter(){
  * @api private
  */
 
-Exporter.prototype.init = function(options){
-    options = options || {};
-    this.port = options.port || this.port;
-    
+Exporter.prototype.init = function(fractal){
+
+    fractal.getComponents().then(function(components){
+        
+    });
+
     return this;
 };
 
