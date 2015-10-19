@@ -17,26 +17,26 @@
         "files": {
             "preview": {
                 "matches": "{{name}}\\.hbs",
-                "title": "Source",
+                "label": "Source",
                 "handler": "handlebars"
             },
             "data": {
                 "matches": "^data\\.(js|json|yaml|yml)$",
-                "title": "Data"
+                "label": "Data"
             },
             "styles": {
                 "multiple": true,
                 "matches": "^.*\\.(css|scss|less)$",
-                "title": "Styles"
+                "label": "Styles"
             },
             "behaviour": {
                 "multiple": true,
                 "matches": "^(?!data).*\\.(js|coffee)$",
-                "title": "Behaviour"
+                "label": "Behaviour"
             },
             "readme": {
                 "matches": "^readme\\.(md|markdown)$",
-                "title": "Readme",
+                "label": "Readme",
                 "handler": "markdown"
             }
         }

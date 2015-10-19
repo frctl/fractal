@@ -16,9 +16,11 @@
   "homepage": "https://github.com/frctl/core",
   "dependencies": {
     "bluebird": "^2.10.2",
+    "chokidar": "^1.2.0",
     "express": "^4.13.1",
     "fractal-theme-default": "frctl/theme-default",
     "gray-matter": "^2.0.1",
+    "js-yaml": "^3.4.3",
     "lodash": "^3.10.0",
     "nconf": "^0.8.2",
     "winston": "^1.1.0"

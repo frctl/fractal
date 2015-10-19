@@ -7,6 +7,7 @@ var Path        = require('path');
 var Promise     = require('bluebird');
 var logger      = require('winston');
 var _           = require('lodash');
+var chokidar    = require('chokidar');
 
 var server      = require('./services/server/server');
 var exporter    = require('./services/exporter/exporter');
@@ -26,30 +27,9 @@ var app = exports = module.exports = {};
  */
 
 app.init = function(){
+    this._monitors = [];
+    this._components = null;
     this.defaultConfig();
-};
-
-/*
- * Setup the initial app configuration.
- *
- * @api private
- */
-
-app.defaultConfig = function(){
-    nconf.argv({
-        "s": {
-            alias: ['serve','run:server'],
-            describe: 'Run the server',
-            default: false
-        },
-        "e": {
-            alias: ['export','run:exporter'],
-            describe: 'Run the exporter',
-            default: false
-        }
-    }).env().file({
-        file: Path.join(__dirname + '/../config.json')
-    });
 };
 
 /*
@@ -143,7 +123,14 @@ app.run = function(){
  */
 
 app.getComponents = function(){
-    return Components.build(this);
+    if (!this._components) {
+        var self = this;
+        this._components = Components.build(this);
+        this.createMonitor(this.get('components:path'), function(event, path) {
+            self._components = null;
+        });
+    }
+    return this._components;
 };
 
 /*
@@ -165,4 +152,41 @@ app.getStatuses = function(){
 app.getStatus = function(status){
     var statuses = this.getStatuses();
     return statuses[status] || _.find(statuses, 'default', true);
+};
+
+/*
+ * Setup the initial app configuration.
+ *
+ * @api private
+ */
+
+app.defaultConfig = function(){
+    nconf.argv({
+        "s": {
+            alias: ['serve','run:server'],
+            describe: 'Run the server',
+            default: false
+        },
+        "e": {
+            alias: ['export','run:exporter'],
+            describe: 'Run the exporter',
+            default: false
+        }
+    }).env().file({
+        file: Path.join(__dirname + '/../config.json')
+    });
+};
+
+/*
+ * Create a directory monitor with callback.
+ *
+ * @api private
+ */
+
+app.createMonitor = function(path, callback){
+    var monitor = chokidar.watch(path, {ignored: /[\/\\]\./});
+    monitor.on('ready', function(){
+        monitor.on('all', callback);
+    });
+    this._monitors[path] = monitor;
 };

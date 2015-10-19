@@ -8,6 +8,7 @@ Fractal tool build - work in progress. See the [Fractal example project](https:/
 
 * name: short reference name (previously ID) for component.
 * title: In-page title for component
+* notes: Implementation notes
 * label: Label to refer to component in navigation
 * status: status name (from config) 
 * layout: which layout to render the preview in

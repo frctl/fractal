@@ -46,7 +46,7 @@ Component.prototype.getVariants = function(){
         var variants = {};
         var base = {
             name:       'base',
-            title:      'Base',
+            label:      'Base',
             status:     this.status,
             layout:     this.layout,
             context:    this.context,
@@ -55,7 +55,7 @@ Component.prototype.getVariants = function(){
         };
         _.each(supplied, function(variant, key){
             variant.name = key;
-            variant.title = variant.title || utils.titlize(key);
+            variant.label = variant.label || utils.titlize(key);
             variants[key] = _.defaultsDeep(variant, base);
         });
         variants.base = variants.base || base;
@@ -80,7 +80,7 @@ Component.prototype.getStatus = function(){
  * @api public
  */
 
-Component.prototype.toJSON = function(){
+Component.prototype.getFileContents = function(){
     // TODO
 };
 
