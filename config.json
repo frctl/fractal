@@ -15,10 +15,10 @@
     "components": {
         "path": "src/components",
         "files": {
-            "template": {
-                "primary": true,
-                "matches": ".*\\.hbs",
-                "title": "Template"
+            "preview": {
+                "matches": "{{name}}\\.hbs",
+                "title": "Source",
+                "render": "handlebars"
             },
             "data": {
                 "matches": "^data\\.(js|json|yaml|yml)$",

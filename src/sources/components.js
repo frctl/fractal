@@ -50,28 +50,30 @@ ComponentSource.buildComponentTree = function(dir, config){
 
     var ret             = [];
     var directories     = _.filter(dir.children, 'type', 'directory');
-    var files           = _.filter(dir.children, 'type', 'file');
-    var primaryMatcher  = _.find(config.files, 'primary', true).matches;
+    var preview         = config.files['preview'] || null;
 
-    var primaryFiles = _.filter(files, function(file){
-        return file.matches(primaryMatcher);
-    });
-    
-    for (var i = primaryFiles.length - 1; i >= 0; i--) {
-        var file = primaryFiles[i];
-        if (!dir.isRoot && file.name === dir.name) {
-            // matches parent directory name so this whole directory is a component
+    if (!preview) {
+        throw new Error('No preview file definition found');
+    }
+
+    if (!dir.isRoot) {
+        var previewFile = null;
+        for (var i = 0; i < dir.children.length; i++) {
+            var entity = dir.children[i];
+            if (entity.isFile() && entity.matches(preview.matches, {
+                name: dir.name
+            })) {
+                previewFile = entity;
+                break;
+            }
+        };
+        if (previewFile) {
             var entity = Component.createFromDirectory(dir, config);
             if (entity) {
-                return entity;    
+                return entity;
             }
-            continue;
         }
-        var entity = Component.createFromFile(file, config);
-        if (entity) {
-            ret.push(entity);    
-        }
-    };
+    }
 
     for (var i = directories.length - 1; i >= 0; i--) {
         var directory = directories[i];
@@ -81,20 +83,9 @@ ComponentSource.buildComponentTree = function(dir, config){
                 ret.push(children);
             } else {
                 ret.push(new Group(directory, children));
-                // ret.push({
-                //     name: directory.fauxInfo.name,
-                //     title: directory.getTitle(),
-                //     order: directory.order,
-                //     depth: directory.depth,
-                //     id: directory.getId(),
-                //     isDirectory: true,
-                //     type: 'directory',
-                //     children: children
-                // });
             }
         }
     };
 
-    return ret;
-    // return _.isArray(ret) ? _.sortByOrder(ret, ['type','order','title'], ['desc','asc','asc']) : ret;
+    return _.isArray(ret) ? _.sortByOrder(ret, ['type','order','title'], ['desc','asc','asc']) : ret;
 };

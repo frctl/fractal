@@ -16,10 +16,11 @@ module.exports = {
     },
 
     parseFrontMatter: function(content){
+        content = _.isObject(content) ? content.toString() : content;
         var parsed = matter(content);
         return {
-            data: parsed.data,
-            content: new Buffer(parsed.content.trim() + "\n", "utf-8")
+            data: parsed.data || {},
+            body: new Buffer(parsed.content.trim() + "\n", "utf-8")
         };
     }
 };

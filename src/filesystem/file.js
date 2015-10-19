@@ -31,6 +31,17 @@ function File(filePath, contents, meta){
 mixin.call(File.prototype);
 
 /*
+ * Override the contents of a file. Not saved to disk.
+ *
+ * @api public
+ */
+
+File.prototype.replaceContents = function(contents){
+    this.contents = contents;
+    return this;
+};
+
+/*
  * Return a new File instance from a path.
  *
  * @api public

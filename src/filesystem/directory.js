@@ -79,7 +79,12 @@ Directory.fetchChildren = function(directoryPath, relativeTo){
             }
         });
     }).then(function(items){
-        return items;
-        // return _.sortByOrder(items, ['type','order','path'], ['desc','asc','asc'])
+        // filter out hidden files
+        return _.filter(items, function(item){
+            return ! (/(^|\/)\.[^\/\.]/g).test(item.absolutePath);
+        });
+        
+    }).then(function(items){
+        return _.sortByOrder(items, ['type','order','path'], ['desc','asc','asc']);
     });
 };

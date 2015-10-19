@@ -6,7 +6,9 @@ var Promise     = require('bluebird');
 var _           = require('lodash');
 
 var mixin       = require('./entity');
+var collector   = require('../../filesystem/collector');
 var utils       = require('../../utils');
+var dataParser  = require('../../data');
 
 /*
  * Export the component.
@@ -20,42 +22,54 @@ module.exports = Component;
  * @api private
  */
 
-function Component(source){
+function Component(files, data, meta){
+    var self = this;
     this.type = 'component';
-    this.source = source;
-    this.files = {};
+    this.files = files;
+    this.data = data;
+    _.defaults(this, meta);
+    console.log(this.title);
 };
 
 mixin.call(Component.prototype);
 
-Component.createFromDirectory = function(dir, config){
+/*
+ * Create a new component from a directory.
+ *
+ * - Collect files according to type.
+ * - Parse any YAML front matter from preview file.
+ * - Merge FM data with data from data file, if present.
+ * - Instantiate and return new component.
+ * 
+ * @api public
+ */
 
-    var files = buildFileList(dir.children, config.files);
-    var primary = _.find(files, primary, true).matched;
+Component.createFromDirectory = function(dir, config){
+    var preview = config.files['preview'] || null;
+    if (!preview) {
+        throw new Error('No preview file definition found');
+    }
+
+    var files = collector.collectFiles(dir.children, _.clone(config.files), {
+        name: dir.name
+    }, true);
+
+    if (!files.preview.matched) {
+        throw new Error('No preview file found');
+    }
+
+    var previewFile = files.preview.matched;
+    var parsed = utils.parseFrontMatter(previewFile.contents);
+    var data = files['data'].matched ? dataParser.fromFile(files['data'].matched, parsed.data) : {};
 
     var meta = {
-        // title: 
+        origin: 'directory',
+        title:  data.title || utils.titlize(dir.name),
+        order:  dir.order,
+        hidden: data.hidden || previewFile.hidden,  
     };
 
-    // var parsed = utils.parseFrontMatter();
-    return new Component(primary, files).init();
+    previewFile.replaceContents(parsed.body);
+
+    return new Component(files, data, meta).init();
 };
-
-Component.createFromFile = function(file, config){
-    var files = buildFileList(file, config.files);
-
-};
-
-function buildFileList(files, config){
-    files = _.isArray(files) ? files : [files];
-    return _.mapValues(config, function(definition, key){
-        definition.matched = _.filter(files, function(entity){
-            return (entity.isFile() && entity.matches(definition.matches));
-        });
-        if (!definition.multiple || definition.primary) {
-            definition.matched = _.first(definition.matched) || [];
-        }
-        definition.matched = definition.matched.length ? definition.matched : null;
-        return definition;
-    });
-}

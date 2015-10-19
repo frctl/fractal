@@ -22,15 +22,15 @@ function entity(){
 
     this.init = function(){
         
-        this.absolutePath       = this.absolutePath.toLowerCase();
-        this.path               = this.path.toLowerCase();
+        // this.absolutePath       = this.absolutePath.toLowerCase();
+        // this.path               = this.path.toLowerCase();
 
         var fileInfo            = path.parse(this.absolutePath);
         var relativefileInfo    = path.parse(this.path);
         var nameParts           = fileInfo.name.match(/^_?(\d+)\-(.*)/,'');
 
         this.relativePath       = this.path;
-        this.ext                = fileInfo.ext;
+        this.ext                = this.isFile() ? fileInfo.ext : null;
         this.name               = nameParts ? nameParts[2] : fileInfo.name;
         this.base               = this.name + this.ext;
         this.dir                = fileInfo.dir;
@@ -45,6 +45,10 @@ function entity(){
                                     return segment.charAt(0) === '_';
                                 });
         
+        if (this.isFile()) {
+            this.raw = this.contents;
+        }
+
         return this;
     };
 
@@ -84,7 +88,13 @@ function entity(){
      * @api public
      */
     
-    this.matches = function(matcher){
+    this.matches = function(matcher, replacements){
+        if (replacements) {
+            _.each(replacements, function(replacement, variable){
+                replacement = replacement.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+                matcher = matcher.replace('{{' + variable + '}}', replacement);
+            });
+        }
         var tester = new RegExp(matcher);
         return tester.test(this.base);
     };
