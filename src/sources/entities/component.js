@@ -27,7 +27,7 @@ function Component(files, meta, app){
     this._app = app;
     this._variants = null;
     this.type = 'component';
-    this.files = files;
+    this._files = files;
     _.defaults(this, meta);
 };
 
@@ -75,13 +75,18 @@ Component.prototype.getStatus = function(){
 };
 
 /*
- * Get any notes associated with the component.
+ * Get the contents of a component file.
+ * Will return merge file content if more that one of those type are available.
+ * Contents will be passed through the any specified handlers.
  *
  * @api public
  */
 
-Component.prototype.getFileContents = function(){
-    // TODO
+Component.prototype.getFileContents = function(type){
+    var files = this._files[type].matched;
+    if (_.isEmpty(files)) {
+        
+    }
 };
 
 /*
