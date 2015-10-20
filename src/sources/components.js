@@ -51,32 +51,18 @@ ComponentSource.buildComponentTree = function(dir, app){
 
     var config          = app.get('components');
     var ret             = [];
+    var files           = _.filter(dir.children, 'type', 'file');
     var directories     = _.filter(dir.children, 'type', 'directory');
-    var preview         = config.files['preview'] || null;
 
-    if (!preview) {
-        throw new Error('No preview file definition found');
-    }
-
-    if (!dir.isRoot) {
-        var previewFile = null;
-        for (var i = 0; i < dir.children.length; i++) {
-            var entity = dir.children[i];
-            if (entity.isFile() && entity.matches(preview.matches, {
-                name: dir.name
-            })) {
-                previewFile = entity;
-                break;
-            }
-        };
-        if (previewFile) {
-            var entity = Component.createFromDirectory(dir, app);
-            if (entity) {
-                return entity;
-            }
+    // If there are files in there, it's a component!
+    if (files.length) {
+        var entity = Component.createFromDirectory(dir, app);
+        if (entity) {
+            return entity;
         }
     }
 
+    // Otherwise recurse through any directories...
     for (var i = directories.length - 1; i >= 0; i--) {
         var directory = directories[i];
         if ( directory.hasChildren()) {

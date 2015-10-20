@@ -11,8 +11,8 @@ Fractal tool build - work in progress. See the [Fractal example project](https:/
 * notes: Implementation notes
 * label: Label to refer to component in navigation
 * status: status name (from config) 
-* layout: which layout to render the preview in
-* preview: styles to attach to the preview rendering
+* preview: The file to use to render the preview
+* styles: Styles to apply to the preview iframe 
 * context: Data object to pass to preview
 * variants: Alternative versions of the component (merged with main object properties as defaults)
 

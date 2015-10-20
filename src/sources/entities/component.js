@@ -29,6 +29,7 @@ function Component(files, meta, app){
     this.type = 'component';
     this._files = files;
     _.defaults(this, meta);
+    console.log(this.title);
 };
 
 mixin.call(Component.prototype);
@@ -42,7 +43,7 @@ mixin.call(Component.prototype);
 
 Component.prototype.getVariants = function(){
     if (!this._variants) {
-        var supplied = this._data.variants || []
+        var supplied = this._config.variants || []
         var variants = {};
         var base = {
             name:       'base',
@@ -82,11 +83,12 @@ Component.prototype.getStatus = function(){
  * @api public
  */
 
-Component.prototype.getFileContents = function(type){
+Component.prototype.getFileContents = function(type, highlighted){
     var files = this._files[type].matched;
     if (_.isEmpty(files)) {
-        
+        return null;
     }
+
 };
 
 /*
@@ -113,37 +115,30 @@ Component.prototype.toJSON = function(){
 
 Component.createFromDirectory = function(dir, app){
 
-    var config = app.get('components');
-
-    if (_.isUndefined(config.files['preview'])) {
-        throw new Error('No preview file definition found');
+    var config = {};
+    var files = dir.children;
+    var configFile = _.first(files, function(entity){
+        return entity.isFile() && entity.matches(app.get('components').config.name);
+    });
+    
+    if (configFile) {
+        config = _.defaultsDeep(config, dataParser.fromFile(configFile), app.get('components').config.defaults);
     }
-
-    var files = collector.collectFiles(dir.children, _.clone(config.files), {
-        name: dir.name
-    }, true);
-
-    if (!files.preview.matched) {
-        throw new Error('No preview file found');
-    }
-
-    var previewFile = files.preview.matched;
-    var data = files['data'].matched ? dataParser.fromFile(files['data'].matched) : {};
 
     var meta        = {}
     meta.path       = utils.fauxPath(dir.path);
-    meta.name       = data.name || meta.path.replace(/\//g, '-');
-    meta.title      = data.title || utils.titlize(dir.name);
-    meta.label      = data.label || meta.title;
+    meta.name       = config.name || meta.path.replace(/\//g, '-');
+    meta.title      = config.title || utils.titlize(dir.name);
+    meta.label      = config.label || meta.title;
     meta.order      = dir.order;
     meta.depth      = dir.depth;
-    meta.hidden     = !! (data.hidden || previewFile.hidden);
-    meta.context    = data.context || {};
-    meta.status     = data.status || _.findKey(app.get('statuses'), 'default', true);
-    meta.layout     = data.layout || null;
-    meta.preview    = data.preview || {};
-    meta.notes      = data.notes || null;
-    meta._data      = data;
+    meta.hidden     = !! (config.hidden || dir.hidden);
+    // meta.context    = config.context || {};
+    // meta.status     = config.status || _.findKey(app.get('statuses'), 'default', true);
+    // meta.layout     = config.layout || null;
+    // meta.preview    = config.preview || {};
+    // meta.notes      = config.notes || null;
+    // meta._data      = data;
 
     return new Component(files, meta, app).init();
 };

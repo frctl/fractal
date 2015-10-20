@@ -18,6 +18,7 @@
     "bluebird": "^2.10.2",
     "chokidar": "^1.2.0",
     "express": "^4.13.1",
+    "faker": "^3.0.1",
     "fractal-theme-default": "frctl/theme-default",
     "gray-matter": "^2.0.1",
     "js-yaml": "^3.4.3",

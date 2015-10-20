@@ -36,6 +36,11 @@ module.exports = {
             return _.defaultsDeep(data, defaults);
         }
         return {};
+    },
+
+    fromPath: function(path){
+        // TODO
     }
+
 
 };
