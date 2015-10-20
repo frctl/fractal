@@ -4,6 +4,7 @@
 
 var Promise     = require('bluebird');
 var _           = require('lodash');
+var logger      = require('winston');
 
 var mixin       = require('./entity');
 var collector   = require('../../filesystem/collector');
@@ -24,12 +25,11 @@ module.exports = Component;
 
 function Component(files, meta, app){
     var self = this;
+    this.type = 'component';
     this._app = app;
     this._variants = null;
-    this.type = 'component';
     this._files = files;
     _.defaults(this, meta);
-    console.log(this.title);
 };
 
 mixin.call(Component.prototype);
@@ -42,24 +42,27 @@ mixin.call(Component.prototype);
  */
 
 Component.prototype.getVariants = function(){
+    var self = this;
     if (!this._variants) {
-        var supplied = this._config.variants || []
-        var variants = {};
-        var base = {
+        var supplied = _.isEmpty(this._config.variants) ? [] : this._config.variants;
+        var variants = [{
             name:       'base',
             label:      'Base',
             status:     this.status,
+            view:       this.view,
             layout:     this.layout,
             context:    this.context,
-            preview:    this.preview,
+            display:    this.display,
             notes:      this.notes,
-        };
-        _.each(supplied, function(variant, key){
-            variant.name = key;
-            variant.label = variant.label || utils.titlize(key);
-            variants[key] = _.defaultsDeep(variant, base);
+        }];
+        _.each(supplied, function(variant, i){
+            if (_.isUndefined(variant.name)) {
+                logger.warn('Variant ' + i + ' of component ' + self.name + ' does not have a name value so will be ignored.');
+            } else {
+                variant.label = variant.label || utils.titlize(variant.name);
+                variants.push(_.defaultsDeep(variant, variants[0]));
+            }
         });
-        variants.base = variants.base || base;
         this._variants = variants;
     }
     return this._variants;
@@ -105,8 +108,7 @@ Component.prototype.toJSON = function(){
 /*
  * Create a new component from a directory.
  *
- * - Collect files according to type.
- * - Extract data from data file, if present.
+ * - Extract config from config file, if present.
  * - Build component metadata items. 
  * - Instantiate and return new component.
  * 
@@ -115,30 +117,31 @@ Component.prototype.toJSON = function(){
 
 Component.createFromDirectory = function(dir, app){
 
-    var config = {};
+    var meta = {};
     var files = dir.children;
-    var configFile = _.first(files, function(entity){
-        return entity.isFile() && entity.matches(app.get('components').config.name);
+    var configFile = _.find(files, function(entity){
+        return (entity.isFile() && entity.matches(app.get('components').config));
     });
     
-    if (configFile) {
-        config = _.defaultsDeep(config, dataParser.fromFile(configFile), app.get('components').config.defaults);
-    }
+    var config = configFile ? dataParser.fromFile(configFile) : {};
 
-    var meta        = {}
-    meta.path       = utils.fauxPath(dir.path);
-    meta.name       = config.name || meta.path.replace(/\//g, '-');
-    meta.title      = config.title || utils.titlize(dir.name);
-    meta.label      = config.label || meta.title;
+    // component level data
+    meta._config    = config;
     meta.order      = dir.order;
     meta.depth      = dir.depth;
     meta.hidden     = !! (config.hidden || dir.hidden);
-    // meta.context    = config.context || {};
-    // meta.status     = config.status || _.findKey(app.get('statuses'), 'default', true);
-    // meta.layout     = config.layout || null;
-    // meta.preview    = config.preview || {};
-    // meta.notes      = config.notes || null;
-    // meta._data      = data;
+    meta.path       = utils.fauxPath(dir.path);
+    meta.name       = config.name || meta.path.replace(/\//g, '-');
+    meta.label      = config.label || utils.titlize(dir.name);
+    meta.title      = config.title || meta.label;
 
+    // variant level data
+    meta.context    = config.context || {};
+    meta.display    = config.display || {};
+    meta.status     = config.status || _.findKey(app.get('statuses'), 'default', true);
+    meta.layout     = config.layout || null;
+    meta.view       = (config.view || app.get('components').view.file).replace('{{name}}', dir.name);
+    meta.notes      = config.notes || null;
+    
     return new Component(files, meta, app).init();
 };

@@ -15,22 +15,11 @@
     "theme": "fractal-theme-default",
     "components": {
         "path": "src/components",
-        "config": {
-            "name": "config\\.(js|json|yml|yaml)",
-            "defaults": {
-                "name": null,
-                "title": null,
-                "status": null,
-                "label": null,
-                "notes": null,
-                "view": null,
-                "layout": null,
-                "styles": {},
-                "context": {},
-                "variants": []
-            }
-        },
-        "handler": "fractal-handlebars-templates"
+        "config": "config\\.(js|json|yml|yaml)",
+        "view": {
+            "handler": "fractal-handlebars-templates",
+            "file": "{{name}}.hbs"
+        }
     },
     "statuses": {
         "prototype": {
