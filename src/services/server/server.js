@@ -9,6 +9,8 @@ var _           = require('lodash');
 var components  = require('./handlers/components');
 var pages       = require('./handlers/pages');
 var misc        = require('./handlers/misc');
+var renderer    = require('../../views/handlebars');
+
 
 /*
  * Export the server.
@@ -35,9 +37,15 @@ function Server(){
 
 Server.prototype.init = function(fractal){
 
-    this.port = fractal.get('server:port') || this.port;
+    var hbs = renderer(fractal.getTheme().paths.partials);
 
+    this.port = fractal.get('server:port') || this.port;
+ 
     express.locals.fractal = fractal;
+
+    express.engine('hbs', hbs.engine);
+    express.set('views', fractal.getTheme().paths.views);
+    express.set('view engine', 'hbs');
     
     express.use(function (req, res, next) {
         req.segments = _.compact(req.path.split('/'));

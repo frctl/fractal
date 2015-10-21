@@ -17,13 +17,19 @@
   "dependencies": {
     "bluebird": "^2.10.2",
     "chokidar": "^1.2.0",
+    "consolidate": "^0.13.1",
     "express": "^4.13.1",
+    "express-handlebars": "^2.0.1",
     "faker": "^3.0.1",
     "fractal-theme-default": "frctl/theme-default",
     "gray-matter": "^2.0.1",
+    "handlebars": "^4.0.3",
     "js-yaml": "^3.4.3",
     "lodash": "^3.10.0",
+    "marked": "^0.3.5",
     "nconf": "^0.8.2",
+    "swag": "^0.7.0",
+    "swig": "^1.4.2",
     "winston": "^1.1.0"
   }
 }

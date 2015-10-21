@@ -29,6 +29,16 @@ function ComponentSource(components, app){
 mixin.call(ComponentSource.prototype);
 
 /*
+ * Resolve a component name or path and return the component.
+ *
+ * @api public
+ */
+
+ComponentSource.prototype.resolve = function(str){
+    
+};
+
+/*
  * Return a new ComponentSource instance from a directory path.
  *
  * @api public
@@ -51,29 +61,27 @@ ComponentSource.buildComponentTree = function(dir, app){
 
     var config          = app.get('components');
     var ret             = [];
-    var files           = _.filter(dir.children, 'type', 'file');
-    var directories     = _.filter(dir.children, 'type', 'directory');
+    var files           = dir.getFiles();
+    var directories     = dir.getDirectories();
 
     // If there are files in there, it's a component!
     if (files.length) {
-        var entity = Component.createFromDirectory(dir, app);
-        if (entity) {
-            return entity;
-        }
+        return Component.createFromDirectory(dir, app);
     }
 
     // Otherwise recurse through any directories...
     for (var i = directories.length - 1; i >= 0; i--) {
         var directory = directories[i];
-        if ( directory.hasChildren()) {
-            var children = ComponentSource.buildComponentTree(directory, app);
-            if (!_.isArray(children)) {
-                ret.push(children);
+        if (directory.hasChildren()) {
+            var subtree = ComponentSource.buildComponentTree(directory, app);
+            if (!_.isArray(subtree)) {
+                ret.push(subtree);
             } else {
-                ret.push(new Group(directory, children));
+                ret.push(new Group(directory, subtree));
             }
         }
     };
 
+    ret = _.compact(ret);
     return _.isArray(ret) ? _.sortByOrder(ret, ['type','order','title'], ['desc','asc','asc']) : ret;
 };

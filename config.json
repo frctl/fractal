@@ -4,7 +4,8 @@
         "level": "warn"
     },
     "project": {
-        "title": "Fractal"
+        "title": "Fractal",
+        "version": null
     },
     "server": {
         "port": 3000
@@ -12,31 +13,43 @@
     "exporter": {
 
     },
-    "theme": "fractal-theme-default",
+    "theme": {
+        "name": "fractal-theme-default",
+        "config": null
+    },
     "components": {
         "path": "src/components",
         "config": "config\\.(js|json|yml|yaml)",
         "view": {
-            "handler": "fractal-handlebars-templates",
-            "file": "{{name}}.hbs"
+            "handler": "handlers/components",
+            "file": "{{name}}.hbs",
+            "engine": "handlebars"
         }
     },
+    "pages": {
+        "path": "src/pages",
+        "match": ".*\\.(html|md|markdown)",
+        "handler": "handlers/pages/markdown"
+    },
     "statuses": {
-        "prototype": {
-            "label": "Prototype",
-            "notes": "Do not implement.",
-            "color": "red"
-        },
-        "wip": {
-            "label": "WIP",
-            "notes": "Work in progress. Implemement with caution.",
-            "color": "orange"
-        },
-        "ready": {
-            "label": "Ready",
-            "notes": "Ready to implement.",
-            "color": "green",
-            "default": true
+        "default": "ready",
+        "options": {
+            "prototype": {
+                "name": "prototype",
+                "label": "Prototype",
+                "description": "Do not implement.",
+                "color": "red"
+            },
+            "wip": {
+                "label": "WIP",
+                "description": "Work in progress. Implemement with caution.",
+                "color": "orange"
+            },
+            "ready": {
+                "label": "Ready",
+                "description": "Ready to implement.",
+                "color": "green"
+            }
         }
     }
 }

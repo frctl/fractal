@@ -17,7 +17,7 @@ module.exports = {
      * @api private
      */
 
-    fromFile: function(file, defaults){
+    load: function(file, defaults){
         defaults = defaults || {};
         if (file) {
             var data = {};
@@ -36,10 +36,6 @@ module.exports = {
             return _.defaultsDeep(data, defaults);
         }
         return {};
-    },
-
-    fromPath: function(path){
-        // TODO
     }
 
 

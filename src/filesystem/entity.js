@@ -37,10 +37,11 @@ function entity(){
         this.relativeDir        = relativefileInfo.dir;
         
         this.pathSegments       = _.compact(this.path.split('/'));
+        this.depth              = this.pathSegments.length;
 
         this.modified           = this.stat.mtime;
 
-        this.order              = nameParts ? parseInt(nameParts[1], 10) : Infinity;
+        this.order              = nameParts ? parseInt(nameParts[1], 10) : 10000; // Can't use Infinity as it converts to NULL on JSON stringification!
         this.hidden             = !! _.find(this.pathSegments, function(segment){
                                     return segment.charAt(0) === '_';
                                 });

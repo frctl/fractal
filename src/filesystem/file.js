@@ -36,6 +36,16 @@ mixin.call(File.prototype);
  * @api public
  */
 
+File.prototype.getContents = function(contents){
+    return this.contents.toString();
+};
+
+/*
+ * Override the contents of a file. Not saved to disk.
+ *
+ * @api public
+ */
+
 File.prototype.replaceContents = function(contents){
     this.contents = contents;
     return this;

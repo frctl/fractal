@@ -15,7 +15,7 @@ var handlers = exports = module.exports = {};
  */
 
 handlers.index = function(req, res){
-    res.send('homepage');
+    res.render('index');
 };
 
 /*

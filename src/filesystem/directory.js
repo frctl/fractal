@@ -29,6 +29,10 @@ function Directory(directoryPath, children, meta){
     this.stat = meta.stat;
     this.path = meta.relativePath;
     this.isRoot = this.path === '';
+    this.finderCache = {
+        file: {},
+        directory: {},
+    };
 };
 
 mixin.call(Directory.prototype);
@@ -41,6 +45,76 @@ mixin.call(Directory.prototype);
 
 Directory.prototype.hasChildren = function(){
     return !! this.children.length;
+};
+
+/*
+ * Get the child files from the directory (non-recursive).
+ *
+ * @api public
+ */
+
+Directory.prototype.getFiles = function(){
+    return _.filter(this.children, 'type', 'file');
+};
+
+/*
+ * Get the child files from the directory (non-recursive).
+ *
+ * @api public
+ */
+
+Directory.prototype.getDirectories = function(){
+    return _.filter(this.children, 'type', 'directory');
+};
+
+/*
+ * Recursively find an entity in the directory.
+ *
+ * @api public
+ */
+
+Directory.prototype.find = function(type, key, value, maxDepth) {
+    var searchId = this.path + key + value;
+    var startingDepth = this.depth || 0;
+    if (_.isEmpty(this.finderCache[type][searchId])) {
+        maxDepth = _.isUndefined(maxDepth) ? 10000 : maxDepth;
+        var found = null;
+        function checkChildren(children){
+            if (found) return found;
+            for (var i = 0; i < children.length; i++) {
+                var child = children[i];
+                if (child.isType(type) && _.get(child, key) === value) {
+                    found = child;
+                    break;
+                } else if (child.isDirectory() && (child.depth - startingDepth) < maxDepth) {
+                    checkChildren(child.children);
+                }
+            };
+            return found;
+        }
+        this.finderCache[type][searchId] = checkChildren(this.children);
+    }
+    return this.finderCache[type][searchId];
+};
+
+/*
+ * Recursively find an file in the directory.
+ *
+ * @api public
+ */
+
+Directory.prototype.findFile = function(key, value, maxDepth){
+    return this.find('file', key, value, maxDepth);
+};
+
+/*
+ * Recursively find a directory in the directory.
+ *
+ * @api public
+ */
+
+Directory.prototype.findDirectory = function(key, value, maxDepth){
+    return this.find('directory', key, value, maxDepth);
 };
 
 /*
