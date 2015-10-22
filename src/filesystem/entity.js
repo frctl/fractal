@@ -27,11 +27,12 @@ function entity(){
 
         var fileInfo            = path.parse(this.absolutePath);
         var relativefileInfo    = path.parse(this.path);
-        var nameParts           = fileInfo.name.match(/^_?(\d+)\-(.*)/,'');
-
+        var name                = fileInfo.name.replace(/^_/,'');
+        var nameParts           = name.match(/^(\d+)\-(.*)/,'');
+        
         this.relativePath       = this.path;
         this.ext                = this.isFile() ? fileInfo.ext : null;
-        this.name               = nameParts ? nameParts[2] : fileInfo.name; // remove order from filename
+        this.name               = nameParts ? nameParts[2] : name; // remove order from filename
         this.base               = this.name + this.ext;
         this.dir                = fileInfo.dir;
         this.relativeDir        = relativefileInfo.dir;

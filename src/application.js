@@ -194,7 +194,14 @@ app.defaultConfig = function(){
  */
 
 app.createMonitor = function(path, callback){
-    var monitor = chokidar.watch(path, {ignored: /[\/\\]\./});
+    var monitor = chokidar.watch(path, {
+        ignored: /[\/\\]\./
+        // ,
+        // awaitWriteFinish: {
+        //     stabilityThreshold: 1000,
+        //     pollInterval: 100
+        // }
+    });
     monitor.on('ready', function(){
         monitor.on('all', callback);
     });

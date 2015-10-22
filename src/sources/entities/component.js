@@ -63,17 +63,6 @@ function Component(dir, app){
             return variants;
         }
     });
-
-    // if (!this.hidden) {
-        // console.log(this.toString());
-        this.renderView('special', {text: "NEW CONTEXT", modifier: 'foobar'}).then(function(view){
-            console.log(view);
-        });
-        // this.renderView('swig').then(function(view){
-        //     console.log(view);
-        // });
-        // console.log(this.getVariantFiles('special'));
-    // }
 };
 
 mixin.call(Component.prototype);
@@ -90,7 +79,7 @@ Component.prototype.getVariants = function(){
     var supplied = this._config.variants || [];
     var variants = [this._base];
     _.each(supplied, function(variant, i){
-        variant.handle = variant.handle || (self.handle + '-' + (i + 1));
+        variant.handle = variant.handle || (i + 1);
         variants.push(new Variant(variant.handle, _.defaultsDeep(variant, self._base.toJSON()), self));
     });
     return variants;
@@ -139,15 +128,15 @@ Component.prototype.getVariant = function(handle){
 };
 
 /*
- * Generate the rendered component view.
+ * Generate a rendered view of a variant.
  * Returns a Promise object.
  *
  * @api public
  */
 
-Component.prototype.renderView = function(handle, context){
+Component.prototype.renderView = function(context, preview, handle){
     var variant = this.getVariant(handle);
-    return variant.renderView(context);
+    return variant.renderView(context, preview);
 };
 
 /*

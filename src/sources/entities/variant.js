@@ -55,23 +55,16 @@ function Variant(handle, config, parent){
  * @api public
  */
 
-Variant.prototype.renderView = function(context){
+Variant.prototype.renderView = function(context, preview){
     try {
         var renderer = require(this._app.get('components:view:handler'));    
     } catch (e) {
         var renderer = require(path.join('../../', this._app.get('components:view:handler')));
     }
+    if (preview) {
+        return renderer.renderPreview(this, context || this.defaultContext, this._app);    
+    }
     return renderer.render(this, context || this.defaultContext, this._app);
-};
-
-/*
- * Get an object describing the preview file, if specified.
- *
- * @api public
- */
-
-Variant.prototype.getPreview = function(){
-    
 };
 
 /*

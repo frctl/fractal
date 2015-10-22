@@ -17,8 +17,10 @@ var handlers = exports = module.exports = {};
 handlers.index = function(req, res) {
     var fractal = req.app.locals.fractal;
     fractal.getComponents().then(function(components){
-
-        res.send('component index');
+        var variant = components.resolve('@button::swig');
+        variant.renderView(null, true).then(function(view){
+            res.send(view);
+        });
     });
 };
 

@@ -3,6 +3,7 @@
  */
 
 var path        = require('path');
+var _           = require('lodash');
 var consolidate = require('consolidate');
 
 /*
@@ -12,7 +13,8 @@ var consolidate = require('consolidate');
 module.exports = {
 
     /*
-     * Render a template using the consolidate library.
+     * Render a variant using consolidate to provide some template-language independence.
+     * Components are loaded in as partials, keyed by their handle.
      * Returns a promise.
      *
      * @api public
@@ -24,20 +26,69 @@ module.exports = {
         }
         var context = context || entity.defaultContext;
 
-        // TODO: add helpers
-        // TODO: add partials
-        // 
-        return consolidate[entity.engine](entity.viewPath, context).then(function(rendered){
-            if (variant.preview) {
-                var components = app.getComponents().value();
-                var layout = components.resolve(variant.preview);
-                if (layout) {
-                    
-                    // context[app.get('components:layout:yield')] = rendered;
-                    // return layout.renderView();
-                }
+        // TODO: add helpers        
+
+        return this.getPartials(entity.viewPath, app).then(function(partials){
+            context.partials = partials;
+            context.cache = false;
+            return consolidate[entity.engine](entity.viewPath, context);
+        });
+    },
+
+    /*
+     * Render a variant within it's preview layout (if one is specified).
+     * Returns a promise.
+     *
+     * @api public
+     */
+    
+    renderPreview: function(entity, context, app){
+        return this.render(entity, context, app).then(function(rendered){
+            if (entity.preview) {
+                return app.getComponents().then(function(components){
+                    var layout = components.resolve(entity.preview);
+                    var layoutContext = {
+                        _variant: entity.toJSON(),
+                        cache: false
+                    };
+                    layoutContext[app.get('components:preview:yield')] = rendered;
+                    return layout.renderView(layoutContext, false);
+                });
             }
             return rendered;
+        });   
+    },
+
+    /*
+     * Return an promise of an object of partials.
+     *
+     * Object return format
+     * Key = partial name to use in templates
+     * Value = path to the partial, relative to the view path
+     *
+     * @api public
+     */
+
+    getPartials: function(viewPath, app){
+        return app.getComponents().then(function(components){
+            var partials = {};
+            _.each(components.all(), function(comp){
+                var variants = comp.getVariants();
+                _.each(variants, function(variant){
+                    if (viewPath != variant.viewPath) {
+                        var relPath = path.relative(viewPath, variant.viewPath).replace('../', '');
+                        var parts = path.parse(relPath);
+                        if ( !_.isEmpty(parts.name) && (path.extname(viewPath) == path.extname(variant.viewPath))) {
+                            var key = comp.handle + '::' + variant.handle;
+                            partials[key] = path.join(parts.dir, parts.name);            
+                            if (variant.handle == 'base') {
+                                partials[comp.handle] = partials[key];                
+                            }
+                        }
+                    }
+                });
+            });
+            return partials;
         });
     }
 
