@@ -35,7 +35,8 @@ mixin.call(ComponentSource.prototype);
  */
 
 ComponentSource.prototype.resolve = function(str){
-    
+
+    return null;
 };
 
 /*
@@ -66,7 +67,7 @@ ComponentSource.buildComponentTree = function(dir, app){
 
     // If there are files in there, it's a component!
     if (files.length) {
-        return Component.createFromDirectory(dir, app);
+        return new Component(dir, app).init();
     }
 
     // Otherwise recurse through any directories...

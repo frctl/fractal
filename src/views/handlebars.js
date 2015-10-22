@@ -10,17 +10,22 @@ var swag        = require('swag');
 var exphbs      = require('express-handlebars');
 
 /*
- * Export the handlebars instance.
+ * Load helpers from disk.
+ */
+
+var helpers = {};
+var helpersPath = path.join(__dirname, 'helpers');
+
+fs.readdirSync(helpersPath).forEach(function(fileName){
+    var helper = require(path.join(helpersPath, fileName));
+    helpers[helper.name] = helper.helper;
+});
+
+/*
+ * Instantiate and export the express-handlebars instance.
  */
 
 module.exports = function(partialsDir, helpers){
-
-    var helpersPath = path.join(__dirname, 'helpers');
-    var helpers = {};
-    fs.readdirSync(helpersPath).forEach(function(fileName){
-        var helper = require(path.join(helpersPath, fileName));
-        helpers[helper.name] = helper.helper;
-    });
 
     var hbs = exphbs.create({
         extname: 'hbs',

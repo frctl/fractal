@@ -18,11 +18,27 @@ module.exports = {
      * @api public
      */
      
-    render: function(variant, app){
-        var viewPath = path.join(app.get('components:path'), variant.path, variant.view);
+    render: function(entity, context, app){
+        if (entity.type == 'component') {
+            entity = entity.getVariant();
+        }
+        var context = context || entity.defaultContext;
+
         // TODO: add helpers
         // TODO: add partials
-        return consolidate[variant.engine](viewPath, variant.context);
+        // 
+        return consolidate[entity.engine](entity.viewPath, context).then(function(rendered){
+            if (variant.preview) {
+                var components = app.getComponents().value();
+                var layout = components.resolve(variant.preview);
+                if (layout) {
+                    
+                    // context[app.get('components:layout:yield')] = rendered;
+                    // return layout.renderView();
+                }
+            }
+            return rendered;
+        });
     }
 
 };

@@ -155,27 +155,6 @@ app.getStatus = function(status){
 };
 
 /*
- * Return details of the configured theme.
- *
- * @api public
- */
-
-app.getTheme = function(){
-    var theme = this.get('theme');
-    if (!theme.config) {
-        var dir = path.parse(require.resolve(theme.name)).dir;
-        var themeJSON = require(theme.name);
-        theme.paths = {
-            views: path.join(dir, themeJSON.views),
-            assets: path.join(dir, themeJSON.assets),
-            partials: path.join(dir, themeJSON.partials),
-        };
-        this.set('theme', theme);
-    }
-    return theme;
-};
-
-/*
  * Setup the initial app configuration.
  *
  * @api private
@@ -196,6 +175,16 @@ app.defaultConfig = function(){
     }).env().file({
         file: path.join(__dirname + '/../config.json')
     });
+
+    var theme = this.get('theme');
+    var dir = path.parse(require.resolve(theme.name)).dir;
+    var themeJSON = require(theme.name);
+    theme.paths = {
+        views: path.join(dir, themeJSON.views),
+        assets: path.join(dir, themeJSON.assets),
+        partials: path.join(dir, themeJSON.partials),
+    };
+    this.set('theme', theme);
 };
 
 /*

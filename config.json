@@ -24,6 +24,10 @@
             "handler": "handlers/components",
             "file": "{{name}}.hbs",
             "engine": "handlebars"
+        },
+        "preview": {
+            "layout": null,
+            "yield": "yield"
         }
     },
     "pages": {

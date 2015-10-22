@@ -8,6 +8,7 @@ var path        = require('path');
 var logger      = require('winston');
 
 var mixin       = require('./entity');
+var Variant     = require('./variant');
 var utils       = require('../../utils');
 var data        = require('../../data');
 
@@ -18,23 +19,40 @@ var data        = require('../../data');
 module.exports = Component;
 
 /*
- * Group constructor.
+ * Component constructor.
  *
+ * - Extract config from config file, if present.
+ * - Build component metadata . 
+ * - Instantiate and return new component.
+ * 
  * @api private
  */
 
-function Component(dir, meta, app){
+function Component(dir, app){
     var self = this;
     var variants = null;
+    var configFile = _.find(dir.getFiles(), function(entity){
+        return entity.matches(app.get('components:config'));
+    });
+    var config = configFile ? data.load(configFile) : {};
 
-    this.type = 'component';
     this._app = app;
-    
     this._dir = dir;
 
-    _.forOwn(meta, function(value, key){
-        self[key] = value;
-    });
+    // component level data
+    this._config    = config;
+    this.type       = 'component';
+    this.order      = dir.order;
+    this.depth      = dir.depth;
+    this.hidden     = !! (config.hidden || dir.hidden);
+    this.path       = utils.fauxPath(dir.path);
+    this.handle     = config.handle || this.path.replace(/\//g, '-');
+    this.label      = config.label || utils.titlize(dir.name);
+    this.title      = config.title || this.label;
+    this.version    = config.version || app.get('project:version');
+
+    // base variant
+    this._base = new Variant("base", config, this);
 
     Object.defineProperty(this, 'variants', {
         enumerable: true,
@@ -48,9 +66,9 @@ function Component(dir, meta, app){
 
     // if (!this.hidden) {
         // console.log(this.toString());
-        // this.renderView('special').then(function(view){
-        //     console.log(view);
-        // });
+        this.renderView('special', {text: "NEW CONTEXT", modifier: 'foobar'}).then(function(view){
+            console.log(view);
+        });
         // this.renderView('swig').then(function(view){
         //     console.log(view);
         // });
@@ -72,13 +90,8 @@ Component.prototype.getVariants = function(){
     var supplied = this._config.variants || [];
     var variants = [this._base];
     _.each(supplied, function(variant, i){
-        if (_.isUndefined(variant.name)) {
-            logger.warn('Variant ' + i + ' of component ' + self.name + ' does not have a \'name\' value so will be ignored.');
-        } else {
-            variant.label = variant.label || utils.titlize(variant.name);
-            variant.path = _.isEmpty(variant.cwd) ? self._base.path : path.join(self._dir.path, variant.cwd);
-            variants.push(_.defaultsDeep(variant, self._base));
-        }
+        variant.handle = variant.handle || (self.handle + '-' + (i + 1));
+        variants.push(new Variant(variant.handle, _.defaultsDeep(variant, self._base.toJSON()), self));
     });
     return variants;
 };
@@ -116,11 +129,11 @@ Component.prototype.toString = function(){
  * @api public
  */
 
-Component.prototype.getVariant = function(name){
-    name = name || 'base';
-    var variant = _.find(this.variants, 'name', name);
+Component.prototype.getVariant = function(handle){
+    handle = handle || 'base';
+    var variant = _.find(this.variants, 'handle', handle);
     if (!variant) {
-        throw new Error('The variant ' + name + ' of component ' + this.name + ' could not be found.');
+        throw new Error('The variant ' + handle + ' of component ' + this.handle + ' could not be found.');
     }
     return variant;
 };
@@ -132,13 +145,9 @@ Component.prototype.getVariant = function(name){
  * @api public
  */
 
-Component.prototype.renderView = function(variantName){
-    try {
-        var handler = require(this._app.get('components:view:handler'));    
-    } catch (e) {
-        var handler = require(path.join('../../', this._app.get('components:view:handler')));
-    }
-    return handler.render(this.getVariant(variantName), this._app);
+Component.prototype.renderView = function(handle, context){
+    var variant = this.getVariant(handle);
+    return variant.renderView(context);
 };
 
 /*
@@ -166,52 +175,4 @@ Component.prototype.getVariantFiles = function(variantName){
 
 Component.prototype.getFileContents = function(filename){
     
-};
-
-/*
- * Create a new component from a directory.
- *
- * - Extract config from config file, if present.
- * - Build component metadata items. 
- * - Instantiate and return new component.
- * 
- * @api public
- */
-
-Component.createFromDirectory = function(dir, app){
-
-    var meta = {};
-    var configFile = _.find(dir.getFiles(), function(entity){
-        return entity.matches(app.get('components:config'));
-    });
-
-    var config = configFile ? data.load(configFile) : {};
-
-    // component level data
-    meta._config    = config;
-    meta.order      = dir.order;
-    meta.depth      = dir.depth;
-    meta.hidden     = !! (config.hidden || dir.hidden);
-    meta.path       = utils.fauxPath(dir.path);
-    meta.name       = config.name || meta.path.replace(/\//g, '-');
-    meta.label      = config.label || utils.titlize(dir.name);
-    meta.title      = config.title || meta.label;
-    meta.version    = config.version || app.get('project:version');
-
-    // base variant
-    meta._base = {
-        name:       "base",
-        label:      "Base",
-        cwd:        config.cwd || null,
-        engine:     config.engine || app.get('components:view:engine'),
-        path:        _.isEmpty(config.cwd) ? dir.path : path.join(dir.path, config.cwd),
-        context:    config.context || {},
-        display:    config.display || {},
-        status:     config.status || app.get('statuses:default'),
-        layout:     config.layout || null,
-        view:       (config.view || app.get('components:view:file')).replace('{{name}}', dir.name),
-        notes:      config.notes || null,
-    };
-
-    return new Component(dir, meta, app).init();
 };

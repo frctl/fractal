@@ -2,7 +2,8 @@
  * Module dependencies.
  */
 
-var express     = require('express')();
+var express     = require('express');
+var srv         = express();         
 var logger      = require('winston');
 var _           = require('lodash');
 
@@ -26,7 +27,7 @@ module.exports = new Server;
 
 function Server(){
     this.port = 3000;
-    this.express = express;
+    this.srv = srv;
 }
 
 /**
@@ -37,33 +38,38 @@ function Server(){
 
 Server.prototype.init = function(fractal){
 
-    var hbs = renderer(fractal.getTheme().paths.partials);
+    var hbs = renderer(fractal.get('theme:paths:partials'));
 
     this.port = fractal.get('server:port') || this.port;
  
-    express.locals.fractal = fractal;
+    srv.locals.fractal = fractal;
 
-    express.engine('hbs', hbs.engine);
-    express.set('views', fractal.getTheme().paths.views);
-    express.set('view engine', 'hbs');
+    srv.engine('hbs', hbs.engine);
+    srv.set('views', fractal.get('theme:paths:views'));
+    srv.set('view engine', 'hbs');
+
+    srv.use('/_theme', express.static(fractal.get('theme:paths:assets')));
+    if (fractal.get('static')){
+        srv.use(express.static(fractal.get('static')));
+    }
     
-    express.use(function (req, res, next) {
+    srv.use(function (req, res, next) {
         req.segments = _.compact(req.path.split('/'));
         next();
     });
     
     // Homepage
-    express.get('/', pages.index);
+    srv.get('/', pages.index);
 
     // Components
-    express.get('/components', components.index);
-    express.get('/components/*', components.component);
+    srv.get('/components', components.index);
+    srv.get('/components/*', components.component);
 
     // Favicon
-    express.get('/favicon.ico', misc.favicon);
+    srv.get('/favicon.ico', misc.favicon);
 
     // All other requests are assumed to be page requests
-    express.get('/*', pages.page);
+    srv.get('/*', pages.page);
 
     return this;
 };
@@ -76,7 +82,7 @@ Server.prototype.init = function(fractal){
 
 Server.prototype.listen = function(){
     var port = this.port;
-    express.listen(port, function() {
+    srv.listen(port, function() {
         logger.info('Fractal server is now running at http://localhost:%s', port);
     });
 };
