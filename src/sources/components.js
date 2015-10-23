@@ -45,18 +45,23 @@ ComponentSource.prototype.resolve = function(str){
 
 /*
  * Find a component by it's path.
+ * If a the path specifies a variant then that will be returned in place of the component.
  * Throws an error if the component/variant is not found.
  *
+ * Path format: my/component/path::optional-variant-handle
+ * 
  * @api public
  */
 
 ComponentSource.prototype.findByPath = function(componentPath){
-    return this.findByKey('path', componentPath);
+    var pathParts = componentPath.split('::', 2);
+    var component = this.findByKey('path', pathParts[0]);
+    return (pathParts.length === 2) ? component.getVariant(pathParts[1]) : component;
 };
 
 /*
  * Find a component by it's handle.
- * If a the handle specified a variant then that will be returned in place of the component.
+ * If a the handle specifies a variant then that will be returned in place of the component.
  * Throws an error if the component/variant is not found.
  *
  * Handle format: @component-handle::optional-variant-handle
@@ -66,7 +71,7 @@ ComponentSource.prototype.findByPath = function(componentPath){
 
 ComponentSource.prototype.findByHandle = function(handle){
     handle = handle.replace(/^@/, '');
-    handleParts = handle.split('::', 2);
+    var handleParts = handle.split('::', 2);
     var component = this.findByKey('handle', handleParts[0]);
     return (handleParts.length === 2) ? component.getVariant(handleParts[1]) : component;
 };
@@ -113,6 +118,54 @@ ComponentSource.prototype.all = function(){
         });
     }
     return _.flatten(list(this.components));
+};
+
+/*
+ * Returns a component tree filtered by key:value
+ *
+ * @api public
+ */
+
+ComponentSource.prototype.filter = function(key, value){
+    function filter(items){
+        var ret = [];
+        _.each(items, function(item){
+            if (item.type === 'component') {
+                if (item[key] === value) {
+                    ret.push(item);
+                }
+            } else {
+                var children = filter(item.children);
+                if (children.length) {
+                    ret.push(new Group(item._dir, children));
+                }
+            }
+        }); 
+        return _.compact(ret);
+    }
+    return new ComponentSource(filter(this.components), this.app);
+};
+
+/*
+ * Returns a JSON representation of all the components
+ *
+ * @api public
+ */
+
+ComponentSource.prototype.toJSON = function(){
+    return _.map(this.components, function(entity){
+        return entity.toJSON();
+    });
+};
+
+/*
+ * Get a JSON-formatted string representation of the components.
+ *
+ * @api public
+ */
+    
+ComponentSource.prototype.toString = function(){
+    return JSON.stringify(this.toJSON(), null, 4);
 };
 
 /*

@@ -127,10 +127,22 @@ app.getComponents = function(){
         var self = this;
         this._components = Components.build(this);
         this.createMonitor(this.get('components:path'), function(event, path) {
+            // TODO: make this tree rebuilding more refined rather than all or nothing.
             self._components = null;
         });
     }
     return this._components;
+};
+
+/*
+ * Return a collection of pages based on the config path.
+ *
+ * @api public
+ */
+
+app.getPages = function(){
+    // TODO: implement pages
+    return Promise.resolve([]);
 };
 
 /*
@@ -196,11 +208,6 @@ app.defaultConfig = function(){
 app.createMonitor = function(path, callback){
     var monitor = chokidar.watch(path, {
         ignored: /[\/\\]\./
-        // ,
-        // awaitWriteFinish: {
-        //     stabilityThreshold: 1000,
-        //     pollInterval: 100
-        // }
     });
     monitor.on('ready', function(){
         monitor.on('all', callback);

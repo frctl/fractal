@@ -45,8 +45,9 @@ function Component(dir, app){
     this.order      = dir.order;
     this.depth      = dir.depth;
     this.hidden     = !! (config.hidden || dir.hidden);
+    this.fsPath     = dir.path;
     this.path       = utils.fauxPath(dir.path);
-    this.handle     = config.handle || this.path.replace(/\//g, '-');
+    this.handle     = config.handle || utils.fauxPath(dir.name);
     this.label      = config.label || utils.titlize(dir.name);
     this.title      = config.title || this.label;
     this.version    = config.version || app.get('project:version');
@@ -83,33 +84,6 @@ Component.prototype.getVariants = function(){
         variants.push(new Variant(variant.handle, _.defaultsDeep(variant, self._base.toJSON()), self));
     });
     return variants;
-};
-
-/*
- * Get a static, JSON-style object representation of the component.
- * Good for using with templating languages.
- *
- * @api public
- */
-
-Component.prototype.toJSON = function(){
-    var obj = {};
-    _.forOwn(this, function(value, key){
-        if (!_.startsWith(key, '_')) {
-            obj[key] = value;
-        }
-    });
-    return obj;
-};
-
-/*
- * Get a JSON-formatted string representation of the component.
- *
- * @api public
- */
-
-Component.prototype.toString = function(){
-    return JSON.stringify(this.toJSON(), null, 4);
 };
 
 /*

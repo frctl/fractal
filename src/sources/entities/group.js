@@ -20,14 +20,36 @@ module.exports = Group;
  * @api private
  */
 
-function Group(source, children){
-    this.type = 'group';
-    this.source = source;
-    this.children = children;
-    this.name = source.name;
-    this.title = utils.titlize(source.name);
-    this.order = source.order;
-    this.depth = source.depth;
+function Group(dir, children){
+    this.type       = 'group';
+    this._dir       = dir;
+    this.children   = children;
+    this.handle     = dir.name;
+    this.label      = utils.titlize(dir.name);
+    this.title      = this.label;
+    this.order      = dir.order;
+    this.depth      = dir.depth;
 };
 
 mixin.call(Group.prototype);
+
+/*
+ * Get a static, JSON-style object representation of the group.
+ * Good for using with templating languages.
+ *
+ * @api public
+ */
+
+Group.prototype.toJSON = function(){
+    var obj = {};
+    _.forOwn(this, function(value, key){
+        if (!_.startsWith(key, '_')) {
+            obj[key] = value;
+        }
+    });
+    _.map(obj.children, function(item){
+        return item.toJSON();
+    });
+    return obj;
+};
+

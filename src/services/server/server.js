@@ -6,6 +6,7 @@ var express     = require('express');
 var srv         = express();         
 var logger      = require('winston');
 var _           = require('lodash');
+var Promise     = require('bluebird');
 
 var components  = require('./handlers/components');
 var pages       = require('./handlers/pages');
@@ -38,11 +39,15 @@ function Server(){
 
 Server.prototype.init = function(fractal){
 
+    /**
+     * General configuration.
+     */
+
     var hbs = renderer(fractal.get('theme:paths:partials'));
 
     this.port = fractal.get('server:port') || this.port;
- 
-    srv.locals.fractal = fractal;
+    
+    srv.set('fractal', fractal);
 
     srv.engine('hbs', hbs.engine);
     srv.set('views', fractal.get('theme:paths:views'));
@@ -53,17 +58,45 @@ Server.prototype.init = function(fractal){
         srv.use(express.static(fractal.get('static')));
     }
     
+    /**
+     * Set up some shared request data and locals.
+     */
+    
+    srv.locals.config = fractal.get();
+    srv.locals.statuses = fractal.getStatuses();
+
     srv.use(function (req, res, next) {
-        req.segments = _.compact(req.path.split('/'));
-        next();
+        req.segments    = _.compact(req.path.split('/'));
+        var components  = fractal.getComponents();
+        var pages       = fractal.getPages();
+        Promise.join(components, pages, function(components, pages){
+            req._components = components;
+            req._pages = pages;
+            srv.locals.components = components.toJSON();
+            // srv.locals.pages = pages.toJSON();
+            srv.locals.pages = [];
+            next();
+        });
     });
+
+    /**
+     * Bind routes and parameters to handlers.
+     */
     
     // Homepage
     srv.get('/', pages.index);
 
     // Components
+    srv.use('/components', components.common);
+
+    srv.param('component', components.params.component);
+    srv.param('componentFile', components.params.componentFile);
+
     srv.get('/components', components.index);
-    srv.get('/components/*', components.component);
+    srv.get('/components/detail/:component(*)', components.detail);
+    srv.get('/components/raw/:componentFile(*)', components.raw);
+    srv.get('/components/preview/:componentFile(*)', components.preview);
+    srv.get('/components/highlight/:componentFile(*)', components.highlight);
 
     // Favicon
     srv.get('/favicon.ico', misc.favicon);

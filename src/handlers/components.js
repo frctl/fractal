@@ -24,14 +24,14 @@ module.exports = {
         if (entity.type == 'component') {
             entity = entity.getVariant();
         }
-        var context = context || entity.defaultContext;
+        var context = context || entity.context;
 
         // TODO: add helpers        
 
-        return this.getPartials(entity.viewPath, app).then(function(partials){
+        return this.getPartials(entity.fsViewPath, app).then(function(partials){
             context.partials = partials;
             context.cache = false;
-            return consolidate[entity.engine](entity.viewPath, context);
+            return consolidate[entity.engine](entity.fsViewPath, context);
         });
     },
 
@@ -69,16 +69,16 @@ module.exports = {
      * @api public
      */
 
-    getPartials: function(viewPath, app){
+    getPartials: function(fsViewPath, app){
         return app.getComponents().then(function(components){
             var partials = {};
             _.each(components.all(), function(comp){
                 var variants = comp.getVariants();
                 _.each(variants, function(variant){
-                    if (viewPath != variant.viewPath) {
-                        var relPath = path.relative(viewPath, variant.viewPath).replace('../', '');
+                    if (fsViewPath != variant.fsViewPath) {
+                        var relPath = path.relative(fsViewPath, variant.fsViewPath).replace('../', '');
                         var parts = path.parse(relPath);
-                        if ( !_.isEmpty(parts.name) && (path.extname(viewPath) == path.extname(variant.viewPath))) {
+                        if ( !_.isEmpty(parts.name) && (path.extname(fsViewPath) == path.extname(variant.fsViewPath))) {
                             var key = comp.handle + '::' + variant.handle;
                             partials[key] = path.join(parts.dir, parts.name);            
                             if (variant.handle == 'base') {

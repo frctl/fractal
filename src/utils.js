@@ -40,6 +40,12 @@ module.exports = {
         return _.map(path.split('/'), function(segment){
             return segment.replace(/^_/,'').replace(/^\d+\-/, '');
         }).join('/');    
+    },
+
+    httpError: function(msg, status){
+        var e = new Error(msg);
+        e.status = status || 500;
+        return e;
     }
     
 };
