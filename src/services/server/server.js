@@ -5,13 +5,14 @@
 var express     = require('express');
 var srv         = express();         
 var logger      = require('winston');
+var path        = require('path');
 var _           = require('lodash');
 var Promise     = require('bluebird');
 
 var components  = require('./handlers/components');
 var pages       = require('./handlers/pages');
 var misc        = require('./handlers/misc');
-var renderer    = require('../../views/handlebars');
+var renderer    = require('../../views/renderer');
 
 
 /*
@@ -43,15 +44,14 @@ Server.prototype.init = function(fractal){
      * General configuration.
      */
 
-    var hbs = renderer(fractal.get('theme:paths:partials'));
+    this.nunjucks = renderer(fractal.get('theme:paths:views'));
+    this.nunjucks.express(srv);
 
     this.port = fractal.get('server:port') || this.port;
     
     srv.set('fractal', fractal);
-
-    srv.engine('hbs', hbs.engine);
-    srv.set('views', fractal.get('theme:paths:views'));
-    srv.set('view engine', 'hbs');
+    srv.set('view engine', 'nunj');
+    srv.engine('nunj', this.nunjucks.render);
 
     srv.use('/_theme', express.static(fractal.get('theme:paths:assets')));
     if (fractal.get('static')){
@@ -64,6 +64,16 @@ Server.prototype.init = function(fractal){
     
     srv.locals.config = fractal.get();
     srv.locals.statuses = fractal.getStatuses();
+    srv.locals.navigation = [{
+        handle: 'home',
+        label: 'Overview',
+        url: '/'
+    },
+    {
+        handle: 'components',
+        label: 'Components',
+        url: '/components'
+    }];
 
     srv.use(function (req, res, next) {
         req.segments    = _.compact(req.path.split('/'));
@@ -93,6 +103,7 @@ Server.prototype.init = function(fractal){
     srv.param('componentFile', components.params.componentFile);
 
     srv.get('/components', components.index);
+    srv.get('/components/list/:collection', components.list);
     srv.get('/components/detail/:component(*)', components.detail);
     srv.get('/components/raw/:componentFile(*)', components.raw);
     srv.get('/components/preview/:componentFile(*)', components.preview);

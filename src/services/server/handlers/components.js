@@ -19,9 +19,10 @@ handlers.params = {};
 
 handlers.common = function(req, res, next) {
     req.app.locals.section = {
+        handle: 'components',
         title: "Components",
         baseUrl: '/components',
-        navItems: req._components.filter('hidden', false).toJSON()
+        subnav: req._components.filter('hidden', false).toJSON()
     };
     next();
 };
@@ -66,8 +67,22 @@ handlers.params.componentFile = function(req, res, next, componentFile) {
  */
 
 handlers.index = function(req, res) {
-    res.json(req.app.locals.components);
-    // res.render('components/index');
+    // res.json(req.app.locals.components);
+    res.render('components/index');
+};
+
+/*
+ * Display a list of a collection of components
+ */
+
+handlers.list = function(req, res) {
+    var data = {};
+    switch(req.params.collection){
+        case 'all':
+            data.items = req._components.flatten();
+        break;
+    }
+    res.render('components/list', data);
 };
 
 /*

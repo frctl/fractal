@@ -72,7 +72,7 @@ module.exports = {
     getPartials: function(fsViewPath, app){
         return app.getComponents().then(function(components){
             var partials = {};
-            _.each(components.all(), function(comp){
+            _.each(components.flatten(), function(comp){
                 var variants = comp.getVariants();
                 _.each(variants, function(variant){
                     if (fsViewPath != variant.fsViewPath) {

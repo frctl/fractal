@@ -111,7 +111,7 @@ ComponentSource.prototype.findByKey = function(key, value) {
  * @api public
  */
 
-ComponentSource.prototype.all = function(){
+ComponentSource.prototype.flatten = function(){
     function list(items) {
         return _.map(items, function(item){
             return item.type === 'group' ? list(item.children) : item;

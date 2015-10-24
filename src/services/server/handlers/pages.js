@@ -15,7 +15,11 @@ var handlers = exports = module.exports = {};
  */
 
 handlers.index = function(req, res){
-    res.render('index');
+    res.render('index', {
+        section: {
+            handle: 'home'
+        }
+    });
 };
 
 /*
