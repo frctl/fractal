@@ -22,8 +22,9 @@
         "config": "config\\.(js|json|yml|yaml)",
         "view": {
             "handler": "handlers/components",
-            "file": "{{name}}.hbs",
-            "engine": "handlebars"
+            "file": ["{{component}}--{{variant}}", "{{component}}"],
+            "engine": "handlebars",
+            "ext": ".hbs"
         },
         "preview": {
             "layout": null,

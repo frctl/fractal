@@ -5,6 +5,7 @@
 var Promise     = require('bluebird');
 var _           = require('lodash');
 var path        = require('path');
+var fs          = require('fs');
 
 var mixin       = require('./entity');
 var utils       = require('../../utils');
@@ -22,6 +23,9 @@ module.exports = Variant;
  */
 
 function Variant(handle, config, parent){
+    if (_.isUndefined(handle)) {
+        throw new Error('No handle defined for variant of ' + parent.handle);
+    }
     var app         = this._app = parent._app;
     this.type       = 'variant';
     this.handle     = handle;
@@ -40,11 +44,40 @@ function Variant(handle, config, parent){
 
     this.label          = config.label || utils.titlize(handle);
     this.path           = utils.fauxPath(this._dir.path);
-    this.fsPath         = this._dir.path;
-    this.view           = (config.view || app.get('components:view:file')).replace('{{name}}', this._dir.name);
+    this.fsPath         = this._dir.path; 
+    this.ext            = config.ext ||  app.get('components:view:ext'); 
+    this.view           = null;
+    
+    var viewNames = config.view || app.get('components:view:file');
+
+    if (!_.isArray(viewNames)) {
+        viewNames = [viewNames];
+    }
+
+    for (var i = 0; i < viewNames.length; i++) {
+        var viewName = viewNames[i].replace('{{component}}', parent.handle).replace('{{variant}}', this.handle);
+        var view = path.parse(viewName).name + this.ext;
+        var fsViewPath = path.join(app.get('components:path'), this.fsPath, view);
+
+        console.log(path.resolve(fsViewPath));
+        try {
+            var stats = fs.lstatSync(path.resolve(fsViewPath));
+            if (stats){
+                
+                
+                this.view = view;
+                this.fsViewPath = fsViewPath;
+                break;
+            }
+        } catch (e) {}
+    };
+
+    if (this.view == null) {
+        throw new Error('Variant view not found');
+    }
+                    
     this.viewPath       = path.join(app.get('components:path'), this.path, this.view);
-    this.fsViewPath     = path.join(app.get('components:path'), this.fsPath, this.view);
-    this.context = config.context || {};
+    this.context        = config.context || {};
     this.display        = config.display || {};
     this.status         = config.status || app.get('statuses:default');
     this.preview        = config.preview || app.get('components:preview:layout');

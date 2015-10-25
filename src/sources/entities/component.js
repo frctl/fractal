@@ -53,7 +53,7 @@ function Component(dir, app){
     this.version    = config.version || app.get('project:version');
 
     // base variant
-    this._base = new Variant("base", config, this);
+    this._base = new Variant('base', config, this);
 
     Object.defineProperty(this, 'variants', {
         enumerable: true,
@@ -80,8 +80,13 @@ Component.prototype.getVariants = function(){
     var supplied = this._config.variants || [];
     var variants = [this._base];
     _.each(supplied, function(variant, i){
-        variant.handle = variant.handle || (i + 1);
-        variants.push(new Variant(variant.handle, _.defaultsDeep(variant, self._base.toJSON()), self));
+        try {
+            var config = _.defaultsDeep(variant, _.cloneDeep(self._config))
+            delete config.variants;
+            variants.push(new Variant(variant.handle, config, self));    
+        } catch(e) {
+            logger.error('Variant of ' + self.handle + ' could not be created: ' + e.message );
+        }
     });
     return variants;
 };
