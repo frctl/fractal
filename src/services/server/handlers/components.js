@@ -36,7 +36,7 @@ handlers.params.component = function(req, res, next, componentPath) {
         var entity = req._components.resolve(componentPath);
         if (entity.type == 'component') {
             req._component = entity;
-            req._variant = entity.getVariant('base');
+            req._variant = entity.getVariant();
         } else if (entity.type == 'variant') {
             req._component = entity._component;
             req._variant = entity;

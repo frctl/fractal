@@ -3,14 +3,23 @@
  */
 
 var app = require("./application");
+var data = require("./data");
 
 /**
  * Export boot() function.
  */
 
-exports = module.exports = boot;
+exports = module.exports = fractal;
 
-function boot(){
+function fractal(){
     app.init();
     return app;
+};
+
+fractal.data = {
+    load: function(path){
+        return {
+            foo: 'bar'
+        }
+    }
 };

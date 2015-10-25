@@ -58,13 +58,9 @@ function Variant(handle, config, parent){
         var viewName = viewNames[i].replace('{{component}}', parent.handle).replace('{{variant}}', this.handle);
         var view = path.parse(viewName).name + this.ext;
         var fsViewPath = path.join(app.get('components:path'), this.fsPath, view);
-
-        console.log(path.resolve(fsViewPath));
         try {
             var stats = fs.lstatSync(path.resolve(fsViewPath));
             if (stats){
-                
-                
                 this.view = view;
                 this.fsViewPath = fsViewPath;
                 break;

@@ -3,6 +3,7 @@
  */
 
 var _           = require('lodash');
+var logger      = require('winston');
 
 var Directory   = require('../filesystem/directory');
 var Component   = require('./entities/component');
@@ -196,7 +197,12 @@ ComponentSource.buildComponentTree = function(dir, app){
 
     // If there are files in there, it's a component!
     if (files.length) {
-        return new Component(dir, app).init();
+        try {
+            return new Component(dir, app).init();    
+        } catch(e){
+            logger.warn('Component could not be created from directory ' + dir.path + ': ' + e.message);
+            return null;
+        }
     }
 
     // Otherwise recurse through any directories...

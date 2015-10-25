@@ -53,7 +53,11 @@ function Component(dir, app){
     this.version    = config.version || app.get('project:version');
 
     // base variant
-    this._base = new Variant('base', config, this);
+    var baseVariantConfig = _.cloneDeep(config);
+    baseVariantConfig.label = 'Base';
+    baseVariantConfig.variants = null;
+    this._base = new Variant(this.handle, baseVariantConfig, this);
+    this.baseVariant = this.handle;
 
     Object.defineProperty(this, 'variants', {
         enumerable: true,
@@ -82,8 +86,9 @@ Component.prototype.getVariants = function(){
     _.each(supplied, function(variant, i){
         try {
             var config = _.defaultsDeep(variant, _.cloneDeep(self._config))
-            delete config.variants;
-            variants.push(new Variant(variant.handle, config, self));    
+            config.variants = null;
+            var v = new Variant(variant.handle, config, self);
+            variants.push(v);
         } catch(e) {
             logger.error('Variant of ' + self.handle + ' could not be created: ' + e.message );
         }
@@ -98,7 +103,7 @@ Component.prototype.getVariants = function(){
  */
 
 Component.prototype.getVariant = function(handle){
-    handle = handle || 'base';
+    handle = handle || this.baseVariant;
     var variant = _.find(this.variants, 'handle', handle);
     if (!variant) {
         throw new Error('The variant ' + handle + ' of component ' + this.handle + ' could not be found.');
