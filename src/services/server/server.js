@@ -106,7 +106,7 @@ Server.prototype.init = function(fractal){
     srv.get('/components/list/:collection', components.list);
     srv.get('/components/detail/:component(*)', components.detail);
     srv.get('/components/raw/:componentFile(*)', components.raw);
-    srv.get('/components/preview/:componentFile(*)', components.preview);
+    srv.get('/components/preview/:component(*)', components.preview);
     srv.get('/components/highlight/:componentFile(*)', components.highlight);
 
     // Favicon

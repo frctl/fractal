@@ -2,9 +2,12 @@
  * Module dependencies.
  */
 
-var Promise     = require('bluebird');
+var Promise         = require('bluebird');
+var path            = require('path');
+var _               = require('lodash');
 
-var utils = require('../../../utils');
+var utils           = require('../../../utils');
+var highlighter     = require('../../../highlighter');
 
 /*
  * Export the component route handlers.
@@ -43,11 +46,7 @@ handlers.params.component = function(req, res, next, componentPath) {
         }
         res.locals.component = req._component.toJSON();
         res.locals.variant = req._variant.toJSON();
-        var rendered = req._variant.renderView();
-        Promise.join(rendered, function(rendered){
-            res.locals.rendered = rendered;
-            next();
-        })
+        next();
     } catch(e) {
         next(utils.httpError('Component not found', 404));
     }
@@ -58,8 +57,35 @@ handlers.params.component = function(req, res, next, componentPath) {
  */
 
 handlers.params.componentFile = function(req, res, next, componentFile) {
-    req.componentFile = componentFile;
-    next();
+    var pathInfo        = path.parse(componentFile);
+    var entity          = req._components.resolve(pathInfo.dir);
+    var variant         = (entity.type == 'component') ? entity.getVariant() : entity;
+    if (!_.isEmpty(pathInfo.ext)) {
+        res.locals.contents = variant.getFile(pathInfo.base).getContents();
+        return next();
+    } else {
+        switch(pathInfo.name) {
+            case 'view': 
+                res.locals.contents = variant.getFile(variant.view).getContents();
+                return next();
+                break;
+            case 'context': 
+                res.locals.contents = variant.getContextString();
+                return next();
+                break;
+            case 'rendered': 
+                variant.renderView().then(function(rendered){
+                    res.locals.contents = rendered;
+                    next();
+                });
+                break;
+            case 'config': 
+                res.locals.contents = JSON.stringify(variant._component._config, null, 4);
+                return next();
+                break;
+        }
+        
+    }
 };
 
 /*
@@ -90,7 +116,14 @@ handlers.list = function(req, res) {
  */
 
 handlers.detail = function(req, res) {
-    res.render('components/detail');
+    Promise.join(req._variant.renderView(), function(rendered){
+        res.render('components/detail', {
+            rendered: {
+                raw: rendered,
+                highlighted: highlighter(rendered)
+            }
+        });
+    });
 };
 
 /*
@@ -98,7 +131,15 @@ handlers.detail = function(req, res) {
  */
 
 handlers.preview = function(req, res) {
-
+    var embedded = !_.isUndefined(req.query.embedded);
+    Promise.join(req._variant.renderView(), function(rendered){
+        res.render('components/preview', {
+            embedded: embedded,
+            rendered: {
+                raw: rendered
+            }
+        });
+    })
 };
 
 /*
@@ -106,7 +147,10 @@ handlers.preview = function(req, res) {
  */
 
 handlers.raw = function(req, res) {
-
+    res.setHeader("Content-Type", "text/plain");
+    res.render('components/raw', {
+        contents: res.locals.contents
+    });
 };
 
 /*
@@ -114,5 +158,7 @@ handlers.raw = function(req, res) {
  */
 
 handlers.highlight = function(req, res) {
-
+    res.render('components/highlight', {
+        contents: highlighter(res.locals.contents)
+    });
 };

@@ -11,6 +11,7 @@ var mixin       = require('./entity');
 var Variant     = require('./variant');
 var utils       = require('../../utils');
 var data        = require('../../data');
+var md          = require('../../markdown');
 
 /*
  * Export the component.
@@ -34,13 +35,13 @@ function Component(dir, app){
     var configFile = _.find(dir.getFiles(), function(entity){
         return entity.matches(app.get('components:config'));
     });
-    var config = configFile ? data.load(configFile) : {};
+    var config = configFile ? data.load(configFile) : {};    
 
     this._app = app;
     this._dir = dir;
 
     // component level data
-    this._config    = config;
+    this._config    = _.cloneDeep(config);
     this.type       = 'component';
     this.order      = dir.order;
     this.depth      = dir.depth;
@@ -50,14 +51,21 @@ function Component(dir, app){
     this.handle     = config.handle || utils.fauxPath(dir.name);
     this.label      = config.label || utils.titlize(dir.name);
     this.title      = config.title || this.label;
-    this.version    = config.version || app.get('project:version');
+    
+    if (_.isUndefined(config.readme)) {
+        var readMeFile = _.find(dir.getFiles(), function(entity){
+            return entity.matches(app.get('components:readme'));
+        });
+        this.readme  = readMeFile ? md(readMeFile.getContents()) : null;
+    } else {
+        this.readme = config.readme || null;
+    }
 
-    // base variant
-    var baseVariantConfig = _.cloneDeep(config);
-    baseVariantConfig.label = 'Base';
-    baseVariantConfig.variants = null;
-    this._base = new Variant(this.handle, baseVariantConfig, this);
-    this.baseVariant = this.handle;
+    // default variant
+    var defaultVariantConfig = _.cloneDeep(config).default || {};
+    var defaultVariantHandle = defaultVariantConfig.handle || 'default';
+    this._default = new Variant(defaultVariantHandle, defaultVariantConfig, this);
+    this.defaultVariant = defaultVariantHandle;
 
     Object.defineProperty(this, 'variants', {
         enumerable: true,
@@ -82,11 +90,13 @@ mixin.call(Component.prototype);
 Component.prototype.getVariants = function(){
     var self = this;
     var supplied = this._config.variants || [];
-    var variants = [this._base];
+    var variants = [this._default];
     _.each(supplied, function(variant, i){
         try {
-            var config = _.defaultsDeep(variant, _.cloneDeep(self._config))
-            config.variants = null;
+            var config = _.defaultsDeep(variant, _.cloneDeep(self._config).default || {});
+            // label and title are not inherited from the default
+            delete config.label;
+            delete config.title;
             var v = new Variant(variant.handle, config, self);
             variants.push(v);
         } catch(e) {
@@ -103,7 +113,7 @@ Component.prototype.getVariants = function(){
  */
 
 Component.prototype.getVariant = function(handle){
-    handle = handle || this.baseVariant;
+    handle = handle || this._default.handle;
     var variant = _.find(this.variants, 'handle', handle);
     if (!variant) {
         throw new Error('The variant ' + handle + ' of component ' + this.handle + ' could not be found.');

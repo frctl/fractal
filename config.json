@@ -20,6 +20,7 @@
     "components": {
         "path": "src/components",
         "config": "config\\.(js|json|yml|yaml)",
+        "readme": "readme\\.(md|markdown)",
         "view": {
             "handler": "handlers/components",
             "file": ["{{component}}--{{variant}}", "{{component}}"],
@@ -56,5 +57,12 @@
                 "color": "green"
             }
         }
+    },
+    "renderer": {
+        "mappings": [
+            {
+                
+            }
+        ]
     }
 }

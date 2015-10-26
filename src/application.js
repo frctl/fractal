@@ -13,6 +13,7 @@ var server      = require('./services/server/server');
 var exporter    = require('./services/exporter/exporter');
 var Components  = require('./sources/components');
 var Pages       = require('./sources/pages');
+var data        = require('./data');
 
 /*
  * Export the app.
@@ -165,6 +166,22 @@ app.getStatus = function(status){
     var statuses = this.getStatuses();
     return statuses[status] || _.find(statuses, 'default', true);
 };
+
+/*
+ * Loads a component's configuration file.
+ *
+ * @api public
+ */
+
+// app.getComponentConfig = function(handle){
+//     return this.getComponents().then(function(components){
+//         var entity = components.resolve(handle);
+//         if (entity.type === 'variant') {
+//             entity = entity._component;
+//         }
+//         return entity._config;
+//     }); 
+// };
 
 /*
  * Setup the initial app configuration.

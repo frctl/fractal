@@ -6,20 +6,9 @@ var Promise     = require('bluebird');
 var _           = require('lodash');
 var fs          = require('fs');
 var path        = require('path');
-// var swag        = require('swag');
 var nunjucks    = require('nunjucks');
 
-/*
- * Load helpers from disk.
- */
-
-// var helpers = {};
-// var helpersPath = path.join(__dirname, 'helpers');
-
-// fs.readdirSync(helpersPath).forEach(function(fileName){
-//     var helper = require(path.join(helpersPath, fileName));
-//     helpers[helper.name] = helper.helper;
-// });
+var highlighter = require('../highlighter');
 
 /*
  * Instantiate and export the nunjucks instance.
@@ -34,6 +23,13 @@ module.exports = function(viewsPath, opts){
             autoescape: false,
             watch: true
     }));
+
+    nj.addGlobal('fractal', {
+        highlight: function(str){
+            str =  !_.isString(str) ? str.toString() : str; 
+            return highlighter(str);
+        }
+    });
 
     return nj;
 };

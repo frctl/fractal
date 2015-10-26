@@ -28,6 +28,7 @@ function Variant(handle, config, parent){
     }
     var app         = this._app = parent._app;
     this.type       = 'variant';
+    this._config    = config;
     this.handle     = handle;
     this.cwd        = config.cwd || null;
     this._component = parent;
@@ -43,6 +44,7 @@ function Variant(handle, config, parent){
     }
 
     this.label          = config.label || utils.titlize(handle);
+    this.title          = config.title || this.label;
     this.path           = utils.fauxPath(this._dir.path);
     this.fsPath         = this._dir.path; 
     this.ext            = config.ext ||  app.get('components:view:ext'); 
@@ -71,7 +73,7 @@ function Variant(handle, config, parent){
     if (this.view == null) {
         throw new Error('Variant view not found');
     }
-                    
+    
     this.viewPath       = path.join(app.get('components:path'), this.path, this.view);
     this.context        = config.context || {};
     this.display        = config.display || {};
@@ -98,4 +100,38 @@ Variant.prototype.renderView = function(context, preview){
         var renderer = require(path.join('../../', this._app.get('components:view:handler')));
     }
     return preview ? renderer.renderPreview(this, context, this._app) : renderer.render(this, context, this._app);
+};
+
+/*
+ * Get a list of supporting files.
+ *
+ * @api public
+ */
+
+Variant.prototype.getFiles = function(){
+    return this._dir.getFiles();
+};
+
+/*
+ * Get a file object for one of the variant's support files.
+ *
+ * @api public
+ */
+
+Variant.prototype.getFile = function(baseName){
+    var file = _.find(this.getFiles(), 'base', baseName);
+    if (!file) {
+        throw new Error('File ' + baseName + ' not found for variant ' + this.handle);
+    }
+    return file;
+};
+
+/*
+ * Get a stringified version of the variant's context
+ *
+ * @api public
+ */
+
+Variant.prototype.getContextString = function(baseName){
+    return JSON.stringify(this.context, null, 4);
 };

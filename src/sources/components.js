@@ -216,7 +216,7 @@ ComponentSource.buildComponentTree = function(dir, app){
                 ret.push(new Group(directory, subtree));
             }
         }
-    };
+    }
 
     ret = _.compact(ret);
     return _.isArray(ret) ? _.sortByOrder(ret, ['type','order','title'], ['desc','asc','asc']) : ret;

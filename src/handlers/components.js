@@ -81,7 +81,7 @@ module.exports = {
                         if ( !_.isEmpty(parts.name) && (path.extname(fsViewPath) == path.extname(variant.fsViewPath))) {
                             var key = comp.handle + '::' + variant.handle;
                             partials[key] = path.join(parts.dir, parts.name);            
-                            if (variant.handle === comp.baseVariant) {
+                            if (variant.handle === comp._default.handle) {
                                 partials[comp.handle] = partials[key];                
                             }
                         }
