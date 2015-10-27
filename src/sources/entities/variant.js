@@ -26,10 +26,12 @@ function Variant(handle, config, parent){
     if (_.isUndefined(handle)) {
         throw new Error('No handle defined for variant of ' + parent.handle);
     }
-    var app         = this._app = parent._app;
+    var self        = this;
+    var app         = this._app = parent._app; 
     this.type       = 'variant';
     this._config    = config;
     this.handle     = handle;
+    this.fullHandle = '@' + parent.handle + '::' + this.handle;
     this.cwd        = config.cwd || null;
     this._component = parent;
     this._dir       = parent._dir;
@@ -38,7 +40,7 @@ function Variant(handle, config, parent){
         var variantPath = path.join(this._dir.path, this.cwd);
         this._dir = this._dir.findDirectory('path', variantPath);
         if (!this._dir) {
-            // TODO: better variant path error handling
+            // TODO: better variant path error handling?
             throw new Error('Variant directory ' + variantPath + ' not found');
         }
     }
@@ -77,13 +79,35 @@ function Variant(handle, config, parent){
     this.viewPath       = path.join(app.get('components:path'), this.path, this.view);
     this.context        = config.context || {};
     this.display        = config.display || {};
-    this.status         = config.status || app.get('statuses:default');
+    this.status         = app.getStatus(config.status);
     this.preview        = config.preview || app.get('components:preview:layout');
     this.engine         = config.engine || app.get('components:view:engine');
     this.notes          = config.notes || null;
+    this.rendered       = null;
+    this.files          = {
+        view: _.find(this.getFiles(), 'base', this.view)
+    };
 };
 
 mixin.call(Variant.prototype);
+
+/*
+ * Generate the rendered variant view.
+ * Returns a Promise object.
+ *
+ * @api public
+ */
+
+Variant.prototype.init = function(siblings){
+    var self = this;
+    var viewFiles = _.map(siblings, function(sibling){
+        return sibling.files.view;
+    });
+    this.files.other = _.reject(this.getFiles(), function(file){
+        return _.contains(_.values(self.files).concat(viewFiles), file);
+    });
+    return self;
+};
 
 /*
  * Generate the rendered variant view.
@@ -100,6 +124,20 @@ Variant.prototype.renderView = function(context, preview){
         var renderer = require(path.join('../../', this._app.get('components:view:handler')));
     }
     return preview ? renderer.renderPreview(this, context, this._app) : renderer.render(this, context, this._app);
+};
+
+/*
+ * Get a list of supporting files.
+ *
+ * @api public
+ */
+
+Variant.prototype.preRender = function(preview){
+    var self = this;
+    return this.renderView(null, preview).then(function(rendered){
+        self.rendered = rendered;
+        return self;
+    });
 };
 
 /*

@@ -24,7 +24,7 @@ module.exports = {
         if (entity.type == 'component') {
             entity = entity.getVariant();
         }
-        var context = context || entity.context;
+        var context = _.cloneDeep(context || entity.context);
 
         // TODO: add helpers        
 
@@ -68,7 +68,7 @@ module.exports = {
      *
      * @api public
      */
-
+     
     getPartials: function(fsViewPath, app){
         return app.getComponents().then(function(components){
             var partials = {};
@@ -80,7 +80,7 @@ module.exports = {
                         var parts = path.parse(relPath);
                         if ( !_.isEmpty(parts.name) && (path.extname(fsViewPath) == path.extname(variant.fsViewPath))) {
                             var key = comp.handle + '::' + variant.handle;
-                            partials[key] = path.join(parts.dir, parts.name);            
+                            partials[key] = path.join(parts.dir, parts.name);
                             if (variant.handle === comp._default.handle) {
                                 partials[comp.handle] = partials[key];                
                             }

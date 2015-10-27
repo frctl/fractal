@@ -49,6 +49,7 @@ function Component(dir, app){
     this.fsPath     = dir.path;
     this.path       = utils.fauxPath(dir.path);
     this.handle     = config.handle || utils.fauxPath(dir.name);
+    this.fullHandle = '@' + this.handle;
     this.label      = config.label || utils.titlize(dir.name);
     this.title      = config.title || this.label;
     
@@ -103,7 +104,10 @@ Component.prototype.getVariants = function(){
             logger.error('Variant of ' + self.handle + ' could not be created: ' + e.message );
         }
     });
-    return variants;
+    var initedVariants = _.map(variants, function(variant){
+        return variant.init(variants);
+    });
+    return initedVariants;
 };
 
 /*
@@ -131,6 +135,24 @@ Component.prototype.getVariant = function(handle){
 Component.prototype.renderView = function(context, preview, handle){
     var variant = this.getVariant(handle);
     return variant.renderView(context, preview);
+};
+
+/*
+ * Pre-render all variants.
+ * Useful for running before .toJSON() to provide a one-hit promise-based rendering of variants.
+ * Returns a promise of self. 
+ *
+ * @api public
+ */
+
+Component.prototype.renderAll = function(){
+    var self = this;
+    var promises = _.map(this.variants, function(variant){
+        return variant.preRender();
+    });
+    return Promise.all(promises).then(function(){
+        return self;
+    });
 };
 
 /*

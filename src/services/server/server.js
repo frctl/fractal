@@ -43,7 +43,7 @@ Server.prototype.init = function(fractal){
     /**
      * General configuration.
      */
-
+    
     this.nunjucks = renderer(fractal.get('theme:paths:views'));
     this.nunjucks.express(srv);
 
@@ -52,6 +52,8 @@ Server.prototype.init = function(fractal){
     srv.set('fractal', fractal);
     srv.set('view engine', 'nunj');
     srv.engine('nunj', this.nunjucks.render);
+    // TODO: enable view cache when not in dev mode
+    // srv.enable('view cache'); 
 
     srv.use('/_theme', express.static(fractal.get('theme:paths:assets')));
     if (fractal.get('static')){
@@ -76,7 +78,7 @@ Server.prototype.init = function(fractal){
     }];
 
     srv.use(function (req, res, next) {
-        req.segments    = _.compact(req.path.split('/'));
+        req._segments    = _.compact(req.path.split('/'));
         var components  = fractal.getComponents();
         var pages       = fractal.getPages();
         Promise.join(components, pages, function(components, pages){
@@ -98,14 +100,15 @@ Server.prototype.init = function(fractal){
 
     // Components
     srv.use('/components', components.common);
-
+    
     srv.param('component', components.params.component);
     srv.param('componentFile', components.params.componentFile);
-
+    
     srv.get('/components', components.index);
     srv.get('/components/list/:collection', components.list);
     srv.get('/components/detail/:component(*)', components.detail);
     srv.get('/components/raw/:componentFile(*)', components.raw);
+    srv.get('/components/preview/:component(*)/embed', components.previewEmbed);
     srv.get('/components/preview/:component(*)', components.preview);
     srv.get('/components/highlight/:componentFile(*)', components.highlight);
 

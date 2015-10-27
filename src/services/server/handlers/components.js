@@ -44,9 +44,12 @@ handlers.params.component = function(req, res, next, componentPath) {
             req._component = entity._component;
             req._variant = entity;
         }
-        res.locals.component = req._component.toJSON();
-        res.locals.variant = req._variant.toJSON();
-        next();
+        req._type = entity.type;
+        req._component.renderAll().then(function(comp){
+            res.locals.component = comp.toJSON();
+            res.locals.variant = _.find(comp.variants, 'handle', req._variant.handle);
+            next();
+        });
     } catch(e) {
         next(utils.httpError('Component not found', 404));
     }
@@ -65,6 +68,7 @@ handlers.params.componentFile = function(req, res, next, componentFile) {
         return next();
     } else {
         switch(pathInfo.name) {
+            case 'template':
             case 'view': 
                 res.locals.contents = variant.getFile(variant.view).getContents();
                 return next();
@@ -116,14 +120,7 @@ handlers.list = function(req, res) {
  */
 
 handlers.detail = function(req, res) {
-    Promise.join(req._variant.renderView(), function(rendered){
-        res.render('components/detail', {
-            rendered: {
-                raw: rendered,
-                highlighted: highlighter(rendered)
-            }
-        });
-    });
+    res.render('components/' + req._type);
 };
 
 /*
@@ -131,15 +128,18 @@ handlers.detail = function(req, res) {
  */
 
 handlers.preview = function(req, res) {
-    var embedded = !_.isUndefined(req.query.embedded);
-    Promise.join(req._variant.renderView(), function(rendered){
-        res.render('components/preview', {
-            embedded: embedded,
-            rendered: {
-                raw: rendered
-            }
-        });
-    })
+    res.render('components/preview');
+};
+
+/*
+ * Render the contents of a component file as an embed
+ */
+
+handlers.previewEmbed = function(req, res) {
+    res.locals.embedded = true;
+    res.render('components/preview', {
+        embedded: true
+    });
 };
 
 /*

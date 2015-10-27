@@ -118,6 +118,26 @@ Directory.prototype.findDirectory = function(key, value, maxDepth){
 };
 
 /*
+ * Get a static, JSON-style object representation of the directory.
+ * Good for using with templating languages.
+ *
+ * @api public
+ */
+
+Directory.prototype.toJSON = function(){
+    var obj = {};
+    _.forOwn(this, function(value, key){
+        if (!_.startsWith(key, '_')) {
+            obj[key] = value;
+        }
+    });
+    _.map(obj.children, function(item){
+        return item.toJSON();
+    });
+    return obj;
+};
+
+/*
  * Return a new Directory instance from a path.
  *
  * @api public

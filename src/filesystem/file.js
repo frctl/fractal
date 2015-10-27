@@ -4,6 +4,7 @@
 
 var Promise     = require('bluebird');
 var path        = require('path');
+var _           = require('lodash');
 var fs          = Promise.promisifyAll(require('fs'));
 
 var mixin       = require('./entity');
@@ -49,6 +50,29 @@ File.prototype.getContents = function(contents){
 File.prototype.replaceContents = function(contents){
     this.contents = contents;
     return this;
+};
+
+/*
+ * Get a static, JSON-style object representation of the file.
+ * Good for using with templating languages.
+ *
+ * @api public
+ */
+
+File.prototype.toJSON = function(){
+    var obj = {};
+    _.forOwn(this, function(value, key){
+        if (!_.startsWith(key, '_')) {
+            if (value instanceof Buffer) {
+                obj[key] = value.toString();
+            } else if (value && typeof value.toJSON === 'function') {
+                obj[key] = value.toJSON();
+            } else {
+                obj[key] = value;    
+            }
+        }
+    });
+    return obj;
 };
 
 /*

@@ -49,6 +49,7 @@ function entity(){
         
         if (this.isFile()) {
             this.raw = this.contents;
+            this.lang = this.ext.replace(/^\./,'').toLowerCase();
         }
 
         return this;

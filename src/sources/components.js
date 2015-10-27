@@ -198,7 +198,7 @@ ComponentSource.buildComponentTree = function(dir, app){
     // If there are files in there, it's a component!
     if (files.length) {
         try {
-            return new Component(dir, app).init();    
+            return new Component(dir, app);    
         } catch(e){
             logger.warn('Component could not be created from directory ' + dir.path + ': ' + e.message);
             return null;

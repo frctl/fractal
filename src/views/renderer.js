@@ -14,20 +14,21 @@ var highlighter = require('../highlighter');
  * Instantiate and export the nunjucks instance.
  */
 
-module.exports = function(viewsPath, opts){
-
-    opts = opts || {};
+module.exports = function(viewsPath){
+    
     var nj = new nunjucks.Environment(
-        new nunjucks.FileSystemLoader(viewsPath),
-        _.defaults(opts, {
-            autoescape: false,
-            watch: true
-    }));
+        new nunjucks.FileSystemLoader(viewsPath, {
+            watch: true,
+            noCache: true
+        }), {
+            autoescape: false
+        }
+    );
 
     nj.addGlobal('fractal', {
-        highlight: function(str){
+        highlight: function(str, lang){
             str =  !_.isString(str) ? str.toString() : str; 
-            return highlighter(str);
+            return highlighter(str, lang);
         }
     });
 

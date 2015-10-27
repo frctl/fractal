@@ -15,17 +15,6 @@ module.exports = entity;
 function entity(){
     
     /*
-     * Initialisation to set common properties.
-     *
-     * @api private
-     */
-
-    this.init = function(){
-        
-        return this;
-    };
-
-    /*
      * Get a static, JSON-style object representation of the entity.
      * Good for using with templating languages.
      *
@@ -36,7 +25,11 @@ function entity(){
         var obj = {};
         _.forOwn(this, function(value, key){
             if (!_.startsWith(key, '_')) {
-                obj[key] = value;
+                if (value && typeof value.toJSON === 'function') {
+                    obj[key] = value.toJSON();
+                } else {
+                    obj[key] = value;    
+                }
             }
         });
         return obj;

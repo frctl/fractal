@@ -153,7 +153,7 @@ app.getPages = function(){
  */
 
 app.getStatuses = function(){
-    return this.get('statuses');
+    return this.get('statuses:options');
 };
 
 /*
@@ -164,7 +164,8 @@ app.getStatuses = function(){
 
 app.getStatus = function(status){
     var statuses = this.getStatuses();
-    return statuses[status] || _.find(statuses, 'default', true);
+    status = status || this.get('statuses:default');
+    return _.find(statuses, 'name', status) || _.find(statuses, 'name', this.get('statuses:default'));
 };
 
 /*

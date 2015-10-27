@@ -39,24 +39,26 @@
     },
     "statuses": {
         "default": "ready",
-        "options": {
-            "prototype": {
+        "options": [
+            {
                 "name": "prototype",
                 "label": "Prototype",
                 "description": "Do not implement.",
                 "color": "red"
             },
-            "wip": {
+            {
+                "name": "wip",
                 "label": "WIP",
                 "description": "Work in progress. Implemement with caution.",
                 "color": "orange"
             },
-            "ready": {
+            {
+                "name": "ready",
                 "label": "Ready",
                 "description": "Ready to implement.",
                 "color": "green"
             }
-        }
+        ]
     },
     "renderer": {
         "mappings": [
