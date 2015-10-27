@@ -40,7 +40,7 @@ function Component(dir, app){
     this._app = app;
     this._dir = dir;
 
-    // component level data
+    this._configFile = configFile;
     this._config    = _.cloneDeep(config);
     this.type       = 'component';
     this.order      = dir.order;
@@ -58,8 +58,10 @@ function Component(dir, app){
             return entity.matches(app.get('components:readme'));
         });
         this.readme  = readMeFile ? md(readMeFile.getContents()) : null;
+        this._readMeFile = readMeFile;
     } else {
         this.readme = config.readme || null;
+        this._readMeFile = null;
     }
 
     // default variant

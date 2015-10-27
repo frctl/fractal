@@ -9,6 +9,7 @@ var fs          = require('fs');
 
 var mixin       = require('./entity');
 var utils       = require('../../utils');
+var md          = require('../../markdown');
 
 /*
  * Export the variant.
@@ -57,7 +58,7 @@ function Variant(handle, config, parent){
     if (!_.isArray(viewNames)) {
         viewNames = [viewNames];
     }
-
+    
     for (var i = 0; i < viewNames.length; i++) {
         var viewName = viewNames[i].replace('{{component}}', parent.handle).replace('{{variant}}', this.handle);
         var view = path.parse(viewName).name + this.ext;
@@ -82,10 +83,12 @@ function Variant(handle, config, parent){
     this.status         = app.getStatus(config.status);
     this.preview        = config.preview || app.get('components:preview:layout');
     this.engine         = config.engine || app.get('components:view:engine');
-    this.notes          = config.notes || null;
+    this.notes          = config.notes ? md(config.notes) : null;
     this.rendered       = null;
     this.files          = {
-        view: _.find(this.getFiles(), 'base', this.view)
+        view: _.find(this.getFiles(), 'base', this.view),
+        config: parent._configFile,
+        readme: parent._readMeFile,
     };
 };
 
