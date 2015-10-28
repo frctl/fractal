@@ -50,6 +50,7 @@ function Variant(handle, config, parent){
     this.title          = config.title || this.label;
     this.path           = utils.fauxPath(this._dir.path);
     this.fsPath         = this._dir.path; 
+    this.handlePath     = parent.handlePath + '::' + this.handle;
     this.ext            = config.ext ||  app.get('components:view:ext'); 
     this.view           = null;
     
@@ -90,6 +91,14 @@ function Variant(handle, config, parent){
         config: parent._configFile,
         readme: parent._readMeFile,
     };
+
+    Object.defineProperty(this, 'contextString', {
+        enumerable: true,
+        get: function() {
+            return this.getContextString();
+        }
+    });
+
 };
 
 mixin.call(Variant.prototype);
@@ -174,5 +183,8 @@ Variant.prototype.getFile = function(baseName){
  */
 
 Variant.prototype.getContextString = function(baseName){
+    if (_.isEmpty(this.context)) {
+        return null;
+    }
     return JSON.stringify(this.context, null, 4);
 };

@@ -35,7 +35,7 @@ function Component(dir, app){
     var configFile = _.find(dir.getFiles(), function(entity){
         return entity.matches(app.get('components:config'));
     });
-    var config = configFile ? data.load(configFile) : {};    
+    var config = configFile ? data.load(configFile) : {};
 
     this._app = app;
     this._dir = dir;
@@ -48,6 +48,7 @@ function Component(dir, app){
     this.hidden     = !! (config.hidden || dir.hidden);
     this.fsPath     = dir.path;
     this.path       = utils.fauxPath(dir.path);
+    this.handlePath = this.path;
     this.handle     = config.handle || utils.fauxPath(dir.name);
     this.fullHandle = '@' + this.handle;
     this.label      = config.label || utils.titlize(dir.name);
@@ -79,6 +80,11 @@ function Component(dir, app){
             return variants;
         }
     });
+
+    Object.defineProperty(this, 'status', {
+        enumerable: true,
+        get: this.getStatuses
+    });
 };
 
 mixin.call(Component.prototype);
@@ -94,18 +100,26 @@ Component.prototype.getVariants = function(){
     var self = this;
     var supplied = this._config.variants || [];
     var variants = [this._default];
+    var usedViews = [];
     _.each(supplied, function(variant, i){
         try {
-            var config = _.defaultsDeep(variant, _.cloneDeep(self._config).default || {});
-            // label and title are not inherited from the default
-            delete config.label;
-            delete config.title;
+            var defaults = _.cloneDeep(self._config).default || {};
+            // label, title and notes are not inherited from the default
+            delete defaults.label;
+            delete defaults.title;
+            delete defaults.notes;
+            var config = _.defaultsDeep(variant, defaults);
             var v = new Variant(variant.handle, config, self);
             variants.push(v);
+            usedViews.push(v.view);
         } catch(e) {
             logger.error('Variant of ' + self.handle + ' could not be created: ' + e.message );
         }
     });
+    // now find any view files that haven't been accounted for and turn them into variants
+    // TODO: auto-create variants from unused view files
+    // console.log('----');
+    // console.log(usedViews);
     var initedVariants = _.map(variants, function(variant){
         return variant.init(variants);
     });
@@ -174,12 +188,13 @@ Component.prototype.getVariantFiles = function(variantName){
 };
 
 /*
- * Get the contents of one of the component's files, optionally with syntax highlighting.
- * Returns a Promise object.
+ * Gets a de-duped array of the component variants statuses.
  *
  * @api public
  */
 
-Component.prototype.getFileContents = function(filename){
-    
+Component.prototype.getStatuses = function(){
+    return _.compact(_.uniq(_.map(this.variants, function(variant){
+            return variant.status;
+    })));
 };
