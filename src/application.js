@@ -30,6 +30,7 @@ var app = exports = module.exports = {};
 app.init = function(){
     this._monitors = [];
     this._components = null;
+    this.serverIsRunning = false;
     this.defaultConfig();
 };
 
@@ -110,11 +111,18 @@ app.run = function(){
     }
 
     if (this.enabled('run:server') || this.disabled('run:exporter')) {
-        logger.info('Booting server...');
-        server.init(this).listen();
+        this.startServer();
     }
 
     return this;
+};
+
+app.startServer = function(){
+    if (!this.serverIsRunning) {
+        logger.info('Booting server...');
+        server.init(this).listen();
+        this.serverIsRunning = true;
+    }
 };
 
 /*

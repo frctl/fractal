@@ -28,9 +28,8 @@ function Exporter(){
 
 Exporter.prototype.init = function(fractal){
 
-    fractal.getComponents().then(function(components){
-        
-    });
+    var url = fractal.startServer();
+    
 
     return this;
 };

@@ -132,4 +132,5 @@ Server.prototype.listen = function(){
     srv.listen(port, function() {
         logger.info('Fractal server is now running at http://localhost:%s', port);
     });
+    return 'http://localhost:' + port;
 };

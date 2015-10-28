@@ -30,6 +30,8 @@
     "marked": "^0.3.5",
     "nconf": "^0.8.2",
     "nunjucks": "^2.1.0",
+    "request": "^2.65.0",
+    "superagent": "^1.4.0",
     "swag": "^0.7.0",
     "swig": "^1.4.2",
     "winston": "^1.1.0"
