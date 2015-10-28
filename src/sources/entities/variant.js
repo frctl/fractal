@@ -31,12 +31,12 @@ function Variant(handle, config, parent){
     var app         = this._app = parent._app; 
     this.type       = 'variant';
     this._config    = config;
+    this._component = parent;
+    this._dir       = parent._dir;
     this.handle     = handle;
     this.fullHandle = '@' + parent.handle + '::' + this.handle;
     this.cwd        = config.cwd || null;
-    this._component = parent;
-    this._dir       = parent._dir;
-
+    
     if (this.cwd) {
         var variantPath = path.join(this._dir.path, this.cwd);
         this._dir = this._dir.findDirectory('path', variantPath);
@@ -81,11 +81,13 @@ function Variant(handle, config, parent){
     this.viewPath       = path.join(app.get('components:path'), this.path, this.view);
     this.context        = config.context || {};
     this.display        = config.display || {};
+    this.hidden         = parent.hidden;
     this.status         = app.getStatus(config.status);
-    this.preview        = config.preview || app.get('components:preview:layout');
+    this.preview        = config.preview !== null ? app.get('components:preview:layout') : null;
     this.engine         = config.engine || app.get('components:view:engine');
     this.notes          = config.notes ? md(config.notes) : null;
     this.rendered       = null;
+    this.renderedInLayout = null;
     this.files          = {
         view: _.find(this.getFiles(), 'base', this.view),
         config: parent._configFile,
@@ -144,10 +146,13 @@ Variant.prototype.renderView = function(context, preview){
  * @api public
  */
 
-Variant.prototype.preRender = function(preview){
+Variant.prototype.preRender = function(){
     var self = this;
-    return this.renderView(null, preview).then(function(rendered){
+    var rendered = this.renderView(null, false);
+    var renderedPreview = this.renderView(null, true);
+    return Promise.join(rendered, renderedPreview, function(rendered, renderedPreview){
         self.rendered = rendered;
+        self.renderedPreview = renderedPreview;
         return self;
     });
 };

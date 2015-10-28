@@ -118,11 +118,11 @@ ComponentSource.prototype.flatten = function(){
             return item.type === 'group' ? list(item.children) : item;
         });
     }
-    return _.flatten(list(this.components));
+    return new ComponentSource(_.flatten(list(this.components)), this.app);
 };
 
 /*
- * Returns a component tree filtered by key:value
+ * Returns a new component tree filtered by key:value
  *
  * @api public
  */

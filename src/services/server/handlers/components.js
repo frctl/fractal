@@ -39,7 +39,7 @@ handlers.params.component = function(req, res, next, componentPath) {
         var entity = req._components.resolve(componentPath);
         if (entity.type == 'component') {
             req._component = entity;
-            req._variant = entity.getVariant();
+            req._variant = entity.default;
         } else if (entity.type == 'variant') {
             req._component = entity._component;
             req._variant = entity;
@@ -107,12 +107,22 @@ handlers.index = function(req, res) {
 
 handlers.list = function(req, res) {
     var data = {};
+    var notHidden = req._components.filter('hidden', false);
     switch(req.params.collection){
         case 'all':
-            data.items = req._components.flatten();
+            data.title = 'All components (with variants)';
+            data.items = notHidden.flatten().toJSON();
+            data.showVariants = true;
+        break;
+        case 'all-no-variants':
+            data.title = 'All components (no variants)';
+            data.items = notHidden.flatten().toJSON();
+            data.showVariants = false;
         break;
     }
-    res.render('components/list', data);
+    res.render('components/list', {
+        list: data
+    });
 };
 
 /*

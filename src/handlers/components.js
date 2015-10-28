@@ -26,7 +26,8 @@ module.exports = {
         }
         var context = _.cloneDeep(context || entity.context);
 
-        // TODO: add helpers        
+        // TODO: add helpers
+        // TODO: Add loader for nunjucks
 
         return this.getPartials(entity.fsViewPath, app).then(function(partials){
             context.partials = partials;
@@ -72,7 +73,7 @@ module.exports = {
     getPartials: function(fsViewPath, app){
         return app.getComponents().then(function(components){
             var partials = {};
-            _.each(components.flatten(), function(comp){
+            _.each(components.flatten().components, function(comp){
                 var variants = comp.getVariants();
                 _.each(variants, function(variant){
                     if (fsViewPath != variant.fsViewPath) {
@@ -81,7 +82,7 @@ module.exports = {
                         if ( !_.isEmpty(parts.name) && (path.extname(fsViewPath) == path.extname(variant.fsViewPath))) {
                             var key = comp.handle + '::' + variant.handle;
                             partials[key] = path.join(parts.dir, parts.name);
-                            if (variant.handle === comp._default.handle) {
+                            if (variant.handle === comp.default.handle) {
                                 partials[comp.handle] = partials[key];                
                             }
                         }

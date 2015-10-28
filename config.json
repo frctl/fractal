@@ -66,5 +66,16 @@
                 
             }
         ]
+    },
+    "fractal": {
+        "site": {
+            "url": "http://fractal.clearleft.com"
+        },
+        "docs": {
+
+        },
+        "bugs": {
+            "url": "mailto:dev@clearleft.com"
+        }
     }
 }

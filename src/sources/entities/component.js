@@ -68,7 +68,7 @@ function Component(dir, app){
     // default variant
     var defaultVariantConfig = _.cloneDeep(config).default || {};
     var defaultVariantHandle = defaultVariantConfig.handle || 'default';
-    this._default = new Variant(defaultVariantHandle, defaultVariantConfig, this);
+    this.default = new Variant(defaultVariantHandle, defaultVariantConfig, this);
     this.defaultVariant = defaultVariantHandle;
 
     Object.defineProperty(this, 'variants', {
@@ -99,7 +99,7 @@ mixin.call(Component.prototype);
 Component.prototype.getVariants = function(){
     var self = this;
     var supplied = this._config.variants || [];
-    var variants = [this._default];
+    var variants = [this.default];
     var usedViews = [];
     _.each(supplied, function(variant, i){
         try {
@@ -133,7 +133,7 @@ Component.prototype.getVariants = function(){
  */
 
 Component.prototype.getVariant = function(handle){
-    handle = handle || this._default.handle;
+    handle = handle || this.default.handle;
     var variant = _.find(this.variants, 'handle', handle);
     if (!variant) {
         throw new Error('The variant ' + handle + ' of component ' + this.handle + ' could not be found.');
