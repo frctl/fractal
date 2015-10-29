@@ -114,11 +114,11 @@ ComponentSource.prototype.findByKey = function(key, value) {
 
 ComponentSource.prototype.flatten = function(){
     function list(items) {
-        return _.map(items, function(item){
+        return _.flatten(_.map(items, function(item){
             return item.type === 'group' ? list(item.children) : item;
-        });
+        }));
     }
-    return new ComponentSource(_.flatten(list(this.components)), this.app);
+    return new ComponentSource(list(this.components), this.app);
 };
 
 /*

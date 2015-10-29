@@ -30,7 +30,8 @@ var app = exports = module.exports = {};
 app.init = function(){
     this._monitors = [];
     this._components = null;
-    this.serverIsRunning = false;
+    this.httpServer = null;
+    this.httpServerUrl = null;
     this.defaultConfig();
 };
 
@@ -117,11 +118,23 @@ app.run = function(){
     return this;
 };
 
-app.startServer = function(){
-    if (!this.serverIsRunning) {
+app.startServer = function(callback){
+    callback = callback || function(){};
+    var self = this;
+    if (!this.httpServer) {
         logger.info('Booting server...');
-        server.init(this).listen();
-        this.serverIsRunning = true;
+        server.init(this).listen(function(baseUrl, httpServer){
+            self.httpServer = httpServer;
+            self.httpServerUrl = baseUrl;
+            httpServer.on('close', function(){
+                self.httpServer = null;
+                self.httpServerUrl = null;
+            });
+            callback(baseUrl, httpServer);
+        });
+        
+    } else {
+        callback(this.httpServerUrl, this.httpServer);
     }
 };
 

@@ -127,10 +127,22 @@ Server.prototype.init = function(fractal){
  * @api public
  */
 
-Server.prototype.listen = function(){
+Server.prototype.listen = function(callback){
     var port = this.port;
-    srv.listen(port, function() {
+    callback = callback || function(){};
+    var instance = srv.listen(port, function(){
         logger.info('Fractal server is now running at http://localhost:%s', port);
+        callback('http://localhost:' + port, instance);
     });
-    return 'http://localhost:' + port;
+    return instance;
+};
+
+/**
+ * Stop the server
+ *
+ * @api public
+ */
+
+Server.prototype.close = function(){
+    srv.close();
 };
