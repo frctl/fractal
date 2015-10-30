@@ -10,8 +10,12 @@
     "server": {
         "port": 3000
     },
-    "exporter": {
-
+    "static": {
+        "path": null,
+        "dest": "/"
+    },
+    "build": {
+        "dest": "build"
     },
     "theme": {
         "name": "fractal-theme-default",

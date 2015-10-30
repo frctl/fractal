@@ -34,6 +34,7 @@
     "nunjucks": "^2.1.0",
     "request": "^2.65.0",
     "request-promise": "^1.0.2",
+    "rimraf": "^2.4.3",
     "superagent": "^1.4.0",
     "swag": "^0.7.0",
     "swig": "^1.4.2",

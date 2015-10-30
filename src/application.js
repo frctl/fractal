@@ -10,7 +10,7 @@ var _           = require('lodash');
 var chokidar    = require('chokidar');
 
 var server      = require('./services/server/server');
-var exporter    = require('./services/exporter/exporter');
+var builder     = require('./services/builder/builder');
 var Components  = require('./sources/components');
 var Pages       = require('./sources/pages');
 var data        = require('./data');
@@ -106,12 +106,12 @@ app.run = function(){
 
     logger.level = this.get('log:level');
 
-    if (this.enabled('run:exporter')) {
-        logger.info('Running exporter...');
-        exporter.init(this).export();
+    if (this.enabled('run:build')) {
+        logger.info('Running build...');
+        builder.init(this).run();
     }
 
-    if (this.enabled('run:server') || this.disabled('run:exporter')) {
+    if (this.enabled('run:server') || this.disabled('run:build')) {
         this.startServer();
     }
 
@@ -218,9 +218,9 @@ app.defaultConfig = function(){
             describe: 'Run the server',
             default: false
         },
-        "e": {
-            alias: ['export','run:exporter'],
-            describe: 'Run the exporter',
+        "b": {
+            alias: ['build','run:build'],
+            describe: 'Run the build task',
             default: false
         }
     }).env().file({

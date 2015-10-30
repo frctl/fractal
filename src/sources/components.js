@@ -49,13 +49,13 @@ ComponentSource.prototype.resolve = function(str){
  * If a the path specifies a variant then that will be returned in place of the component.
  * Throws an error if the component/variant is not found.
  *
- * Path format: my/component/path::optional-variant-handle
+ * Path format: my/component/path:optional-variant-handle
  * 
  * @api public
  */
 
 ComponentSource.prototype.findByPath = function(componentPath){
-    var pathParts = componentPath.split('::', 2);
+    var pathParts = componentPath.split('--', 2);
     var component = this.findByKey('path', pathParts[0]);
     return (pathParts.length === 2) ? component.getVariant(pathParts[1]) : component;
 };
@@ -65,14 +65,14 @@ ComponentSource.prototype.findByPath = function(componentPath){
  * If a the handle specifies a variant then that will be returned in place of the component.
  * Throws an error if the component/variant is not found.
  *
- * Handle format: @component-handle::optional-variant-handle
+ * Handle format: @component-handle:optional-variant-handle
  *
  * @api public
  */
 
 ComponentSource.prototype.findByHandle = function(handle){
     handle = handle.replace(/^@/, '');
-    var handleParts = handle.split('::', 2);
+    var handleParts = handle.split(':', 2);
     var component = this.findByKey('handle', handleParts[0]);
     return (handleParts.length === 2) ? component.getVariant(handleParts[1]) : component;
 };

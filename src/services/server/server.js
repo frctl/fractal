@@ -56,8 +56,9 @@ Server.prototype.init = function(fractal){
     // srv.enable('view cache'); 
 
     srv.use('/_theme', express.static(fractal.get('theme:paths:assets')));
-    if (fractal.get('static')){
-        srv.use(express.static(fractal.get('static')));
+    if (fractal.get('static:path')){
+        var dest = '/' + _.trim(fractal.get('static:dest'), '/');
+        srv.use(dest, express.static(fractal.get('static:path')));
     }
     
     /**

@@ -80,7 +80,7 @@ module.exports = {
                         var relPath = path.relative(fsViewPath, variant.fsViewPath).replace('../', '');
                         var parts = path.parse(relPath);
                         if ( !_.isEmpty(parts.name) && (path.extname(fsViewPath) == path.extname(variant.fsViewPath))) {
-                            var key = comp.handle + '::' + variant.handle;
+                            var key = comp.handle + ':' + variant.handle;
                             partials[key] = path.join(parts.dir, parts.name);
                             if (variant.handle === comp.default.handle) {
                                 partials[comp.handle] = partials[key];                

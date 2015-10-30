@@ -34,7 +34,7 @@ function Variant(handle, config, parent){
     this._component = parent;
     this._dir       = parent._dir;
     this.handle     = handle;
-    this.fullHandle = '@' + parent.handle + '::' + this.handle;
+    this.fullHandle = '@' + parent.handle + ':' + this.handle;
     this.cwd        = config.cwd || null;
     
     if (this.cwd) {
@@ -50,7 +50,7 @@ function Variant(handle, config, parent){
     this.title          = config.title || this.label;
     this.path           = utils.fauxPath(this._dir.path);
     this.fsPath         = this._dir.path; 
-    this.handlePath     = parent.handlePath + '::' + this.handle;
+    this.handlePath     = parent.handlePath + '--' + this.handle;
     this.ext            = config.ext ||  app.get('components:view:ext'); 
     this.view           = null;
     
