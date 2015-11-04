@@ -20,15 +20,16 @@ module.exports = Group;
  * @api private
  */
 
-function Group(dir, children){
+function Group(dir, config, children){
     this.type       = 'group';
     this._dir       = dir;
-    this.children   = children;
+    this._config    = config;
     this.handle     = dir.name;
-    this.label      = utils.titlize(dir.name);
-    this.title      = this.label;
+    this.label      = config.label || utils.titlize(dir.name);
+    this.title      = config.title || this.label;
     this.order      = dir.order;
     this.depth      = dir.depth;
+    this.children   = children;
 };
 
 mixin.call(Group.prototype);
@@ -53,3 +54,6 @@ Group.prototype.toJSON = function(){
     return obj;
 };
 
+Group.fromDirectory = function(){
+    
+};

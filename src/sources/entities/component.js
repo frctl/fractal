@@ -198,3 +198,37 @@ Component.prototype.getStatuses = function(){
             return variant.status;
     })));
 };
+
+/*
+ * Create a new component from a directory
+ *
+ * @api public
+ */
+
+Component.fromDirectory = function(dir, config, app){
+    return {
+        toJSON: function(){
+            return {
+                type: "component",
+                handle: dir.base
+            }
+        }
+    };
+};
+
+/*
+ * Create a new component from a file
+ *
+ * @api public
+ */
+
+Component.fromFile = function(file, dir, config, app){
+    return {
+        toJSON: function(){
+            return {
+                type: "component",
+                handle: file.base
+            }
+        }
+    };
+};

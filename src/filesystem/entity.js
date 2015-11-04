@@ -33,7 +33,7 @@ function entity(){
         this.relativePath       = this.path;
         this.ext                = this.isFile() ? fileInfo.ext : null;
         this.name               = nameParts ? nameParts[2] : name; // remove order from filename
-        this.base               = this.name + this.ext;
+        this.base               = this.name + (this.ext || '');
         this.dir                = fileInfo.dir;
         this.relativeDir        = relativefileInfo.dir;
         
