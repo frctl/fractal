@@ -29,80 +29,52 @@ function Variant(handle, config, parent){
         throw new Error('No handle defined for variant of ' + parent.handle);
     }
 
-    var self            = this;
-    var app             = this._app = parent._app; 
+    var self                = this;
+    var app                 = this._app = parent._app;
 
-    this._config        = config;
-    this._files         = config.files || [];
-    this._component     = parent;
-    this._source        = parent._source;
+    this._config            = config;
+    this._files             = config.files || [];
+    this._component         = parent;
+    this._source            = parent._source;
 
-    this.type           = 'variant';
-    this.handle         = handle;
-    this.fullHandle     = '@' + parent.handle + ':' + this.handle;
-    this.label          = config.label || utils.titlize(handle);
-    this.title          = config.title || this.label;
-    this.path           = utils.fauxPath(this._source.path);
-    this.fsPath         = this._source.path;
-    this.handlePath     = parent.handlePath + '--' + this.handle;
-    this.context        = config.context || {};
-    this.display        = config.display || {};
-    this.hidden         = config.hidden || false;
-    this.status         = app.getStatus(config.status);
-    this.preview        = config.preview !== null ? app.get('components:preview:layout') : null;
-    this.notes          = config.notes ? md(config.notes) : null;
-    this.contextString  = null;
+    this.type               = 'variant';
+    this.handle             = handle;
+    this.fullHandle         = '@' + parent.handle + ':' + this.handle;
+    this.label              = config.label || utils.titlize(handle);
+    this.title              = config.title || this.label;
+    // this.fsPath             = parent.fsPath;
+    // this.path               = parent.path;
+    this.handlePath         = parent.handlePath + '--' + this.handle;
+    this.context            = config.context || {};
+    this.display            = config.display || {};
+    this.hidden             = config.hidden || false;
+    this.status             = app.getStatus(config.status);
+    this.preview            = config.preview || null;
+    this.notes              = config.notes ? md(config.notes) : null;
+    this.ext                = parent.viewExt;
+    this.view               = path.parse(config.view).name + this.ext;
+    this.engine             = parent.engine;
 
-    // this.cwd        = config.cwd || null;
+    if (parent.sourceType == 'directory') {
+        this.fsViewPath = path.resolve(path.join(app.get('components:path'), parent._source.path, this.view)); 
+    } else {
+        this.fsViewPath = path.resolve(path.join(app.get('components:path'), parent._source.relativeDir, this.view)); 
+    }
     
-    // if (this.cwd) {
-    //     var variantPath = path.join(this._dir.path, this.cwd);
-    //     this._dir = this._dir.findDirectory('path', variantPath);
-    //     if (!this._dir) {
-    //         throw new Error('Variant directory ' + variantPath + ' not found');
-    //     }
-    // }
+    this.contextString      = null;
+    this.rendered           = null;
+    this.renderedInLayout   = null;
 
-    // this.ext            = config.ext ||  app.get('components:view:ext'); 
-    // this.view           = null;
-    
-    // var viewNames = config.view || app.get('components:view:file');
+    this.files = {
+        view: _.find(this._files, 'fsBase', this.view),
+        other: _.reject(this._files, 'fsBase', this.view),
+    };
 
-    // if (!_.isArray(viewNames)) {
-    //     viewNames = [viewNames];
-    // }
-    
-    // for (var i = 0; i < viewNames.length; i++) {
-    //     var viewName = viewNames[i].replace('{{component}}', parent.handle).replace('{{variant}}', this.handle);
-    //     var view = path.parse(viewName).name + this.ext;
-    //     var fsViewPath = path.join(app.get('components:path'), this.fsPath, view);
-    //     try {
-    //         var stats = fs.lstatSync(path.resolve(fsViewPath));
-    //         if (stats){
-    //             this.view = view;
-    //             this.fsViewPath = fsViewPath;
-    //             break;
-    //         }
-    //     } catch (e) {}
-    // };
-
-    // if (this.view == null) {
-    //     throw new Error('Variant view not found');
-    // }
-    
-    // this.viewPath       = path.join(app.get('components:path'), this.path, this.view);
-
-   
-    this.rendered       = null;
-    this.renderedInLayout = null;
-
-    // this.files          = {
-    //     view: _.find(this.getFiles(), 'base', this.view),
-    //     config: parent._configFile,
-    //     readme: parent._readMeFile,
-    // };
-
-  
+    try {
+        var stats = fs.lstatSync(this.fsViewPath);
+    } catch (e) {
+        throw new Error('Variant view not found (path searched: ' + this.fsViewPath + ')');
+    }
 
 };
 
@@ -116,20 +88,9 @@ mixin.call(Variant.prototype);
  */
 
 Variant.prototype.init = function(siblings){
-
     var self = this;
-
     this.contextString = this.getContextString();
-
-    // var viewFiles = _.map(siblings, function(sibling){
-    //     return sibling.files.view;
-    // });
-    // this.files.other = _.reject(this.getFiles(), function(file){
-    //     return _.contains(_.values(self.files).concat(viewFiles), file);
-    // });
-    // 
-    
-    return Promise.resolve(self);
+    return self;
 };
 
 /*
@@ -140,11 +101,12 @@ Variant.prototype.init = function(siblings){
  */
 
 Variant.prototype.renderView = function(context, preview){
-    context = context || this.context;
+    var context = context || this.context;
+    var engine = this._app.getComponentViewEngine();
     try {
-        var renderer = require(this._app.get('components:view:handler'));    
+        var renderer = require(engine.handler);    
     } catch (e) {
-        var renderer = require(path.join('../../', this._app.get('components:view:handler')));
+        var renderer = require(path.join('../../', engine.handler));
     }
     return preview ? renderer.renderPreview(this, context, this._app) : renderer.render(this, context, this._app);
 };

@@ -85,9 +85,8 @@ Server.prototype.init = function(fractal){
         Promise.join(components, pages, function(components, pages){
             req._components = components;
             req._pages = pages;
-            console.log(JSON.stringify(components.components, null, 4));
-            // srv.locals.components = components.toJSON();
-
+            srv.locals.components = components.toJSON();
+            // return res.json(components.toJSON());
             // srv.locals.pages = pages.toJSON();
             srv.locals.pages = [];
             next();

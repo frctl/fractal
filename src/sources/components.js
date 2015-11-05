@@ -120,7 +120,7 @@ ComponentSource.prototype.flatten = function(){
             return item.type === 'group' ? list(item.children) : item;
         }));
     }
-    return new ComponentSource(list(this.components), this.app);
+    return new ComponentSource(list(this.components), this.app).init();
 };
 
 /*
@@ -138,15 +138,16 @@ ComponentSource.prototype.filter = function(key, value){
                     ret.push(item);
                 }
             } else {
+                // group
                 var children = filter(item.children);
                 if (children.length) {
-                    ret.push(new Group(item._dir, children));
+                    ret.push(new Group(item._dir, item._config, children, item._app));
                 }
             }
         }); 
         return _.compact(ret);
     }
-    return new ComponentSource(filter(this.components), this.app);
+    return new ComponentSource(filter(this.components), this.app).init();
 };
 
 /*
@@ -178,8 +179,12 @@ ComponentSource.prototype.toString = function(){
  */
 
 ComponentSource.build = function(app){
-    return Directory.fromPath(app.get('components').path).then(function(dir){
-        return ComponentSource.buildComponentTree(dir, {context: app.get('components:context')}, app).then(function(tree){
+    return Directory.fromPath(app.get('components:path')).then(function(dir){
+        var defaults = {
+            preview: app.get('components:preview:layout'),
+            context: app.get('components:context')
+        };
+        return ComponentSource.buildComponentTree(dir, defaults, app).then(function(tree){
             return new ComponentSource(tree, app).init();    
         });
     });
@@ -209,7 +214,7 @@ ComponentSource.buildComponentTree = function(dir, cascadeConfig, app){
     
     return dirConfig.then(function(dirConfig){
 
-        var mergedConfig = _.defaultsDeep(dirConfig, cascadeConfig);
+        var mergedConfig = _.defaultsDeep(dirConfig, _.pick(cascadeConfig, ['context', 'preview', 'status', 'display']));
 
         if (dirConfig.type == 'component' || _.find(files, 'base', dir.name + engine.ext)) {
             // Does the config specify this as a component?
@@ -237,7 +242,7 @@ ComponentSource.buildComponentTree = function(dir, cascadeConfig, app){
         function makeGroupPromise(directory){
             return ComponentSource.buildComponentTree(directory, mergedConfig, app).then(function(subtree){
                 if (_.isArray(subtree)) {
-                    return Group.fromDirectory(directory, dirConfig, subtree);
+                    return Group.fromDirectory(directory, subtree, app);
                 }
                 return subtree;
             });
@@ -247,14 +252,13 @@ ComponentSource.buildComponentTree = function(dir, cascadeConfig, app){
         for (var i = directories.length - 1; i >= 0; i--) {
             var directory = directories[i];
             if (directory.hasChildren()) {
-                var subtree = makeGroupPromise(directory);
-                ret.push(subtree);
+                ret.push(makeGroupPromise(directory));
             }
         }
 
         return Promise.all(ret).then(function(items){
             var items = _.compact(items);
-            return _.isArray(items) ? _.sortByOrder(items, ['type','order','title'], ['desc','asc','asc']) : items;    
+            return _.isArray(items) ? _.sortByOrder(items, ['type','order','label'], ['desc','asc','asc']) : items;    
         });
         
     });

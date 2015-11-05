@@ -51,6 +51,7 @@ handlers.params.component = function(req, res, next, componentPath) {
             next();
         });
     } catch(e) {
+        // console.log(e.stack);
         next(utils.httpError('Component not found', 404));
     }
 };

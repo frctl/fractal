@@ -195,9 +195,10 @@ app.getStatus = function(status){
  * @api public
  */
 
-app.getComponentViewEngine = function(status){
+app.getComponentViewEngine = function(){
     var engine = this.get('components:engines')[this.get('components:engine')];
     engine.ext = '.' + _.trim(engine.ext, '.');
+    engine.engine = this.get('components:engine');
     return engine;
 };
 
