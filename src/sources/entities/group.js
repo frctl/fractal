@@ -54,6 +54,13 @@ Group.prototype.toJSON = function(){
     return obj;
 };
 
-Group.fromDirectory = function(){
-    
+/*
+ * Factory method to create a new group instance from a directory.
+ * Returns a promise.
+ *
+ * @api public
+ */
+
+Group.fromDirectory = function(dir, config, children){
+    return Promise.resolve(new Group(dir, config, children));
 };

@@ -91,15 +91,33 @@ function entity(){
      * @api public
      */
     
-    this.matches = function(matcher, replacements){
+    this.matches = function(matcher, replacements, key){
+        var key = key || 'base';
         if (replacements) {
             _.each(replacements, function(replacement, variable){
                 matcher = matcher.replace('{{' + variable + '}}', replacement.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"));
             });
         }
         var tester = new RegExp(matcher, 'i');
-        return tester.test(this.base);
+        return tester.test(this[key]);
     };
+
+    /*
+     * Match sections of the base
+     *
+     * @api public
+     */
+
+    this.match = function(matcher, replacements, key){
+        var key = key || 'base';
+        if (replacements) {
+            _.each(replacements, function(replacement, variable){
+                matcher = matcher.replace('{{' + variable + '}}', replacement.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"));
+            });
+        }
+        var tester = new RegExp(matcher, 'i');
+        return this[key].match(tester);
+    }
 
 };
 

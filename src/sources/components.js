@@ -179,7 +179,7 @@ ComponentSource.prototype.toString = function(){
 
 ComponentSource.build = function(app){
     return Directory.fromPath(app.get('components').path).then(function(dir){
-        return ComponentSource.buildComponentTree(dir, app.get('components:defaults'), app).then(function(tree){
+        return ComponentSource.buildComponentTree(dir, {context: app.get('components:context')}, app).then(function(tree){
             return new ComponentSource(tree, app).init();    
         });
     });
@@ -191,10 +191,9 @@ ComponentSource.build = function(app){
  * @api public
  */
 
-ComponentSource.buildComponentTree = function(dir, itemConfig, app){
+ComponentSource.buildComponentTree = function(dir, cascadeConfig, app){
 
-    var engine          = app.get('components:engines')[app.get('components:engine')];
-    var ext             = '.' + _.trim(engine.ext, '.');
+    var engine          = app.getComponentViewEngine();
     var ret             = [];
     var files           = dir.getFiles();
     var directories     = dir.getDirectories();
@@ -205,17 +204,19 @@ ComponentSource.buildComponentTree = function(dir, itemConfig, app){
             name: dir.name
         });
     });
+    
     var dirConfig = configFile ? data.load(configFile.absolutePath) : Promise.resolve({});
-
+    
     return dirConfig.then(function(dirConfig){
 
-         var itemConfig = _.defaultsDeep(dirConfig, itemConfig);
+        var mergedConfig = _.defaultsDeep(dirConfig, cascadeConfig);
 
-        if (_.find(files, 'base', dir.name + ext)) {
-            // Is there a file within this directory that has the same name as the directory?
+        if (dirConfig.type == 'component' || _.find(files, 'base', dir.name + engine.ext)) {
+            // Does the config specify this as a component?
+            // Or is there a file within this directory that has the same name as the directory?
             // If so it's a component directory.
             try {
-                return Component.fromDirectory(dir, itemConfig, app);
+                return Component.fromDirectory(dir, mergedConfig, app);
             } catch(e){
                 logger.warn('Component could not be created from directory ' + dir.path + ': ' + e.message);
                 return null;
@@ -225,18 +226,18 @@ ComponentSource.buildComponentTree = function(dir, itemConfig, app){
             _.each(files, function(file){
                 var matches = file.matches('^(?!.*({{splitter}})).*{{ext}}$', {
                     splitter: app.get('components:variantSplitter'),
-                    ext: ext
+                    ext: engine.ext
                 });
                 if (matches) {
-                    ret.push(Component.fromFile(file, dir, itemConfig, app));
+                    ret.push(Component.fromFile(file, dir, mergedConfig, app));
                 }
             });
         }
 
         function makeGroupPromise(directory){
-            return ComponentSource.buildComponentTree(directory, itemConfig, app).then(function(subtree){
+            return ComponentSource.buildComponentTree(directory, mergedConfig, app).then(function(subtree){
                 if (_.isArray(subtree)) {
-                    return new Group(directory, dirConfig, subtree);
+                    return Group.fromDirectory(directory, dirConfig, subtree);
                 }
                 return subtree;
             });
@@ -250,7 +251,7 @@ ComponentSource.buildComponentTree = function(dir, itemConfig, app){
                 ret.push(subtree);
             }
         }
-        
+
         return Promise.all(ret).then(function(items){
             var items = _.compact(items);
             return _.isArray(items) ? _.sortByOrder(items, ['type','order','title'], ['desc','asc','asc']) : items;    

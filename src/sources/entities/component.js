@@ -29,101 +29,163 @@ module.exports = Component;
  * @api private
  */
 
-function Component(dir, app){
-    var self = this;
-    var variants = null;
-    var configFile = _.find(dir.getFiles(), function(entity){
-        return entity.matches(app.get('components:config'));
-    });
-    var config = configFile ? data.load(configFile) : {};
+function Component(entity, files, config, app){
 
-    this._app = app;
-    this._dir = dir;
-
-    this._configFile = configFile;
-    this._config    = _.cloneDeep(config);
-    this.type       = 'component';
-    this.order      = dir.order;
-    this.depth      = dir.depth;
-    this.hidden     = !! (config.hidden || dir.hidden);
-    this.fsPath     = dir.path;
-    this.path       = utils.fauxPath(dir.path);
-    this.handlePath = this.path;
-    this.handle     = config.handle || utils.fauxPath(dir.name);
-    this.fullHandle = '@' + this.handle;
-    this.label      = config.label || utils.titlize(dir.name);
-    this.title      = config.title || this.label;
+    var self                = this;
+    var engine              = app.getComponentViewEngine();
     
-    if (_.isUndefined(config.readme)) {
-        var readMeFile = _.find(dir.getFiles(), function(entity){
-            return entity.matches(app.get('components:readme'));
-        });
-        this.readme  = readMeFile ? md(readMeFile.getContents()) : null;
-        this._readMeFile = readMeFile;
-    } else {
-        this.readme = config.readme || null;
-        this._readMeFile = null;
-    }
+    this._app               = app;
+    this._source            = entity;
+    this._files             = files;
+    this._config            = _.cloneDeep(config);
 
-    // default variant
-    var defaultVariantConfig = _.cloneDeep(config).default || {};
-    var defaultVariantHandle = defaultVariantConfig.handle || 'default';
-    this.default = new Variant(defaultVariantHandle, defaultVariantConfig, this);
-    this.defaultVariant = defaultVariantHandle;
+    this.readme             = null;
+    this.default            = null;
+    this.variants           = null;
+    this.sourceType         = entity.type;
+    this.type               = 'component';
+    this.order              = entity.order;
+    this.depth              = entity.depth;
+    this.hidden             = !! (config.hidden || entity.hidden);
+    this.fsPath             = entity.path;
+    this.path               = utils.fauxPath(entity.path);
+    this.handlePath         = this.path;
+    this.handle             = config.handle || utils.fauxPath(entity.name);
+    this.fullHandle         = '@' + this.handle;
+    this.label              = config.label || utils.titlize(entity.name);
+    this.title              = config.title || this.label;
+    this.defaultHandle      = config.default || 'default';
+    this.viewExt            = engine.ext;
 
-    Object.defineProperty(this, 'variants', {
-        enumerable: true,
-        get: function() {
-            if (_.isNull(variants)) {
-                variants = self.getVariants();
-            }
-            return variants;
-        }
-    });
-
-    Object.defineProperty(this, 'status', {
-        enumerable: true,
-        get: this.getStatuses
-    });
+    this.variantDefaults = {
+        status:     config.status || app.get('statuses:default'),
+        context:    config.context || {},
+        preview:    config.preview || app.get('components:preview:layout'),
+        display:    config.display || {},
+        view:       config.view || (entity.name + this.viewExt)
+    };
 };
 
 mixin.call(Component.prototype);
 
 /*
+ * Initialise the component.
+ * Returns a promise.
+ *
+ * @api private
+ */
+
+Component.prototype.init = function(){
+    var self = this;
+    var variants        = this.getVariants();
+    this.readme         = this.getReadme();
+    return Promise.join(variants, function(variants){
+        self.variants = variants;
+        self.default  = _.find(variants, 'handle', self.defaultHandle);
+        self.status   = self.getStatuses();
+        return self;
+    });
+};
+
+/*
+ * Build the default variant object
+ *
+ * @api private
+ */
+
+// Component.prototype.initDefaultVariant = function(){
+
+//     // Get any config specified in the array of variants
+//     // and merge with any defaults that are set 
+//     var variantConfig = _.find(this._config.variants || {}, 'handle', this.defaultHandle) || {};
+//     var config = _.defaults(variantConfig, this.variantDefaults);
+    
+//     return (new Variant(this.defaultHandle, this._files, config, this)).init();
+// };
+
+/*
  * Get an array of all the available variants.
- * Includes the base variant, so this will always have a length > 0.
+ * Includes the default variant, so this will always have a length > 0.
  *
  * @api private
  */
 
 Component.prototype.getVariants = function(){
+    if (this.variants) {
+        return this.variants;
+    }
     var self = this;
-    var supplied = this._config.variants || [];
-    var variants = [this.default];
-    var usedViews = [];
-    _.each(supplied, function(variant, i){
-        try {
-            var defaults = _.cloneDeep(self._config).default || {};
-            // label, title and notes are not inherited from the default
-            delete defaults.label;
-            delete defaults.title;
-            delete defaults.notes;
-            var config = _.defaultsDeep(variant, defaults);
-            var v = new Variant(variant.handle, config, self);
-            variants.push(v);
-            usedViews.push(v.view);
-        } catch(e) {
-            logger.error('Variant of ' + self.handle + ' could not be created: ' + e.message );
+    var variants = [];
+    var splitter = self._app.get('components:variantSplitter');
+    var configs = _.map(this._config.variants || [], function(config){
+        if (!_.isUndefined(config.handle)) {
+            return makeVariantConfig(config.handle, config);
+        } else {
+            logger.error('Variant of ' + config.handle + ' could not be created: ' + e.message );
         }
     });
-    // now find any view files that haven't been accounted for and turn them into variants
-    // TODO: auto-create variants from unused view files
-    // console.log('----');
-    // console.log(usedViews);
-    var initedVariants = _.map(variants, function(variant){
-        return variant.init(variants);
+
+    function makeVariantConfig(handle, variantConf, files){
+        // is there a variant-specific config file?
+        var configFile = _.find(files, function(entity){
+            return entity.matches(self._app.get('components:config'), {
+                name: self.handle + splitter + handle
+            });
+        });
+        var specificConfig = configFile ? data.load(configFile.absolutePath) : Promise.resolve({});
+        return specificConfig.then(function(spec){
+            return _.defaultsDeep(spec, variantConf, self.variantDefaults);
+        });
+    }
+
+    // Generate configs for any files that look like a variant but don't have config specified.
+    _.each(this._files, function(file){
+        if (file.base == self.variantDefaults.view) {
+            // it's the default variant's view
+            if (!_.find(configs, 'handle', self.defaultHandle)) {
+                var variantConf = {
+                    handle: self.defaultHandle,
+                };
+                configs.unshift(makeVariantConfig(self.defaultHandle, variantConf, self._files));
+            }
+        } else {
+            // Does the file match the expected variant view filename pattern?
+            var matches = file.matches('^' + self.handle + '{{splitter}}.*{{ext}}$', {
+                splitter: splitter,
+                ext: self.viewExt
+            });
+            if (matches) {
+                var parts = file.match('^' + self.handle + '{{splitter}}(.*){{ext}}$', {
+                    splitter: splitter,
+                    ext: self.viewExt
+                });
+                if (parts && !_.find(configs, 'handle', parts[1])) {
+                    // no configuration for this variant view yet so push it onto the stack
+                    var variantConf = {
+                        handle: parts[1],
+                        view: file.base
+                    };
+                    configs.push(makeVariantConfig(parts[1], variantConf, self._files));
+                }
+            }
+        } 
     });
-    return initedVariants;
+
+    if (this.sourceType == 'directory') {
+        // also check the subdirectories to see if any of those contain variants
+        var subDirs = this._entity.getDirectories();
+        
+    }
+
+    return Promise.all(configs).then(function(configs){
+        
+        // Now generate some variant objects from the configs
+        
+        return _.map(configs, function(config){
+            return (new Variant(config.handle, config, self)).init();
+        });
+
+    });
 };
 
 /*
@@ -133,7 +195,7 @@ Component.prototype.getVariants = function(){
  */
 
 Component.prototype.getVariant = function(handle){
-    handle = handle || this.default.handle;
+    handle = handle || this.defaultHandle;
     var variant = _.find(this.variants, 'handle', handle);
     if (!variant) {
         throw new Error('The variant ' + handle + ' of component ' + this.handle + ' could not be found.');
@@ -177,15 +239,16 @@ Component.prototype.renderAll = function(){
  * @api protected
  */
 
-Component.prototype.getVariantFiles = function(variantName){
-    var variant = this.getVariant(variantName);
-    var dir = variant.cwd ? this._dir.findDirectory('path', variant.path) : this._dir;
-    var files = [];
-    if (dir) {
-        files = dir.getFiles();
-    }
-    return files;
-};
+// Component.prototype.getVariantFiles = function(variantName){
+
+//     var variant = this.getVariant(variantName);
+//     var dir = variant.cwd ? this._dir.findDirectory('path', variant.path) : this._entity;
+//     var files = [];
+//     if (dir && dir.type == 'directory') {
+//         files = dir.getFiles();
+//     }
+//     return files;
+// };
 
 /*
  * Gets a de-duped array of the component variants statuses.
@@ -195,34 +258,48 @@ Component.prototype.getVariantFiles = function(variantName){
 
 Component.prototype.getStatuses = function(){
     return _.compact(_.uniq(_.map(this.variants, function(variant){
-            return variant.status;
+        return variant.status;
     })));
 };
 
 /*
- * Create a new component from a directory
+ * Get the readme contents.
+ *
+ * @api public
+ */
+
+Component.prototype.getReadme = function(){
+    var str = null;
+    var self = this;
+    if (_.isUndefined(this._config.readme)) {
+        var readMeFile = _.find(this._files, function(entity){
+            return entity.matches(self._app.get('components:readme'));
+        });
+        str = readMeFile ? readMeFile.getContents() : null;
+    } else {
+        str = this._config.readme || null;
+    }
+    return str ? md(str) : null;
+};
+
+/*
+ * Factory method to create a new component from a directory.
  *
  * @api public
  */
 
 Component.fromDirectory = function(dir, config, app){
-    return {
-        toJSON: function(){
-            return {
-                type: "component",
-                handle: dir.base
-            }
-        }
-    };
+    return (new Component(dir, dir.getFiles(), config, app)).init();
 };
 
 /*
- * Create a new component from a file
+ * Factory method to create a new component from a file.
  *
  * @api public
  */
 
 Component.fromFile = function(file, dir, config, app){
+    // check to see if there is some config associated with the file 
     return {
         toJSON: function(){
             return {

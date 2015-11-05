@@ -190,6 +190,18 @@ app.getStatus = function(status){
 };
 
 /*
+ * Get the component view engine
+ *
+ * @api public
+ */
+
+app.getComponentViewEngine = function(status){
+    var engine = this.get('components:engines')[this.get('components:engine')];
+    engine.ext = '.' + _.trim(engine.ext, '.');
+    return engine;
+};
+
+/*
  * Loads a component's configuration file.
  *
  * @api public
