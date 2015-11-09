@@ -120,10 +120,77 @@ Component.prototype.getVariants = function(){
     var splitter = self._app.get('components:variantSplitter');
     var configs = _.map(this._config.variants || [], function(config){
         if (!_.isUndefined(config.handle)) {
-            return makeVariantConfig(config.handle, config);
+            return makeVariantConfig(config.handle, config).then(function(conf){
+                conf.files = _.clone(self._nonCoreFiles);
+                // get the view file
+                var file = _.find(self._viewFiles, 'fsBase', conf.view);
+                if (!file) {
+                    logger.error('Variant of ' + config.handle + ' could not be created - view file not found');
+                    return null;
+                }
+                conf.files.unshift(file);
+                return conf;
+            });
         } else {
             logger.error('Variant of ' + config.handle + ' could not be created: ' + e.message );
         }
+    });
+
+    return Promise.all(configs).then(function(configs){
+
+        // Generate configs for any files that look like a variant but don't have config specified.
+        _.each(self._viewFiles, function(file){
+            if (file.fsBase == self.variantDefaults.view) {
+                // it's the default variant's view
+                if (!_.find(configs, 'handle', self.defaultHandle)) {
+                    var variantConf = makeVariantConfig(self.defaultHandle, {
+                        handle: self.defaultHandle
+                    }).then(function(conf){
+                        conf.files = _.clone(self._nonCoreFiles);
+                        conf.files.unshift(file);
+                        return conf;
+                    });
+                    configs.push(variantConf);
+                }
+            } else {
+                // Does the file match the expected variant view filename pattern?
+                var matches = file.matches('^' + self.handle + '{{splitter}}.*{{ext}}$', {
+                    splitter: splitter,
+                    ext: self.viewExt
+                });
+                if (matches) {
+                    var parts = file.match('^' + self.handle + '{{splitter}}(.*){{ext}}$', {
+                        splitter: splitter,
+                        ext: self.viewExt
+                    });
+                    if (parts && !_.find(configs, 'handle', parts[1])) {
+                        // no configuration for this variant view yet so push it onto the stack
+                        var variantConf = makeVariantConfig(parts[1], {
+                            handle: parts[1],
+                            view: file.base
+                        }).then(function(conf){
+                            conf.files = _.clone(self._nonCoreFiles);
+                            conf.files.unshift(file);
+                            return conf;
+                        });
+                        configs.push(variantConf);
+                    }
+                }
+            } 
+        });
+
+        // if (this.sourceType == 'directory') {
+        //     // also check the subdirectories to see if any of those contain variants
+        //     var subDirs = this._source.getDirectories();
+
+        // }
+
+        return Promise.all(configs).then(function(configs){
+            // Now generate some variant objects from the configs
+            return _.map(configs, function(config){
+                return (new Variant(config.handle, config, self)).init();
+            });
+        });
     });
 
     function makeVariantConfig(handle, variantConf){
@@ -139,61 +206,6 @@ Component.prototype.getVariants = function(){
         });
     }
 
-    // Generate configs for any files that look like a variant but don't have config specified.
-    _.each(this._viewFiles, function(file){
-        if (file.fsBase == self.variantDefaults.view) {
-            // it's the default variant's view
-            if (!_.find(configs, 'handle', self.defaultHandle)) {
-                var variantConf = makeVariantConfig(self.defaultHandle, {
-                    handle: self.defaultHandle
-                }).then(function(conf){
-                    conf.files = _.clone(self._nonCoreFiles);
-                    conf.files.unshift(file);
-                    return conf;
-                });
-                configs.push(variantConf);
-            }
-        } else {
-            // Does the file match the expected variant view filename pattern?
-            var matches = file.matches('^' + self.handle + '{{splitter}}.*{{ext}}$', {
-                splitter: splitter,
-                ext: self.viewExt
-            });
-            if (matches) {
-                var parts = file.match('^' + self.handle + '{{splitter}}(.*){{ext}}$', {
-                    splitter: splitter,
-                    ext: self.viewExt
-                });
-                if (parts && !_.find(configs, 'handle', parts[1])) {
-                    // no configuration for this variant view yet so push it onto the stack
-                    var variantConf = makeVariantConfig(parts[1], {
-                        handle: parts[1],
-                        view: file.base
-                    }).then(function(conf){
-                        conf.files = _.clone(self._nonCoreFiles);
-                        conf.files.unshift(file);
-                        return conf;
-                    });
-                    configs.push(variantConf);
-                }
-            }
-        } 
-    });
-
-    // if (this.sourceType == 'directory') {
-    //     // also check the subdirectories to see if any of those contain variants
-    //     var subDirs = this._source.getDirectories();
-
-    // }
-
-    return Promise.all(configs).then(function(configs){
-        // Now generate some variant objects from the configs
-        
-        return _.map(configs, function(config){
-            return (new Variant(config.handle, config, self)).init();
-        });
-
-    });
 };
 
 /*
