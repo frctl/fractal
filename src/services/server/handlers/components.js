@@ -75,8 +75,10 @@ handlers.params.componentFile = function(req, res, next, componentFile) {
                 return next();
                 break;
             case 'context': 
-                res.locals.contents = variant.getContextString();
-                return next();
+                variant.getContextString().then(function(str){
+                    res.locals.contents = str;
+                    return next();
+                });
                 break;
             case 'rendered': 
                 variant.renderView().then(function(rendered){

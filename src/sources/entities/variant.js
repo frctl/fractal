@@ -31,6 +31,7 @@ function Variant(handle, config, parent){
 
     var self                = this;
     var app                 = this._app = parent._app;
+    var context             = null;
 
     this._config            = config;
     this._files             = config.files || [];
@@ -89,7 +90,7 @@ mixin.call(Variant.prototype);
 
 Variant.prototype.init = function(siblings){
     var self = this;
-    this.contextString = this.getContextString();
+    // this.contextString = this.getContextString();
     return self;
 };
 
@@ -102,39 +103,15 @@ Variant.prototype.init = function(siblings){
 
 Variant.prototype.renderView = function(context, preview){
     var self = this;
-    return this._app.getComponents().then(function(components){
-        
-        function resolveReferences(obj)
-        {
-            return _.mapValues(obj, function(val, key){
-                if (_.isObject(val)) {
-                    return resolveReferences(val);
-                }
-                if (_.startsWith(val, '@')) {
-                    var entity = components.resolve(val);
-                    if (entity) {
-                        if (entity.type == 'component') {
-                            entity = entity.getVariant();
-                        }
-                        return entity.context;
-                    } else {
-                        logger.warn("Could not resolve data reference for " + val);
-                    }
-                }
-                return val;
-            });
-        }
-
-        var context = resolveReferences(context || self.context);
+    var context = resolveReferences(context || self.context, this._app);
+    return context.then(function(context){
         var engine = self._app.getComponentViewEngine();
-        
         try {
             var renderer = require(engine.handler);    
         } catch (e) {
             var renderer = require(path.join('../../', engine.handler));
         }
         return preview ? renderer.renderPreview(self, context, self._app) : renderer.render(self, context, self._app);
-
     });
 };
 
@@ -148,9 +125,11 @@ Variant.prototype.preRender = function(){
     var self = this;
     var rendered = this.renderView(null, false);
     var renderedPreview = this.renderView(null, true);
-    return Promise.join(rendered, renderedPreview, function(rendered, renderedPreview){
+    var contextString = this.getContextString();
+    return Promise.join(rendered, renderedPreview, contextString, function(rendered, renderedPreview, contextString){
         self.rendered = rendered;
         self.renderedPreview = renderedPreview;
+        self.contextString = contextString;
         return self;
     });
 };
@@ -187,7 +166,37 @@ Variant.prototype.getFile = function(baseName){
 
 Variant.prototype.getContextString = function(){
     if (_.isEmpty(this.context)) {
-        return null;
+        return Promise.resolve(null);
     }
-    return JSON.stringify(this.context, null, 4);
+    return resolveReferences(this.context, this._app).then(function(c){
+        return JSON.stringify(c, null, 4);
+    });
 };
+
+function resolveReferences(context, app) {
+    return app.getComponents().then(function(components){
+
+        function resolve(obj)
+        {
+            return _.mapValues(obj, function(val, key){
+                if (_.isObject(val)) {
+                    return resolve(val);
+                }
+                if (_.startsWith(val, '@')) {
+                    var entity = components.resolve(val);
+                    if (entity) {
+                        if (entity.type == 'component') {
+                            entity = entity.getVariant();
+                        }
+                        return entity.context;
+                    } else {
+                        logger.warn("Could not resolve data reference for " + val);
+                    }
+                }
+                return val;
+            });
+        }
+        
+        return resolve(context);
+    });
+}
