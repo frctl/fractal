@@ -23,7 +23,7 @@ handlers.params = {};
 handlers.common = function(req, res, next) {
     req.app.locals.section = {
         handle: 'components',
-        title: "Components",
+        title: "Component Library",
         baseUrl: '/components',
         subnav: req._components.filter('hidden', false).toJSON()
     };

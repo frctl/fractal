@@ -258,7 +258,8 @@ ComponentSource.buildComponentTree = function(dir, cascadeConfig, app){
 
         return Promise.all(ret).then(function(items){
             var items = _.compact(items);
-            return _.isArray(items) ? _.sortByOrder(items, ['type','order','label'], ['desc','asc','asc']) : items;    
+            return _.isArray(items) ? _.sortByOrder(items, ['order','label'], ['asc','asc']) : items;    
+            // return _.isArray(items) ? _.sortByOrder(items, ['type','order','label'], ['desc','asc','asc']) : items;    
         });
         
     });

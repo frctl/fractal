@@ -74,7 +74,7 @@ Server.prototype.init = function(fractal){
     },
     {
         handle: 'components',
-        label: 'Components',
+        label: 'Component Library',
         url: '/components'
     }];
 
