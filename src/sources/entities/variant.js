@@ -24,82 +24,58 @@ module.exports = Variant;
  */
 
 function Variant(handle, config, parent){
+
     if (_.isUndefined(handle)) {
         throw new Error('No handle defined for variant of ' + parent.handle);
     }
-    var self        = this;
-    var app         = this._app = parent._app; 
-    this.type       = 'variant';
-    this._config    = config;
-    this._component = parent;
-    this._dir       = parent._dir;
-    this.handle     = handle;
-    this.fullHandle = '@' + parent.handle + ':' + this.handle;
-    this.cwd        = config.cwd || null;
-    
-    if (this.cwd) {
-        var variantPath = path.join(this._dir.path, this.cwd);
-        this._dir = this._dir.findDirectory('path', variantPath);
-        if (!this._dir) {
-            // TODO: better variant path error handling?
-            throw new Error('Variant directory ' + variantPath + ' not found');
-        }
-    }
 
-    this.label          = config.label || utils.titlize(handle);
-    this.title          = config.title || this.label;
-    this.path           = utils.fauxPath(this._dir.path);
-    this.fsPath         = this._dir.path; 
-    this.handlePath     = parent.handlePath + '--' + this.handle;
-    this.ext            = config.ext ||  app.get('components:view:ext'); 
-    this.view           = null;
-    
-    var viewNames = config.view || app.get('components:view:file');
+    var self                = this;
+    var app                 = this._app = parent._app;
+    var context             = null;
 
-    if (!_.isArray(viewNames)) {
-        viewNames = [viewNames];
+    this._config            = config;
+    this._files             = config.files || [];
+    this._component         = parent;
+    this._source            = parent._source;
+
+    this.type               = 'variant';
+    this.handle             = handle;
+    this.fullHandle         = '@' + parent.handle + ':' + this.handle;
+    this.label              = config.label || utils.titlize(handle);
+    this.title              = config.title || this.label;
+    // this.fsPath             = parent.fsPath;
+    // this.path               = parent.path;
+    this.handlePath         = parent.handlePath + '--' + this.handle;
+    this.context            = config.context || {};
+    this.display            = config.display || {};
+    this.hidden             = config.hidden || false;
+    this.status             = app.getStatus(config.status);
+    this.preview            = config.preview || null;
+    this.notes              = config.notes ? md(config.notes) : null;
+    this.ext                = parent.viewExt;
+    this.view               = path.parse(config.view).name + this.ext;
+    this.engine             = parent.engine;
+
+    if (parent.sourceType == 'directory') {
+        this.fsViewPath = path.resolve(path.join(app.get('components:path'), parent._source.path, this.view)); 
+    } else {
+        this.fsViewPath = path.resolve(path.join(app.get('components:path'), parent._source.relativeDir, this.view)); 
     }
     
-    for (var i = 0; i < viewNames.length; i++) {
-        var viewName = viewNames[i].replace('{{component}}', parent.handle).replace('{{variant}}', this.handle);
-        var view = path.parse(viewName).name + this.ext;
-        var fsViewPath = path.join(app.get('components:path'), this.fsPath, view);
-        try {
-            var stats = fs.lstatSync(path.resolve(fsViewPath));
-            if (stats){
-                this.view = view;
-                this.fsViewPath = fsViewPath;
-                break;
-            }
-        } catch (e) {}
+    this.contextString      = null;
+    this.rendered           = null;
+    this.renderedInLayout   = null;
+
+    this.files = {
+        view: _.find(this._files, 'fsBase', this.view),
+        other: _.reject(this._files, 'fsBase', this.view),
     };
 
-    if (this.view == null) {
-        throw new Error('Variant view not found');
+    try {
+        var stats = fs.lstatSync(this.fsViewPath);
+    } catch (e) {
+        throw new Error('Variant view not found (path searched: ' + this.fsViewPath + ')');
     }
-    
-    this.viewPath       = path.join(app.get('components:path'), this.path, this.view);
-    this.context        = config.context || {};
-    this.display        = config.display || {};
-    this.hidden         = parent.hidden;
-    this.status         = app.getStatus(config.status);
-    this.preview        = config.preview !== null ? app.get('components:preview:layout') : null;
-    this.engine         = config.engine || app.get('components:view:engine');
-    this.notes          = config.notes ? md(config.notes) : null;
-    this.rendered       = null;
-    this.renderedInLayout = null;
-    this.files          = {
-        view: _.find(this.getFiles(), 'base', this.view),
-        config: parent._configFile,
-        readme: parent._readMeFile,
-    };
-
-    Object.defineProperty(this, 'contextString', {
-        enumerable: true,
-        get: function() {
-            return this.getContextString();
-        }
-    });
 
 };
 
@@ -114,12 +90,7 @@ mixin.call(Variant.prototype);
 
 Variant.prototype.init = function(siblings){
     var self = this;
-    var viewFiles = _.map(siblings, function(sibling){
-        return sibling.files.view;
-    });
-    this.files.other = _.reject(this.getFiles(), function(file){
-        return _.contains(_.values(self.files).concat(viewFiles), file);
-    });
+    // this.contextString = this.getContextString();
     return self;
 };
 
@@ -131,13 +102,17 @@ Variant.prototype.init = function(siblings){
  */
 
 Variant.prototype.renderView = function(context, preview){
-    context = context || this.context;
-    try {
-        var renderer = require(this._app.get('components:view:handler'));    
-    } catch (e) {
-        var renderer = require(path.join('../../', this._app.get('components:view:handler')));
-    }
-    return preview ? renderer.renderPreview(this, context, this._app) : renderer.render(this, context, this._app);
+    var self = this;
+    var context = resolveContextReferences(context || self.context, this._app);
+    return context.then(function(context){
+        var engine = self._app.getComponentViewEngine();
+        try {
+            var renderer = require(engine.handler);    
+        } catch (e) {
+            var renderer = require(path.join('../../', engine.handler));
+        }
+        return preview ? renderer.renderPreview(self, context, self._app) : renderer.render(self, context, self._app);
+    });
 };
 
 /*
@@ -150,9 +125,11 @@ Variant.prototype.preRender = function(){
     var self = this;
     var rendered = this.renderView(null, false);
     var renderedPreview = this.renderView(null, true);
-    return Promise.join(rendered, renderedPreview, function(rendered, renderedPreview){
+    var contextString = this.getContextString();
+    return Promise.join(rendered, renderedPreview, contextString, function(rendered, renderedPreview, contextString){
         self.rendered = rendered;
         self.renderedPreview = renderedPreview;
+        self.contextString = contextString;
         return self;
     });
 };
@@ -164,7 +141,7 @@ Variant.prototype.preRender = function(){
  */
 
 Variant.prototype.getFiles = function(){
-    return this._dir.getFiles();
+    return this._files;
 };
 
 /*
@@ -187,9 +164,44 @@ Variant.prototype.getFile = function(baseName){
  * @api public
  */
 
-Variant.prototype.getContextString = function(baseName){
+Variant.prototype.getContextString = function(){
     if (_.isEmpty(this.context)) {
-        return null;
+        return Promise.resolve(null);
     }
-    return JSON.stringify(this.context, null, 4);
+    return resolveContextReferences(this.context, this._app).then(function(c){
+        return JSON.stringify(c, null, 4);
+    });
 };
+
+/*
+ * Takes a context object and resolves any references to other variants
+ *
+ * @api public
+ */
+
+function resolveContextReferences(context, app) {
+    return app.getComponents().then(function(components){
+
+        function resolve(obj) {
+            return _.mapValues(obj, function(val, key){
+                if (_.isObject(val)) {
+                    return resolve(val);
+                }
+                if (_.startsWith(val, '@')) {
+                    var entity = components.resolve(val);
+                    if (entity) {
+                        if (entity.type == 'component') {
+                            entity = entity.getVariant();
+                        }
+                        return entity.context;
+                    } else {
+                        logger.warn("Could not resolve data reference for " + val);
+                    }
+                }
+                return val;
+            });
+        }
+
+        return resolve(context);
+    });
+}

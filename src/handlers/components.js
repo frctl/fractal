@@ -67,7 +67,7 @@ module.exports = {
      * Key = partial name to use in templates
      * Value = path to the partial, relative to the view path
      *
-     * @api public
+     * @api private
      */
      
     getPartials: function(fsViewPath, app){

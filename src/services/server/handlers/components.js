@@ -51,6 +51,7 @@ handlers.params.component = function(req, res, next, componentPath) {
             next();
         });
     } catch(e) {
+        // console.log(e.stack);
         next(utils.httpError('Component not found', 404));
     }
 };
@@ -74,8 +75,10 @@ handlers.params.componentFile = function(req, res, next, componentFile) {
                 return next();
                 break;
             case 'context': 
-                res.locals.contents = variant.getContextString();
-                return next();
+                variant.getContextString().then(function(str){
+                    res.locals.contents = str;
+                    return next();
+                });
                 break;
             case 'rendered': 
                 variant.renderView().then(function(rendered){

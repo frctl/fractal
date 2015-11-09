@@ -32,8 +32,10 @@ function entity(){
         
         this.relativePath       = this.path;
         this.ext                = this.isFile() ? fileInfo.ext : null;
+        this.fsName             = fileInfo.name;
+        this.fsBase             = fileInfo.base;
         this.name               = nameParts ? nameParts[2] : name; // remove order from filename
-        this.base               = this.name + this.ext;
+        this.base               = this.name + (this.ext || '');
         this.dir                = fileInfo.dir;
         this.relativeDir        = relativefileInfo.dir;
         
@@ -91,15 +93,36 @@ function entity(){
      * @api public
      */
     
-    this.matches = function(matcher, replacements){
+    this.matches = function(matcher, replacements, key, dontEscape){
+        var key = key || 'base';
+        if (replacements) {
+            _.each(replacements, function(replacement, variable){
+                if (!dontEscape) {
+                    replacement = replacement.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+                }
+                matcher = matcher.replace('{{' + variable + '}}', replacement);  
+            });
+        }
+        var tester = new RegExp(matcher, 'i');
+        return tester.test(this[key]);
+    };
+
+    /*
+     * Match sections of the base
+     *
+     * @api public
+     */
+
+    this.match = function(matcher, replacements, key){
+        var key = key || 'base';
         if (replacements) {
             _.each(replacements, function(replacement, variable){
                 matcher = matcher.replace('{{' + variable + '}}', replacement.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"));
             });
         }
         var tester = new RegExp(matcher, 'i');
-        return tester.test(this.base);
-    };
+        return this[key].match(tester);
+    }
 
 };
 

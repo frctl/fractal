@@ -2,6 +2,7 @@
  * Module dependencies.
  */
 
+var Promise     = require('bluebird');
 var _           = require('lodash');
 var logger      = require('winston');
 
@@ -9,6 +10,7 @@ var Directory   = require('../filesystem/directory');
 var Component   = require('./entities/component');
 var Group       = require('./entities/group');
 var mixin       = require('./source');
+var data        = require('../data');
 
 /*
  * Export the component source.
@@ -118,7 +120,7 @@ ComponentSource.prototype.flatten = function(){
             return item.type === 'group' ? list(item.children) : item;
         }));
     }
-    return new ComponentSource(list(this.components), this.app);
+    return new ComponentSource(list(this.components), this.app).init();
 };
 
 /*
@@ -136,15 +138,16 @@ ComponentSource.prototype.filter = function(key, value){
                     ret.push(item);
                 }
             } else {
+                // group
                 var children = filter(item.children);
                 if (children.length) {
-                    ret.push(new Group(item._dir, children));
+                    ret.push(new Group(item._dir, item._config, children, item._app));
                 }
             }
         }); 
         return _.compact(ret);
     }
-    return new ComponentSource(filter(this.components), this.app);
+    return new ComponentSource(filter(this.components), this.app).init();
 };
 
 /*
@@ -176,9 +179,14 @@ ComponentSource.prototype.toString = function(){
  */
 
 ComponentSource.build = function(app){
-    return Directory.fromPath(app.get('components').path).then(function(dir){
-        var tree = ComponentSource.buildComponentTree(dir, app);
-        return new ComponentSource(tree, app).init();
+    return Directory.fromPath(app.get('components:path')).then(function(dir){
+        var defaults = {
+            preview: app.get('components:preview:layout'),
+            context: app.get('components:context')
+        };
+        return ComponentSource.buildComponentTree(dir, defaults, app).then(function(tree){
+            return new ComponentSource(tree, app).init();    
+        });
     });
 };
 
@@ -188,36 +196,70 @@ ComponentSource.build = function(app){
  * @api public
  */
 
-ComponentSource.buildComponentTree = function(dir, app){
+ComponentSource.buildComponentTree = function(dir, cascadeConfig, app){
 
-    var config          = app.get('components');
+    var engine          = app.getComponentViewEngine();
     var ret             = [];
     var files           = dir.getFiles();
     var directories     = dir.getDirectories();
 
-    // If there are files in there, it's a component!
-    if (files.length) {
-        try {
-            return new Component(dir, app);    
-        } catch(e){
-            logger.warn('Component could not be created from directory ' + dir.path + ': ' + e.message);
-            return null;
-        }
-    }
+    // see if the directory itself has a config file defined
+    var configFile = _.find(files, function(entity){
+        return entity.matches(app.get('components:config'), {
+            name: dir.name
+        });
+    });
+    
+    var dirConfig = configFile ? data.load(configFile.absolutePath) : Promise.resolve({});
+    
+    return dirConfig.then(function(dirConfig){
 
-    // Otherwise recurse through any directories...
-    for (var i = directories.length - 1; i >= 0; i--) {
-        var directory = directories[i];
-        if (directory.hasChildren()) {
-            var subtree = ComponentSource.buildComponentTree(directory, app);
-            if (!_.isArray(subtree)) {
-                ret.push(subtree);
-            } else {
-                ret.push(new Group(directory, subtree));
+        var mergedConfig = _.defaultsDeep(dirConfig, _.pick(cascadeConfig, ['context', 'preview', 'status', 'display']));
+
+        if (dirConfig.type == 'component' || _.find(files, 'base', dir.name + engine.ext)) {
+            // Does the config specify this as a component?
+            // Or is there a file within this directory that has the same name as the directory?
+            // If so it's a component directory.
+            try {
+                return Component.fromDirectory(dir, mergedConfig, app);
+            } catch(e){
+                logger.warn('Component could not be created from directory ' + dir.path + ': ' + e.message);
+                return null;
+            }
+        } else {
+            // Otherwise check to see if any of the files in the directory match the component filename pattern.
+            _.each(files, function(file){
+                var matches = file.matches('^(?!.*({{splitter}})).*{{ext}}$', {
+                    splitter: app.get('components:variantSplitter'),
+                    ext: engine.ext
+                });
+                if (matches) {
+                    ret.push(Component.fromFile(file, dir, mergedConfig, app));
+                }
+            });
+        }
+
+        function makeGroupPromise(directory){
+            return ComponentSource.buildComponentTree(directory, mergedConfig, app).then(function(subtree){
+                if (_.isArray(subtree)) {
+                    return Group.fromDirectory(directory, subtree, app);
+                }
+                return subtree;
+            });
+        }
+
+        // And then finally recurse through any directories.
+        for (var i = directories.length - 1; i >= 0; i--) {
+            var directory = directories[i];
+            if (directory.hasChildren()) {
+                ret.push(makeGroupPromise(directory));
             }
         }
-    }
 
-    ret = _.compact(ret);
-    return _.isArray(ret) ? _.sortByOrder(ret, ['type','order','title'], ['desc','asc','asc']) : ret;
+        return Promise.all(ret).then(function(items){
+            var items = _.compact(items);
+            return _.isArray(items) ? _.sortByOrder(items, ['type','order','label'], ['desc','asc','asc']) : items;    
+        });
+        
+    });
 };

@@ -23,17 +23,21 @@
     },
     "components": {
         "path": "src/components",
-        "config": "config\\.(js|json|yml|yaml)",
+        "config": "{{name}}\\.config\\.(js|json|yml|yaml)",
         "readme": "readme\\.(md|markdown)",
-        "view": {
-            "handler": "handlers/components",
-            "file": ["{{component}}--{{variant}}", "{{component}}"],
-            "engine": "handlebars",
-            "ext": ".hbs"
-        },
+        "engine": "handlebars",
         "preview": {
             "layout": null,
             "yield": "yield"
+        },
+        "context": {},
+        "variantSplitter": "--",
+        "engines": {
+            "handlebars": {
+                "name": "handlebars",
+                "ext": ".hbs",
+                "handler": "handlers/components"
+            }
         }
     },
     "pages": {
@@ -61,13 +65,6 @@
                 "label": "Ready",
                 "description": "Ready to implement.",
                 "color": "green"
-            }
-        ]
-    },
-    "renderer": {
-        "mappings": [
-            {
-                
             }
         ]
     },
