@@ -101,14 +101,41 @@ Variant.prototype.init = function(siblings){
  */
 
 Variant.prototype.renderView = function(context, preview){
-    var context = context || this.context;
-    var engine = this._app.getComponentViewEngine();
-    try {
-        var renderer = require(engine.handler);    
-    } catch (e) {
-        var renderer = require(path.join('../../', engine.handler));
-    }
-    return preview ? renderer.renderPreview(this, context, this._app) : renderer.render(this, context, this._app);
+    var self = this;
+    return this._app.getComponents().then(function(components){
+        
+        function resolveReferences(obj)
+        {
+            return _.mapValues(obj, function(val, key){
+                if (_.isObject(val)) {
+                    return resolveReferences(val);
+                }
+                if (_.startsWith(val, '@')) {
+                    var entity = components.resolve(val);
+                    if (entity) {
+                        if (entity.type == 'component') {
+                            entity = entity.getVariant();
+                        }
+                        return entity.context;
+                    } else {
+                        logger.warn("Could not resolve data reference for " + val);
+                    }
+                }
+                return val;
+            });
+        }
+
+        var context = resolveReferences(context || self.context);
+        var engine = self._app.getComponentViewEngine();
+        
+        try {
+            var renderer = require(engine.handler);    
+        } catch (e) {
+            var renderer = require(path.join('../../', engine.handler));
+        }
+        return preview ? renderer.renderPreview(self, context, self._app) : renderer.render(self, context, self._app);
+
+    });
 };
 
 /*

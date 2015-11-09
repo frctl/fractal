@@ -208,15 +208,15 @@ app.getComponentViewEngine = function(){
  * @api public
  */
 
-// app.getComponentConfig = function(handle){
-//     return this.getComponents().then(function(components){
+app.getData = function(path, defaults){
+    return data.load(path, defaults);
+};
+
+// return this.getComponents().then(function(components){
 //         var entity = components.resolve(handle);
-//         if (entity.type === 'variant') {
-//             entity = entity._component;
-//         }
+//         console.log(entity);
 //         return entity._config;
 //     }); 
-// };
 
 /*
  * Setup the initial app configuration.

@@ -24,7 +24,7 @@ module.exports = {
 
     load: function(filePath, defaults){
         defaults = defaults || {};
-        var pathInfo = path.parse(filePath);
+        var pathInfo = path.parse(path.resolve(filePath));
         var ext = pathInfo.ext.toLowerCase();
 
         if (ext == '.js') {
