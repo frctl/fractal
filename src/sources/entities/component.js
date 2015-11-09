@@ -254,23 +254,6 @@ Component.prototype.renderAll = function(){
 };
 
 /*
- * Get an array of files for a variant
- *
- * @api protected
- */
-
-// Component.prototype.getVariantFiles = function(variantName){
-
-//     var variant = this.getVariant(variantName);
-//     var dir = variant.cwd ? this._dir.findDirectory('path', variant.path) : this._entity;
-//     var files = [];
-//     if (dir && dir.type == 'directory') {
-//         files = dir.getFiles();
-//     }
-//     return files;
-// };
-
-/*
  * Gets a de-duped array of the component variants statuses.
  *
  * @api public

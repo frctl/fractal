@@ -103,7 +103,7 @@ Variant.prototype.init = function(siblings){
 
 Variant.prototype.renderView = function(context, preview){
     var self = this;
-    var context = resolveReferences(context || self.context, this._app);
+    var context = resolveContextReferences(context || self.context, this._app);
     return context.then(function(context){
         var engine = self._app.getComponentViewEngine();
         try {
@@ -168,16 +168,21 @@ Variant.prototype.getContextString = function(){
     if (_.isEmpty(this.context)) {
         return Promise.resolve(null);
     }
-    return resolveReferences(this.context, this._app).then(function(c){
+    return resolveContextReferences(this.context, this._app).then(function(c){
         return JSON.stringify(c, null, 4);
     });
 };
 
-function resolveReferences(context, app) {
+/*
+ * Takes a context object and resolves any references to other variants
+ *
+ * @api public
+ */
+
+function resolveContextReferences(context, app) {
     return app.getComponents().then(function(components){
 
-        function resolve(obj)
-        {
+        function resolve(obj) {
             return _.mapValues(obj, function(val, key){
                 if (_.isObject(val)) {
                     return resolve(val);
@@ -196,7 +201,7 @@ function resolveReferences(context, app) {
                 return val;
             });
         }
-        
+
         return resolve(context);
     });
 }
