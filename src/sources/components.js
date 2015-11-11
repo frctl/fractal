@@ -32,6 +32,16 @@ function ComponentSource(components, app){
 mixin.call(ComponentSource.prototype);
 
 /*
+ * Return the component tree.
+ *
+ * @api public
+ */
+
+ComponentSource.prototype.all = function(){
+    return this.components;
+};
+
+/*
  * Resolve a component by handle or path and return the component.
  * If a the handle specified a variant then that will be returned in place of the component.
  *
@@ -187,6 +197,9 @@ ComponentSource.build = function(app){
         return ComponentSource.buildComponentTree(dir, defaults, app).then(function(tree){
             return new ComponentSource(tree, app).init();    
         });
+    }).catch(function(e){
+        logger.warn('Could not create component tree - ' + e.message);
+        return new ComponentSource([], app).init();
     });
 };
 

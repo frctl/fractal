@@ -28,10 +28,11 @@ var app = exports = module.exports = {};
  */
 
 app.init = function(){
-    this._monitors = [];
-    this._components = null;
-    this.httpServer = null;
-    this.httpServerUrl = null;
+    this._monitors      = [];
+    this._components    = null;
+    this._pages         = null;
+    this.httpServer     = null;
+    this.httpServerUrl  = null;
     this.defaultConfig();
 };
 
@@ -163,8 +164,14 @@ app.getComponents = function(){
  */
 
 app.getPages = function(){
-    // TODO: implement pages
-    return Promise.resolve([]);
+    if (!this._pages) {
+        var self = this;
+        this._pages = Pages.build(this);
+        this.createMonitor(this.get('pages:path'), function(event, path) {
+            self._pages = null;
+        });
+    }
+    return this._pages;
 };
 
 /*

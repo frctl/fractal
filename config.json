@@ -42,6 +42,7 @@
     },
     "pages": {
         "path": "src/pages",
+        "config": "{{name}}\\.config\\.(js|json|yml|yaml)",
         "match": ".*\\.(html|md|markdown)",
         "handler": "handlers/pages/markdown"
     },
