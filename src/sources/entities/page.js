@@ -65,13 +65,15 @@ Page.prototype.init = function(){
         eval: true
     });
 
-    this.content        = md(parsed.getContents());
+    this.content        = md(parsed.content);
     this._config        = _.defaultsDeep(this._config, parsed.data || {});
-    this.label          = this._config.label || utils.titlize(file.name);
+    this.label          = this._config.label || utils.titlize(this._source.name);
     this.title          = this._config.title || this.label;
-    this.handle         = this._config.handle || utils.fauxPath(this.isIndex ? this._dir.name : file.name);
-    this.hidden         = !! (this._config.hidden || file.hidden);
+    this.handle         = this._config.handle || utils.fauxPath(this.isIndex ? this._dir.name : this._source.name);
+    this.hidden         = !! (this._config.hidden || this._source.hidden);
     this.fullHandle     = '@' + this.handle;
+
+    return self;
 };
 
 /*

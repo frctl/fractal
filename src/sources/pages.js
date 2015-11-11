@@ -121,7 +121,7 @@ PageSource.prototype.findByKey = function(key, value) {
  */
 
 PageSource.prototype.toJSON = function(){
-    return _.map(this.components, function(entity){
+    return _.map(this.pages, function(entity){
         return entity.toJSON();
     });
 };
@@ -144,10 +144,11 @@ PageSource.prototype.toString = function(){
 
 PageSource.build = function(app){
     return Directory.fromPath(app.get('pages:path')).then(function(dir){
-        return PageSource.buildComponentTree(dir, app).then(function(tree){
+        return PageSource.buildPageTree(dir, app).then(function(tree){
             return new PageSource(tree, app).init();    
         });
     }).catch(function(e){
+        console.log(e.stack);
         logger.warn('Could not create page tree - ' + e.message);
         return new PageSource([], app).init();
     });
@@ -162,7 +163,7 @@ PageSource.build = function(app){
 
 PageSource.buildPageTree = function(dir, app){
     
-    var ret = [];
+    var tree = [];
 
     function makeGroupPromise(directory){
         return PageSource.buildPageTree(directory, app).then(function(subtree){
@@ -173,21 +174,21 @@ PageSource.buildPageTree = function(dir, app){
         });
     }
 
-    _.each(dir.getChildren(), function(entity){
+    _.each(dir.children, function(entity){
         if (entity.type == 'file') {
-            var matches = file.matches(app.get('pages:match'));
+            var matches = entity.matches(app.get('pages:match'));
             if (matches) {
-                ret.push(Page.fromFile(file, dir, app));
+                tree.push(Page.fromFile(entity, dir, app));
             }
         } else {
             if (entity.hasChildren()) {
-                ret.push(makeGroupPromise(entity));
+                tree.push(makeGroupPromise(entity));
             }
         }
         return null;
     });
 
-    return Promise.all(ret).then(function(items){
+    return Promise.all(tree).then(function(items){
         var items = _.compact(items);
         return _.isArray(items) ? _.sortByOrder(items, ['order','label'], ['asc','asc']) : items;
     });

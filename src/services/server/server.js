@@ -86,9 +86,8 @@ Server.prototype.init = function(fractal){
             req._components = components;
             req._pages = pages;
             srv.locals.components = components.toJSON();
-            // return res.json(components.toJSON());
-            // srv.locals.pages = pages.toJSON();
-            srv.locals.pages = [];
+            srv.locals.pages = pages.toJSON();
+            // return res.json(pages.toJSON());
             next();
         });
     });
