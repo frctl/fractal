@@ -26,15 +26,39 @@ function Group(dir, config, children, app){
     this._dir       = dir;
     this._app       = app;
     this._config    = config;
-    this.handle     = dir.name;
-    this.label      = config.label || utils.titlize(dir.name);
+    this.handle     = dir.name || config.handle;
+    this.label      = config.label || utils.titlize(this.handle);
     this.title      = config.title || this.label;
-    this.order      = dir.order;
-    this.depth      = dir.depth;
+    this.order      = dir.order || config.order || null;
+    this.depth      = dir.depth || config.depth || null;
     this.children   = children;
 };
 
 mixin.call(Group.prototype);
+
+/*
+ * Return the immediate child subgroups, if there are any.
+ *
+ * @api public
+ */
+
+Group.prototype.getSubGroups = function(){
+    return _.filter(this.children, function(child){
+        return child.type === 'group';
+    });
+};
+
+/*
+ * Return the immediate child sub entities (i.e. not groups), if there are any.
+ *
+ * @api public
+ */
+
+Group.prototype.getSubEntities = function(){
+    return _.filter(this.children, function(child){
+        return child.type !== 'group';
+    });
+};
 
 /*
  * Get a static, JSON-style object representation of the group.
@@ -73,4 +97,9 @@ Group.fromDirectory = function(dir, children, app){
     return groupConfig.then(function(groupConfig){
         return new Group(dir, groupConfig, children, app);
     });
+};
+
+
+Group.fromConfig = function(config, children, app){
+    return new Group({}, config, children, app);
 };

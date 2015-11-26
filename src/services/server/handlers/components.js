@@ -25,7 +25,7 @@ handlers.common = function(req, res, next) {
         handle: 'components',
         title: "Component Library",
         baseUrl: '/components',
-        subnav: req._components.filter('hidden', false).toJSON()
+        subnav: req._components.filter('hidden', false).flattenWithGroups().toJSON()
     };
     next();
 };

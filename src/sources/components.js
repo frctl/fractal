@@ -134,6 +134,42 @@ ComponentSource.prototype.flatten = function(){
 };
 
 /*
+ * Returns a flattened array of all components in the system
+ *
+ * @api public
+ */
+
+ComponentSource.prototype.flattenWithGroups = function(){
+    var grouped = [];
+    var self = this;
+    function group(items, labelPath) {
+        _.each(items, function(item){
+            var newPath = labelPath ? labelPath + '/' + item.label : item.label;
+            if (item.type === 'group') {
+                var subComponents = item.getSubEntities();
+                var subGroups = item.getSubGroups();
+                if (subComponents.length) {
+                    var newGroup = _.clone(item);
+                    item.children = subComponents;
+                    item.label = item.title = newPath;
+                    item.depth = 0;
+                    grouped.push(item);
+                }
+                if (subGroups.length) {
+                    console.log('asd');
+                    group(subGroups, newPath);
+                }
+            } else {
+                grouped.push(item);
+            }
+        });
+    }
+    group(this.components, null);
+    grouped = _.sortByOrder(grouped, ['order', 'type', 'label'], ['asc','desc','asc']);
+    return new ComponentSource(grouped, this.app).init();
+};
+
+/*
  * Returns a new component tree filtered by key:value
  *
  * @api public
