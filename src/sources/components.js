@@ -156,7 +156,6 @@ ComponentSource.prototype.flattenWithGroups = function(){
                     grouped.push(item);
                 }
                 if (subGroups.length) {
-                    console.log('asd');
                     group(subGroups, newPath);
                 }
             } else {
@@ -165,7 +164,7 @@ ComponentSource.prototype.flattenWithGroups = function(){
         });
     }
     group(this.components, null);
-    grouped = _.sortByOrder(grouped, ['order', 'type', 'label'], ['asc','desc','asc']);
+    grouped = _.sortByOrder(grouped, ['order', 'type', 'label'], ['asc','asc','asc']);
     return new ComponentSource(grouped, this.app).init();
 };
 
