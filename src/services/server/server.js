@@ -67,18 +67,12 @@ Server.prototype.init = function(fractal){
     
     srv.locals.config = fractal.get();
     srv.locals.statuses = fractal.getStatuses();
-    srv.locals.navigation = [{
-        handle: 'home',
-        label: 'Overview',
-        url: '/'
-    },
-    {
-        handle: 'components',
-        label: 'Component Library',
-        url: '/components'
-    }];
 
     srv.use(function (req, res, next) {
+        if (req.header('X-PJAX')) {
+            req.pjax = true;
+        }
+        srv.locals.noLayout = req.pjax || false;
         req._segments    = _.compact(req.path.split('/'));
         var components  = fractal.getComponents();
         var pages       = fractal.getPages();
@@ -87,7 +81,19 @@ Server.prototype.init = function(fractal){
             req._pages = pages;
             srv.locals.components = components.toJSON();
             srv.locals.pages = pages.toJSON();
-            // return res.json(pages.toJSON());
+            
+            srv.locals.navigation = [{
+                handle: 'home',
+                label: 'Overview',
+                url: '/'
+            },
+            {
+                handle: 'components',
+                label: 'Component Library',
+                url: '/components',
+                items: components.filter('hidden', false).flattenWithGroups().toJSON()
+            }];
+            
             next();
         });
     });
