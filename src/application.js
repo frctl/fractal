@@ -219,12 +219,6 @@ app.getData = function(path, defaults){
     return data.load(path, defaults);
 };
 
-// return this.getComponents().then(function(components){
-//         var entity = components.resolve(handle);
-//         console.log(entity);
-//         return entity._config;
-//     }); 
-
 /*
  * Setup the initial app configuration.
  *

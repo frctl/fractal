@@ -20,18 +20,8 @@ function source(){
      */
 
     this.init = function(){
-        
-
-        
+            
         return this;
-    };
-
-    this.find = function(){
-        
-    };
-
-    this.fuzzyFind = function(){
-        
     };
 
 };
