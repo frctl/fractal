@@ -35,8 +35,5 @@
     "superagent": "^1.4.0",
     "swig": "^1.4.2",
     "winston": "^1.1.0"
-  },
-  "devDependencies": {
-    "fractal-theme-default": "frctl/theme-default"
   }
 }
