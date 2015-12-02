@@ -164,14 +164,13 @@ app.getComponents = function(){
  */
 
 app.getPages = function(){
-    // if (!this._pages) {
-    //     var self = this;
-    //     this._pages = Pages.build(this);
-    //     this.createMonitor(this.get('pages:path'), function(event, path) {
-    //         self._pages = null;
-    //     });
-    // }
-    this._pages = [];
+    if (!this._pages) {
+        var self = this;
+        this._pages = Pages.build(this);
+        this.createMonitor(this.get('pages:path'), function(event, path) {
+            self._pages = null;
+        });
+    }
     return this._pages;
 };
 
