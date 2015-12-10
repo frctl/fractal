@@ -62,7 +62,7 @@ ComponentSource.prototype.resolve = function(str){
  * Throws an error if the component/variant is not found.
  *
  * Path format: my/component/path:optional-variant-handle
- * 
+ *
  * @api public
  */
 
@@ -164,7 +164,7 @@ ComponentSource.prototype.flattenWithGroups = function(){
         });
     }
     group(this.components, null);
-    grouped = _.sortByOrder(grouped, ['order', 'type', 'label'], ['asc','asc','asc']);
+    // grouped = _.sortByOrder(grouped, ['order', 'type', 'label'], ['asc','asc','asc']);
     return new ComponentSource(grouped, this.app).init();
 };
 
@@ -189,7 +189,7 @@ ComponentSource.prototype.filter = function(key, value){
                     ret.push(new Group(item._dir, item._config, children, item._app));
                 }
             }
-        }); 
+        });
         return _.compact(ret);
     }
     return new ComponentSource(filter(this.components), this.app).init();
@@ -212,7 +212,7 @@ ComponentSource.prototype.toJSON = function(){
  *
  * @api public
  */
-    
+
 ComponentSource.prototype.toString = function(){
     return JSON.stringify(this.toJSON(), null, 4);
 };
@@ -230,7 +230,7 @@ ComponentSource.build = function(app){
             context: app.get('components:context')
         };
         return ComponentSource.buildComponentTree(dir, defaults, app).then(function(tree){
-            return new ComponentSource(tree, app).init();    
+            return new ComponentSource(tree, app).init();
         });
     }).catch(function(e){
         logger.warn('Could not create component tree - ' + e.message);
@@ -257,9 +257,9 @@ ComponentSource.buildComponentTree = function(dir, cascadeConfig, app){
             name: dir.name
         });
     });
-    
+
     var dirConfig = configFile ? data.load(configFile.absolutePath) : Promise.resolve({});
-    
+
     return dirConfig.then(function(dirConfig){
 
         var mergedConfig = _.defaultsDeep(dirConfig, _.pick(cascadeConfig, ['context', 'preview', 'status', 'display']));
@@ -306,9 +306,9 @@ ComponentSource.buildComponentTree = function(dir, cascadeConfig, app){
 
         return Promise.all(ret).then(function(items){
             var items = _.compact(items);
-            return _.isArray(items) ? _.sortByOrder(items, ['order','label'], ['asc','asc']) : items;    
-            // return _.isArray(items) ? _.sortByOrder(items, ['type','order','label'], ['desc','asc','asc']) : items;    
+            return _.isArray(items) ? _.sortByOrder(items, ['order','label'], ['asc','asc']) : items;
+            // return _.isArray(items) ? _.sortByOrder(items, ['type','order','label'], ['desc','asc','asc']) : items;
         });
-        
+
     });
 };
