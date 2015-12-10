@@ -3,7 +3,7 @@
  */
 
 var express     = require('express');
-var srv         = express();         
+var srv         = express();
 var logger      = require('winston');
 var path        = require('path');
 var _           = require('lodash');
@@ -43,28 +43,31 @@ Server.prototype.init = function(fractal){
     /**
      * General configuration.
      */
-    
+
     this.nunjucks = renderer(fractal.get('theme:paths:views'));
     this.nunjucks.express(srv);
 
     this.port = fractal.get('server:port') || this.port;
-    
+
     srv.set('fractal', fractal);
     srv.set('view engine', 'nunj');
     srv.engine('nunj', this.nunjucks.render);
     // TODO: enable view cache when not in dev mode
-    // srv.enable('view cache'); 
+    // srv.enable('view cache');
 
     srv.use('/_theme', express.static(fractal.get('theme:paths:assets')));
-    if (fractal.get('static:path')){
-        var dest = '/' + _.trim(fractal.get('static:dest'), '/');
-        srv.use(dest, express.static(fractal.get('static:path')));
-    }
-    
+    try {
+        if (fractal.get('static:path')){
+            var dest = '/' + _.trim(fractal.get('static:dest'), '/');
+            srv.use(dest, express.static(fractal.get('static:path')));
+        }
+    } catch(e){}
+
+
     /**
      * Set up some shared request data and locals.
      */
-    
+
     srv.locals.config = fractal.get();
     srv.locals.statuses = fractal.getStatuses();
 
@@ -81,7 +84,7 @@ Server.prototype.init = function(fractal){
             req._pages = pages;
             srv.locals.components = components.toJSON();
             srv.locals.pages = pages.toJSON();
-            
+
             srv.locals.navigation = [{
                 handle: 'home',
                 label: 'Overview',
@@ -93,7 +96,7 @@ Server.prototype.init = function(fractal){
                 url: '/components',
                 items: components.filter('hidden', false).flattenWithGroups().toJSON()
             }];
-            
+
             next();
         });
     });
@@ -101,16 +104,16 @@ Server.prototype.init = function(fractal){
     /**
      * Bind routes and parameters to handlers.
      */
-    
+
     // Homepage
     srv.get('/', pages.index);
 
     // Components
     srv.use('/components', components.common);
-    
+
     srv.param('component', components.params.component);
     srv.param('componentFile', components.params.componentFile);
-    
+
     srv.get('/components', components.index);
     srv.get('/components/list/:collection', components.list);
     srv.get('/components/detail/:component(*)', components.detail);

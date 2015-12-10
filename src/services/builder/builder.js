@@ -3,6 +3,7 @@
  */
 
 var logger      = require('winston');
+var os          = require('os');
 var request     = require('request-promise');
 var Promise     = require('bluebird');
 var path        = require('path');
@@ -65,14 +66,18 @@ Builder.prototype.run = function(){
         var buildDir    = path.resolve(self.app.get('build:dest'));
         var components  = self.app.getComponents();
         var pages       = self.app.getPages();
-        var removeDir   = rimraf(buildDir);
-        
-        Promise.join(removeDir, components, pages, function(removeDir, components, pages){
+
+        var timestamp   = Date.now();
+        var tmpExportPath = path.join(os.tmpdir(), 'fractal', 'export-' + timestamp);
+
+        var makeTempDir = mkdirp(tmpExportPath);
+
+        Promise.join(makeTempDir, components, pages, function(makeTempDir, components, pages){
 
             /**
              * Static pages
              */
-            
+
             urls.push('/');
             urls.push('/components');
             urls.push('/components/list/all');
@@ -104,24 +109,24 @@ Builder.prototype.run = function(){
             /**
              * Run export...
              */
-            
+
             var jobs = [];
 
             // 1. Copy theme assets
-            
-            jobs.push(ncp(self.app.get('theme:paths:assets'), path.join(buildDir, '_theme')));
+
+            jobs.push(ncp(self.app.get('theme:paths:assets'), path.join(tmpExportPath, '_theme')));
 
             // 2. Copy site static assets, if defined.
-            
-            if (self.app.get('static:path')) {
-                jobs.push(ncp(self.app.get('static:path'), path.join(buildDir, self.app.get('static:dest'))));
+
+            if (self.app.get('static:path') && self.app.get('build:dest') !== self.app.get('static:path')) {
+                jobs.push(ncp(self.app.get('static:path'), path.join(tmpExportPath, self.app.get('static:dest'))));
             }
-            
+
             // 3. For each URL: make a GET request, save response to disk.
 
             _.each(urls, function(url){
                 var requestUrl = base + url.trim('/');
-                var exportPath = path.resolve(path.join(buildDir, url, 'index.html'));
+                var exportPath = path.resolve(path.join(tmpExportPath, url, 'index.html'));
                 var exportPathInfo = path.parse(exportPath);
                 logger.info('Exporting response from ' + requestUrl);
                 var job = mkdirp(exportPathInfo.dir).then(function(){
@@ -131,10 +136,16 @@ Builder.prototype.run = function(){
                 }).catch(self.onError);
                 jobs.push(job);
             });
-
+            
             Promise.all(jobs).then(function(){
-                server.close();
-                process.exit();
+                // rimraf(buildDir).then(function(){
+                //     mkdirp(buildDir).then(function(){
+                        ncp(tmpExportPath, buildDir).then(function(){
+                            server.close();
+                            process.exit();
+                        });
+                //     });
+                // });
             });
 
         }).catch(function(e){
