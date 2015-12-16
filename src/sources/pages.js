@@ -110,6 +110,37 @@ PageSource.prototype.findByKey = function(key, value) {
 };
 
 /*
+ * Find a group by a key.
+ * Throws an error if the page is not found.
+ *
+ * @api public
+ */
+
+PageSource.prototype.findGroupByKey = function(key, value) {
+    var found = null;
+    function checkChildren(children){
+        if (found) return found;
+        for (var i = 0; i < children.length; i++) {
+            var child = children[i];
+            if (child.type == 'group') {
+                if (_.get(child, key) === value) {
+                    found = child;
+                    break;
+                } else {
+                    checkChildren(child.children);
+                }
+            }
+        };
+        return found;
+    }
+    var result = checkChildren(this.pages);
+    if (!result) {
+        throw new Error('The group ' + key + ':' + value + ' could not be found.');
+    }
+    return result;
+};
+
+/*
  * Returns a new page tree filtered by key:value
  *
  * @api public
@@ -165,20 +196,44 @@ PageSource.prototype.toString = function(){
  */
 
 PageSource.prototype.setDefaults = function(defaults){
+    var self = this;
     function addDefaults(source, items){
         _.each(items, function(item){
+            var found = false;
             if (item.type === 'page') {
-                var found = false;
                 try {
-                    var sourcePage = source.findByPath(item.path);
+                    var sourcePage = self.findByPath(item.path);
                     if (! sourcePage.hidden) {
                         found = true;
                     }
                 } catch(e) {}
                 if (!found) {
-                    source.pages.push(item);
-                    source.pages = _.sortByOrder(source.pages, ['order','label'], ['asc','asc'])
+                    if (source instanceof PageSource) {
+                        source.pages.push(item);
+                        source.pages = _.sortByOrder(source.pages, ['order','label'], ['asc','asc']);
+                    } else {
+                        source.children.push(item);
+                        source.children = _.sortByOrder(source.children, ['order','label'], ['asc','asc']);
+                    }
                 }
+            } else if (item.type === 'group') {
+                try {
+                    var group = self.findGroupByKey('path', item.path);
+                    if (! group.hidden) {
+                        found = true;
+                    }
+                } catch(e) {}
+                if (!found) {
+                    var group = new Group(item._dir, item._config, [], item._app);
+                    if (source instanceof PageSource) {
+                        source.pages.push(group);
+                        source.pages = _.sortByOrder(source.pages, ['order','label'], ['asc','asc']);
+                    } else {
+                        source.children.push(group);
+                        source.children = _.sortByOrder(source.children, ['order','label'], ['asc','asc']);
+                    }
+                }
+                addDefaults(group, item.children);
             }
         });
         return source;
