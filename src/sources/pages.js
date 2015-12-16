@@ -159,13 +159,12 @@ PageSource.prototype.toString = function(){
 };
 
 /*
- * Merge two PageSources and return a new one.
+ * Merge a default PageSource into this one.
  *
  * @api public
  */
 
-PageSource.defaults = function(source1, source2){
-    var newSource = source1;
+PageSource.prototype.setDefaults = function(defaults){
     function addDefaults(source, items){
         _.each(items, function(item){
             if (item.type === 'page') {
@@ -178,15 +177,13 @@ PageSource.defaults = function(source1, source2){
                 } catch(e) {}
                 if (!found) {
                     source.pages.push(item);
+                    source.pages = _.sortByOrder(source.pages, ['order','label'], ['asc','asc'])
                 }
             }
         });
         return source;
     }
-    addDefaults(newSource, source2.pages)
-
-    var items = _.sortByOrder(newSource.pages, ['order','label'], ['asc','asc'])
-    return new PageSource(items, this.app).init();
+    addDefaults(this, defaults.pages);
 };
 
 /*
