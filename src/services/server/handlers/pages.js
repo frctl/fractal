@@ -15,14 +15,6 @@ var utils           = require('../../../utils');
 var handlers = exports = module.exports = {};
 handlers.params = {};
 
-handlers.common = function(req, res, next) {
-    req.app.locals.section = {
-        handle: 'pages',
-        baseUrl: '/',
-    };
-    next();
-};
-
 /*
  * Resolve a page from a path parameter
  */
@@ -30,18 +22,14 @@ handlers.common = function(req, res, next) {
 handlers.params.page = function(req, res, next, pagePath) {
     try {
         var page = req._pages.resolve(pagePath);
+        page.renderContent().then(function(){
+            res.locals.page = page.toJSON();
+            next();
+        });
     } catch(e) {
-        try {
-            var page = req._themePages.resolve(pagePath);
-        } catch(e) {
-            // console.log(e.stack);
-            return next(utils.httpError('Page not found', 404));
-        }
+        // console.log(e.stack);
+        next(utils.httpError('Page not found', 404));
     }
-    page.renderContent().then(function(){
-        res.locals.page = page.toJSON();
-        next();
-    });
 };
 
 /*
@@ -49,6 +37,11 @@ handlers.params.page = function(req, res, next, pagePath) {
  */
 
 handlers.page = function(req, res){
-
-    res.render('pages/page');
+    var section = res.locals.section || {
+        handle: 'pages',
+        baseUrl: '/',
+    };
+    res.render('pages/page', {
+        section: section
+    });
 };

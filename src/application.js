@@ -168,7 +168,10 @@ app.getPages = function(){
     if (!this._pages) {
         if (this.get('pages:path')) {
             var self = this;
-            this._pages = Pages.build(this.get('pages:path'), this);
+            var pages = Pages.build(this.get('pages:path'), this);
+            var themePages = this.getThemePages();
+
+            this._pages = Promise.join(pages, themePages, Pages.defaults);
             this.createMonitor(this.get('pages:path'), function(event, path) {
                 self._pages = null;
             });

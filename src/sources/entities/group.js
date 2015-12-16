@@ -32,6 +32,7 @@ function Group(dir, config, children, app){
     this.order      = dir.order || config.order || null;
     this.depth      = dir.depth || config.depth || null;
     this.children   = children;
+    this.path       = utils.fauxPath(dir.path);
 };
 
 mixin.call(Group.prototype);
@@ -54,10 +55,13 @@ Group.prototype.getSubGroups = function(){
  * @api public
  */
 
-Group.prototype.getSubEntities = function(){
-    return _.filter(this.children, function(child){
+Group.prototype.getSubEntities = function(toJSON){
+    var subEntities = _.filter(this.children, function(child){
         return child.type !== 'group';
     });
+    return toJSON ? _.map(subEntities, function(item){
+        return item.toJSON();
+    }) : subEntities;
 };
 
 /*

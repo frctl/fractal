@@ -21,7 +21,7 @@ handlers.params = {};
  */
 
 handlers.common = function(req, res, next) {
-    req.app.locals.section = {
+    res.locals.section = {
         handle: 'components',
         baseUrl: '/components',
     };
@@ -68,28 +68,28 @@ handlers.params.componentFile = function(req, res, next, componentFile) {
     } else {
         switch(pathInfo.name) {
             case 'template':
-            case 'view': 
+            case 'view':
                 res.locals.contents = variant.getFile(variant.view).getContents();
                 return next();
                 break;
-            case 'context': 
+            case 'context':
                 variant.getContextString().then(function(str){
                     res.locals.contents = str;
                     return next();
                 });
                 break;
-            case 'rendered': 
+            case 'rendered':
                 variant.renderView().then(function(rendered){
                     res.locals.contents = rendered;
                     next();
                 });
                 break;
-            case 'config': 
+            case 'config':
                 res.locals.contents = JSON.stringify(variant._component._config, null, 4);
                 return next();
                 break;
         }
-        
+
     }
 };
 

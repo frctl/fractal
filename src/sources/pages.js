@@ -159,6 +159,37 @@ PageSource.prototype.toString = function(){
 };
 
 /*
+ * Merge two PageSources and return a new one.
+ *
+ * @api public
+ */
+
+PageSource.defaults = function(source1, source2){
+    var newSource = source1;
+    function addDefaults(source, items){
+        _.each(items, function(item){
+            if (item.type === 'page') {
+                var found = false;
+                try {
+                    var sourcePage = source.findByPath(item.path);
+                    if (! sourcePage.hidden) {
+                        found = true;
+                    }
+                } catch(e) {}
+                if (!found) {
+                    source.pages.push(item);
+                }
+            }
+        });
+        return source;
+    }
+    addDefaults(newSource, source2.pages)
+
+    var items = _.sortByOrder(newSource.pages, ['order','label'], ['asc','asc'])
+    return new PageSource(items, this.app).init();
+};
+
+/*
  * Return a new PageSource instance from a directory path.
  *
  * @api public

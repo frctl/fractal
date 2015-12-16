@@ -65,11 +65,19 @@ Page.prototype.init = function(){
         eval: true
     });
 
+    var dirName = this._dir.name
+
     this._content       = parsed.content;
     this._config        = _.defaultsDeep(this._config, parsed.data || {});
     this.label          = this._config.label || utils.titlize(this._source.name);
-    this.title          = this._config.title || this.label;
-    this.handle         = this._config.handle || utils.fauxPath(this.isIndex ? this._dir.name : this._source.name);
+    if (this.label.toLowerCase() === 'index') {
+        this.label = this._app.get('pages:indexLabel');
+        this.title = this._config.title || utils.titlize(this._source.depth > 1 ? this._dir.name : this.label);
+    } else {
+        this.title = this._config.title || this.label;
+    }
+
+    this.handle         = this._config.handle || utils.fauxPath(this.isIndex ? (this._source.depth > 1 ? this._dir.name : 'home') : this._source.name);
     this.hidden         = !! (this._config.hidden || this._source.hidden);
     this.fullHandle     = '@' + this.handle;
     this.content        = null;
@@ -101,6 +109,7 @@ Page.fromFile = function(file, dir, app){
     });
     var pageConfig = configFile ? data.load(configFile.absolutePath) : Promise.resolve({});
     return pageConfig.then(function(pageConfig){
+
         return (new Page(file, dir, pageConfig, app)).init();
     });
 };

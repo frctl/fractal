@@ -69,34 +69,41 @@ Server.prototype.init = function(fractal){
      */
 
     srv.use(function (req, res, next) {
+
         if (req.header('X-PJAX')) {
             req.pjax = true;
         }
         srv.locals.noLayout = req.pjax || false;
         req._segments    = _.compact(req.path.split('/'));
+
         var components  = fractal.getComponents();
         var pages       = fractal.getPages();
-        var themePages  = fractal.getThemePages();
-        Promise.join(components, pages, themePages, function(components, pages, themePages){
+        Promise.join(components, pages, function(components, pages){
+
             req._components = components;
             req._pages = pages.filter('hidden', false);
-            req._themePages = themePages;
 
-            srv.locals.components = components.toJSON();
+            srv.locals.components = components.filter('hidden', false).flattenWithGroups().toJSON();
             srv.locals.pages = pages.toJSON();
-            // srv.locals.themePages = themePages.toJSON();
 
-            srv.locals.navigation = [{
-                handle: 'home',
-                label: 'Overview',
-                url: '/'
-            },
-            {
-                handle: 'components',
-                label: 'Component Library',
-                url: '/components',
-                items: components.filter('hidden', false).flattenWithGroups().toJSON()
-            }];
+            srv.locals.navigation = [];
+
+            _.each(req._pages.pages, function(entity){
+                if (entity.type == 'page') {
+                    srv.locals.navigation.push({
+                        handle: entity.handle,
+                        label: entity.label,
+                        url: '/' + entity.path,
+                    });
+                } else {
+                    srv.locals.navigation.push({
+                        handle: entity.handle,
+                        label: entity.label,
+                        url: '/' + entity.path,
+                        items: entity.getSubEntities(true)
+                    });
+                }
+            });
 
             next();
         });
