@@ -44,7 +44,7 @@ Server.prototype.init = function(fractal){
      * General configuration.
      */
 
-    this.nunjucks = renderer(fractal.get('theme:paths:views'));
+    this.nunjucks = renderer(fractal.get('theme:paths:views'), fractal);
     this.nunjucks.express(srv);
 
     this.port = fractal.get('server:port') || this.port;
@@ -68,9 +68,6 @@ Server.prototype.init = function(fractal){
      * Set up some shared request data and locals.
      */
 
-    srv.locals.config = fractal.get();
-    srv.locals.statuses = fractal.getStatuses();
-
     srv.use(function (req, res, next) {
         if (req.header('X-PJAX')) {
             req.pjax = true;
@@ -79,11 +76,15 @@ Server.prototype.init = function(fractal){
         req._segments    = _.compact(req.path.split('/'));
         var components  = fractal.getComponents();
         var pages       = fractal.getPages();
-        Promise.join(components, pages, function(components, pages){
+        var themePages  = fractal.getThemePages();
+        Promise.join(components, pages, themePages, function(components, pages, themePages){
             req._components = components;
-            req._pages = pages;
+            req._pages = pages.filter('hidden', false);
+            req._themePages = themePages;
+
             srv.locals.components = components.toJSON();
             srv.locals.pages = pages.toJSON();
+            // srv.locals.themePages = themePages.toJSON();
 
             srv.locals.navigation = [{
                 handle: 'home',
@@ -105,8 +106,6 @@ Server.prototype.init = function(fractal){
      * Bind routes and parameters to handlers.
      */
 
-    // Homepage
-    srv.get('/', pages.index);
 
     // Components
     srv.use('/components', components.common);
@@ -114,7 +113,7 @@ Server.prototype.init = function(fractal){
     srv.param('component', components.params.component);
     srv.param('componentFile', components.params.componentFile);
 
-    srv.get('/components', components.index);
+    // srv.get('/components', components.index);
     srv.get('/components/list/:collection', components.list);
     srv.get('/components/detail/:component(*)', components.detail);
     srv.get('/components/raw/:componentFile(*)', components.raw);
@@ -126,7 +125,10 @@ Server.prototype.init = function(fractal){
     srv.get('/favicon.ico', misc.favicon);
 
     // All other requests are assumed to be page requests
-    srv.get('/*', pages.page);
+
+    srv.param('page', pages.params.page);
+    // srv.get(':page', pages.page);
+    srv.get('/:page(*)', pages.page);
 
     return this;
 };

@@ -56,18 +56,14 @@ PageSource.prototype.resolve = function(str){
 };
 
 /*
- * Find a component by it's path.
- * If a the path specifies a variant then that will be returned in place of the component.
- * Throws an error if the component/variant is not found.
- *
+ * Find a page by it's path.
  * Path format: my/page/path
- * 
+ *
  * @api public
  */
 
 PageSource.prototype.findByPath = function(pagePath){
-    var pathParts = pagePath.split('--', 2);
-    return this.findByKey('path', pathParts[0]);
+    return this.findByKey('path', pagePath);
 };
 
 /*
@@ -80,9 +76,8 @@ PageSource.prototype.findByPath = function(pagePath){
  */
 
 PageSource.prototype.findByHandle = function(handle){
-    handle = handle.replace(/^@/, '');
-    var handleParts = handle.split(':', 2);
-    return this.findByKey('handle', handleParts[0]);
+    var handle = handle.replace(/^@/, '');
+    return this.findByKey('handle', handle);
 };
 
 /*
@@ -115,6 +110,33 @@ PageSource.prototype.findByKey = function(key, value) {
 };
 
 /*
+ * Returns a new page tree filtered by key:value
+ *
+ * @api public
+ */
+
+PageSource.prototype.filter = function(key, value){
+    function filter(items){
+        var ret = [];
+        _.each(items, function(item){
+            if (item.type === 'page') {
+                if (item[key] === value) {
+                    ret.push(item);
+                }
+            } else {
+                // group
+                var children = filter(item.children);
+                if (children.length) {
+                    ret.push(new Group(item._dir, item._config, children, item._app));
+                }
+            }
+        });
+        return _.compact(ret);
+    }
+    return new PageSource(filter(this.pages), this.app).init();
+};
+
+/*
  * Returns a JSON representation of all the pages
  *
  * @api public
@@ -131,7 +153,7 @@ PageSource.prototype.toJSON = function(){
  *
  * @api public
  */
-    
+
 PageSource.prototype.toString = function(){
     return JSON.stringify(this.toJSON(), null, 4);
 };
@@ -142,10 +164,10 @@ PageSource.prototype.toString = function(){
  * @api public
  */
 
-PageSource.build = function(app){
-    return Directory.fromPath(app.get('pages:path')).then(function(dir){
+PageSource.build = function(path, app){
+    return Directory.fromPath(path).then(function(dir){
         return PageSource.buildPageTree(dir, app).then(function(tree){
-            return new PageSource(tree, app).init();    
+            return new PageSource(tree, app).init();
         });
     }).catch(function(e){
         console.log(e.stack);
@@ -162,7 +184,7 @@ PageSource.build = function(app){
  */
 
 PageSource.buildPageTree = function(dir, app){
-    
+
     var tree = [];
 
     function makeGroupPromise(directory){
@@ -192,4 +214,14 @@ PageSource.buildPageTree = function(dir, app){
         var items = _.compact(items);
         return _.isArray(items) ? _.sortByOrder(items, ['order','label'], ['asc','asc']) : items;
     });
+};
+
+/*
+ * Return an empty new PageSource instance
+ *
+ * @api public
+ */
+
+PageSource.emptySource = function(app){
+    return Promise.resolve(new PageSource([], app).init());
 };

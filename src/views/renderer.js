@@ -14,8 +14,8 @@ var highlighter = require('../highlighter');
  * Instantiate and export the nunjucks instance.
  */
 
-module.exports = function(viewsPath){
-    
+module.exports = function(viewsPath, app){
+
     var nj = new nunjucks.Environment(
         new nunjucks.FileSystemLoader(viewsPath, {
             watch: true,
@@ -27,10 +27,12 @@ module.exports = function(viewsPath){
 
     nj.addGlobal('fractal', {
         highlight: function(str, lang){
-            str =  !_.isString(str) ? str.toString() : str; 
+            str =  !_.isString(str) ? str.toString() : str;
             return highlighter(str, lang);
-        }
+        },
+        statuses: app.getStatuses(),
+        config: app.get(),
     });
-
+    
     return nj;
 };

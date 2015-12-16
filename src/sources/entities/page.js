@@ -10,7 +10,7 @@ var matter      = require('gray-matter');
 
 var mixin       = require('./entity');
 var utils       = require('../../utils');
-var md          = require('../../markdown');
+var renderer    = require('../../handlers/pages');
 
 /*
  * Export the page.
@@ -65,15 +65,24 @@ Page.prototype.init = function(){
         eval: true
     });
 
-    this.content        = md(parsed.content);
+    this._content       = parsed.content;
     this._config        = _.defaultsDeep(this._config, parsed.data || {});
     this.label          = this._config.label || utils.titlize(this._source.name);
     this.title          = this._config.title || this.label;
     this.handle         = this._config.handle || utils.fauxPath(this.isIndex ? this._dir.name : this._source.name);
     this.hidden         = !! (this._config.hidden || this._source.hidden);
     this.fullHandle     = '@' + this.handle;
+    this.content        = null;
 
     return self;
+};
+
+Page.prototype.renderContent = function(context){
+    var self = this;
+    return renderer.render(this, context || {}, this._app).then(function(content){
+        self.content = content;
+        return content;
+    });
 };
 
 /*
@@ -84,7 +93,7 @@ Page.prototype.init = function(){
 
 Page.fromFile = function(file, dir, app){
     var self = this;
-    // check to see if there is some config associated with the file 
+    // check to see if there is some config associated with the file
     var configFile = _.find(dir.getFiles(), function(entity){
         return entity.matches(app.get('pages:config'), {
             name: file.name

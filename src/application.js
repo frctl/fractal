@@ -31,6 +31,7 @@ app.init = function(){
     this._monitors      = [];
     this._components    = null;
     this._pages         = null;
+    this._themePages    = null;
     this.httpServer     = null;
     this.httpServerUrl  = null;
     this.defaultConfig();
@@ -133,7 +134,7 @@ app.startServer = function(callback){
             });
             callback(baseUrl, httpServer);
         });
-        
+
     } else {
         callback(this.httpServerUrl, this.httpServer);
     }
@@ -165,13 +166,30 @@ app.getComponents = function(){
 
 app.getPages = function(){
     if (!this._pages) {
-        var self = this;
-        this._pages = Pages.build(this);
-        this.createMonitor(this.get('pages:path'), function(event, path) {
-            self._pages = null;
-        });
+        if (this.get('pages:path')) {
+            var self = this;
+            this._pages = Pages.build(this.get('pages:path'), this);
+            this.createMonitor(this.get('pages:path'), function(event, path) {
+                self._pages = null;
+            });
+        } else {
+            this._pages = Pages.emptySource(this);
+        }
     }
     return this._pages;
+};
+
+/*
+ * Return a collection of default, theme-provided pages for fallbacks
+ *
+ * @api public
+ */
+
+app.getThemePages = function(){
+    if (!this._defaultPages) {
+        this._themePages = Pages.build(this.get('theme:paths:pages'), this);
+    }
+    return this._themePages;
 };
 
 /*
@@ -248,6 +266,7 @@ app.defaultConfig = function(){
         views: path.join(dir, themeJSON.views),
         assets: path.join(dir, themeJSON.assets),
         partials: path.join(dir, themeJSON.partials),
+        pages: path.join(dir, themeJSON.pages),
     };
     this.set('theme', theme);
 };
