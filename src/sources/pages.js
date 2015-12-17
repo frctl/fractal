@@ -11,6 +11,7 @@ var Page        = require('./entities/page');
 var Group       = require('./entities/group');
 var mixin       = require('./source');
 var data        = require('../data');
+var NotFoundError  = require('../errors/notfound');
 
 /*
  * Export the page source.
@@ -104,7 +105,7 @@ PageSource.prototype.findByKey = function(key, value) {
     }
     var result = checkChildren(this.pages);
     if (!result) {
-        throw new Error('The page ' + key + ':' + value + ' could not be found.');
+        throw new NotFoundError('The page with ' + key + ' "' + value + '" could not be found.');
     }
     return result;
 };
@@ -135,7 +136,7 @@ PageSource.prototype.findGroupByKey = function(key, value) {
     }
     var result = checkChildren(this.pages);
     if (!result) {
-        throw new Error('The group ' + key + ':' + value + ' could not be found.');
+        throw new NotFoundError('The group with ' + key + ' "' + value + '" could not be found.');
     }
     return result;
 };

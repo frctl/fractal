@@ -33,6 +33,6 @@ module.exports = function(viewsPath, app){
         statuses: app.getStatuses(),
         config: app.get(),
     });
-    
+        
     return nj;
 };

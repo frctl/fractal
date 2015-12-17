@@ -5,6 +5,7 @@
 var path        = require('path');
 var _           = require('lodash');
 var consolidate = require('consolidate');
+var RenderError  = require('../errors/render');
 
 /*
  * Export the component renderer.
@@ -19,21 +20,25 @@ module.exports = {
      *
      * @api public
      */
-     
+
     render: function(entity, context, app){
-        if (entity.type == 'component') {
-            entity = entity.getVariant();
+        try {
+            if (entity.type == 'component') {
+                entity = entity.getVariant();
+            }
+            var context = _.cloneDeep(context || entity.context);
+
+            // TODO: add helpers
+            // TODO: Add loader for nunjucks
+
+            return this.getPartials(entity.fsViewPath, app).then(function(partials){
+                context.partials = partials;
+                context.cache = false;
+                return consolidate[entity.engine](entity.fsViewPath, context);
+            });
+        } catch(e) {
+            throw new RenderError('Could not render component "' + page.handlePath + '".', e);
         }
-        var context = _.cloneDeep(context || entity.context);
-
-        // TODO: add helpers
-        // TODO: Add loader for nunjucks
-
-        return this.getPartials(entity.fsViewPath, app).then(function(partials){
-            context.partials = partials;
-            context.cache = false;
-            return consolidate[entity.engine](entity.fsViewPath, context);
-        });
     },
 
     /*
@@ -42,7 +47,7 @@ module.exports = {
      *
      * @api public
      */
-    
+
     renderPreview: function(entity, context, app){
         return this.render(entity, context, app).then(function(rendered){
             if (entity.preview) {
@@ -57,7 +62,7 @@ module.exports = {
                 });
             }
             return rendered;
-        });   
+        });
     },
 
     /*
@@ -69,7 +74,7 @@ module.exports = {
      *
      * @api private
      */
-     
+
     getPartials: function(fsViewPath, app){
         return app.getComponents().then(function(components){
             var partials = {};
@@ -83,7 +88,7 @@ module.exports = {
                             var key = comp.handle + ':' + variant.handle;
                             partials[key] = path.join(parts.dir, parts.name);
                             if (variant.handle === comp.default.handle) {
-                                partials[comp.handle] = partials[key];                
+                                partials[comp.handle] = partials[key];
                             }
                         }
                     }

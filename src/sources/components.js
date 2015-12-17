@@ -11,6 +11,7 @@ var Component   = require('./entities/component');
 var Group       = require('./entities/group');
 var mixin       = require('./source');
 var data        = require('../data');
+var NotFoundError  = require('../errors/notfound')
 
 /*
  * Export the component source.
@@ -113,7 +114,7 @@ ComponentSource.prototype.findByKey = function(key, value) {
     }
     var result = checkChildren(this.components);
     if (!result) {
-        throw new Error('The component ' + key + ':' + value + ' could not be found.');
+        throw new NotFoundError('The component with ' + key + ' "' + value + '" could not be found.');
     }
     return result;
 };

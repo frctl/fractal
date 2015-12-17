@@ -20,16 +20,11 @@ handlers.params = {};
  */
 
 handlers.params.page = function(req, res, next, pagePath) {
-    try {
-        var page = req._pages.resolve(pagePath);
-        page.renderContent().then(function(){
-            res.locals.page = page.toJSON();
-            next();
-        });
-    } catch(e) {
-        // console.log(e.stack);
-        next(utils.httpError('Page not found', 404));
-    }
+    var page = req._pages.resolve(pagePath);
+    page.renderContent().then(function(){
+        res.locals.page = page.toJSON();
+        next();
+    });
 };
 
 /*

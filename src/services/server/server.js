@@ -113,7 +113,6 @@ Server.prototype.init = function(fractal){
      * Bind routes and parameters to handlers.
      */
 
-
     // Components
     srv.use('/components', components.common);
 
@@ -134,8 +133,11 @@ Server.prototype.init = function(fractal){
     // All other requests are assumed to be page requests
 
     srv.param('page', pages.params.page);
-    // srv.get(':page', pages.page);
     srv.get('/:page(*)', pages.page);
+
+    // finally the error handler
+    srv.use(misc.error);
+
 
     return this;
 };

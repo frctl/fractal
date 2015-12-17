@@ -1,4 +1,4 @@
-    /**
+/**
  * Module dependencies.
  */
 
@@ -33,25 +33,20 @@ handlers.common = function(req, res, next) {
  */
 
 handlers.params.component = function(req, res, next, componentPath) {
-    try {
-        var entity = req._components.resolve(componentPath);
-        if (entity.type == 'component') {
-            req._component = entity;
-            req._variant = entity.default;
-        } else if (entity.type == 'variant') {
-            req._component = entity._component;
-            req._variant = entity;
-        }
-        req._type = entity.type;
-        req._component.renderAll().then(function(comp){
-            res.locals.component = comp.toJSON();
-            res.locals.variant = _.find(comp.variants, 'handle', req._variant.handle);
-            next();
-        });
-    } catch(e) {
-        // console.log(e.stack);
-        next(utils.httpError('Component not found', 404));
+    var entity = req._components.resolve(componentPath);
+    if (entity.type == 'component') {
+        req._component = entity;
+        req._variant = entity.default;
+    } else if (entity.type == 'variant') {
+        req._component = entity._component;
+        req._variant = entity;
     }
+    req._type = entity.type;
+    req._component.renderAll().then(function(comp){
+        res.locals.component = comp.toJSON();
+        res.locals.variant = _.find(comp.variants, 'handle', req._variant.handle);
+        next();
+    });
 };
 
 /*

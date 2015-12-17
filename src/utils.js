@@ -39,7 +39,7 @@ module.exports = {
     fauxPath: function(path){
         return _.map(path.split('/'), function(segment){
             return segment.replace(/^_/,'').replace(/^\d+\-/, '');
-        }).join('/');    
+        }).join('/');
     },
 
     httpError: function(msg, status){
@@ -47,5 +47,5 @@ module.exports = {
         e.status = status || 500;
         return e;
     }
-    
+
 };
