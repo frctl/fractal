@@ -134,7 +134,7 @@ ComponentSource.prototype.flatten = function(){
 };
 
 /*
- * Returns a flattened array of all components in the system
+ * Returns a flattened, grouped array of all components in the system
  *
  * @api public
  */

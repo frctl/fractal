@@ -141,6 +141,55 @@ PageSource.prototype.findGroupByKey = function(key, value) {
 };
 
 /*
+ * Returns a flattened array of all components in the system
+ *
+ * @api public
+ */
+
+PageSource.prototype.flatten = function(){
+    function list(items) {
+        return _.flatten(_.map(items, function(item){
+            return item.type === 'group' ? list(item.children) : item;
+        }));
+    }
+    return new PageSource(list(this.pages), this.app).init();
+};
+
+/*
+ * Returns a flattened array of all components in the system
+ *
+ * @api public
+ */
+
+PageSource.prototype.flattenWithGroups = function(){
+    var grouped = [];
+    var self = this;
+    function group(items, labelPath) {
+        _.each(items, function(item){
+            var newPath = labelPath ? labelPath + '/' + item.label : item.label;
+            if (item.type === 'group') {
+                var subPages = item.getSubEntities();
+                var subGroups = item.getSubGroups();
+                if (subPages.length) {
+                    var newGroup = _.clone(item);
+                    item.children = subPages;
+                    item.label = item.title = newPath;
+                    item.depth = 0;
+                    grouped.push(item);
+                }
+                if (subGroups.length) {
+                    group(subGroups, newPath);
+                }
+            } else {
+                grouped.push(item);
+            }
+        });
+    }
+    group(this.pages, null);
+    return new PageSource(grouped, this.app).init();
+};
+
+/*
  * Returns a new page tree filtered by key:value
  *
  * @api public

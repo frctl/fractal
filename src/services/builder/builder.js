@@ -107,6 +107,17 @@ Builder.prototype.run = function(){
             });
 
             /**
+             * Pages
+             */
+
+            _.each(pages.flatten().pages, function(page){
+                if (!page.hidden) {
+                    console.log(path.join('/', page.handlePath));
+                    urls.push(path.join('/', page.handlePath));
+                }
+            });
+
+            /**
              * Run export...
              */
 
@@ -136,7 +147,7 @@ Builder.prototype.run = function(){
                 }).catch(self.onError);
                 jobs.push(job);
             });
-            
+
             Promise.all(jobs).then(function(){
                 // rimraf(buildDir).then(function(){
                 //     mkdirp(buildDir).then(function(){
