@@ -117,6 +117,10 @@ Builder.prototype.run = function(){
                 }
             });
 
+            server.close();
+            process.exit();
+            return;
+
             /**
              * Run export...
              */

@@ -179,7 +179,7 @@ app.getPages = function(){
                 self._pages = null;
             });
         } else {
-            this._pages = Pages.emptySource(this);
+            this._pages = this.getThemePages();
         }
     }
     return this._pages;
