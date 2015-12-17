@@ -112,14 +112,9 @@ Builder.prototype.run = function(){
 
             _.each(pages.flatten().pages, function(page){
                 if (!page.hidden) {
-                    console.log(path.join('/', page.handlePath));
                     urls.push(path.join('/', page.handlePath));
                 }
             });
-
-            server.close();
-            process.exit();
-            return;
 
             /**
              * Run export...
