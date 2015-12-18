@@ -41,7 +41,7 @@ module.exports = function(app){
             server.use(dest, express.static(app.get('static:path')));
         }
     } catch(e){}
-    
+
     /**
      * Set up some shared request data and locals.
      */

@@ -107,6 +107,8 @@ app.run = function(){
 
     logger.level = this.get('log:level');
 
+    this.server = server(this);
+
     if (this.enabled('run:build')) {
         logger.info('Running build...');
         builder(this);
@@ -278,7 +280,6 @@ app.defaultConfig = function(){
         pages: path.join(dir, themeJSON.pages),
     };
     this.set('theme', theme);
-    this.server = server(this);
 };
 
 /*
