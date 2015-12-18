@@ -31,9 +31,8 @@ app.init = function(){
     this._monitors      = [];
     this._components    = null;
     this._pages         = null;
-    this._themePages    = null;
-    this.httpServer     = null;
-    this.httpServerUrl  = null;
+    this._httpServer    = null;
+    this.server         = null;
     this.defaultConfig();
 };
 
@@ -110,7 +109,7 @@ app.run = function(){
 
     if (this.enabled('run:build')) {
         logger.info('Running build...');
-        builder.init(this).run();
+        builder(this);
     }
 
     if (this.enabled('run:server') || this.disabled('run:build')) {
@@ -121,22 +120,26 @@ app.run = function(){
 };
 
 app.startServer = function(callback){
-    callback = callback || function(){};
-    var self = this;
-    if (!this.httpServer) {
-        logger.info('Booting server...');
-        server.init(this).listen(function(baseUrl, httpServer){
-            self.httpServer = httpServer;
-            self.httpServerUrl = baseUrl;
-            httpServer.on('close', function(){
-                self.httpServer = null;
-                self.httpServerUrl = null;
-            });
-            callback(baseUrl, httpServer);
+    var callback = callback || function(){};
+    var port = this.get('server:port') || 3000;
+    if (!this._httpServer) {
+        this._httpServer = this.server.listen(port, function(){
+            logger.info('Fractal server is now running at http://localhost:%s', port);
+            callback();
         });
-
     } else {
-        callback(this.httpServerUrl, this.httpServer);
+        callback();
+    }
+};
+
+app.stopServer = function(callback){
+    var callback = callback || function(){};
+    if (this._httpServer) {
+        this._httpServer.close(function(){
+            logger.info('Fractal server is shutting down.');
+            callback();
+        });
+        this._httpServer = null;
     }
 };
 
@@ -275,6 +278,7 @@ app.defaultConfig = function(){
         pages: path.join(dir, themeJSON.pages),
     };
     this.set('theme', theme);
+    this.server = server(this);
 };
 
 /*

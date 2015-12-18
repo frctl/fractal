@@ -3,7 +3,7 @@
  */
 
 var express     = require('express');
-var srv         = express();
+var server      = express();
 var logger      = require('winston');
 var path        = require('path');
 var _           = require('lodash');
@@ -14,89 +14,67 @@ var pages       = require('./handlers/pages');
 var misc        = require('./handlers/misc');
 var renderer    = require('../../views/renderer');
 
-
-/*
- * Export the server.
- */
-
-module.exports = new Server;
-
 /**
- * Initialize a new Server instance.
- *
- * @api private
+ * Export the server constructor
  */
 
-function Server(){
-    this.port = 3000;
-    this.srv = srv;
-}
-
-/**
- * Build the initial set of routes and responses.
- *
- * @api public
- */
-
-Server.prototype.init = function(fractal){
+module.exports = function(app){
 
     /**
      * General configuration.
      */
 
-    this.nunjucks = renderer(fractal.get('theme:paths:views'), fractal);
-    this.nunjucks.express(srv);
+    var nunjucks = renderer(app.get('theme:paths:views'), app);
+    nunjucks.express(server);
 
-    this.port = fractal.get('server:port') || this.port;
+    server.set('app', app);
+    server.set('view engine', 'nunj');
+    server.engine('nunj', nunjucks.render);
 
-    srv.set('fractal', fractal);
-    srv.set('view engine', 'nunj');
-    srv.engine('nunj', this.nunjucks.render);
     // TODO: enable view cache when not in dev mode
-    // srv.enable('view cache');
+    // server.enable('view cache');
 
-    srv.use('/_theme', express.static(fractal.get('theme:paths:assets')));
+    server.use('/_theme', express.static(app.get('theme:paths:assets')));
     try {
-        if (fractal.get('static:path')){
-            var dest = '/' + _.trim(fractal.get('static:dest'), '/');
-            srv.use(dest, express.static(fractal.get('static:path')));
+        if (app.get('static:path')){
+            var dest = '/' + _.trim(app.get('static:dest'), '/');
+            server.use(dest, express.static(app.get('static:path')));
         }
     } catch(e){}
-
-
+    
     /**
      * Set up some shared request data and locals.
      */
 
-    srv.use(function (req, res, next) {
+    server.use(function (req, res, next) {
 
         if (req.header('X-PJAX')) {
             req.pjax = true;
         }
-        srv.locals.noLayout = req.pjax || false;
+        server.locals.noLayout = req.pjax || false;
         req._segments    = _.compact(req.path.split('/'));
 
-        var components  = fractal.getComponents();
-        var pages       = fractal.getPages();
+        var components  = app.getComponents();
+        var pages       = app.getPages();
         Promise.join(components, pages, function(components, pages){
 
             req._components = components;
             req._pages = pages.filter('hidden', false);
 
-            srv.locals.components = components.filter('hidden', false).flattenWithGroups().toJSON();
-            srv.locals.pages = pages.toJSON();
+            server.locals.components = components.filter('hidden', false).flattenWithGroups().toJSON();
+            server.locals.pages = pages.toJSON();
 
-            srv.locals.navigation = [];
+            server.locals.navigation = [];
 
             _.each(req._pages.pages, function(entity){
                 if (entity.type == 'page') {
-                    srv.locals.navigation.push({
+                    server.locals.navigation.push({
                         handle: entity.handle,
                         label: entity.label,
                         url: '/' + entity.path,
                     });
                 } else {
-                    srv.locals.navigation.push({
+                    server.locals.navigation.push({
                         handle: entity.handle,
                         label: entity.label,
                         url: '/' + entity.path,
@@ -114,56 +92,30 @@ Server.prototype.init = function(fractal){
      */
 
     // Components
-    srv.use('/components', components.common);
+    server.use('/components', components.common);
 
-    srv.param('component', components.params.component);
-    srv.param('componentFile', components.params.componentFile);
+    server.param('component', components.params.component);
+    server.param('componentFile', components.params.componentFile);
 
-    // srv.get('/components', components.index);
-    srv.get('/components/list/:collection', components.list);
-    srv.get('/components/detail/:component(*)', components.detail);
-    srv.get('/components/raw/:componentFile(*)', components.raw);
-    srv.get('/components/preview/:component(*)/embed', components.previewEmbed);
-    srv.get('/components/preview/:component(*)', components.preview);
-    srv.get('/components/highlight/:componentFile(*)', components.highlight);
+    // server.get('/components', components.index);
+    server.get('/components/list/:collection', components.list);
+    server.get('/components/detail/:component(*)', components.detail);
+    server.get('/components/raw/:componentFile(*)', components.raw);
+    server.get('/components/preview/:component(*)/embed', components.previewEmbed);
+    server.get('/components/preview/:component(*)', components.preview);
+    server.get('/components/highlight/:componentFile(*)', components.highlight);
 
     // Favicon
-    srv.get('/favicon.ico', misc.favicon);
+    server.get('/favicon.ico', misc.favicon);
 
     // All other requests are assumed to be page requests
 
-    srv.param('page', pages.params.page);
-    srv.get('/:page(*)', pages.page);
+    server.param('page', pages.params.page);
+    server.get('/:page(*)', pages.page);
 
     // finally the error handler
-    srv.use(misc.error);
+    server.use(misc.error);
 
+    return server;
 
-    return this;
-};
-
-/**
- * Start the server listening to requests.
- *
- * @api public
- */
-
-Server.prototype.listen = function(callback){
-    var port = this.port;
-    callback = callback || function(){};
-    var instance = srv.listen(port, function(){
-        logger.info('Fractal server is now running at http://localhost:%s', port);
-        callback('http://localhost:' + port, instance);
-    });
-    return instance;
-};
-
-/**
- * Stop the server
- *
- * @api public
- */
-
-Server.prototype.close = function(){
-    srv.close();
 };
