@@ -23,9 +23,9 @@ module.exports = Component;
  * Component constructor.
  *
  * - Extract config from config file, if present.
- * - Build component metadata . 
+ * - Build component metadata .
  * - Instantiate and return new component.
- * 
+ *
  * @api private
  */
 
@@ -33,7 +33,7 @@ function Component(entity, files, config, app){
 
     var self                = this;
     var engine              = app.getComponentViewEngine();
-    
+
     this._app               = app;
     this._source            = entity;
     this._files             = files;
@@ -77,9 +77,13 @@ function Component(entity, files, config, app){
         }, null, true);
     });
 
+    this._readMeFiles = _.filter(files, function(file){
+        return file.matches(self._app.get('components:readme'));
+    });
+
     this._nonViewFiles = _.difference(files, this._viewFiles);
 
-    this._nonCoreFiles = _.difference(files, this._viewFiles, this._configFiles);
+    this._nonCoreFiles = _.difference(files, this._viewFiles, this._configFiles, this._readMeFiles);
 
 };
 
@@ -176,7 +180,7 @@ Component.prototype.getVariants = function(){
                         configs.push(variantConf);
                     }
                 }
-            } 
+            }
         });
 
         // if (this.sourceType == 'directory') {
@@ -246,7 +250,7 @@ Component.prototype.renderView = function(context, preview, handle){
 /*
  * Pre-render all variants.
  * Useful for running before .toJSON() to provide a one-hit promise-based rendering of variants.
- * Returns a promise of self. 
+ * Returns a promise of self.
  *
  * @api public
  */
@@ -315,7 +319,7 @@ Component.fromFile = function(file, dir, config, app){
         return _.startsWith(file.name, file.name);
     });
 
-    // check to see if there is some config associated with the file 
+    // check to see if there is some config associated with the file
     var configFile = _.find(files, function(entity){
         return entity.matches(app.get('components:config'), {
             name: file.name
@@ -323,6 +327,6 @@ Component.fromFile = function(file, dir, config, app){
     });
     var componentConfig = configFile ? data.load(configFile.absolutePath) : Promise.resolve({});
     return componentConfig.then(function(componentConfig){
-        return (new Component(file, files, _.defaultsDeep(componentConfig, config), app)).init();    
+        return (new Component(file, files, _.defaultsDeep(componentConfig, config), app)).init();
     });
 };

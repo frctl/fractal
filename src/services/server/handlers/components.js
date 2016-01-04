@@ -126,7 +126,7 @@ handlers.list = function(req, res) {
  */
 
 handlers.detail = function(req, res) {
-    res.render('components/' + req._type);
+    res.render('components/component');
 };
 
 /*
