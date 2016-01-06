@@ -1,6 +1,6 @@
 {
   "name": "@fractal/fractal",
-  "version": "0.1.0-alpha",
+  "version": "0.1.2",
   "description": "An unopinionated UI component library generator.",
   "main": "src/fractal.js",
   "repository": {
@@ -14,7 +14,7 @@
   },
   "homepage": "https://github.com/frctl/fractal",
   "dependencies": {
-    "@fractal/theme-default": "frctl/theme-default",
+    "@fractal/theme-default": "^0.2",
     "bluebird": "^2.10.2",
     "chokidar": "^1.2.0",
     "consolidate": "^0.13.1",
