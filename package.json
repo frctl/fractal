@@ -1,5 +1,5 @@
 {
-  "name": "@fractal/fractal",
+  "name": "@frctl/fractal",
   "version": "0.1.2",
   "description": "An unopinionated UI component library generator.",
   "main": "src/fractal.js",
