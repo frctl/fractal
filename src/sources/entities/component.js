@@ -56,6 +56,7 @@ function Component(entity, files, config, app){
     this.defaultHandle      = config.default || 'default';
     this.viewExt            = engine.ext;
     this.engine             = engine.engine;
+    this.hasMultipleVariants = false;
 
     this.variantDefaults = {
         status:     config.status || app.get('statuses:default'),
@@ -104,6 +105,7 @@ Component.prototype.init = function(){
         self.variants = variants;
         self.default  = _.find(variants, 'handle', self.defaultHandle);
         self.status   = self.getStatuses();
+        self.hasMultipleVariants = self.variants.length > 1;
         return self;
     });
 };

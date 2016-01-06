@@ -106,14 +106,8 @@ handlers.list = function(req, res) {
     var notHidden = req._components.filter('hidden', false);
     switch(req.params.collection){
         case 'all':
-            data.title = 'All components (with variants)';
+            data.title = 'All components';
             data.items = notHidden.flatten().toJSON();
-            data.showVariants = true;
-        break;
-        case 'all-no-variants':
-            data.title = 'All components (no variants)';
-            data.items = notHidden.flatten().toJSON();
-            data.showVariants = false;
         break;
     }
     res.render('components/list', {
