@@ -29,6 +29,7 @@ module.exports = {
 
         if (ext == '.js') {
             try {
+                delete require.cache[require.resolve(filePath)]; // Always fetch a fresh copy
                 var data = Promise.resolve(require(filePath));
             } catch(e) {
                 var data = Promise.reject(e);
@@ -57,7 +58,3 @@ module.exports = {
     }
 
 };
-
-
-            
-                
