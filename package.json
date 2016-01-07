@@ -18,6 +18,7 @@
     "bluebird": "^2.10.2",
     "chalk": "^1.1.1",
     "chokidar": "^1.2.0",
+    "commander": "^2.9.0",
     "consolidate": "^0.13.1",
     "express": "^4.13.1",
     "express-handlebars": "^2.0.1",
@@ -44,5 +45,8 @@
   },
   "engines": {
     "node": ">= 4.0.0"
+  },
+  "scripts": {
+    "server": "node ./bin/fractal.js server"
   }
 }

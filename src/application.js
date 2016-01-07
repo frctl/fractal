@@ -6,11 +6,12 @@ var nconf       = require('nconf');
 var path        = require('path');
 var Promise     = require('bluebird');
 var logger      = require('winston');
+var chalk       = require('chalk');
 var _           = require('lodash');
 var chokidar    = require('chokidar');
 
 var server      = require('./services/server/server');
-var builder     = require('./services/builder/builder');
+var build       = require('./services/builder/builder');
 var Components  = require('./sources/components');
 var Pages       = require('./sources/pages');
 var data        = require('./data');
@@ -98,28 +99,36 @@ app.disabled = function(setting){
 };
 
 /*
- * Run the application! Yay!
+ * Run the app.
  *
  * @api public
  */
 
-app.run = function(){
-
-    logger.level = this.get('log:level');
-
+app.run = function(command){
     this.server = server(this);
-
-    if (this.enabled('run:build')) {
-        logger.info('Running build...');
-        builder(this);
+    switch (command) {
+        case 'build':
+            console.log(chalk.green('Running Fractal build task...'));
+            build(this);
+            return;
+            break;
+        case 'start':
+            this.startServer();
+            console.log(chalk.green('Fractal server started on port ' + app.get('server:port')));
+            return;
+            break;
+        default:
+            logger.error('Unreconised command name.');
+            process.exit(0);
+            return;
     }
-
-    if (this.enabled('run:server') || this.disabled('run:build')) {
-        this.startServer();
-    }
-
-    return this;
 };
+
+/*
+ * Start the server, if it isn't already running
+ *
+ * @api protected
+ */
 
 app.startServer = function(callback){
     var callback = callback || function(){};
@@ -133,6 +142,12 @@ app.startServer = function(callback){
         callback();
     }
 };
+
+/*
+ * Stop the server, if it is running
+ *
+ * @api protected
+ */
 
 app.stopServer = function(callback){
     var callback = callback || function(){};
@@ -255,18 +270,7 @@ app.getData = function(path, defaults){
  */
 
 app.defaultConfig = function(){
-    nconf.argv({
-        "s": {
-            alias: ['serve','run:server'],
-            describe: 'Run the server',
-            default: false
-        },
-        "b": {
-            alias: ['build','run:build'],
-            describe: 'Run the build task',
-            default: false
-        }
-    }).env().file({
+    nconf.file({
         file: path.join(__dirname + '/../config.json')
     });
 

@@ -5,21 +5,7 @@
 var app = require("./application");
 var data = require("./data");
 
-/**
- * Export boot() function.
- */
-
-exports = module.exports = fractal;
-
-function fractal(){
+module.exports = (function(){
     app.init();
     return app;
-};
-
-fractal.data = {
-    load: function(path){
-        return {
-            foo: 'bar'
-        }
-    }
-};
+})();
