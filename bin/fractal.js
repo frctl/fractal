@@ -36,12 +36,36 @@ var command = null;
 
 input
     .version(cliPackage.version)
-    .arguments('start')
+    .option('-l, --level <level>', 'The log level to use', /^(error|warn|info|verbose|debug|silly)$/i, 'warn');
+
+input
+    .command('start')
     .description('Start the fractal server.')
+    .option('-p, --port <port>', 'The port for the server to listen on')
+    .action(function(cmd) {
+        command = cmd;
+    });
+
+input
+    .command('build')
+    .description('Generate a static version of your component library.')
     .action(function (cmd) {
-         command = 'start';
-     })
-    .parse(process.argv);
+        command = cmd;
+    });
+
+input
+    .command('init')
+    .description('Initialise a new Fractal project.')
+    .action(function (cmd) {
+        command = cmd;
+    });
+
+input.parse(process.argv);
+
+if (!command) {
+    input.help();
+    process.exit(1);
+}
 
 /*
  * Run tings proper.
@@ -76,7 +100,11 @@ function run(env){
     require(env.configPath);
     var app = require(env.modulePath);
 
-    logger.level = app.get('log:level');
+    if (input.level) {
+        app.set('log:level', input.level);
+        logger.level = app.get('log:level');
+    }
+
     logger.info('Using config file %s', env.configPath);
 
     app.run(command);

@@ -99,29 +99,53 @@ app.disabled = function(setting){
 };
 
 /*
- * Run the app.
+ * Determine which service to run.
  *
  * @api public
  */
 
 app.run = function(command){
     this.server = server(this);
-    switch (command) {
-        case 'build':
-            console.log(chalk.green('Running Fractal build task...'));
-            build(this);
-            return;
-            break;
+    switch (command._name) {
         case 'start':
-            this.startServer();
-            console.log(chalk.green('Fractal server started on port ' + app.get('server:port')));
-            return;
+            this.runServerService(command);
+            break;
+        case 'build':
+            this.runBuildService(command);
+            break;
+        case 'init':
+            console.log(chalk.magenta('Fractal `init` command is not yet implemented.'));
+            process.exit(0);
             break;
         default:
-            logger.error('Unreconised command name.');
-            process.exit(0);
-            return;
+            logger.error('Unrecognised command name.');
+            process.exit(1);
+            break;
     }
+};
+
+/*
+ * Run the server.
+ *
+ * @api private
+ */
+
+app.runServerService = function(command){
+    if (command.port) {
+        this.set('server:port', command.port);
+    }
+    this.startServer();
+};
+
+/*
+ * Run the build service to export a static version of the site.
+ *
+ * @api private
+ */
+
+app.runBuildService= function(command){
+    console.log(chalk.green('Running Fractal build task...'));
+    build(this);
 };
 
 /*
@@ -135,7 +159,7 @@ app.startServer = function(callback){
     var port = this.get('server:port') || 3000;
     if (!this._httpServer) {
         this._httpServer = this.server.listen(port, function(){
-            logger.info('Fractal server is now running at http://localhost:%s', port);
+            console.log(chalk.green('Fractal server is now running at http://localhost:' + port + ' - use ^c to exit.'));
             callback();
         });
     } else {

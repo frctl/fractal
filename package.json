@@ -47,6 +47,8 @@
     "node": ">= 4.0.0"
   },
   "scripts": {
-    "server": "node ./bin/fractal.js server"
+    "start": "node ./bin/fractal.js start",
+    "build": "node ./bin/fractal.js build",
+    "init": "node ./bin/fractal.js init"
   }
 }
