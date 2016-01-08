@@ -12,6 +12,7 @@ var chokidar    = require('chokidar');
 
 var server      = require('./services/server/server');
 var build       = require('./services/builder/builder');
+var generate    = require('./services/generator/generator');
 var Components  = require('./sources/components');
 var Pages       = require('./sources/pages');
 var data        = require('./data');
@@ -106,12 +107,18 @@ app.disabled = function(setting){
 
 app.run = function(command){
     this.server = server(this);
-    switch (command._name) {
+    var commandNameParts = command._name.split(':');
+    var commandName = commandNameParts[0];
+    var subCommandName = commandNameParts[1] || null;
+    switch (commandName) {
         case 'start':
             this.runServerService(command);
             break;
         case 'build':
             this.runBuildService(command);
+            break;
+        case 'create':
+            this.runGeneratorService(subCommandName, command);
             break;
         case 'init':
             console.log(chalk.magenta('Fractal `init` command is not yet implemented.'));
@@ -143,9 +150,20 @@ app.runServerService = function(command){
  * @api private
  */
 
-app.runBuildService= function(command){
+app.runBuildService = function(command){
     console.log(chalk.green('Running Fractal build task...'));
     build(this);
+};
+
+/*
+ * Run the generator service to create a new entity.
+ *
+ * @api private
+ */
+
+app.runGeneratorService = function(subCommandName, command){
+    console.dir(command);
+    generate(subCommandName, command.namedArgs.path, {}, this);
 };
 
 /*

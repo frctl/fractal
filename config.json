@@ -21,6 +21,11 @@
         "name": "@frctl/theme-default",
         "config": null
     },
+    "generator": {
+        "config": {
+            "ext": ".js"
+        }
+    },
     "components": {
         "path": "src/components",
         "config": "{{name}}\\.config\\.(js|json|yml|yaml)",

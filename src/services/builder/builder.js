@@ -17,7 +17,7 @@ var rimraf      = Promise.promisify(require('rimraf'));
 var request     = require('./supertest');
 
 /**
- * Export the builder constructor
+ * Export the builder
  */
 
 module.exports = function(app){

@@ -38,7 +38,8 @@
     "semver": "^5.1.0",
     "supertest": "^1.1.0",
     "swig": "^1.4.2",
-    "winston": "^1.1.0"
+    "winston": "^1.1.0",
+    "yargs": "^3.31.0"
   },
   "bin": {
     "fractal": "./bin/fractal.js"
