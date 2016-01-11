@@ -1,6 +1,6 @@
 {
   "name": "@frctl/fractal",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "An unopinionated UI component library generator.",
   "main": "src/fractal.js",
   "repository": {
