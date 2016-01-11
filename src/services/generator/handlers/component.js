@@ -6,7 +6,6 @@ var path        = require('path');
 
 var ExistsError = require('../../../errors/exists');
 
-
 module.exports = ComponentGenerator;
 
 /*
@@ -18,7 +17,6 @@ module.exports = ComponentGenerator;
 function ComponentGenerator(app){
     this.app = app;
 };
-
 
 /*
  * Run the generator.
@@ -33,10 +31,8 @@ ComponentGenerator.prototype.generate = function(relPath, opts){
         if (components.exists(relPath)) {
             throw new ExistsError('The component at ' + relPath +' already exists.');
         }
-        return mkdirp(fullPath).then(function(){
-            return components
-        });
+        return components;
     }).then(function(components){
-        return components.create(relPath)
+        return components.create(relPath, opts);
     });
 };

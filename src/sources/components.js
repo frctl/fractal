@@ -208,8 +208,7 @@ ComponentSource.prototype.filter = function(key, value){
 
 ComponentSource.prototype.exists = function(str){
     try {
-        var component = this.resolve(str);
-        return component;
+        return this.resolve(str);
     } catch(e){
         return false;
     }
@@ -222,25 +221,29 @@ ComponentSource.prototype.exists = function(str){
  */
 
 ComponentSource.prototype.create = function(relPath, opts){
-    
-    var fullPath = path.join(this.app.get('components:path'), relPath);
-    var pathParts = path.parse(fullPath);
-    var title = utils.titlize(pathParts.name);
 
-    var config = {
-        handle: pathParts.name,
-        label: title
-    };
+    var self = this;
+    var fullPath = path.join(self.app.get('components:path'), relPath);
+    return mkdirp(fullPath).then(function(){
 
-    var templatePath = pathParts.name + this.app.getComponentViewEngine().ext;
-    var configPath = this.app.get('generator:config:name').replace('{{name}}', pathParts.name);
+        var pathParts = path.parse(fullPath);
+        var title = utils.titlize(pathParts.name);
 
-    var writes = [
-        fs.writeFileAsync(path.join(fullPath, templatePath), '<p>' + title + ' component</p>'),
-        data.write(path.join(fullPath, configPath), config)
-    ];
+        var config = {
+            handle: pathParts.name,
+            label: title
+        };
 
-    return Promise.all(writes);
+        var templatePath = pathParts.name + self.app.getComponentViewEngine().ext;
+        var configPath = self.app.get('generator:config:name').replace('{{name}}', pathParts.name);
+
+        var writes = [
+            fs.writeFileAsync(path.join(fullPath, templatePath), '<p>' + title + ' component</p>'),
+            data.write(path.join(fullPath, configPath), config)
+        ];
+
+        return Promise.all(writes);
+    });
 };
 
 /*

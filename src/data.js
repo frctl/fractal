@@ -59,27 +59,30 @@ module.exports = {
 
     write: function(filePath, data) {
         var pathInfo = path.parse(path.resolve(filePath));
-        var ext = pathInfo.ext.toLowerCase();
-        var content = null;
+        var format = pathInfo.ext.toLowerCase().replace(/^\./, '');
+        return fs.writeFileAsync(filePath, this.stringify(data, format));
+    },
 
-        switch(ext) {
-            case ".js":
-                content = 'module.exports = ' + JSON.stringify(data, null, 4) + ';';
+    stringify: function(data, format){
+        var str = null;
+        var format = format.toLowerCase();
+        switch(format) {
+            case "js":
+                str = 'module.exports = ' + JSON.stringify(data, null, 4) + ';';
                 break;
-            case ".json":
-                content = JSON.stringify(data, null, 4);
+            case "json":
+                str = JSON.stringify(data, null, 4);
                 break;
             break;
-            case ".yml":
-            case ".yaml":
-                content = yaml.safeDump(data);
+            case "yml":
+            case "yaml":
+                str = yaml.safeDump(data);
                 break;
             default:
                 throw new Error('Unknown data file extension: ' + ext);
                 return;
         }
-
-        return fs.writeFileAsync(filePath, content);
+        return str;
     }
 
 };
