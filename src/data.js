@@ -55,6 +55,31 @@ module.exports = {
             return _.defaultsDeep(data, defaults);
         });
 
+    },
+
+    write: function(filePath, data) {
+        var pathInfo = path.parse(path.resolve(filePath));
+        var ext = pathInfo.ext.toLowerCase();
+        var content = null;
+
+        switch(ext) {
+            case ".js":
+                content = 'module.exports = ' + JSON.stringify(data, null, 4) + ';';
+                break;
+            case ".json":
+                content = JSON.stringify(data, null, 4);
+                break;
+            break;
+            case ".yml":
+            case ".yaml":
+                content = yaml.safeDump(data);
+                break;
+            default:
+                throw new Error('Unknown data file extension: ' + ext);
+                return;
+        }
+
+        return fs.writeFileAsync(filePath, content);
     }
 
 };

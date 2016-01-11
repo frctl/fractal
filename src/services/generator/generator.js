@@ -2,38 +2,33 @@
  * Module dependencies.
  */
 
-var logger      = require('winston');
-var Promise     = require('bluebird');
-var chalk       = require('chalk');
 var path        = require('path');
-var fs          = require('fs');
-var _           = require('lodash');
-var mkdirp      = Promise.promisify(require('mkdirp'));
-var ncp         = Promise.promisify(require('ncp'));
-var rimraf      = Promise.promisify(require('rimraf'));
+var logger      = require('winston');
 
 /**
  * Export the generator function
  */
 
-module.exports = function(type, relPath, opts, app){
-    var opts = opts || {};
-    switch (type) {
-        case 'component':
-            var rootPath = app.get('components:path');
-            break;
-        case 'page':
-            var rootPath = app.get('pages:path');
-            break;
-        default:
-            logger.error("Entity type '%s' is not recognised. Try 'page' or 'component' instead.", type);
-            process.exit(1);
-            return;
+module.exports = function(argv, app){
+
+    var type = argv._[1];
+    var relPath = argv._[2].trim('/');
+
+    try {
+        var Handler = require('./handlers/' + type);
+    } catch(e) {
+        logger.debug(e.message);
+        logger.error("Entity type '%s' is not recognised. Try 'page' or 'component' instead.", type);
+        process.exit(1);
+        return;
     }
 
-    var entityPath = path.join(rootPath, relPath);
+    var generator = new Handler(app);
+    generator.generate(relPath, argv).catch(function(e){
+        logger.error(e.message);
+        process.exit(1);
+    }).finally(function(){
+        process.exit(0);
+    });
 
-    console.log(entityPath);
-
-    process.exit(0);
 };

@@ -120,7 +120,7 @@ app.run = function(argv){
             this.runGeneratorService(argv);
             break;
         case 'init':
-            console.log(chalk.magenta('Fractal `init` command is not yet implemented.'));
+            console.log(chalk.magenta('The `init` command is not yet implemented.'));
             process.exit(0);
             break;
         default:

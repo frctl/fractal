@@ -1,3 +1,5 @@
+#! /usr/bin/env node
+
 'use strict';
 
 /*
@@ -164,7 +166,7 @@ checkCommandCount(yargs, argv, 1);
 function checkCommandCount(yargs, argv, numRequired) {
     if (argv._.length < numRequired) {
         yargs.showHelp();
-        process.exit(1);
+        process.exit(0);
         return false;
     }
     return true;

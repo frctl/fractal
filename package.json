@@ -42,14 +42,15 @@
     "yargs": "^3.31.0"
   },
   "bin": {
-    "fractal": "./bin/fractal.js"
+    "fractal": "./bin/fractal"
   },
   "engines": {
     "node": ">= 4.0.0"
   },
   "scripts": {
-    "start": "node ./bin/fractal.js start",
-    "build": "node ./bin/fractal.js build",
-    "init": "node ./bin/fractal.js init"
+    "start": "node ./bin/fractal start",
+    "build": "node ./bin/fractal build",
+    "init": "node ./bin/fractal init",
+    "create": "node ./bin/fractal create"
   }
 }

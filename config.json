@@ -23,7 +23,7 @@
     },
     "generator": {
         "config": {
-            "ext": ".js"
+            "name": "{{name}}.config.js"
         }
     },
     "components": {
