@@ -105,27 +105,26 @@ app.disabled = function(setting){
  * @api public
  */
 
-app.run = function(command){
+app.run = function(argv){
+
     this.server = server(this);
-    var commandNameParts = command._name.split(':');
-    var commandName = commandNameParts[0];
-    var subCommandName = commandNameParts[1] || null;
-    switch (commandName) {
+
+    switch (argv._[0]) {
         case 'start':
-            this.runServerService(command);
+            this.runServerService(argv);
             break;
         case 'build':
-            this.runBuildService(command);
+            this.runBuildService(argv);
             break;
         case 'create':
-            this.runGeneratorService(subCommandName, command);
+            this.runGeneratorService(argv);
             break;
         case 'init':
             console.log(chalk.magenta('Fractal `init` command is not yet implemented.'));
             process.exit(0);
             break;
         default:
-            logger.error('Unrecognised command name.');
+            logger.error('Unrecognised command.');
             process.exit(1);
             break;
     }
@@ -137,9 +136,9 @@ app.run = function(command){
  * @api private
  */
 
-app.runServerService = function(command){
-    if (command.port) {
-        this.set('server:port', command.port);
+app.runServerService = function(argv){
+    if (argv.port) {
+        this.set('server:port', argv.port);
     }
     this.startServer();
 };
@@ -150,8 +149,8 @@ app.runServerService = function(command){
  * @api private
  */
 
-app.runBuildService = function(command){
-    console.log(chalk.green('Running Fractal build task...'));
+app.runBuildService = function(argv){
+    console.log(chalk.green('Running build task...'));
     build(this);
 };
 
@@ -161,9 +160,8 @@ app.runBuildService = function(command){
  * @api private
  */
 
-app.runGeneratorService = function(subCommandName, command){
-    console.dir(command);
-    generate(subCommandName, command.namedArgs.path, {}, this);
+app.runGeneratorService = function(argv){
+    generate(argv, this);
 };
 
 /*
