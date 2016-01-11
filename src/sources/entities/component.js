@@ -58,12 +58,18 @@ function Component(entity, files, config, app){
     this.engine             = engine.engine;
     this.hasMultipleVariants = false;
 
+    if (this.sourceType == 'directory') {
+        var variantViewBase = entity.name;
+    } else {
+        var variantViewBase = entity.fsName;
+    }
+
     this.variantDefaults = {
         status:     config.status || app.get('statuses:default'),
         context:    config.context || {},
         preview:    config.preview || app.get('components:preview:layout'),
         display:    config.display || {},
-        view:       config.view || (entity.fsName + this.viewExt)
+        view:       config.view || (variantViewBase + this.viewExt)
     };
 
     this._viewFiles = _.filter(files, function(file){
