@@ -16,6 +16,7 @@ var mixin       = require('./source');
 var data        = require('../data');
 var NotFoundError  = require('../errors/notfound')
 var utils       = require('../utils');
+var app         = require('../application');
 
 /*
  * Export the component source.
@@ -29,9 +30,8 @@ module.exports = ComponentSource;
  * @api private
  */
 
-function ComponentSource(components, app){
+function ComponentSource(components){
     this.components = components;
-    this.app = app;
 };
 
 mixin.call(ComponentSource.prototype);
@@ -135,7 +135,7 @@ ComponentSource.prototype.flatten = function(){
             return item.type === 'group' ? list(item.children) : item;
         }));
     }
-    return new ComponentSource(list(this.components), this.app).init();
+    return new ComponentSource(list(this.components)).init();
 };
 
 /*
@@ -170,7 +170,7 @@ ComponentSource.prototype.flattenWithGroups = function(){
     }
     group(this.components, null);
     // grouped = _.sortByOrder(grouped, ['order', 'type', 'label'], ['asc','asc','asc']);
-    return new ComponentSource(grouped, this.app).init();
+    return new ComponentSource(grouped).init();
 };
 
 /*
@@ -191,13 +191,13 @@ ComponentSource.prototype.filter = function(key, value){
                 // group
                 var children = filter(item.children);
                 if (children.length) {
-                    ret.push(new Group(item._dir, item._config, children, item._app));
+                    ret.push(new Group(item._dir, item._config, children));
                 }
             }
         });
         return _.compact(ret);
     }
-    return new ComponentSource(filter(this.components), this.app).init();
+    return new ComponentSource(filter(this.components)).init();
 };
 
 /*
@@ -223,7 +223,7 @@ ComponentSource.prototype.exists = function(str){
 ComponentSource.prototype.create = function(relPath, opts){
 
     var self = this;
-    var fullPath = path.join(self.app.get('components:path'), relPath);
+    var fullPath = path.join(app.get('components:path'), relPath);
     return mkdirp(fullPath).then(function(){
 
         var pathParts = path.parse(fullPath);
@@ -234,8 +234,8 @@ ComponentSource.prototype.create = function(relPath, opts){
             label: title
         };
 
-        var templatePath = pathParts.name + self.app.getComponentViewEngine().ext;
-        var configPath = self.app.get('generator:config:name').replace('{{name}}', pathParts.name);
+        var templatePath = pathParts.name + app.get('components:engine').ext;
+        var configPath = app.get('generator:config:name').replace('{{name}}', pathParts.name);
 
         var writes = [
             fs.writeFileAsync(path.join(fullPath, templatePath), '<p>' + title + ' component</p>'),
@@ -274,18 +274,19 @@ ComponentSource.prototype.toString = function(){
  * @api public
  */
 
-ComponentSource.build = function(app){
+ComponentSource.build = function(){
+    
     return Directory.fromPath(app.get('components:path')).then(function(dir){
         var defaults = {
             preview: app.get('components:preview:layout'),
             context: app.get('components:context')
         };
-        return ComponentSource.buildComponentTree(dir, defaults, app).then(function(tree){
-            return new ComponentSource(tree, app).init();
+        return ComponentSource.buildComponentTree(dir, defaults).then(function(tree){
+            return new ComponentSource(tree).init();
         });
     }).catch(function(e){
         logger.warn('Could not create component tree - ' + e.message);
-        return new ComponentSource([], app).init();
+        return new ComponentSource([]).init();
     });
 };
 
@@ -295,9 +296,9 @@ ComponentSource.build = function(app){
  * @api public
  */
 
-ComponentSource.buildComponentTree = function(dir, cascadeConfig, app){
+ComponentSource.buildComponentTree = function(dir, cascadeConfig){
 
-    var engine          = app.getComponentViewEngine();
+    var engine          = app.get('components:engine');
     var ret             = [];
     var files           = dir.getFiles();
     var directories     = dir.getDirectories();
@@ -320,7 +321,7 @@ ComponentSource.buildComponentTree = function(dir, cascadeConfig, app){
             // Or is there a file within this directory that has the same name as the directory?
             // If so it's a component directory.
             try {
-                return Component.fromDirectory(dir, mergedConfig, app);
+                return Component.fromDirectory(dir, mergedConfig);
             } catch(e){
                 logger.warn('Component could not be created from directory ' + dir.path + ': ' + e.message);
                 return null;
@@ -333,15 +334,15 @@ ComponentSource.buildComponentTree = function(dir, cascadeConfig, app){
                     ext: engine.ext
                 });
                 if (matches) {
-                    ret.push(Component.fromFile(file, dir, mergedConfig, app));
+                    ret.push(Component.fromFile(file, dir, mergedConfig));
                 }
             });
         }
 
         function makeGroupPromise(directory){
-            return ComponentSource.buildComponentTree(directory, mergedConfig, app).then(function(subtree){
+            return ComponentSource.buildComponentTree(directory, mergedConfig).then(function(subtree){
                 if (_.isArray(subtree)) {
-                    return Group.fromDirectory(directory, subtree, app);
+                    return Group.fromDirectory(directory, subtree);
                 }
                 return subtree;
             });

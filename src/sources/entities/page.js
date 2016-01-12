@@ -11,6 +11,7 @@ var matter      = require('gray-matter');
 var mixin       = require('./entity');
 var utils       = require('../../utils');
 var renderer    = require('../../handlers/pages');
+var app         = require('../../application');
 
 /*
  * Export the page.
@@ -24,7 +25,7 @@ module.exports = Page;
  * @api private
  */
 
-function Page(file, dir, config, app){
+function Page(file, dir, config){
 
     var self = this;
 
@@ -99,7 +100,7 @@ Page.prototype.renderContent = function(context){
  * @api public
  */
 
-Page.fromFile = function(file, dir, app){
+Page.fromFile = function(file, dir){
     var self = this;
     // check to see if there is some config associated with the file
     var configFile = _.find(dir.getFiles(), function(entity){

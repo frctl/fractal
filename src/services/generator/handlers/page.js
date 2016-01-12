@@ -6,36 +6,22 @@ var path        = require('path');
 var chalk       = require('chalk');
 
 var ExistsError = require('../../../errors/exists');
+var app         = require('../../../application');
 
-module.exports = PageGenerator;
+module.exports = {
 
-/*
- * PageGenerator constructor.
- *
- * @api private
- */
+    generate: function(relPath, opts){
+        var fullPath = path.join(app.get('pages:path'), relPath);
+        return app.getPages().then(function(pages){
+            if (pages.exists(relPath)) {
+                throw new ExistsError('The page at ' + relPath +' already exists.');
+            }
+            return pages;
+        }).then(function(pages){
+            return pages.create(relPath, opts);
+        }).then(function(){
+            console.log(chalk.green("Page created."));
+        });
+    }
 
-function PageGenerator(app){
-    this.app = app;
-};
-
-/*
- * Run the generator.
- *
- * @api public
- */
-
-PageGenerator.prototype.generate = function(relPath, opts){
-    var self = this;
-    var fullPath = path.join(self.app.get('pages:path'), relPath);
-    return this.app.getPages().then(function(pages){
-        if (pages.exists(relPath)) {
-            throw new ExistsError('The page at ' + relPath +' already exists.');
-        }
-        return pages;
-    }).then(function(pages){
-        return pages.create(relPath, opts);
-    }).then(function(){
-        console.log(chalk.green("Page created."));
-    });
 };

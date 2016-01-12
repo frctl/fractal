@@ -8,6 +8,7 @@ var _           = require('lodash');
 var mixin       = require('./entity');
 var utils       = require('../../utils');
 var data       = require('../../data');
+var app         = require('../../application');
 
 /*
  * Export the group.
@@ -21,7 +22,7 @@ module.exports = Group;
  * @api private
  */
 
-function Group(dir, config, children, app){
+function Group(dir, config, children){
     this.type       = 'group';
     this._dir       = dir;
     this._app       = app;
@@ -91,7 +92,7 @@ Group.prototype.toJSON = function(){
  * @api public
  */
 
-Group.fromDirectory = function(dir, children, app){
+Group.fromDirectory = function(dir, children){
     var configFile = _.find(dir.getFiles(), function(entity){
         return entity.matches(app.get('components:config'), {
             name: dir.name
@@ -99,11 +100,11 @@ Group.fromDirectory = function(dir, children, app){
     });
     var groupConfig = configFile ? data.load(configFile.absolutePath) : Promise.resolve({});
     return groupConfig.then(function(groupConfig){
-        return new Group(dir, groupConfig, children, app);
+        return new Group(dir, groupConfig, children);
     });
 };
 
 
-Group.fromConfig = function(config, children, app){
-    return new Group({}, config, children, app);
+Group.fromConfig = function(config, children){
+    return new Group({}, config, children);
 };

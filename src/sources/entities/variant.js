@@ -10,6 +10,7 @@ var fs          = require('fs');
 var mixin       = require('./entity');
 var utils       = require('../../utils');
 var md          = require('../../markdown');
+var app         = require('../../application');
 
 /*
  * Export the variant.
@@ -19,7 +20,7 @@ module.exports = Variant;
 
 /*
  * Variant constructor.
- * 
+ *
  * @api private
  */
 
@@ -30,9 +31,9 @@ function Variant(handle, config, parent){
     }
 
     var self                = this;
-    var app                 = this._app = parent._app;
     var context             = null;
 
+    this._app               = app;
     this._config            = config;
     this._files             = config.files || [];
     this._component         = parent;
@@ -57,11 +58,11 @@ function Variant(handle, config, parent){
     this.engine             = parent.engine;
 
     if (parent.sourceType == 'directory') {
-        this.fsViewPath = path.resolve(path.join(app.get('components:path'), parent._source.path, this.view)); 
+        this.fsViewPath = path.resolve(path.join(app.get('components:path'), parent._source.path, this.view));
     } else {
-        this.fsViewPath = path.resolve(path.join(app.get('components:path'), parent._source.relativeDir, this.view)); 
+        this.fsViewPath = path.resolve(path.join(app.get('components:path'), parent._source.relativeDir, this.view));
     }
-    
+
     this.contextString      = null;
     this.rendered           = null;
     this.renderedInLayout   = null;
@@ -105,9 +106,9 @@ Variant.prototype.renderView = function(context, preview){
     var self = this;
     var context = resolveContextReferences(context || self.context, this._app);
     return context.then(function(context){
-        var engine = self._app.getComponentViewEngine();
+        var engine = self._app.get('components:engine');
         try {
-            var renderer = require(engine.handler);    
+            var renderer = require(engine.handler);
         } catch (e) {
             var renderer = require(path.join('../../', engine.handler));
         }

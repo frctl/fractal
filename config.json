@@ -19,7 +19,8 @@
     },
     "theme": {
         "name": "@frctl/theme-default",
-        "config": null
+        "config": null,
+        "paths": {}
     },
     "generator": {
         "config": {
