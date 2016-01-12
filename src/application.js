@@ -13,6 +13,7 @@ var chokidar    = require('chokidar');
 var server      = require('./services/server/server');
 var build       = require('./services/builder/builder');
 var generate    = require('./services/generator/generator');
+var init        = require('./services/init');
 var Components  = require('./sources/components');
 var Pages       = require('./sources/pages');
 var data        = require('./data');
@@ -114,14 +115,13 @@ app.run = function(argv){
             this.runServerService(argv);
             break;
         case 'build':
-            this.runBuildService(argv);
+            build(this);
             break;
         case 'create':
-            this.runGeneratorService(argv);
+            generate(argv, this);
             break;
         case 'init':
-            console.log(chalk.magenta('The `init` command is not yet implemented.'));
-            process.exit(0);
+            init(argv, this);
             break;
         default:
             logger.error('Unrecognised command.');
@@ -141,27 +141,6 @@ app.runServerService = function(argv){
         this.set('server:port', argv.port);
     }
     this.startServer();
-};
-
-/*
- * Run the build service to export a static version of the site.
- *
- * @api private
- */
-
-app.runBuildService = function(argv){
-    console.log(chalk.green('Running build task...'));
-    build(this);
-};
-
-/*
- * Run the generator service to create a new entity.
- *
- * @api private
- */
-
-app.runGeneratorService = function(argv){
-    generate(argv, this);
 };
 
 /*

@@ -20,6 +20,8 @@ var argv, levelOpt;
  * Define global options
  */
 
+logger.cli();
+
 yargs.usage('\nUsage: $0 <command> [options]');
 
 yargs.version(cliPackage.version);
@@ -107,16 +109,6 @@ yargs.command('create', 'Create a new page or component. See command help for de
 });
 
 /*
- * Configure liftoff to enable us to find the local Fractal module.
- */
-
-var Fractal = new Liftoff({
-    processTitle: 'fractal',
-    moduleName: '@frctl/fractal',
-    configName: 'fractal',
-});
-
-/*
  * Run tings proper.
  */
 
@@ -124,42 +116,56 @@ argv = addShared(yargs).argv;
 
 checkCommandCount(yargs, argv, 1);
 
- Fractal.launch({
-    argv: argv
- }, run);
+if (argv._[0] === 'init') {
 
- function run(env){
+    // init command does not try to load local config file
 
-    logger.cli();
+    var app = require('../src/fractal.js');
+    run(app);
+} else {
 
-    if (!env.modulePath) {
-        logger.error("Local fractal module not found in %s \n\t Try running: npm install @frctl/fractal", env.cwd);
-        process.exit(1);
-    }
+    // everything else uses Liftoff to load local config file and modules
 
-    if (!env.configPath) {
-        logger.error('No fractal.js file found.');
-        process.exit(1);
-    }
+    var Fractal = new Liftoff({
+        processTitle: 'fractal',
+        moduleName: '@frctl/fractal',
+        configName: 'fractal',
+    });
 
-    if (semver.gt(cliPackage.version, env.modulePackage.version)) {
-        logger.warn(
-            "Fractal version mismatch:\n\t Global fractal is %s\n\t Local fractal is %s",
-            cliPackage.version,
-            env.modulePackage.version
-        );
-    }
+    Fractal.launch({
+       argv: argv
+   }, function(env){
 
-    require(env.configPath);
-    var app = require(env.modulePath);
+       if (!env.configPath) {
+           logger.error('No fractal.js file found. Try running `fractal init` to get started.');
+           process.exit(1);
+       }
+       if (!env.modulePath) {
+           logger.error("Local fractal module not found in %s \n\t Try running `npm install @frctl/fractal`", env.cwd);
+           process.exit(1);
+       }
+       if (semver.gt(cliPackage.version, env.modulePackage.version)) {
+           logger.warn(
+               "Fractal version mismatch:\n\t Global fractal is %s\n\t Local fractal is %s",
+               cliPackage.version,
+               env.modulePackage.version
+           );
+       }
 
+       require(env.configPath);
+       var app = require(env.modulePath);
+       run(app, env);
+   });
+}
+
+function run(app, env){
     if (argv.level) {
         app.set('log:level', argv.level);
         logger.level = app.get('log:level');
     }
-
-    logger.info('Using config file %s', env.configPath);
-
+    if (env) {
+        logger.info('Using config file %s', env.configPath);
+    }
     app.run(argv);
 }
 

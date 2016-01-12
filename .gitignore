@@ -1,5 +1,6 @@
 node_modules
 npm-debug.log
 fractal.js
+!src/fractal.js
 example/*
 build/*

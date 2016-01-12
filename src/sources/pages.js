@@ -257,7 +257,10 @@ PageSource.prototype.create = function(relPath, opts){
         var strConfig = '---\n' + data.stringify(config, 'yaml') + '---\n';
         var content = strConfig + '# ' + config.label + ' page';
 
-        console.log(content);
+        var pagePath = path.join(fullPath,self.app.get('generator:pages:name').replace('{{name}}', pathParts.name));
+
+        console.log(pagePath);
+        // return fs.writeFileAsync(pagePath, content);
     });
 
     // var templatePath = pathParts.name + this.app.getComponentViewEngine().ext;

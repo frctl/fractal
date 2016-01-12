@@ -4,23 +4,23 @@
 
 var logger      = require('winston');
 var os          = require('os');
-// var request     = require('request-promise');
 var Promise     = require('bluebird');
 var chalk       = require('chalk');
 var path        = require('path');
 var fs          = require('fs');
+var request     = require('./supertest');
 var _           = require('lodash');
 var mkdirp      = Promise.promisify(require('mkdirp'));
 var ncp         = Promise.promisify(require('ncp'));
 var rimraf      = Promise.promisify(require('rimraf'));
-
-var request     = require('./supertest');
 
 /**
  * Export the builder
  */
 
 module.exports = function(app){
+
+    console.log(chalk.green('Running build task...'));
 
     if (!app.get('build:dest')) {
         logger.error('You need to specify a build destination in your configuration.');
