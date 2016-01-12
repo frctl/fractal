@@ -7,7 +7,7 @@ var _           = require('lodash');
 
 var mixin       = require('./entity');
 var utils       = require('../../utils');
-var data       = require('../../data');
+var data        = require('../../data');
 var app         = require('../../application');
 
 /*
@@ -25,7 +25,6 @@ module.exports = Group;
 function Group(dir, config, children){
     this.type       = 'group';
     this._dir       = dir;
-    this._app       = app;
     this._config    = config;
     this.handle     = dir.name || config.handle;
     this.label      = config.label || utils.titlize(this.handle);

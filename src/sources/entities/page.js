@@ -29,7 +29,6 @@ function Page(file, dir, config){
 
     var self = this;
 
-    this._app           = app;
     this._source        = file;
     this._dir           = dir;
     this._config        = config;
@@ -72,7 +71,7 @@ Page.prototype.init = function(){
     this._config        = _.defaultsDeep(this._config, parsed.data || {});
     this.label          = this._config.label || utils.titlize(this._source.name);
     if (this.label.toLowerCase() === 'index') {
-        this.label = this._app.get('pages:indexLabel');
+        this.label = app.get('pages:indexLabel');
         this.title = this._config.title || utils.titlize(this._source.depth > 1 ? this._dir.name : this.label);
     } else {
         this.title = this._config.title || this.label;
@@ -88,7 +87,7 @@ Page.prototype.init = function(){
 
 Page.prototype.renderContent = function(context){
     var self = this;
-    return renderer.render(this, context || {}, this._app).then(function(content){
+    return renderer.render(this, context || {}, app).then(function(content){
         self.content = content;
         return content;
     });

@@ -35,7 +35,6 @@ function Component(entity, files, config){
     var self                = this;
     var engine              = app.get('components:engine');
 
-    this._app               = app;
     this._source            = entity;
     this._files             = files;
     this._config            = _.cloneDeep(config);
@@ -86,7 +85,7 @@ function Component(entity, files, config){
     });
 
     this._readMeFiles = _.filter(files, function(file){
-        return file.matches(self._app.get('components:readme'));
+        return file.matches(app.get('components:readme'));
     });
 
     this._nonViewFiles = _.difference(files, this._viewFiles);
@@ -130,7 +129,7 @@ Component.prototype.getVariants = function(){
     }
     var self = this;
     var variants = [];
-    var splitter = self._app.get('components:variantSplitter');
+    var splitter = app.get('components:variantSplitter');
     var configs = _.map(this._config.variants || [], function(config){
         if (!_.isUndefined(config.handle)) {
             return makeVariantConfig(config.handle, config).then(function(conf){
@@ -217,7 +216,7 @@ Component.prototype.getVariants = function(){
     function makeVariantConfig(handle, variantConf){
         // is there a variant-specific config file?
         var configFile = _.find(self._configFiles, function(entity){
-            return entity.matches(self._app.get('components:config'), {
+            return entity.matches(app.get('components:config'), {
                 name: self.handle + splitter + handle
             });
         });
@@ -297,7 +296,7 @@ Component.prototype.getReadme = function(){
     var self = this;
     if (_.isUndefined(this._config.readme)) {
         var readMeFile = _.find(this._files, function(entity){
-            return entity.matches(self._app.get('components:readme'));
+            return entity.matches(app.get('components:readme'));
         });
         str = readMeFile ? readMeFile.getContents() : null;
     } else {

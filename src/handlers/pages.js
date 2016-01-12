@@ -7,7 +7,8 @@ var _           = require('lodash');
 
 var md          = require('../markdown');
 var renderer    = require('../views/renderer');
-var RenderError  = require('../errors/render');
+var RenderError = require('../errors/render');
+var app         = require('../application');
 
 /*
  * Export the page renderer object.
@@ -21,8 +22,8 @@ module.exports = {
      * @api public
      */
 
-    render: function(page, context, app){
-        var pageRenderer = renderer(app.get('theme:paths:views'), app);
+    render: function(page, context){
+        var pageRenderer = renderer(app.get('theme:paths:views'));
         var context = _.defaultsDeep({
             page: page.toJSON()
         }, context || {});
@@ -39,8 +40,8 @@ module.exports = {
      * @api public
      */
 
-    renderString: function(str, context, app){
-        var pageRenderer = renderer(app.get('theme:paths:views'), app);
+    renderString: function(str, context){
+        var pageRenderer = renderer(app.get('theme:paths:views'));
         return Promise.resolve(md(pageRenderer.renderString(page._content, context)));
     }
 

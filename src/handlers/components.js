@@ -6,6 +6,7 @@ var path        = require('path');
 var _           = require('lodash');
 var consolidate = require('consolidate');
 var RenderError  = require('../errors/render');
+var app         = require('../application');
 
 /*
  * Export the component renderer.
@@ -21,7 +22,7 @@ module.exports = {
      * @api public
      */
 
-    render: function(entity, context, app){
+    render: function(entity, context){
         try {
             if (entity.type == 'component') {
                 entity = entity.getVariant();
@@ -31,7 +32,7 @@ module.exports = {
             // TODO: add helpers
             // TODO: Add loader for nunjucks
 
-            return this.getPartials(entity.fsViewPath, app).then(function(partials){
+            return this.getPartials(entity.fsViewPath).then(function(partials){
                 context.partials = partials;
                 context.cache = false;
                 return consolidate[entity.engine](entity.fsViewPath, context);
@@ -48,8 +49,8 @@ module.exports = {
      * @api public
      */
 
-    renderPreview: function(entity, context, app){
-        return this.render(entity, context, app).then(function(rendered){
+    renderPreview: function(entity, context){
+        return this.render(entity, context).then(function(rendered){
             if (entity.preview) {
                 return app.getComponents().then(function(components){
                     var layout = components.resolve(entity.preview);
@@ -75,7 +76,7 @@ module.exports = {
      * @api private
      */
 
-    getPartials: function(fsViewPath, app){
+    getPartials: function(fsViewPath){
         return app.getComponents().then(function(components){
             var partials = {};
             _.each(components.flatten().components, function(comp){
