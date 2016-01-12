@@ -33,7 +33,7 @@ module.exports = Component;
 function Component(entity, files, config){
 
     var self                = this;
-    var engine              = app.get('components:engine');
+    var engine              = app.get('components:view:engine');
 
     this._source            = entity;
     this._files             = files;

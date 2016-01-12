@@ -234,7 +234,7 @@ ComponentSource.prototype.create = function(relPath, opts){
             label: title
         };
 
-        var templatePath = pathParts.name + app.get('components:engine').ext;
+        var templatePath = pathParts.name + app.get('components:view:engine').ext;
         var configPath = app.get('generator:config:name').replace('{{name}}', pathParts.name);
 
         var writes = [
@@ -275,11 +275,11 @@ ComponentSource.prototype.toString = function(){
  */
 
 ComponentSource.build = function(){
-    
+
     return Directory.fromPath(app.get('components:path')).then(function(dir){
         var defaults = {
             preview: app.get('components:preview:layout'),
-            context: app.get('components:context')
+            context: app.get('components:view:context')
         };
         return ComponentSource.buildComponentTree(dir, defaults).then(function(tree){
             return new ComponentSource(tree).init();
@@ -298,7 +298,7 @@ ComponentSource.build = function(){
 
 ComponentSource.buildComponentTree = function(dir, cascadeConfig){
 
-    var engine          = app.get('components:engine');
+    var engine          = app.get('components:view:engine');
     var ret             = [];
     var files           = dir.getFiles();
     var directories     = dir.getDirectories();

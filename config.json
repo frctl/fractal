@@ -34,12 +34,10 @@
         "path": null,
         "config": "{{name}}\\.config\\.(js|json|yml|yaml)",
         "readme": "readme\\.(md|markdown)",
-        "engine": "handlebars",
         "preview": {
             "layout": null,
             "yield": "yield"
         },
-        "context": {},
         "variantSplitter": "--",
         "engines": {
             "handlebars": {
@@ -47,6 +45,11 @@
                 "ext": ".hbs",
                 "handler": "src/handlers/engines/handlebars"
             }
+        },
+        "view": {
+            "engine": "handlebars",
+            "extras": {},
+            "context": {}
         }
     },
     "pages": {

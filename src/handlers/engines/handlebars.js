@@ -3,28 +3,26 @@
  */
 
 var Handlebars = require('handlebars');
-var Promise    = require('bluebird');
 var _          = require('lodash');
-
-var partials = null;
 
 module.exports = {
 
-    addPartials: function(partials) {
-        partials.forEach(function(partial){
-            Handlebars.registerPartial(partial.handle, partial.content);
-            if (partial.alias) {
-                Handlebars.registerPartial(partial.alias, partial.content);
+    registerViews: function(views) {
+        views.forEach(function(view){
+            Handlebars.registerPartial(view.handle, view.content);
+            if (view.alias) {
+                Handlebars.registerPartial(view.alias, view.content);
             }
         });
     },
 
-    addGlobals: function(globals) {
-        
-    },
-
-    addHelpers: function(helpers) {
-
+    registerExtras: function(extras) {
+        _.each(extras.helpers || {}, function(helper, key){
+            Handlebars.registerHelper(key, helper);
+        });
+        _.each(extras.partials || {}, function(partial, key){
+            Handlebars.registerPartial(key, partial);
+        });
     },
 
     render: function(str, context) {

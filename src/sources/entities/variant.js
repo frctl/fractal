@@ -44,8 +44,6 @@ function Variant(handle, config, parent){
     this.fullHandle         = '@' + parent.handle + ':' + this.handle;
     this.label              = config.label || utils.titlize(handle);
     this.title              = config.title || this.label;
-    // this.fsPath             = parent.fsPath;
-    // this.path               = parent.path;
     this.handlePath         = parent.handlePath + '--' + this.handle;
     this.context            = config.context || {};
     this.display            = config.display || {};
@@ -83,15 +81,13 @@ function Variant(handle, config, parent){
 mixin.call(Variant.prototype);
 
 /*
- * Generate the rendered variant view.
- * Returns a Promise object.
+ * Initialise the variant with for anything not set in the constructor
  *
  * @api public
  */
 
 Variant.prototype.init = function(siblings){
     var self = this;
-    // this.contextString = this.getContextString();
     return self;
 };
 
@@ -178,8 +174,9 @@ function resolveContextReferences(context) {
     return app.getComponents().then(function(components){
 
         function resolve(obj) {
-            return _.mapValues(obj, function(val, key){
-                if (_.isObject(val)) {
+            var iterator = _.isArray(obj) ? 'map' : 'mapValues';
+            return _[iterator](obj, function(val, key){
+                if (_.isObject(val) || _.isArray(val)) {
                     return resolve(val);
                 }
                 if (_.startsWith(val, '@')) {
