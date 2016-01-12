@@ -4,27 +4,28 @@
 
 var logger      = require('winston');
 var os          = require('os');
-// var request     = require('request-promise');
 var Promise     = require('bluebird');
+var chalk       = require('chalk');
 var path        = require('path');
 var fs          = require('fs');
+var request     = require('./supertest');
 var _           = require('lodash');
 var mkdirp      = Promise.promisify(require('mkdirp'));
 var ncp         = Promise.promisify(require('ncp'));
 var rimraf      = Promise.promisify(require('rimraf'));
 
-var request     = require('./supertest');
-
 /**
- * Export the builder constructor
+ * Export the builder
  */
 
 module.exports = function(app){
 
+    console.log(chalk.green('Running build task...'));
+
     if (!app.get('build:dest')) {
         logger.error('You need to specify a build destination in your configuration.');
         server.close();
-        process.exit();
+        process.exit(1);
         return;
     }
 
@@ -47,7 +48,6 @@ module.exports = function(app){
         urls.push('/');
         urls.push('/components');
         urls.push('/components/list/all');
-        urls.push('/components/list/all-no-variants');
 
         /**
          * Components
@@ -55,19 +55,13 @@ module.exports = function(app){
 
         _.each(components.flatten().components, function(component){
             if (!component.hidden) {
+                urls.push(path.join('/components/detail', component.handlePath));
+                // urls.push(path.join('/components/preview', component.handlePath));
+                // urls.push(path.join('/components/preview', component.handlePath, 'embed'));
                 _.each(component.getVariants(), function(variant){
-                    // component detail
-                    urls.push(path.join('/components/detail', variant.handlePath));
-                    if (variant == component.default) {
-                        urls.push(path.join('/components/detail', component.handlePath));
-                    }
-                    // component preview
+                    // urls.push(path.join('/components/detail', variant.handlePath));
                     urls.push(path.join('/components/preview', variant.handlePath));
                     urls.push(path.join('/components/preview', variant.handlePath, 'embed'));
-                    if (variant == component.default) {
-                        urls.push(path.join('/components/preview', component.handlePath));
-                        urls.push(path.join('/components/preview', component.handlePath, 'embed'));
-                    }
                 });
             }
         });
@@ -103,7 +97,7 @@ module.exports = function(app){
         var onError = function(e){
             logger.error(e.message);
             app.stopServer();
-            process.exit();
+            process.exit(1);
         };
 
         _.each(urls, function(url){
@@ -111,7 +105,7 @@ module.exports = function(app){
             var exportPathInfo = path.parse(exportPath);
             var job = mkdirp(exportPathInfo.dir).then(function(){
                 return req.get(url).end().then(function(response){
-                    logger.info('Exporting response from ' + url);
+                    logger.info('Exporting response from %s', url);
                     return fs.writeFileAsync(exportPath, response.text);
                 }).catch(onError);
             }).catch(onError);
@@ -120,18 +114,19 @@ module.exports = function(app){
 
         Promise.all(jobs).then(function(){
             rimraf(buildDir).then(function(){
-                mkdirp(buildDir).then(function(){
-                    ncp(tmpExportPath, buildDir).then(function(){
-                        app.stopServer();
-                        process.exit();
-                    });
-                });
+                return mkdirp(buildDir);
+            }).then(function(){
+                return ncp(tmpExportPath, buildDir);
+            }).finally(function(){
+                app.stopServer();
+                console.log(chalk.green('A static version of your component library has been exported into ' + buildDir));
+                process.exit(0);
             });
         });
 
     }).catch(function(e){
         logger.error(e.message);
         app.stopServer();
-        process.exit();
+        process.exit(1);
     });
 };

@@ -5,6 +5,9 @@
 var Promise     = require('bluebird');
 var _           = require('lodash');
 var logger      = require('winston');
+var path        = require('path');
+var fs          = Promise.promisifyAll(require('fs'));
+var mkdirp      = Promise.promisify(require('mkdirp'));
 
 var Directory   = require('../filesystem/directory');
 var Component   = require('./entities/component');
@@ -12,6 +15,7 @@ var Group       = require('./entities/group');
 var mixin       = require('./source');
 var data        = require('../data');
 var NotFoundError  = require('../errors/notfound')
+var utils       = require('../utils');
 
 /*
  * Export the component source.
@@ -194,6 +198,52 @@ ComponentSource.prototype.filter = function(key, value){
         return _.compact(ret);
     }
     return new ComponentSource(filter(this.components), this.app).init();
+};
+
+/*
+ * Checks if a component exists
+ *
+ * @api public
+ */
+
+ComponentSource.prototype.exists = function(str){
+    try {
+        return this.resolve(str);
+    } catch(e){
+        return false;
+    }
+};
+
+/*
+ * Creates a new component
+ *
+ * @api public
+ */
+
+ComponentSource.prototype.create = function(relPath, opts){
+
+    var self = this;
+    var fullPath = path.join(self.app.get('components:path'), relPath);
+    return mkdirp(fullPath).then(function(){
+
+        var pathParts = path.parse(fullPath);
+        var title = utils.titlize(pathParts.name);
+
+        var config = {
+            handle: pathParts.name,
+            label: title
+        };
+
+        var templatePath = pathParts.name + self.app.getComponentViewEngine().ext;
+        var configPath = self.app.get('generator:config:name').replace('{{name}}', pathParts.name);
+
+        var writes = [
+            fs.writeFileAsync(path.join(fullPath, templatePath), '<p>' + title + ' component</p>'),
+            data.write(path.join(fullPath, configPath), config)
+        ];
+
+        return Promise.all(writes);
+    });
 };
 
 /*

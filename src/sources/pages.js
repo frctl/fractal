@@ -5,6 +5,9 @@
 var Promise     = require('bluebird');
 var _           = require('lodash');
 var logger      = require('winston');
+var path        = require('path');
+var fs          = Promise.promisifyAll(require('fs'));
+var mkdirp      = Promise.promisify(require('mkdirp'));
 
 var Directory   = require('../filesystem/directory');
 var Page        = require('./entities/page');
@@ -12,6 +15,7 @@ var Group       = require('./entities/group');
 var mixin       = require('./source');
 var data        = require('../data');
 var NotFoundError  = require('../errors/notfound');
+var utils       = require('../utils');
 
 /*
  * Export the page source.
@@ -215,6 +219,46 @@ PageSource.prototype.filter = function(key, value){
         return _.compact(ret);
     }
     return new PageSource(filter(this.pages), this.app).init();
+};
+
+/*
+ * Checks if a page exists
+ *
+ * @api public
+ */
+
+PageSource.prototype.exists = function(str){
+    try {
+        return this.resolve(str);
+    } catch(e){
+        return false;
+    }
+};
+
+/*
+ * Creates a new page
+ *
+ * @api public
+ */
+
+PageSource.prototype.create = function(relPath, opts){
+
+    var self = this;
+    var fullPath = path.join(this.app.get('pages:path'), relPath);
+    var pathParts = path.parse(fullPath);
+    return mkdirp(pathParts.dir).then(function(){
+
+        var config = {
+            handle: pathParts.name,
+            title: utils.titlize(pathParts.name)
+        };
+
+        var strConfig = '---\n' + data.stringify(config, 'yaml') + '---\n\n';
+        var content = strConfig + 'This is the ' + config.title + ' page';
+        var pagePath = path.join(pathParts.dir, self.app.get('generator:pages:name').replace('{{name}}', pathParts.name));
+
+        return fs.writeFileAsync(pagePath, content);
+    });
 };
 
 /*

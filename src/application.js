@@ -6,11 +6,14 @@ var nconf       = require('nconf');
 var path        = require('path');
 var Promise     = require('bluebird');
 var logger      = require('winston');
+var chalk       = require('chalk');
 var _           = require('lodash');
 var chokidar    = require('chokidar');
 
 var server      = require('./services/server/server');
-var builder     = require('./services/builder/builder');
+var build       = require('./services/builder/builder');
+var generate    = require('./services/generator/generator');
+var init        = require('./services/init');
 var Components  = require('./sources/components');
 var Pages       = require('./sources/pages');
 var data        = require('./data');
@@ -98,41 +101,72 @@ app.disabled = function(setting){
 };
 
 /*
- * Run the application! Yay!
+ * Determine which service to run.
  *
  * @api public
  */
 
-app.run = function(){
-
-    logger.level = this.get('log:level');
+app.run = function(argv){
 
     this.server = server(this);
 
-    if (this.enabled('run:build')) {
-        logger.info('Running build...');
-        builder(this);
+    switch (argv._[0]) {
+        case 'start':
+            this.runServerService(argv);
+            break;
+        case 'build':
+            build(this);
+            break;
+        case 'create':
+            generate(argv, this);
+            break;
+        case 'init':
+            init(argv, this);
+            break;
+        default:
+            logger.error('Unrecognised command.');
+            process.exit(1);
+            break;
     }
-
-    if (this.enabled('run:server') || this.disabled('run:build')) {
-        this.startServer();
-    }
-
-    return this;
 };
+
+/*
+ * Run the server.
+ *
+ * @api private
+ */
+
+app.runServerService = function(argv){
+    if (argv.port) {
+        this.set('server:port', argv.port);
+    }
+    this.startServer();
+};
+
+/*
+ * Start the server, if it isn't already running
+ *
+ * @api protected
+ */
 
 app.startServer = function(callback){
     var callback = callback || function(){};
     var port = this.get('server:port') || 3000;
     if (!this._httpServer) {
         this._httpServer = this.server.listen(port, function(){
-            logger.info('Fractal server is now running at http://localhost:%s', port);
+            console.log(chalk.green('Fractal server is now running at http://localhost:' + port + ' - use ^c to exit.'));
             callback();
         });
     } else {
         callback();
     }
 };
+
+/*
+ * Stop the server, if it is running
+ *
+ * @api protected
+ */
 
 app.stopServer = function(callback){
     var callback = callback || function(){};
@@ -255,18 +289,7 @@ app.getData = function(path, defaults){
  */
 
 app.defaultConfig = function(){
-    nconf.argv({
-        "s": {
-            alias: ['serve','run:server'],
-            describe: 'Run the server',
-            default: false
-        },
-        "b": {
-            alias: ['build','run:build'],
-            describe: 'Run the build task',
-            default: false
-        }
-    }).env().file({
+    nconf.file({
         file: path.join(__dirname + '/../config.json')
     });
 

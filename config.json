@@ -21,8 +21,16 @@
         "name": "@frctl/theme-default",
         "config": null
     },
+    "generator": {
+        "config": {
+            "name": "{{name}}.config.js"
+        },
+        "pages": {
+            "name": "{{name}}.md"
+        }
+    },
     "components": {
-        "path": "src/components",
+        "path": null,
         "config": "{{name}}\\.config\\.(js|json|yml|yaml)",
         "readme": "readme\\.(md|markdown)",
         "engine": "handlebars",
