@@ -245,33 +245,20 @@ PageSource.prototype.create = function(relPath, opts){
 
     var self = this;
     var fullPath = path.join(this.app.get('pages:path'), relPath);
-    return mkdirp(fullPath).then(function(){
-        var pathParts = path.parse(fullPath);
-        var title = utils.titlize(pathParts.name);
+    var pathParts = path.parse(fullPath);
+    return mkdirp(pathParts.dir).then(function(){
 
         var config = {
             handle: pathParts.name,
-            label: title
+            title: utils.titlize(pathParts.name)
         };
 
-        var strConfig = '---\n' + data.stringify(config, 'yaml') + '---\n';
-        var content = strConfig + '# ' + config.label + ' page';
+        var strConfig = '---\n' + data.stringify(config, 'yaml') + '---\n\n';
+        var content = strConfig + 'This is the ' + config.title + ' page';
+        var pagePath = path.join(pathParts.dir, self.app.get('generator:pages:name').replace('{{name}}', pathParts.name));
 
-        var pagePath = path.join(fullPath,self.app.get('generator:pages:name').replace('{{name}}', pathParts.name));
-
-        console.log(pagePath);
-        // return fs.writeFileAsync(pagePath, content);
+        return fs.writeFileAsync(pagePath, content);
     });
-
-    // var templatePath = pathParts.name + this.app.getComponentViewEngine().ext;
-
-    //
-    // var writes = [
-    //     ,
-    //     data.write(path.join(fullPath, configPath), config)
-    // ];
-
-    // return fs.writeFileAsync(path.join(fullPath, templatePath), '<p>' + title + ' component</p>');
 };
 
 /*

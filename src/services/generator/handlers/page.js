@@ -3,6 +3,7 @@
  */
 
 var path        = require('path');
+var chalk       = require('chalk');
 
 var ExistsError = require('../../../errors/exists');
 
@@ -34,5 +35,7 @@ PageGenerator.prototype.generate = function(relPath, opts){
         return pages;
     }).then(function(pages){
         return pages.create(relPath, opts);
+    }).then(function(){
+        console.log(chalk.green("Page created."));
     });
 };

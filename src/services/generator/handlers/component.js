@@ -3,6 +3,7 @@
  */
 
 var path        = require('path');
+var chalk       = require('chalk');
 
 var ExistsError = require('../../../errors/exists');
 
@@ -34,5 +35,7 @@ ComponentGenerator.prototype.generate = function(relPath, opts){
         return components;
     }).then(function(components){
         return components.create(relPath, opts);
+    }).then(function(){
+        console.log(chalk.green("Component created."));
     });
 };
