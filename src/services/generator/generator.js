@@ -5,30 +5,29 @@
 var path        = require('path');
 var logger      = require('winston');
 
-/**
- * Export the generator function
- */
+module.exports = {
 
-module.exports = function(argv, app){
+    start: function(args, opts){
 
-    var type = argv._[1];
-    var relPath = argv._[2].trim('/');
+        var type = args[0];
+        var relPath = args[1].trim('/');
 
-    try {
-        var Handler = require('./handlers/' + type);
-    } catch(e) {
-        logger.debug(e.message);
-        logger.error("Entity type '%s' is not recognised. Try 'page' or 'component' instead.", type);
-        process.exit(1);
-        return;
+        try {
+            var handler = require('./handlers/' + type);
+        } catch(e) {
+            logger.debug(e.message);
+            logger.error("Entity type '%s' is not recognised. Try 'page' or 'component' instead.", type);
+            process.exit(1);
+            return;
+        }
+
+        handler.generate(relPath, opts).catch(function(e){
+            logger.error(e.message);
+            process.exit(1);
+        }).finally(function(){
+            process.exit(0);
+        });
+
     }
-
-    var generator = new Handler(app);
-    generator.generate(relPath, argv).catch(function(e){
-        logger.error(e.message);
-        process.exit(1);
-    }).finally(function(){
-        process.exit(0);
-    });
 
 };

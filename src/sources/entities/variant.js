@@ -10,6 +10,7 @@ var fs          = require('fs');
 var mixin       = require('./entity');
 var utils       = require('../../utils');
 var md          = require('../../markdown');
+var app         = require('../../application');
 
 /*
  * Export the variant.
@@ -19,7 +20,7 @@ module.exports = Variant;
 
 /*
  * Variant constructor.
- * 
+ *
  * @api private
  */
 
@@ -30,7 +31,6 @@ function Variant(handle, config, parent){
     }
 
     var self                = this;
-    var app                 = this._app = parent._app;
     var context             = null;
 
     this._config            = config;
@@ -57,11 +57,11 @@ function Variant(handle, config, parent){
     this.engine             = parent.engine;
 
     if (parent.sourceType == 'directory') {
-        this.fsViewPath = path.resolve(path.join(app.get('components:path'), parent._source.path, this.view)); 
+        this.fsViewPath = path.resolve(path.join(app.get('components:path'), parent._source.path, this.view));
     } else {
-        this.fsViewPath = path.resolve(path.join(app.get('components:path'), parent._source.relativeDir, this.view)); 
+        this.fsViewPath = path.resolve(path.join(app.get('components:path'), parent._source.relativeDir, this.view));
     }
-    
+
     this.contextString      = null;
     this.rendered           = null;
     this.renderedInLayout   = null;
@@ -103,15 +103,15 @@ Variant.prototype.init = function(siblings){
 
 Variant.prototype.renderView = function(context, preview){
     var self = this;
-    var context = resolveContextReferences(context || self.context, this._app);
+    var context = resolveContextReferences(context || self.context);
     return context.then(function(context){
-        var engine = self._app.getComponentViewEngine();
+        var engine = app.get('components:engine');
         try {
-            var renderer = require(engine.handler);    
+            var renderer = require(engine.handler);
         } catch (e) {
             var renderer = require(path.join('../../', engine.handler));
         }
-        return preview ? renderer.renderPreview(self, context, self._app) : renderer.render(self, context, self._app);
+        return preview ? renderer.renderPreview(self, context) : renderer.render(self, context);
     });
 };
 
@@ -168,7 +168,7 @@ Variant.prototype.getContextString = function(){
     if (_.isEmpty(this.context)) {
         return Promise.resolve(null);
     }
-    return resolveContextReferences(this.context, this._app).then(function(c){
+    return resolveContextReferences(this.context).then(function(c){
         return JSON.stringify(c, null, 4);
     });
 };
@@ -179,7 +179,7 @@ Variant.prototype.getContextString = function(){
  * @api public
  */
 
-function resolveContextReferences(context, app) {
+function resolveContextReferences(context) {
     return app.getComponents().then(function(components){
 
         function resolve(obj) {

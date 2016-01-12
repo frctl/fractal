@@ -9,12 +9,13 @@ var path        = require('path');
 var nunjucks    = require('nunjucks');
 
 var highlighter = require('../highlighter');
+var app         = require('../application');
 
 /*
  * Instantiate and export the nunjucks instance.
  */
 
-module.exports = function(viewsPath, app){
+module.exports = function(viewsPath){
 
     var nj = new nunjucks.Environment(
         new nunjucks.FileSystemLoader(viewsPath, {
@@ -33,6 +34,6 @@ module.exports = function(viewsPath, app){
         statuses: app.getStatuses(),
         config: app.get(),
     });
-        
+
     return nj;
 };
