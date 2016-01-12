@@ -85,6 +85,7 @@ module.exports = {
 
     run: function(argv) {
 
+        this.setPathInfo();
         this.setThemeDetails();
         this.setViewEngine();
 
@@ -95,6 +96,16 @@ module.exports = {
         delete opts.$0;
 
         require('./services/run')(command, args, opts);
+    },
+
+    /*
+     * Set some information about the current path
+     *
+     * @api private
+     */
+
+    setPathInfo: function(){
+        this.set('system:paths:root', process.cwd());
     },
 
     /*

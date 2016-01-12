@@ -2,11 +2,14 @@
  * Module dependencies.
  */
 
-var _           = require('lodash');
-var chokidar    = require('chokidar');
-var Promise     = require('bluebird');
+var EventEmitter = require('events').EventEmitter;
+var _            = require('lodash');
+var chokidar     = require('chokidar');
+var Promise      = require('bluebird');
+var util         = require('util');
+var path         = require('path');
 
-var fractal     = require('./fractal');
+var fractal      = require('./fractal');
 
 /*
  * Cache some values
@@ -19,6 +22,8 @@ var monitors = [];
 
 module.exports = {
 
+    events: new EventEmitter(),
+
     /*
      * Return a collection of components based on the config path.
      *
@@ -27,10 +32,12 @@ module.exports = {
 
     getComponents: function(){
         if (!components) {
+            var self = this;
             components = require('./sources/components').build();
             this.createMonitor(this.get('components:path'), function(event, path) {
-                // TODO: make this tree rebuilding more refined rather than all or nothing.
+                // TODO: make component tree rebuilding more refined rather than all or nothing.
                 components = null;
+                self.events.emit("component-tree-changed");
             });
         }
         return components;
@@ -45,14 +52,17 @@ module.exports = {
     getPages: function(){
         if (!pages) {
             if (this.get('pages:path')) {
-                var pages = require('./sources/pages').build(this.get('pages:path'));
-                var themePages = this.getThemePages();
+                var self = this;
+                themePages = this.getThemePages();
+                pages = require('./sources/pages').build(this.get('pages:path'));
                 pages = Promise.join(pages, themePages, function(pages, themePages){
                     pages.setDefaults(themePages);
                     return pages;
                 });
                 this.createMonitor(this.get('pages:path'), function(event, path) {
+                    // TODO: make page tree rebuilding more refined rather than all or nothing.
                     pages = null;
+                    self.events.emit("page-tree-changed");
                 });
             } else {
                 pages = this.getThemePages();

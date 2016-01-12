@@ -2,19 +2,34 @@
  * Module dependencies.
  */
 
-var path        = require('path');
-var _           = require('lodash');
-var consolidate = require('consolidate');
-var RenderError  = require('../errors/render');
+var Handlebars = require('handlebars');
+var Promise    = require('bluebird');
+var _          = require('lodash');
 
-/*
- * Export the component renderer.
- */
+var partials = null;
 
 module.exports = {
 
-    render: function(variant, ){
+    addPartials: function(partials) {
+        partials.forEach(function(partial){
+            Handlebars.registerPartial(partial.handle, partial.content);
+            if (partial.alias) {
+                Handlebars.registerPartial(partial.alias, partial.content);
+            }
+        });
+    },
 
+    addGlobals: function(globals) {
+        
+    },
+
+    addHelpers: function(helpers) {
+
+    },
+
+    render: function(str, context) {
+        var template = Handlebars.compile(str);
+        return template(context);
     }
 
 };

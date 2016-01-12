@@ -4,9 +4,26 @@
 
 var path        = require('path');
 var _           = require('lodash');
-var consolidate = require('consolidate');
+var consolidate           = require('consolidate');
 var RenderError  = require('../errors/render');
+var NotFoundError  = require('../errors/notfound');
 var app         = require('../application');
+
+var engine = app.get('components:engine');
+
+var partials = null;
+
+try {
+    var renderer = require(engine.handler);
+} catch (e) {
+    try {
+        var renderer = require(path.join(app.get('system:paths:root'), engine.handler));
+    } catch (e) {
+        console.log(e)
+        console.log(path.join('../../../', engine.handler))
+        throw new NotFoundError('The component handler ' + engine.handler + ' could not be found.');
+    }
+}
 
 /*
  * Export the component renderer.
@@ -23,22 +40,27 @@ module.exports = {
      */
 
     render: function(entity, context){
+
         try {
             if (entity.type == 'component') {
                 entity = entity.getVariant();
             }
             var context = _.cloneDeep(context || entity.context);
 
-            // TODO: add helpers
-            // TODO: Add loader for nunjucks
+            if (!partials) {
+                partials = this.fetchPartials().then(function(partials){
+                    renderer.addPartials(partials);
+                });
+                app.events.once('component-tree-changed', function(){
+                    partials = null;
+                });
+            }
 
-            return this.getPartials(entity.fsViewPath).then(function(partials){
-                context.partials = partials;
-                context.cache = false;
-                return consolidate[entity.engine](entity.fsViewPath, context);
+            return partials.then(function(){
+                return renderer.render(entity.files.view.getContents(), context);
             });
         } catch(e) {
-            throw new RenderError('Could not render component "' + page.handlePath + '".', e);
+            throw new RenderError('Could not render component "' + entity.handlePath + '".', e);
         }
     },
 
@@ -56,7 +78,6 @@ module.exports = {
                     var layout = components.resolve(entity.preview);
                     var layoutContext = {
                         _variant: entity.toJSON(),
-                        cache: false
                     };
                     layoutContext[app.get('components:preview:yield')] = rendered;
                     return layout.renderView(layoutContext, false);
@@ -66,33 +87,18 @@ module.exports = {
         });
     },
 
-    /*
-     * Return an promise of an object of partials.
-     *
-     * Object return format
-     * Key = partial name to use in templates
-     * Value = path to the partial, relative to the view path
-     *
-     * @api private
-     */
-
-    getPartials: function(fsViewPath){
+    fetchPartials: function(){
         return app.getComponents().then(function(components){
-            var partials = {};
+            var partials = [];
             _.each(components.flatten().components, function(comp){
                 var variants = comp.getVariants();
                 _.each(variants, function(variant){
-                    if (fsViewPath != variant.fsViewPath) {
-                        var relPath = path.relative(fsViewPath, variant.fsViewPath).replace('../', '');
-                        var parts = path.parse(relPath);
-                        if ( !_.isEmpty(parts.name) && (path.extname(fsViewPath) == path.extname(variant.fsViewPath))) {
-                            var key = comp.handle + ':' + variant.handle;
-                            partials[key] = path.join(parts.dir, parts.name);
-                            if (variant.handle === comp.default.handle) {
-                                partials[comp.handle] = partials[key];
-                            }
-                        }
-                    }
+                    partials.push({
+                        handle: comp.handle + ':' + variant.handle,
+                        alias: variant.handle === comp.default.handle ? comp.handle : null,
+                        path: variant.fsViewPath,
+                        content: variant.files.view.getContents()
+                    });
                 });
             });
             return partials;

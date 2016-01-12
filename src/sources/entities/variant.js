@@ -10,6 +10,7 @@ var fs          = require('fs');
 var mixin       = require('./entity');
 var utils       = require('../../utils');
 var md          = require('../../markdown');
+var renderer    = require('../../handlers/components');
 var app         = require('../../application');
 
 /*
@@ -105,12 +106,6 @@ Variant.prototype.renderView = function(context, preview){
     var self = this;
     var context = resolveContextReferences(context || self.context);
     return context.then(function(context){
-        var engine = app.get('components:engine');
-        try {
-            var renderer = require(engine.handler);
-        } catch (e) {
-            var renderer = require(path.join('../../', engine.handler));
-        }
         return preview ? renderer.renderPreview(self, context) : renderer.render(self, context);
     });
 };

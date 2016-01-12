@@ -45,7 +45,7 @@
             "handlebars": {
                 "name": "handlebars",
                 "ext": ".hbs",
-                "handler": "handlers/components"
+                "handler": "src/handlers/engines/handlebars"
             }
         }
     },
