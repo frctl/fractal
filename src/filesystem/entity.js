@@ -4,6 +4,7 @@
 
 var path        = require('path');
 var _           = require('lodash');
+var tob         = require('istextorbinary');
 
 /*
  * Export the mixin.
@@ -21,7 +22,7 @@ function entity(){
      */
 
     this.init = function(){
-        
+
         // this.absolutePath       = this.absolutePath.toLowerCase();
         // this.path               = this.path.toLowerCase();
 
@@ -29,7 +30,7 @@ function entity(){
         var relativefileInfo    = path.parse(this.path);
         var name                = fileInfo.name.replace(/^_/,'');
         var nameParts           = name.match(/^(\d+)\-(.*)/,'');
-        
+
         this.relativePath       = this.path;
         this.ext                = this.isFile() ? fileInfo.ext : null;
         this.fsName             = fileInfo.name;
@@ -38,7 +39,7 @@ function entity(){
         this.base               = this.name + (this.ext || '');
         this.dir                = fileInfo.dir;
         this.relativeDir        = relativefileInfo.dir;
-        
+
         this.pathSegments       = _.compact(this.path.split('/'));
         this.depth              = this.pathSegments.length;
 
@@ -48,10 +49,11 @@ function entity(){
         this.hidden             = !! _.find(this.pathSegments, function(segment){
                                     return segment.charAt(0) === '_';
                                 });
-        
+
         if (this.isFile()) {
             this.raw = this.contents;
             this.lang = this.ext.replace(/^\./,'').toLowerCase();
+            this.isBinary = tob.isBinarySync(this.relativePath, this.contents);
         }
 
         return this;
@@ -65,7 +67,7 @@ function entity(){
 
     this.isDirectory = function(){
         return this.type === 'directory';
-    }; 
+    };
 
     /*
      * File test.
@@ -92,7 +94,7 @@ function entity(){
      *
      * @api public
      */
-    
+
     this.matches = function(matcher, replacements, key, dontEscape){
         var key = key || 'base';
         if (replacements) {
@@ -100,7 +102,7 @@ function entity(){
                 if (!dontEscape) {
                     replacement = replacement.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
                 }
-                matcher = matcher.replace('{{' + variable + '}}', replacement);  
+                matcher = matcher.replace('{{' + variable + '}}', replacement);
             });
         }
         var tester = new RegExp(matcher, 'i');
@@ -125,4 +127,3 @@ function entity(){
     }
 
 };
-
