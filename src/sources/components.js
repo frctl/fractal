@@ -201,6 +201,33 @@ ComponentSource.prototype.filter = function(key, value){
 };
 
 /*
+ * Returns a new component tree excluding matches of key:value
+ *
+ * @api public
+ */
+
+ComponentSource.prototype.exclude = function(key, value){
+    function exclude(items){
+        var ret = [];
+        _.each(items, function(item){
+            if (item.type === 'component') {
+                if (item[key] !== value) {
+                    ret.push(item);
+                }
+            } else {
+                // group
+                var children = exclude(item.children);
+                if (children.length) {
+                    ret.push(new Group(item._dir, item._config, children));
+                }
+            }
+        });
+        return _.compact(ret);
+    }
+    return new ComponentSource(exclude(this.components)).init();
+};
+
+/*
  * Checks if a component exists
  *
  * @api public

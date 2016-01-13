@@ -6,12 +6,15 @@ var Promise     = require('bluebird');
 var _           = require('lodash');
 var path        = require('path');
 var fs          = require('fs');
+var crypto      = require('crypto');
 
 var mixin       = require('./entity');
 var utils       = require('../utils');
 var md          = require('../markdown');
 var renderer    = require('../handlers/components');
 var app         = require('../application');
+
+var resolvedContextCache = {};
 
 /*
  * Export the variant.
@@ -64,6 +67,7 @@ function Variant(handle, config, parent){
     this.contextString      = null;
     this.rendered           = null;
     this.renderedInLayout   = null;
+    this._resolvedContext   = null;
 
     this.files = {
         view: _.find(this._files, 'fsBase', this.view),
@@ -159,41 +163,50 @@ Variant.prototype.getContextString = function(){
     if (_.isEmpty(this.context)) {
         return Promise.resolve(null);
     }
-    return resolveContextReferences(this.context).then(function(c){
+    return resolveContextReferences(this.context, this).then(function(c){
         return JSON.stringify(c, null, 4);
     });
 };
 
 /*
- * Takes a context object and resolves any references to other variants
+ * Takes a context object and resolves any references to other variants,
+ * as well as resolving any promises.
  *
  * @api public
  */
 
 function resolveContextReferences(context) {
-    return app.getComponents().then(function(components){
-
-        function resolve(obj) {
-            var iterator = _.isArray(obj) ? 'map' : 'mapValues';
-            return _[iterator](obj, function(val, key){
-                if (_.isObject(val) || _.isArray(val)) {
-                    return resolve(val);
-                }
-                if (_.startsWith(val, '@')) {
-                    var entity = components.resolve(val);
-                    if (entity) {
-                        if (entity.type == 'component') {
-                            entity = entity.getVariant();
+    var key = crypto.createHash('md5').update(JSON.stringify(context)).digest("hex");
+    if (!resolvedContextCache[key]) {
+        resolvedContextCache[key] = app.getComponents().then(function(components){
+            function resolve(obj) {
+                var iterator = _.isArray(obj) ? 'map' : 'mapValues';
+                var handler  = _.isArray(obj) ? 'all' : 'props';
+                var promises = _[iterator](obj, function(val, key){
+                    return Promise.resolve(val).then(function(val){
+                        if (_.isObject(val) || _.isArray(val)) {
+                            return resolve(val);
                         }
-                        return entity.context;
-                    } else {
-                        logger.warn("Could not resolve data reference for " + val);
-                    }
-                }
-                return val;
+                        if (_.startsWith(val, '@')) {
+                            var entity = components.resolve(val);
+                            if (entity) {
+                                if (entity.type == 'component') {
+                                    entity = entity.getVariant();
+                                }
+                                return entity.context;
+                            } else {
+                                logger.warn("Could not resolve data reference for " + val);
+                            }
+                        }
+                        return val;
+                    });
+                });
+                return Promise[handler](promises);
+            }
+            return Promise.resolve(context).then(function(context){
+                return resolve(context);
             });
-        }
-
-        return resolve(context);
-    });
+        });
+    }
+    return resolvedContextCache[key];
 }

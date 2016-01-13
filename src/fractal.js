@@ -95,6 +95,8 @@ module.exports = {
         delete opts._;
         delete opts.$0;
 
+        this.app = require('./application');
+
         require('./services/run')(command, args, opts);
     },
 
