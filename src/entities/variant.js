@@ -59,9 +59,9 @@ function Variant(handle, config, parent){
     this.engine             = parent.engine;
 
     if (parent.sourceType == 'directory') {
-        this.fsViewPath = path.resolve(path.join(app.get('components:path'), parent._source.path, this.view));
+        this.fsViewPath = path.resolve(path.join(app.get('components.path'), parent._source.path, this.view));
     } else {
-        this.fsViewPath = path.resolve(path.join(app.get('components:path'), parent._source.relativeDir, this.view));
+        this.fsViewPath = path.resolve(path.join(app.get('components.path'), parent._source.relativeDir, this.view));
     }
 
     this.contextString      = null;

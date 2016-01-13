@@ -11,7 +11,7 @@ var app         = require('../../../application');
 module.exports = {
 
     generate: function(relPath, opts){
-        var fullPath = path.join(app.get('pages:path'), relPath);
+        var fullPath = path.join(app.get('pages.path'), relPath);
         return app.getPages().then(function(pages){
             if (pages.exists(relPath)) {
                 throw new ExistsError('The page at ' + relPath +' already exists.');

@@ -23,7 +23,7 @@ module.exports = {
 
         console.log(chalk.green('Running build task...'));
 
-        if (!app.get('build:dest')) {
+        if (!app.get('build.dest')) {
             logger.error('You need to specify a build destination in your configuration.');
             process.exit(1);
             return;
@@ -31,7 +31,7 @@ module.exports = {
 
         var urls        = [];
         var jobs        = [];
-        var buildDir    = path.resolve(app.get('build:dest'));
+        var buildDir    = path.resolve(app.get('build.dest'));
         var components  = app.getComponents();
         var pages       = app.getPages();
 
@@ -82,12 +82,12 @@ module.exports = {
 
             // 1. Copy theme assets
 
-            jobs.push(ncp(app.get('theme:paths:assets'), path.join(tmpExportPath, '_theme')));
+            jobs.push(ncp(app.get('theme.paths.assets'), path.join(tmpExportPath, '_theme')));
 
             // 2. Copy site static assets, if defined.
 
-            if (app.get('static:path') && app.get('build:dest') !== app.get('static:path')) {
-                jobs.push(ncp(app.get('static:path'), path.join(tmpExportPath, app.get('static:dest'))));
+            if (app.get('static.path') && app.get('build.dest') !== app.get('static.path')) {
+                jobs.push(ncp(app.get('static.path'), path.join(tmpExportPath, app.get('static.dest'))));
             }
 
             // 3. For each URL: make a GET request, save response to disk.

@@ -23,7 +23,7 @@ module.exports = {
      */
 
     render: function(page, context){
-        var pageRenderer = renderer(app.get('theme:paths:views'));
+        var pageRenderer = renderer(app.get('theme.paths.views'));
         var context = _.defaultsDeep({
             page: page.toJSON()
         }, context || {});
@@ -41,7 +41,7 @@ module.exports = {
      */
 
     renderString: function(str, context){
-        var pageRenderer = renderer(app.get('theme:paths:views'));
+        var pageRenderer = renderer(app.get('theme.paths.views'));
         return Promise.resolve(md(pageRenderer.renderString(page._content, context)));
     }
 

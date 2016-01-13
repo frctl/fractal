@@ -22,7 +22,7 @@ var renderer    = require('../../view');
 
 var instance = null;
 
-var nunjucks = renderer(app.get('theme:paths:views'), app);
+var nunjucks = renderer(app.get('theme.paths.views'), app);
 nunjucks.express(server);
 
 server.set('app', app);
@@ -32,11 +32,11 @@ server.engine('nunj', nunjucks.render);
 // TODO: enable view cache when not in dev mode
 // server.enable('view cache');
 
-server.use('/_theme', express.static(app.get('theme:paths:assets')));
+server.use('/_theme', express.static(app.get('theme.paths.assets')));
 try {
-    if (app.get('static:path')){
-        var dest = '/' + _.trim(app.get('static:dest'), '/');
-        server.use(dest, express.static(app.get('static:path')));
+    if (app.get('static.path')){
+        var dest = '/' + _.trim(app.get('static.dest'), '/');
+        server.use(dest, express.static(app.get('static.path')));
     }
 } catch(e){}
 
@@ -123,7 +123,7 @@ module.exports = {
     server: server,
 
     start: function(opts){
-        var port = opts.port || app.get('server:port') || 3000;
+        var port = opts.port || app.get('server.port') || 3000;
         if (!instance) {
             instance = server.listen(port, function(){
                 console.log(chalk.green('Fractal server is now running at http://localhost:' + port + ' - use ^c to exit.'));

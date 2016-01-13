@@ -244,7 +244,7 @@ PageSource.prototype.exists = function(str){
 PageSource.prototype.create = function(relPath, opts){
 
     var self = this;
-    var fullPath = path.join(app.get('pages:path'), relPath);
+    var fullPath = path.join(app.get('pages.path'), relPath);
     var pathParts = path.parse(fullPath);
     return mkdirp(pathParts.dir).then(function(){
 
@@ -254,7 +254,7 @@ PageSource.prototype.create = function(relPath, opts){
 
         var strConfig = '---\n' + data.stringify(config, 'yaml') + '---\n\n';
         var content = strConfig + 'This is the ' + config.title + ' page';
-        var pagePath = path.join(pathParts.dir, app.get('generator:pages:name').replace('{{name}}', pathParts.name));
+        var pagePath = path.join(pathParts.dir, app.get('generator.pages.name').replace('{{name}}', pathParts.name));
 
         return fs.writeFileAsync(pagePath, content);
     });
@@ -374,7 +374,7 @@ PageSource.buildPageTree = function(dir){
 
     _.each(dir.children, function(entity){
         if (entity.type == 'file') {
-            var matches = entity.matches(app.get('pages:match'));
+            var matches = entity.matches(app.get('pages.match'));
             if (matches) {
                 tree.push(Page.fromFile(entity, dir));
             }

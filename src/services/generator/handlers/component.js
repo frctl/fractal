@@ -11,7 +11,7 @@ var app         = require('../../../application');
 module.exports = {
 
     generate: function(relPath, opts){
-        var fullPath = path.join(app.get('components:path'), relPath);
+        var fullPath = path.join(app.get('components.path'), relPath);
         return app.getComponents().then(function(components){
             if (components.exists(relPath)) {
                 throw new ExistsError('The component at ' + relPath +' already exists.');

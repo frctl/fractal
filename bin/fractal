@@ -160,8 +160,8 @@ if (argv._[0] === 'init') {
 
 function run(app, env){
     if (argv.level) {
-        app.set('log:level', argv.level);
-        logger.level = app.get('log:level');
+        app.set('log.level', argv.level);
+        logger.level = app.get('log.level');
     }
     if (env) {
         logger.info('Using config file %s', env.configPath);

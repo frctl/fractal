@@ -33,7 +33,7 @@ module.exports = Component;
 function Component(entity, files, config){
 
     var self                = this;
-    var engine              = app.get('components:view:engine');
+    var engine              = app.get('components.view.engine');
 
     this._source            = entity;
     this._files             = files;
@@ -65,9 +65,9 @@ function Component(entity, files, config){
     }
 
     this.variantDefaults = {
-        status:     config.status || app.get('statuses:default'),
+        status:     config.status || app.get('statuses.default'),
         context:    config.context || {},
-        preview:    config.preview || app.get('components:preview:layout'),
+        preview:    config.preview || app.get('components.preview.layout'),
         display:    config.display || {},
         view:       config.view || (variantViewBase + this.viewExt)
     };
@@ -79,13 +79,13 @@ function Component(entity, files, config){
     });
 
     this._configFiles = _.filter(files, function(file){
-        return file.matches(app.get('components:config'), {
+        return file.matches(app.get('components.config'), {
             name: '.*'
         }, null, true);
     });
 
     this._readMeFiles = _.filter(files, function(file){
-        return file.matches(app.get('components:readme'));
+        return file.matches(app.get('components.readme'));
     });
 
     this._nonViewFiles = _.difference(files, this._viewFiles);
@@ -129,7 +129,7 @@ Component.prototype.getVariants = function(){
     }
     var self = this;
     var variants = [];
-    var splitter = app.get('components:variantSplitter');
+    var splitter = app.get('components.variantSplitter');
     var configs = _.map(this._config.variants || [], function(config){
         if (!_.isUndefined(config.handle)) {
             return makeVariantConfig(config.handle, config).then(function(conf){
@@ -216,7 +216,7 @@ Component.prototype.getVariants = function(){
     function makeVariantConfig(handle, variantConf){
         // is there a variant-specific config file?
         var configFile = _.find(self._configFiles, function(entity){
-            return entity.matches(app.get('components:config'), {
+            return entity.matches(app.get('components.config'), {
                 name: self.handle + splitter + handle
             });
         });
@@ -296,7 +296,7 @@ Component.prototype.getReadme = function(){
     var self = this;
     if (_.isUndefined(this._config.readme)) {
         var readMeFile = _.find(this._files, function(entity){
-            return entity.matches(app.get('components:readme'));
+            return entity.matches(app.get('components.readme'));
         });
         str = readMeFile ? readMeFile.getContents() : null;
     } else {
@@ -329,7 +329,7 @@ Component.fromFile = function(file, dir, config){
 
     // check to see if there is some config associated with the file
     var configFile = _.find(files, function(entity){
-        return entity.matches(app.get('components:config'), {
+        return entity.matches(app.get('components.config'), {
             name: file.name
         });
     });

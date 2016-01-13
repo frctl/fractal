@@ -34,7 +34,7 @@ module.exports = {
         if (!components) {
             var self = this;
             components = require('./sources/components').build();
-            this.createMonitor(this.get('components:path'), function(event, path) {
+            this.createMonitor(this.get('components.path'), function(event, path) {
                 // TODO: make component tree rebuilding more refined rather than all or nothing.
                 components = null;
                 self.events.emit("component-tree-changed");
@@ -51,15 +51,15 @@ module.exports = {
 
     getPages: function(){
         if (!pages) {
-            if (this.get('pages:path')) {
+            if (this.get('pages.path')) {
                 var self = this;
                 themePages = this.getThemePages();
-                pages = require('./sources/pages').build(this.get('pages:path'));
+                pages = require('./sources/pages').build(this.get('pages.path'));
                 pages = Promise.join(pages, themePages, function(pages, themePages){
                     pages.setDefaults(themePages);
                     return pages;
                 });
-                this.createMonitor(this.get('pages:path'), function(event, path) {
+                this.createMonitor(this.get('pages.path'), function(event, path) {
                     // TODO: make page tree rebuilding more refined rather than all or nothing.
                     pages = null;
                     self.events.emit("page-tree-changed");
@@ -79,7 +79,7 @@ module.exports = {
 
     getThemePages: function(){
         if (!themePages) {
-            themePages = require('./sources/pages').build(this.get('theme:paths:pages'));
+            themePages = require('./sources/pages').build(this.get('theme.paths.pages'));
         }
         return themePages;
     },
@@ -91,7 +91,7 @@ module.exports = {
      */
 
     getStatuses: function(){
-        return this.get('statuses:options');
+        return this.get('statuses.options');
     },
 
     /*
@@ -102,8 +102,8 @@ module.exports = {
 
     getStatus: function(status){
         var statuses = this.getStatuses();
-        status = status || this.get('statuses:default');
-        return _.find(statuses, 'name', status) || _.find(statuses, 'name', this.get('statuses:default'));
+        status = status || this.get('statuses.default');
+        return _.find(statuses, 'name', status) || _.find(statuses, 'name', this.get('statuses.default'));
     },
 
     /*

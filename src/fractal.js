@@ -2,14 +2,11 @@
  * Module dependencies.
  */
 
-var nconf       = require('nconf');
 var path        = require('path');
 var logger      = require('winston');
 var _           = require('lodash');
 
-nconf.file({
-    file: path.join(__dirname + '/../config.json')
-});
+var config      = require(path.join(__dirname + '/../config.json'));
 
 module.exports = {
 
@@ -21,7 +18,7 @@ module.exports = {
 
     set: function(setting, val){
         logger.debug('Setting config value: %s = %s', setting, _.isObject(val) ? JSON.stringify(val, null, 2) : val);
-        nconf.set(setting, val);
+        _.set(config, setting, val);
         return this;
     },
 
@@ -33,7 +30,7 @@ module.exports = {
 
     enable: function(setting){
         logger.debug('Enabling %s', setting);
-        return nconf.set(setting, true);
+        return _.set(config, setting, true);
     },
 
     /*
@@ -44,7 +41,7 @@ module.exports = {
 
     disable: function(setting){
         logger.debug('Disabling %s', setting);
-        return nconf.set(setting, false);
+        return _.set(config, setting, false);
     },
 
     /*
@@ -54,7 +51,7 @@ module.exports = {
      */
 
     get: function(setting){
-        return nconf.get(setting);
+        return _.get(config, setting);
     },
 
     /*
@@ -107,7 +104,7 @@ module.exports = {
      */
 
     setPathInfo: function(){
-        this.set('system:paths:root', process.cwd());
+        this.set('system.paths.root', process.cwd());
     },
 
     /*
@@ -117,11 +114,11 @@ module.exports = {
      */
 
     setViewEngine: function(){
-        var name = this.get('components:view:engine');
+        var name = this.get('components.view.engine');
         var engine = this.get('engines')[name];
         engine.ext = '.' + _.trim(engine.ext, '.');
         engine.engine = name;
-        this.set('components:view:engine', engine);
+        this.set('components.view.engine', engine);
     },
 
     /*

@@ -93,7 +93,7 @@ Group.prototype.toJSON = function(){
 
 Group.fromDirectory = function(dir, children){
     var configFile = _.find(dir.getFiles(), function(entity){
-        return entity.matches(app.get('components:config'), {
+        return entity.matches(app.get('components.config'), {
             name: dir.name
         });
     });

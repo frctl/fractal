@@ -250,7 +250,7 @@ ComponentSource.prototype.exists = function(str){
 ComponentSource.prototype.create = function(relPath, opts){
 
     var self = this;
-    var fullPath = path.join(app.get('components:path'), relPath);
+    var fullPath = path.join(app.get('components.path'), relPath);
     return mkdirp(fullPath).then(function(){
 
         var pathParts = path.parse(fullPath);
@@ -261,8 +261,8 @@ ComponentSource.prototype.create = function(relPath, opts){
             label: title
         };
 
-        var templatePath = pathParts.name + app.get('components:view:engine').ext;
-        var configPath = app.get('generator:config:name').replace('{{name}}', pathParts.name);
+        var templatePath = pathParts.name + app.get('components.view.engine').ext;
+        var configPath = app.get('generator.config.name').replace('{{name}}', pathParts.name);
 
         var writes = [
             fs.writeFileAsync(path.join(fullPath, templatePath), '<p>' + title + ' component</p>'),
@@ -303,10 +303,10 @@ ComponentSource.prototype.toString = function(){
 
 ComponentSource.build = function(){
 
-    return Directory.fromPath(app.get('components:path')).then(function(dir){
+    return Directory.fromPath(app.get('components.path')).then(function(dir){
         var defaults = {
-            preview: app.get('components:preview:layout'),
-            context: app.get('components:view:context')
+            preview: app.get('components.preview.layout'),
+            context: app.get('components.view.context')
         };
         return ComponentSource.buildComponentTree(dir, defaults).then(function(tree){
             return new ComponentSource(tree).init();
@@ -325,14 +325,14 @@ ComponentSource.build = function(){
 
 ComponentSource.buildComponentTree = function(dir, cascadeConfig){
 
-    var engine          = app.get('components:view:engine');
+    var engine          = app.get('components.view.engine');
     var ret             = [];
     var files           = dir.getFiles();
     var directories     = dir.getDirectories();
 
     // see if the directory itself has a config file defined
     var configFile = _.find(files, function(entity){
-        return entity.matches(app.get('components:config'), {
+        return entity.matches(app.get('components.config'), {
             name: dir.name
         });
     });
@@ -357,7 +357,7 @@ ComponentSource.buildComponentTree = function(dir, cascadeConfig){
             // Otherwise check to see if any of the files in the directory match the component filename pattern.
             _.each(files, function(file){
                 var matches = file.matches('^(?!.*({{splitter}})).*{{ext}}$', {
-                    splitter: app.get('components:variantSplitter'),
+                    splitter: app.get('components.variantSplitter'),
                     ext: engine.ext
                 });
                 if (matches) {

@@ -10,14 +10,14 @@ var NotFoundError = require('../errors/notfound');
 var app           = require('../application');
 
 var renderer;
-var engineConf    = app.get('components:view:engine');
+var engineConf    = app.get('components.view.engine');
 var viewsCache    = null;
 
 try {
     engine = require(engineConf.handler);
 } catch (e) {
     try {
-        engine = require(path.join(app.get('system:paths:root'), engineConf.handler));
+        engine = require(path.join(app.get('system:.paths.root'), engineConf.handler));
     } catch (e) {
         logger.warn(e.message);
         throw new NotFoundError('The component handler ' + engineConf.handler + ' could not be found.');
@@ -72,7 +72,7 @@ module.exports = {
                     var layoutContext = {
                         _variant: entity.toJSON(),
                     };
-                    layoutContext[app.get('components:preview:yield')] = rendered;
+                    layoutContext[app.get('components.preview.yield')] = rendered;
                     return layout.renderView(layoutContext, false);
                 });
             }
