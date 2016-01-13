@@ -46,6 +46,8 @@ handlers.params.component = function(req, res, next, componentPath) {
         res.locals.component = comp.toJSON();
         res.locals.variant = _.find(comp.variants, 'handle', req._variant.handle);
         next();
+    }).catch(function(e){
+        next(e);
     });
 };
 

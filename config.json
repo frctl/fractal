@@ -19,25 +19,30 @@
     },
     "theme": {
         "name": "@frctl/theme-default",
-        "config": null
+        "config": null,
+        "paths": {}
+    },
+    "generator": {
+        "config": {
+            "name": "{{name}}.config.js"
+        },
+        "pages": {
+            "name": "{{name}}.md"
+        }
     },
     "components": {
-        "path": "src/components",
+        "path": null,
         "config": "{{name}}\\.config\\.(js|json|yml|yaml)",
         "readme": "readme\\.(md|markdown)",
-        "engine": "handlebars",
         "preview": {
             "layout": null,
             "yield": "yield"
         },
-        "context": {},
         "variantSplitter": "--",
-        "engines": {
-            "handlebars": {
-                "name": "handlebars",
-                "ext": ".hbs",
-                "handler": "handlers/components"
-            }
+        "view": {
+            "engine": "handlebars",
+            "extend": {},
+            "context": {}
         }
     },
     "pages": {
@@ -69,6 +74,18 @@
                 "color": "green"
             }
         ]
+    },
+    "engines": {
+        "handlebars": {
+            "name": "handlebars",
+            "ext": ".hbs",
+            "handler": "src/engines/handlebars"
+        },
+        "nunjucks": {
+            "name": "nunjucks",
+            "ext": ".nunjucks",
+            "handler": "src/engines/nunjucks"
+        }
     },
     "fractal": {
         "site": {
