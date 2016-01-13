@@ -163,9 +163,13 @@ Variant.prototype.getContextString = function(){
     if (_.isEmpty(this.context)) {
         return Promise.resolve(null);
     }
-    return resolveContextReferences(this.context, this).then(function(c){
+    return this.getResolvedContext().then(function(c){
         return JSON.stringify(c, null, 4);
     });
+};
+
+Variant.prototype.getResolvedContext = function(){
+    return resolveContextReferences(this.context);
 };
 
 /*
@@ -188,12 +192,20 @@ function resolveContextReferences(context) {
                             return resolve(val);
                         }
                         if (_.startsWith(val, '@')) {
-                            var entity = components.resolve(val);
+                            var parts = val.split('.');
+                            var handle = parts.shift();
+                            var entity = components.resolve(handle);
                             if (entity) {
                                 if (entity.type == 'component') {
                                     entity = entity.getVariant();
                                 }
-                                return entity.context;
+                                if (parts.length) {
+                                    var dotPath = parts.join('.');
+                                    return entity.getResolvedContext().then(function(c){
+                                        return _.get(c, dotPath, null);
+                                    });
+                                }
+                                return entity.getResolvedContext();
                             } else {
                                 logger.warn("Could not resolve data reference for " + val);
                             }
