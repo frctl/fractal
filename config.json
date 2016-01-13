@@ -44,10 +44,15 @@
                 "name": "handlebars",
                 "ext": ".hbs",
                 "handler": "src/handlers/engines/handlebars"
+            },
+            "nunjucks": {
+                "name": "nunjucks",
+                "ext": ".nunj",
+                "handler": "src/handlers/engines/nunjucks"
             }
         },
         "view": {
-            "engine": "handlebars",
+            "engine": "nunjucks",
             "extras": {},
             "context": {}
         }

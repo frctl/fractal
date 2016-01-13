@@ -47,6 +47,8 @@ module.exports = {
             var context = _.cloneDeep(context || entity.context);
             return this.loadViews().then(function(){
                 return engine.render(entity.files.view.getContents(), context);
+            }).catch(function(e){
+                throw new RenderError('Could not render component "' + entity.handlePath + '".', e);
             });
         } catch(e) {
             throw new RenderError('Could not render component "' + entity.handlePath + '".', e);

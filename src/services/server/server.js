@@ -14,7 +14,7 @@ var app         = require('../../application');
 var components  = require('./handlers/components');
 var pages       = require('./handlers/pages');
 var misc        = require('./handlers/misc');
-var renderer    = require('../../views/renderer');
+var renderer    = require('../../view');
 
 /**
  * General setup.

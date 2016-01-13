@@ -6,7 +6,7 @@ var Promise     = require('bluebird');
 var _           = require('lodash');
 
 var md          = require('../markdown');
-var renderer    = require('../views/renderer');
+var renderer    = require('../view');
 var RenderError = require('../errors/render');
 var app         = require('../application');
 

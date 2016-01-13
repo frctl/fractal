@@ -8,8 +8,8 @@ var fs          = require('fs');
 var path        = require('path');
 var nunjucks    = require('nunjucks');
 
-var highlighter = require('../highlighter');
-var app         = require('../application');
+var highlighter = require('./highlighter');
+var app         = require('./application');
 
 /*
  * Instantiate and export the nunjucks instance.

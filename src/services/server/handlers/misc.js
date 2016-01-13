@@ -32,7 +32,7 @@ handlers.error = function(err, req, res, next) {
             error: err
         });
     } else {
-        return res.status(500).render('pages/500', {
+        return res.render('pages/500', {
             message: err.message,
             stack: highlighter(err.stack),
             error: err
