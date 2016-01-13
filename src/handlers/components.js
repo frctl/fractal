@@ -24,7 +24,7 @@ try {
     }
 }
 
-engine.extend(app.get('components:view:extend'));
+engine.extend(engineConf.extend);
 
 /*
  * Export the component handler.

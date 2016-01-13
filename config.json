@@ -41,7 +41,6 @@
         "variantSplitter": "--",
         "view": {
             "engine": "handlebars",
-            "extend": {},
             "context": {}
         }
     },
@@ -79,12 +78,20 @@
         "handlebars": {
             "name": "handlebars",
             "ext": ".hbs",
-            "handler": "src/engines/handlebars"
+            "handler": "src/engines/handlebars",
+            "extend": {
+                "helpers": {}
+            }
         },
         "nunjucks": {
             "name": "nunjucks",
             "ext": ".nunjucks",
-            "handler": "src/engines/nunjucks"
+            "handler": "src/engines/nunjucks",
+            "extend": {
+                "filters": {},
+                "globals": {},
+                "extensions": {}
+            }
         }
     },
     "fractal": {
