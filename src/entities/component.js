@@ -9,10 +9,10 @@ var logger      = require('winston');
 
 var mixin       = require('./entity');
 var Variant     = require('./variant');
-var utils       = require('../../utils');
-var data        = require('../../data');
-var md          = require('../../markdown');
-var app         = require('../../application');
+var utils       = require('../utils');
+var data        = require('../data');
+var md          = require('../markdown');
+var app         = require('../application');
 
 /*
  * Export the component.

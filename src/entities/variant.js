@@ -8,10 +8,10 @@ var path        = require('path');
 var fs          = require('fs');
 
 var mixin       = require('./entity');
-var utils       = require('../../utils');
-var md          = require('../../markdown');
-var renderer    = require('../../handlers/components');
-var app         = require('../../application');
+var utils       = require('../utils');
+var md          = require('../markdown');
+var renderer    = require('../handlers/components');
+var app         = require('../application');
 
 /*
  * Export the variant.

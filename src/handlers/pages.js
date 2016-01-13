@@ -11,7 +11,7 @@ var RenderError = require('../errors/render');
 var app         = require('../application');
 
 /*
- * Export the page renderer object.
+ * Export the page handler object.
  */
 
 module.exports = {

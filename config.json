@@ -43,16 +43,16 @@
             "handlebars": {
                 "name": "handlebars",
                 "ext": ".hbs",
-                "handler": "src/handlers/engines/handlebars"
+                "handler": "src/engines/handlebars"
             },
             "nunjucks": {
                 "name": "nunjucks",
-                "ext": ".nunj",
-                "handler": "src/handlers/engines/nunjucks"
+                "ext": ".nunjucks",
+                "handler": "src/engines/nunjucks"
             }
         },
         "view": {
-            "engine": "nunjucks",
+            "engine": "handlebars",
             "extras": {},
             "context": {}
         }

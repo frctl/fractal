@@ -5,7 +5,7 @@
 var nunjucks      = require('nunjucks');
 var _             = require('lodash');
 
-var NotFoundError = require('../../errors/notfound');
+var NotFoundError = require('../errors/notfound');
 
 var viewCache = {};
 

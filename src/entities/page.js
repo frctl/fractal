@@ -9,9 +9,9 @@ var logger      = require('winston');
 var matter      = require('gray-matter');
 
 var mixin       = require('./entity');
-var utils       = require('../../utils');
-var renderer    = require('../../handlers/pages');
-var app         = require('../../application');
+var utils       = require('../utils');
+var renderer    = require('../handlers/pages');
+var app         = require('../application');
 
 /*
  * Export the page.

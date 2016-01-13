@@ -6,9 +6,9 @@ var Promise     = require('bluebird');
 var _           = require('lodash');
 
 var mixin       = require('./entity');
-var utils       = require('../../utils');
-var data        = require('../../data');
-var app         = require('../../application');
+var utils       = require('../utils');
+var data        = require('../data');
+var app         = require('../application');
 
 /*
  * Export the group.

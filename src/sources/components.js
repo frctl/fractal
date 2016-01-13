@@ -2,21 +2,21 @@
  * Module dependencies.
  */
 
-var Promise     = require('bluebird');
-var _           = require('lodash');
-var logger      = require('winston');
-var path        = require('path');
-var fs          = Promise.promisifyAll(require('fs'));
-var mkdirp      = Promise.promisify(require('mkdirp'));
+var Promise       = require('bluebird');
+var _             = require('lodash');
+var logger        = require('winston');
+var path          = require('path');
+var fs            = Promise.promisifyAll(require('fs'));
+var mkdirp        = Promise.promisify(require('mkdirp'));
 
-var Directory   = require('../filesystem/directory');
-var Component   = require('./entities/component');
-var Group       = require('./entities/group');
-var mixin       = require('./source');
-var data        = require('../data');
-var NotFoundError  = require('../errors/notfound')
-var utils       = require('../utils');
-var app         = require('../application');
+var Directory     = require('../filesystem/directory');
+var Component     = require('../entities/component');
+var Group         = require('../entities/group');
+var mixin         = require('./source');
+var data          = require('../data');
+var NotFoundError = require('../errors/notfound')
+var utils         = require('../utils');
+var app           = require('../application');
 
 /*
  * Export the component source.
