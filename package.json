@@ -18,6 +18,7 @@
     "bluebird": "^2.10.2",
     "chalk": "^1.1.1",
     "chokidar": "^1.2.0",
+    "consolidate": "^0.13.1",
     "express": "^4.13.1",
     "gray-matter": "^2.0.1",
     "handlebars": "^4.0.3",

@@ -10,9 +10,6 @@ var NotFoundError = require('../errors/notfound');
 var viewCache = {};
 
 var StringLoader = nunjucks.Loader.extend({
-    init: function() {
-
-    },
     getSource: function(name) {
         var view = _.find(viewCache, function(view){
             return (view.handle === name || view.alias === name);
@@ -23,9 +20,8 @@ var StringLoader = nunjucks.Loader.extend({
                 path: view.path,
                 noCache: true
             };
-        } else {
-            throw new NotFoundError('Partial template not found.');
         }
+        throw new NotFoundError('Partial template not found.');
     }
 });
 
@@ -35,11 +31,8 @@ var nj = new nunjucks.Environment(new StringLoader(), {
 
 module.exports = {
 
-    registerViews: function(views) {
-        viewCache = views;
-    },
-
-    extend: function(extras) {
+    init: function(config){
+        var extras = config.extend || {};
         _.each(extras.filters || {}, function(filter, name){
             nj.addFilter(name, filter);
         });
@@ -49,6 +42,10 @@ module.exports = {
         _.each(extras.globals || {}, function(value, name){
             nj.addGlobal(name, value);
         });
+    },
+
+    registerViews: function(views) {
+        viewCache = views;
     },
 
     render: function(str, context) {

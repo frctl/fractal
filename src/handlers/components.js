@@ -24,7 +24,7 @@ try {
     }
 }
 
-engine.extend(engineConf.extend);
+engine.init(engineConf);
 
 /*
  * Export the component handler.
@@ -46,7 +46,9 @@ module.exports = {
             }
             var context = _.cloneDeep(context || entity.context);
             return this.loadViews().then(function(){
-                return engine.render(entity.files.view.getContents(), context);
+                return engine.render(entity.files.view.getContents(), context, {
+                    path: entity.fsViewPath
+                });
             }).catch(function(e){
                 throw new RenderError('Could not render component "' + entity.handlePath + '".', e);
             });
