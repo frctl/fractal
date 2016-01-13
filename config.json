@@ -39,21 +39,9 @@
             "yield": "yield"
         },
         "variantSplitter": "--",
-        "engines": {
-            "handlebars": {
-                "name": "handlebars",
-                "ext": ".hbs",
-                "handler": "src/engines/handlebars"
-            },
-            "nunjucks": {
-                "name": "nunjucks",
-                "ext": ".nunjucks",
-                "handler": "src/engines/nunjucks"
-            }
-        },
         "view": {
             "engine": "handlebars",
-            "extras": {},
+            "extend": {},
             "context": {}
         }
     },
@@ -86,6 +74,18 @@
                 "color": "green"
             }
         ]
+    },
+    "engines": {
+        "handlebars": {
+            "name": "handlebars",
+            "ext": ".hbs",
+            "handler": "src/engines/handlebars"
+        },
+        "nunjucks": {
+            "name": "nunjucks",
+            "ext": ".nunjucks",
+            "handler": "src/engines/nunjucks"
+        }
     },
     "fractal": {
         "site": {

@@ -116,7 +116,7 @@ module.exports = {
 
     setViewEngine: function(){
         var name = this.get('components:view:engine');
-        var engine = this.get('components:engines')[name];
+        var engine = this.get('engines')[name];
         engine.ext = '.' + _.trim(engine.ext, '.');
         engine.engine = name;
         this.set('components:view:engine', engine);

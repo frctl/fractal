@@ -39,8 +39,16 @@ module.exports = {
         viewCache = views;
     },
 
-    registerExtras: function(extras) {
-
+    extend: function(extras) {
+        _.each(extras.filters || {}, function(filter, name){
+            nj.addFilter(name, filter);
+        });
+        _.each(extras.extensions || {}, function(ext, name){
+            nj.addExtension(name, ext);
+        });
+        _.each(extras.globals || {}, function(value, name){
+            nj.addGlobal(name, value);
+        });
     },
 
     render: function(str, context) {

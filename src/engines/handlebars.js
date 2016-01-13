@@ -16,12 +16,12 @@ module.exports = {
         });
     },
 
-    registerExtras: function(extras) {
-        _.each(extras.helpers || {}, function(helper, key){
-            Handlebars.registerHelper(key, helper);
+    extend: function(extras) {
+        _.each(extras.helpers || {}, function(helper, name){
+            Handlebars.registerHelper(name, helper);
         });
-        _.each(extras.partials || {}, function(partial, key){
-            Handlebars.registerPartial(key, partial);
+        _.each(extras.partials || {}, function(partial, name){
+            Handlebars.registerPartial(name, partial);
         });
     },
 

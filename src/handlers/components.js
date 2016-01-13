@@ -24,7 +24,7 @@ try {
     }
 }
 
-engine.registerExtras(app.get('components:view:extras'));
+engine.extend(app.get('components:view:extend'));
 
 /*
  * Export the component handler.
