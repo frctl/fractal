@@ -1,30 +1,31 @@
 {
   "name": "@frctl/fractal",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "description": "An unopinionated UI component library generator.",
   "main": "src/fractal.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/frctl/fractal.git"
   },
-  "author": "Mark Perkins",
+  "author": "Clearleft <dev@clearleft.com> (http://clearleft.com/)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/frctl/fractal/issues"
   },
   "homepage": "https://github.com/frctl/fractal",
   "dependencies": {
-    "@frctl/theme-default": "^0.2.0",
+    "@frctl/theme-default": "0.2.1",
     "bluebird": "^2.10.2",
+    "chalk": "^1.1.1",
     "chokidar": "^1.2.0",
     "consolidate": "^0.13.1",
     "express": "^4.13.1",
-    "express-handlebars": "^2.0.1",
-    "faker": "^3.0.1",
     "gray-matter": "^2.0.1",
     "handlebars": "^4.0.3",
     "highlight.js": "^8.9.1",
+    "istextorbinary": "^1.0.2",
     "js-yaml": "^3.4.3",
+    "liftoff": "^2.2.0",
     "lodash": "^3.10.0",
     "marked": "^0.3.5",
     "mkdirp": "^0.5.1",
@@ -32,8 +33,22 @@
     "ncp": "^2.0.0",
     "nunjucks": "^2.1.0",
     "rimraf": "^2.4.3",
+    "semver": "^5.1.0",
     "supertest": "^1.1.0",
     "swig": "^1.4.2",
-    "winston": "^1.1.0"
+    "winston": "^1.1.0",
+    "yargs": "^3.31.0"
+  },
+  "bin": {
+    "fractal": "./bin/fractal"
+  },
+  "engines": {
+    "node": ">= 4.0.0"
+  },
+  "scripts": {
+    "start": "node ./bin/fractal start",
+    "build": "node ./bin/fractal build",
+    "init": "node ./bin/fractal init",
+    "create": "node ./bin/fractal create"
   }
 }

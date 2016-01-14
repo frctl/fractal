@@ -43,9 +43,11 @@ handlers.params.component = function(req, res, next, componentPath) {
     }
     req._type = entity.type;
     req._component.renderAll().then(function(comp){
-        res.locals.component = comp.toJSON();
+        res.locals.component = comp;
         res.locals.variant = _.find(comp.variants, 'handle', req._variant.handle);
         next();
+    }).catch(function(e){
+        next(e);
     });
 };
 
@@ -107,7 +109,7 @@ handlers.list = function(req, res) {
     switch(req.params.collection){
         case 'all':
             data.title = 'All components';
-            data.items = notHidden.flatten().toJSON();
+            data.items = notHidden.flatten().components;
         break;
     }
     res.render('components/list', {

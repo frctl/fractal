@@ -9,8 +9,9 @@ var logger      = require('winston');
 var matter      = require('gray-matter');
 
 var mixin       = require('./entity');
-var utils       = require('../../utils');
-var renderer    = require('../../handlers/pages');
+var utils       = require('../utils');
+var renderer    = require('../handlers/pages');
+var app         = require('../application');
 
 /*
  * Export the page.
@@ -24,11 +25,10 @@ module.exports = Page;
  * @api private
  */
 
-function Page(file, dir, config, app){
+function Page(file, dir, config){
 
     var self = this;
 
-    this._app           = app;
     this._source        = file;
     this._dir           = dir;
     this._config        = config;
@@ -71,7 +71,7 @@ Page.prototype.init = function(){
     this._config        = _.defaultsDeep(this._config, parsed.data || {});
     this.label          = this._config.label || utils.titlize(this._source.name);
     if (this.label.toLowerCase() === 'index') {
-        this.label = this._app.get('pages:indexLabel');
+        this.label = app.get('pages.indexLabel');
         this.title = this._config.title || utils.titlize(this._source.depth > 1 ? this._dir.name : this.label);
     } else {
         this.title = this._config.title || this.label;
@@ -87,7 +87,7 @@ Page.prototype.init = function(){
 
 Page.prototype.renderContent = function(context){
     var self = this;
-    return renderer.render(this, context || {}, this._app).then(function(content){
+    return renderer.render(this, context || {}, app).then(function(content){
         self.content = content;
         return content;
     });
@@ -99,11 +99,11 @@ Page.prototype.renderContent = function(context){
  * @api public
  */
 
-Page.fromFile = function(file, dir, app){
+Page.fromFile = function(file, dir){
     var self = this;
     // check to see if there is some config associated with the file
     var configFile = _.find(dir.getFiles(), function(entity){
-        return entity.matches(app.get('pages:config'), {
+        return entity.matches(app.get('pages.config'), {
             name: file.name
         });
     });

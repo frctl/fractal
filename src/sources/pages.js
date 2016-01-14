@@ -2,16 +2,21 @@
  * Module dependencies.
  */
 
-var Promise     = require('bluebird');
-var _           = require('lodash');
-var logger      = require('winston');
+var Promise       = require('bluebird');
+var _             = require('lodash');
+var logger        = require('winston');
+var path          = require('path');
+var fs            = Promise.promisifyAll(require('fs'));
+var mkdirp        = Promise.promisify(require('mkdirp'));
 
-var Directory   = require('../filesystem/directory');
-var Page        = require('./entities/page');
-var Group       = require('./entities/group');
-var mixin       = require('./source');
-var data        = require('../data');
-var NotFoundError  = require('../errors/notfound');
+var Directory     = require('../filesystem/directory');
+var Page          = require('../entities/page');
+var Group         = require('../entities/group');
+var mixin         = require('./source');
+var data          = require('../data');
+var NotFoundError = require('../errors/notfound');
+var utils         = require('../utils');
+var app           = require('../application');
 
 /*
  * Export the page source.
@@ -25,9 +30,8 @@ module.exports = PageSource;
  * @api private
  */
 
-function PageSource(pages, app){
+function PageSource(pages){
     this.pages = pages;
-    this.app = app;
 };
 
 mixin.call(PageSource.prototype);
@@ -153,7 +157,7 @@ PageSource.prototype.flatten = function(){
             return item.type === 'group' ? list(item.children) : item;
         }));
     }
-    return new PageSource(list(this.pages), this.app).init();
+    return new PageSource(list(this.pages)).init();
 };
 
 /*
@@ -187,7 +191,7 @@ PageSource.prototype.flattenWithGroups = function(){
         });
     }
     group(this.pages, null);
-    return new PageSource(grouped, this.app).init();
+    return new PageSource(grouped).init();
 };
 
 /*
@@ -208,13 +212,52 @@ PageSource.prototype.filter = function(key, value){
                 // group
                 var children = filter(item.children);
                 if (children.length) {
-                    ret.push(new Group(item._dir, item._config, children, item._app));
+                    ret.push(new Group(item._dir, item._config, children));
                 }
             }
         });
         return _.compact(ret);
     }
-    return new PageSource(filter(this.pages), this.app).init();
+    return new PageSource(filter(this.pages)).init();
+};
+
+/*
+ * Checks if a page exists
+ *
+ * @api public
+ */
+
+PageSource.prototype.exists = function(str){
+    try {
+        return this.resolve(str);
+    } catch(e){
+        return false;
+    }
+};
+
+/*
+ * Creates a new page
+ *
+ * @api public
+ */
+
+PageSource.prototype.create = function(relPath, opts){
+
+    var self = this;
+    var fullPath = path.join(app.get('pages.path'), relPath);
+    var pathParts = path.parse(fullPath);
+    return mkdirp(pathParts.dir).then(function(){
+
+        var config = {
+            title: utils.titlize(pathParts.name)
+        };
+
+        var strConfig = '---\n' + data.stringify(config, 'yaml') + '---\n\n';
+        var content = strConfig + 'This is the ' + config.title + ' page';
+        var pagePath = path.join(pathParts.dir, app.get('generator.pages.name').replace('{{name}}', pathParts.name));
+
+        return fs.writeFileAsync(pagePath, content);
+    });
 };
 
 /*
@@ -274,7 +317,7 @@ PageSource.prototype.setDefaults = function(defaults){
                     }
                 } catch(e) {}
                 if (!found) {
-                    var group = new Group(item._dir, item._config, [], item._app);
+                    var group = new Group(item._dir, item._config, []);
                     if (source instanceof PageSource) {
                         source.pages.push(group);
                         source.pages = _.sortByOrder(source.pages, ['order','label'], ['asc','asc']);
@@ -297,15 +340,15 @@ PageSource.prototype.setDefaults = function(defaults){
  * @api public
  */
 
-PageSource.build = function(path, app){
+PageSource.build = function(path){
     return Directory.fromPath(path).then(function(dir){
-        return PageSource.buildPageTree(dir, app).then(function(tree){
-            return new PageSource(tree, app).init();
+        return PageSource.buildPageTree(dir).then(function(tree){
+            return new PageSource(tree).init();
         });
     }).catch(function(e){
         console.log(e.stack);
         logger.warn('Could not create page tree - ' + e.message);
-        return new PageSource([], app).init();
+        return new PageSource([]).init();
     });
 };
 
@@ -316,14 +359,14 @@ PageSource.build = function(path, app){
  * @public
  */
 
-PageSource.buildPageTree = function(dir, app){
+PageSource.buildPageTree = function(dir){
 
     var tree = [];
 
     function makeGroupPromise(directory){
-        return PageSource.buildPageTree(directory, app).then(function(subtree){
+        return PageSource.buildPageTree(directory).then(function(subtree){
             if (_.isArray(subtree)) {
-                return Group.fromDirectory(directory, subtree, app);
+                return Group.fromDirectory(directory, subtree);
             }
             return subtree;
         });
@@ -331,9 +374,9 @@ PageSource.buildPageTree = function(dir, app){
 
     _.each(dir.children, function(entity){
         if (entity.type == 'file') {
-            var matches = entity.matches(app.get('pages:match'));
+            var matches = entity.matches(app.get('pages.match'));
             if (matches) {
-                tree.push(Page.fromFile(entity, dir, app));
+                tree.push(Page.fromFile(entity, dir));
             }
         } else {
             if (entity.hasChildren()) {
@@ -355,6 +398,6 @@ PageSource.buildPageTree = function(dir, app){
  * @api public
  */
 
-PageSource.emptySource = function(app){
-    return Promise.resolve(new PageSource([], app).init());
+PageSource.emptySource = function(){
+    return Promise.resolve(new PageSource([]).init());
 };

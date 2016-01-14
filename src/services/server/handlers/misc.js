@@ -1,7 +1,7 @@
 /**
  * Module dependencies.
  */
-
+var logger          = require('winston');
 var NotFoundError   = require('../../../errors/notfound');
 var highlighter     = require('../../../highlighter');
 
@@ -24,7 +24,8 @@ handlers.favicon = function(req, res) {
  * Error handler
  */
 
-handlers.error = function(err, req, res, next) {
+handlers.error = function(err, req, res) {
+    logger.warn(err.message);
     if (err instanceof NotFoundError) {
         return res.status(404).render('pages/404', {
             message: err.message,
@@ -32,7 +33,7 @@ handlers.error = function(err, req, res, next) {
             error: err
         });
     } else {
-        return res.status(500).render('pages/500', {
+        return res.render('pages/500', {
             message: err.message,
             stack: highlighter(err.stack),
             error: err
