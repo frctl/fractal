@@ -15,16 +15,11 @@ var viewsCache    = null;
 
 try {
     engine = require(engineConf.handler);
+    engine.init(engineConf);
 } catch (e) {
-    try {
-        engine = require(path.join(app.get('system.paths.root'), engineConf.handler));
-    } catch (e) {
-        logger.warn(e.message);
-        throw new NotFoundError('The component handler ' + engineConf.handler + ' could not be found.');
-    }
+    logger.warn(e.message);
+    throw new NotFoundError('The component engine ' + engineConf.handler + ' could not be found.');
 }
-
-engine.init(engineConf);
 
 /*
  * Export the component handler.

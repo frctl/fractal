@@ -1,6 +1,6 @@
 {
   "name": "@frctl/fractal",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "An unopinionated UI component library generator.",
   "main": "src/fractal.js",
   "repository": {
@@ -14,7 +14,10 @@
   },
   "homepage": "https://github.com/frctl/fractal",
   "dependencies": {
-    "@frctl/theme-default": "0.2.1",
+    "@frctl/consolidate-engine": "^0.1.0",
+    "@frctl/handlebars-engine": "^0.1.0",
+    "@frctl/nunjucks-engine": "^0.1.0",
+    "@frctl/theme-default": "^0.2.1",
     "bluebird": "^2.10.2",
     "chalk": "^1.1.1",
     "chokidar": "^1.2.0",
@@ -29,6 +32,7 @@
     "lodash": "^3.10.0",
     "marked": "^0.3.5",
     "mkdirp": "^0.5.1",
+    "mustache": "^2.2.1",
     "nconf": "^0.8.2",
     "ncp": "^2.0.0",
     "nunjucks": "^2.1.0",

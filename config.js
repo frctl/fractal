@@ -51,7 +51,6 @@ module.exports = {
         path: null,
         config: "{{name}}\\.config\\.(js|json|yml|yaml)",
         match: ".*\\.(html|md|markdown)",
-        handler: "handlers/pages/markdown",
         indexLabel: "Overview"
     },
     statuses: {
@@ -79,22 +78,25 @@ module.exports = {
     },
     engines: {
         handlebars: {
-            name: "handlebars",
             ext: ".hbs",
-            handler: "src/engines/handlebars",
+            handler: "@frctl/handlebars-engine",
             extend: {
                 helpers: {}
             }
         },
         nunjucks: {
-            name: "nunjucks",
             ext: ".nunjucks",
-            handler: "src/engines/nunjucks",
+            handler: "@frctl/nunjucks-engine",
             extend: {
                 filters: {},
                 globals: {},
                 extensions: {}
             }
+        },
+        mustache: {
+            ext: ".mustache",
+            handler: "@frctl/consolidate-engine",
+            extend: {}
         }
     },
     fractal: {

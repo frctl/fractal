@@ -28,9 +28,7 @@ handlers.params.page = function(req, res, next, pagePath) {
             next();
         });
     } catch(err) {
-        return res.status(404).render('pages/404', {
-            message: err.message
-        });
+        next(err);
     }
 };
 
