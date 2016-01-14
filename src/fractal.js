@@ -51,6 +51,9 @@ module.exports = {
      */
 
     get: function(setting){
+        if (_.isUndefined(setting)) {
+            return config;
+        }
         return _.get(config, setting);
     },
 
