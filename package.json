@@ -14,7 +14,7 @@
   },
   "homepage": "https://github.com/frctl/fractal",
   "dependencies": {
-    "@frctl/theme-default": "^0.2.0",
+    "@frctl/theme-default": "0.2.1",
     "bluebird": "^2.10.2",
     "chalk": "^1.1.1",
     "chokidar": "^1.2.0",
