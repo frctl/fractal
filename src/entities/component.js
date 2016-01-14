@@ -129,7 +129,7 @@ Component.prototype.getVariants = function(){
     }
     var self = this;
     var variants = [];
-    var splitter = app.get('components.variantSplitter');
+    var splitter = app.get('components.splitter');
     var configs = _.map(this._config.variants || [], function(config){
         if (!_.isUndefined(config.handle)) {
             return makeVariantConfig(config.handle, config).then(function(conf){

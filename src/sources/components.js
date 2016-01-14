@@ -357,7 +357,7 @@ ComponentSource.buildComponentTree = function(dir, cascadeConfig){
             // Otherwise check to see if any of the files in the directory match the component filename pattern.
             _.each(files, function(file){
                 var matches = file.matches('^(?!.*({{splitter}})).*{{ext}}$', {
-                    splitter: app.get('components.variantSplitter'),
+                    splitter: app.get('components.splitter'),
                     ext: engine.ext
                 });
                 if (matches) {
