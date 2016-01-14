@@ -1,4 +1,7 @@
+var packageJSON = require('./package.json');
+
 module.exports = {
+    version: packageJSON.version,
     dev: false,
     log: {
         level: "warn"
