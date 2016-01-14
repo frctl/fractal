@@ -1,2 +1,3 @@
-# handlebars-engine
-Use Handlebars templates with Fractal
+# Handlebars Engine
+
+Use Handlebars templates with Fractal.
