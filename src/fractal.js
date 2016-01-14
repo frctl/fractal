@@ -120,7 +120,7 @@ module.exports = {
         var name = this.get('components.view.engine');
         var engine = this.get('engines.' + name);
         if (!engine) {
-            logger.error('Template engine '%s' not recognised. Aborting.', name);
+            logger.error('Template engine \'%s\' not recognised. Aborting.', name);
             process.exit();
         }
         engine.ext = '.' + _.trim(engine.ext, '.');
