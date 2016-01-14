@@ -24,8 +24,11 @@ handlers.favicon = function(req, res) {
  * Error handler
  */
 
-handlers.error = function(err, req, res) {
-    logger.warn(err.message);
+handlers.error = function(err, req, res, next) {
+    logger.error(err.message);
+    if (res.headersSent) {
+        return next(err);
+    }
     if (err instanceof NotFoundError) {
         return res.status(404).render('pages/404', {
             message: err.message,

@@ -118,9 +118,13 @@ module.exports = {
 
     setViewEngine: function(){
         var name = this.get('components.view.engine');
-        var engine = this.get('engines')[name];
+        var engine = this.get('engines.' + name);
+        if (!engine) {
+            logger.error('Template engine '%s' not recognised. Aborting.', name);
+            process.exit();
+        }
         engine.ext = '.' + _.trim(engine.ext, '.');
-        engine.engine = name;
+        engine.name = engine.engine = name;
         this.set('components.view.engine', engine);
     },
 
