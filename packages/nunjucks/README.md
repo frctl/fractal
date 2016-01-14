@@ -1,2 +1,3 @@
-# nunjucks-engine
-Use Nunjucks templates with Fractal
+# Nunjucks Engine
+
+Use [Nunjucks](http://mozilla.github.io/nunjucks/) templates with Fractal.

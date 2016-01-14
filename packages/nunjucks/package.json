@@ -1,0 +1,21 @@
+{
+  "name": "@frctl/nunjucks-engine",
+  "version": "0.1.0",
+  "description": "Use Nunjucks templates with Fractal.",
+  "main": "engine.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/frctl/nunjucks-engine.git"
+  },
+  "author": "Clearleft <dev@clearleft.com> (http://clearleft.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/frctl/nunjucks-engine/issues"
+  },
+  "homepage": "https://github.com/frctl/nunjucks-engine",
+  "dependencies": {
+    "lodash": "^4.0.0",
+    "nunjucks": "^2.3.0"
+  },
+  "devDependencies": {}
+}
