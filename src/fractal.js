@@ -6,7 +6,7 @@ var path        = require('path');
 var logger      = require('winston');
 var _           = require('lodash');
 
-var config      = require(path.join(__dirname + '/../config.js'));
+var config      = require('../config.js');
 
 module.exports = {
 

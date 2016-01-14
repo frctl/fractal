@@ -391,3 +391,13 @@ ComponentSource.buildComponentTree = function(dir, cascadeConfig){
 
     });
 };
+
+/*
+ * Return an empty new ComponentSource instance
+ *
+ * @api public
+ */
+
+ComponentSource.emptySource = function(){
+    return Promise.resolve(new ComponentSource([]).init());
+};

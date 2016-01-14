@@ -32,17 +32,21 @@ module.exports = {
 
     getComponents: function(){
         if (!components) {
-            var self = this;
-            components = require('./sources/components').build();
-            this.createMonitor(this.get('components.path'), function(event, path) {
-                // TODO: make component tree rebuilding more refined rather than all or nothing.
-                components = null;
-                self.events.emit("component-tree-changed");
-            });
+            if (this.get('components.path')) {
+                var self = this;
+                components = require('./sources/components').build();
+                this.createMonitor(this.get('components.path'), function(event, path) {
+                    // TODO: make component tree rebuilding more refined rather than all or nothing.
+                    components = null;
+                    self.events.emit("component-tree-changed");
+                });
+            } else {
+                components = require('./sources/components').emptySource();
+            }
         }
         return components;
     },
-
+    
     /*
      * Return a collection of pages based on the config path.
      *
