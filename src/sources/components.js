@@ -312,7 +312,7 @@ ComponentSource.build = function(){
             return new ComponentSource(tree).init();
         });
     }).catch(function(e){
-        logger.warn('Could not create component tree - ' + e.message);
+        logger.info('Could not create component tree - ' + e.message);
         return new ComponentSource([]).init();
     });
 };

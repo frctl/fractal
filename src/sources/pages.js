@@ -346,8 +346,7 @@ PageSource.build = function(path){
             return new PageSource(tree).init();
         });
     }).catch(function(e){
-        console.log(e.stack);
-        logger.warn('Could not create page tree - ' + e.message);
+        logger.info('Could not create page tree - ' + e.message);
         return new PageSource([]).init();
     });
 };
