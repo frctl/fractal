@@ -26,6 +26,7 @@
     "gray-matter": "^2.0.1",
     "handlebars": "^4.0.3",
     "highlight.js": "^8.9.1",
+    "intern": "^3.0.6",
     "istextorbinary": "^1.0.2",
     "js-yaml": "^3.4.3",
     "liftoff": "^2.2.0",
