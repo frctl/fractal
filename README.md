@@ -11,7 +11,7 @@ Core features include:
 * **Inbuilt server for rapid development**, and **static-site export** functionality for easy hosting.
 * Configurable **component statuses** to aid implementation workflows.
 * **Freedom to organise your components** to fit your own design system.
-* **Fork the default theme** to customise the UI to your liking.
+* **Forkable default theme** to customise the UI to your liking.
 
 > **Important:** Fractal is currently considered to be in an _early-alpha_ stage and not ready for production use. Until it reaches a 1.0 release there may be breaking changes in point-releases, as well as out-of date or incorrect documentation. Use at your own risk!
 
