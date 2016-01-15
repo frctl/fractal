@@ -17,7 +17,7 @@ var app = require('@frctl/fractal');
 
 app.set('project.title', 'My Amazing Component Library');
 
-//... Any more configuration here
+//... Any other configuration items here
 
 ```
 
@@ -31,6 +31,10 @@ Run the command `fractal start` from within your root directory and then point y
 
 Run the command `fractal create component my-example` in your terminal and then refresh your browser to see your shiny new component in all it's glory.
 
-#### 6. Learn more...
+#### 6. Export a static version of your component library
 
-Check out the rest of the documentation for details on configuring Fractal, creating components and pages and much more.
+Use the `fractal build` command to export a static version of the site that you can easily upload to your webserver.
+
+#### 7. And much more...
+
+Check out the rest of the documentation for details on [configuring Fractal](/docs/configuration.md), creating [components](/docs/components/overview.md) and [pages](/docs/pages/overview.md) and more.

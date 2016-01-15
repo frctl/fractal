@@ -4,18 +4,21 @@
 
 Core features include:
 
-* Template-language agnostic components with support for associated assets and variants.
-* Data-driven component previews - fetch content from APIs, generate it with libraries like [Faker](https://github.com/marak/Faker.js/) or provide it yourself.
-* Markdown-powered pages and documentation for components.
-* Freedom to organise your component library to fit your own design system.
-* Static-site export functionality.
+* **Template-language agnostic components** with support for associated assets and variants.
+* **Data-driven component previews** - fetch content from APIs, generate it with libraries like [Faker](https://github.com/marak/Faker.js/) or provide it yourself.
+* **Sandboxed rendering** - all components are rendered in an iframe within an optional preview layout. No 'style bleed' from the library into your templates!
+* **Markdown-powered pages** and documentation for components.
+* **Inbuilt server for rapid development**, and **static-site export** functionality for easy hosting.
+* Configurable **component statuses** to aid implementation workflows.
+* **Freedom to organise your components** to fit your own design system.
+* **Fork the default theme** to customise the UI to your liking.
 
 > **Important:** Fractal is currently considered to be in an _early-alpha_ stage and not ready for production use. Until it reaches a 1.0 release there may be breaking changes in point-releases, as well as out-of date or incorrect documentation. Use at your own risk!
 
 ## Table of Contents
 
-* [Quick start guide](docs/quick-start.md)
-* [Configuration](docs/configuration.md)
+* [Quick start guide](/docs/quick-start.md)
+* [Configuration](/docs/configuration.md)
 
 ## Q&A
 
