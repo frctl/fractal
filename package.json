@@ -26,7 +26,6 @@
     "gray-matter": "^2.0.1",
     "handlebars": "^4.0.3",
     "highlight.js": "^8.9.1",
-    "intern": "^3.0.6",
     "istextorbinary": "^1.0.2",
     "js-yaml": "^3.4.3",
     "liftoff": "^2.2.0",
@@ -51,9 +50,12 @@
     "node": ">= 4.0.0"
   },
   "scripts": {
-    "start": "node ./bin/fractal start",
-    "build": "node ./bin/fractal build",
-    "init": "node ./bin/fractal init",
-    "create": "node ./bin/fractal create"
+    "test": "./node_modules/.bin/mocha --reporter spec"
+  },
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "chai-as-promised": "^5.2.0",
+    "mocha": "^2.3.4",
+    "sinon": "^1.17.2"
   }
 }
