@@ -46,7 +46,7 @@ module.exports = {
         }
         return components;
     },
-    
+
     /*
      * Return a collection of pages based on the config path.
      *
@@ -95,7 +95,7 @@ module.exports = {
      */
 
     getStatuses: function(){
-        return this.get('statuses.options');
+        return this.get('status.options');
     },
 
     /*
@@ -106,8 +106,8 @@ module.exports = {
 
     getStatus: function(status){
         var statuses = this.getStatuses();
-        status = status || this.get('statuses.default');
-        return _.find(statuses, 'name', status) || _.find(statuses, 'name', this.get('statuses.default'));
+        var status = status || this.get('status.default');
+        return _.find(statuses, 'name', status) || _.find(statuses, 'name', this.get('status.default'));
     },
 
     /*

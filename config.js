@@ -53,7 +53,7 @@ module.exports = {
         match: ".*\\.(html|md|markdown)",
         indexLabel: "Overview"
     },
-    statuses: {
+    status: {
         default: "ready",
         options: [
             {

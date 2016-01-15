@@ -65,7 +65,7 @@ function Component(entity, files, config){
     }
 
     this.variantDefaults = {
-        status:     config.status || app.get('statuses.default'),
+        status:     config.status || app.get('status.default'),
         context:    config.context || {},
         preview:    config.preview || app.get('components.preview.layout'),
         display:    config.display || {},
