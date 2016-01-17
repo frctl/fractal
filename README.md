@@ -1,19 +1,22 @@
-# Fractal
+<h1 style="display: flex; align-items: center;"> Fractal
+    <a style="margin-left: auto" href="https://travis-ci.org/frctl/fractal"><img src="https://img.shields.io/travis/frctl/fractal.svg?style=flat" alt="Build Status"></a>
+</h1>
 
 **Fractal is an un-opinionated tool for creating and documenting website component libraries.**
 
 Core features include:
 
-* **Template-language agnostic components** with support for associated assets and variants.
+* **Template-language-agnostic components** with support for associated assets and variants.
 * **Data-driven component previews** - fetch content from APIs, generate it with libraries like [Faker](https://github.com/marak/Faker.js/) or provide it yourself.
 * **Sandboxed rendering** - all components are rendered in an iframe within an optional preview layout. No 'style bleed' from the library into your templates!
 * **Markdown-powered pages** and documentation for components.
 * **Inbuilt server for rapid development**, and **static-site export** functionality for easy hosting.
 * Configurable **component statuses** to aid implementation workflows.
 * **Freedom to organise your components** to fit your own design system.
-* **Forkable default theme** to customise the UI to your liking.
 
-> **Important:** Fractal is currently considered to be in an _early-alpha_ stage and not ready for production use. Until it reaches a 1.0 release there may be breaking changes in point-releases, as well as out-of date or incorrect documentation. Use at your own risk!
+> _**Important:** Fractal is currently considered to be in an early-alpha stage and not ready for production use. Until it reaches a 1.0 release there may be breaking changes in point-releases, as well as out-of date or incorrect documentation. Use at your own risk!_
+
+
 
 ## Table of Contents
 
