@@ -1,6 +1,4 @@
-<h1 style="display: flex; align-items: center;"> Fractal
-    <a style="margin-left: auto" href="https://travis-ci.org/frctl/fractal"><img src="https://img.shields.io/travis/frctl/fractal.svg?style=flat" alt="Build Status"></a>
-</h1>
+# Fractal
 
 **Fractal is an un-opinionated tool for creating and documenting website component libraries.**
 
@@ -16,7 +14,7 @@ Core features include:
 
 > _**Important:** Fractal is currently considered to be in an early-alpha stage and not ready for production use. Until it reaches a 1.0 release there may be breaking changes in point-releases, as well as out-of date or incorrect documentation. Use at your own risk!_
 
-
+[![Build Status](https://img.shields.io/travis/frctl/fractal.svg?style=flat)](https://travis-ci.org/frctl/fractal)
 
 ## Table of Contents
 
