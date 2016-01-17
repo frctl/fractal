@@ -50,9 +50,13 @@
     "node": ">= 4.0.0"
   },
   "scripts": {
-    "start": "node ./bin/fractal start",
-    "build": "node ./bin/fractal build",
-    "init": "node ./bin/fractal init",
-    "create": "node ./bin/fractal create"
+    "test": "NODE_ENV=test ./node_modules/.bin/mocha --reporter spec"
+  },
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "chai-as-promised": "^5.2.0",
+    "mocha": "^2.3.4",
+    "proxyquire": "^1.7.3",
+    "sinon": "^1.17.2"
   }
 }

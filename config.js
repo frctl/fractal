@@ -2,7 +2,7 @@ var packageJSON = require('./package.json');
 
 module.exports = {
     version: packageJSON.version,
-    dev: false,
+    env: process.env.NODE_ENV || 'production',
     log: {
         level: "warn"
     },
@@ -22,7 +22,6 @@ module.exports = {
     },
     theme: {
         name: "@frctl/theme-default",
-        config: null,
         paths: {}
     },
     generator: {
@@ -110,4 +109,4 @@ module.exports = {
             url: "mailto:dev@clearleft.com"
         }
     }
-}
+};

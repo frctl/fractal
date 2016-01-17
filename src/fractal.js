@@ -10,6 +10,10 @@ var config      = require('../config.js');
 
 module.exports = {
 
+    version: config.version,
+
+    env: config.env,
+
     /*
      * Set a configuration value.
      *
@@ -85,19 +89,32 @@ module.exports = {
 
     run: function(argv) {
 
+        var input = this.parseArgv(argv);
+
         this.setPathInfo();
         this.setThemeDetails();
         this.setViewEngine();
 
+        require('./services/run')(input.command, input.args, input.opts);
+    },
+
+    /*
+     * Parse the supplied argv to extract a command, arguments and options
+     *
+     * @api private
+     */
+
+    parseArgv: function(argv){
         var args = argv._;
         var command = args.shift();
         var opts = argv;
         delete opts._;
         delete opts.$0;
-
-        this.app = require('./application');
-
-        require('./services/run')(command, args, opts);
+        return {
+            command: command,
+            args: args,
+            opts: opts
+        }
     },
 
     /*
