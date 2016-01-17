@@ -16,9 +16,9 @@ Fractal consist of two parts, a global command line tool and a per-project NPM p
 var app = require('@frctl/fractal');
 
 app.set('project.title', 'My Amazing Component Library');
+app.set('components.path', 'src/components');
 
 //... Any other configuration items here
-
 ```
 
 (Or run `fractal init` from within the root directory of your project to generate a default `fractal.js` file).
