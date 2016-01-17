@@ -8,7 +8,7 @@ Core features include:
 * **Data-driven component previews** - fetch content from APIs, generate it with libraries like [Faker](https://github.com/marak/Faker.js/) or provide it yourself.
 * **Sandboxed rendering** - all components are rendered in an iframe within an optional preview layout. No 'style bleed' from the library into your templates!
 * **Markdown-powered pages** and documentation for components.
-* **Inbuilt server for rapid development**, and **static-site export** functionality for easy hosting.
+* **In-built server for rapid development**, and **static-site export** functionality for easy hosting.
 * Configurable **component statuses** to aid implementation workflows.
 * **Freedom to organise your components** to fit your own design system.
 
@@ -20,6 +20,8 @@ Core features include:
 
 * [Quick start guide](/docs/quick-start.md)
 * [Configuration](/docs/configuration.md)
+* [Components](/docs/components/overview.md)
+* [More coming soon]
 
 ## Q&A
 
