@@ -19,6 +19,7 @@ module.exports = function(viewsPath){
 
     var nj = new nunjucks.Environment(
         new nunjucks.FileSystemLoader(viewsPath, {
+            // TODO: enable template caching, cache bust on file tree change
             watch: true,
             noCache: true
         }), {
