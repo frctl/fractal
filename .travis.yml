@@ -1,0 +1,8 @@
+language: node_js
+node_js:
+  - "5"
+  - "4"
+sudo: false
+script: "npm test"
+env:
+  - NODE_ENV=TEST
