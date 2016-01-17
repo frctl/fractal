@@ -3,6 +3,7 @@
  */
 
 var logger = require('winston');
+var app    = require('../application');
 
 module.exports = function(command, args, opts) {
     switch (command) {
@@ -19,8 +20,12 @@ module.exports = function(command, args, opts) {
             require('./init').start(opts);
             break;
         default:
-            logger.error('Unrecognised command.');
-            process.exit(1);
+            if (app.get('env') === 'test') {
+                // do nothing
+            } else {
+                logger.error('Unrecognised command.');
+                process.exit(1);
+            }
             break;
     }
 };
