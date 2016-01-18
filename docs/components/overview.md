@@ -24,7 +24,7 @@ The markup for a component can either be written as 'vanilla' HTML or using a te
 
 See the [template engine documentation](/docs/components/template-engines.md) for more details on how to configure and use different template engines with Fractal.
 
-## Getting started
+## In this section
 
 * [Creating Components - A Guide](/docs/components/creating-components.md)
 * [Template Engines](/docs/components/template-engines.md)
