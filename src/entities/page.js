@@ -87,7 +87,7 @@ Page.prototype.init = function(){
 
 Page.prototype.renderContent = function(context){
     var self = this;
-    return renderer.render(this, context || {}, app).then(function(content){
+    return renderer.render(this, context || {}).then(function(content){
         self.content = content;
         return content;
     });
@@ -108,8 +108,7 @@ Page.fromFile = function(file, dir){
         });
     });
     var pageConfig = configFile ? data.load(configFile.absolutePath) : Promise.resolve({});
-    return pageConfig.then(function(pageConfig){
-
+    return pageConfig.then(function(pageConfig){        
         return (new Page(file, dir, pageConfig, app)).init();
     });
 };

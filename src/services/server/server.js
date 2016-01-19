@@ -2,19 +2,21 @@
  * Module dependencies.
  */
 
-var express     = require('express');
-var server      = express();
-var logger      = require('winston');
-var path        = require('path');
-var _           = require('lodash');
-var chalk       = require('chalk');
-var Promise     = require('bluebird');
+var express       = require('express');
+var server        = express();
+var logger        = require('winston');
+var path          = require('path');
+var _             = require('lodash');
+var chalk         = require('chalk');
+var Promise       = require('bluebird');
+var favicon       = require('serve-favicon');
 
-var app         = require('../../application');
-var components  = require('./handlers/components');
-var pages       = require('./handlers/pages');
-var misc        = require('./handlers/misc');
-var renderer    = require('../../view');
+var app           = require('../../application');
+var NotFoundError = require('../../errors/notfound');
+var highlighter   = require('../../highlighter');
+var api           = require('../../api');
+var theme         = require('../../theme/theme');
+var engine        = require('../../view');
 
 /**
  * General setup.
@@ -22,97 +24,109 @@ var renderer    = require('../../view');
 
 var instance = null;
 
-var nunjucks = renderer(app.get('theme.paths.views'), app);
-nunjucks.express(server);
-
-server.set('app', app);
+engine.express(server);
 server.set('view engine', 'nunj');
-server.engine('nunj', nunjucks.render);
+server.engine('nunj', engine.render);
 
-// TODO: enable view cache when not in dev mode
-// server.enable('view cache');
+/**
+ * Static paths for the theme.
+ */
 
-server.use('/_theme', express.static(app.get('theme.paths.assets')));
+_.forEach(theme.staticPaths, function(directory, route){
+    server.use(route, express.static(directory));
+});
+
+try {
+    server.use(favicon(theme.favicon));
+} catch(e){
+    logger.warn('Favicon not found at %s', theme.favicon);
+}
+
+/**
+ * Static paths for the components.
+ */
+
 try {
     if (app.get('static.path')){
         var dest = '/' + _.trim(app.get('static.dest'), '/');
         server.use(dest, express.static(app.get('static.path')));
     }
-} catch(e){}
+} catch(e){
+    logger.warn('Static assets path %s does not exist', app.get('static.path'));
+}
 
 /**
- * Set up some shared request data and locals.
+ * Play nicely with PJAX
  */
 
 server.use(function (req, res, next) {
-
     if (req.header('X-PJAX')) {
         req.pjax = true;
     }
-    server.locals.noLayout = req.pjax || false;
-    req._segments    = _.compact(req.path.split('/'));
+    next();
+});
 
-    var components  = app.getComponents();
-    var pages       = app.getPages();
-    Promise.join(components, pages, function(components, pages){
+/**
+ * Set up local variables
+ */
 
-        req._components = components;
-        req._pages = pages.filter('hidden', false);
-
-        server.locals.components = components.filter('hidden', false).flattenWithGroups().toJSON();
-        server.locals.pages = pages.toJSON();
-
-        server.locals.navigation = [];
-
-        _.each(req._pages.pages, function(entity){
-            if (entity.type == 'page') {
-                server.locals.navigation.push({
-                    handle: entity.handle,
-                    label: entity.label,
-                    url: '/' + entity.path,
-                });
-            } else {
-                server.locals.navigation.push({
-                    handle: entity.handle,
-                    label: entity.label,
-                    url: '/' + entity.path,
-                    items: entity.getSubEntities(true)
-                });
-            }
-        });
-
+server.use(function (req, res, next) {
+    server.locals.request = req;
+    api.load().then(function(api){
+        server.locals.api = api;
         next();
     });
 });
 
 /**
- * Bind routes and parameters to handlers.
+ * Specify routes
  */
 
-// Components
-server.use('/components', components.common);
+// Theme-provided routes
 
-server.param('component', components.params.component);
-server.param('componentFile', components.params.componentFile);
+_.forEach(theme.routes, function(route, name){
+    server.get(route.path, function(req, res, next){
+        res.render(route.view, {}, function(e, html){
+            if (e) {
+                if (! (e instanceof NotFoundError) && _.contains(e.message, 'NotFoundError')) {
+                    next(new NotFoundError(e.message, e))
+                } else {
+                    next(e)
+                }
+            } else {
+                res.send(html);
+            }
+        });
+    });
+});
 
-// server.get('/components', components.index);
-server.get('/components/list/:collection', components.list);
-server.get('/components/detail/:component(*)', components.detail);
-server.get('/components/raw/:componentFile(*)', components.raw);
-server.get('/components/preview/:component(*)/embed', components.previewEmbed);
-server.get('/components/preview/:component(*)', components.preview);
-server.get('/components/highlight/:componentFile(*)', components.highlight);
+/**
+ * Error handler
+ */
 
-// Favicon
-server.get('/favicon.ico', misc.favicon);
-
-// All other requests are assumed to be page requests
-
-server.param('page', pages.params.page);
-server.get('/:page(*)', pages.page);
-
-// finally the error handler
-server.use(misc.error);
+server.use(function(e, req, res, next) {
+    logger.error(e.message);
+    if (res.headersSent) {
+        return next(e);
+    }
+    if (e instanceof NotFoundError || _.contains(e.message, 'NotFoundError')) {
+        return res.status(404).render(theme.notFoundView, {
+            message: e.message,
+            stack: highlighter(e.stack),
+            error: e
+        }, function(err, html){
+            res.send(html);
+        });
+    } else {
+        return res.render(theme.errorView, {
+            message: e.message,
+            stack: highlighter(e.stack),
+            error: e
+        }), function(err, html){
+            res.send(html);
+        };
+    }
+});
 
 /**
  * Export control methods
@@ -127,7 +141,6 @@ module.exports = {
         if (!instance) {
             instance = server.listen(port, function(){
                 console.log(chalk.green('Fractal server is now running at http://localhost:' + port + ' - use ^c to exit.'));
-
             });
         }
     },

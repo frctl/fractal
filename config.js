@@ -22,7 +22,7 @@ module.exports = {
     },
     theme: {
         name: "@frctl/theme-default",
-        paths: {}
+        config: {}
     },
     generator: {
         config: {

@@ -10,6 +10,7 @@ var util         = require('util');
 var path         = require('path');
 
 var fractal      = require('./fractal');
+var theme        = require('./theme/theme');
 
 /*
  * Cache some values
@@ -83,7 +84,7 @@ module.exports = {
 
     getThemePages: function(){
         if (!themePages) {
-            themePages = require('./sources/pages').build(this.get('theme.paths.pages'));
+            themePages = require('./sources/pages').build(theme.pagesPath);
         }
         return themePages;
     },

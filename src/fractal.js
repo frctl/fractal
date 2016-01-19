@@ -2,11 +2,11 @@
  * Module dependencies.
  */
 
-var path        = require('path');
 var logger      = require('winston');
 var _           = require('lodash');
 
 var config      = require('../config.js');
+var theme       = require('./theme/theme.js');
 
 module.exports = {
 
@@ -92,7 +92,7 @@ module.exports = {
         var input = this.parseArgv(argv);
 
         this.setPathInfo();
-        this.setThemeDetails();
+        this.setTheme();
         this.setViewEngine();
 
         require('./services/run')(input.command, input.args, input.opts);
@@ -146,19 +146,14 @@ module.exports = {
     },
 
     /*
-     * Fetch theme paths from the theme's json spec and update the theme config info.
+     * Load the theme.
      *
      * @api private
      */
 
-    setThemeDetails: function(){
-        var theme = this.get('theme');
-        var dir = path.parse(require.resolve(theme.name)).dir;
-        var themeJSON = require(theme.name);
-        ['views','assets','partials','pages'].forEach(function(key){
-            theme.paths[key] = path.join(dir, themeJSON[key])
-        });
-        this.set('theme', theme);
+    setTheme: function(){
+        theme.init(this.get('theme').name);
+        require('./view')(theme.viewsPath);
     }
 
 };
