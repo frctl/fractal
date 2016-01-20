@@ -11,12 +11,12 @@ var chalk         = require('chalk');
 var Promise       = require('bluebird');
 var favicon       = require('serve-favicon');
 
-var app           = require('../../application');
-var NotFoundError = require('../../errors/notfound');
-var highlighter   = require('../../highlighter');
-var api           = require('../../api');
-var theme         = require('../../theme/theme');
-var engine        = require('../../view');
+var app           = require('../application');
+var NotFoundError = require('../errors/notfound');
+var highlighter   = require('../highlighter');
+var api           = require('../api');
+var theme         = require('../theme/theme');
+var engine        = require('../view');
 
 /**
  * General setup.
@@ -61,21 +61,10 @@ try {
 
 server.use(function (req, res, next) {
     if (req.header('X-PJAX')) {
-        req.pjax = true;
+        req._pjax = true;
     }
+    req.segments  = _.compact(req.path.split('/'));
     next();
-});
-
-/**
- * Set up local variables
- */
-
-server.use(function (req, res, next) {
-    server.locals.request = req;
-    api.load().then(function(api){
-        server.locals.api = api;
-        next();
-    });
 });
 
 /**
@@ -86,16 +75,26 @@ server.use(function (req, res, next) {
 
 _.forEach(theme.routes, function(route, name){
     server.get(route.path, function(req, res, next){
-        res.render(route.view, {}, function(e, html){
-            if (e) {
-                if (! (e instanceof NotFoundError) && _.contains(e.message, 'NotFoundError')) {
-                    next(new NotFoundError(e.message, e))
+        api.load().then(function(api){
+            req._api = api;
+            req.params = _.defaults(route.params || {}, req.params);
+            var context = {
+                request: req,
+                api: api,
+                route: route
+            };
+            context._context = context;
+            res.render(route.view, context, function(e, html){
+                if (e) {
+                    if (! (e instanceof NotFoundError) && _.contains(e.message, 'NotFoundError')) {
+                        next(new NotFoundError(e.message, e))
+                    } else {
+                        next(e)
+                    }
                 } else {
-                    next(e)
+                    res.send(html);
                 }
-            } else {
-                res.send(html);
-            }
+            });
         });
     });
 });
@@ -109,22 +108,19 @@ server.use(function(e, req, res, next) {
     if (res.headersSent) {
         return next(e);
     }
+    var context = {
+        message: e.message,
+        stack: highlighter(e.stack),
+        error: e,
+        api: req._api
+    };
+    var cb = function(err, html){
+        res.send(html);
+    };
     if (e instanceof NotFoundError || _.contains(e.message, 'NotFoundError')) {
-        return res.status(404).render(theme.notFoundView, {
-            message: e.message,
-            stack: highlighter(e.stack),
-            error: e
-        }, function(err, html){
-            res.send(html);
-        });
+        return res.status(404).render(theme.notFoundView, context, cb);
     } else {
-        return res.render(theme.errorView, {
-            message: e.message,
-            stack: highlighter(e.stack),
-            error: e
-        }), function(err, html){
-            res.send(html);
-        };
+        return res.render(theme.errorView, context, cb);
     }
 });
 

@@ -34,6 +34,8 @@ module.exports = function(viewsPath){
         }
     });
 
+    nj.addGlobal('theme', require('./theme/theme'));
+
     nj.addFilter('resolve', function(p, callback){
         return Promise.resolve(p).then(function(result){
             callback(null, result);

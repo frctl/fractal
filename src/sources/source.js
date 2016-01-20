@@ -2,7 +2,7 @@
  * Module dependencies.
  */
 
-var _           = require('lodash');
+var _ = require('lodash');
 
 /*
  * Export the mixin.

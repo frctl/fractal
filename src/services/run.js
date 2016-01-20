@@ -8,7 +8,7 @@ var app    = require('../application');
 module.exports = function(command, args, opts) {
     switch (command) {
         case 'start':
-            require('./server/server').start(opts);
+            require('./server').start(opts);
             break;
         case 'build':
             require('./builder/builder').start(opts);

@@ -200,16 +200,19 @@ Component.prototype.getVariants = function(){
 
         return Promise.all(configs).then(function(configs){
             // Now generate some variant objects from the configs
-            return _.map(configs, function(config){
+
+            return Promise.all(_.map(configs, function(config){
                 return (new Variant(config.handle, config, self)).init();
-            }).sort(function(a, b){
-                if (a.handle === self.defaultHandle) {
-                    return -1;
-                }
-                if (b.handle === self.defaultHandle) {
-                    return 1;
-                }
-                return 0;
+            })).then(function(variants){
+                return variants.sort(function(a, b){
+                    if (a.handle === self.defaultHandle) {
+                        return -1;
+                    }
+                    if (b.handle === self.defaultHandle) {
+                        return 1;
+                    }
+                    return 0;
+                });
             });
         });
     });
