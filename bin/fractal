@@ -2,14 +2,8 @@
 
 'use strict';
 
-/*
- * Load dependencies.
- */
-
-var chalk   = require('chalk');
 var semver  = require('semver');
 var Liftoff = require('liftoff');
-var logger  = require('winston');
 var yargs   = require('yargs');
 
 var cliPackage = require('../package.json');
@@ -19,8 +13,6 @@ var argv, levelOpt;
 /*
  * Define global options
  */
-
-logger.cli();
 
 yargs.usage('\nUsage: $0 <command> [options]');
 

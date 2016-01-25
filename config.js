@@ -1,3 +1,5 @@
+'use strict';
+
 var packageJSON = require('./package.json');
 
 module.exports = {

@@ -1,0 +1,51 @@
+
+
+core:
+ - loads config
+ - provides internal api for accessing core entities
+ - watches trees for changes
+ - provides entity sources
+
+renderer:
+ - renders entities
+
+entity parser:
+ - parses file tree
+ - returns object representation of that file tree, based on collections and entities
+
+services:
+ - preview (uses themes, provides static preview builder)
+ - generator (creates new entities in the file system)
+ - exporter (transforms entities according to some spec, exports to a location)
+ - external API (provide http or other api access to components)
+
+helpers:
+ -
+---------
+
+frctl/support
+
+- collection
+- entity
+- source
+
+
+---------
+
+- how to spec an entity?
+- were to put create functions?
+
+---------
+
+entity parser:
+
+ - parses a single directory
+ - requires a spec to describe how it should parse the directory?
+ - provide it with a collection type + an entity type
+ - returns a collection instance
+
+components:
+
+1. Async read all config files, store results
+2. Iterate over all directories - is directory a collection or a component?
+3.
