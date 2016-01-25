@@ -2,17 +2,18 @@
  * Module dependencies.
  */
 
-var Promise     = require('bluebird');
-var _           = require('lodash');
-var path        = require('path');
-var logger      = require('winston');
+var Promise       = require('bluebird');
+var _             = require('lodash');
+var path          = require('path');
+var logger        = require('winston');
 
-var mixin       = require('./entity');
-var Variant     = require('./variant');
-var utils       = require('../utils');
-var data        = require('../data');
-var md          = require('../markdown');
-var app         = require('../application');
+var mixin         = require('./entity');
+var Variant       = require('./variant');
+var utils         = require('../utils');
+var data          = require('../data');
+var md            = require('../markdown');
+var app           = require('../application');
+var NotFoundError = require('../errors/notfound');
 
 /*
  * Export the component.
@@ -199,16 +200,19 @@ Component.prototype.getVariants = function(){
 
         return Promise.all(configs).then(function(configs){
             // Now generate some variant objects from the configs
-            return _.map(configs, function(config){
+
+            return Promise.all(_.map(configs, function(config){
                 return (new Variant(config.handle, config, self)).init();
-            }).sort(function(a, b){
-                if (a.handle === self.defaultHandle) {
-                    return -1;
-                }
-                if (b.handle === self.defaultHandle) {
-                    return 1;
-                }
-                return 0;
+            })).then(function(variants){
+                return variants.sort(function(a, b){
+                    if (a.handle === self.defaultHandle) {
+                        return -1;
+                    }
+                    if (b.handle === self.defaultHandle) {
+                        return 1;
+                    }
+                    return 0;
+                });
             });
         });
     });
@@ -238,7 +242,7 @@ Component.prototype.getVariant = function(handle){
     handle = handle || this.defaultHandle;
     var variant = _.find(this.variants, 'handle', handle);
     if (!variant) {
-        throw new Error('The variant ' + handle + ' of component ' + this.handle + ' could not be found.');
+        throw new NotFoundError('The variant ' + handle + ' of component ' + this.handle + ' could not be found.');
     }
     return variant;
 };

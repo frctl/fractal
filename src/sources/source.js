@@ -2,7 +2,7 @@
  * Module dependencies.
  */
 
-var _           = require('lodash');
+var _ = require('lodash');
 
 /*
  * Export the mixin.
@@ -20,9 +20,18 @@ function source(){
      */
 
     this.init = function(){
-            
+
         return this;
     };
 
-};
+    /*
+     * Alias for the resolve() method
+     *
+     * @api private
+     */
 
+    this.find = function(str){
+        return this.resolve(str);
+    };
+
+};

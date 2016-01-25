@@ -72,6 +72,7 @@ ComponentSource.prototype.resolve = function(str){
  */
 
 ComponentSource.prototype.findByPath = function(componentPath){
+    var componentPath = componentPath.replace(/^\/|\/$/g, '');
     var pathParts = componentPath.split('--', 2);
     var component = this.findByKey('path', pathParts[0]);
     return (pathParts.length === 2) ? component.getVariant(pathParts[1]) : component;

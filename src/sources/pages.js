@@ -68,7 +68,7 @@ PageSource.prototype.resolve = function(str){
  */
 
 PageSource.prototype.findByPath = function(pagePath){
-    return this.findByKey('path', pagePath);
+    return this.findByKey('path', pagePath.replace(/^\/|\/$/g, ''));
 };
 
 /*

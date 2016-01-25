@@ -111,6 +111,17 @@ Variant.prototype.renderView = function(context, preview){
 };
 
 /*
+ * Generate the rendered variant view, wrapped in it's preview layout.
+ * Returns a Promise object.
+ *
+ * @api public
+ */
+
+Variant.prototype.renderPreview = function(context){
+    return this.renderView(context, true);
+};
+
+/*
  * Get a list of supporting files.
  *
  * @api public
@@ -118,8 +129,8 @@ Variant.prototype.renderView = function(context, preview){
 
 Variant.prototype.preRender = function(){
     var self = this;
-    var rendered = this.renderView(null, false);
-    var renderedPreview = this.renderView(null, true);
+    var rendered = this.renderView();
+    var renderedPreview = this.renderPreview();
     var contextString = this.getContextString();
     return Promise.join(rendered, renderedPreview, contextString, function(rendered, renderedPreview, contextString){
         self.rendered = rendered;
