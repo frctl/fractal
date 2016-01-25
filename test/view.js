@@ -17,9 +17,8 @@ describe("view", function(){
         it("returns an Nunjucks environment instance when called with a file path", function(){
             expect(viewInstance).to.be.an.instanceof(nunjucks.Environment);
         });
-        it("provides access to a global `fractal` template variable and it's properties", function(){
-            expect(viewInstance.getGlobal('fractal')).to.be.an('object');
-            expect(viewInstance.getGlobal('fractal')).to.have.all.keys(['statuses','config','highlight']);
+        it("provides access to a global `theme` template variable", function(){
+            expect(viewInstance.getGlobal('theme')).to.be.an('object');
         });
         it("can load template files from the filesystem", function(){
             expect(viewInstance.getTemplate('example.nunj')).to.be.an('object');

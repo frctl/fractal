@@ -89,11 +89,7 @@ describe("fractal", function(){
         it("set the system root path to the cwd", function(){
             expect(config.system.paths.root).to.equal(process.cwd());
         });
-        it("set the theme paths", function(){
-            ['views','assets','partials','pages'].forEach(function(key){
-                expect(config.theme.paths[key]).to.be.a('string');
-            });
-        });
+        it("configure the theme");
         it("set the view engine", function(){
             expect(config.components.view.engine).not.to.be.a('string');
             ['ext','name','engine','handler'].forEach(function(key){

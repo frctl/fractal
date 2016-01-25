@@ -47,6 +47,8 @@ module.exports = function(viewsPath){
     nj.addExtension('ErrorExtension', new ErrorExtension());
 
     module.exports = nj;
+
+    return nj;
 };
 
 function ErrorExtension() {
