@@ -1,30 +1,39 @@
 'use strict';
 
-const Emitter     = require('events').EventEmitter;
-const _           = require('lodash');
-const config      = require('./config');
+const Emitter         = require('events').EventEmitter;
+const _               = require('lodash');
+const co              = require('co');
+const logger          = require('./logger');
+const config          = require('./config');
+const pages           = require('./pages');
 
-const handlers    = new Map();
+// const handlers    = new Map();
 
 const app = module.exports = {
 
-    run(argv){
-        let input = this._parseArgv(argv);
-        let handler = handlers.get(input.command);
-        if (handler) {
-            handler(input);
-        }
+    run(argv) {
+        const input = this._parseArgv(argv);
+        
+        // console.time('tree');
+        pages.load().then(function (tree) {
+            // console.timeEnd('tree');
+            logger.dump(tree);
+            // console.log(JSON.stringify(tree, function(key, val){
+            //     if (val instanceof Buffer || val.type == 'Buffer') {
+            //         return '<Buffer>';
+            //     }
+            //     return val;
+            // }, 4));
+        }).catch(function(err){
+            console.log(err);
+        });
     },
 
-    register(handler, callback){
-        handlers.set(handler, callback);
-    },
-
-    get version(){
+    get version() {
         return config.get('version');
     },
 
-    get env(){
+    get env() {
         return config.get('env');
     },
 
@@ -34,17 +43,17 @@ const app = module.exports = {
      * @api private
      */
 
-    _parseArgv: function(argv){
-        var args = argv._;
-        var command = args.shift();
-        var opts = argv;
+    _parseArgv: function (argv) {
+        const args = argv._;
+        const command = args.shift();
+        const opts = argv;
         delete opts._;
         delete opts.$0;
         return {
             command: command,
             args: args,
             opts: opts
-        }
+        };
     }
 
 };

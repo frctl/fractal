@@ -4,8 +4,13 @@ var config = require('../config');
 
 module.exports = {
 
-    read(){
-        
+    load(directoryPath) {
+
+    },
+
+    get components() {
+
+        return new Promise.resolve([{ comp: 'foo' }]);
     }
 
 };

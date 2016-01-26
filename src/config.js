@@ -12,7 +12,7 @@ module.exports = {
      * @api public
      */
 
-    set: function(setting, val){
+    set: function (setting, val) {
         logger.debug('Setting config value: %s = %s', setting, _.isObject(val) ? JSON.stringify(val, null, 2) : val);
         _.set(config, setting, val);
         return this;
@@ -24,7 +24,7 @@ module.exports = {
      * @api public
      */
 
-    enable: function(setting){
+    enable: function (setting) {
         logger.debug('Enabling %s', setting);
         return _.set(config, setting, true);
     },
@@ -35,7 +35,7 @@ module.exports = {
      * @api public
      */
 
-    disable: function(setting){
+    disable: function (setting) {
         logger.debug('Disabling %s', setting);
         return _.set(config, setting, false);
     },
@@ -46,10 +46,11 @@ module.exports = {
      * @api public
      */
 
-    get: function(setting){
+    get: function (setting) {
         if (_.isUndefined(setting)) {
             return config;
         }
+
         return _.get(config, setting);
     },
 
@@ -59,7 +60,7 @@ module.exports = {
      * @api public
      */
 
-    enabled: function(setting){
+    enabled: function (setting) {
         return !!this.get(setting);
     },
 
@@ -69,7 +70,7 @@ module.exports = {
      * @api public
      */
 
-    disabled: function(setting){
+    disabled: function (setting) {
         return !this.get(setting);
     },
 
