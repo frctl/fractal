@@ -1,25 +1,41 @@
 'use strict';
 
-const co         = require('co');
-const _          = require('lodash');
-const Component  = require('./component');
-const view       = require('./view');
-const source     = require('../source');
-const fs         = require('../fs');
-const config     = require('../config');
-const logger     = require('../logger');
-const utils      = require('../utils');
-const Collection = require('../collection');
+const co             = require('co');
+const _              = require('lodash');
+const Component      = require('./component');
+const view           = require('./view');
+const app            = require('../app');
+const source         = require('../source');
+const fs             = require('../fs');
+const config         = require('../config');
+const logger         = require('../logger');
+const utils          = require('../utils');
+const Collection     = require('../collection');
 
 const isComponentExt = (ext) => (ext === view.engine.ext);
 
 const self = module.exports = {
 
     load(dirPath) {
-        return fs.describe(dirPath || config.get('components.path'))
-                 .then(fileTree => this._transform(fileTree));
+        dirPath = dirPath || config.get('components.path');
+        return this.fetch(dirPath, () => {
+            return fs.describe(dirPath).then(t => this._transform(t))
+        });
+        // if (!treeCache.has(dirPath)) {
+        //     const components = fs.describe(dirPath || config.get('components.path'))
+        //                          .then(fileTree => this._transform(fileTree));
+        //     treeCache.set(dirPath, components);
+        // }
+        // if (!watchers.has(dirPath)) {
+        //     // watchers.set(dirPath, this.createMonitor(dirPath, (event, path) = {
+        //     //         // TODO: make page tree rebuilding more refined rather than all or nothing.
+        //     //         pages = null;
+        //     //         app.emit("page-tree-changed");
+        //     //     }));
+        // }
+        // return treeCache.get(dirPath);
     },
-    
+
     _transform(fileTree) {
         const splitter = config.get('components.splitter');
         const build = co.wrap(function* (dir, root){

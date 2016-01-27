@@ -10,13 +10,15 @@ const logger     = require('../logger');
 const utils      = require('../utils');
 const Collection = require('../collection');
 
-const isPageExt = (ext) => (ext === config.get('pages.ext').toLowerCase());
+const isPageExt  = (ext) => (ext === config.get('pages.ext').toLowerCase());
 
 const self = module.exports = {
 
     load(dirPath) {
-        return fs.describe(dirPath || config.get('pages.path'))
-                 .then(fileTree => this._transform(fileTree));
+        dirPath = dirPath || config.get('pages.path');
+        return this.fetch(dirPath, () => {
+            return fs.describe(dirPath).then(t => this._transform(t))
+        });
     },
 
     _transform(fileTree) {

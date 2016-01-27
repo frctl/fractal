@@ -25,8 +25,8 @@ module.exports = class Collection {
         return utils.toJSON(this);
     }
 
-    find(){
-
+    find(predicate, opts){
+        
     }
 
     flatten(){

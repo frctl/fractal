@@ -23,8 +23,11 @@ const app = module.exports = {
         //     console.log(err);
         // });
 
+
+
         components.load().then(function (tree) {
-            logger.dump(tree);
+            
+            // logger.dump(tree);
         }).catch(function(err){
             console.log(err);
         });
