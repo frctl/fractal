@@ -1,13 +1,38 @@
 'use strict';
 
-const Path = require('path');
-const _    = require('lodash');
+const Promise = require('bluebird');
+const Path    = require('path');
+const _       = require('lodash');
 
 module.exports = {
 
     guessLanguage(filePath, lc){
         let lang = _.get(extLangMap, Path.parse(filePath).ext, null);
         return lc ? lang.toLowerCase() : lang;
+    },
+
+    titlize: function(str){
+        return _.startCase(str);
+    },
+
+    toJSON(item){
+        const obj = {};
+        _.forOwn(item, (value, key) => {
+            if (!key.startsWith('_')) {
+                if (value instanceof Buffer) {
+                    obj[key] = '<Buffer>';
+                } else if (value && typeof value.toJSON === 'function') {
+                    obj[key] = value.toJSON();
+                } else {
+                    obj[key] = value;
+                }
+            }
+        });
+        return obj;
+    },
+
+    escapeForRegexp(str){
+        return str.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
     }
 
 };

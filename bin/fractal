@@ -5,6 +5,7 @@
 var semver  = require('semver');
 var Liftoff = require('liftoff');
 var yargs   = require('yargs');
+var logger   = require('winston');
 
 var cliPackage = require('../package.json');
 

@@ -2,35 +2,28 @@
 
 const Promise = require('bluebird');
 const _       = require('lodash');
-const utils   = require('./utils');
+const logger  = require('../logger');
+const utils   = require('../utils');
+const config  = require('../config');
 
-module.exports = class Collection {
+module.exports = class Component {
 
-    constructor(props, items) {
-        this.type     = 'collection';
+    constructor(props, related) {
+        this.type     = 'component';
         this._config  = props;
+        this._related = related;
         this.name     = props.name;
         this.order    = props.order;
         this.isHidden = props.isHidden;
-        this.items    = items || [];
         this.label    = props.label || utils.titlize(props.name);
         this.title    = props.title || this.label;
     }
 
-    static create(props, items){
-        return Promise.resolve(new Collection(props, items));
+    static create(props, related){
+        return Promise.resolve(new Component(props, related));
     }
 
     toJSON(){
         return utils.toJSON(this);
     }
-
-    find(){
-
-    }
-
-    flatten(){
-
-    }
-
 }

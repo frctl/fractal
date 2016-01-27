@@ -6,24 +6,25 @@ const co              = require('co');
 const logger          = require('./logger');
 const config          = require('./config');
 const pages           = require('./pages');
+const components      = require('./components');
 
 // const handlers    = new Map();
 
 const app = module.exports = {
 
     run(argv) {
+
         const input = this._parseArgv(argv);
-        
+
         // console.time('tree');
-        pages.load().then(function (tree) {
-            // console.timeEnd('tree');
+        // pages.load().then(function (tree) {
+        //     logger.dump(tree);
+        // }).catch(function(err){
+        //     console.log(err);
+        // });
+
+        components.load().then(function (tree) {
             logger.dump(tree);
-            // console.log(JSON.stringify(tree, function(key, val){
-            //     if (val instanceof Buffer || val.type == 'Buffer') {
-            //         return '<Buffer>';
-            //     }
-            //     return val;
-            // }, 4));
         }).catch(function(err){
             console.log(err);
         });
@@ -43,7 +44,7 @@ const app = module.exports = {
      * @api private
      */
 
-    _parseArgv: function (argv) {
+    _parseArgv(argv) {
         const args = argv._;
         const command = args.shift();
         const opts = argv;

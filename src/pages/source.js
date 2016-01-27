@@ -1,20 +1,18 @@
 'use strict';
 
 const co         = require('co');
-const all        = require('co-flow').all;
 const _          = require('lodash');
+const Page       = require('./page');
+const source     = require('../source');
 const fs         = require('../fs');
 const config     = require('../config');
-const data       = require('../data');
 const logger     = require('../logger');
-const Page       = require('./page');
+const utils      = require('../utils');
 const Collection = require('../collection');
 
 const isPageExt = (ext) => (ext === config.get('pages.ext').toLowerCase());
 
-module.exports = {
-
-    config: null,
+const self = module.exports = {
 
     load(dirPath) {
         return fs.describe(dirPath || config.get('pages.path'))
@@ -22,23 +20,34 @@ module.exports = {
     },
 
     _transform(fileTree) {
-        var self = this;
-        const build = co.wrap(function* (dir){
-            let items = yield dir.children.map(item => {
+        const build = co.wrap(function* (dir, root){
+            const props = {
+                name: dir.name
+            };
+            if (!root) {
+                props.isHidden = dir.isHidden;
+                props.order = dir.order;
+            }
+            const dirConfig = yield self.loadConfigFile(dir.name, dir.children, props);
+            const items = yield dir.children.map(item => {
                 if (item.isFile && isPageExt(item.ext)) {
-                    return Page.create(item, dir);
+                    const props = {
+                        name:     item.name,
+                        isHidden: item.isHidden,
+                        order:    item.order,
+                        lang:     item.lang,
+                        buffer:   item.buffer
+                    };
+                    return self.loadConfigFile(item.name, dir.children, props).then(c => Page.create(c));
                 } else if (item.isDirectory) {
                     return build(item);
                 }
                 return Promise.resolve(null);
             });
-            const props = {
-                path: dir.path,
-                hidden: dir.hidden
-                // TODO
-            };
-            return Collection.create(props, _.compact(items));
+            return Collection.create(dirConfig, _.compact(items));
         });
-        return build(fileTree);
+        return build(fileTree, true);
     }
 };
+
+Object.assign(self, source);

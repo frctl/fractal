@@ -96,7 +96,6 @@ module.exports = {
     },
     pages: {
         path: null,
-        config: "{{name}}\\.config\\.(js|json|yml|yaml)",
         ext: '.md',
         indexLabel: "Overview"
     },
