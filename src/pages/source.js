@@ -15,7 +15,7 @@ const self = module.exports = {
     load(dirPath) {
         dirPath = dirPath || config.get('pages.path');
         return this.fetch(dirPath, () => {
-            return fs.describe(dirPath).then(t => this._transform(t))
+            return fs.describe(dirPath).then(t => this._transform(t));
         });
     },
 
@@ -25,7 +25,7 @@ const self = module.exports = {
     },
 
     _transform(fileTree) {
-        const build = co.wrap(function* (dir, root){
+        const build = co.wrap(function* (dir, root) {
             const props = {
                 name: dir.name
             };

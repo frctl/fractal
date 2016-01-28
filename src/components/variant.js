@@ -22,11 +22,11 @@ module.exports = class Variant {
         this._parent  = props.parent;
     }
 
-    static create(props){
+    static create(props) {
         return Promise.resolve(new Variant(props));
     }
 
-    toJSON(){
+    toJSON() {
         return utils.toJSON(this);
     }
-}
+};

@@ -17,7 +17,7 @@ const self = module.exports = {
     load(dirPath) {
         dirPath = dirPath || config.get('components.path');
         return this.fetch(dirPath, () => {
-            return fs.describe(dirPath).then(t => this._transform(t))
+            return fs.describe(dirPath).then(t => this._transform(t));
         });
     },
 
@@ -29,13 +29,13 @@ const self = module.exports = {
 
     _transform(fileTree) {
         const splitter = config.get('components.splitter');
-        const build = co.wrap(function* (dir, root){
+        const build = co.wrap(function* (dir, root) {
             const children = dir.children;
 
             // first figure out if it's a component directory or not...
 
             if (!root) {
-                const componentView = _.find(children, {'name': dir.name, 'ext': engine.ext});
+                const componentView = _.find(children, { name: dir.name, ext: engine.ext });
                 if (componentView) { // it is a component
                     const conf = yield self.loadConfigFile(componentView.name, children, {
                         _name:    dir.name,
@@ -73,7 +73,7 @@ const self = module.exports = {
                 props.order    = dir.order;
             }
             const dirConfig = yield self.loadConfigFile(dir.name, children, props);
-            const items = _.orderBy(_.concat(components, collections), ['type','order','name'], ['desc','asc','asc']);
+            const items = _.orderBy(_.concat(components, collections), ['type', 'order', 'name'], ['desc', 'asc', 'asc']);
             return Collection.create(dirConfig, items);
         });
         return build(fileTree, true);

@@ -12,12 +12,14 @@ const watchers  = new Map();
 
 module.exports = {
 
-    fetch(dirPath, populator){
+    fetch(dirPath, populator) {
         var self = this;
+
         // console.time(`fetch ${dirPath}`);
-        return co(function* (){
+        return co(function* () {
             if (!treeCache.has(dirPath)) {
                 treeCache.set(dirPath, yield populator());
+
                 // console.timeEnd(`fetch ${dirPath}`);
                 self.watch(dirPath);
             }
@@ -25,11 +27,11 @@ module.exports = {
         });
     },
 
-    clear(dirPath){
+    clear(dirPath) {
         treeCache.delete(dirPath);
     },
 
-    watch(dirPath){
+    watch(dirPath) {
         if (!watchers.has(dirPath)) {
             const monitor = chokidar.watch(dirPath, {
                 ignored: /[\/\\]\./
@@ -51,4 +53,4 @@ module.exports = {
         });
     }
 
-}
+};

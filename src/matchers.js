@@ -12,7 +12,7 @@ var self = module.exports = {
 
     // Matchers
 
-    components:     file => anymatch([`**/*${cExt}`,`!**/*${splitter}*${cExt}`], file.path),
+    components:     file => anymatch([`**/*${cExt}`, `!**/*${splitter}*${cExt}`], file.path),
 
     variants:       file => anymatch(`**/*${splitter}*${cExt}`, file.path),
 
@@ -22,7 +22,7 @@ var self = module.exports = {
 
     // Finders
 
-    findComponent:  (name, files) => _.find(files, {'name': name, ext: cExt}),
+    findComponent:  (name, files) => _.find(files, { name: name, ext: cExt }),
 
     findVariantsOf: (name, files) => files.filter(self.variants).filter(file => file.name.startsWith(`${name}${splitter}`)),
 

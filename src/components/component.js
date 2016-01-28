@@ -39,38 +39,38 @@ module.exports = class Component {
 
     }
 
-    get variantProps(){
+    get variantProps() {
         return this._variantProps;
     }
 
-    addVariants(variants){
+    addVariants(variants) {
         variants.forEach(v => this.addVariant(v));
         return this;
     }
 
-    addVariant(variant){
+    addVariant(variant) {
         this.variants.set(variant.handle, variant);
         return this;
     }
 
-    getVariant(handle){
+    getVariant(handle) {
         return this.variants.get(handle);
     }
 
-    getVariants(){
+    getVariants() {
         return _.sortBy(Array.from(this.variants.values()), ['order', '_name']);
     }
 
-    hasVariant(handle){
+    hasVariant(handle) {
         return this.variants.has(handle);
     }
 
-    toJSON(){
+    toJSON() {
         return utils.toJSON(this);
     }
 
-    static create(props, relatedFiles){
-        return co(function* (){
+    static create(props, relatedFiles) {
+        return co(function* () {
             const comp     = new Component(props, relatedFiles);
             const confVars = yield variantsFromConfig(comp, props.variants || []);
             const skip     = confVars.map(v => v.name);
@@ -80,9 +80,9 @@ module.exports = class Component {
             return comp;
         });
     }
-}
+};
 
-function variantsFromFiles(component, files, skip){
+function variantsFromFiles(component, files, skip) {
     skip = skip || [];
     let variants = match.findVariantsOf(component.name, files);
     variants = variants.map(v => {
@@ -98,7 +98,7 @@ function variantsFromFiles(component, files, skip){
     return Promise.all(_.compact(variants));
 }
 
-function variantsFromConfig(component, varConfs){
+function variantsFromConfig(component, varConfs) {
     let variants = varConfs.map(conf => {
         if (_.isUndefined(conf.handle)) {
             logger.error(`Could not create variant of ${component.handle} - handle value is missing`);

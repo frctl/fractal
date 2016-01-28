@@ -17,20 +17,20 @@ module.exports = class Collection {
         this.title    = props.title || this.label;
     }
 
-    static create(props, items){
+    static create(props, items) {
         return Promise.resolve(new Collection(props, items));
     }
 
-    toJSON(){
+    toJSON() {
         return utils.toJSON(this);
     }
 
-    find(predicate, opts){
-        
-    }
-
-    flatten(){
+    find(predicate, opts) {
 
     }
 
-}
+    flatten() {
+
+    }
+
+};

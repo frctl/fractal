@@ -4,7 +4,7 @@ const config = require('../config');
 
 module.exports = {
 
-    render(page){
+    render(page) {
 
     }
 

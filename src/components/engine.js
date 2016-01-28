@@ -7,7 +7,7 @@ let handler = null;
 
 module.exports = {
 
-    get config(){
+    get config() {
         if (conf) {
             return conf;
         }
@@ -20,7 +20,7 @@ module.exports = {
         return conf;
     },
 
-    get handler(){
+    get handler() {
         if (handler) {
             return handler;
         }

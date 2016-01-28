@@ -8,7 +8,6 @@ const config          = require('./config');
 const pages           = require('./pages');
 const components      = require('./components');
 
-
 // const handlers    = new Map();
 
 const app = module.exports = {
@@ -20,9 +19,9 @@ const app = module.exports = {
         const promises = [pages.load(), components.load()];
 
         Promise.all(promises).then(function (promises) {
-            
+
             require('./services/server');
-        }).catch(function(err){
+        }).catch(function (err) {
             console.log(err.stack);
         });
     },

@@ -25,14 +25,14 @@ module.exports = class Page {
         this.context  = props.context || {};
     }
 
-    static create(props){
+    static create(props) {
         props.buffer = props.buffer || new Buffer();
         var parsed   = matter(props.buffer.toString('UTF-8'));
         props        = _.defaultsDeep(parsed.data || {}, props);
         return Promise.resolve(new Page(props, parsed.content));
     }
 
-    toJSON(){
+    toJSON() {
         return utils.toJSON(this);
     }
-}
+};

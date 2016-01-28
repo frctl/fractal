@@ -10,7 +10,7 @@ var logger  = require('./logger');
 
 const self = module.exports = {
 
-    parse(data, format){
+    parse(data, format) {
         format = format.toLowerCase();
         if (format === 'js' || format === 'javascript') {
             return data;
@@ -22,7 +22,7 @@ const self = module.exports = {
         throw new Error('Data format not recognised');
     },
 
-    stringify(data, format){
+    stringify(data, format) {
         format = format.toLowerCase();
         if (format === 'js' || format === 'javascript') {
             return `module.exports = ${JSON.stringify(data, null, 4)};`;
@@ -34,9 +34,9 @@ const self = module.exports = {
         throw new Error('Data format not recognised');
     },
 
-    readFile(filePath){
+    readFile(filePath) {
         if (Path.isAbsolute(filePath)) {
-            return Promise.reject("Data file paths must be relative to the root of the project");
+            return Promise.reject('Data file paths must be relative to the root of the project');
         }
         const format = utils.guessLanguage(filePath, true);
         if (format === 'js' || format === 'javascript') {
@@ -52,20 +52,20 @@ const self = module.exports = {
                     return Promise.reject(new Error('Error loading data file'));
                 }
                 return Promise.resolve(data);
-            } catch(e) {
+            } catch (e) {
                 return Promise.reject(e);
             }
         } else {
-            return fs.readFileAsync(filePath, 'UTF-8').then(function(contents){
+            return fs.readFileAsync(filePath, 'UTF-8').then(function (contents) {
                 return self.parse(contents, format);
-            }).catch(function(err){
+            }).catch(function (err) {
                 logger.error(`Error loading data file ${filePath}: ${err.message}`);
                 return {};
             });
         }
     },
 
-    writeFile(filePath, data){
+    writeFile(filePath, data) {
         const pathInfo = path.parse(path.resolve(filePath));
         const format = utils.guessLanguage(filePath, true);
         return fs.writeFileAsync(filePath, this.stringify(data, format));

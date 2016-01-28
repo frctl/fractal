@@ -8,13 +8,13 @@ const langMap = new Map([
     ['nunj', 'django']
 ]);
 
-module.exports = function highlighter(content, lang){
+module.exports = function highlighter(content, lang) {
 
     lang = langMap.get(lang) || lang;
     lang = lang ? lang.toLowerCase() : lang;
     try {
         return lang ? HighlightJs.highlight(lang, content).value : HighlightJs.highlightAuto(content).value;
-    } catch(e) {
+    } catch (e) {
         return HighlightJs.highlightAuto(content).value;
     }
 
