@@ -24,23 +24,23 @@ module.exports = {
 
 function build(filePath, stat) {
     return co(function* () {
-        const p = Path.parse(filePath);
-        const fsName = p.name;
-        p.path = filePath;
-        p.name = _.get(fsName.match(/^_?(\d+\-)?(.*)/), 2, fsName);
-        p.dirs = _.compact(p.dir.split('/'));
-        p.isHidden = !!_.find(p.dirs, s => s.startsWith('_'));
-        p.order = parseInt(_.get(fsName.match(/^_?(\d+)\-.*/), 1, 1000000), 10);
-        p.ext = p.ext.toLowerCase();
-        p.isFile = stat.isFile();
-        p.isDirectory = stat.isDirectory();
+        const p        = Path.parse(filePath);
+        const fsName   = p.name;
+        p.path         = filePath;
+        p.name         = _.get(fsName.match(/^_?(\d+\-)?(.*)/), 2, fsName);
+        p.dirs         = _.compact(p.dir.split('/'));
+        p.isHidden     = !!_.find(p.dirs, s => s.startsWith('_'));
+        p.order        = parseInt(_.get(fsName.match(/^_?(\d+)\-.*/), 1, 1000000), 10);
+        p.ext          = p.ext.toLowerCase();
+        p.isFile       = stat.isFile();
+        p.isDirectory  = stat.isDirectory();
         if (p.isDirectory) {
-            p.type = 'directory';
+            p.type     = 'directory';
         } else {
-            p.type = 'file';
-            p.lang = utils.guessLanguage(filePath);
+            p.type     = 'file';
+            p.lang     = utils.guessLanguage(filePath);
             p.isBinary = yield isBinary(filePath, null);
-            p.buffer = yield readFile(filePath);
+            p.buffer   = yield readFile(filePath);
         }
         return p;
     });

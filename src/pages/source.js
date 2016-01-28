@@ -2,6 +2,7 @@
 
 const co         = require('co');
 const _          = require('lodash');
+const anymatch   = require('anymatch');
 const Page       = require('./page');
 const source     = require('../source');
 const fs         = require('../fs');
@@ -10,7 +11,8 @@ const logger     = require('../logger');
 const utils      = require('../utils');
 const Collection = require('../collection');
 
-const isPageExt  = (ext) => (ext === config.get('pages.ext').toLowerCase());
+const pageExt    = config.get('pages.ext').toLowerCase();
+const isPage     = anymatch(`**/*${pageExt}`);
 
 const self = module.exports = {
 
@@ -19,6 +21,11 @@ const self = module.exports = {
         return this.fetch(dirPath, () => {
             return fs.describe(dirPath).then(t => this._transform(t))
         });
+    },
+
+    refresh(event, path, rootDir) {
+        // TODO: be smarter about re-caclulation of component tree
+        this.clear(rootDir);
     },
 
     _transform(fileTree) {
@@ -32,7 +39,7 @@ const self = module.exports = {
             }
             const dirConfig = yield self.loadConfigFile(dir.name, dir.children, props);
             const items = yield dir.children.map(item => {
-                if (item.isFile && isPageExt(item.ext)) {
+                if (item.isFile && isPage(item.path)) {
                     const props = {
                         name:     item.name,
                         isHidden: item.isHidden,

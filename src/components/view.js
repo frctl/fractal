@@ -17,6 +17,10 @@ module.exports = {
         }
         engine.ext = engine.ext.toLowerCase();
         return engine;
+    },
+
+    render(entity){
+
     }
 
 };

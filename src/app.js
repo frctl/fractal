@@ -8,6 +8,7 @@ const config          = require('./config');
 const pages           = require('./pages');
 const components      = require('./components');
 
+
 // const handlers    = new Map();
 
 const app = module.exports = {
@@ -16,18 +17,14 @@ const app = module.exports = {
 
         const input = this._parseArgv(argv);
 
-        // console.time('tree');
-        // pages.load().then(function (tree) {
-        //     logger.dump(tree);
-        // }).catch(function(err){
-        //     console.log(err);
-        // });
+        console.time('initial');
 
+        const promises = [pages.load(), components.load()];
 
-
-        components.load().then(function (tree) {
-            
-            // logger.dump(tree);
+        Promise.all(promises).then(function (promises) {
+            // logger.dump(promises[0])
+            console.timeEnd('initial');
+            require('./services/server');
         }).catch(function(err){
             console.log(err);
         });
