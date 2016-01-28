@@ -1,8 +1,9 @@
 'use strict';
 
-const Promise = require('bluebird');
-const Path    = require('path');
-const _       = require('lodash');
+const Promise  = require('bluebird');
+const Path     = require('path');
+const anymatch = require('anymatch');
+const _        = require('lodash');
 
 module.exports = {
 
@@ -14,6 +15,8 @@ module.exports = {
     titlize: function(str){
         return _.startCase(str);
     },
+
+    slugify: str => _.kebabCase(_.deburr(str)).toLowerCase(),
 
     toJSON(item){
         const obj = {};
@@ -34,7 +37,6 @@ module.exports = {
     escapeForRegexp(str){
         return str.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
     }
-
 };
 
 const extLangMap = {

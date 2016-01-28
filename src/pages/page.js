@@ -13,10 +13,12 @@ module.exports = class Page {
         this._raw     = content;
         this._config  = props;
         this._buffer  = props.buffer;
-        this.name     = props.name;
+        this.name     = props.name.toLowerCase();
+        this.handle   = props.handle || utils.slugify(props.name);
+        this.atHandle = `@${this.handle}`;
         this.order    = props.order;
         this.isHidden = props.isHidden;
-        this.isIndex  = this.name.toLowerCase() === 'index';
+        this.isIndex  = this.name === 'index';
         this.lang     = props.lang;
         this.label    = this.isIndex ? config.get('pages.indexLabel') : props.label || utils.titlize(props.name);
         this.title    = props.title || this.label;

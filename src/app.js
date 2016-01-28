@@ -26,7 +26,7 @@ const app = module.exports = {
             console.timeEnd('initial');
             require('./services/server');
         }).catch(function(err){
-            console.log(err);
+            console.log(err.stack);
         });
     },
 

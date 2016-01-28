@@ -25,12 +25,12 @@ module.exports = {
 function build(filePath, stat) {
     return co(function* () {
         const p        = Path.parse(filePath);
-        const fsName   = p.name;
+        p.fsName       = p.name;
+        p.name         = _.get(p.fsName.match(/^_?(\d+\-)?(.*)/), 2, p.fsName);
         p.path         = filePath;
-        p.name         = _.get(fsName.match(/^_?(\d+\-)?(.*)/), 2, fsName);
         p.dirs         = _.compact(p.dir.split('/'));
         p.isHidden     = !!_.find(p.dirs, s => s.startsWith('_'));
-        p.order        = parseInt(_.get(fsName.match(/^_?(\d+)\-.*/), 1, 1000000), 10);
+        p.order        = parseInt(_.get(p.fsName.match(/^_?(\d+)\-.*/), 1, 1000000), 10);
         p.ext          = p.ext.toLowerCase();
         p.isFile       = stat.isFile();
         p.isDirectory  = stat.isDirectory();

@@ -2,17 +2,13 @@
 
 const co         = require('co');
 const _          = require('lodash');
-const anymatch   = require('anymatch');
 const Page       = require('./page');
+const match      = require('../matchers');
 const source     = require('../source');
 const fs         = require('../fs');
 const config     = require('../config');
 const logger     = require('../logger');
-const utils      = require('../utils');
 const Collection = require('../collection');
-
-const pageExt    = config.get('pages.ext').toLowerCase();
-const isPage     = anymatch(`**/*${pageExt}`);
 
 const self = module.exports = {
 
@@ -39,7 +35,7 @@ const self = module.exports = {
             }
             const dirConfig = yield self.loadConfigFile(dir.name, dir.children, props);
             const items = yield dir.children.map(item => {
-                if (item.isFile && isPage(item.path)) {
+                if (match.pages(item)) {
                     const props = {
                         name:     item.name,
                         isHidden: item.isHidden,

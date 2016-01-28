@@ -2,19 +2,15 @@
 
 const co             = require('co');
 const _              = require('lodash');
-const anymatch       = require('anymatch');
 const Component      = require('./component');
-const view           = require('./view');
+const engine         = require('./engine').config;
+const match          = require('../matchers');
 const app            = require('../app');
 const source         = require('../source');
 const fs             = require('../fs');
 const config         = require('../config');
 const logger         = require('../logger');
-const utils          = require('../utils');
 const Collection     = require('../collection');
-
-const isComponent    = anymatch([`**/*${view.engine.ext}`,`!**/*--*${view.engine.ext}`]);
-const isVariant     = anymatch([`**/*--*${view.engine.ext}`]);
 
 const self = module.exports = {
 
@@ -39,12 +35,13 @@ const self = module.exports = {
             // first figure out if it's a component directory or not...
 
             if (!root) {
-                const componentView = _.find(children, {'name': dir.name, 'ext': view.engine.ext});
+                const componentView = _.find(children, {'name': dir.name, 'ext': engine.ext});
                 if (componentView) { // it is a component
                     const conf = yield self.loadConfigFile(componentView.name, children, {
                         name:     dir.name,
                         order:    dir.order,
                         isHidden: dir.isHidden,
+                        view:     componentView.base
                     });
                     return Component.create(conf, children);
                 }
@@ -54,8 +51,8 @@ const self = module.exports = {
 
             const directories    = children.filter(item => item.isDirectory);
             const collections    = yield directories.map(item => build(item));
-            const componentViews = views.filter(isComponent);
-            const variants       = views.filter(isVariant);
+            const componentViews = children.filter(match.components);
+            const variants       = children.filter(match.variants);
 
             const components = yield componentViews.map(item => {
                 const related = variants.filter(sibling => sibling.name.startsWith(item.name));
@@ -63,6 +60,7 @@ const self = module.exports = {
                     name:     item.name,
                     order:    item.order,
                     isHidden: item.isHidden,
+                    view:     item.base
                 });
                 return conf.then(c => Component.create(c, related));
             });
