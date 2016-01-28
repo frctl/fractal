@@ -17,13 +17,10 @@ const app = module.exports = {
 
         const input = this._parseArgv(argv);
 
-        console.time('initial');
-
         const promises = [pages.load(), components.load()];
 
         Promise.all(promises).then(function (promises) {
-            // logger.dump(promises[0])
-            console.timeEnd('initial');
+            
             require('./services/server');
         }).catch(function(err){
             console.log(err.stack);

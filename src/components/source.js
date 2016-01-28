@@ -38,7 +38,7 @@ const self = module.exports = {
                 const componentView = _.find(children, {'name': dir.name, 'ext': engine.ext});
                 if (componentView) { // it is a component
                     const conf = yield self.loadConfigFile(componentView.name, children, {
-                        name:     dir.name,
+                        _name:    dir.name,
                         order:    dir.order,
                         isHidden: dir.isHidden,
                         view:     componentView.base
@@ -57,7 +57,7 @@ const self = module.exports = {
             const components = yield componentViews.map(item => {
                 const related = variants.filter(sibling => sibling.name.startsWith(item.name));
                 const conf    = self.loadConfigFile(item.name, children, {
-                    name:     item.name,
+                    _name:    item.name,
                     order:    item.order,
                     isHidden: item.isHidden,
                     view:     item.base

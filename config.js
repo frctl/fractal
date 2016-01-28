@@ -71,27 +71,24 @@ module.exports = {
             }
         },
         status: {
-            'default': "ready",
-            options: [
-                {
-                    name: "prototype",
+            default: "ready",
+            options: {
+                protoype: {
                     label: "Prototype",
                     description: "Do not implement.",
                     color: "red"
                 },
-                {
-                    name: "wip",
+                wip: {
                     label: "WIP",
                     description: "Work in progress. Implemement with caution.",
                     color: "orange"
                 },
-                {
-                    name: "ready",
+                ready: {
                     label: "Ready",
                     description: "Ready to implement.",
                     color: "green"
                 }
-            ]
+            }
         }
     },
     pages: {

@@ -43,7 +43,15 @@ const self = module.exports = {
             try {
                 filePath = Path.relative(__dirname, filePath);
                 delete require.cache[require.resolve(filePath)]; // Always fetch a fresh copy
-                return Promise.resolve(require(filePath));
+                let data = require(filePath);
+                if (typeof data === 'function') {
+                    data = data();
+                }
+                if (!_.isObject(data)) {
+                    logger.error(`Error loading data file ${filePath}: JS files must return a JavaScript data object.`);
+                    return Promise.reject(new Error('Error loading data file'));
+                }
+                return Promise.resolve(data);
             } catch(e) {
                 return Promise.reject(e);
             }

@@ -17,14 +17,15 @@ module.exports = class Component {
         this.type     = 'component';
         this._config  = props;
         this._files   = files;
-        this._name    = props.name;
-        this.handle   = props.handle || utils.slugify(props.name);
+        this.name     = props._name;
+        this.handle   = props.handle || utils.slugify(this.name);
         this.atHandle = `@${this.handle}`;
         this.order    = props.order;
         this.isHidden = props.isHidden;
-        this.label    = props.label || utils.titlize(props.name);
+        this.label    = props.label || utils.titlize(this.name);
         this.title    = props.title || this.label;
         this.variants = new Map();
+        this.default  = props.config || 'default';
 
         this._variantProps = {
             status:  props.status  || config.get('components.status.default'),
@@ -35,6 +36,7 @@ module.exports = class Component {
             parent:  this,
             order:   100000
         };
+
     }
 
     get variantProps(){
@@ -43,14 +45,20 @@ module.exports = class Component {
 
     addVariants(variants){
         variants.forEach(v => this.addVariant(v));
+        return this;
     }
 
     addVariant(variant){
         this.variants.set(variant.handle, variant);
+        return this;
     }
 
     getVariant(handle){
         return this.variants.get(handle);
+    }
+
+    getVariants(){
+        return _.sortBy(Array.from(this.variants.values()), ['order', '_name']);
     }
 
     hasVariant(handle){
@@ -63,23 +71,41 @@ module.exports = class Component {
 
     static create(props, relatedFiles){
         return co(function* (){
-            const c = new Component(props, relatedFiles);
-            const fileVariants = yield variantsFromFiles(c, relatedFiles, c.variantProps);
-            fileVariants.length ? logger.dump(fileVariants) : null;
-            c.addVariants(fileVariants);
-            return c;
+            const comp     = new Component(props, relatedFiles);
+            const confVars = yield variantsFromConfig(comp, props.variants || []);
+            const skip     = confVars.map(v => v.name);
+            const fileVars = yield variantsFromFiles(comp, relatedFiles, skip);
+            comp.addVariants(_.concat(fileVars, confVars));
+            logger.dump(comp.getVariants());
+            return comp;
         });
     }
 }
 
-function variantsFromFiles(component, files, defaults){
-    defaults = defaults || {};
+function variantsFromFiles(component, files, skip){
+    skip = skip || [];
     let variants = match.findVariantsOf(component.name, files);
-    return Promise.all(variants.map(v => {
-        const defs = _.clone(defaults);
-        defs.name = v.name;
-        defs.view = v.base;
-        logger.dump(defs);
-        return source.loadConfigFile(v.name, files, defs).then(c => Variant.create(c));
-    }));
+    variants = variants.map(v => {
+        if (_.includes(skip, v.name)) {
+            // skip any variants that have been specified in the component config
+            return null;
+        }
+        const props = _.clone(component.variantProps);
+        props._name = v.name;
+        props.view  = v.base;
+        return source.loadConfigFile(v.name, files, props).then(c => Variant.create(c));
+    });
+    return Promise.all(_.compact(variants));
+}
+
+function variantsFromConfig(component, varConfs){
+    let variants = varConfs.map(conf => {
+        if (_.isUndefined(conf.handle)) {
+            logger.error(`Could not create variant of ${component.handle} - handle value is missing`);
+        }
+        return Variant.create(_.defaults(conf, component.variantProps, {
+            _name: conf.handle
+        }));
+    });
+    return _.compact(variants);
 }

@@ -14,9 +14,11 @@ module.exports = {
 
     fetch(dirPath, populator){
         var self = this;
+        // console.time(`fetch ${dirPath}`);
         return co(function* (){
             if (!treeCache.has(dirPath)) {
                 treeCache.set(dirPath, yield populator());
+                // console.timeEnd(`fetch ${dirPath}`);
                 self.watch(dirPath);
             }
             return treeCache.get(dirPath);
