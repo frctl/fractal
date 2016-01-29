@@ -11,7 +11,7 @@ module.exports = class Collection {
         this.name     = props.name;
         this.order    = props.order;
         this.isHidden = props.isHidden;
-        this.items    = items || [];
+        this._items   = new Set(items || []);
         this.label    = props.label || utils.titlize(props.name);
         this.title    = props.title || this.label;
     }
@@ -20,17 +20,24 @@ module.exports = class Collection {
         return Promise.resolve(new Collection(props, items));
     }
 
+    get items(){
+        return Array.from(this._items);
+    }
+
+    get size(){
+        return this._items.size;
+    }
+
     toJSON() {
         return utils.toJSON(this);
     }
 
     find(handle) {
         const isRef = handle.startsWith('@');
-        if (this.items.length === 0) {
+        if (this.size === 0) {
             return undefined;
         }
-        for (let i = 0; i < this.items.length; i++) {
-            let item = this.items[i];
+        for (let item of this) {
             if (item instanceof Collection) {
                 return item.find(handle);
             }
@@ -48,4 +55,7 @@ module.exports = class Collection {
 
     }
 
+    [Symbol.iterator](){
+        return this.items[Symbol.iterator]()
+    }
 };
