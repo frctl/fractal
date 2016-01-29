@@ -13,18 +13,19 @@ const config  = require('../config');
 module.exports = class Component {
 
     constructor(props, files) {
-        this.type     = 'component';
-        this._config  = props;
-        this._files   = files;
-        this.name     = props._name;
-        this.handle   = props.handle || utils.slugify(this.name);
-        this.ref      = `@${this.handle}`;
-        this.order    = props.order;
-        this.isHidden = props.isHidden;
-        this.label    = props.label || utils.titlize(this.name);
-        this.title    = props.title || this.label;
-        this.variants = new Map();
-        this.default  = props.config || 'default';
+        this.type      = 'component';
+        this._config   = props;
+        this._files    = files;
+        this.name      = props._name;
+        this.handle    = props.handle || utils.slugify(this.name);
+        this.ref       = `@${this.handle}`;
+        this.order     = props.order;
+        this.isHidden  = props.isHidden;
+        this.label     = props.label || utils.titlize(this.name);
+        this.title     = props.title || this.label;
+        this.default   = props.default || 'default';
+        this._variants = new Map();
+        this._view     = props.view;
 
         this._variantProps = {
             status:  props.status  || config.get('components.status.default'),
@@ -41,26 +42,45 @@ module.exports = class Component {
         return this._variantProps;
     }
 
+    get variants() {
+        return this.getVariants();
+    }
+
     addVariants(variants) {
         variants.forEach(v => this.addVariant(v));
         return this;
     }
 
     addVariant(variant) {
-        this.variants.set(variant.handle, variant);
+        this._variants.set(variant.handle, variant);
         return this;
     }
 
     getVariant(handle) {
-        return this.variants.get(handle);
+        return handle ? this._variants.get(handle) : this.getDefaultVariant();
     }
 
     getVariants() {
-        return _.sortBy(Array.from(this.variants.values()), ['order', '_name']);
+        return _.sortBy(Array.from(this._variants.values()), ['order', '_name']);
     }
 
     hasVariant(handle) {
-        return this.variants.has(handle);
+        return this._variants.has(handle);
+    }
+
+    getDefaultVariant() {
+        let vars = this._variants;
+        if (vars.has(this.default)) {
+            return vars.get(this.default);
+        }
+        vars = this.getVariants();
+        for (let val of vars) {
+            // return the first component with a matching view template
+            if (val.view === this._view) {
+                return val;
+            }
+        }
+        return vars[0];
     }
 
     toJSON() {
@@ -73,7 +93,15 @@ module.exports = class Component {
             const confVars = yield variantsFromConfig(comp, props.variants || []);
             const skip     = confVars.map(v => v.name);
             const fileVars = yield variantsFromFiles(comp, relatedFiles, skip);
-            comp.addVariants(_.concat(fileVars, confVars));
+            const variants = _.concat(fileVars, confVars);
+            if (!variants.length) {
+                const defaultVariant = yield Variant.create(_.defaultsDeep({
+                    name: comp.default,
+                    handle: comp.default
+                }, comp.variantProps));
+                variants.push(defaultVariant);
+            }
+            comp.addVariants(variants);
             return comp;
         });
     }

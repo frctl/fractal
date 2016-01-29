@@ -1,7 +1,6 @@
 'use strict';
 
 const Promise = require('bluebird');
-const _       = require('lodash');
 const utils   = require('./utils');
 
 module.exports = class Collection {
@@ -30,17 +29,19 @@ module.exports = class Collection {
         if (this.items.length === 0) {
             return undefined;
         }
-        return _.find(this.items, function(item){
+        for (let i = 0; i < this.items.length; i++) {
+            let item = this.items[i];
             if (item instanceof Collection) {
                 return item.find(handle);
             }
             if (isRef && item.ref === handle) {
-                return true;
+                return item;
             }
             if (! isRef && item.handle === handle) {
-                return true;
+                return item;
             }
-        });
+        }
+        return undefined;
     }
 
     flatten() {

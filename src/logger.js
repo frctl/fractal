@@ -1,13 +1,22 @@
-var winston = require('winston');
+'use strict';
 
-var logger = module.exports = {
+const winston = require('winston');
+const _       = require('lodash');
+
+const logger = module.exports = {
     dump(data) {
-        console.log(JSON.stringify(data, function (key, val) {
+        if (!data) {
+            return console.log(data);
+        }
+        if (!_.isFunction(data.then)) {
+            data = Promise.resolve(data);
+        }
+        data.then(data => console.log(JSON.stringify(data, function (key, val) {
             if (this[key] instanceof Buffer) {
                 return '<Buffer>';
             }
             return val;
-        }, 4));
+        }, 4)));
     }
 };
 

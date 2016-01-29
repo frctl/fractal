@@ -9,7 +9,7 @@ module.exports = function(str, context, preview){
     context = context || {};
     preview = preview || null;
     const handler = getHandler();
-    
+
 };
 
 function getHandler(){
@@ -17,12 +17,12 @@ function getHandler(){
         return handler;
     }
     try {
-        const handlerName = config.get('components.view.config.handler');
-        handler = require(handlerName);
-        handler.init(engineConf);
+        const moduleName = config.get('components.view.engine');
+        handler = require(moduleName);
+        handler.extend(config.get('components.view.extend'));
         return handler;
     } catch (e) {
-        throw new Error(`The component view engine '${handlerName}' could not be loaded: ${e.message}`);
+        throw new Error(`The component view engine '${moduleName}' could not be loaded: ${e.message}`);
     }
 }
 

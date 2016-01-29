@@ -3,6 +3,7 @@
 const co         = require('co');
 const _          = require('lodash');
 const Component  = require('./component');
+const Collection = require('./collection');
 const match      = require('../matchers');
 const app        = require('../app');
 const source     = require('../source');
@@ -10,9 +11,8 @@ const fs         = require('../fs');
 const data       = require('../data');
 const config     = require('../config');
 const logger     = require('../logger');
-const Collection = require('../collection');
 
-const engine     = config.get('components.view.config');
+const ext        = config.get('components.view.ext');
 
 module.exports = function(fileTree) {
     const splitter = config.get('components.splitter');
@@ -22,7 +22,7 @@ module.exports = function(fileTree) {
         // first figure out if it's a component directory or not...
 
         if (!root) {
-            const componentView = _.find(children, { name: dir.name, ext: engine.ext });
+            const componentView = _.find(children, { name: dir.name, ext: ext });
             if (componentView) { // it is a component
                 const conf = yield data.getConfig(match.findConfigFor(componentView.name, children), {
                     _name:    dir.name,
@@ -42,6 +42,7 @@ module.exports = function(fileTree) {
         const variants       = children.filter(match.variants);
 
         const components = yield componentViews.map(item => {
+
             const related = variants.filter(sibling => sibling.name.startsWith(item.name));
             const conf    = data.getConfig(match.findConfigFor(item.name, children), {
                 _name:    item.name,

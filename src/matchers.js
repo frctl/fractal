@@ -5,7 +5,7 @@ const _        = require('lodash');
 const config   = require('./config');
 
 const pExt      = config.get('pages.ext').toLowerCase();
-const cExt      = config.get('components.view.config.ext');
+const cExt      = config.get('components.view.ext');
 const splitter  = config.get('components.splitter');
 
 var self = module.exports = {
@@ -26,5 +26,15 @@ var self = module.exports = {
 
     findVariantsOf: (name, files) => files.filter(self.variants).filter(file => file.name.startsWith(`${name}${splitter}`)),
 
-    findConfigFor:  (name, files) => _.find(files.filter(self.configs), file => file.name.startsWith(`${name}.`))
+    findConfigFor:  (name, files) => _.find(files.filter(self.configs), file => file.name.startsWith(`${name}.`)),
+
+    // other
+
+    splitHandle: (handle) => {
+        const hp = handle.split(splitter);
+        return {
+            component: hp[0],
+            variant: hp[1],
+        }
+    }
 };

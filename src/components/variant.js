@@ -26,6 +26,14 @@ module.exports = class Variant {
         return this._context;
     }
 
+    get parent(){
+        return this._parent;
+    }
+
+    get siblings(){
+        return this._parent.variants;
+    }
+
     static create(props) {
         return Promise.resolve(new Variant(props));
     }

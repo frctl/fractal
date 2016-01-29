@@ -17,16 +17,21 @@ const app = module.exports = {
         this._setComponentEngine();
 
         const source = require('./source');
-
         const promises = {
             pages: source(config.get('pages.path'), 'pages'),
             components: source(config.get('components.path'), 'components')
         };
 
         Promise.props(promises).then(function (p) {
+
             const page = p.pages.find('index');
             const render = require('./pages/engine');
-            render(page.content, page.context).then(c => logger.dump(c));
+
+            logger.dump(render(page.content, page.context));
+            // logger.dump(p.components)
+            const c = p.components.find('button').getVariant();
+            logger.dump(c);
+
             // require('./services/server');
         }).catch(function (err) {
             console.log(err.stack);
@@ -61,14 +66,18 @@ const app = module.exports = {
     },
 
     _setComponentEngine(){
-        const engineName = config.get('components.view.engine');
-        const engine = config.get(`components.engines.${engineName}`, null);
-        if (!engine) {
-            throw new Error(`The component view engine '${engineName}' was not recognised.`);
+        let engine;
+        const moduleName = config.get('components.view.engine');
+        try {
+            engine = require(moduleName);
+        } catch(err) {
+            throw new Error(`Could not find component engine module '${moduleName}'. Try running 'npm install ${moduleName} --save'.`);
         }
-        engine.ext = engine.ext.toLowerCase();
-        engine.context = config.get('components.view.context', {});
-        config.set('components.view.config', engine);
+        const ext = config.get('components.view.ext') || engine.defaults.ext;
+        if (!ext) {
+            throw new Error(`No component extension found!`);
+        }
+        config.set('components.view.ext', ext.toLowerCase());
     }
 
 };
