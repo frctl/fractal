@@ -15,7 +15,7 @@ module.exports = class Page {
         this._buffer  = props.buffer;
         this.name     = props.name.toLowerCase();
         this.handle   = props.handle || utils.slugify(props.name);
-        this.atHandle = `@${this.handle}`;
+        this.ref      = `@${this.handle}`;
         this.order    = props.order;
         this.isHidden = props.isHidden;
         this.isIndex  = this.name === 'index';

@@ -5,8 +5,7 @@ const _               = require('lodash');
 const co              = require('co');
 const logger          = require('./logger');
 const config          = require('./config');
-const pages           = require('./pages');
-const components      = require('./components');
+const source          = require('./source');
 
 // const handlers    = new Map();
 
@@ -16,10 +15,12 @@ const app = module.exports = {
 
         const input = this._parseArgv(argv);
 
-        const promises = [pages.load(), components.load()];
+        const promises = [
+            source(config.get('pages.path'), 'pages'),
+            source(config.get('components.path'), 'components')
+        ];
 
         Promise.all(promises).then(function (promises) {
-
             require('./services/server');
         }).catch(function (err) {
             console.log(err.stack);

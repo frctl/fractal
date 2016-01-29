@@ -69,5 +69,17 @@ const self = module.exports = {
         const pathInfo = path.parse(path.resolve(filePath));
         const format = utils.guessLanguage(filePath, true);
         return fs.writeFileAsync(filePath, this.stringify(data, format));
+    },
+
+    getConfig(file, defaults) {
+        defaults = defaults || {};
+        if (!file) {
+            return Promise.resolve(defaults);
+        }
+        return this.readFile(file.path).then(c => _.defaultsDeep(c, defaults)).catch(err => {
+            logger.error(`Error parsing data file ${file.path}: ${err.message}`);
+            return defaults;
+        });
     }
+
 };

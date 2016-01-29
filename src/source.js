@@ -1,56 +1,57 @@
 'use strict';
 
-const _         = require('lodash');
-const co        = require('co');
-const chokidar  = require('chokidar');
-const data      = require('./data');
-const logger    = require('./logger');
-const match     = require('./matchers');
+const _            = require('lodash');
+const co           = require('co');
+const chokidar     = require('chokidar');
+const fs           = require('./fs');
+const data         = require('./data');
+const logger       = require('./logger');
+const match        = require('./matchers');
 
-const treeCache = new Map();
-const watchers  = new Map();
+const transformers = new Map();
+const treeCache    = new Map();
+const watchers     = new Map();
 
-module.exports = {
+transformers.set('components', require('./components/transform'));
+transformers.set('pages', require('./pages/transform'));
 
-    fetch(dirPath, populator) {
-        var self = this;
+const source = module.exports = function(dirPath, type){
+    const timer = process.hrtime();
+    return co(function* () {
+        if (!treeCache.has(dirPath)) {
 
-        // console.time(`fetch ${dirPath}`);
-        return co(function* () {
-            if (!treeCache.has(dirPath)) {
-                treeCache.set(dirPath, yield populator());
+            const fileTree = yield fs.describe(dirPath);
+            const sourceTree = yield source.transform(fileTree, type);
 
-                // console.timeEnd(`fetch ${dirPath}`);
-                self.watch(dirPath);
-            }
-            return treeCache.get(dirPath);
-        });
-    },
+            logger.debug(process.hrtime(timer));
 
-    clear(dirPath) {
-        treeCache.delete(dirPath);
-    },
-
-    watch(dirPath) {
-        if (!watchers.has(dirPath)) {
-            const monitor = chokidar.watch(dirPath, {
-                ignored: /[\/\\]\./
-            });
-            monitor.on('ready', () => {
-                monitor.on('all', (event, path) => this.refresh(event, path, dirPath));
-            });
-            watchers.set(dirPath, monitor);
+            treeCache.set(dirPath, sourceTree);
+            source.watch(dirPath);
         }
-    },
+        return treeCache.get(dirPath);
+    });
+};
 
-    loadConfigFile(name, files, defaults) {
-        defaults = defaults || {};
-        const confFile = match.findConfigFor(name, files);
-        const conf = confFile ? data.readFile(confFile.path) : Promise.resolve({});
-        return conf.then(c => _.defaultsDeep(c, defaults)).catch(err => {
-            logger.error(`Error parsing data file ${confFile.path}: ${err.message}`);
-            return defaults;
-        });
+module.exports.transform = function(fileTree, type){
+    if (!transformers.has(type)) {
+        throw new Error('Tranformer for ${type} not found');
     }
+    return transformers.get(type)(fileTree);
+};
 
+module.exports.clear = function(dirPath) {
+    treeCache.delete(dirPath);
+};
+
+module.exports.watch = function(dirPath) {
+    if (!watchers.has(dirPath)) {
+        const monitor = chokidar.watch(dirPath, {
+            ignored: /[\/\\]\./
+        });
+        monitor.on('ready', () => {
+            // TODO: Smarter tree rebuild rather than nuke and re-parse
+            monitor.on('all', (event, path) => source.clear(dirPath));
+        });
+        watchers.set(dirPath, monitor);
+    }
 };

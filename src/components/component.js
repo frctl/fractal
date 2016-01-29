@@ -9,7 +9,6 @@ const logger  = require('../logger');
 const data    = require('../data');
 const utils   = require('../utils');
 const config  = require('../config');
-const source  = require('../source');
 
 module.exports = class Component {
 
@@ -19,7 +18,7 @@ module.exports = class Component {
         this._files   = files;
         this.name     = props._name;
         this.handle   = props.handle || utils.slugify(this.name);
-        this.atHandle = `@${this.handle}`;
+        this.ref      = `@${this.handle}`;
         this.order    = props.order;
         this.isHidden = props.isHidden;
         this.label    = props.label || utils.titlize(this.name);
@@ -36,7 +35,6 @@ module.exports = class Component {
             parent:  this,
             order:   100000
         };
-
     }
 
     get variantProps() {
@@ -90,10 +88,10 @@ function variantsFromFiles(component, files, skip) {
             // skip any variants that have been specified in the component config
             return null;
         }
-        const props = _.clone(component.variantProps);
+        const props = _.cloneDeep(component.variantProps);
         props._name = v.name;
         props.view  = v.base;
-        return source.loadConfigFile(v.name, files, props).then(c => Variant.create(c));
+        return data.getConfig(match.findConfigFor(v.name, files), props).then(c => Variant.create(c));
     });
     return Promise.all(_.compact(variants));
 }
