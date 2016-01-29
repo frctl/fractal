@@ -19,7 +19,7 @@ renderer.code = function (code, lang, escaped) {
             highlighted = true;
         }
     }
-    const code = escaped ? code : escape(code, true);
+    code = escaped ? code : escape(code, true);
     if (!lang) {
         return `<code><pre>${code}
 </pre></code>`;

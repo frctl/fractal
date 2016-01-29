@@ -74,7 +74,6 @@ module.exports = class Component {
             const skip     = confVars.map(v => v.name);
             const fileVars = yield variantsFromFiles(comp, relatedFiles, skip);
             comp.addVariants(_.concat(fileVars, confVars));
-            logger.dump(comp.getVariants());
             return comp;
         });
     }

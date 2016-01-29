@@ -5,7 +5,7 @@ const _        = require('lodash');
 const config   = require('./config');
 
 const pExt      = config.get('pages.ext').toLowerCase();
-const cExt      = require('./components/engine').config.ext;
+const cExt      = config.get('components.view.config.ext');
 const splitter  = config.get('components.splitter');
 
 var self = module.exports = {

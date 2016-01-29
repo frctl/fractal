@@ -94,7 +94,12 @@ module.exports = {
     pages: {
         path: null,
         ext: '.md',
-        indexLabel: "Overview"
+        indexLabel: "Overview",
+        extend: {
+            filters: {},
+            globals: {},
+            extensions: {}
+        }
     },
     fractal: {
         site: {

@@ -18,7 +18,7 @@ module.exports = class Variant {
         this.preview  = props.preview;
         this.display  = props.display;
         this._parent  = props.parent;
-        this._context  = props.context;
+        this._context = props.context;
         this._config  = props;
     }
 

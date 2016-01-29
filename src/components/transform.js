@@ -1,17 +1,18 @@
 'use strict';
 
-const co             = require('co');
-const _              = require('lodash');
-const Component      = require('./component');
-const engine         = require('./engine').config;
-const match          = require('../matchers');
-const app            = require('../app');
-const source         = require('../source');
-const fs             = require('../fs');
-const data           = require('../data');
-const config         = require('../config');
-const logger         = require('../logger');
-const Collection     = require('../collection');
+const co         = require('co');
+const _          = require('lodash');
+const Component  = require('./component');
+const match      = require('../matchers');
+const app        = require('../app');
+const source     = require('../source');
+const fs         = require('../fs');
+const data       = require('../data');
+const config     = require('../config');
+const logger     = require('../logger');
+const Collection = require('../collection');
+
+const engine     = config.get('components.view.config');
 
 module.exports = function(fileTree) {
     const splitter = config.get('components.splitter');

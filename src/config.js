@@ -46,12 +46,12 @@ module.exports = {
      * @api public
      */
 
-    get: function (setting) {
+    get: function (setting, defaultVal) {
         if (_.isUndefined(setting)) {
             return config;
         }
 
-        return _.get(config, setting);
+        return _.get(config, setting, defaultVal || undefined);
     },
 
     /*

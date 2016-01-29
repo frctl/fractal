@@ -4,7 +4,7 @@ const HighlightJs = require('highlight.js');
 const _           = require('lodash');
 
 const langMap = new Map([
-    ['nunjucks', 'django']
+    ['nunjucks', 'django'],
     ['nunj', 'django']
 ]);
 

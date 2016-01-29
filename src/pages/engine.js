@@ -1,11 +1,11 @@
 'use strict';
 
-const config = require('../config');
+const Promise  = require('bluebird');
+const md       = require('../markdown');
+const config   = require('../config');
+const nunjucks = require('../nunjucks');
 
-module.exports = {
-
-    render(page) {
-
-    }
-
+module.exports = function(str, context){
+    var render = nunjucks();
+    return Promise.resolve(md(render(str, context)));
 };

@@ -25,8 +25,22 @@ module.exports = class Collection {
         return utils.toJSON(this);
     }
 
-    find(predicate, opts) {
-
+    find(handle) {
+        const isRef = handle.startsWith('@');
+        if (this.items.length === 0) {
+            return undefined;
+        }
+        return _.find(this.items, function(item){
+            if (item instanceof Collection) {
+                return item.find(handle);
+            }
+            if (isRef && item.ref === handle) {
+                return true;
+            }
+            if (! isRef && item.handle === handle) {
+                return true;
+            }
+        });
     }
 
     flatten() {
