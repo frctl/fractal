@@ -5,17 +5,21 @@ var _          = require('lodash');
 
 module.exports = {
 
+    defaults: {
+        ext: ".hbs"
+    },
+
     /**
-     * Initialise the Handlebars instance.
+     * Extend the Handlebars instance.
      * Register any custom helpers and partials set in the config.
      */
 
-    init: function(config){
-        var extras = config.extend || {};
-        _.each(extras.helpers || {}, function(helper, name){
+    extend: function(ext){
+        ext = ext || {}
+        _.each(ext.helpers || {}, function(helper, name){
             Handlebars.registerHelper(name, helper);
         });
-        _.each(extras.partials || {}, function(partial, name){
+        _.each(ext.partials || {}, function(partial, name){
             Handlebars.registerPartial(name, partial);
         });
     },
