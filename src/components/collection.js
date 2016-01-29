@@ -24,4 +24,8 @@ module.exports = class ComponentCollection extends Collection {
         return component;
     }
 
+    newSelf(props, items){
+        return new ComponentCollection(props, items);
+    }
+
 };

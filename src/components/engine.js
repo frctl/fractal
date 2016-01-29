@@ -27,27 +27,26 @@ var engine = function(str, context, preview){
 
 const loadViews = co(function* (){
     if (!viewsCache) {
+
         const components = yield source(app.get('components.path'), 'components');
         const views = [];
-        _.each(components.flatten(), function(comp){
-            var variants = comp.getVariants();
-            _.each(variants, function(variant){
+        for (let comp of components.flatten()) {
+            let defaultVariant = comp.getDefaultVariant();
+            for (let variant of comp.variants) {
                 views.push({
-                    handle: comp.handle + ':' + variant.handle,
-                    alias: variant.handle === comp.default.handle ? comp.handle : null,
-                    path: variant.fsViewPath,
-                    content: variant.files.view.getContents()
+                    handle: `${comp.handle}${config.get('components.splitter')}${variant.handle}`,
+                    alias: variant.handle === defaultVariant.handle ? comp.handle : null,
+                    path: variant.path,
+                    content: variant.files.view.getContents() // TODO: Give variants files
                 });
-            });
-        });
+            }
+        }
 
+        // engine.registerViews(views);
+        // app.events.once('component-tree-changed', function(){
+        //     viewsCache = null;
+        // });
 
-        }).then(function(views){
-            engine.registerViews(views);
-            app.events.once('component-tree-changed', function(){
-                viewsCache = null;
-            });
-        });
     }
     return viewsCache;
 });

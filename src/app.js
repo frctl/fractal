@@ -28,12 +28,11 @@ const app = module.exports = {
             const render = require('./pages/engine');
 
             logger.dump(render(page.content, page.context));
-            //
-            logger.dump(p.components.find('button').getVariant());
+            // logger.dump();
 
-            // for (let item of p.pages) {
-            //     console.log(item);
-            // }
+            for (let item of p.components.flatten()) {
+                console.log(item.handle);
+            }
 
             // require('./services/server');
         }).catch(function (err) {

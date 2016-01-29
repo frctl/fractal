@@ -1,19 +1,21 @@
 'use strict';
 
 const Promise = require('bluebird');
+const _       = require('lodash');
 const utils   = require('./utils');
+
 
 module.exports = class Collection {
 
     constructor(props, items) {
         this.type     = 'collection';
-        this._config  = props;
         this.name     = props.name;
         this.order    = props.order;
         this.isHidden = props.isHidden;
-        this._items   = new Set(items || []);
         this.label    = props.label || utils.titlize(props.name);
         this.title    = props.title || this.label;
+        this._config  = props;
+        this._items   = new Set(items || []);
     }
 
     static create(props, items) {
@@ -52,7 +54,24 @@ module.exports = class Collection {
     }
 
     flatten() {
+        let items = [];
+        for (let item of this) {
+            if (item instanceof Collection) {
+                items = _.concat(items, item.flatten().items);
+            } else {
+                items.push(item);
+            }
+        }
+        return this.newSelf({
+            order: this.order,
+            isHidden: this.isHidden,
+            label: this.label,
+            title: this.title
+        }, items)
+    }
 
+    newSelf(props, items){
+        return new Collection(props, items);
     }
 
     [Symbol.iterator](){

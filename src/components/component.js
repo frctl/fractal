@@ -23,7 +23,7 @@ module.exports = class Component {
         this.isHidden  = props.isHidden;
         this.label     = props.label || utils.titlize(this.name);
         this.title     = props.title || this.label;
-        this.default   = props.default || 'default';
+        this.defaultHandle  = props.default || 'default';
         this._variants = new Map();
         this._view     = props.view;
 
@@ -70,8 +70,8 @@ module.exports = class Component {
 
     getDefaultVariant() {
         let vars = this._variants;
-        if (vars.has(this.default)) {
-            return vars.get(this.default);
+        if (vars.has(this.defaultHandle)) {
+            return vars.get(this.defaultHandle);
         }
         vars = this.getVariants();
         for (let val of vars) {
@@ -96,8 +96,8 @@ module.exports = class Component {
             const variants = _.concat(fileVars, confVars);
             if (!variants.length) {
                 const defaultVariant = yield Variant.create(_.defaultsDeep({
-                    name: comp.default,
-                    handle: comp.default
+                    name: comp.defaultHandle,
+                    handle: comp.defaultHandle
                 }, comp.variantProps));
                 variants.push(defaultVariant);
             }
