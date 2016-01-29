@@ -36,6 +36,8 @@ module.exports = class Component {
             parent:  this,
             order:   100000
         };
+
+        // TODO: filter files
     }
 
     get variantProps() {
@@ -52,7 +54,9 @@ module.exports = class Component {
     }
 
     addVariant(variant) {
-        this._variants.set(variant.handle, variant);
+        if (!this._variants.has(variant.handle)) {
+            this._variants.set(variant.handle, variant);
+        }
         return this;
     }
 
@@ -91,8 +95,7 @@ module.exports = class Component {
         return co(function* () {
             const comp     = new Component(props, relatedFiles);
             const confVars = yield variantsFromConfig(comp, props.variants || []);
-            const skip     = confVars.map(v => v.name);
-            const fileVars = yield variantsFromFiles(comp, relatedFiles, skip);
+            const fileVars = yield variantsFromFiles(comp, relatedFiles);
             const variants = _.concat(fileVars, confVars);
             if (!variants.length) {
                 const defaultVariant = yield Variant.create(_.defaultsDeep({
@@ -107,14 +110,9 @@ module.exports = class Component {
     }
 };
 
-function variantsFromFiles(component, files, skip) {
-    skip = skip || [];
+function variantsFromFiles(component, files) {
     let variants = match.findVariantsOf(component.name, files);
     variants = variants.map(v => {
-        if (_.includes(skip, v.name)) {
-            // skip any variants that have been specified in the component config
-            return null;
-        }
         const props = _.cloneDeep(component.variantProps);
         props._name = v.name;
         props.view  = v.base;
@@ -128,7 +126,7 @@ function variantsFromConfig(component, varConfs) {
         if (_.isUndefined(conf.handle)) {
             logger.error(`Could not create variant of ${component.handle} - handle value is missing`);
         }
-        return Variant.create(_.defaults(conf, component.variantProps, {
+        return Variant.create(_.defaultsDeep(conf, component.variantProps, {
             _name: conf.handle
         }));
     });
