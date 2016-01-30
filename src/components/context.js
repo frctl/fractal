@@ -21,17 +21,15 @@ const resolver = module.exports = co.wrap(function* (context) {
                 return resolve(item);
             }
             if (_.isString(item) && _.startsWith(item, '@')) {
-                const parts = item.split('.');
+                const parts  = item.split('.');
                 const handle = parts.shift();
-                let entity = components.find(handle);
-                if (entity) {
+                let entity   = components.find(handle);
+                if (entity && parts.length) {
                     if (entity.type === 'component') {
                         entity = entity.getVariant();
                     }
-                    if (parts.length) {
-                        const entityContext = yield resolve(entity.context);
-                        return _.get(entityContext, parts.join('.'), null);
-                    }
+                    const entityContext = yield resolve(entity.context);
+                    return _.get(entityContext, parts.join('.'), null);
                 }
                 logger.warn(`Could not resolve context reference for ${item}`);
                 return null;

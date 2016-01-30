@@ -22,6 +22,7 @@ module.exports = class Page {
         this._config  = props;
         this._raw     = content;
         this._buffer  = props.buffer;
+        this._parent  = props.parent;
         this._context = props.context || {};
 
         this._context.title = this._context.title || this.title;
@@ -29,7 +30,7 @@ module.exports = class Page {
     }
 
     get context(){
-        return this._context;
+        return _.defaultsDeep(this._context, this._parent.context);
     }
 
     get content(){

@@ -14,19 +14,20 @@ module.exports = class Variant {
         this.name     = props._name;
         this.handle   = `${props.handle || this.name.split(config.get('components.splitter'))[1]}`;
         this.ref      = `@${props.parent.handle}${config.get('components.splitter')}${this.handle}`;
-        this.status   = props.status;
-        this.order    = props.order;
+        this.order    = props.order || 10000;
         this.view     = props.view;
-        this.preview  = props.preview;
-        this.display  = props.display;
-        this._parent  = props.parent;
         this._context = props.context || {};
         this._config  = props;
+        const p = this._parent = props.parent;
+
+        this.status  = props.status  || p.status;
+        this.preview = props.preview || p.preview;
+        this.display = props.display || p.display;
     }
 
     get context(){
         // need to resolve cascade
-        return this._parent ? _.defaultsDeep(this._context, this._parent._parent.context) : this._context;
+        return _.defaultsDeep(this._context, this._parent.context);
     }
 
     get parent(){

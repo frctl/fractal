@@ -32,7 +32,8 @@ module.exports = {
         readme: "readme.{md,markdown}",
         preview: {
             layout: null,
-            yield: "yield"
+            yield: "yield",
+            display: {}
         },
         splitter: "--",
         view: {
@@ -41,29 +42,6 @@ module.exports = {
             extend: {},
             context: {}
         },
-        // engines: {
-        //     handlebars: {
-        //         ext: ".hbs",
-        //         handler: "",
-        //         extend: {
-        //             helpers: {}
-        //         }
-        //     },
-        //     nunjucks: {
-        //         ext: ".nunjucks",
-        //         handler: "@frctl/nunjucks-engine",
-        //         extend: {
-        //             filters: {},
-        //             globals: {},
-        //             extensions: {}
-        //         }
-        //     },
-        //     mustache: {
-        //         ext: ".mustache",
-        //         handler: "@frctl/consolidate-engine",
-        //         extend: {}
-        //     }
-        // },
         status: {
             default: "ready",
             options: {

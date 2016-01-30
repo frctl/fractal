@@ -35,7 +35,7 @@ module.exports = function(fileTree, parent) {
 
         // first figure out if it's a component directory or not...
 
-        if (!root) {
+        if (parent) {
             const componentView = _.find(children, { name: dir.name, ext: ext });
             if (componentView) { // it is a component
                 const conf = yield data.getConfig(match.findConfigFor(componentView.name, children), {

@@ -1,11 +1,11 @@
 'use strict';
 
-const Promise         = require('bluebird');
-const Emitter         = require('events').EventEmitter;
-const _               = require('lodash');
-const co              = require('co');
-const logger          = require('./logger');
-const config          = require('./config');
+const Promise = require('bluebird');
+const Emitter = require('events').EventEmitter;
+const _       = require('lodash');
+const co      = require('co');
+const logger  = require('./logger');
+const config  = require('./config');
 
 // const handlers    = new Map();
 
@@ -28,16 +28,21 @@ const app = module.exports = {
             };
 
             const page = p.pages.find('index');
+            logger.dump(page.context);
+            console.log('----');
 
-            for (let item of p.components.flatten()) {
-                // console.log(item.handle);
+            for (let item of p.pages.flatten()) {
+                console.log(item.handle);
             }
 
             console.log('----');
 
             const comp = p.components.find('filters').getVariant();
+            logger.dump(comp.status);
             const ctx = yield context(comp.context);
-            logger.dump(ctx);
+
+
+            // logger.dump(ctx);
 
             // console.log('------');
             // logger.dump(p.components);

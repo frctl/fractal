@@ -26,8 +26,18 @@ module.exports = class Component {
         this.defaultHandle  = props.default || 'default';
         this._variants = new Map();
         this._view     = props.view;
-        this._parent   = props.parent;
+        this._context  = props.context || {};
+        const p = this._parent = props.parent;
+
+        this.status  = props.status  || p.status;
+        this.preview = props.preview || p.preview;
+        this.display = props.display || p.display;
+
         // TODO: filter files
+    }
+
+    get context(){
+        return _.defaultsDeep(this._context, this._parent.context);
     }
 
     get variants() {
@@ -82,13 +92,8 @@ module.exports = class Component {
             const comp     = new Component(props, relatedFiles);
 
             const vDefaults = {
-                status:  props.status  || config.get('components.status.default'),
-                preview: props.preview || config.get('components.preview.layout'),
                 view:    props.view,
-                context: props.context || {},
-                display: props.display || {},
-                parent:  comp,
-                order:   100000
+                parent:  comp
             };
 
             const confVars = yield variantsFromConfig(comp.name, props.variants || [], vDefaults);

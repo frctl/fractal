@@ -12,8 +12,10 @@ module.exports = class Collection {
         this.name     = props.name;
         this.order    = props.order;
         this.isHidden = props.isHidden;
+        this._parent  = props.parent;
         this.label    = props.label || utils.titlize(props.name);
         this.title    = props.title || this.label;
+        this._context = props.context || {};
         this._config  = props;
         this._items   = new Set(items || []);
     }

@@ -10,8 +10,13 @@ module.exports = class ComponentCollection extends Collection {
 
     constructor(props, items) {
         super(props, items);
-        this._context = props.context || {};
-        this._parent = props.parent || undefined;
+        
+        const c = config.get('components');
+        const p = this._parent;
+
+        this.status  = props.status  || (p ? p.status  : c.status.default);
+        this.preview = props.preview || (p ? p.preview : c.preview.layout);
+        this.display = props.display || (p ? p.display : c.preview.display);
     }
 
     get context(){
