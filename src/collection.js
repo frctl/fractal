@@ -35,7 +35,9 @@ module.exports = class Collection {
     }
 
     toJSON() {
-        return utils.toJSON(this);
+        const result = utils.toJSON(this);
+        result.items = this.items;
+        return result;
     }
 
     find(handle) {
@@ -44,14 +46,16 @@ module.exports = class Collection {
             return undefined;
         }
         for (let item of this) {
-            if (item instanceof Collection) {
-                return item.find(handle);
-            }
             if (isRef && item.ref === handle) {
                 return item;
             }
             if (! isRef && item.handle === handle) {
                 return item;
+            }
+            if (item instanceof Collection) {
+                const search = item.find(handle);
+                if (search) return search;
+
             }
         }
         return undefined;

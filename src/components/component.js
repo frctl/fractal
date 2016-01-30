@@ -26,7 +26,7 @@ module.exports = class Component {
         this.defaultHandle  = props.default || 'default';
         this._variants = new Map();
         this._view     = props.view;
-
+        this._parent   = props.parent;
         // TODO: filter files
     }
 
@@ -79,7 +79,6 @@ module.exports = class Component {
 
     static create(props, relatedFiles) {
         return co(function* () {
-            
             const comp     = new Component(props, relatedFiles);
 
             const vDefaults = {

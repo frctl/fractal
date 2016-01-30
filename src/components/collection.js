@@ -2,6 +2,7 @@
 
 const _          = require('lodash');
 const config     = require('../config');
+const logger     = require('../logger');
 const Collection = require('../collection');
 const matcher    = require('../matchers');
 
@@ -9,6 +10,15 @@ module.exports = class ComponentCollection extends Collection {
 
     constructor(props, items) {
         super(props, items);
+        this._context = props.context || {};
+        this._parent = props.parent || undefined;
+    }
+
+    get context(){
+        if (this._parent) {
+            return _.defaultsDeep(this._context, this._parent.context);
+        }
+        return _.defaultsDeep(this._context, config.get('components.view.context', {}));
     }
 
     static create(props, items) {

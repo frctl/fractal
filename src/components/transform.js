@@ -14,18 +14,23 @@ const logger     = require('../logger');
 
 const ext        = config.get('components.view.ext');
 
-module.exports = function(fileTree) {
+module.exports = function(fileTree, parent) {
     const splitter = config.get('components.splitter');
-    const build = co.wrap(function* (dir, root) {
+    const build = co.wrap(function* (dir, parent) {
+
         const children = dir.children;
         const props = {
             name: dir.name
         };
-        if (!root) {
+        if (parent) {
             props.isHidden = dir.isHidden;
             props.order    = dir.order;
         }
+
         const dirConfig = yield data.getConfig(match.findConfigFor(dir.name, children), props);
+        if (parent) {
+            dirConfig.parent = parent;
+        }
         const collection = yield Collection.create(dirConfig);
 
         // first figure out if it's a component directory or not...
@@ -47,12 +52,11 @@ module.exports = function(fileTree) {
         // not a component, so go through the items and group into components and collections
 
         const directories    = children.filter(item => item.isDirectory);
-        const collections    = yield directories.map(item => build(item));
+        const collections    = yield directories.map(item => build(item, collection));
         const componentViews = children.filter(match.components);
         const variants       = children.filter(match.variants);
 
         const components = yield componentViews.map(item => {
-
             const related = variants.filter(sibling => sibling.name.startsWith(item.name));
             const conf    = data.getConfig(match.findConfigFor(item.name, children), {
                 _name:    item.name,
@@ -60,12 +64,14 @@ module.exports = function(fileTree) {
                 isHidden: item.isHidden,
                 view:     item.base
             });
-            conf.parent = collection;
-            return conf.then(c => Component.create(c, related));
+            return conf.then(c => {
+                c.parent = collection;
+                return Component.create(c, related)
+            });
         });
 
         collection.items = _.orderBy(_.concat(components, collections), ['type', 'order', 'name'], ['desc', 'asc', 'asc']);
         return collection;
     });
-    return build(fileTree, true);
+    return build(fileTree);
 };

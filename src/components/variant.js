@@ -20,12 +20,13 @@ module.exports = class Variant {
         this.preview  = props.preview;
         this.display  = props.display;
         this._parent  = props.parent;
-        this._context = props.context;
+        this._context = props.context || {};
         this._config  = props;
     }
 
     get context(){
-        return this._context;
+        // need to resolve cascade
+        return this._parent ? _.defaultsDeep(this._context, this._parent._parent.context) : this._context;
     }
 
     get parent(){

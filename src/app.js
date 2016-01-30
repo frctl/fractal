@@ -16,28 +16,39 @@ const app = module.exports = {
         const input = this._parseArgv(argv);
         this._setComponentEngine();
 
-        const source = require('./source');
-        const promises = {
-            pages: source(config.get('pages.path'), 'pages'),
-            components: source(config.get('components.path'), 'components')
-        };
+        const go = co.wrap(function* run(){
 
-        Promise.props(promises).then(function (p) {
+            const source = require('./source');
+            const pRender = require('./pages/engine');
+            const context = require('./components/context');
+
+            const p = yield {
+                pages: source(config.get('pages.path'), 'pages'),
+                components: source(config.get('components.path'), 'components')
+            };
 
             const page = p.pages.find('index');
-            const render = require('./pages/engine');
-
-            logger.dump(render(page.content, page.context));
-            // logger.dump();
 
             for (let item of p.components.flatten()) {
-                console.log(item.handle);
+                // console.log(item.handle);
             }
 
-            // require('./services/server');
-        }).catch(function (err) {
+            console.log('----');
+
+            const comp = p.components.find('filters').getVariant();
+            const ctx = yield context(comp.context);
+            logger.dump(ctx);
+
+            // console.log('------');
+            // logger.dump(p.components);
+
+        });
+
+        go().catch(function (err) {
             console.log(err.stack);
         });
+
+
     },
 
     get version() {
