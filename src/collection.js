@@ -22,12 +22,16 @@ module.exports = class Collection {
         return Promise.resolve(new Collection(props, items));
     }
 
-    get items(){
+    get items() {
         return Array.from(this._items);
     }
 
-    get size(){
+    get size() {
         return this._items.size;
+    }
+
+    set items(items) {
+        this._items = new Set(items || []);
     }
 
     toJSON() {

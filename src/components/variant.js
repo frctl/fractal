@@ -4,6 +4,8 @@ const Promise = require('bluebird');
 const _       = require('lodash');
 const utils   = require('../utils');
 const config  = require('../config');
+const data    = require('../data');
+const match   = require('../matchers');
 
 module.exports = class Variant {
 
@@ -40,5 +42,13 @@ module.exports = class Variant {
 
     toJSON() {
         return utils.toJSON(this);
+    }
+
+    static createFromFiles(view, files, defaults) {
+        const configFile = match.findConfigFor(view.name, files);
+        const props = _.cloneDeep(defaults);
+        props._name = view.name;
+        props.view  = view.base;
+        return data.getConfig(configFile, props).then(c => Variant.create(c));
     }
 };

@@ -18,6 +18,15 @@ module.exports = function(fileTree) {
     const splitter = config.get('components.splitter');
     const build = co.wrap(function* (dir, root) {
         const children = dir.children;
+        const props = {
+            name: dir.name
+        };
+        if (!root) {
+            props.isHidden = dir.isHidden;
+            props.order    = dir.order;
+        }
+        const dirConfig = yield data.getConfig(match.findConfigFor(dir.name, children), props);
+        const collection = yield Collection.create(dirConfig);
 
         // first figure out if it's a component directory or not...
 
@@ -30,6 +39,7 @@ module.exports = function(fileTree) {
                     isHidden: dir.isHidden,
                     view:     componentView.base
                 });
+                conf.parent = collection;
                 return Component.create(conf, children);
             }
         }
@@ -50,19 +60,12 @@ module.exports = function(fileTree) {
                 isHidden: item.isHidden,
                 view:     item.base
             });
+            conf.parent = collection;
             return conf.then(c => Component.create(c, related));
         });
 
-        const props = {
-            name: dir.name
-        };
-        if (!root) {
-            props.isHidden = dir.isHidden;
-            props.order    = dir.order;
-        }
-        const dirConfig = yield data.getConfig(match.findConfigFor(dir.name, children), props);
-        const items = _.orderBy(_.concat(components, collections), ['type', 'order', 'name'], ['desc', 'asc', 'asc']);
-        return Collection.create(dirConfig, items);
+        collection.items = _.orderBy(_.concat(components, collections), ['type', 'order', 'name'], ['desc', 'asc', 'asc']);
+        return collection;
     });
     return build(fileTree, true);
 };
