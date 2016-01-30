@@ -33,29 +33,19 @@ module.exports = function nunj(includePath, config){
     }) : new NullLoader();
 
     const env = new nunjucks.Environment(loader);
-    const applyFilter = addFilter.bind(env);
-
-    // Add Common
-    globals.forEach((val, key) => env.addGlobal(key, val));
-    filters.forEach(applyFilter);
-    extensions.forEach((val, key) => env.addExtension(key, val));
 
     // Add configured
-    _.each(config.globals || {}, (val, key) => env.addGlobal(key, val));
-    _.each(config.filters || {}, applyFilter);
-    _.each(config.extensions || {}, (val, key) => env.addExtension(key, val));
+    _.each(_.defaults(config.globals    || {}, globals),    (val, key) => env.addGlobal(key, val));
+    _.each(_.defaults(config.extensions || {}, extensions), (val, key) => env.addExtension(key, val));
+    _.each(_.defaults(config.filters    || {}, filters),    (val, key) => {
+        return _.isFunction(val) ? env.addFilter(key, val) : env.addFilter(key, val.filter, val.async || false);
+    });
 
     return function(str, context){
+        
         return env.renderString(str, context || {});
     };
 };
-
-function addFilter(val, key) {
-    if (_.isFunction(val)) {
-        return this.addFilter(key, val);
-    }
-    this.addFilter(key, val.filter, val.async || false);
-}
 
 function ErrorExtension() {
     this.tags = ['error'];

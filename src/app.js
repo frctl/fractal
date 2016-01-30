@@ -16,7 +16,7 @@ const app = module.exports = {
         const input = this._parseArgv(argv);
         this._setComponentEngine();
 
-        const go = co.wrap(function* run(){
+        co(function* run(){
 
             const source = require('./source');
             const pRender = require('./pages/engine');
@@ -29,10 +29,17 @@ const app = module.exports = {
 
             const page = p.pages.find('index');
             logger.dump(page.context);
+            console.log(yield pRender(page.content, page.context));
             console.log('----');
 
             for (let item of p.pages.flatten()) {
-                console.log(item.handle);
+                // console.log(item.handle);
+            }
+
+            console.log('---');
+
+            for (let item of p.components.flatten()) {
+                // console.log(item.handle);
             }
 
             console.log('----');
@@ -41,19 +48,11 @@ const app = module.exports = {
             logger.dump(comp.status);
             const ctx = yield context(comp.context);
 
+            logger.dump(ctx);
 
-            // logger.dump(ctx);
-
-            // console.log('------');
-            // logger.dump(p.components);
-
-        });
-
-        go().catch(function (err) {
+        }).catch(function (err) {
             console.log(err.stack);
         });
-
-
     },
 
     get version() {

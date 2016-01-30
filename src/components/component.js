@@ -13,22 +13,23 @@ const config  = require('../config');
 module.exports = class Component {
 
     constructor(props, files) {
-        this.type      = 'component';
-        this._config   = props;
-        this._files    = files;
-        this.name      = props._name;
-        this.handle    = props.handle || utils.slugify(this.name);
-        this.ref       = `@${this.handle}`;
-        this.order     = props.order;
-        this.isHidden  = props.isHidden;
-        this.label     = props.label || utils.titlize(this.name);
-        this.title     = props.title || this.label;
-        this.defaultHandle  = props.default || 'default';
-        this._variants = new Map();
-        this._view     = props.view;
-        this._context  = props.context || {};
-        const p = this._parent = props.parent;
+        this.type          = 'component';
+        this._config       = props;
+        this._files        = files;
+        this.name          = props._name;
+        this.handle        = props.handle || utils.slugify(this.name);
+        this.ref           = `@${this.handle}`;
+        this.order         = props.order;
+        this.isHidden      = props.isHidden;
+        this.label         = props.label || utils.titlize(this.name);
+        this.title         = props.title || this.label;
+        this.defaultHandle = props.default || 'default';
+        this._parent       = props.parent;
+        this._variants     = new Map();
+        this._view         = props.view;
+        this._context      = props.context || {};
 
+        const p      = this._parent;
         this.status  = props.status  || p.status;
         this.preview = props.preview || p.preview;
         this.display = props.display || p.display;

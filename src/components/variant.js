@@ -12,14 +12,15 @@ module.exports = class Variant {
     constructor(props) {
         this.type     = 'variant';
         this.name     = props._name;
-        this.handle   = `${props.handle || this.name.split(config.get('components.splitter'))[1]}`;
+        this.handle   = props.handle || this.name.split(config.get('components.splitter'))[1];
         this.ref      = `@${props.parent.handle}${config.get('components.splitter')}${this.handle}`;
         this.order    = props.order || 10000;
         this.view     = props.view;
+        this._parent  = props.parent;
         this._context = props.context || {};
         this._config  = props;
-        const p = this._parent = props.parent;
 
+        const p      = this._parent;
         this.status  = props.status  || p.status;
         this.preview = props.preview || p.preview;
         this.display = props.display || p.display;
