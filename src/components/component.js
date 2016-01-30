@@ -3,6 +3,7 @@
 const Promise = require('bluebird');
 const _       = require('lodash');
 const co      = require('co');
+const Path    = require('path');
 const Variant = require('./variant');
 const match   = require('../matchers');
 const logger  = require('../logger');
@@ -26,7 +27,6 @@ module.exports = class Component {
         this.defaultHandle = props.default || 'default';
         this._parent       = props.parent;
         this._variants     = new Map();
-        this._view         = props.view;
         this._context      = props.context || {};
 
         const p      = this._parent;
@@ -94,6 +94,7 @@ module.exports = class Component {
 
             const vDefaults = {
                 view:    props.view,
+                dir:     props.dir,
                 parent:  comp
             };
 
@@ -103,7 +104,8 @@ module.exports = class Component {
             if (!variants.length) {
                 const defaultVariant = yield Variant.create(_.defaultsDeep({
                     name: comp.defaultHandle,
-                    handle: comp.defaultHandle
+                    handle: comp.defaultHandle,
+                    viewPath: props.view 
                 }, vDefaults));
                 variants.push(defaultVariant);
             }
@@ -126,9 +128,9 @@ function variantsFromConfig(name, configSet, defaults) {
             logger.error(`Could not create variant of ${name} - handle value is missing`);
             return null;
         }
-        const props = _.defaultsDeep(conf, defaults, {
-            _name: conf.handle
-        })
+        const props = _.defaultsDeep(conf, defaults);
+        props._name = conf.handle;
+        props.viewPath = Path.join(defaults.dir, props.view);
         return Variant.create(props);
     });;
     return Promise.all(_.compact(variants));

@@ -13,10 +13,9 @@ module.exports = {
 
     describe(dir) {
         return dirscribe(dir, {
-            filter:   filePath => !(/(^|\/)\.[^\/\.]/g).test(filePath),
-            after:    files => _.orderBy(files, ['type', 'order', 'path'], ['desc', 'asc', 'asc']),
-            build:    build,
-            recursive: true
+            filter: filePath => !(/(^|\/)\.[^\/\.]/g).test(filePath),
+            after:  files => _.orderBy(files, ['type', 'order', 'path'], ['desc', 'asc', 'asc']),
+            build:  build
         });
     }
 

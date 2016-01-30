@@ -42,7 +42,9 @@ module.exports = function(fileTree, parent) {
                     _name:    dir.name,
                     order:    dir.order,
                     isHidden: dir.isHidden,
-                    view:     componentView.base
+                    view:     componentView.base,
+                    viewPath: componentView.path,
+                    dir:      dir.path,
                 });
                 conf.parent = collection;
                 return Component.create(conf, children);
@@ -62,7 +64,9 @@ module.exports = function(fileTree, parent) {
                 _name:    item.name,
                 order:    item.order,
                 isHidden: item.isHidden,
-                view:     item.base
+                view:     item.base,
+                viewPath: item.path,
+                dir:      dir.path,
             });
             return conf.then(c => {
                 c.parent = collection;

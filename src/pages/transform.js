@@ -31,7 +31,8 @@ module.exports = function(fileTree) {
                     isHidden: item.isHidden,
                     order:    item.order,
                     lang:     item.lang,
-                    buffer:   item.buffer
+                    buffer:   item.buffer,
+                    filePath: item.path
                 };
                 return data.getConfig(match.findConfigFor(item.name, dir.children), props).then(c => {
                     c.parent = collection;

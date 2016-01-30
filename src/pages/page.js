@@ -17,6 +17,7 @@ module.exports = class Page {
         this.isHidden = props.isHidden;
         this.isIndex  = this.name === 'index';
         this.lang     = props.lang;
+        this.filePath = props.filePath;
         this.label    = this.isIndex ? config.get('pages.indexLabel') : props.label || utils.titlize(props.name);
         this.title    = props.title || this.label;
         this._config  = props;

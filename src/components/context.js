@@ -7,7 +7,7 @@ const app    = require('../app');
 
 const resolver = module.exports = co.wrap(function* (context) {
 
-    const components = yield source(app.get('components.path'), 'components');
+    const components = yield source('components');
 
     const resolve = co.wrap(function* (obj) {
 

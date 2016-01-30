@@ -8,27 +8,9 @@ const source = require('../source');
 const handler = null;
 const viewsCache = null;
 
-var engine = function(str, context, preview){
-    context = context || {};
-    preview = preview || null;
-    const handler = getHandler();
-    try {
-        return this.loadViews().then(function(){
-            return engine.render(entity.files.view.getContents(), context, {
-                path: entity.fsViewPath
-            });
-        }).catch(function(e){
-            throw new Error(`Template render error`, e);
-        });
-    } catch(e) {
-        throw new Error(`Template render error`, e);
-    }
-};
-
-const loadViews = co(function* (){
+const loadViews = co.wrap(function* (){
     if (!viewsCache) {
-
-        const components = yield source(app.get('components.path'), 'components');
+        const components = yield source('components');
         const views = [];
         for (let comp of components.flatten()) {
             let defaultVariant = comp.getDefaultVariant();
@@ -41,12 +23,13 @@ const loadViews = co(function* (){
                 });
             }
         }
-
-        // engine.registerViews(views);
-        // app.events.once('component-tree-changed', function(){
-        //     viewsCache = null;
-        // });
-
+        handler.registerViews(views);
+        source.once('changed', (name) => {
+            if (name === 'components'){
+                viewsCache = null;
+                console.log('CLEAR');
+            }
+        });
     }
     return viewsCache;
 });
@@ -65,10 +48,16 @@ function getHandler(){
     }
 }
 
-function render(){
+module.exports = co.wrap(function* (variant, preview){
+    const handler = getHandler();
+    const views   = yield loadViews();
 
-}
+    // TODO
 
-
-
-module.exports = engine;
+    const rendered = handler.render(file, context, {
+        path: variant.viewPath // TODO: do we need this??
+    });
+    if (preview){
+        const components = yield source('components');
+    }
+});

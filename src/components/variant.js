@@ -16,6 +16,7 @@ module.exports = class Variant {
         this.ref      = `@${props.parent.handle}${config.get('components.splitter')}${this.handle}`;
         this.order    = props.order || 10000;
         this.view     = props.view;
+        this.viewPath = props.viewPath;
         this._parent  = props.parent;
         this._context = props.context || {};
         this._config  = props;
@@ -52,6 +53,7 @@ module.exports = class Variant {
         const props = _.cloneDeep(defaults);
         props._name = view.name;
         props.view  = view.base;
+        props.viewPath = view.path;
         return data.getConfig(configFile, props).then(c => Variant.create(c));
     }
 };

@@ -1,7 +1,6 @@
 'use strict';
 
 const Promise = require('bluebird');
-const Emitter = require('events').EventEmitter;
 const _       = require('lodash');
 const co      = require('co');
 const logger  = require('./logger');
@@ -23,13 +22,13 @@ const app = module.exports = {
             const context = require('./components/context');
 
             const p = yield {
-                pages: source(config.get('pages.path'), 'pages'),
-                components: source(config.get('components.path'), 'components')
+                pages: source('pages'),
+                components: source('components')
             };
 
             const page = p.pages.find('index');
             logger.dump(page.context);
-            console.log(yield pRender(page.content, page.context));
+            console.log(yield pRender(page));
             console.log('----');
 
             for (let item of p.pages.flatten()) {
@@ -39,7 +38,9 @@ const app = module.exports = {
             console.log('---');
 
             for (let item of p.components.flatten()) {
-                // console.log(item.handle);
+                for (let v of item.getVariants()) {
+                    console.log(v.viewPath);
+                }
             }
 
             console.log('----');
@@ -99,5 +100,4 @@ const app = module.exports = {
 
 };
 
-Object.assign(app, Emitter.prototype);
 Object.assign(app, config);
