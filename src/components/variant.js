@@ -25,6 +25,13 @@ module.exports = class Variant {
         this.status  = props.status  || p.status;
         this.preview = props.preview || p.preview;
         this.display = props.display || p.display;
+
+        const pfs = this._parent.files;
+        this.files = {
+            view:   pfs.variants.filter(f => f.base === this.view)[0] || pfs.view,
+            binary: pfs.binary,
+            other:  pfs.other,
+        };
     }
 
     get context(){
@@ -38,6 +45,10 @@ module.exports = class Variant {
 
     get siblings(){
         return this._parent.variants;
+    }
+
+    get viewContents(){
+        return this.files.view.buffer.toString('UTF-8');
     }
 
     static create(props) {

@@ -4,6 +4,7 @@ const co     = require('co');
 const _      = require('lodash');
 const source = require('../source');
 const app    = require('../app');
+const logger = require('../logger');
 
 const resolver = module.exports = co.wrap(function* (context) {
 

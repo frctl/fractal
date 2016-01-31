@@ -18,7 +18,8 @@ const app = module.exports = {
         co(function* run(){
 
             const source = require('./source');
-            const pRender = require('./pages/engine');
+            const pRender = require('./pages/render');
+            const cRender = require('./components/render');
             const context = require('./components/context');
 
             const p = yield {
@@ -27,29 +28,28 @@ const app = module.exports = {
             };
 
             const page = p.pages.find('index');
-            logger.dump(page.context);
-            console.log(yield pRender(page));
-            console.log('----');
+            // logger.dump(page.context);
+            // console.log(yield pRender(page));
+            // console.log('----');
 
             for (let item of p.pages.flatten()) {
                 // console.log(item.handle);
             }
 
-            console.log('---');
+            // console.log('---');
 
             for (let item of p.components.flatten()) {
                 for (let v of item.getVariants()) {
-                    console.log(v.viewPath);
+                    // console.log(v.files.view.path);
                 }
             }
 
             console.log('----');
 
-            const comp = p.components.find('filters').getVariant();
-            logger.dump(comp.status);
+            const comp = p.components.find('button').getVariant();
             const ctx = yield context(comp.context);
-
-            logger.dump(ctx);
+            logger.dump(cRender(comp, true).catch(e => console.log(e)));
+            // logger.dump(ctx);
 
         }).catch(function (err) {
             console.log(err.stack);

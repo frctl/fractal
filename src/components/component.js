@@ -16,7 +16,6 @@ module.exports = class Component {
     constructor(props, files) {
         this.type          = 'component';
         this._config       = props;
-        this._files        = files;
         this.name          = props._name;
         this.handle        = props.handle || utils.slugify(this.name);
         this.ref           = `@${this.handle}`;
@@ -34,7 +33,13 @@ module.exports = class Component {
         this.preview = props.preview || p.preview;
         this.display = props.display || p.display;
 
-        // TODO: filter files
+        let filtered = files.filter(f => ! match.configs(f));
+        this.files = {
+            view:     filtered.filter(f => f.base === props.view)[0],
+            variants: match.findVariantsOf(this.name, filtered),
+            binary:   filtered.filter(f => f.isBinary),
+            other:    filtered.filter(f => (f.base !== props.view) && !f.isBinary),
+        };
     }
 
     get context(){
@@ -90,6 +95,7 @@ module.exports = class Component {
 
     static create(props, relatedFiles) {
         return co(function* () {
+
             const comp     = new Component(props, relatedFiles);
 
             const vDefaults = {
@@ -99,13 +105,13 @@ module.exports = class Component {
             };
 
             const confVars = yield variantsFromConfig(comp.name, props.variants || [], vDefaults);
-            const fileVars = yield variantsFromFiles(comp.name, relatedFiles, vDefaults);
+            const fileVars = yield comp.files.variants.map(v => Variant.createFromFiles(v, relatedFiles, vDefaults));
             const variants = _.concat(fileVars, confVars);
             if (!variants.length) {
                 const defaultVariant = yield Variant.create(_.defaultsDeep({
                     name: comp.defaultHandle,
                     handle: comp.defaultHandle,
-                    viewPath: props.view 
+                    viewPath: props.view,
                 }, vDefaults));
                 variants.push(defaultVariant);
             }
@@ -114,13 +120,6 @@ module.exports = class Component {
         });
     }
 };
-
-function variantsFromFiles(name, files, defaults) {
-    let variants = match.findVariantsOf(name, files);
-    return Promise.all(variants.map(view => {
-        return Variant.createFromFiles(view, files, defaults);
-    }));
-}
 
 function variantsFromConfig(name, configSet, defaults) {
     let variants = configSet.map(conf => {

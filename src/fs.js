@@ -37,7 +37,7 @@ function build(filePath, stat) {
             p.type     = 'directory';
         } else {
             p.type     = 'file';
-            p.lang     = utils.guessLanguage(filePath);
+            p.lang     = utils.lang(filePath);
             p.isBinary = yield isBinary(filePath, null);
             p.buffer   = yield readFile(filePath);
         }

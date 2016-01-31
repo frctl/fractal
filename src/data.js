@@ -38,7 +38,7 @@ const self = module.exports = {
         if (Path.isAbsolute(filePath)) {
             return Promise.reject('Data file paths must be relative to the root of the project');
         }
-        const format = utils.guessLanguage(filePath, true);
+        const format = utils.lang(filePath, true).mode;
         if (format === 'js' || format === 'javascript') {
             try {
                 filePath = Path.relative(__dirname, filePath);
@@ -67,7 +67,7 @@ const self = module.exports = {
 
     writeFile(filePath, data) {
         const pathInfo = path.parse(path.resolve(filePath));
-        const format = utils.guessLanguage(filePath, true);
+        const format = utils.lang(filePath, true).mode;
         return fs.writeFileAsync(filePath, this.stringify(data, format));
     },
 

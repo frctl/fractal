@@ -18,7 +18,7 @@ module.exports = function(fileTree, parent) {
     const splitter = config.get('components.splitter');
     const build = co.wrap(function* (dir, parent) {
 
-        const children = dir.children;
+        const children = dir.children || [];
         const props = {
             name: dir.name
         };
@@ -70,7 +70,8 @@ module.exports = function(fileTree, parent) {
             });
             return conf.then(c => {
                 c.parent = collection;
-                return Component.create(c, related)
+                related.push(item);
+                return Component.create(c, related);
             });
         });
 
