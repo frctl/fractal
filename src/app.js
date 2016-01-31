@@ -6,6 +6,7 @@ const co      = require('co');
 const logger  = require('./logger');
 const config  = require('./config');
 
+
 // const handlers    = new Map();
 
 const app = module.exports = {
@@ -15,12 +16,15 @@ const app = module.exports = {
         const input = this._parseArgv(argv);
         this._setComponentEngine();
 
+        const server  = require('./services/server');
+
         co(function* run(){
 
             const source = require('./source');
             const pRender = require('./pages/render');
             const cRender = require('./components/render');
             const context = require('./components/context');
+            const status = require('./components/status');
 
             const p = yield {
                 pages: source('pages'),
@@ -46,9 +50,10 @@ const app = module.exports = {
 
             console.log('----');
 
-            const comp = p.components.find('button').getVariant();
-            const ctx = yield context(comp.context);
-            logger.dump(cRender(comp).catch(e => console.log(e)));
+            const comp = p.components.find('button');
+            console.log(status(comp.statuses));
+            // const ctx = yield context(comp.context);
+            // logger.dump(cRender(comp).catch(e => console.log(e)));
             // logger.dump(ctx);
 
         }).catch(function (err) {

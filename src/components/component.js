@@ -29,9 +29,9 @@ module.exports = class Component {
         this._context      = props.context || {};
 
         const p      = this._parent;
-        this.status  = props.status  || p.status;
-        this.preview = props.preview || p.preview;
-        this.display = props.display || p.display;
+        this._status  = props.status  || p.status;
+        this._preview = props.preview || p.preview;
+        this._display = props.display || p.display;
 
         let filtered = files.filter(f => ! match.configs(f));
         this.files = {
@@ -50,6 +50,10 @@ module.exports = class Component {
         return this.getVariants();
     }
 
+    get statuses(){
+        return _.compact(_.uniq(_.map(this.variants, v => v.status)));
+    }
+
     addVariants(variants) {
         variants.forEach(v => this.addVariant(v));
         return this;
@@ -63,7 +67,7 @@ module.exports = class Component {
     }
 
     getVariant(handle) {
-        return handle ? this._variants.get(handle) : this.getDefaultVariant();
+        return (handle && handle !== this.defaultHandle) ? this._variants.get(handle) : this.getDefaultVariant();
     }
 
     getVariants() {

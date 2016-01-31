@@ -22,9 +22,9 @@ module.exports = class Variant {
         this._config  = props;
 
         const p      = this._parent;
-        this.status  = props.status  || p.status;
-        this.preview = props.preview || p.preview;
-        this.display = props.display || p.display;
+        this.status  = props.status  || p._status;
+        this.preview = props.preview || p._preview;
+        this.display = props.display || p._display;
 
         const pfs = this._parent.files;
         this.files = {

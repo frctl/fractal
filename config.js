@@ -45,7 +45,7 @@ module.exports = {
         status: {
             default: "ready",
             options: {
-                protoype: {
+                prototype: {
                     label: "Prototype",
                     description: "Do not implement.",
                     color: "red"
