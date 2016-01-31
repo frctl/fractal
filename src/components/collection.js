@@ -10,7 +10,7 @@ module.exports = class ComponentCollection extends Collection {
 
     constructor(props, items) {
         super(props, items);
-        
+
         const c = config.get('components');
         const p = this._parent;
 
@@ -19,7 +19,7 @@ module.exports = class ComponentCollection extends Collection {
         this.display = props.display || (p ? p.display : c.preview.display);
     }
 
-    get context(){
+    get context() {
         if (this._parent) {
             return _.defaultsDeep(this._context, this._parent.context);
         }
@@ -39,7 +39,7 @@ module.exports = class ComponentCollection extends Collection {
         return component;
     }
 
-    newSelf(props, items){
+    newSelf(props, items) {
         return new ComponentCollection(props, items);
     }
 

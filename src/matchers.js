@@ -35,6 +35,6 @@ var self = module.exports = {
         return {
             component: hp[0],
             variant: hp[1],
-        }
+        };
     }
 };

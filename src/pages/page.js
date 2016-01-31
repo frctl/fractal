@@ -30,11 +30,11 @@ module.exports = class Page {
         this._context.label = this._context.label || this.label;
     }
 
-    get context(){
+    get context() {
         return _.defaultsDeep(this._context, this._parent.context);
     }
 
-    get content(){
+    get content() {
         return this._raw;
     }
 

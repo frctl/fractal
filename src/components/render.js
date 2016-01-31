@@ -19,7 +19,7 @@ try {
 
 source.on('loaded', name => {
     if (name === 'components') {
-        viewsLoaded = co(function* (){
+        viewsLoaded = co(function* () {
             const components = yield source('components');
             const views = [];
             for (let comp of components.flatten()) {
@@ -37,15 +37,15 @@ source.on('loaded', name => {
             return true;
         });
     }
-})
+});
 
-module.exports = co.wrap(function* (entity, preview){
+module.exports = co.wrap(function* (entity, preview) {
     const variant = entity.getVariant();
     if (viewsLoaded !== false) yield viewsLoaded;
     let rendered = engine.render(variant.viewContents, yield context(variant.context), {
         path: variant.viewPath
     });
-    if (preview && variant.preview){
+    if (preview && variant.preview) {
         const components = yield source('components');
         let layout = components.find(variant.preview);
         if (!layout) {

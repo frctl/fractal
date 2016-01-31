@@ -14,7 +14,7 @@ const NullLoader = nunjucks.Loader.extend({
     getSource: name => {}
 });
 
-module.exports = function nunj(includePath, config){
+module.exports = function nunj(includePath, config) {
 
     config = config || {};
 
@@ -55,7 +55,7 @@ module.exports = function nunj(includePath, config){
 
     env.addExtension('ErrorExtension', new ErrorExtension());
 
-    return function(str, ctx){
+    return function (str, ctx) {
         return Promise.props(getFractalGlobals()).then(frctl => {
             let context = ctx || {};
             context.frctl = frctl;
@@ -66,13 +66,13 @@ module.exports = function nunj(includePath, config){
 
 function ErrorExtension() {
     this.tags = ['error'];
-    this.parse = function(parser, nodes, lexer) {
+    this.parse = function (parser, nodes, lexer) {
         var tok = parser.nextToken();
         var errorType = parser.parseSignature(null, true);
         parser.advanceAfterBlockEnd(tok.value);
         return new nodes.CallExtension(this, 'run', errorType);
     };
-    this.run = function(context, errorType) {
+    this.run = function (context, errorType) {
         if (errorType == '404') {
             throw new NotFoundError('Not Found');
         } else {
@@ -81,12 +81,11 @@ function ErrorExtension() {
     };
 }
 
-function getFractalGlobals()
-{
+function getFractalGlobals() {
     return {
         components: source('components'),
         pages: source('pages'),
         status: status,
         config: config.get(),
-    }
+    };
 }

@@ -6,7 +6,7 @@ const logger  = require('../logger');
 const options = config.get('components.status.options');
 const def     = config.get('components.status.default');
 
-module.exports = function status(label){
+module.exports = function status(label) {
     if (_.isArray(label)) {
         return _.compact(label.map(l => status(l)));
     }

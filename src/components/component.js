@@ -34,7 +34,7 @@ module.exports = class Component {
         this._preview = props.preview || p.preview;
         this._display = props.display || p.display;
 
-        let filtered = files.filter(f => ! match.configs(f));
+        let filtered = files.filter(f => !match.configs(f));
         this.files = {
             view:     filtered.filter(f => f.base === props.view)[0],
             variants: match.findVariantsOf(this.name, filtered),
@@ -43,7 +43,7 @@ module.exports = class Component {
         };
     }
 
-    get context(){
+    get context() {
         return _.defaultsDeep(this._context, this._parent.context);
     }
 
@@ -51,7 +51,7 @@ module.exports = class Component {
         return this.getVariants();
     }
 
-    get statuses(){
+    get statuses() {
         return status(_.compact(_.uniq(_.map(this.variants, v => v._status))));
     }
 

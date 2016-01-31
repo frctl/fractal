@@ -6,7 +6,6 @@ const co      = require('co');
 const logger  = require('./logger');
 const config  = require('./config');
 
-
 // const handlers    = new Map();
 
 const app = module.exports = {
@@ -18,10 +17,9 @@ const app = module.exports = {
 
         const server  = require('./services/server');
 
-        co(function* run(){
+        co(function* run() {
 
             const source = require('./source');
-
 
             // // const pRender = require('./pages/render');
             // const cRender = require('./components/render');
@@ -39,8 +37,9 @@ const app = module.exports = {
                 source('components').then(s => {
                     console.log('asd');
                     console.log(s.find('button').getVariant().context);
-                })
-            })
+                });
+            });
+
             // const page = p.pages.find('index');
             // // logger.dump(page.context);
             // // console.log(yield pRender(page));
@@ -98,12 +97,12 @@ const app = module.exports = {
         };
     },
 
-    _setComponentEngine(){
+    _setComponentEngine() {
         let engine;
         const moduleName = config.get('components.view.engine');
         try {
             engine = require(moduleName);
-        } catch(err) {
+        } catch (err) {
             throw new Error(`Could not find component engine module '${moduleName}'. Try running 'npm install ${moduleName} --save'.`);
         }
         const ext = config.get('components.view.ext') || engine.defaults.ext;

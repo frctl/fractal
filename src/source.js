@@ -18,13 +18,13 @@ const transformers = {
 
 const queue = [];
 
-const source = module.exports = function(name, dirPath, type){
+const source = module.exports = function (name, dirPath, type) {
     dirPath = dirPath || config.get(`${name}.path`);
     type = type || name;
     const timer = process.hrtime();
     return co(function* () {
 
-        if (!sources.has(name) || ! sources.get(name)) {
+        if (!sources.has(name) || !sources.get(name)) {
             const fileTree   = yield fs.describe(dirPath);
             const sourceTree = yield source.transform(fileTree, type);
             const srcObject  = {
@@ -32,7 +32,7 @@ const source = module.exports = function(name, dirPath, type){
                 tree:    sourceTree,
                 monitor: null,
                 type: type
-            }
+            };
             logger.debug(process.hrtime(timer));
 
             sources.set(name, srcObject);
@@ -43,11 +43,11 @@ const source = module.exports = function(name, dirPath, type){
     });
 };
 
-module.exports.transform = function(fileTree, type){
+module.exports.transform = function (fileTree, type) {
     return transformers[type](fileTree);
 };
 
-module.exports.reload = function(name) {
+module.exports.reload = function (name) {
     const sourceObj = sources.get(name);
     source.emit('reloading', name);
 
@@ -60,7 +60,7 @@ module.exports.reload = function(name) {
     }
 };
 
-module.exports.watch = function(name) {
+module.exports.watch = function (name) {
     const sourceObj = sources.get(name);
     if (sourceObj && !sourceObj.monitor) {
         sourceObj.monitor = chokidar.watch(sourceObj.path, {

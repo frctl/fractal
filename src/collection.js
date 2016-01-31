@@ -4,7 +4,6 @@ const Promise = require('bluebird');
 const _       = require('lodash');
 const utils   = require('./utils');
 
-
 module.exports = class Collection {
 
     constructor(props, items) {
@@ -51,7 +50,7 @@ module.exports = class Collection {
             if (isRef && item.ref === handle) {
                 return item;
             }
-            if (! isRef && item.handle === handle) {
+            if (!isRef && item.handle === handle) {
                 return item;
             }
             if (item instanceof Collection) {
@@ -77,14 +76,14 @@ module.exports = class Collection {
             isHidden: this.isHidden,
             label: this.label,
             title: this.title
-        }, items)
+        }, items);
     }
 
-    newSelf(props, items){
+    newSelf(props, items) {
         return new Collection(props, items);
     }
 
-    [Symbol.iterator](){
-        return this.items[Symbol.iterator]()
+    [Symbol.iterator]() {
+        return this.items[Symbol.iterator]();
     }
 };

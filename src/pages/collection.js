@@ -12,7 +12,7 @@ module.exports = class PageCollection extends Collection {
         super(props, items);
     }
 
-    get context(){
+    get context() {
         if (this._parent) {
             return _.defaultsDeep(this._context, this._parent.context);
         }
@@ -23,7 +23,7 @@ module.exports = class PageCollection extends Collection {
         return Promise.resolve(new PageCollection(props, items));
     }
 
-    newSelf(props, items){
+    newSelf(props, items) {
         return new PageCollection(props, items);
     }
 

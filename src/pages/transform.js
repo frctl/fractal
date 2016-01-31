@@ -11,7 +11,7 @@ const data       = require('../data');
 const config     = require('../config');
 const logger     = require('../logger');
 
-module.exports = function(fileTree) {
+module.exports = function (fileTree) {
     const build = co.wrap(function* (dir, parent) {
         const props = {
             name: dir.name
@@ -36,7 +36,7 @@ module.exports = function(fileTree) {
                 };
                 return data.getConfig(match.findConfigFor(item.name, dir.children), props).then(c => {
                     c.parent = collection;
-                    return Page.create(c)
+                    return Page.create(c);
                 });
             } else if (item.isDirectory) {
                 return build(item, collection);

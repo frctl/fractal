@@ -35,28 +35,28 @@ module.exports = class Variant {
         };
     }
 
-    get context(){
+    get context() {
         // need to resolve cascade
         return _.defaultsDeep(this._context, this._parent.context);
     }
 
-    get parent(){
+    get parent() {
         return this._parent;
     }
 
-    get status(){
+    get status() {
         return status(this._status);
     }
 
-    get siblings(){
+    get siblings() {
         return this._parent.variants;
     }
 
-    get viewContents(){
+    get viewContents() {
         return this.files.view.buffer.toString('UTF-8');
     }
 
-    getVariant(){
+    getVariant() {
         return this;
     }
 

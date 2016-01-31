@@ -6,12 +6,11 @@ const anymatch  = require('anymatch');
 const fang      = require('@allmarkedup/fang');
 const _         = require('lodash');
 
-
 module.exports = {
 
     lang(filePath) {
         return fang(filePath) || {
-            name:  Path.parse(filePath).ext.replace('.','').toUpperCase(),
+            name:  Path.parse(filePath).ext.replace('.', '').toUpperCase(),
             mode:  'text',
             scope: null,
             color: null

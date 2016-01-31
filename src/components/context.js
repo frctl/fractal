@@ -12,7 +12,7 @@ const resolver = module.exports = co.wrap(function* (context) {
 
     const resolve = co.wrap(function* (obj) {
 
-        const mapper = co.wrap(function* (item, key){
+        const mapper = co.wrap(function* (item, key) {
 
             item = yield Promise.resolve(item);
             if (_.isFunction(item)) {

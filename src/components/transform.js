@@ -14,7 +14,7 @@ const logger     = require('../logger');
 
 const ext        = config.get('components.view.ext');
 
-module.exports = function(fileTree, parent) {
+module.exports = function (fileTree, parent) {
     const splitter = config.get('components.splitter');
     const build = co.wrap(function* (dir, parent) {
 
