@@ -32,13 +32,13 @@ const app = module.exports = {
             };
 
             // console.log(p.components.find('button').getVariant().context);
-            source.on('loaded', name => {
-                console.log(name);
-                source('components').then(s => {
-                    console.log('asd');
-                    console.log(s.find('button').getVariant().context);
-                });
-            });
+            // source.on('loaded', name => {
+            //     console.log(name);
+            //     source('components').then(s => {
+            //         console.log('asd');
+            //         console.log(s.find('button').getVariant().context);
+            //     });
+            // });
 
             // const page = p.pages.find('index');
             // // logger.dump(page.context);
@@ -50,11 +50,18 @@ const app = module.exports = {
             // }
             //
             // // console.log('---');
-            //
+
+            const foo = p.components.findCollection('components/units/form-fields');
+
+            console.log(foo.handle);
+
+            // const flat = p.components.flatten();
+            // console.log(flat.path);
             // for (let item of p.components.flatten()) {
-            //     for (let v of item.getVariants()) {
-            //         // console.log(v.files.view.path);
-            //     }
+            //     console.log(item.ref);
+            //     // for (let v of item.getVariants()) {
+            //     //     // console.log(v.files.view.path);
+            //     // }
             // }
             //
             // console.log('----');

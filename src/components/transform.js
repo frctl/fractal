@@ -19,19 +19,6 @@ module.exports = function (fileTree, parent) {
     const build = co.wrap(function* (dir, parent) {
 
         const children = dir.children || [];
-        const props = {
-            name: dir.name
-        };
-        if (parent) {
-            props.isHidden = dir.isHidden;
-            props.order    = dir.order;
-        }
-
-        const dirConfig = yield data.getConfig(match.findConfigFor(dir.name, children), props);
-        if (parent) {
-            dirConfig.parent = parent;
-        }
-        const collection = yield Collection.create(dirConfig);
 
         // first figure out if it's a component directory or not...
 
@@ -46,10 +33,24 @@ module.exports = function (fileTree, parent) {
                     viewPath: componentView.path,
                     dir:      dir.path,
                 });
-                conf.parent = collection;
+                conf.parent = parent;
                 return Component.create(conf, children);
             }
         }
+
+        const props = {
+            name: dir.name
+        };
+        if (parent) {
+            props.isHidden = dir.isHidden;
+            props.order    = dir.order;
+        }
+
+        const dirConfig = yield data.getConfig(match.findConfigFor(dir.name, children), props);
+        if (parent) {
+            dirConfig.parent = parent;
+        }
+        const collection = yield Collection.create(dirConfig);
 
         // not a component, so go through the items and group into components and collections
 
