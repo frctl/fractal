@@ -16,6 +16,8 @@ const transformers = {
     components: require('./components/transform')
 };
 
+const queue = [];
+
 const source = module.exports = function(name, dirPath, type){
     dirPath     = dirPath || config.get(`${name}.path`);
     type = type || name;
@@ -35,6 +37,7 @@ const source = module.exports = function(name, dirPath, type){
 
             sources.set(name, srcObject);
             source.watch(name);
+            source.emit('loaded', name);
         }
         return sources.get(name).tree;
     });
@@ -44,22 +47,25 @@ module.exports.transform = function(fileTree, type){
     return transformers[type](fileTree);
 };
 
-module.exports.clear = function(name) {
+module.exports.reload = function(name) {
     const sourceObj = sources.get(name);
-    sourceObj.monitor.close();
-    sources.delete(name);
-    source.emit('changed', name);
+    source.emit('reloading', name);
+    if (sourceObj) {
+        sourceObj.monitor.close();
+        sources.delete(name);
+        source(name, sourceObj.path, sourceObj.type);
+    }
 };
 
 module.exports.watch = function(name) {
-    if (!sources.has(name)) {
-        const sourceObj = sources.get(name);
+    const sourceObj = sources.get(name);
+    if (sourceObj && !sourceObj.monitor) {
         sourceObj.monitor = chokidar.watch(sourceObj.path, {
             ignored: /[\/\\]\./
         });
-        sourceObj.on('ready', () => {
+        sourceObj.monitor.on('ready', () => {
             // TODO: Smarter tree rebuild rather than nuke and re-parse
-            sourceObj.on('all', (event, path) => source.clear(name));
+            sourceObj.monitor.on('all', (event, path) => source.reload(name));
         });
     }
 };

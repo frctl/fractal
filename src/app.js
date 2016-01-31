@@ -48,7 +48,7 @@ const app = module.exports = {
 
             const comp = p.components.find('button').getVariant();
             const ctx = yield context(comp.context);
-            logger.dump(cRender(comp, true).catch(e => console.log(e)));
+            logger.dump(cRender(comp).catch(e => console.log(e)));
             // logger.dump(ctx);
 
         }).catch(function (err) {

@@ -51,6 +51,10 @@ module.exports = class Variant {
         return this.files.view.buffer.toString('UTF-8');
     }
 
+    getVariant(){
+        return this;
+    }
+
     static create(props) {
         return Promise.resolve(new Variant(props));
     }
