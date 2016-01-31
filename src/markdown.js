@@ -10,9 +10,9 @@ marked.setOptions({
 
 const renderer = new marked.Renderer();
 renderer.code = function (code, lang, escaped) {
-    const highlighted = false;
+    var highlighted = false;
     if (this.options.highlight) {
-        const out = this.options.highlight(code, lang);
+        var out = this.options.highlight(code, lang);
         if (out != null && out !== code) {
             escaped = true;
             code = out;

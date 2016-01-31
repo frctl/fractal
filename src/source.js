@@ -19,12 +19,12 @@ const transformers = {
 const queue = [];
 
 const source = module.exports = function(name, dirPath, type){
-    dirPath     = dirPath || config.get(`${name}.path`);
+    dirPath = dirPath || config.get(`${name}.path`);
     type = type || name;
     const timer = process.hrtime();
     return co(function* () {
 
-        if (!sources.has(name)) {
+        if (!sources.has(name) || ! sources.get(name)) {
             const fileTree   = yield fs.describe(dirPath);
             const sourceTree = yield source.transform(fileTree, type);
             const srcObject  = {
@@ -50,8 +50,11 @@ module.exports.transform = function(fileTree, type){
 module.exports.reload = function(name) {
     const sourceObj = sources.get(name);
     source.emit('reloading', name);
+
     if (sourceObj) {
+        console.log('reloading');
         sourceObj.monitor.close();
+        sources.set(name, null);
         sources.delete(name);
         source(name, sourceObj.path, sourceObj.type);
     }
@@ -70,4 +73,4 @@ module.exports.watch = function(name) {
     }
 };
 
-Object.assign(source, Emitter.prototype);
+Object.assign(module.exports, Emitter.prototype);

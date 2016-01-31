@@ -47,6 +47,7 @@
     "js-yaml": "^3.4.3",
     "koa": "^1.1.2",
     "koa-route": "^2.4.2",
+    "koa-router": "^5.3.0",
     "liftoff": "^2.2.0",
     "lodash": "^4.0.1",
     "map-stream": "0.0.6",

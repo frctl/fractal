@@ -2,6 +2,7 @@
 
 const Promise = require('bluebird');
 const _       = require('lodash');
+const status  = require('./status');
 const utils   = require('../utils');
 const config  = require('../config');
 const data    = require('../data');
@@ -22,7 +23,7 @@ module.exports = class Variant {
         this._config  = props;
 
         const p      = this._parent;
-        this.status  = props.status  || p._status;
+        this._status  = props.status  || p._status;
         this.preview = props.preview || p._preview;
         this.display = props.display || p._display;
 
@@ -41,6 +42,10 @@ module.exports = class Variant {
 
     get parent(){
         return this._parent;
+    }
+
+    get status(){
+        return status(this._status);
     }
 
     get siblings(){

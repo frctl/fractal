@@ -21,37 +21,47 @@ const app = module.exports = {
         co(function* run(){
 
             const source = require('./source');
-            const pRender = require('./pages/render');
-            const cRender = require('./components/render');
-            const context = require('./components/context');
-            const status = require('./components/status');
 
+
+            // // const pRender = require('./pages/render');
+            // const cRender = require('./components/render');
+            // const context = require('./components/context');
+            // const status = require('./components/status');
+            //
             const p = yield {
                 pages: source('pages'),
                 components: source('components')
             };
 
-            const page = p.pages.find('index');
-            // logger.dump(page.context);
-            // console.log(yield pRender(page));
+            // console.log(p.components.find('button').getVariant().context);
+            source.on('loaded', name => {
+                console.log(name);
+                source('components').then(s => {
+                    console.log('asd');
+                    console.log(s.find('button').getVariant().context);
+                })
+            })
+            // const page = p.pages.find('index');
+            // // logger.dump(page.context);
+            // // console.log(yield pRender(page));
+            // // console.log('----');
+            //
+            // for (let item of p.pages.flatten()) {
+            //     console.log(item.handle);
+            // }
+            //
+            // // console.log('---');
+            //
+            // for (let item of p.components.flatten()) {
+            //     for (let v of item.getVariants()) {
+            //         // console.log(v.files.view.path);
+            //     }
+            // }
+            //
             // console.log('----');
-
-            for (let item of p.pages.flatten()) {
-                // console.log(item.handle);
-            }
-
-            // console.log('---');
-
-            for (let item of p.components.flatten()) {
-                for (let v of item.getVariants()) {
-                    // console.log(v.files.view.path);
-                }
-            }
-
-            console.log('----');
-
-            const comp = p.components.find('button');
-            console.log(status(comp.statuses));
+            //
+            // const comp = p.components.find('button');
+            // console.log(status(comp.statuses));
             // const ctx = yield context(comp.context);
             // logger.dump(cRender(comp).catch(e => console.log(e)));
             // logger.dump(ctx);

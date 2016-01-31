@@ -1,17 +1,17 @@
-
-var koa = require('koa');
-var app = koa();
-
+const server = require('koa')();
+const router = require('koa-router')();
 const source = require('../source');
-const render = require('../components/render');
+const logger = require('../logger');
+const render = require('../pages/render');
 
-// logger
-
-// response
-
-app.use(function * () {
-    var tree = yield source('components');
-    this.body = yield render(tree.find('assign-class-content'), true);
+router.get('/', function * (next) {
+    var tree = yield source('pages');
+    this.body = yield render(tree.find('index')).catch(e => {
+        logger.error(e);
+        return 'Error!';
+    });
 });
 
-app.listen(3000);
+server.use(router.routes()).use(router.allowedMethods());
+
+server.listen(3000);

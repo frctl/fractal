@@ -5,6 +5,7 @@ const _       = require('lodash');
 const co      = require('co');
 const Path    = require('path');
 const Variant = require('./variant');
+const status  = require('./status');
 const match   = require('../matchers');
 const logger  = require('../logger');
 const data    = require('../data');
@@ -51,7 +52,7 @@ module.exports = class Component {
     }
 
     get statuses(){
-        return _.compact(_.uniq(_.map(this.variants, v => v.status)));
+        return status(_.compact(_.uniq(_.map(this.variants, v => v._status))));
     }
 
     addVariants(variants) {
