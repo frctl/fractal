@@ -4,6 +4,9 @@ const Promise     = require('bluebird');
 const nunjucks    = require('nunjucks');
 const _           = require('lodash');
 const highlighter = require('./highlighter');
+const Component   = require('./components/component');
+const Variant     = require('./components/variant');
+const Page        = require('./pages/page');
 const render      = require('./components/render');
 const context     = require('./components/context');
 const status      = require('./components/status');
@@ -35,8 +38,16 @@ module.exports = function nunj(includePath, config) {
         return _.isFunction(val) ? env.addFilter(key, val) : env.addFilter(key, val.filter, val.async || false);
     });
 
-    env.addFilter('resolve', (ctx, cb) => {
-        context(ctx).then(result => cb(null, result)).catch(cb);
+    env.addFilter('context', (entity, cb) => {
+        let ctx;
+        if (entity instanceof Component || entity instanceof Variant) {
+            ctx = context(entity.context);
+        } else if (entity instanceof Page) {
+            ctx = Promise.resolve(entity.context);
+        } else {
+            ctx = Promise.resolve(entity);
+        }
+        ctx.then(result => cb(null, result)).catch(cb);
     }, true);
 
     env.addFilter('render', (entity, cb) => {

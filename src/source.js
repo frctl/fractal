@@ -50,9 +50,7 @@ module.exports.transform = function (fileTree, type) {
 module.exports.reload = function (name) {
     const sourceObj = sources.get(name);
     source.emit('reloading', name);
-
     if (sourceObj) {
-        console.log('reloading');
         sourceObj.monitor.close();
         sources.set(name, null);
         sources.delete(name);
@@ -67,7 +65,7 @@ module.exports.watch = function (name) {
             ignored: /[\/\\]\./
         });
         sourceObj.monitor.on('ready', () => {
-            // TODO: Smarter tree rebuild rather than nuke and re-parse
+            // TODO: Smarter tree rebuild rather than nuke and re-parse?
             sourceObj.monitor.on('all', (event, path) => source.reload(name));
         });
     }

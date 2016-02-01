@@ -51,10 +51,18 @@ const app = module.exports = {
             //
             // // console.log('---');
 
-            const foo = p.components.findCollection('components/units/form-fields');
+            // const foo = p.components.findCollection('components/units/form-fields');
+            // const foo = p.components.find('button');
+            // console.log(foo.handle);
+            const group = p.components.flatten(true);
+            console.log(group.title);
+            console.log('---');
+            for (let item of group) {
+                console.log(item.title);
+                // logger.dump(item.t);
+            }
 
-            console.log(foo.handle);
-
+            // console.log(group.find('button').title);
             // const flat = p.components.flatten();
             // console.log(flat.path);
             // for (let item of p.components.flatten()) {
