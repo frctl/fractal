@@ -19,9 +19,10 @@ const fractal = module.exports = {
         this._setComponentEngine();
         this._registerServices();
 
-        yargs.usage('\nUsage: $0 <command> [options]');
+        yargs.usage('\nUsage: $0 <command> [subcommand] [options]');
         yargs.version(this.version);
         commandify(yargs, 1);
+
         argv = yargs.argv;
 
         if (argv.level) {

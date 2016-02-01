@@ -13,5 +13,5 @@ module.exports = function(){
 
 };
 
-module.exports.renderPage = require('./pages/render');
+module.exports.render = require('./render');
 module.exports.logger = require('./logger');

@@ -1,19 +1,31 @@
-const server = require('koa')();
-const router = require('koa-router')();
+const express = require('express');
+const server  = express();
 
 module.exports = function(config, app){
 
-    router.get('/', function * (next) {
-        var tree = yield app().pages;
+    const theme = app.theme;
 
-       this.body = yield app.renderPage(tree.find('index')).catch(e => {
-           app.logger.error(e);
-           return 'Error!';
-       });
+    theme.static().forEach(s => {
+        server.use(s.mount, express.static(s.path));
     });
 
-    server.use(router.routes()).use(router.allowedMethods());
+    // try {
+    //     if (app.get('static.path')){
+    //         var dest = '/' + _.trim(app.get('static.dest'), '/');
+    //         server.use(dest, express.static(app.get('static.path')));
+    //     }
+    // } catch(e){
+    //     logger.warn('Static assets path %s does not exist', app.get('static.path'));
+    // }
 
-    server.listen(3000);
+    app.theme.routes().forEach(route => {
+
+        // router.get(route.path, function * (next) {
+        //     this.body = route.handle;
+        // });
+
+    });
+
+
 
 };

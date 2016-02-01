@@ -7,7 +7,6 @@ const highlighter = require('./highlighter');
 const Component   = require('./components/component');
 const Variant     = require('./components/variant');
 const Page        = require('./pages/page');
-const render      = require('./components/render');
 const context     = require('./components/context');
 const status      = require('./components/status');
 const app         = require('./app');
@@ -50,7 +49,13 @@ module.exports = function (includePath, config) {
     }, true);
 
     env.addFilter('render', (entity, cb) => {
-        render(entity).then(result => cb(null, result)).catch(cb);
+        let rendered;
+        if (entity instanceof Variant || entity instanceof Component) {
+            rendered = require('./components/render')(entity);
+        } else if (entity instanceof Page) {
+            rendered = require('./pages/render')(entity);
+        }
+        rendered.then(result => cb(null, result)).catch(cb);
     }, true);
 
     env.addFilter('preview', (entity, cb) => {
