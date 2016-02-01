@@ -12,21 +12,6 @@ module.exports = {
         title: "Fractal",
         version: null
     },
-    services: {
-        preview: {
-            server: {
-                port: 3000
-            },
-            static: {
-                path: null,
-                dest: "/"
-            },
-            build: {
-                dest: "build"
-            },
-            theme: "@frctl/theme-default"
-        }
-    },
     components: {
         path: null,
         readme: "readme.{md,markdown}",

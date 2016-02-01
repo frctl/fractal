@@ -1,0 +1,4 @@
+{
+    "name": "@frctl/browser-plugin",
+    "main": "index.js"
+}

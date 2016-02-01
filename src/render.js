@@ -17,7 +17,7 @@ const NullLoader = nunjucks.Loader.extend({
     getSource: name => {}
 });
 
-module.exports = function nunj(includePath, config) {
+module.exports = function render(includePath, config) {
 
     config = config || {};
 
