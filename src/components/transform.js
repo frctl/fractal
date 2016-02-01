@@ -5,7 +5,6 @@ const _          = require('lodash');
 const Component  = require('./component');
 const Collection = require('./collection');
 const match      = require('../matchers');
-const app        = require('../app');
 const source     = require('../source');
 const fs         = require('../fs');
 const data       = require('../data');

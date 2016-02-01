@@ -16,8 +16,6 @@ const transformers = {
     components: require('./components/transform')
 };
 
-const queue = [];
-
 const source = module.exports = function (name, dirPath, type) {
     dirPath = dirPath || config.get(`${name}.path`);
     type = type || name;

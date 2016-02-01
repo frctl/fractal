@@ -5,7 +5,6 @@ const _         = require('lodash');
 const Component = require('./component');
 const Variant   = require('./variant');
 const source    = require('../source');
-const app       = require('../app');
 const logger    = require('../logger');
 
 const resolver = module.exports = co.wrap(function* (context) {

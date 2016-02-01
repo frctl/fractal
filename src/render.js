@@ -10,14 +10,13 @@ const Page        = require('./pages/page');
 const render      = require('./components/render');
 const context     = require('./components/context');
 const status      = require('./components/status');
-const source      = require('./source');
-const config      = require('./config');
+const app         = require('./app');
 
 const NullLoader = nunjucks.Loader.extend({
     getSource: name => {}
 });
 
-module.exports = function render(includePath, config) {
+module.exports = function (includePath, config) {
 
     config = config || {};
 
@@ -54,6 +53,10 @@ module.exports = function render(includePath, config) {
         render(entity).then(result => cb(null, result)).catch(cb);
     }, true);
 
+    env.addFilter('preview', (entity, cb) => {
+        render(entity, true).then(result => cb(null, result)).catch(cb);
+    }, true);
+
     env.addFilter('async', (p, cb) => {
         Promise.resolve(p).then(result => cb(null, result)).catch(cb);
     }, true);
@@ -67,7 +70,7 @@ module.exports = function render(includePath, config) {
     env.addExtension('ErrorExtension', new ErrorExtension());
 
     return function (str, ctx) {
-        return Promise.props(getFractalGlobals()).then(frctl => {
+        return Promise.props(app()).then(frctl => {
             let context = ctx || {};
             context.frctl = frctl;
             return env.renderStringAsync(str, context);
@@ -89,14 +92,5 @@ function ErrorExtension() {
         } else {
             throw new Error('Server error');
         }
-    };
-}
-
-function getFractalGlobals() {
-    return {
-        components: source('components'),
-        pages: source('pages'),
-        status: status,
-        config: config.get(),
     };
 }

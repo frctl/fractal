@@ -1,0 +1,4 @@
+{
+    "name": "@frctl/generator-service",
+    "main": "index.js"
+}

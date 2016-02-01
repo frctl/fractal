@@ -45,7 +45,9 @@ module.exports = co.wrap(function* (entity, preview) {
     let rendered = engine.render(variant.viewContents, yield context(variant.context), {
         path: variant.viewPath
     });
+
     if (preview && variant.preview) {
+        
         const components = yield source('components');
         let layout = components.find(variant.preview);
         if (!layout) {
