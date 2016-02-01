@@ -28,7 +28,7 @@ function build(filePath, stat) {
         p.name         = _.get(p.fsName.match(/^_?(\d+\-)?(.*)/), 2, p.fsName);
         p.path         = filePath;
         p.dirs         = _.compact(p.dir.split('/'));
-        p.isHidden     = !!_.find(p.dirs, s => s.startsWith('_'));
+        p.isHidden     = !!(_.find(p.dirs, s => s.startsWith('_')) || p.fsName.startsWith('_'));
         p.order        = parseInt(_.get(p.fsName.match(/^_?(\d+)\-.*/), 1, 1000000), 10);
         p.ext          = p.ext.toLowerCase();
         p.isFile       = stat.isFile();

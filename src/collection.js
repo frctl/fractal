@@ -159,7 +159,15 @@ module.exports = class Collection {
     }
 
     filter(predicate){
-
+        return this.newSelf({
+            order:    this.order,
+            isHidden: this.isHidden,
+            label:    this.label,
+            title:    this.title,
+            name:     this.name,
+            handle:   this.handle,
+            parent:   this.parent
+        }, _.filter(this.flatten().items, predicate));
     }
 
     newSelf(props, items) {
