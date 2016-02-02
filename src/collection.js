@@ -121,17 +121,7 @@ module.exports = class Collection {
                 items.push(item);
             }
         }
-        return this.newSelf({
-            order:    this.order,
-            isHidden: this.isHidden,
-            label:    this.label,
-            title:    this.title,
-            name:     this.name,
-            handle:   this.handle,
-            parent:   this.parent,
-            labelPath: this.labelPath,
-            path:   this.path
-        }, items);
+        return this.newSelf(items);
     }
 
     _flattenWithCollections(){
@@ -146,22 +136,12 @@ module.exports = class Collection {
             }
         }
         if (items.length){
-            const col = this.newSelf({
-                order:    this.order,
-                isHidden: this.isHidden,
-                label:    this.label,
-                title:    this.title,
-                name:     this.name,
-                handle:   this.handle,
-                parent:   this.parent,
-                labelPath: this.labelPath,
-                path:   this.path
-            }, items);
+            const col = this.newSelf(items);
             collections.unshift(col);
         }
         collections = collections.filter(c => c.items.length > 0);
         // collections = collections.concat(items);
-        return this.newSelf({}, collections);
+        return this.newSelf(collections, {});
     }
 
     filter(predicate){
@@ -179,21 +159,28 @@ module.exports = class Collection {
                 }
             }
         }
-        return this.newSelf({
-            order:    this.order,
-            isHidden: this.isHidden,
-            label:    this.label,
-            title:    this.title,
-            name:     this.name,
-            handle:   this.handle,
-            parent:   this.parent,
-            labelPath: this.labelPath,
-            path:   this.path
-        }, items);
+        return this.newSelf(items);
     }
 
-    newSelf(props, items) {
-        return new Collection(props, items);
+    newSelf(items, props) {
+        if (_.isNull(props) || _.isUndefined(props)) {
+            props = this._getAttributes();
+        }
+        return new (this.constructor)(props, items);
+    }
+
+    _getAttributes(){
+        return {
+            order:     this.order,
+            isHidden:  this.isHidden,
+            label:     this.label,
+            title:     this.title,
+            name:      this.name,
+            handle:    this.handle,
+            parent:    this.parent,
+            labelPath: this.labelPath,
+            path:      this.path
+        }
     }
 
     [Symbol.iterator]() {

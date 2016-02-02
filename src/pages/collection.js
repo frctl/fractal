@@ -22,9 +22,4 @@ module.exports = class PageCollection extends Collection {
     static create(props, items) {
         return Promise.resolve(new PageCollection(props, items));
     }
-
-    newSelf(props, items) {
-        return new PageCollection(props, items);
-    }
-
 };
