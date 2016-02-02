@@ -71,48 +71,40 @@ module.exports = function (includePath, config) {
         return JSON.stringify(obj, null, 4);
     });
 
+    env.addFilter('status', (entity) => {
+        return status(entity.status);
+    });
+
     env.addFilter('highlight', highlighter);
 
-    env.addExtension('ErrorExtension', new ErrorExtension());
+    env.addExtension('Throw404Extension', new Throw404Extension());
 
     return {
         env: env,
-        string: function (str, ctx) {
-            return Promise.props(app())
-                          .then(app => makeContext(ctx, app))
-                          .then(context => env.renderStringAsync(path, context));
+        string: function (str, context, globals) {
+            return Promise.props(app()).then(app => {
+                env.addGlobal('frctl', Object.assign(app, globals || {}));
+                return env.renderStringAsync(str, context || {});
+            });
         },
-        template: function (path, ctx) {
-            return Promise.props(app())
-                          .then(app => makeContext(ctx, app))
-                          .then(context => env.renderAsync(path, context));
+        template: function (path, context, globals) {
+            return Promise.props(app()).then(app => {
+                env.addGlobal('frctl', Object.assign(app, globals || {}));
+                return env.renderAsync(path, context || {});
+            });
         }
     };
 };
 
-function ErrorExtension() {
-    this.tags = ['error'];
+function Throw404Extension() {
+    this.tags = ['throw404'];
     this.parse = function (parser, nodes, lexer) {
         var tok = parser.nextToken();
-        var errorType = parser.parseSignature(null, true);
+        var message = parser.parseSignature(null, true);
         parser.advanceAfterBlockEnd(tok.value);
-        return new nodes.CallExtension(this, 'run', errorType);
+        return new nodes.CallExtension(this, 'run', message);
     };
-    this.run = function (context, errorType) {
-        if (errorType == '404') {
-            throw new NotFoundError('Not Found');
-        } else {
-            throw new Error('Server error');
-        }
+    this.run = function (context, message) {
+        throw new Error(message || 'Not Found');
     };
-}
-
-function makeContext(ctx, app){
-    let context = ctx || {};
-    if (context.frctl) {
-        Object.assign(context.frctl, app);
-    } else {
-        context.frctl = app;
-    }
-    return context;
 }

@@ -81,12 +81,11 @@ module.exports = class Collection {
             return undefined;
         }
         for (let item of this) {
-            if (item.type !== 'collection' && item[type] === str) {
-                return item;
-            }
             if (item.type === 'collection') {
                 const search = item.find(str);
                 if (search) return search;
+            } else if (item[type] === str) {
+                return item;
             }
         }
         return undefined;

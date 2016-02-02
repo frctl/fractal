@@ -38,6 +38,21 @@ module.exports = class Page {
         return this._raw;
     }
 
+    get parent() {
+        return this._parent;
+    }
+
+    get path() {
+        if (this._path) {
+            return this._path;
+        }
+        return _.trim((this._makePath().replace(/index$/, '') || '/'),'/');
+    }
+
+    _makePath(){
+        return (this._parent) ? `${this._parent._makePath()}/${this.handle}` : '';
+    }
+
     static create(props) {
         props.buffer = props.buffer || new Buffer();
         var parsed   = matter(props.buffer.toString('UTF-8'));

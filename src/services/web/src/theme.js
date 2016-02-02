@@ -12,18 +12,15 @@ let exporter      = null;
 module.exports = {
 
     name(name) {
-        return this.set('name', name);
+        return arguments.length ? this.set('name', name) : this.get('name');
     },
 
     version(version) {
-        return this.set('version', version);
+        return arguments.length ? this.set('version', version) : this.get('version');
     },
 
     root(path){
-        if (arguments.length === 0) {
-            return this.get('root') || '';
-        }
-        return this.set('root', path);
+        return arguments.length ? this.set('root', path) : this.get('root') || '';
     },
 
     error(err){
@@ -87,6 +84,31 @@ module.exports = {
             }
         }
         return false;
+    },
+
+    // routeFromPath: function(urlPath){
+    //     urlPath = '/' + cleanUrlPath(urlPath.replace(/^\//,''));
+    //     for (let i = 0; i < config.routes.length; i++) {
+    //         let route = config.routes[i];
+    //         try {
+    //             let re = pathToRegexp(route.path);
+    //             if (re.test(urlPath)) {
+    //                 return route;
+    //             }
+    //         } catch(e){
+    //             logger.warn(e.message);
+    //         }
+    //     }
+    //     return null;
+    // },
+
+    urlFromRoute: function(handle, params){
+        let route = routes.get(handle);
+        if (route) {
+            let compiler = pr.compile(route.path);
+            return compiler(params);
+        }
+        return null;
     },
 
     export(callback) {

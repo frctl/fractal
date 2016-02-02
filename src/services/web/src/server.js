@@ -1,17 +1,19 @@
 'use strict';
 
-const _       = require('lodash');
-const express = require('express');
+const _          = require('lodash');
+const express    = require('express');
 
 module.exports = function(config, app){
 
     const server  = express();
     const theme = app.theme;
     const render = app.render(theme.views());
-    const context = {
+    const globals = {
         theme: theme,
-        error: null
+        error: null,
+        request: null,
     };
+
 
     /**
      * Set a few helpful properties on the request object
@@ -20,7 +22,8 @@ module.exports = function(config, app){
     server.use((req, res, next) => {
         req.isPjax = !! req.header('X-PJAX');
         req.segments = _.compact(req.path.split('/'));
-        context.request = req;
+        globals.request = req;
+        globals.error = null;
         next();
     });
 
@@ -43,8 +46,7 @@ module.exports = function(config, app){
             return next(new Error('No matching route found')); // TODO: 404
         }
         req.params = match.params;
-        const context = getContext(_.clone(match.route.context));
-        render.template(match.route.view, context).then(v => res.send(v)).catch(err => next(err));
+        render.template(match.route.view, match.route.context, getGlobals()).then(v => res.send(v)).catch(err => next(err));
     });
 
     /**
@@ -56,9 +58,8 @@ module.exports = function(config, app){
         if (res.headersSent || !theme.error()) {
             return next(err);
         }
-        const context = getContext(theme.error().context);
-        context.frctl.browser.error = err;
-        render.template(theme.error().view, context).then(v => res.send(v)).catch(err => next(err));
+        globals.error = err;
+        render.template(theme.error().view, theme.error().context, getGlobals()).then(v => res.send(v)).catch(err => next(err));
     });
 
     return {
@@ -80,10 +81,9 @@ module.exports = function(config, app){
         }
     };
 
-    function getContext(ctx) {
-        ctx = ctx || {};
-        ctx.frctl = ctx.frctl || {};
-        ctx.frctl.browser = _.clone(context);
-        return ctx;
+    function getGlobals() {
+        return {
+            web: globals
+        };
     }
 };

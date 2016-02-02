@@ -12,6 +12,18 @@ module.exports = class PageCollection extends Collection {
         super(props, items);
     }
 
+    findByPath(path) {
+        for (let item of this) {
+            if (item.type === 'collection') {
+                const search = item.findByPath(path);
+                if (search) return search;
+            } else if (item.path === path) {
+                return item;
+            }
+        }
+        return undefined;
+    }
+
     get context() {
         if (this._parent) {
             return _.defaultsDeep(this._context, this._parent.context);
