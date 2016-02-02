@@ -39,4 +39,29 @@ module.exports = class ComponentCollection extends Collection {
         return component;
     }
 
+    filter(predicate){
+        if (
+            (_.isArray(predicate) && predicate[0] === 'status') ||
+            (_.isObject(predicate) && predicate.status)
+        ){
+            let items = [];
+            for (let item of this) {
+                if (item.type === 'collection') {
+                    let collection = item.filter(predicate);
+                    if (collection.size) {
+                        items.push(collection);
+                    }
+                } else {
+                    let statuses = item.statuses;
+                    let search = _.isArray(predicate) ? predicate[1] : predicate.status;
+                    if (_.includes(statuses, search)) {
+                        items.push(item);
+                    }
+                }
+            }
+            return this.newSelf(items);
+        }
+        return super.filter(predicate);
+    }
+
 };

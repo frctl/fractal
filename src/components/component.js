@@ -52,7 +52,7 @@ module.exports = class Component {
     }
 
     get statuses() {
-        return status(_.compact(_.uniq(_.map(this.variants, v => v._status))));
+        return _.compact(_.uniq(_.map(this.variants, v => v._status)));
     }
 
     addVariants(variants) {

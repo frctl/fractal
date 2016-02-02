@@ -2,7 +2,6 @@
 
 const Promise = require('bluebird');
 const _       = require('lodash');
-const status  = require('./status');
 const utils   = require('../utils');
 const config  = require('../config');
 const data    = require('../data');
@@ -45,7 +44,7 @@ module.exports = class Variant {
     }
 
     get status() {
-        return status(this._status);
+        return this._status;
     }
 
     get siblings() {
