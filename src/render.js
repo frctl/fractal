@@ -10,6 +10,7 @@ const Page        = require('./pages/page');
 const context     = require('./components/context');
 const status      = require('./components/status');
 const app         = require('./app');
+const logger      = require('./logger');
 
 const NullLoader = nunjucks.Loader.extend({
     getSource: name => {}
@@ -74,12 +75,18 @@ module.exports = function (includePath, config) {
 
     env.addExtension('ErrorExtension', new ErrorExtension());
 
-    return function (str, ctx) {
-        return Promise.props(app()).then(frctl => {
-            let context = ctx || {};
-            context.frctl = frctl;
-            return env.renderStringAsync(str, context);
-        });
+    return {
+        env: env,
+        string: function (str, ctx) {
+            return Promise.props(app())
+                          .then(app => makeContext(ctx, app))
+                          .then(context => env.renderStringAsync(path, context));
+        },
+        template: function (path, ctx) {
+            return Promise.props(app())
+                          .then(app => makeContext(ctx, app))
+                          .then(context => env.renderAsync(path, context));
+        }
     };
 };
 
@@ -98,4 +105,14 @@ function ErrorExtension() {
             throw new Error('Server error');
         }
     };
+}
+
+function makeContext(ctx, app){
+    let context = ctx || {};
+    if (context.frctl) {
+        Object.assign(context.frctl, app);
+    } else {
+        context.frctl = app;
+    }
+    return context;
 }

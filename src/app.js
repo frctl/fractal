@@ -3,7 +3,7 @@ const config = require('./config');
 const status = require('./components/status');
 
 module.exports = function(){
-
+    
     return {
         components: source('components'),
         pages: source('pages'),
@@ -14,4 +14,4 @@ module.exports = function(){
 };
 
 module.exports.render = require('./render');
-module.exports.logger = require('./logger');
+module.exports.log = require('./logger');

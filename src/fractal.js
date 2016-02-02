@@ -3,6 +3,7 @@
 const Promise = require('bluebird');
 const _       = require('lodash');
 const co      = require('co');
+const chalk   = require('chalk');
 const yargs   = require('yargs');
 const logger  = require('./logger');
 const config  = require('./config');
@@ -14,8 +15,6 @@ const services    = new Map();
 const fractal = module.exports = {
 
     run() {
-        let argv;
-
         this._setComponentEngine();
         this._registerServices();
 
@@ -23,7 +22,7 @@ const fractal = module.exports = {
         yargs.version(this.version);
         commandify(yargs, 1);
 
-        argv = yargs.argv;
+        let argv = yargs.argv;
 
         if (argv.level) {
             this.set('log.level', argv.level);

@@ -1,5 +1,7 @@
 'use strict';
 
+const chalk    = require('chalk');
+const Path     = require('path');
 const Service  = require('../../../service');
 const defaults = require('../config');
 const server   = require('./server');
@@ -11,12 +13,13 @@ module.exports = class BrowserService extends Service {
     constructor(config) {
         super(config);
     }
-
+    
     run(command, args, opts, app){
         this.config.port = opts.port || this.config.port;
         app.theme = this.loadTheme();
         if (command === 'browser' && args[0] === 'start') {
-            server(this.config, app);
+            const srv = server(this.config, app);
+            srv.start();
         } else if (command === 'browser' && args[0] === 'build') {
             build(this.config, app);
         }
@@ -25,6 +28,7 @@ module.exports = class BrowserService extends Service {
     loadTheme(){
         const conf = this.config;
         require(conf.theme)(theme);
+        theme.root(Path.parse(require.resolve(conf.theme)).dir);
         if (conf.static.path) {
             theme.static(conf.static.path, conf.static.mount);
         }

@@ -14,7 +14,7 @@
   },
   "homepage": "https://github.com/frctl/fractal",
   "dependencies": {
-    "@allmarkedup/dirscribe": "^0.1.0",
+    "@allmarkedup/dirscribe": "^1.0.0",
     "@allmarkedup/fang": "^1.0.0",
     "@frctl/consolidate-engine": "^0.1.0",
     "@frctl/handlebars-engine": "^0.1.0",

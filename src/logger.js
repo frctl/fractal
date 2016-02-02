@@ -2,8 +2,22 @@
 
 const winston = require('winston');
 const _       = require('lodash');
+const chalk   = require('chalk');
 
 const logger = module.exports = {
+
+    success(str) {
+        console.log(chalk.green(`✔ ${str}`));
+    },
+
+    write(str) {
+        console.log(str);
+    },
+
+    end(str) {
+        console.log(str);
+    },
+
     dump(data) {
         if (!data) {
             return console.log(data);

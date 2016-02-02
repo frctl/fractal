@@ -6,5 +6,5 @@ const md       = require('../markdown');
 const render   = require('../render')();
 
 module.exports = function (page) {
-    return Promise.resolve(render(page.content, page.context).then(c => md(c)));
+    return Promise.resolve(render.string(page.content, page.context).then(c => md(c)));
 };

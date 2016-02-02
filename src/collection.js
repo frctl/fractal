@@ -35,6 +35,10 @@ module.exports = class Collection {
         return Array.from(this._items);
     }
 
+    all() {
+        return this.items;
+    }
+
     get size() {
         return this._items.size;
     }
