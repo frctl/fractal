@@ -13,6 +13,7 @@ module.exports = class PageCollection extends Collection {
     }
 
     findByPath(path) {
+        path = _.trim(path, '/');
         for (let item of this) {
             if (item.type === 'collection') {
                 const search = item.findByPath(path);
