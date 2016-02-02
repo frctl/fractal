@@ -128,7 +128,9 @@ module.exports = class Collection {
             title:    this.title,
             name:     this.name,
             handle:   this.handle,
-            parent:   this.parent
+            parent:   this.parent,
+            labelPath: this.labelPath,
+            path:   this.path
         }, items);
     }
 
@@ -163,6 +165,20 @@ module.exports = class Collection {
     }
 
     filter(predicate){
+        let matcher = _.iteratee(predicate);
+        let items = [];
+        for (let item of this) {
+            if (item.type === 'collection') {
+                let collection = item.filter(predicate);
+                if (collection.size) {
+                    items.push(collection);
+                }
+            } else {
+                if (matcher(item)) {
+                    items.push(item);
+                }
+            }
+        }
         return this.newSelf({
             order:    this.order,
             isHidden: this.isHidden,
@@ -170,8 +186,10 @@ module.exports = class Collection {
             title:    this.title,
             name:     this.name,
             handle:   this.handle,
-            parent:   this.parent
-        }, _.filter(this.flatten().items, predicate));
+            parent:   this.parent,
+            labelPath: this.labelPath,
+            path:   this.path
+        }, items);
     }
 
     newSelf(props, items) {
