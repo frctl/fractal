@@ -6,10 +6,10 @@ const co      = require('co');
 const chalk   = require('chalk');
 const yargs   = require('yargs');
 const logger  = require('./logger');
+const Service = require('./service');
 const config  = require('./config');
 
-const registry    = Object.create({});
-const commands    = new Map();
+const registry    = [];
 const services    = new Map();
 
 const fractal = module.exports = {
@@ -20,7 +20,6 @@ const fractal = module.exports = {
 
         yargs.usage('\nUsage: $0 <command> [subcommand] [options]');
         yargs.version(this.version);
-        commandify(yargs, 1);
 
         let argv = yargs.argv;
 
@@ -30,13 +29,11 @@ const fractal = module.exports = {
         }
 
         const input = this._parseArgv(argv);
-        const serviceName = commands.get(input.command)
-        if (serviceName) {
-            const service = services.get(serviceName);
-            if (service) {
-                return service.run(input.command, input.args, input.opts, require('./app'));
-            }
+        const srv = services.get(input.command)
+        if (srv) {
+            return srv.runner()(input.command, input.args, input.opts, require('./app'));
         }
+
         yargs.showHelp();
         process.exit(0);
     },
@@ -49,23 +46,19 @@ const fractal = module.exports = {
         return config.get('env');
     },
 
-    use(name, service) {
-        if (arguments.length === 1) {
-            service = name;
-            name = service.getName();
-        }
-        registry[name] = service;
+    use(plugin) {
+        registry.push(plugin);
     },
 
     _registerServices(){
-        for (let name in registry) {
-            let service = registry[name];
-            const conf = _.defaultsDeep(this.get(`services.${name}`, {}), service.getDefaults());
-            for (let command of service.getCommands(commandify, conf)) {
-                yargs.command(command.name, command.description, command.command);
-                commands.set(command.name, name);
-            }
-            services.set(name, new service(conf));
+        for (let i = 0; i < registry.length; i++) {
+            const plugin = new Service(yargs);
+            require(registry[i])(plugin);
+            plugin.config(_.defaultsDeep(this.get(`services.${plugin.name()}`, {}), plugin.defaults()));
+            plugin.applyCommands(yargs);
+            plugin.triggers.forEach(t => {
+                services.set(t, plugin);
+            });
         }
     },
 
@@ -104,25 +97,6 @@ const fractal = module.exports = {
         config.set('components.view.ext', ext.toLowerCase());
     }
 
-};
-
-function commandify(yargs, numArgsRequired)  {
-    yargs.option('l', {
-        alias: 'level',
-        default: 'warn',
-        description: 'The log level to use.',
-        type: 'string',
-        choices: ['error','warn','info','verbose','debug','silly'],
-    });
-    yargs.alias('h', 'help').help('help').wrap(false);
-    if (numArgsRequired) {
-        let argv = yargs.argv;
-        if (argv._.length < numArgsRequired) {
-            yargs.showHelp();
-            process.exit(0);
-            return false;
-        }
-    }
 };
 
 Object.assign(fractal, config);

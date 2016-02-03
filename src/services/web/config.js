@@ -9,5 +9,6 @@ module.exports = {
     build: {
         dest: "build"
     },
+    favicon: null,
     theme: "@frctl/theme-default"
 };

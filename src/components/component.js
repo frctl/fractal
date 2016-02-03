@@ -55,6 +55,10 @@ module.exports = class Component {
         return _.compact(_.uniq(_.map(this.variants, v => v._status)));
     }
 
+    get variantCount() {
+        return this._variants.size;
+    }
+
     addVariants(variants) {
         variants.forEach(v => this.addVariant(v));
         return this;

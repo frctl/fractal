@@ -2,6 +2,7 @@
 
 const _          = require('lodash');
 const express    = require('express');
+var favicon      = require('serve-favicon');
 
 module.exports = function(config, app){
 
@@ -14,6 +15,17 @@ module.exports = function(config, app){
         request: null,
     };
 
+    /**
+     * Set the favicon to prevent pesky 404s
+     */
+
+    if (theme.favicon()){
+        try {
+            server.use(favicon(theme.favicon()));
+        } catch(err){
+            app.log.error(`Could not find favicon at ${theme.favicon()}`);
+        }
+    }
 
     /**
      * Set a few helpful properties on the request object
@@ -43,9 +55,13 @@ module.exports = function(config, app){
         const match = app.theme.matchRoute(req.path);
         if (!match) {
             req.params = {};
-            return next(new Error('No matching route found')); // TODO: 404
+            return next(new Error(`No matching route found for ${req.path}`)); // TODO: 404
+        }
+        if (match.route.redirect) {
+            return res.redirect(match.route.redirect);
         }
         req.params = match.params;
+        req.route = match.route;
         render.template(match.route.view, match.route.context, getGlobals()).then(v => res.send(v)).catch(err => next(err));
     });
 

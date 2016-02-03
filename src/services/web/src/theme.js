@@ -15,8 +15,16 @@ module.exports = {
         return arguments.length ? this.set('name', name) : this.get('name');
     },
 
+    title(name) {
+        return arguments.length ? this.set('title', name) : this.get('title');
+    },
+
     version(version) {
         return arguments.length ? this.set('version', version) : this.get('version');
+    },
+
+    favicon(favicon) {
+        return arguments.length ? this.set('favicon', favicon) : this.get('favicon');
     },
 
     root(path){
@@ -86,34 +94,21 @@ module.exports = {
         return false;
     },
 
-    // routeFromPath: function(urlPath){
-    //     urlPath = '/' + cleanUrlPath(urlPath.replace(/^\//,''));
-    //     for (let i = 0; i < config.routes.length; i++) {
-    //         let route = config.routes[i];
-    //         try {
-    //             let re = pathToRegexp(route.path);
-    //             if (re.test(urlPath)) {
-    //                 return route;
-    //             }
-    //         } catch(e){
-    //             logger.warn(e.message);
-    //         }
-    //     }
-    //     return null;
-    // },
-
     urlFromRoute: function(handle, params){
         let route = routes.get(handle);
         if (route) {
             let compiler = pr.compile(route.path);
-            return compiler(params);
+            return cleanUrlPath(compiler(params));
         }
         return null;
     },
 
-    export(callback) {
-        exporter = callback;
-        return this;
+    exporter(exp) {
+        if (arguments.length) {
+            exporter = exp;
+            return this;
+        }
+        return exp;
     },
 
     path(path){
@@ -129,3 +124,7 @@ module.exports = {
         return configs.get(key);
     }
 };
+
+function cleanUrlPath(urlPath){
+    return urlPath.replace(/\%2F/g, '/');
+}

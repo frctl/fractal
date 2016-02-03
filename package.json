@@ -78,7 +78,8 @@
   "scripts": {
     "test": "NODE_ENV=test ./node_modules/.bin/mocha --reporter spec",
     "lint": "jscs src",
-    "lint:fix": "jscs src --fix"
+    "lint:fix": "jscs src --fix",
+    "web": "node ./run.js web start"
   },
   "devDependencies": {
     "chai": "^3.4.1",
