@@ -21,12 +21,9 @@ renderer.code = function (code, lang, escaped) {
     }
     code = escaped ? code : escape(code, true);
     if (!lang) {
-        return `<code><pre>${code}
-</pre></code>`;
+        return `<code><pre>${code}</pre></code>`;
     }
-    return `<code class="${this.options.langPrefix}${escape(lang, true)}"><pre>${code}
-</pre></code>
-`;
+    return `<code class="${this.options.langPrefix}${escape(lang, true)}"><pre>${code}</pre></code>`;
 };
 
 /*
