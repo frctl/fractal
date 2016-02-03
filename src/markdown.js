@@ -35,7 +35,6 @@ renderer.code = function (code, lang, escaped) {
 
 module.exports = function markdown(content) {
 
-    // return marked(content, { renderer: renderer });
-    return marked(content);
+    return marked(content, { renderer: renderer });
 
 };

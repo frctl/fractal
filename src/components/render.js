@@ -10,6 +10,7 @@ const source  = require('../source');
 let engine       = null;
 let viewsLoaded  = false;
 const moduleName = config.get('components.view.engine');
+
 try {
     engine = require(moduleName);
     engine.extend(config.get('components.view.extend'));
@@ -17,37 +18,39 @@ try {
     throw new Error(`The component view engine '${moduleName}' could not be loaded: ${e.message}`);
 }
 
+function loadViews() {
+    return source('components').then(components => {
+        const views = [];
+        for (let comp of components.flatten()) {
+            let defaultVariant = comp.getDefaultVariant();
+            for (let variant of comp.variants) {
+                views.push({
+                    handle: variant.ref,
+                    alias: variant.handle === defaultVariant.handle ? comp.handle : null,
+                    path: variant.path,
+                    content: variant.viewContents
+                });
+            }
+        }
+        engine.registerViews(views);
+        return views;
+    });
+};
+
 source.on('loaded', name => {
     if (name === 'components') {
-        viewsLoaded = co(function* () {
-            const components = yield source('components');
-            const views = [];
-            for (let comp of components.flatten()) {
-                let defaultVariant = comp.getDefaultVariant();
-                for (let variant of comp.variants) {
-                    views.push({
-                        handle: variant.ref,
-                        alias: variant.handle === defaultVariant.handle ? comp.handle : null,
-                        path: variant.path,
-                        content: variant.viewContents
-                    });
-                }
-            }
-            engine.registerViews(views);
-            return true;
-        });
+        viewsLoaded = loadViews();
     }
 });
 
 module.exports = co.wrap(function* (entity, preview) {
+    viewsLoaded = yield loadViews();
     const variant = entity.getVariant();
     if (viewsLoaded !== false) yield viewsLoaded;
     let rendered = engine.render(variant.viewContents, yield context(variant.context), {
         path: variant.viewPath
     });
-
     if (preview && variant.preview) {
-
         const components = yield source('components');
         let layout = components.find(variant.preview);
         if (!layout) {

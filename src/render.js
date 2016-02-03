@@ -60,7 +60,7 @@ module.exports = function (includePath, config) {
     }, true);
 
     env.addFilter('preview', (entity, cb) => {
-        render(entity, true).then(result => cb(null, result)).catch(cb);
+        require('./components/render')(entity, true).then(result => cb(null, result)).catch(cb);
     }, true);
 
     env.addFilter('async', (p, cb) => {
@@ -81,7 +81,12 @@ module.exports = function (includePath, config) {
         return status(entity.status);
     });
 
-    env.addFilter('highlight', highlighter);
+    env.addFilter('highlight', (str, lang) => {
+        if (!_.isString(str)) {
+            str = str.toString();
+        }
+        return highlighter(str, lang);
+    });
 
     env.addExtension('Throw404Extension', new Throw404Extension());
 
