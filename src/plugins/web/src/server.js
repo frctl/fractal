@@ -55,7 +55,8 @@ module.exports = function(config, app){
         const match = app.theme.matchRoute(req.path);
         if (!match) {
             req.params = {};
-            return next(new Error(`No matching route found for ${req.path}`)); // TODO: 404
+            res.locals._errorStatus = '404';
+            return next(new Error(`No matching route found for ${req.path}`));
         }
         if (match.route.redirect) {
             return res.redirect(match.route.redirect);
@@ -75,6 +76,9 @@ module.exports = function(config, app){
             return next(err);
         }
         globals.error = err;
+        if (res.locals._errorStatus){
+            res.sendStatus(res.locals._errorStatus);
+        }
         render.template(theme.error().view, theme.error().context, getGlobals()).then(v => res.send(v)).catch(err => next(err));
     });
 
