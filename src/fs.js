@@ -40,6 +40,9 @@ function build(filePath, stat) {
             p.lang     = utils.lang(filePath);
             p.isBinary = yield isBinary(filePath, null);
             p.buffer   = yield readFile(filePath);
+            p.toString = function(){
+                return p.isBinary ? null : p.buffer.toString('UTF-8');
+            }
         }
         return p;
     });

@@ -20,6 +20,8 @@ var self = module.exports = {
 
     configs:        file => anymatch(`**/*.config.{js,json,yaml,yml}`, file.path),
 
+    readmes:        file => anymatch(`**/readme.md`, file.path.toLowerCase()),
+
     // Finders
 
     findComponent:  (name, files) => _.find(files, { name: name, ext: cExt }),
@@ -27,6 +29,11 @@ var self = module.exports = {
     findVariantsOf: (name, files) => files.filter(self.variants).filter(file => file.name.startsWith(`${name}${splitter}`)),
 
     findConfigFor:  (name, files) => _.find(files.filter(self.configs), file => file.name.startsWith(`${name}.`)),
+
+    findReadme: (files) => {
+        const rms = files.filter(self.readmes);
+        return rms.length ? rms[0] : null;
+    },
 
     // other
 

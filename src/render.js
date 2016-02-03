@@ -68,10 +68,16 @@ module.exports = function (includePath, config) {
     }, true);
 
     env.addFilter('stringify', (obj) => {
+        if (obj instanceof Buffer) {
+            return obj.toString('UTF-8');
+        }
         return JSON.stringify(obj, null, 4);
     });
 
     env.addFilter('status', (entity) => {
+        if (_.isString(entity) || _.isArray(entity)) {
+            return status(entity);
+        }
         return status(entity.status);
     });
 

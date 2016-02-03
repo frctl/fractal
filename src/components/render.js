@@ -26,7 +26,7 @@ source.on('loaded', name => {
                 let defaultVariant = comp.getDefaultVariant();
                 for (let variant of comp.variants) {
                     views.push({
-                        handle: `${comp.handle}${config.get('components.splitter')}${variant.handle}`,
+                        handle: variant.ref,
                         alias: variant.handle === defaultVariant.handle ? comp.handle : null,
                         path: variant.path,
                         content: variant.viewContents
@@ -47,7 +47,7 @@ module.exports = co.wrap(function* (entity, preview) {
     });
 
     if (preview && variant.preview) {
-        
+
         const components = yield source('components');
         let layout = components.find(variant.preview);
         if (!layout) {

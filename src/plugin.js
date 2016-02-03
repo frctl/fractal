@@ -3,7 +3,7 @@
 const Path     = require('path');
 const _        = require('lodash');
 
-module.exports = class Service {
+module.exports = class Plugin {
 
     constructor(yargs){
         this.yargs    = yargs;

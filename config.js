@@ -45,6 +45,12 @@ module.exports = {
                     description: "Ready to implement.",
                     color: "green"
                 }
+            },
+            mixed: {
+                handle: 'mixed',
+                label: "Mixed",
+                description: "This component has variants of differing statuses",
+                color: "#666"
             }
         }
     },

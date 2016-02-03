@@ -6,17 +6,17 @@ const co      = require('co');
 const chalk   = require('chalk');
 const yargs   = require('yargs');
 const logger  = require('./logger');
-const Service = require('./service');
+const Plugin  = require('./plugin');
 const config  = require('./config');
 
 const registry    = [];
-const services    = new Map();
+const plugins    = new Map();
 
 const fractal = module.exports = {
 
     run() {
         this._setComponentEngine();
-        this._registerServices();
+        this._registerPlugins();
 
         yargs.usage('\nUsage: $0 <command> [subcommand] [options]');
         yargs.version(this.version);
@@ -29,9 +29,9 @@ const fractal = module.exports = {
         }
 
         const input = this._parseArgv(argv);
-        const srv = services.get(input.command)
-        if (srv) {
-            return srv.runner()(input.command, input.args, input.opts, require('./app'));
+        const use = plugins.get(input.command)
+        if (use) {
+            return use.runner()(input.command, input.args, input.opts, require('./app'));
         }
 
         yargs.showHelp();
@@ -50,14 +50,14 @@ const fractal = module.exports = {
         registry.push(plugin);
     },
 
-    _registerServices(){
+    _registerPlugins(){
         for (let i = 0; i < registry.length; i++) {
-            const plugin = new Service(yargs);
-            require(registry[i])(plugin);
-            plugin.config(_.defaultsDeep(this.get(`services.${plugin.name()}`, {}), plugin.defaults()));
-            plugin.applyCommands(yargs);
-            plugin.triggers.forEach(t => {
-                services.set(t, plugin);
+            const plug = new Plugin(yargs);
+            require(registry[i])(plug);
+            plug.config(_.defaultsDeep(this.get(`services.${plug.name()}`, {}), plug.defaults()));
+            plug.applyCommands(yargs);
+            plug.triggers.forEach(t => {
+                plugins.set(t, plug);
             });
         }
     },

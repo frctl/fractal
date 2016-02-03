@@ -84,7 +84,7 @@ module.exports = class Collection {
             if (item.type === 'collection') {
                 const search = item.find(str);
                 if (search) return search;
-            } else if (item[type] === str) {
+            } else if (item[type] === str || `@$(item[type])` === str) {
                 return item;
             }
         }

@@ -15,31 +15,36 @@ const config  = require('../config');
 module.exports = class Component {
 
     constructor(props, files) {
+
+        let filtered       = files.filter(f => !match.configs(f));
+        let readme         = match.findReadme(filtered);
+
         this.type          = 'component';
         this._config       = props;
         this.name          = props._name;
         this.handle        = props.handle || utils.slugify(this.name);
-        this.ref           = `@${this.handle}`;
+        this.ref           = this.handle;
         this.order         = props.order;
         this.isHidden      = props.isHidden;
         this.label         = props.label || utils.titlize(this.name);
         this.title         = props.title || this.label;
         this.defaultHandle = props.default || 'default';
+        this.notes         = props.notes || props.readme || (readme ? readme.buffer.toString('UTF-8') : null);
         this._parent       = props.parent;
         this._variants     = new Map();
         this._context      = props.context || {};
 
-        const p      = this._parent;
-        this._status  = props.status  || p.status;
-        this._preview = props.preview || p.preview;
-        this._display = props.display || p.display;
+        const p            = this._parent;
+        this._status       = props.status  || p.status;
+        this._preview      = props.preview || p.preview;
+        this._display      = props.display || p.display;
 
-        let filtered = files.filter(f => !match.configs(f));
         this.files = {
             view:     filtered.filter(f => f.base === props.view)[0],
             variants: match.findVariantsOf(this.name, filtered),
             binary:   filtered.filter(f => f.isBinary),
-            other:    filtered.filter(f => (f.base !== props.view) && !f.isBinary),
+            other:    filtered.filter(f => (f.base !== props.view) && !f.isBinary && (!readme || readme.base !== f.base)),
+            readme:   readme || null
         };
     }
 
@@ -51,8 +56,13 @@ module.exports = class Component {
         return this.getVariants();
     }
 
+    get status() {
+        const statuses = this.statuses;
+        return statuses.length > 1 ? config.get('components.status.mixed.handle') : statuses[0];
+    }
+
     get statuses() {
-        return _.compact(_.uniq(_.map(this.variants, v => v._status)));
+        return _.compact(_.uniq(_.map(this.variants, v => v.status)));
     }
 
     get variantCount() {

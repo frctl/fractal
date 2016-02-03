@@ -3,21 +3,26 @@
 const _       = require('lodash');
 const config  = require('../config');
 const logger  = require('../logger');
+
 const options = config.get('components.status.options');
 const def     = config.get('components.status.default');
+const mixed   = config.get('components.status.mixed');
 
-module.exports = function status(label) {
-    if (_.isArray(label)) {
-        return _.compact(label.map(l => status(l)));
+module.exports = function status(handle) {
+    if (_.isArray(handle)) {
+        return _.compact(handle.map(l => status(l)));
     }
-    if (_.isUndefined(label)) {
+    if (_.isUndefined(handle)) {
         return null;
     }
-    if (!options[label]) {
-        logger.error(`Status ${label} is not a known option.`);
+    if (handle == mixed.handle) {
+        return mixed;
+    }
+    if (!options[handle]) {
+        logger.error(`Status ${handle} is not a known option.`);
         return options[def];
     }
-    return options[label];
+    return options[handle];
 };
 
 module.exports.options = options;
