@@ -60,6 +60,7 @@ module.exports = function(plugin){
         if (plugin.config('favicon')) {
             theme.favicon(_.trim(plugin.config('favicon'), '/'));
         }
+        theme.buildDir(plugin.config('build.dest'));
         return theme;
     }
 

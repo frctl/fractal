@@ -54,7 +54,7 @@ const fractal = module.exports = {
         for (let i = 0; i < registry.length; i++) {
             const plug = new Plugin(yargs);
             require(registry[i])(plug);
-            plug.config(_.defaultsDeep(this.get(`services.${plug.name()}`, {}), plug.defaults()));
+            plug.config(_.defaultsDeep(this.get(`plugins.${plug.name()}`, {}), plug.defaults()));
             plug.applyCommands(yargs);
             plug.triggers.forEach(t => {
                 plugins.set(t, plug);

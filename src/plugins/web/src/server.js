@@ -4,10 +4,11 @@ const _          = require('lodash');
 const express    = require('express');
 var favicon      = require('serve-favicon');
 
-module.exports = function(config, app){
+module.exports = function serve(config, app){
 
-    const server  = express();
-    const theme = app.theme;
+    const server = express();
+    const theme  = app.theme;
+    const log    = app.log;
     const render = app.render(theme.views());
     const globals = {
         theme: theme,
@@ -23,7 +24,7 @@ module.exports = function(config, app){
         try {
             server.use(favicon(theme.favicon()));
         } catch(err){
-            app.log.error(`Could not find favicon at ${theme.favicon()}`);
+            log.error(`Could not find favicon at ${theme.favicon()}`);
         }
     }
 
@@ -71,7 +72,7 @@ module.exports = function(config, app){
      */
 
     server.use((err, req, res, next) => {
-        app.log.error(err.message);
+        log.error(err.message);
         if (res.headersSent || !theme.error()) {
             return next(err);
         }
@@ -90,13 +91,13 @@ module.exports = function(config, app){
             opts = opts || {};
             var port = opts.port || config.port || 3000;
             server.listen(port, function(){
-                app.log.success(`Fractal preview browser is now available at http://localhost:${port} - use ^c to exit.`);
+                log.success(`Fractal preview browser is now available at http://localhost:${port} - use ^c to exit.`);
             });
         },
 
         stop: function(){
             server.close(function(){
-                app.log.end('Fractal preview browser is shutting down.');
+                log.end('Fractal preview browser is shutting down.');
             });
         }
     };

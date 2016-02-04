@@ -1,13 +1,15 @@
 'use strict';
 
-const Path        = require('path');
-const _           = require('lodash');
-const pr          = require('path-to-regexp');
+const Path     = require('path');
+const Promise  = require('Bluebird');
+const _        = require('lodash');
+const fs       = Promise.promisifyAll(require('fs-extra'));
+const pr       = require('path-to-regexp');
 
 const configs     = new Map();
 const routes      = new Map();
 const staticPaths = new Set();
-let exporter      = null;
+let exporter      = function* () {};
 
 module.exports = {
 
@@ -29,6 +31,10 @@ module.exports = {
 
     root(path){
         return arguments.length ? this.set('root', path) : this.get('root') || '';
+    },
+
+    buildDir(path){
+        return arguments.length ? this.set('buildDir', path) : this.get('buildDir') || null;
     },
 
     error(err){
@@ -103,12 +109,12 @@ module.exports = {
         return null;
     },
 
-    exporter(exp) {
+    builder(exp) {
         if (arguments.length) {
             exporter = exp;
             return this;
         }
-        return exp;
+        return exporter;
     },
 
     path(path){
