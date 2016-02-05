@@ -4,7 +4,7 @@ const _          = require('lodash');
 const express    = require('express');
 var favicon      = require('serve-favicon');
 
-module.exports = function serve(config, app){
+module.exports = function serve(config, app) {
 
     const server = express();
     const theme  = app.theme;
@@ -15,10 +15,10 @@ module.exports = function serve(config, app){
      * Set the favicon to prevent pesky 404s
      */
 
-    if (theme.favicon()){
+    if (theme.favicon()) {
         try {
             server.use(favicon(theme.favicon()));
-        } catch(err){
+        } catch (err) {
             log.error(`Could not find favicon at ${theme.favicon()}`);
         }
     }
@@ -29,7 +29,7 @@ module.exports = function serve(config, app){
 
     server.use((req, res, next) => {
         const request = {
-            isPjax: !! req.header('X-PJAX'),
+            isPjax: !!req.header('X-PJAX'),
             segments: _.compact(req.path.split('/')),
             params: {},
             path: req.path,
@@ -53,7 +53,7 @@ module.exports = function serve(config, app){
      * Register theme routes
      */
 
-    server.get(':path(*)', function(req, res, next){
+    server.get(':path(*)', function (req, res, next) {
         const match = app.theme.matchRoute(req.path);
         if (!match) {
             res.locals.__request.params = {};
@@ -78,7 +78,7 @@ module.exports = function serve(config, app){
             return next(err);
         }
         res.locals.__request.error = err;
-        if (res.locals.__request.errorStatus){
+        if (res.locals.__request.errorStatus) {
             res.sendStatus(res.locals.__request.errorStatus);
         }
         render.template(theme.error().view, theme.error().context, getGlobals(res.locals)).then(v => res.send(v)).catch(err => next(err));
@@ -88,16 +88,16 @@ module.exports = function serve(config, app){
 
         server: server,
 
-        start: function(opts){
+        start: function (opts) {
             opts = opts || {};
             var port = opts.port || config.port || 3000;
-            server.listen(port, function(){
+            server.listen(port, function () {
                 log.success(`Fractal preview browser is now available at http://localhost:${port} - use ^c to exit.`);
             });
         },
 
-        stop: function(){
-            server.close(function(){
+        stop: function () {
+            server.close(function () {
                 log.end('Fractal preview browser is shutting down.');
             });
         }

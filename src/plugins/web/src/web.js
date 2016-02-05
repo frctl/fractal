@@ -7,7 +7,7 @@ const build       = require('./build');
 const theme       = require('./theme');
 const packageJSON = require('../package.json');
 
-module.exports = function(plugin){
+module.exports = function (plugin) {
 
     plugin.name('web');
     plugin.title('Fractal web preview');
@@ -17,7 +17,8 @@ module.exports = function(plugin){
 
     plugin.register(plugin.name(), 'Start a local web server or generate a static build.', (yargs) => {
 
-        yargs.usage(`\nUsage: $0 ${plugin.name()} <command>`);
+        yargs.usage(`
+Usage: $0 ${plugin.name()} <command>`);
 
         yargs.command('start', 'Start the component library web interface server.', (yargs) => {
             yargs.usage('\nUsage: $0 start [options]');
@@ -37,7 +38,7 @@ module.exports = function(plugin){
         plugin.wrap(yargs, 2);
     });
 
-    plugin.runner(function(command, args, opts, app){
+    plugin.runner(function (command, args, opts, app) {
         plugin.config('port', opts.port || plugin.config('port'));
         app.theme = loadTheme();
         if (command === plugin.name()) {
@@ -51,7 +52,7 @@ module.exports = function(plugin){
         throw new Error('Command not recognised');
     });
 
-    function loadTheme(){
+    function loadTheme() {
         theme.root(Path.parse(require.resolve(plugin.config('theme'))).dir);
         require(plugin.config('theme'))(theme);
         if (plugin.config('static.path')) {

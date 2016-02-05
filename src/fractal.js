@@ -29,7 +29,7 @@ const fractal = module.exports = {
         }
 
         const input = this._parseArgv(argv);
-        const use = plugins.get(input.command)
+        const use = plugins.get(input.command);
         if (use) {
             return use.runner()(input.command, input.args, input.opts, require('./app'));
         }
@@ -50,7 +50,7 @@ const fractal = module.exports = {
         registry.push(plugin);
     },
 
-    _registerPlugins(){
+    _registerPlugins() {
         for (let i = 0; i < registry.length; i++) {
             const plug = new Plugin(yargs);
             require(registry[i])(plug);

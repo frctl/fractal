@@ -42,11 +42,11 @@ module.exports = class ComponentCollection extends Collection {
         return component;
     }
 
-    filter(predicate){
+    filter(predicate) {
         if (
             (_.isArray(predicate) && predicate[0] === 'status') ||
             (_.isObject(predicate) && predicate.status)
-        ){
+        ) {
             let items = [];
             for (let item of this) {
                 if (item.type === 'collection') {

@@ -5,7 +5,7 @@ const Path    = require('path');
 const co      = require('co');
 const builder = require('./builder');
 
-module.exports = function build(config, app){
+module.exports = function build(config, app) {
 
     const theme  = app.theme;
     const log    = app.log;
@@ -25,7 +25,7 @@ module.exports = function build(config, app){
 
     const bob = builder(theme, render, config.build.concurrency);
 
-    co(function* (){
+    co(function* () {
         const api = yield app();
         theme.builder()(bob, api);
         yield bob.run();
@@ -34,6 +34,5 @@ module.exports = function build(config, app){
         log.error(err);
         process.exit(1);
     });
-
 
 };

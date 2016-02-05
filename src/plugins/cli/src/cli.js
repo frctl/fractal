@@ -6,7 +6,7 @@ const Promise     = require('bluebird');
 const defaults    = require('../config');
 const packageJSON = require('../package.json');
 
-module.exports = function(plugin){
+module.exports = function (plugin) {
 
     plugin.name('cli');
     plugin.title('Fractal CLI plugin');
@@ -16,7 +16,8 @@ module.exports = function(plugin){
 
     plugin.register('list', 'List information about entities in your project', (yargs) => {
 
-        yargs.usage(`\nUsage: $0 list <type>`);
+        yargs.usage(`
+Usage: $0 list <type>`);
 
         yargs.command('components', 'List all components', (yargs) => {
             yargs.usage('\nUsage: $0 components');
@@ -30,15 +31,15 @@ module.exports = function(plugin){
         plugin.wrap(yargs, 2);
     });
 
-    plugin.runner(function(command, args, opts, app){
+    plugin.runner(function (command, args, opts, app) {
         if (command === 'list' && args[0] === 'components') {
-            return Promise.props(app()).then(function(app){
+            return Promise.props(app()).then(function (app) {
                 const table = new Table({
                     head: ['Handle', '# of variants', 'ref']
                 });
                 for (let component of app.components.flatten()) {
                     // const varRefs = component.getVariants();
-                    table.push([component.handle, component.variantCount, component.ref])
+                    table.push([component.handle, component.variantCount, component.ref]);
                 }
                 console.log(table.toString());
             }).catch(err => {

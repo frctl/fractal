@@ -7,14 +7,14 @@ const _       = require('lodash');
 const fs      = Promise.promisifyAll(require('fs-extra'));
 const request = require('./supertest');
 
-module.exports = function(theme, render, concurrency){
+module.exports = function (theme, render, concurrency) {
 
     const buildDir = Path.resolve(theme.buildDir());
     const throat  = require('throat')(Promise)(5);
     const targets = [];
 
-    const setup = co.wrap(function* (){
-        yield fs.removeAsync(buildDir)
+    const setup = co.wrap(function* () {
+        yield fs.removeAsync(buildDir);
         yield fs.ensureDirAsync(buildDir);
         yield theme.static().map(p => copyStatic(p.path, p.mount));
     });
@@ -29,7 +29,7 @@ module.exports = function(theme, render, concurrency){
 
     return {
 
-        setup(func){
+        setup(func) {
             if (!_.isFunction(func) || !_.isNull(func)) {
                 setup = func;
             } else {
@@ -37,14 +37,14 @@ module.exports = function(theme, render, concurrency){
             }
         },
 
-        run(){
-            return setup().then(function(){
+        run() {
+            return setup().then(function () {
                 const jobs = [];
                 for (let target of targets) {
                     const savePath = Path.join(buildDir, target.url, 'index.html');
                     const pathInfo = Path.parse(savePath);
-                    const job = throat(function(){
-                        return fs.ensureDirAsync(pathInfo.dir).then(function(){
+                    const job = throat(function () {
+                        return fs.ensureDirAsync(pathInfo.dir).then(function () {
                             return render.template(target.route.view, target.route.context, {
                                 web: {
                                     theme: theme,
@@ -58,7 +58,7 @@ module.exports = function(theme, render, concurrency){
                                         route: target.route,
                                     }
                                 }
-                            }).then(function(html){
+                            }).then(function (html) {
                                 return fs.writeFileAsync(savePath, html);
                             });
                         });
@@ -70,7 +70,7 @@ module.exports = function(theme, render, concurrency){
             });
         },
 
-        addRoute(name, params){
+        addRoute(name, params) {
             const url = theme.urlFromRoute(name, params);
             const route = theme.matchRoute(url);
             route.url = url;
@@ -80,6 +80,6 @@ module.exports = function(theme, render, concurrency){
         },
 
         copyStatic: copyStatic
-    }
+    };
 
 };

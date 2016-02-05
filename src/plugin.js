@@ -5,7 +5,7 @@ const _        = require('lodash');
 
 module.exports = class Plugin {
 
-    constructor(yargs){
+    constructor(yargs) {
         this.yargs    = yargs;
         this._config  = {};
         this.commands = [];
@@ -49,13 +49,13 @@ module.exports = class Plugin {
         });
     }
 
-    wrap(yargs, commandCount){
+    wrap(yargs, commandCount) {
         yargs.option('l', {
             alias: 'level',
             default: 'warn',
             description: 'The log level to use.',
             type: 'string',
-            choices: ['error','warn','info','verbose','debug','silly'],
+            choices: ['error', 'warn', 'info', 'verbose', 'debug', 'silly'],
         });
         yargs.alias('h', 'help').help('help').wrap(false);
         if (commandCount) {
@@ -76,7 +76,7 @@ module.exports = class Plugin {
         return this._runner;
     }
 
-    getSet(key, val){
+    getSet(key, val) {
         return val ? this.set(key, val) : this[key];
     }
 
@@ -85,13 +85,13 @@ module.exports = class Plugin {
         return this;
     }
 
-    applyCommands(yargs){
+    applyCommands(yargs) {
         for (let command of this.commands) {
             yargs.command(command.name, command.description, command.command);
         }
     }
 
-    get triggers(){
+    get triggers() {
         return this.commands.map(c => c.name);
     }
 

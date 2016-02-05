@@ -29,22 +29,22 @@ module.exports = {
         return arguments.length ? this.set('favicon', favicon) : this.get('favicon');
     },
 
-    root(path){
+    root(path) {
         return arguments.length ? this.set('root', path) : this.get('root') || '';
     },
 
-    buildDir(path){
+    buildDir(path) {
         return arguments.length ? this.set('buildDir', path) : this.get('buildDir') || null;
     },
 
-    error(err){
+    error(err) {
         if (arguments.length === 0) {
             return this.get('error');
         }
         if (_.isString(err)) {
             err = {
                 view: err
-            }
+            };
         } else if (!err.view) {
             err = null;
         }
@@ -52,14 +52,14 @@ module.exports = {
         return this.set('error', err);
     },
 
-    views(path){
+    views(path) {
         if (arguments.length === 0) {
             return this.path(this.get('views') || 'views');
         }
         return this.set('views', path);
     },
 
-    static(path, mount){
+    static(path, mount) {
         if (arguments.length === 0) {
             return Array.from(staticPaths.values());
         }
@@ -78,11 +78,11 @@ module.exports = {
         return this;
     },
 
-    routes(){
+    routes() {
         return Array.from(routes.values());
     },
 
-    matchRoute(urlPath){
+    matchRoute(urlPath) {
         for (let route of routes.values()) {
             let match = route.matcher.exec(urlPath);
             if (match) {
@@ -100,7 +100,7 @@ module.exports = {
         return false;
     },
 
-    urlFromRoute: function(handle, params){
+    urlFromRoute: function (handle, params) {
         let route = routes.get(handle);
         if (route) {
             let compiler = pr.compile(route.path);
@@ -117,7 +117,7 @@ module.exports = {
         return exporter;
     },
 
-    path(path){
+    path(path) {
         return Path.join(this.root(), path);
     },
 
@@ -131,6 +131,6 @@ module.exports = {
     }
 };
 
-function cleanUrlPath(urlPath){
+function cleanUrlPath(urlPath) {
     return urlPath.replace(/\%2F/g, '/');
 }

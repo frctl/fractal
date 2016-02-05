@@ -51,21 +51,21 @@ module.exports = class Collection {
         if (this._path) {
             return this._path;
         }
-        return _.trimStart(this._makePath(),'/') || '/';
+        return _.trimStart(this._makePath(), '/') || '/';
     }
 
     get labelPath() {
         if (this._labelPath) {
             return this._labelPath;
         }
-        return _.trimStart(this._makeLabelPath(),'/') || '/';
+        return _.trimStart(this._makeLabelPath(), '/') || '/';
     }
 
-    _makePath(){
+    _makePath() {
         return (this._parent) ? `${this._parent._makePath()}/${this.handle}` : '';
     }
 
-    _makeLabelPath(){
+    _makeLabelPath() {
         return (this._parent) ? `${this._parent._makeLabelPath()}/${this.label}` : '';
     }
 
@@ -91,7 +91,7 @@ module.exports = class Collection {
         return undefined;
     }
 
-    findCollection(str){
+    findCollection(str) {
         const type = str.startsWith('@') ? 'ref' : (str.includes('/') ? 'path' : 'handle');
         if (this.size === 0) {
             return undefined;
@@ -123,7 +123,7 @@ module.exports = class Collection {
         return this.newSelf(items);
     }
 
-    _flattenWithCollections(){
+    _flattenWithCollections() {
         let items = [];
         let collections = [];
         for (let item of this) {
@@ -134,16 +134,17 @@ module.exports = class Collection {
                 items.push(item);
             }
         }
-        if (items.length){
+        if (items.length) {
             const col = this.newSelf(items);
             collections.unshift(col);
         }
         collections = collections.filter(c => c.items.length > 0);
+
         // collections = collections.concat(items);
         return this.newSelf(collections, {});
     }
 
-    filter(predicate){
+    filter(predicate) {
         let matcher = _.iteratee(predicate);
         let items = [];
         for (let item of this) {
@@ -168,7 +169,7 @@ module.exports = class Collection {
         return new (this.constructor)(props, items);
     }
 
-    _getAttributes(){
+    _getAttributes() {
         return {
             order:     this.order,
             isHidden:  this.isHidden,
@@ -179,7 +180,7 @@ module.exports = class Collection {
             parent:    this.parent,
             labelPath: this.labelPath,
             path:      this.path
-        }
+        };
     }
 
     [Symbol.iterator]() {

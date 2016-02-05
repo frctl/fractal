@@ -46,10 +46,10 @@ module.exports = class Page {
         if (this._path) {
             return this._path;
         }
-        return _.trim((this._makePath().replace(/index$/, '') || '/'),'/');
+        return _.trim((this._makePath().replace(/index$/, '') || '/'), '/');
     }
 
-    _makePath(){
+    _makePath() {
         return (this._parent) ? `${this._parent._makePath()}/${this.handle}` : '';
     }
 
