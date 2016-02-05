@@ -1,6 +1,8 @@
 # Fractal
 
-**A flexible tool for creating and documenting website component libraries, designed to fit the way you work.**
+**A flexible, extendable tool for creating and documenting website component libraries.**
+
+
 
 Core features include:
 

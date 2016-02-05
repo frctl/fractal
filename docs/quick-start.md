@@ -23,7 +23,7 @@ app.set('components.path', 'src/components');
 
 (Or run `fractal init` from within the root directory of your project to generate a default `fractal.js` file).
 
-#### 4. Start the Fractal server
+#### 4. Start the Fractal web server
 
 Run the command `fractal start` from within your root directory and then point your browser to [http://localhost:3000](http://localhost:3000) to view your new (empty!) component library.
 
