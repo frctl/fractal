@@ -21,10 +21,11 @@ module.exports = {
         },
         splitter: "--",
         view: {
-            engine: "@frctl/handlebars-engine",
+            use: "@frctl/handlebars-engine",
             ext: null,
             extend: {},
-            context: {}
+            context: {},
+            engine: null
         },
         status: {
             default: "ready",

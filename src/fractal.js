@@ -83,7 +83,7 @@ const fractal = module.exports = {
 
     _setComponentEngine() {
         let engine;
-        const moduleName = config.get('components.view.engine');
+        const moduleName = config.get('components.view.use');
         try {
             engine = require(moduleName);
         } catch (err) {

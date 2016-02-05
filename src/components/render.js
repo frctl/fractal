@@ -9,11 +9,11 @@ const source  = require('../source');
 
 let engine       = null;
 let viewsLoaded  = false;
-const moduleName = config.get('components.view.engine');
+const moduleName = config.get('components.view.use');
 
 try {
     engine = require(moduleName);
-    engine.extend(config.get('components.view.extend'));
+    engine.configure(config.get('components.view'));
 } catch (e) {
     throw new Error(`The component view engine '${moduleName}' could not be loaded: ${e.message}`);
 }
