@@ -1,12 +1,14 @@
 # Fractal
 
-**Fractal is an un-opinionated tool for creating and documenting website component libraries.**
+**A flexible, extendable tool for creating and documenting website component libraries.**
+
+
 
 Core features include:
 
 * **Template-language-agnostic components** with support for associated assets and variants.
 * **Data-driven component previews** - fetch content from APIs, generate it with libraries like [Faker](https://github.com/marak/Faker.js/) or provide it yourself.
-* **Sandboxed rendering** - all components are rendered in an iframe within an optional preview layout. No 'style bleed' from the library into your templates!
+* **Sandboxed rendering** - all components are rendered in an iframe within an optional preview layout. No potential 'style bleed' from the Fractal UI into your templates!
 * **Markdown-powered pages** and documentation for components.
 * **In-built server for rapid development**, and **static-site export** functionality for easy hosting.
 * Configurable **component statuses** to aid implementation workflows.
@@ -29,7 +31,7 @@ Core features include:
 
 Fractal is in some ways quite similar to existing tools like [Pattern Lab](http://patternlab.io/) and [Fabricator](http://fbrctr.github.io/). These are great projects, however by-and-large they are fairly opinionated in their implementations. For example, they might expect you to adhere to a pre-defined organisational model for your components/patterns or to require a specific template language or front end build system.
 
-In contrast, Fractal has been designed from the ground-up to be as un-opinionated as possible. Write your component views in the same template language that your production application uses, use whatever front end build system you are most comfortable with, and organise your components in whatever way best suits your own design system or way of thinking. It's up to you!
+In contrast, Fractal has been designed from the ground-up to be as flexible and un-opinionated as possible. Write your component views in the same templating language that your production application uses, use whatever front end build system you are most comfortable with, and organise your components in whatever way best suits your own design system or way of thinking. It's up to you!
 
 #### Un-opinionated? Really?
 

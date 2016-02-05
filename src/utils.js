@@ -1,51 +1,45 @@
-/**
- * Module dependencies.
- */
+'use strict';
 
-var _       = require('lodash');
-var matter  = require('gray-matter');
-
-/*
- * Export the utilities.
- */
+const Promise   = require('bluebird');
+const Path      = require('path');
+const anymatch  = require('anymatch');
+const fang      = require('@allmarkedup/fang');
+const _         = require('lodash');
 
 module.exports = {
 
-    /*
-     * Convert a string to Start Case.
-     *
-     * @api public
-     */
-
-    titlize: function(str){
-        return _.startCase(str);
-    },
-
-    /*
-     * Parse a string (or Buffer) to split into front matter (if any) and body content.
-     *
-     * @api public
-     */
-
-    parseFrontMatter: function(str){
-        str = _.isObject(str) ? str.toString() : str;
-        var parsed = matter(str);
-        return {
-            data: parsed.data || {},
-            body: new Buffer(parsed.content.trim() + "\n", "utf-8")
+    lang(filePath) {
+        return fang(filePath) || {
+            name:  Path.parse(filePath).ext.replace('.', '').toUpperCase(),
+            mode:  'text',
+            scope: null,
+            color: null
         };
     },
 
-    fauxPath: function(path){
-        return _.map(path.split('/'), function(segment){
-            return segment.replace(/^_/,'').replace(/^\d+\-/, '');
-        }).join('/');
+    titlize: function (str) {
+        return _.startCase(str);
     },
 
-    httpError: function(msg, status){
-        var e = new Error(msg);
-        e.status = status || 500;
-        return e;
-    }
+    slugify: str => _.kebabCase(_.deburr(str)).toLowerCase(),
 
+    toJSON(item) {
+        const obj = {};
+        _.forOwn(item, (value, key) => {
+            if (!key.startsWith('_')) {
+                if (value instanceof Buffer) {
+                    obj[key] = '<Buffer>';
+                } else if (value && typeof value.toJSON === 'function') {
+                    obj[key] = value.toJSON();
+                } else {
+                    obj[key] = value;
+                }
+            }
+        });
+        return obj;
+    },
+
+    escapeForRegexp(str) {
+        return str.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+    }
 };

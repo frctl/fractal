@@ -1,88 +1,86 @@
-/**
- * Module dependencies.
- */
+'use strict';
 
 var Promise = require('bluebird');
 var yaml    = require('js-yaml');
 var _       = require('lodash');
-var path    = require('path');
-var logger  = require('winston');
+var Path    = require('path');
 var fs      = Promise.promisifyAll(require('fs'));
+var utils   = require('./utils');
+var logger  = require('./logger');
 
-/*
- * Export the data object.
- */
+const self = module.exports = {
 
-module.exports = {
-
-    /*
-     * Load data from file, optionally with a set of defaults applied.
-     * Returns a promise.
-     *
-     * @api private
-     */
-
-    load: function(filePath, defaults){
-        defaults = defaults || {};
-        var pathInfo = path.parse(path.resolve(filePath));
-        var ext = pathInfo.ext.toLowerCase();
-
-        if (ext == '.js') {
-            try {
-                delete require.cache[require.resolve(filePath)]; // Always fetch a fresh copy
-                var data = Promise.resolve(require(filePath));
-            } catch(e) {
-                var data = Promise.reject(e);
-            }
-        } else {
-            var data = fs.readFileAsync(filePath).then(function(contents){
-                switch(ext) {
-                    case ".json":
-                        return JSON.parse(contents);
-                    break;
-                    case ".yml":
-                    case ".yaml":
-                        return yaml.safeLoad(contents);
-                    break;
-                }
-            });
+    parse(data, format) {
+        format = format.toLowerCase();
+        if (format === 'js' || format === 'javascript') {
+            return data;
+        } else if (format === 'json') {
+            return JSON.parse(data);
+        } else if (format === 'yaml') {
+            return yaml.safeLoad(data);
         }
-
-        return data.catch(function(e){
-            logger.error('Error loading data file ' + filePath + ': ' + e.message);
-            return {};
-        }).then(function(data){
-            return _.defaultsDeep(data, defaults);
-        });
-
+        throw new Error('Data format not recognised');
     },
 
-    write: function(filePath, data) {
-        var pathInfo = path.parse(path.resolve(filePath));
-        var format = pathInfo.ext.toLowerCase().replace(/^\./, '');
+    stringify(data, format) {
+        format = format.toLowerCase();
+        if (format === 'js' || format === 'javascript') {
+            return `module.exports = ${JSON.stringify(data, null, 4)};`;
+        } else if (format === 'json') {
+            return JSON.stringify(data, null, 4);
+        } else if (format === 'yaml') {
+            return yaml.safeDump(data);
+        }
+        throw new Error('Data format not recognised');
+    },
+
+    readFile(filePath) {
+        if (Path.isAbsolute(filePath)) {
+            return Promise.reject('Data file paths must be relative to the root of the project');
+        }
+        const format = utils.lang(filePath, true).mode;
+        if (format === 'js' || format === 'javascript') {
+            try {
+                filePath = Path.relative(__dirname, filePath);
+                delete require.cache[require.resolve(filePath)]; // Always fetch a fresh copy
+                let data = require(filePath);
+                if (typeof data === 'function') {
+                    data = data();
+                }
+                if (!_.isObject(data)) {
+                    logger.error(`Error loading data file ${filePath}: JS files must return a JavaScript data object.`);
+                    return Promise.reject(new Error('Error loading data file'));
+                }
+                return Promise.resolve(data);
+            } catch (e) {
+                return Promise.reject(e);
+            }
+        } else {
+            return fs.readFileAsync(filePath, 'UTF-8').then(contents => {
+                return self.parse(contents, format);
+            }).catch(err => {
+                logger.error(`Error loading data file ${filePath}: ${err.message}`);
+                return {};
+            });
+        }
+    },
+
+    writeFile(filePath, data) {
+        const pathInfo = path.parse(path.resolve(filePath));
+        const format = utils.lang(filePath, true).mode;
         return fs.writeFileAsync(filePath, this.stringify(data, format));
     },
 
-    stringify: function(data, format){
-        var str = null;
-        var format = format.toLowerCase();
-        switch(format) {
-            case "js":
-                str = 'module.exports = ' + JSON.stringify(data, null, 4) + ';';
-                break;
-            case "json":
-                str = JSON.stringify(data, null, 4);
-                break;
-            break;
-            case "yml":
-            case "yaml":
-                str = yaml.safeDump(data);
-                break;
-            default:
-                throw new Error('Unknown data file extension: ' + ext);
-                return;
+    getConfig(file, defaults) {
+        defaults = defaults || {};
+        if (!file) {
+            return Promise.resolve(defaults);
         }
-        return str;
+        return this.readFile(file.path).then(c => _.defaultsDeep(c, defaults)).catch(err => {
+            logger.error(`Error parsing data file ${file.path}: ${err.message}`);
+            console.log(defaults);
+            return defaults;
+        });
     }
 
 };
