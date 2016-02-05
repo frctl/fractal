@@ -14,7 +14,6 @@ module.exports = {
     },
     components: {
         path: null,
-        readme: "readme.{md,markdown}",
         preview: {
             layout: null,
             yield: "yield",
