@@ -34,14 +34,15 @@ var nj = new nunjucks.Environment(new StringLoader(), {
 module.exports = {
 
     defaults: {
-        ext: ".nunjucks"
+        ext: ".nunjucks",
+        name: "nunjucks"
     },
 
     /**
      * Register any custom filters, globals and extensions set in the config.
      */
 
-    extend: function(config){
+    configure: function(config){
         var extras = config.extend || {};
         _.each(extras.filters || {}, function(filter, name){
             nj.addFilter(name, filter);
