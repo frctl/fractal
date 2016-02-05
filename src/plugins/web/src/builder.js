@@ -5,8 +5,9 @@ const Path    = require('path');
 const co      = require('co');
 const _       = require('lodash');
 const fs      = Promise.promisifyAll(require('fs-extra'));
-const mkdirp      = Promise.promisify(require('mkdirp'));
+const mkdirp  = Promise.promisify(require('mkdirp'));
 const request = require('./supertest');
+const throat  = require('throat')(require('bluebird'))(5);
 
 module.exports = function(theme, server){
 
@@ -38,20 +39,28 @@ module.exports = function(theme, server){
         },
 
         run(){
-            var req = request(server);
+            const req = request(server);
             return setup().then(function(){
                 const jobs = [];
                 _.forEach(urls, function(url){
                     const savePath = Path.join(buildDir, url, 'index.html');
                     const pathInfo = Path.parse(savePath);
-                    const job = mkdirp(pathInfo.dir).then(function(){
-                        return req.get(url).end().then(function(response){
-                            return fs.writeFileAsync(savePath, response.text);
+                    const job = throat(function(){
+                        return mkdirp(pathInfo.dir).then(function(){
+                            return req.get('/').end().then(function(response){
+                                return fs.writeFileAsync(savePath, response.text);
+                            });
                         });
                     });
                     jobs.push(job);
                 });
-                return Promise.all(jobs);
+
+                return Promise.all(jobs).then(function(){
+                    process.exit();
+                }).catch(function(err){
+                    console.log(err);
+                    process.exit();
+                });
             });
         },
 

@@ -22,13 +22,12 @@ module.exports = function build(config, server, app){
         }
     });
 
-    const bob = builder(theme, server.server);
+    const bob = builder(theme, server.server, config.build.concurrency);
 
     co(function* (){
         const api = yield app();
         theme.builder()(bob, api);
         yield bob.run();
-        process.exit();
     }).catch(err => {
         log.error(err);
         process.exit();

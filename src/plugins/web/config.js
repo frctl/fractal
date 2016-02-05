@@ -7,8 +7,10 @@ module.exports = {
         mount: "/"
     },
     build: {
-        dest: "build"
+        dest: "build",
+        concurrency: 5
     },
     favicon: null,
     theme: "@frctl/theme-default"
 };
+    
