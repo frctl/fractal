@@ -16,7 +16,7 @@ module.exports = {
      */
 
     configure: function(config){
-        ext = config.extend || {}
+        const ext = config.extend || {}
         _.each(ext.helpers || {}, function(helper, name){
             Handlebars.registerHelper(name, helper);
         });
