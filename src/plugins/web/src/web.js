@@ -15,39 +15,31 @@ module.exports = function (plugin) {
 
     plugin.defaults(defaults);
 
-    plugin.register(plugin.name(), 'Start a local web server or generate a static build.', (yargs) => {
-
-        yargs.usage(`
-Usage: $0 ${plugin.name()} <command>`);
-
-        yargs.command('start', 'Start the component library web interface server.', (yargs) => {
-            yargs.usage('\nUsage: $0 start [options]');
-            yargs.option('p', {
-                alias: 'port',
-                default: plugin.config('port'),
-                description: 'The port to run the server on.',
-            });
-            plugin.wrap(yargs, 2);
+    plugin.register('start', 'Start the Fractal web interface server.', (yargs) => {
+        yargs.usage('\nUsage: $0 start [options]');
+        yargs.option('p', {
+            alias: 'port',
+            default: plugin.config('port'),
+            description: 'The port to run the server on.',
         });
+        plugin.wrap(yargs, 1);
+    });
 
+    plugin.register('build', 'Generate a static version of the Fractal web interface.', (yargs) => {
         yargs.command('build', 'Generate a static version of the component library web interface.', (yargs) => {
             yargs.usage('\nUsage: $0 build');
-            plugin.wrap(yargs, 2);
+            plugin.wrap(yargs, 1);
         });
-
-        plugin.wrap(yargs, 2);
     });
 
     plugin.runner(function (command, args, opts, app) {
         plugin.config('port', opts.port || plugin.config('port'));
         app.theme = loadTheme();
-        if (command === plugin.name()) {
-            if (args[0] === 'start') {
-                const srv = server(plugin.config(), app);
-                return srv.start();
-            } else if (args[0] === 'build') {
-                return build(plugin.config(), app);
-            }
+        if (command === 'start') {
+            const srv = server(plugin.config(), app);
+            return srv.start();
+        } else if (command === 'build') {
+            return build(plugin.config(), app);
         }
         throw new Error('Command not recognised');
     });

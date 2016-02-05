@@ -23,7 +23,7 @@ module.exports = function build(config, app) {
         }
     });
 
-    const bob = builder(theme, render, config.build.concurrency);
+    const bob = builder(config, app);
 
     co(function* () {
         log.started('Starting static web build');

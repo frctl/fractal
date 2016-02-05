@@ -6,10 +6,14 @@ const co      = require('co');
 const _       = require('lodash');
 const fs      = Promise.promisifyAll(require('fs-extra'));
 
-module.exports = function (theme, render, concurrency) {
+module.exports = function (config, app) {
+
+    const theme  = app.theme;
+    const log    = app.log;
+    const render = app.render(theme.views());
 
     const buildDir = Path.resolve(theme.buildDir());
-    const throat  = require('throat')(Promise)(5);
+    const throat  = require('throat')(Promise)(config.build.concurrency);
     const targets = [];
 
     const setup = co.wrap(function* () {
@@ -23,6 +27,8 @@ module.exports = function (theme, render, concurrency) {
         source = Path.resolve(source);
         return fs.copyAsync(source, dest, {
             clobber: true
+        }).catch(function(err){
+            log.error(err);
         });
     }
 
