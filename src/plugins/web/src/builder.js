@@ -5,7 +5,6 @@ const Path    = require('path');
 const co      = require('co');
 const _       = require('lodash');
 const fs      = Promise.promisifyAll(require('fs-extra'));
-const request = require('./supertest');
 
 module.exports = function (theme, render, concurrency) {
 

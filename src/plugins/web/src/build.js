@@ -26,9 +26,11 @@ module.exports = function build(config, app) {
     const bob = builder(theme, render, config.build.concurrency);
 
     co(function* () {
+        log.started('Starting static web build');
         const api = yield app();
         theme.builder()(bob, api);
         yield bob.run();
+        log.taskSuccess('Static web build finished');
         process.exit();
     }).catch(err => {
         log.error(err);

@@ -92,13 +92,13 @@ module.exports = function serve(config, app) {
             opts = opts || {};
             var port = opts.port || config.port || 3000;
             server.listen(port, function () {
-                log.success(`Fractal preview browser is now available at http://localhost:${port} - use ^c to exit.`);
+                log.started(`Fractal preview browser is now available at http://localhost:${port} - use ^c to exit.`);
             });
         },
 
         stop: function () {
             server.close(function () {
-                log.end('Fractal preview browser is shutting down.');
+                log.ended('Fractal preview browser is shutting down.');
             });
         }
     };

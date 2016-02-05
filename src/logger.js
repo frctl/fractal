@@ -6,16 +6,16 @@ const chalk   = require('chalk');
 
 const logger = module.exports = {
 
-    success(str) {
+    started(str) {
+        console.log(chalk.magenta(`${str}`));
+    },
+
+    ended(str) {
+        console.log(str);
+    },
+
+    taskSuccess(str) {
         console.log(chalk.green(`✔ ${str}`));
-    },
-
-    write(str) {
-        console.log(str);
-    },
-
-    end(str) {
-        console.log(str);
     },
 
     dump(data) {
