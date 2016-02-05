@@ -8,9 +8,8 @@ module.exports = {
     },
     build: {
         dest: "build",
-        concurrency: 5
+        concurrency: 100
     },
     favicon: null,
     theme: "@frctl/theme-default"
 };
-    

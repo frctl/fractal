@@ -5,14 +5,13 @@ const Path    = require('path');
 const co      = require('co');
 const _       = require('lodash');
 const fs      = Promise.promisifyAll(require('fs-extra'));
-const mkdirp  = Promise.promisify(require('mkdirp'));
 const request = require('./supertest');
-const throat  = require('throat')(require('bluebird'))(5);
 
-module.exports = function(theme, server){
+module.exports = function(theme, render, concurrency){
 
     const buildDir = Path.resolve(theme.buildDir());
-    const urls     = [];
+    const throat  = require('throat')(Promise)(5);
+    const targets = [];
 
     const setup = co.wrap(function* (){
         yield fs.removeAsync(buildDir)
@@ -39,39 +38,45 @@ module.exports = function(theme, server){
         },
 
         run(){
-            const req = request(server);
             return setup().then(function(){
                 const jobs = [];
-                _.forEach(urls, function(url){
-                    const savePath = Path.join(buildDir, url, 'index.html');
+                for (let target of targets) {
+                    const savePath = Path.join(buildDir, target.url, 'index.html');
                     const pathInfo = Path.parse(savePath);
                     const job = throat(function(){
-                        return mkdirp(pathInfo.dir).then(function(){
-                            return req.get('/').end().then(function(response){
-                                return fs.writeFileAsync(savePath, response.text);
+                        return fs.ensureDirAsync(pathInfo.dir).then(function(){
+                            return render.template(target.route.view, target.route.context, {
+                                web: {
+                                    theme: theme,
+                                    request: {
+                                        isPjax: false,
+                                        segments: _.compact(target.url.split('/')),
+                                        params: target.params,
+                                        path: target.url,
+                                        error: null,
+                                        errorStatus: null,
+                                        route: target.route,
+                                    }
+                                }
+                            }).then(function(html){
+                                return fs.writeFileAsync(savePath, html);
                             });
                         });
                     });
                     jobs.push(job);
-                });
+                }
 
-                return Promise.all(jobs).then(function(){
-                    process.exit();
-                }).catch(function(err){
-                    console.log(err);
-                    process.exit();
-                });
+                return Promise.all(jobs);
             });
         },
 
-        requestRoute(name, params){
+        addRoute(name, params){
             const url = theme.urlFromRoute(name, params);
-            urls.push(url);
-        },
-
-        requestUrl(url){
-            //TODO: some checking of validity here
-            urls.push(url);
+            const route = theme.matchRoute(url);
+            route.url = url;
+            if (route) {
+                targets.push(route);
+            }
         },
 
         copyStatic: copyStatic
