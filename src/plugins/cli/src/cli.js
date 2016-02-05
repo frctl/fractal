@@ -34,10 +34,11 @@ module.exports = function(plugin){
         if (command === 'list' && args[0] === 'components') {
             return Promise.props(app()).then(function(app){
                 const table = new Table({
-                    head: ['Handle', '# of variants']
+                    head: ['Handle', '# of variants', 'ref']
                 });
                 for (let component of app.components.flatten()) {
-                    table.push([component.handle, component.variantCount])
+                    // const varRefs = component.getVariants();
+                    table.push([component.handle, component.variantCount, component.ref])
                 }
                 console.log(table.toString());
             }).catch(err => {

@@ -41,11 +41,11 @@ module.exports = function(plugin){
         plugin.config('port', opts.port || plugin.config('port'));
         app.theme = loadTheme();
         if (command === plugin.name()) {
+            const srv = server(plugin.config(), app);
             if (args[0] === 'start') {
-                const srv = server(plugin.config(), app);
                 return srv.start();
             } else if (args[0] === 'build') {
-                return build(plugin.config(), app);
+                return build(plugin.config(), srv, app);
             }
         }
         throw new Error('Command not recognised');

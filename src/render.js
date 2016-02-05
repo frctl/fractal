@@ -37,6 +37,8 @@ module.exports = function (includePath, config) {
         return _.isFunction(val) ? env.addFilter(key, val) : env.addFilter(key, val.filter, val.async || false);
     });
 
+    // env.addGlobal('log', console.log);
+
     env.addFilter('context', (entity, cb) => {
         let ctx;
         if (entity instanceof Component || entity instanceof Variant) {

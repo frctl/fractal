@@ -5,7 +5,7 @@ const Path    = require('path');
 const co      = require('co');
 const builder = require('./builder');
 
-module.exports = function build(config, app){
+module.exports = function build(config, server, app){
 
     const theme = app.theme;
     const log   = app.log;
@@ -22,21 +22,17 @@ module.exports = function build(config, app){
         }
     });
 
-    const bob = builder(theme);
+    const bob = builder(theme, server.server);
 
     co(function* (){
         const api = yield app();
-
-        yield bob.before();
-
-        yield theme.static().map(p => bob.copyStatic(p.path, p.mount));
-
         theme.builder()(bob, api);
-
-        yield bob.after();
-
+        yield bob.run();
+        process.exit();
     }).catch(err => {
         log.error(err);
+        process.exit();
     });
+
 
 };

@@ -10,11 +10,6 @@ module.exports = function serve(config, app){
     const theme  = app.theme;
     const log    = app.log;
     const render = app.render(theme.views());
-    const globals = {
-        theme: theme,
-        error: null,
-        request: null,
-    };
 
     /**
      * Set the favicon to prevent pesky 404s
@@ -33,10 +28,16 @@ module.exports = function serve(config, app){
      */
 
     server.use((req, res, next) => {
-        req.isPjax = !! req.header('X-PJAX');
-        req.segments = _.compact(req.path.split('/'));
-        globals.request = req;
-        globals.error = null;
+        const request = {
+            isPjax: !! req.header('X-PJAX'),
+            segments: _.compact(req.path.split('/')),
+            params: {},
+            path: req.path,
+            error: null,
+            errorStatus: null,
+            route: null,
+        };
+        res.locals.__request = request;
         next();
     });
 
@@ -55,16 +56,16 @@ module.exports = function serve(config, app){
     server.get(':path(*)', function(req, res, next){
         const match = app.theme.matchRoute(req.path);
         if (!match) {
-            req.params = {};
-            res.locals._errorStatus = '404';
+            res.locals.__request.params = {};
+            res.locals.__request.errorStatus = '404';
             return next(new Error(`No matching route found for ${req.path}`));
         }
         if (match.route.redirect) {
             return res.redirect(match.route.redirect);
         }
-        req.params = match.params;
-        req.route = match.route;
-        render.template(match.route.view, match.route.context, getGlobals()).then(v => res.send(v)).catch(err => next(err));
+        res.locals.__request.params = match.params;
+        res.locals.__request.route = match.route;
+        render.template(match.route.view, match.route.context, getGlobals(res.locals)).then(v => res.send(v)).catch(err => next(err));
     });
 
     /**
@@ -76,11 +77,11 @@ module.exports = function serve(config, app){
         if (res.headersSent || !theme.error()) {
             return next(err);
         }
-        globals.error = err;
-        if (res.locals._errorStatus){
-            res.sendStatus(res.locals._errorStatus);
+        res.locals.__request.error = err;
+        if (res.locals.__request.errorStatus){
+            res.sendStatus(res.locals.__request.errorStatus);
         }
-        render.template(theme.error().view, theme.error().context, getGlobals()).then(v => res.send(v)).catch(err => next(err));
+        render.template(theme.error().view, theme.error().context, getGlobals(res.locals)).then(v => res.send(v)).catch(err => next(err));
     });
 
     return {
@@ -102,9 +103,12 @@ module.exports = function serve(config, app){
         }
     };
 
-    function getGlobals() {
+    function getGlobals(context) {
         return {
-            web: globals
+            web: {
+                theme: theme,
+                request: context.__request
+            }
         };
     }
 };

@@ -31,6 +31,9 @@ module.exports = class ComponentCollection extends Collection {
     }
 
     find(handle) {
+        if (!handle) {
+            return null;
+        }
         const parts = matcher.splitHandle(handle);
         const component = super.find(parts.component);
         if (component && parts.variant) {
