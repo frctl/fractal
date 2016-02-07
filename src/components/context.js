@@ -2,14 +2,9 @@
 
 const co        = require('co');
 const _         = require('lodash');
-const Component = require('./component');
-const Variant   = require('./variant');
-const source    = require('../source');
 const logger    = require('../logger');
 
-const resolver = module.exports = co.wrap(function* (context) {
-
-    const components = yield source('components');
+module.exports = function (context, components) {
 
     const resolve = co.wrap(function* (obj) {
 
@@ -45,4 +40,4 @@ const resolver = module.exports = co.wrap(function* (context) {
     });
 
     return resolve(context);
-});
+};

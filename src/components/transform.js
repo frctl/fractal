@@ -2,38 +2,58 @@
 
 const co         = require('co');
 const _          = require('lodash');
+const anymatch   = require('anymatch');
 const Component  = require('./component');
 const Collection = require('./collection');
-const match      = require('../matchers');
-const source     = require('../source');
 const fs         = require('../fs');
 const data       = require('../data');
-const config     = require('../config');
 const logger     = require('../logger');
 
-const ext        = config.get('components.view.ext');
 
-module.exports = function (fileTree, parent) {
-    const splitter = config.get('components.splitter');
+module.exports = function (fileTree, config) {
+
+    const isView    = anymatch([`**/*${config.ext}`, `!**/*${config.splitter}*${config.ext}`]);
+    const isVarView = anymatch(`**/*${config.splitter}*${config.ext}`);
+    const isConfig  = anymatch(`**/*.config.{js,json,yaml,yml}`);
+    const isReadme  = anymatch(`**/readme.md`);
+
     const build = co.wrap(function* (dir, parent) {
 
-        const children = dir.children || [];
+        const children    = dir.children || [];
+        const files    = children.filter(item => item.isFile);
+        const directories = children.filter(item => item.isDirectory);
+        const matched = {
+            directories: directories,
+            files:       files,
+            views:       files.filter(f => isView(f.path)),
+            varViews:    files.filter(f => isVarView(f.path)),
+            configs:     files.filter(f => isConfig(f.path)),
+            readmes:     files.filter(f => isReadme(f.path)),
+        };
+
+        const dirConfig   = _.find(matched.configs, f => f.name.startsWith(dir.name));
 
         // first figure out if it's a component directory or not...
 
         if (parent) {
-            const componentView = _.find(children, { name: dir.name, ext: ext });
-            if (componentView) { // it is a component
-                const conf = yield data.getConfig(match.findConfigFor(componentView.name, children), {
-                    _name:    dir.name,
+            const view = _.find(matched.views, {name: dir.name});
+            if (view) { // it is a component
+                const nameMatch = `${dir.name}.`;
+                const conf = yield data.getConfig(dirConfig, {
+                    name:     dir.name,
                     order:    dir.order,
                     isHidden: dir.isHidden,
-                    view:     componentView.base,
-                    viewPath: componentView.path,
+                    view:     view.base,
+                    viewPath: view.path,
                     dir:      dir.path,
                 });
                 conf.parent = parent;
-                return Component.create(conf, children);
+                return Component.create(conf, {
+                    view:     view,
+                    readme:   matched.readmes[0],
+                    varViews: _.filter(matched.varViews, f => f.name.startsWith(nameMatch)),
+                    other:    _.differenceBy([matched.files, matched.views, matched.varViews, matched.configs, matched.readmes, [view]], 'path')
+                }, config);
             }
         }
 
@@ -43,35 +63,41 @@ module.exports = function (fileTree, parent) {
         if (parent) {
             props.isHidden = dir.isHidden;
             props.order    = dir.order;
+        } else {
+            props.status = config.defaults.status;
+            props.layout = config.defaults.layout;
+            props.display = config.defaults.display;
+            props.context = config.defaults.context || {};
         }
 
-        const dirConfig = yield data.getConfig(match.findConfigFor(dir.name, children), props);
+        const dirConfigData = yield data.getConfig(dirConfig, props);
         if (parent) {
-            dirConfig.parent = parent;
+            dirConfigData.parent = parent;
         }
-        const collection = yield Collection.create(dirConfig);
+        const collection = yield Collection.create(dirConfigData, []);
 
         // not a component, so go through the items and group into components and collections
-
-        const directories    = children.filter(item => item.isDirectory);
-        const collections    = yield directories.map(item => build(item, collection));
-        const componentViews = children.filter(match.components);
-        const variants       = children.filter(match.variants);
-
-        const components = yield componentViews.map(item => {
-            const related = variants.filter(sibling => sibling.name.startsWith(item.name));
-            const conf    = data.getConfig(match.findConfigFor(item.name, children), {
-                _name:    item.name,
-                order:    item.order,
-                isHidden: item.isHidden,
-                view:     item.base,
-                viewPath: item.path,
+        
+        const collections = yield matched.directories.map(item => build(item, collection));
+        const components  = yield matched.views.map(view => {
+            const nameMatch = `${view.name}.`;
+            const configFile = _.find(matched.configs, f => f.name.startsWith(nameMatch));
+            const conf    = data.getConfig(configFile, {
+                name:     view.name,
+                order:    view.order,
+                isHidden: view.isHidden,
+                view:     view.base,
+                viewPath: view.path,
                 dir:      dir.path,
             });
             return conf.then(c => {
                 c.parent = collection;
-                related.push(item);
-                return Component.create(c, related);
+                return Component.create(c, {
+                    view: view,
+                    readme: null,
+                    varViews: matched.varViews.filter(f => f.name.startsWith(nameMatch)),
+                    other: []
+                }, config);
             });
         });
 

@@ -78,7 +78,6 @@ const self = module.exports = {
         }
         return this.readFile(file.path).then(c => _.defaultsDeep(c, defaults)).catch(err => {
             logger.error(`Error parsing data file ${file.path}: ${err.message}`);
-            console.log(defaults);
             return defaults;
         });
     }

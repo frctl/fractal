@@ -20,13 +20,14 @@ module.exports = {
             display: {}
         },
         splitter: "--",
-        view: {
-            use: "@frctl/handlebars-engine",
-            ext: null,
-            extend: {},
-            context: {},
-            engine: null
-        },
+        ext: ".hbs",
+        // engine: {
+        //     use: "@frctl/handlebars-engine",
+        //     ext: null,
+        //     extend: {},
+        //     context: {},
+        //     engine: null
+        // },
         status: {
             default: "ready",
             options: {

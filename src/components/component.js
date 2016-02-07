@@ -6,30 +6,25 @@ const co      = require('co');
 const Path    = require('path');
 const Variant = require('./variant');
 const status  = require('./status');
-const match   = require('../matchers');
 const logger  = require('../logger');
 const data    = require('../data');
 const utils   = require('../utils');
-const config  = require('../config');
 
 module.exports = class Component {
 
     constructor(props, files) {
 
-        let filtered       = files.filter(f => !match.configs(f));
-        let readme         = match.findReadme(filtered);
-
         this.type          = 'component';
         this._config       = props;
-        this.name          = props._name;
-        this.handle        = props.handle || utils.slugify(this.name);
-        this.ref           = this.handle;
+        this.name          = utils.slugify(props.name);
+        this.handle        = this.name; // component's handles are the same as their names
         this.order         = props.order;
         this.isHidden      = props.isHidden;
         this.label         = props.label || utils.titlize(this.name);
         this.title         = props.title || this.label;
-        this.defaultHandle = props.default || 'default';
-        this.notes         = props.notes || props.readme || (readme ? readme.buffer.toString('UTF-8') : null);
+        this.defaultName   = props.default || 'default';
+        this.notes         = props.notes || props.readme || (files.readme ? files.readme.toString() : null);
+        this._view         = props.view;
         this._parent       = props.parent;
         this._variants     = new Map();
         this._context      = props.context || {};
@@ -40,11 +35,11 @@ module.exports = class Component {
         this._display      = props.display || p.display;
 
         this.files = {
-            view:     filtered.filter(f => f.base === props.view)[0],
-            variants: match.findVariantsOf(this.name, filtered),
-            binary:   filtered.filter(f => f.isBinary),
-            other:    filtered.filter(f => (f.base !== props.view) && !f.isBinary && (!readme || readme.base !== f.base)),
-            readme:   readme || null
+            view:     files.view,
+            variants: files.varViews,
+            binary:   files.other.filter(f => f.isBinary),
+            other:    files.other.filter(f => !f.isBinary),
+            readme:   files.readme || null
         };
     }
 
@@ -75,28 +70,37 @@ module.exports = class Component {
     }
 
     addVariant(variant) {
-        if (!this._variants.has(variant.handle)) {
-            this._variants.set(variant.handle, variant);
+        if (!this._variants.has(variant.name)) {
+            this._variants.set(variant.name, variant);
         }
         return this;
     }
 
-    getVariant(handle) {
-        return (handle && handle !== this.defaultHandle) ? this._variants.get(handle) : this.getDefaultVariant();
+    getVariant(name) {
+        return (name && name !== this.defaultName) ? this._variants.get(name) : this.getDefaultVariant();
+    }
+
+    getVariantByHandle(handle) {
+       for (let variant of this.getVariants()) {
+           if (variant.handle === handle) {
+               return variant;
+           }
+       }
+       return null;
     }
 
     getVariants() {
         return _.sortBy(Array.from(this._variants.values()), ['order', '_name']);
     }
 
-    hasVariant(handle) {
-        return this._variants.has(handle);
+    hasVariant(name) {
+        return this._variants.has(name);
     }
 
     getDefaultVariant() {
         let vars = this._variants;
-        if (vars.has(this.defaultHandle)) {
-            return vars.get(this.defaultHandle);
+        if (vars.has(this.defaultName)) {
+            return vars.get(this.defaultName);
         }
         vars = this.getVariants();
         for (let val of vars) {
@@ -112,44 +116,50 @@ module.exports = class Component {
         return utils.toJSON(this);
     }
 
-    static create(props, relatedFiles) {
-        return co(function* () {
+    static create(props, files, config) {
 
-            const comp     = new Component(props, relatedFiles);
+        const comp = new Component(props, files);
+        const varConfs = props.variants || [];
 
-            const vDefaults = {
+        const configuredVariants = varConfs.map(conf => {
+            if (_.isUndefined(conf.name)) {
+                logger.error(`Could not create variant of ${comp.name} - 'name' value is missing`);
+                return null;
+            }
+            const p = _.defaults(conf, {
                 view:    props.view,
                 dir:     props.dir,
                 parent:  comp
-            };
-
-            const confVars = yield variantsFromConfig(comp.name, props.variants || [], vDefaults);
-            const fileVars = yield comp.files.variants.map(v => Variant.createFromFiles(v, relatedFiles, vDefaults));
-            const variants = _.concat(fileVars, confVars);
-            if (!variants.length) {
-                const defaultVariant = yield Variant.create(_.defaultsDeep({
-                    name: comp.defaultHandle,
-                    handle: comp.defaultHandle,
-                    viewPath: props.view,
-                }, vDefaults));
-                variants.push(defaultVariant);
-            }
-            comp.addVariants(variants);
-            return comp;
+            });
+            p.viewPath = Path.join(p.dir, p.view);
+            p.handle = `${comp.name}${config.splitter}${p.name}`;
+            return new Variant(p);
         });
+
+        const fileVariants = files.varViews.map(f => {
+            const name = f.name.split(config.splitter)[1];
+            return new Variant({
+                name:     name,
+                handle:   `${comp.name}${config.splitter}${name}`,
+                view:     f.view,
+                path:     f.base,
+                viewPath: f.path
+            });
+        });
+
+        const variants = _.compact(_.concat(configuredVariants, fileVariants));
+
+        if (!variants.length) {
+            variants.push(new Variant({
+                name:     comp.defaultName,
+                handle:   `${comp.name}${config.splitter}${comp.defaultName}`,
+                viewPath: props.view,
+                dir:      props.dir,
+                parent:   comp
+            }));
+        }
+
+        comp.addVariants(variants);
+        return comp;
     }
 };
-
-function variantsFromConfig(name, configSet, defaults) {
-    let variants = configSet.map(conf => {
-        if (_.isUndefined(conf.handle)) {
-            logger.error(`Could not create variant of ${name} - handle value is missing`);
-            return null;
-        }
-        const props = _.defaultsDeep(conf, defaults);
-        props._name = conf.handle;
-        props.viewPath = Path.join(defaults.dir, props.view);
-        return Variant.create(props);
-    });;
-    return Promise.all(_.compact(variants));
-}

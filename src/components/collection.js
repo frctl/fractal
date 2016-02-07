@@ -4,26 +4,15 @@ const _          = require('lodash');
 const config     = require('../config');
 const logger     = require('../logger');
 const Collection = require('../collection');
-const matcher    = require('../matchers');
 
 module.exports = class ComponentCollection extends Collection {
 
     constructor(props, items) {
         super(props, items);
-
-        const c = config.get('components');
         const p = this._parent;
-
-        this.status  = props.status  || (p ? p.status  : c.status.default);
-        this.preview = props.preview || (p ? p.preview : c.preview.layout);
-        this.display = props.display || (p ? p.display : c.preview.display);
-    }
-
-    get context() {
-        if (this._parent) {
-            return _.defaultsDeep(this._context, this._parent.context);
-        }
-        return _.defaultsDeep(this._context, config.get('components.view.context', {}));
+        this.status  = props.status  || (p ? p.status : null);
+        this.preview = props.preview || (p ? p.preview : null);
+        this.display = props.display || (p ? p.display : {});
     }
 
     static create(props, items) {
@@ -34,12 +23,17 @@ module.exports = class ComponentCollection extends Collection {
         if (!handle) {
             return null;
         }
-        const parts = matcher.splitHandle(handle);
-        const component = super.find(parts.component);
-        if (component && parts.variant) {
-            return component.getVariant(parts.variant);
+        for (let item of this) {
+            if (item.type === 'collection') {
+                const search = item.find(handle);
+                if (search) return search;
+            } else if (item.type === 'component' && (item.handle === handle || `@${item.handle}` === handle)) {
+                return item;
+            } else if (item.type === 'component') {
+                let variant = item.getVariantByHandle();
+                if (variant) return variant;
+            }
         }
-        return component;
     }
 
     filter(predicate) {
@@ -62,9 +56,31 @@ module.exports = class ComponentCollection extends Collection {
                     }
                 }
             }
-            return this.newSelf(items);
+            return _.clone(this);
         }
         return super.filter(predicate);
+    }
+
+    _getAttributes() {
+        const attrs = {
+            order:     this.order,
+            isHidden:  this.isHidden,
+            label:     this.label,
+            title:     this.title,
+            name:      this.name,
+            handle:    this.handle,
+            labelPath: this.labelPath,
+            path:      this.path
+        };
+        if (this._parent) {
+            attrs.parent = this._parent;
+        } else {
+            attrs.status  = this.status;
+            attrs.preview = this.preview;
+            attrs.display = this.display;
+            attrs.context = this.context;
+        }
+        return attrs;
     }
 
 };

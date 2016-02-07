@@ -7,20 +7,19 @@ const utils   = require('./utils');
 module.exports = class Collection {
 
     constructor(props, items) {
-        this.type     = 'collection';
-        this.name     = props.name;
-        this.order    = props.order;
-        this.handle   = props.handle || utils.slugify(this.name);
-        this.ref      = `@${this.handle}`;
-        this.isHidden = props.isHidden;
-        this._parent  = props.parent;
-        this.label    = props.label || utils.titlize(props.name);
-        this.title    = props.title || this.label;
-        this._context = props.context || {};
-        this._config  = props;
-        this._items   = new Set(items || []);
-        this._labelPath = props.labelPath || null;
-        this._path   = props.path || null;
+        this.type      = 'collection';
+        this._parent   = props.parent;
+        this.name      = props.name;
+        this.order     = props.order;
+        this.handle    = props.handle || utils.slugify(this.name);
+        this.isHidden  = props.isHidden;
+        this.label     = props.label || utils.titlize(props.name);
+        this.title     = props.title || this.label;
+        this.context   = (props.parent ? _.defaultsDeep(props.context || {}, props.parent.context) : props.context ) || {};
+        this.labelPath = props.labelPath || _.trimStart(this._makeLabelPath(), '/') || '/';
+        this.path      = props.path || _.trimStart(this._makePath(), '/') || '/';
+        this._config   = props;
+        this._items    = new Set(items || []);
     }
 
     static create(props, items) {
@@ -47,20 +46,6 @@ module.exports = class Collection {
         this._items = new Set(items || []);
     }
 
-    get path() {
-        if (this._path) {
-            return this._path;
-        }
-        return _.trimStart(this._makePath(), '/') || '/';
-    }
-
-    get labelPath() {
-        if (this._labelPath) {
-            return this._labelPath;
-        }
-        return _.trimStart(this._makeLabelPath(), '/') || '/';
-    }
-
     _makePath() {
         return (this._parent) ? `${this._parent._makePath()}/${this.handle}` : '';
     }
@@ -76,7 +61,6 @@ module.exports = class Collection {
     }
 
     find(str) {
-        const type = str.startsWith('@') ? 'ref' : 'handle';
         if (this.size === 0) {
             return undefined;
         }
@@ -84,7 +68,7 @@ module.exports = class Collection {
             if (item.type === 'collection') {
                 const search = item.find(str);
                 if (search) return search;
-            } else if (item[type] === str || `@${item[type]}` === str) {
+            } else if (item.handle === str || `@${item.handle}` === str) {
                 return item;
             }
         }
@@ -92,13 +76,13 @@ module.exports = class Collection {
     }
 
     findCollection(str) {
-        const type = str.startsWith('@') ? 'ref' : (str.includes('/') ? 'path' : 'handle');
+        const type = str.startsWith('@') ? 'handle' : (str.includes('/') ? 'path' : 'handle');
         if (this.size === 0) {
             return undefined;
         }
         for (let item of this) {
             if (item.type === 'collection') {
-                if (item[type] === str) {
+                if (item[type] === str || `@${item[type]}` === str)  {
                     return item;
                 }
                 const search = item.findCollection(str);
@@ -177,7 +161,7 @@ module.exports = class Collection {
             title:     this.title,
             name:      this.name,
             handle:    this.handle,
-            parent:    this.parent,
+            parent:    this._parent,
             labelPath: this.labelPath,
             path:      this.path
         };

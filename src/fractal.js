@@ -1,102 +1,75 @@
 'use strict';
 
-const Promise = require('bluebird');
-const _       = require('lodash');
-const co      = require('co');
-const chalk   = require('chalk');
-const yargs   = require('yargs');
-const logger  = require('./logger');
-const Plugin  = require('./plugin');
-const config  = require('./config');
+const EventEmitter   = require('events');
+const _              = require('lodash');
+const co             = require('co');
+const anymatch       = require('anymatch');
+const logger         = require('./logger');
+const fs             = require('./fs');
+const compTreeParser = require('./components/transform');
+// const pageTreeParser = require('./pages/transform');
 
-const registry    = [];
-const plugins    = new Map();
+class Fractal extends EventEmitter {
 
-const fractal = module.exports = {
-
-    run() {
-        this._setComponentEngine();
-        this._registerPlugins();
-
-        yargs.usage('\nUsage: $0 <command> [subcommand] [options]');
-        yargs.version(this.version);
-
-        let argv = yargs.argv;
-
-        if (argv.level) {
-            this.set('log.level', argv.level);
-            logger.level = this.get('log.level');
-        }
-
-        const input = this._parseArgv(argv);
-        const use = plugins.get(input.command);
-        if (use) {
-            return use.runner()(input.command, input.args, input.opts, require('./app'));
-        }
-
-        yargs.showHelp();
-        process.exit(0);
-    },
-
-    get version() {
-        return config.get('version');
-    },
-
-    get env() {
-        return config.get('env');
-    },
-
-    use(plugin) {
-        registry.push(plugin);
-    },
-
-    _registerPlugins() {
-        for (let i = 0; i < registry.length; i++) {
-            const plug = new Plugin(yargs);
-            require(registry[i])(plug);
-            plug.config(_.defaultsDeep(this.get(`plugins.${plug.name()}`, {}), plug.defaults()));
-            plug.applyCommands(yargs);
-            plug.triggers.forEach(t => {
-                plugins.set(t, plug);
-            });
-        }
-    },
-
-    /*
-     * Parse the supplied argv to extract a command, arguments and options
-     *
-     * @api private
-     */
-
-    _parseArgv(argv) {
-        const args = argv._;
-        const command = args.shift();
-        const opts = argv;
-        delete opts._;
-        delete opts.$0;
-        return {
-            command: command,
-            args: args,
-            opts: opts
-        };
-    },
-
-    _setComponentEngine() {
-        let engine;
-        const moduleName = config.get('components.view.use');
-        try {
-            engine = require(moduleName);
-        } catch (err) {
-            throw new Error(`Could not find component engine module '${moduleName}'. Try running 'npm install ${moduleName} --save'.`);
-        }
-
-        const ext = config.get('components.view.ext') || engine.defaults.ext;
-        if (!ext) {
-            throw new Error(`No component extension found!`);
-        }
-        config.set('components.view.ext', ext.toLowerCase());
+    constructor(){
+        super();
+        this._config  = require('../config');
+        this._cache   = {};
     }
 
-};
+    components() {
+        const self = this;
+        const components = co(function* () {
+            const fileTree   = yield fs.describe(self.get('components.path'));
+            const components = yield compTreeParser(fileTree, {
+                ext:      self.get('components.ext'),
+                splitter: self.get('components.splitter'),
+                defaults: {
+                    status:   self.get('components.status.default'),
+                    layout:   self.get('components.preview.layout'),
+                    display:  self.get('components.preview.display'),
+                    context:  self.get('components.context'),
+                }
+            });
+            return components;
+        }).catch(e => {
+            logger.error(e);
+        });
+        return components;
+    }
 
-Object.assign(fractal, config);
+    pages() {
+
+    }
+
+    render() {
+
+    }
+
+    register(plugin, config) {
+
+    }
+
+    engine(engine, config, type) {
+
+    }
+
+    run() {
+
+    }
+
+    set(setting, val) {
+        logger.debug('Setting config value: %s = %s', setting, _.isObject(val) ? JSON.stringify(val, null, 2) : val);
+        _.set(this._config, setting, val);
+        return this;
+    }
+
+    get(setting, defaultVal) {
+        if (_.isUndefined(setting)) {
+            return this._config;
+        }
+        return _.get(this._config, setting, defaultVal || undefined);
+    }
+}
+
+module.exports = new Fractal();

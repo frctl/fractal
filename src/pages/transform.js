@@ -5,10 +5,8 @@ const _          = require('lodash');
 const Page       = require('./page');
 const Collection = require('./collection');
 const match      = require('../matchers');
-const source     = require('../source');
 const fs         = require('../fs');
 const data       = require('../data');
-const config     = require('../config');
 const logger     = require('../logger');
 
 module.exports = function (fileTree) {
