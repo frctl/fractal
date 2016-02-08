@@ -33,7 +33,7 @@ module.exports = function (fileTree, source) {
             source.context = dirConfig.context || {};
         } else {
             collection = new Collection(dirConfig);
-            collection.source = source;
+            collection._source = source;
         }
 
         const items = yield children.map(item => {
@@ -57,7 +57,7 @@ module.exports = function (fileTree, source) {
             }
             return Promise.resolve(null);
         });
-        
+
         collection.setItems(_.orderBy(_.compact(items), ['order', 'name']));
         return collection;
     });

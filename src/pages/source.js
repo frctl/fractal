@@ -7,6 +7,7 @@ const Source    = require('../source');
 const md        = require('../markdown');
 const resolve   = require('../context');
 const fs        = require('../fs');
+const utils        = require('../utils');
 
 module.exports = class PageSource extends Source {
 
@@ -31,7 +32,7 @@ module.exports = class PageSource extends Source {
             return self.markdown ? md(rendered) : rendered;
         });
     }
-
+    
     _load() {
         return fs.describe(this.sourcePath).then(fileTree => {
             return transform(fileTree, this).then(self => {
