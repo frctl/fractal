@@ -3,7 +3,6 @@
 const Promise = require('bluebird');
 const _       = require('lodash');
 const utils   = require('../utils');
-const config  = require('../config');
 const data    = require('../data');
 
 module.exports = class Variant {
@@ -20,6 +19,7 @@ module.exports = class Variant {
         this.notes    = props.notes || null;
         this.display  = props.display || {};
         this._parent  = props.parent;
+        this._source  = this._parent._source;
         this._context = props.context || {};
         this._config  = props;
 
@@ -37,7 +37,6 @@ module.exports = class Variant {
     }
 
     get context() {
-        // need to resolve cascade
         return _.defaultsDeep(this._context, this._parent.context);
     }
 
@@ -53,7 +52,7 @@ module.exports = class Variant {
         return this._parent.variants;
     }
 
-    get viewContents() {
+    get viewContent() {
         return this.files.view.buffer.toString('UTF-8');
     }
 

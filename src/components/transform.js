@@ -48,13 +48,13 @@ module.exports = function (fileTree, source) {
             const nameMatch = `${dir.name}.`;
             dirConfig.view = view.base;
             dirConfig.viewPath = view.path;
-
+            dirConfig.source = source;
             return Component.create(dirConfig, {
                 view:     view,
                 readme:   matched.readmes[0],
                 varViews: _.filter(matched.varViews, f => f.name.startsWith(nameMatch)),
                 other:    _.differenceBy([matched.files, matched.views, matched.varViews, matched.configs, matched.readmes, [view]], 'path')
-            }, source);
+            });
         }
 
         // not a component, so go through the items and group into components and collections
@@ -83,12 +83,13 @@ module.exports = function (fileTree, source) {
             });
             return conf.then(c => {
                 c.parent = collection;
+                c.source = source;
                 return Component.create(c, {
                     view: view,
                     readme: null,
                     varViews: matched.varViews.filter(f => f.name.startsWith(nameMatch)),
                     other: []
-                }, source);
+                });
             });
         });
 

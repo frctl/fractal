@@ -26,6 +26,7 @@ module.exports = class Component {
         this.notes         = props.notes || props.readme || (files.readme ? files.readme.toString() : null);
         this._view         = props.view;
         this._parent       = props.parent;
+        this._source       = props.source;
         this._variants     = new Map();
         this._context      = props.context || {};
 
@@ -116,9 +117,10 @@ module.exports = class Component {
         return utils.toJSON(this);
     }
 
-    static create(props, files, config) {
+    static create(props, files) {
 
-        const comp = new Component(props, files);
+        const source   = props.source;
+        const comp     = new Component(props, files);
         const varConfs = props.variants || [];
 
         const configuredVariants = varConfs.map(conf => {
@@ -132,15 +134,15 @@ module.exports = class Component {
                 parent:  comp
             });
             p.viewPath = Path.join(p.dir, p.view);
-            p.handle = `${comp.name}${config.splitter}${p.name}`;
+            p.handle = `${comp.name}${source.splitter}${p.name}`;
             return new Variant(p);
         });
 
         const fileVariants = files.varViews.map(f => {
-            const name = f.name.split(config.splitter)[1];
+            const name = f.name.split(source.splitter)[1];
             return new Variant({
                 name:     name,
-                handle:   `${comp.name}${config.splitter}${name}`,
+                handle:   `${comp.name}${source.splitter}${name}`,
                 view:     f.view,
                 path:     f.base,
                 viewPath: f.path
@@ -152,7 +154,7 @@ module.exports = class Component {
         if (!variants.length) {
             variants.push(new Variant({
                 name:     comp.defaultName,
-                handle:   `${comp.name}${config.splitter}${comp.defaultName}`,
+                handle:   `${comp.name}${source.splitter}${comp.defaultName}`,
                 viewPath: props.view,
                 dir:      props.dir,
                 parent:   comp

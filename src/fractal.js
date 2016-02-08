@@ -33,14 +33,18 @@ class Fractal extends EventEmitter {
 
     components() {
         if (!this._sources.has('components')) {
+            const config = this.get('components');
             const source = new ComponentSource(this.get('components.path'), {
                 name:       'components',
-                status:     this.get('components.status.default'),
-                layout:     this.get('components.preview.layout'),
-                display:    this.get('components.preview.display'),
-                context:    this.get('components.context'),
-                ext:        this.get('components.ext'),
-                splitter:   this.get('components.splitter')
+                status:     config.status.default,
+                layout:     config.preview.layout,
+                display:    config.preview.display,
+                context:    config.context,
+                ext:        config.ext,
+                splitter:   config.splitter,
+                yield:      config.preview.yield,
+                engine:     config.engine,
+                app:        this
             });
             this._sources.set('components', source);
         }
@@ -56,41 +60,42 @@ class Fractal extends EventEmitter {
         this.components().endWatch();
     }
 
-    pages() {
-        
+    engine(name, engine, config) {
+        if (arguments.length > 1) {
+            this._engines[name] = {
+                engine: engine,
+                config: config || {},
+            };
+        } else if (name) {
+            return this._engines[name];
+        }
     }
 
-    renderPreview(component, context, layout) {
+    pages() {
 
     }
 
     render(entity, context, layout) {
-        var self = this;
-        context = context || entity.context;
-        return co(function* (){
-            if (entity.type === 'component') {
-                const collection = yield self.components();
-                context = yield components.context(context, collection);
-                return components.render(entity, context, this);
-            } else if (entity.type === 'page') {
-                const collection = yield self.pages();
-                context = yield pages.context(context, collection);
-                return pages.render(entity, context, this);
-            }
-        });
+        // var self = this;
+        // context = context || entity.context;
+        // return co(function* (){
+        //     if (entity.type === 'component') {
+        //         const collection = yield self.components();
+        //         context = yield components.context(context, collection);
+        //         return components.render(entity, context, this);
+        //     } else if (entity.type === 'page') {
+        //         const collection = yield self.pages();
+        //         context = yield pages.context(context, collection);
+        //         return pages.render(entity, context, this);
+        //     }
+        // });
     }
 
     register(plugin, config) {
 
     }
 
-    engine(name, engine) {
-        if (arguments.length == 2) {
-            this._engines[name] = engine();
-        } else if (name) {
-            return this._engines[name];
-        }
-    }
+
 
     run(command) {
 
