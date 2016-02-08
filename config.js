@@ -21,6 +21,7 @@ module.exports = {
         },
         splitter: "--",
         ext: ".hbs",
+        context: {},
         // engine: {
         //     use: "@frctl/handlebars-engine",
         //     ext: null,

@@ -4,7 +4,7 @@ const co        = require('co');
 const _         = require('lodash');
 const logger    = require('../logger');
 
-module.exports = function (context, components) {
+module.exports = function(context, components) {
 
     const resolve = co.wrap(function* (obj) {
 
