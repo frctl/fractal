@@ -5,24 +5,36 @@ const anymatch   = require('anymatch');
 const logger     = require('./logger');
 const Components = require('./components/source');
 const Pages      = require('./pages/source');
+const Plugin     = require('./plugin');
 
 class Fractal {
 
     constructor(){
-        this._config  = require('../config');
-        this._engines = {};
-        this._sources = new Map();
+        this._config   = require('../config');
+        this._engines  = new Map();
+        this._commands = new Map();
+        this._plugins  = new Map();
+        this._sources  = new Map();
         this.components();
         this.pages();
         this.engine('handlebars', '@frctl/handlebars-engine');
     }
 
-    register(plugin, config) {
-
-    }
-
     run(command) {
-
+        if (this._commands.has(command)) {
+            return this._commands.get(command)(this);
+        }
+        for (let pluginEntry of this._plugins.entries()) {
+            const name = pluginEntry[0];
+            const plugin = pluginEntry[1].plugin;
+            const config = pluginEntry[1].config;
+            for (let commandEntry of plugin.commands().entries()) {
+                if (commandEntry[0] === command) {
+                    const resolvedConfig = _.defaultsDeep(this.get(`plugins.${name}`, {}), config, plugin.defaults);
+                    return commandEntry[1](resolvedConfig, this);
+                }
+            }
+        }
     }
 
     source(type) {
@@ -47,14 +59,31 @@ class Fractal {
         });
     }
 
+    plugin(plugin, config) {
+        const plug = new Plugin();
+        _.isString(plugin) ? require(plugin)(plug) : plugin(plug);
+        if (!plug.name) {
+            logger.error(`Plugins must provide a valid 'name' value.`);
+            return;
+        }
+        this._plugins.set(plug.name, {
+            plugin: plug,
+            config: config || {}
+        });
+    }
+
+    command(name, callback) {
+        this._commands.set(name, callback);
+    }
+
     engine(name, engine, config) {
         if (arguments.length > 1) {
-            this._engines[name] = {
+            this._engines.set(name, {
                 engine: engine,
                 config: config || {},
-            };
+            });
         } else if (name) {
-            return this._engines[name];
+            return this._engines.get(name);
         }
     }
 
