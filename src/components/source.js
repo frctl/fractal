@@ -3,6 +3,7 @@
 const _         = require('lodash');
 const co        = require('co');
 const transform = require('./transform');
+const logger    = require('../logger');
 const Source    = require('../source');
 const fs        = require('../fs');
 const resolve   = require('../context');
@@ -16,6 +17,7 @@ module.exports = class ComponentSource extends Source {
         this.display  = props.display;
         this.yield    = props.yield;
         this.splitter = props.splitter;
+        this._statuses = props.status;
     }
 
     resolve(context) {
@@ -51,6 +53,30 @@ module.exports = class ComponentSource extends Source {
             }
             return rendered;
         });
+    }
+
+    statusInfo(handle){
+        if (_.isUndefined(handle)) {
+            return null;
+        }
+        if (_.isArray(handle)) {
+            const handles = _.uniq(handle);
+            if (handles.length === 1) {
+                return this.statusInfo(handles[0]);
+            }
+            const statuses = _.compact(handles.map(l => this.statusInfo(l)));
+            const details = _.clone(this._statuses.mixed);
+            details.statuses = statuses;
+            return details;
+        }
+        if (handle == this._statuses.mixed.handle) {
+            return this._statuses.mixed;
+        }
+        if (!this._statuses.options[handle]) {
+            logger.error(`Status ${handle} is not a known option.`);
+            return this._statuses.options[this._statuses.default];
+        }
+        return this._statuses.options[handle];
     }
 
     _load() {

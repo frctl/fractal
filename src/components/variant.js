@@ -24,7 +24,7 @@ module.exports = class Variant {
         this._config  = props;
 
         const p      = this._parent;
-        this._status  = props.status  || p._status;
+        this._status = props.status  || p._status;
         this.preview = props.preview || p._preview;
         this.display = props.display || p._display;
 
@@ -43,6 +43,10 @@ module.exports = class Variant {
         return null;
     }
 
+    get status(){
+        return this._source.statusInfo(this._status);
+    }
+
     get context() {
         return _.defaultsDeep(this._context, this._parent.context);
     }
@@ -51,14 +55,10 @@ module.exports = class Variant {
         return this._parent;
     }
 
-    get status() {
-        return this._status;
-    }
-
     get siblings() {
         return this._parent.variants;
     }
-    
+
     get content() {
         return this.files.view.buffer.toString('UTF-8');
     }

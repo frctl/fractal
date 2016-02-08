@@ -7,9 +7,9 @@ module.exports = class ComponentCollection extends Entities {
 
     constructor(props, items) {
         super(props, items);
-        this.status  = props.status  || this._parent.status;
-        this.preview = props.preview || this._parent.preview;
-        this.display = props.display || this._parent.display;
+        this._status  = props.status  || this._parent._status;
+        this._preview = props.preview || this._parent._preview;
+        this._display = props.display || this._parent._display;
     }
 
     find(handle) {

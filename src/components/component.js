@@ -5,7 +5,6 @@ const _       = require('lodash');
 const co      = require('co');
 const Path    = require('path');
 const Variant = require('./variant');
-const status  = require('./status');
 const logger  = require('../logger');
 const data    = require('../data');
 const utils   = require('../utils');
@@ -31,9 +30,9 @@ module.exports = class Component {
         this._context      = props.context || {};
 
         const p            = this._parent;
-        this._status       = props.status  || p.status;
-        this._preview      = props.preview || p.preview;
-        this._display      = props.display || p.display;
+        this._status       = props.status  || p._status;
+        this._preview      = props.preview || p._preview;
+        this._display      = props.display || p._display;
 
         this.files = {
             view:     files.view,
@@ -52,13 +51,9 @@ module.exports = class Component {
         return this.getVariants();
     }
 
-    get status() {
-        const statuses = this.statuses;
-        return statuses.length > 1 ? config.get('components.status.mixed.handle') : statuses[0];
-    }
-
-    get statuses() {
-        return _.compact(_.uniq(_.map(this.variants, v => v.status)));
+    get status(){
+        const variantStatuses = _.compact(_.uniq(_.map(this.variants, v => v._status)));
+        return this._source.statusInfo(variantStatuses);
     }
 
     get variantCount() {

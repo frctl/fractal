@@ -73,6 +73,7 @@ class Fractal {
                 splitter:   config.splitter,
                 yield:      config.preview.yield,
                 engine:     config.engine,
+                status:     config.status,
                 app:        this
             });
             this._sources.set('components', source);
