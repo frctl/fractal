@@ -8,7 +8,7 @@ const Collection   = require('./collection');
 
 class Source extends Collection {
 
-    constructor(props, items){
+    constructor(sourcePath, props, items){
         super(props, items);
         this.name      = utils.slugify(props.name);
         this.label     = props.label || utils.titlize(props.name);
@@ -18,12 +18,13 @@ class Source extends Collection {
         this._context = _.cloneDeep(props.context || {});
         this.labelPath = '';
         this.path = '';
-        this.emit('ready', this.items());
+        this.sourcePath = sourcePath;
+        this.ext = props.ext;
+        this.loaded = false;
     }
 
     setItems(items) {
         this._items = new Set(items || []);
-        this.emit('changed', this.items());
         return this;
     }
 

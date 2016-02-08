@@ -5,9 +5,9 @@ const _               = require('lodash');
 const co              = require('co');
 const anymatch        = require('anymatch');
 const logger          = require('./logger');
-const fs              = require('./fs');
-const components      = require('./components');
+const ComponentSource      = require('./components/source');
 const Source          = require('./source');
+
 // const pages           = require('./pages');
 // const pageTreeParser = require('./pages/transform');
 
@@ -16,29 +16,48 @@ class Fractal extends EventEmitter {
     constructor(){
         super();
         this._config  = require('../config');
-        this._cache   = {};
-        this._engines  = {};
+        this._engines = {};
+        this._watch   = false;
+        this._sources = new Map();
     }
 
-    components(watch) {
-        const self = this;
-        const source = new components.Source({
-            name:     'components',
-            status:   self.get('components.status.default'),
-            layout:   self.get('components.preview.layout'),
-            display:  self.get('components.preview.display'),
-            context:  self.get('components.context'),
-        });
-        return fs.describe(self.get('components.path')).then(function(fileTree){
-            return components.transform(fileTree, source, {
-                ext:      self.get('components.ext'),
-                splitter: self.get('components.splitter')
+    source(type) {
+        if (type === 'components') {
+            return this.components();
+        } else if (type === 'pages') {
+            return this.pages();
+        } else {
+            throw new Error(`Source type ${type} not recognised`);
+        }
+    }
+
+    components() {
+        if (!this._sources.has('components')) {
+            const source = new ComponentSource(this.get('components.path'), {
+                name:       'components',
+                status:     this.get('components.status.default'),
+                layout:     this.get('components.preview.layout'),
+                display:    this.get('components.preview.display'),
+                context:    this.get('components.context'),
+                ext:        this.get('components.ext'),
+                splitter:   this.get('components.splitter')
             });
-        });
+            this._sources.set('components', source);
+        }
+        return this._sources.get('components');
+    }
+
+    watch() {
+        this.components().watch();
+        // this.pages().watch();
+    }
+
+    endWatch() {
+        this.components().endWatch();
     }
 
     pages() {
-
+        
     }
 
     renderPreview(component, context, layout) {

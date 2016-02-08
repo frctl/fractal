@@ -10,10 +10,10 @@ const fs         = require('../fs');
 const data       = require('../data');
 const logger     = require('../logger');
 
-module.exports = function (fileTree, source, config) {
+module.exports = function (fileTree, source) {
 
-    const isView    = anymatch([`**/*${config.ext}`, `!**/*${config.splitter}*${config.ext}`]);
-    const isVarView = anymatch(`**/*${config.splitter}*${config.ext}`);
+    const isView    = anymatch([`**/*${source.ext}`, `!**/*${source.splitter}*${source.ext}`]);
+    const isVarView = anymatch(`**/*${source.splitter}*${source.ext}`);
     const isConfig  = anymatch(`**/*.config.{js,json,yaml,yml}`);
     const isReadme  = anymatch(`**/readme.md`);
 
@@ -54,7 +54,7 @@ module.exports = function (fileTree, source, config) {
                 readme:   matched.readmes[0],
                 varViews: _.filter(matched.varViews, f => f.name.startsWith(nameMatch)),
                 other:    _.differenceBy([matched.files, matched.views, matched.varViews, matched.configs, matched.readmes, [view]], 'path')
-            }, config);
+            }, source);
         }
 
         // not a component, so go through the items and group into components and collections
@@ -68,7 +68,7 @@ module.exports = function (fileTree, source, config) {
         } else {
             collection = new Collection(dirConfig, []);
         }
-        
+
         const collections = yield matched.directories.map(item => build(item, collection));
         const components  = yield matched.views.map(view => {
             const nameMatch = `${view.name}.`;
@@ -88,7 +88,7 @@ module.exports = function (fileTree, source, config) {
                     readme: null,
                     varViews: matched.varViews.filter(f => f.name.startsWith(nameMatch)),
                     other: []
-                }, config);
+                }, source);
             });
         });
 
