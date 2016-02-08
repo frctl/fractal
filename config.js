@@ -22,13 +22,7 @@ module.exports = {
         splitter: "--",
         ext: ".hbs",
         context: {},
-        // engine: {
-        //     use: "@frctl/handlebars-engine",
-        //     ext: null,
-        //     extend: {},
-        //     context: {},
-        //     engine: null
-        // },
+        engine: 'handlebars',
         status: {
             default: "ready",
             options: {
@@ -58,12 +52,10 @@ module.exports = {
     },
     pages: {
         path: null,
+        markdown: true,
         ext: '.md',
         indexLabel: "Overview",
-        extend: {
-            filters: {},
-            globals: {},
-            extensions: {}
-        }
+        engine: 'handlebars',
+        context: {},
     }
 };

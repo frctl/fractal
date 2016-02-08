@@ -67,6 +67,7 @@ module.exports = function (fileTree, source) {
             source.display = dirConfig.display || source.display;
         } else {
             collection = new Collection(dirConfig, []);
+            collection.source = source;
         }
 
         const collections = yield matched.directories.map(item => build(item, collection));

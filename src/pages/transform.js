@@ -2,38 +2,54 @@
 
 const co         = require('co');
 const _          = require('lodash');
+const anymatch   = require('anymatch');
 const Page       = require('./page');
 const Collection = require('./collection');
-const match      = require('../matchers');
 const fs         = require('../fs');
 const data       = require('../data');
 const logger     = require('../logger');
 
-module.exports = function (fileTree) {
-    const build = co.wrap(function* (dir, parent) {
-        const props = {
-            name: dir.name
-        };
-        if (root) {
-            props.isHidden = dir.isHidden;
-            props.order = dir.order;
-        }
-        const dirConfig = yield data.getConfig(match.findConfigFor(dir.name, dir.children), props);
-        dirConfig.parent = parent;
-        const collection = yield Collection.create(dirConfig);
+module.exports = function (fileTree, source) {
 
-        const items = yield dir.children.map(item => {
-            if (match.pages(item)) {
-                const props = {
+    const isPage   = anymatch(`**/*${source.ext}`);
+    const isConfig = anymatch(`**/*.config.{js,json,yaml,yml}`);
+
+    const build = co.wrap(function* (dir, parent) {
+
+        let collection;
+        const children = dir.children || [];
+        const configs = children.filter(f => isConfig(f.path));
+
+        const dirConfig = yield data.getConfig(_.find(configs, f => f.name.startsWith(dir.name)), {
+            name:     dir.name,
+            isHidden: dir.isHidden,
+            order:    dir.order,
+            dir:      dir
+        });
+        dirConfig.parent = parent;
+
+        if (!parent) {
+            collection = source;
+            source.context = dirConfig.context || {};
+        } else {
+            collection = new Collection(dirConfig);
+            collection.source = source;
+        }
+
+        const items = yield children.map(item => {
+            if (isPage(item.path)) {
+                const nameMatch = `${item.name}.`;
+                const configFile = _.find(configs, f => f.name.startsWith(nameMatch));
+                return data.getConfig(configFile, {
                     name:     item.name,
                     isHidden: item.isHidden,
                     order:    item.order,
                     lang:     item.lang,
                     buffer:   item.buffer,
                     filePath: item.path
-                };
-                return data.getConfig(match.findConfigFor(item.name, dir.children), props).then(c => {
+                }).then(c => {
                     c.parent = collection;
+                    c.source = source;
                     return Page.create(c);
                 });
             } else if (item.isDirectory) {
@@ -41,9 +57,10 @@ module.exports = function (fileTree) {
             }
             return Promise.resolve(null);
         });
-
-        collection.items = _.orderBy(_.compact(items), ['order', 'name']);
+        
+        collection.setItems(_.orderBy(_.compact(items), ['order', 'name']));
         return collection;
     });
+
     return build(fileTree);
 };

@@ -1,12 +1,10 @@
 'use strict';
 
-const _          = require('lodash');
-const config     = require('../config');
-const logger     = require('../logger');
-const Collection = require('../collection');
-const matcher    = require('../matchers');
+const _        = require('lodash');
+const logger   = require('../logger');
+const Entities = require('../entities');
 
-module.exports = class PageCollection extends Collection {
+module.exports = class ComponentCollection extends Entities {
 
     constructor(props, items) {
         super(props, items);
@@ -25,14 +23,4 @@ module.exports = class PageCollection extends Collection {
         return undefined;
     }
 
-    get context() {
-        if (this._parent) {
-            return _.defaultsDeep(this._context, this._parent.context);
-        }
-        return _.defaultsDeep(this._context, config.get('pages.context', {}));
-    }
-
-    static create(props, items) {
-        return Promise.resolve(new PageCollection(props, items));
-    }
 };

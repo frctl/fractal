@@ -11,7 +11,7 @@ class Source extends Collection {
 
     constructor(sourcePath, props, items){
         super(props, items);
-        this.name       = utils.slugify(props.name);
+        this.name       = utils.slugify(props.name.toLowerCase());
         this.label      = props.label || utils.titlize(props.name);
         this.title      = props.title || this.label;
         this.labelPath  = '';
@@ -41,8 +41,8 @@ class Source extends Collection {
         return this;
     }
 
-    flatten() {
-        return new Collection({}, this.flattenItems(this.items()));
+    flatten(deep) {
+        return new Collection({}, this.flattenItems(this.items(), deep));
     }
 
     squash(){
@@ -80,10 +80,9 @@ class Source extends Collection {
         }
     }
 
-    endWatch(){
+    unwatch(){
         this._monitor.close();
         this._monitor = null;
-        process.exit();
     }
 
     getEngine(){

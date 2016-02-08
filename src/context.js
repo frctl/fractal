@@ -2,9 +2,9 @@
 
 const co        = require('co');
 const _         = require('lodash');
-const logger    = require('../logger');
+const logger    = require('./logger');
 
-module.exports = function(context, components) {
+module.exports = function(context, source) {
 
     const resolve = co.wrap(function* (obj) {
 
@@ -20,7 +20,7 @@ module.exports = function(context, components) {
             if (_.isString(item) && _.startsWith(item, '@')) {
                 const parts  = item.split('.');
                 const handle = parts.shift();
-                let entity   = components.find(handle);
+                let entity   = source.find(handle);
                 if (entity && parts.length) {
                     if (entity.type === 'component') {
                         entity = entity.getVariant();

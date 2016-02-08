@@ -2,10 +2,10 @@
 
 const _         = require('lodash');
 const co        = require('co');
-const Source    = require('../source');
 const transform = require('./transform');
+const Source    = require('../source');
 const fs        = require('../fs');
-const resolve   = require('./context');
+const resolve   = require('../context');
 
 module.exports = class ComponentSource extends Source {
 
@@ -36,7 +36,7 @@ module.exports = class ComponentSource extends Source {
         return co(function* (){
             const source   = yield (self.loaded ? Promise.resolve(self) : self.load());
             const context  = yield self.resolve(renderContext);
-            const rendered = yield engine.render(variant.viewPath, variant.viewContent, context);
+            const rendered = yield engine.render(variant.viewPath, variant.content, context);
             if (layout && variant.preview) {
                 let layout = source.find(variant.preview);
                 if (!layout) {
@@ -44,10 +44,10 @@ module.exports = class ComponentSource extends Source {
                     return rendered;
                 }
                 layout = layout.getVariant();
-                let layoutContext = yield self.resolve(layout.context);
+                let layoutContext = yield source.resolve(layout.context);
                 layoutContext._variant = variant.toJSON();
                 layoutContext[self.yield] = rendered;
-                return engine.render(layout.viewPath, layout.viewContent, layoutContext);
+                return engine.render(layout.viewPath, layout.content, layoutContext);
             }
             return rendered;
         });

@@ -17,13 +17,10 @@ module.exports = function(source, config){
     });
 
     function loadViews(source) {
-        for (let comp of source.flatten()) {
-            let defaultVariant = comp.getDefaultVariant();
-            for (let variant of comp.variants) {
-                Handlebars.registerPartial(variant.handle, variant.viewContent);
-                if (variant.handle === defaultVariant.handle) {
-                    Handlebars.registerPartial(comp.handle, variant.viewContent);
-                }
+        for (let item of source.flatten(true)) {
+            Handlebars.registerPartial(item.handle, item.content);
+            if (item.alias) {
+                Handlebars.registerPartial(item.alias, item.content);
             }
         }
         viewsLoaded = true;

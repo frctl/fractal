@@ -1,11 +1,10 @@
 'use strict';
 
-const Promise = require('bluebird');
-const _       = require('lodash');
-const utils   = require('./utils');
-const Collection   = require('./collection');
+const _          = require('lodash');
+const utils      = require('./utils');
+const Collection = require('./collection');
 
-module.exports = class EntityCollection extends Collection {
+module.exports = class Entities extends Collection {
 
     constructor(props, items) {
         super(props, items);
@@ -20,6 +19,5 @@ module.exports = class EntityCollection extends Collection {
         this.labelPath = props.labelPath || _.trimStart(`${this._parent.labelPath}/${this.label}`, '/');
         this.path      = props.path || _.trimStart(`${this._parent.path}/${this.handle}`, '/');
     }
-
 
 };

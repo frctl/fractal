@@ -1,9 +1,9 @@
 'use strict';
 
-const _                = require('lodash');
-const EntityCollection = require('../entity-collection');
+const _        = require('lodash');
+const Entities = require('../entities');
 
-module.exports = class ComponentCollection extends EntityCollection {
+module.exports = class ComponentCollection extends Entities {
 
     constructor(props, items) {
         super(props, items);

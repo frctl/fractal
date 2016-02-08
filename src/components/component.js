@@ -65,6 +65,10 @@ module.exports = class Component {
         return this._variants.size;
     }
 
+    flatten(){
+        return this.getVariants();
+    }
+
     addVariants(variants) {
         variants.forEach(v => this.addVariant(v));
         return this;
@@ -111,6 +115,10 @@ module.exports = class Component {
             }
         }
         return vars[0];
+    }
+
+    get content() {
+        return this.getDefaultVariant().content;
     }
 
     toJSON() {

@@ -60,8 +60,8 @@ module.exports = class Collection {
         }
     }
 
-    flatten() {
-        return this.newSelf(this.flattenItems(this.items()));
+    flatten(deep) {
+        return this.newSelf(this.flattenItems(this.items(), deep));
     }
 
     squash(){
@@ -90,13 +90,17 @@ module.exports = class Collection {
         return ret;
     }
 
-    flattenItems(items) {
+    flattenItems(items, deep) {
         let ret = [];
         for (let item of items) {
             if (item.type === 'collection') {
                 ret = _.concat(ret, this.flattenItems(item.items()));
             } else {
-                ret.push(item);
+                if (deep && _.isFunction(item.flatten)) {
+                    ret.push(item.flatten());
+                } else {
+                    ret.push(item);
+                }
             }
         }
         return ret;

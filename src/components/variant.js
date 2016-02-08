@@ -36,6 +36,13 @@ module.exports = class Variant {
         };
     }
 
+    get alias() {
+        if (this.parent.getDefaultVariant().handle === this.handle) {
+            return this.parent.handle;
+        }
+        return null;
+    }
+
     get context() {
         return _.defaultsDeep(this._context, this._parent.context);
     }
@@ -51,8 +58,8 @@ module.exports = class Variant {
     get siblings() {
         return this._parent.variants;
     }
-
-    get viewContent() {
+    
+    get content() {
         return this.files.view.buffer.toString('UTF-8');
     }
 
