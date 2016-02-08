@@ -1,51 +1,40 @@
 'use strict';
 
-var Handlebars = require('handlebars');
-var _          = require('lodash');
+const Handlebars = require('handlebars');
+const _          = require('lodash');
 
-module.exports = {
+module.exports = function(source, config){
 
-    defaults: {
-        ext: '.hbs',
-        name: 'handlebars'
-    },
+    config = config || {};
 
-    /**
-     * Extend the Handlebars instance.
-     * Register any custom helpers and partials set in the config.
-     */
+    let viewsLoaded = false;
 
-    configure: function(config){
-        const ext = config.extend || {}
-        _.each(ext.helpers || {}, function(helper, name){
-            Handlebars.registerHelper(name, helper);
-        });
-        _.each(ext.partials || {}, function(partial, name){
-            Handlebars.registerPartial(name, partial);
-        });
-    },
+    _.each(config.helpers || {}, function(helper, name){
+        Handlebars.registerHelper(name, helper);
+    });
+    _.each(config.partials || {}, function(partial, name){
+        Handlebars.registerPartial(name, partial);
+    });
 
-    /**
-     * Register component view templates as partials.
-     * Called every time the component file tree changes.
-     */
-
-    registerViews: function(views) {
-        views.forEach(function(view){
-            Handlebars.registerPartial(view.handle, view.content);
-            if (view.alias) {
-                Handlebars.registerPartial(view.alias, view.content);
+    function loadViews(source) {
+        for (let item of source.flatten(true)) {
+            Handlebars.registerPartial(item.handle, item.content);
+            if (item.alias) {
+                Handlebars.registerPartial(item.alias, item.content);
             }
-        });
-    },
-
-    /**
-     * Render the component view contents.
-     */
-
-    render: function(str, context, meta) {
-        var template = Handlebars.compile(str);
-        return template(context);
+        }
+        viewsLoaded = true;
     }
 
+    source.on('loaded', loadViews);
+    source.on('changed', loadViews);
+
+    return {
+        engine: Handlebars,
+        render: function(path, str, context, meta){
+            if (!viewsLoaded) loadViews(source);
+            var template = Handlebars.compile(str);
+            return Promise.resolve(template(context));
+        }
+    }
 };
