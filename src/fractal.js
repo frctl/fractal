@@ -14,6 +14,7 @@ class Fractal {
         this._sources = new Map();
         this.components();
         this.pages();
+        this.engine('handlebars', '@frctl/handlebars-engine');
     }
 
     register(plugin, config) {
@@ -113,6 +114,7 @@ class Fractal {
         }
         return _.get(this._config, setting, defaultVal || undefined);
     }
+
 }
 
 module.exports = new Fractal();
