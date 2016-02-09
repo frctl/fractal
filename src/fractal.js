@@ -1,7 +1,7 @@
 'use strict';
 
 const _          = require('lodash');
-const anymatch   = require('anymatch');
+const minimist   = require('minimist');
 const logger     = require('./logger');
 const Components = require('./components/source');
 const Pages      = require('./pages/source');
@@ -23,20 +23,20 @@ class Fractal {
         this.components();
         this.pages();
         this.engine('handlebars', '@frctl/handlebars-engine');
+        this.plugin('@frctl/web-plugin');
     }
 
     run(command) {
-        if (this._commands.has(command)) {
-            return this._commands.get(command)(this);
-        }
-        for (let plugin of this._plugins.values()) {
-            for (let commandEntry of plugin.commands().entries()) {
-                if (commandEntry[0] === command) {
-                    plugin.config = _.defaultsDeep(this.get(`plugins.${plugin.name}`, {}), plugin.config);
-                    return commandEntry[1]();
-                }
+        if (!command) {
+            const argv = minimist(process.argv.slice(2));
+            if (argv._.length) {
+                command = argv._[0];
+            } else {
+                logger.error('No command specified.');
+                return;
             }
         }
+        this._runCommand(command);
     }
 
     source(type) {
@@ -149,6 +149,21 @@ class Fractal {
             return this._config;
         }
         return _.get(this._config, setting, defaultVal || undefined);
+    }
+
+    _runCommand(command){
+        if (this._commands.has(command)) {
+            return this._commands.get(command)(this);
+        }
+        for (let plugin of this._plugins.values()) {
+            for (let commandEntry of plugin.commands().entries()) {
+                if (commandEntry[0] === command) {
+                    plugin.config = _.defaultsDeep(this.get(`plugins.${plugin.name}`, {}), plugin.config);
+                    return commandEntry[1]();
+                }
+            }
+        }
+        logger.error(`Command '${command}' not recognised`);
     }
 
 }
