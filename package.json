@@ -16,7 +16,7 @@
   "dependencies": {
     "@allmarkedup/dirscribe": "^1.0.0",
     "@allmarkedup/fang": "^1.0.0",
-    "@frctl/consolidate-engine": "^0.1.1",
+    "@frctl/consolidate-engine": "^0.2.0",
     "@frctl/handlebars-engine": "^0.2.0",
     "@frctl/nunjucks-engine": "^0.2.0",
     "@frctl/web-plugin": "^0.2.0",
