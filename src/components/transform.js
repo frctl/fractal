@@ -40,6 +40,7 @@ module.exports = function (fileTree, source) {
         if (view) { // it is a component
             const nameMatch = `${dir.name}.`;
             dirConfig.view = view.base;
+            dirConfig.viewName = dir.name;
             dirConfig.viewPath = view.path;
             dirConfig.source = source;
             return Component.create(dirConfig, {
@@ -65,13 +66,14 @@ module.exports = function (fileTree, source) {
 
         const collections = yield matched.directories.map(item => build(item, collection));
         const components  = yield matched.views.map(view => {
-            const nameMatch = `${view.name}.`;
+            const nameMatch = `${view.name}`;
             const configFile = _.find(matched.configs, f => f.name.startsWith(nameMatch));
             const conf    = data.getConfig(configFile, {
                 name:     view.name,
                 order:    view.order,
                 isHidden: view.isHidden,
                 view:     view.base,
+                viewName: view.name,
                 viewPath: view.path,
                 dir:      dir.path,
             });

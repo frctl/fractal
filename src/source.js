@@ -122,6 +122,9 @@ class Source extends Collection {
     }
 
     _build() {
+        if (!this.sourcePath) {
+            return Promise.resolve(this);
+        }
         this._loading = fs.describe(this.sourcePath).then(fileTree => {
             this._loading = null;
             return this.transform(fileTree, this);

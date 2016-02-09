@@ -36,6 +36,7 @@ module.exports = class Variant {
             }
             return true;
         };
+
         this.files = {
             view:   pfs.variants.filter(f => f.base === this.view)[0] || pfs.view,
             binary: pfs.binary,
@@ -69,7 +70,7 @@ module.exports = class Variant {
     }
 
     get content() {
-        return this.files.view.buffer.toString('UTF-8');
+        return this.files.view.buffer.toString();
     }
 
     getVariant() {

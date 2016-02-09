@@ -24,6 +24,7 @@ module.exports = class Component {
         this.defaultName   = props.default || 'default';
         this.notes         = props.notes || props.readme || (files.readme ? files.readme.toString() : null);
         this._view         = props.view;
+        this._viewName     = props.viewName;
         this._parent       = props.parent;
         this._source       = props.source;
         this._variants     = new Map();
@@ -97,18 +98,7 @@ module.exports = class Component {
     }
 
     getDefaultVariant() {
-        let vars = this._variants;
-        if (vars.has(this.defaultName)) {
-            return vars.get(this.defaultName);
-        }
-        vars = this.getVariants();
-        for (let val of vars) {
-            // return the first component with a matching view template
-            if (val.view === this._view) {
-                return val;
-            }
-        }
-        return vars[0];
+        return this._variants.get(this.defaultName);
     }
 
     get content() {
@@ -124,44 +114,56 @@ module.exports = class Component {
         const source   = props.source;
         const comp     = new Component(props, files);
         const varConfs = props.variants || [];
+        const variants = [];
 
-        const configuredVariants = varConfs.map(conf => {
+        // first figure out if we need a 'default' variant.
+        const hasDefaultConfigured = _.find(varConfs, ['name', comp.defaultName]);
+
+        if (!hasDefaultConfigured) {
+            variants.push(new Variant({
+                name:     comp.defaultName,
+                handle:   `${comp.handle}${source.splitter}${comp.defaultName}`.toLowerCase(),
+                view:     props.view,
+                viewPath: Path.join(props.dir, props.view),
+                dir:      props.dir,
+                parent:   comp
+            }));
+        }
+
+        varConfs.forEach(conf => {
             if (_.isUndefined(conf.name)) {
                 logger.error(`Could not create variant of ${comp.handle} - 'name' value is missing`);
                 return null;
             }
             const p = _.defaults(conf, {
-                view:    props.view,
-                dir:     props.dir,
-                parent:  comp
+                dir:    props.dir,
+                parent: comp
             });
+            if (!p.view) {
+                // no view file specified
+                const viewName = `${props.viewName}${source.splitter}${p.name}`.toLowerCase();
+                const view     = _.find(files.varViews, f => f.name.toLowerCase() === viewName);
+                p.view         = view ? view.base : props.view;
+            }
             p.viewPath = Path.join(p.dir, p.view);
-            p.handle = `${comp.handle}${source.splitter}${p.name}`;
-            return new Variant(p);
+            p.handle = `${comp.name}${source.splitter}${p.name}`.toLowerCase();
+            variants.push(new Variant(p));
         });
 
-        const fileVariants = files.varViews.map(f => {
+        const usedViews = variants.map(v => v.view);
+
+        files.varViews.filter(f => !_.includes(usedViews, f.base)).forEach(f => {
             const name = f.name.split(source.splitter)[1];
-            return new Variant({
-                name:     name,
-                handle:   `${comp.handle}${source.splitter}${name}`,
-                view:     f.view,
-                path:     f.base,
-                viewPath: f.path
-            });
-        });
-
-        const variants = _.compact(_.concat(configuredVariants, fileVariants));
-
-        if (!variants.length) {
-            variants.push(new Variant({
-                name:     comp.defaultName,
-                handle:   `${comp.handle}${source.splitter}${comp.defaultName}`,
-                viewPath: props.view,
+            const variant = new Variant({
+                name:     name.toLowerCase(),
+                handle:   `${comp.handle}${source.splitter}${name}`.toLowerCase(),
+                view:     f.base,
+                viewPath: f.path,
                 dir:      props.dir,
                 parent:   comp
-            }));
-        }
+            });
+            variants.push(variant);
+        });
 
         comp.addVariants(variants);
         return comp;

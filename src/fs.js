@@ -8,6 +8,7 @@ const dirscribe = require('@allmarkedup/dirscribe');
 const readFile  = Promise.promisify(require('fs').readFileAsync);
 const isBinary  = Promise.promisify(require('istextorbinary').isBinary);
 const utils     = require('./utils');
+const logger    = require('./logger');
 
 module.exports = {
 
@@ -41,7 +42,7 @@ function build(filePath, stat) {
             p.isBinary = yield isBinary(filePath, null);
             p.buffer   = yield readFile(filePath);
             p.toString = function () {
-                return p.isBinary ? null : p.buffer.toString('UTF-8');
+                return p.isBinary ? null : p.buffer.toString();
             };
         }
         return p;

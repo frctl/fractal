@@ -94,7 +94,7 @@ module.exports = class Collection {
         let ret = [];
         for (let item of items) {
             if (item.type === 'collection') {
-                ret = _.concat(ret, this.flattenItems(item.items()));
+                ret = _.concat(ret, this.flattenItems(item.items(), deep));
             } else {
                 if (deep && _.isFunction(item.flatten)) {
                     ret = _.concat(ret, item.flatten());

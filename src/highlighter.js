@@ -9,7 +9,7 @@ const langMap = new Map([
 ]);
 
 module.exports = function highlighter(content, lang) {
-
+    content = content || '';
     lang = langMap.get(lang) || lang;
     lang = lang ? lang.toLowerCase() : lang;
     try {

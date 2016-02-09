@@ -1,5 +1,6 @@
 'use strict';
 
+const Promise    = require('bluebird');
 const _          = require('lodash');
 const minimist   = require('minimist');
 const logger     = require('./logger');
@@ -20,13 +21,13 @@ class Fractal {
             log: logger,
             highlight: highlight
         };
-        this.components();
-        this.pages();
         this.engine('handlebars', '@frctl/handlebars-engine');
         this.plugin('@frctl/web-plugin');
     }
 
     run(command) {
+        this.components();
+        this.pages();
         if (!command) {
             const argv = minimist(process.argv.slice(2));
             if (argv._.length) {
@@ -50,23 +51,20 @@ class Fractal {
     }
 
     watch() {
-        this._sources.forEach(function(source){
-            source.watch();
-        });
+        this.components().watch();
+        this.pages().watch();
     }
 
     unwatch() {
-        this._sources.forEach(function(source){
-            source.unwatch();
-        });
+        this.components().unwatch();
+        this.pages().unwatch();
     }
 
     load() {
-        const loaders = [];
-        this._sources.forEach(function(source){
-            loaders.push(source.load());
+        return Promise.props({
+            components: this.components().load(),
+            pages: this.pages().load()
         });
-        return Promise.all(loaders);
     }
 
     plugin(plugin, config) {
@@ -96,9 +94,6 @@ class Fractal {
     }
 
     components() {
-        if (!this.get('components.path')) {
-            return null;
-        }
         if (!this._sources.has('components')) {
             const config = this.get('components');
             const source = new Components(this.get('components.path'), {
@@ -119,9 +114,6 @@ class Fractal {
     }
 
     pages() {
-        if (!this.get('pages.path')) {
-            return null;
-        }
         if (!this._sources.has('pages')) {
             const config = this.get('pages');
             const source = new Pages(this.get('pages.path'), {
