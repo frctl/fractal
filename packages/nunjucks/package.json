@@ -1,6 +1,6 @@
 {
   "name": "@frctl/nunjucks-engine",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Use Nunjucks templates with Fractal.",
   "main": "engine.js",
   "repository": {
