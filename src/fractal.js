@@ -22,12 +22,11 @@ class Fractal {
             highlight: highlight
         };
         this.engine('handlebars', '@frctl/handlebars-engine');
+        this.engine('nunjucks', '@frctl/nunjucks-engine');
         this.plugin('@frctl/web-plugin');
     }
 
     run(command) {
-        this.components();
-        this.pages();
         if (!command) {
             const argv = minimist(process.argv.slice(2));
             if (argv._.length) {
@@ -144,6 +143,8 @@ class Fractal {
     }
 
     _runCommand(command){
+        this.components();
+        this.pages();
         if (this._commands.has(command)) {
             return this._commands.get(command)(this);
         }
