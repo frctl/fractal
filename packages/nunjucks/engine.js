@@ -7,7 +7,7 @@ module.exports = function(source, config){
 
     config = config || {};
 
-    const viewCache = {};
+    let viewCache = null;
 
     /**
      * Create a custom string loader and instantiate a new Nunjucks environment object with it.
@@ -55,7 +55,7 @@ module.exports = function(source, config){
     return {
         engine: nj,
         render: function(path, str, context, meta){
-            if (!viewsLoaded) loadViews(source);
+            if (!viewCache) loadViews(source);
             return Promise.resolve(nj.renderString(str, context));
         }
     };
