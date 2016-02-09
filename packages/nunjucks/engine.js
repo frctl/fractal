@@ -1,75 +1,63 @@
 'use strict';
 
-var nunjucks      = require('nunjucks');
-var _             = require('lodash');
+const nunjucks = require('nunjucks');
+const _        = require('lodash');
 
-var viewCache = {};
+module.exports = function(source, config){
 
-/**
- * Create a custom string loader and instantiate a new Nunjucks environment object with it.
- * We don't want to use the FileSystemLoader as we already have
- * the contents of all files cached in the component file tree.
- */
+    config = config || {};
 
-var StringLoader = nunjucks.Loader.extend({
-    getSource: function(name) {
-        var view = _.find(viewCache, function(view){
-            return (view.handle === name || view.alias === name);
-        });
-        if (view) {
-            return {
-                src: view.content,
-                path: view.path,
-                noCache: true
-            };
+    const viewCache = {};
+
+    /**
+     * Create a custom string loader and instantiate a new Nunjucks environment object with it.
+     * We don't want to use the FileSystemLoader as we already have
+     * the contents of all files cached in the component file tree.
+     */
+
+    const StringLoader = nunjucks.Loader.extend({
+        getSource: function(name) {
+            const view = _.find(viewCache, function(view){
+                return (view.handle === name || view.alias === name);
+            });
+            if (view) {
+                return {
+                    src: view.content,
+                    path: view.path,
+                    noCache: true
+                };
+            }
+            throw new Error('Partial template not found.');
         }
-        throw new Error('Partial template not found.');
+    });
+
+    const nj = new nunjucks.Environment(new StringLoader(), {
+        autoescape: false
+    });
+
+    _.each(config.filters || {}, function(filter, name){
+        nj.addFilter(name, filter);
+    });
+    _.each(config.extensions || {}, function(ext, name){
+        nj.addExtension(name, ext);
+    });
+    _.each(config.globals || {}, function(value, name){
+        nj.addGlobal(name, value);
+    });
+
+    function loadViews(source) {
+        viewCache = source.flatten(true).items();
     }
-});
 
-var nj = new nunjucks.Environment(new StringLoader(), {
-    autoescape: false
-});
+    source.on('loaded', loadViews);
+    source.on('changed', loadViews);
 
-module.exports = {
-
-    defaults: {
-        ext: ".nunjucks",
-        name: "nunjucks"
-    },
-
-    /**
-     * Register any custom filters, globals and extensions set in the config.
-     */
-
-    configure: function(config){
-        var extras = config.extend || {};
-        _.each(extras.filters || {}, function(filter, name){
-            nj.addFilter(name, filter);
-        });
-        _.each(extras.extensions || {}, function(ext, name){
-            nj.addExtension(name, ext);
-        });
-        _.each(extras.globals || {}, function(value, name){
-            nj.addGlobal(name, value);
-        });
-    },
-
-    /**
-     * Update view file cache.
-     * Called every time the component file tree changes.
-     */
-
-    registerViews: function(views) {
-        viewCache = views;
-    },
-
-    /**
-     * Render the component view contents.
-     */
-
-    render: function(str, context, meta) {
-        return nj.renderString(str, context);
-    }
+    return {
+        engine: nj,
+        render: function(path, str, context, meta){
+            if (!viewsLoaded) loadViews(source);
+            return Promise.resolve(nj.renderString(str, context));
+        }
+    };
 
 };
