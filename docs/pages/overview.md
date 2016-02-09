@@ -1,3 +1,0 @@
-# Pages
-
-[Coming soon]
