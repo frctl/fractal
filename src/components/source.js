@@ -2,22 +2,23 @@
 
 const _         = require('lodash');
 const co        = require('co');
+const anymatch  = require('anymatch');
 const transform = require('./transform');
 const logger    = require('../logger');
 const Source    = require('../source');
-const fs        = require('../fs');
 const resolve   = require('../context');
 
 module.exports = class ComponentSource extends Source {
 
     constructor(sourcePath, props, items) {
         super(sourcePath, props, items);
-        this.status   = props.status;
-        this.preview  = props.preview;
-        this.display  = props.display;
+        this._status   = props.status.default;
+        this._preview  = props.preview;
+        this._display  = props.display;
         this.yield    = props.yield;
         this.splitter = props.splitter;
         this._statuses = props.status;
+        this.transform = transform;
     }
 
     resolve(context) {
@@ -36,7 +37,7 @@ module.exports = class ComponentSource extends Source {
         const variant = entity.getVariant();
         const renderContext = context || variant.context;
         return co(function* (){
-            const source   = yield (self.loaded ? Promise.resolve(self) : self.load());
+            const source   = yield (self.isLoaded ? Promise.resolve(self) : self.load());
             const context  = yield self.resolve(renderContext);
             const rendered = yield engine.render(variant.viewPath, variant.content, context);
             if (layout && variant.preview) {
@@ -56,7 +57,7 @@ module.exports = class ComponentSource extends Source {
     }
 
     statusInfo(handle){
-        if (_.isUndefined(handle)) {
+        if (_.isUndefined(handle) || (_.isArray(handle) && !handle.length)) {
             return null;
         }
         if (_.isArray(handle)) {
@@ -79,12 +80,37 @@ module.exports = class ComponentSource extends Source {
         return this._statuses.options[handle];
     }
 
-    _load() {
-        return fs.describe(this.sourcePath).then(fileTree => {
-            return transform(fileTree, this).then(self => {
-                this.loaded = true;
-                return self;
-            });
-        });
+    find(handle) {
+        if (!handle) {
+            return null;
+        }
+        for (let item of this) {
+            if (item.type === 'collection') {
+                const search = item.find(handle);
+                if (search) return search;
+            } else if (item.type === 'component' && (item.handle === handle || `@${item.handle}` === handle)) {
+                return item;
+            } else if (item.type === 'component') {
+                let variant = item.getVariantByHandle(handle);
+                if (variant) return variant;
+            }
+        }
     }
+
+    isView(file) {
+        return anymatch([`**/*${this.ext}`, `!**/*${this.splitter}*${this.ext}`], file.path);
+    }
+
+    isVarView(file) {
+        return anymatch(`**/*${this.splitter}*${this.ext}`, file.path);
+    }
+
+    isConfig(file) {
+        return anymatch(`**/*.config.{js,json,yaml,yml}`, file.path);
+    }
+
+    isReadme(file) {
+        return anymatch(`**/readme.md`, file.path);
+    }
+
 }

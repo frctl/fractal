@@ -81,12 +81,11 @@ module.exports = class Component {
     }
 
     getVariantByHandle(handle) {
-       for (let variant of this.getVariants()) {
-           if (variant.handle === handle) {
-               return variant;
-           }
-       }
-       return null;
+        const parts = handle.split(this._source.splitter);
+        if (parts.length === 1 || parts[0] !== this.handle) {
+            return null;
+        }
+        return this.getVariant(parts[1]);
     }
 
     getVariants() {
@@ -128,7 +127,7 @@ module.exports = class Component {
 
         const configuredVariants = varConfs.map(conf => {
             if (_.isUndefined(conf.name)) {
-                logger.error(`Could not create variant of ${comp.name} - 'name' value is missing`);
+                logger.error(`Could not create variant of ${comp.handle} - 'name' value is missing`);
                 return null;
             }
             const p = _.defaults(conf, {
@@ -137,7 +136,7 @@ module.exports = class Component {
                 parent:  comp
             });
             p.viewPath = Path.join(p.dir, p.view);
-            p.handle = `${comp.name}${source.splitter}${p.name}`;
+            p.handle = `${comp.handle}${source.splitter}${p.name}`;
             return new Variant(p);
         });
 
@@ -145,7 +144,7 @@ module.exports = class Component {
             const name = f.name.split(source.splitter)[1];
             return new Variant({
                 name:     name,
-                handle:   `${comp.name}${source.splitter}${name}`,
+                handle:   `${comp.handle}${source.splitter}${name}`,
                 view:     f.view,
                 path:     f.base,
                 viewPath: f.path
@@ -157,7 +156,7 @@ module.exports = class Component {
         if (!variants.length) {
             variants.push(new Variant({
                 name:     comp.defaultName,
-                handle:   `${comp.name}${source.splitter}${comp.defaultName}`,
+                handle:   `${comp.handle}${source.splitter}${comp.defaultName}`,
                 viewPath: props.view,
                 dir:      props.dir,
                 parent:   comp

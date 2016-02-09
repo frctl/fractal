@@ -2,7 +2,6 @@
 
 const co         = require('co');
 const _          = require('lodash');
-const anymatch   = require('anymatch');
 const Component  = require('./component');
 const Collection = require('./collection');
 const Source     = require('./source');
@@ -11,12 +10,6 @@ const data       = require('../data');
 const logger     = require('../logger');
 
 module.exports = function (fileTree, source) {
-
-    const isView    = anymatch([`**/*${source.ext}`, `!**/*${source.splitter}*${source.ext}`]);
-    const isVarView = anymatch(`**/*${source.splitter}*${source.ext}`);
-    const isConfig  = anymatch(`**/*.config.{js,json,yaml,yml}`);
-    const isReadme  = anymatch(`**/readme.md`);
-
 
     const build = co.wrap(function* (dir, parent) {
 
@@ -27,10 +20,10 @@ module.exports = function (fileTree, source) {
         const matched     = {
             directories: directories,
             files:       files,
-            views:       files.filter(f => isView(f.path)),
-            varViews:    files.filter(f => isVarView(f.path)),
-            configs:     files.filter(f => isConfig(f.path)),
-            readmes:     files.filter(f => isReadme(f.path)),
+            views:       files.filter(f => source.isView(f)),
+            varViews:    files.filter(f => source.isVarView(f)),
+            configs:     files.filter(f => source.isConfig(f)),
+            readmes:     files.filter(f => source.isReadme(f)),
         };
 
         const dirConfig = yield data.getConfig(_.find(matched.configs, f => f.name.startsWith(dir.name)), {
@@ -53,7 +46,7 @@ module.exports = function (fileTree, source) {
                 view:     view,
                 readme:   matched.readmes[0],
                 varViews: _.filter(matched.varViews, f => f.name.startsWith(nameMatch)),
-                other:    _.differenceBy([matched.files, matched.views, matched.varViews, matched.configs, matched.readmes, [view]], 'path')
+                other:    _.differenceBy(matched.files, _.flatten([matched.views, matched.varViews, matched.configs, matched.readmes, view]), 'path')
             });
         }
 
@@ -94,7 +87,7 @@ module.exports = function (fileTree, source) {
             });
         });
 
-        collection.setItems(_.orderBy(_.concat(components, collections), ['type', 'order', 'name'], ['desc', 'asc', 'asc']));
+        collection.setItems(_.orderBy(_.concat(components, collections), ['order', 'name']));
         return collection;
     });
 

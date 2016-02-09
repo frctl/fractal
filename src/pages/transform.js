@@ -2,7 +2,6 @@
 
 const co         = require('co');
 const _          = require('lodash');
-const anymatch   = require('anymatch');
 const Page       = require('./page');
 const Collection = require('./collection');
 const fs         = require('../fs');
@@ -11,14 +10,11 @@ const logger     = require('../logger');
 
 module.exports = function (fileTree, source) {
 
-    const isPage   = anymatch(`**/*${source.ext}`);
-    const isConfig = anymatch(`**/*.config.{js,json,yaml,yml}`);
-
     const build = co.wrap(function* (dir, parent) {
 
         let collection;
         const children = dir.children || [];
-        const configs = children.filter(f => isConfig(f.path));
+        const configs = children.filter(f => source.isConfig(f));
 
         const dirConfig = yield data.getConfig(_.find(configs, f => f.name.startsWith(dir.name)), {
             name:     dir.name,
@@ -37,7 +33,7 @@ module.exports = function (fileTree, source) {
         }
 
         const items = yield children.map(item => {
-            if (isPage(item.path)) {
+            if (source.isPage(item)) {
                 const nameMatch = `${item.name}.`;
                 const configFile = _.find(configs, f => f.name.startsWith(nameMatch));
                 return data.getConfig(configFile, {

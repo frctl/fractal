@@ -6,6 +6,7 @@ const logger     = require('./logger');
 const Components = require('./components/source');
 const Pages      = require('./pages/source');
 const Plugin     = require('./plugin');
+const highlight  = require('./highlighter');
 
 class Fractal {
 
@@ -15,6 +16,10 @@ class Fractal {
         this._commands = new Map();
         this._plugins  = new Map();
         this._sources  = new Map();
+        this.utils = {
+            log: logger,
+            highlight: highlight
+        };
         this.components();
         this.pages();
         this.engine('handlebars', '@frctl/handlebars-engine');
@@ -24,14 +29,11 @@ class Fractal {
         if (this._commands.has(command)) {
             return this._commands.get(command)(this);
         }
-        for (let pluginEntry of this._plugins.entries()) {
-            const name = pluginEntry[0];
-            const plugin = pluginEntry[1].plugin;
-            const config = pluginEntry[1].config;
+        for (let plugin of this._plugins.values()) {
             for (let commandEntry of plugin.commands().entries()) {
                 if (commandEntry[0] === command) {
-                    const resolvedConfig = _.defaultsDeep(this.get(`plugins.${name}`, {}), config, plugin.defaults);
-                    return commandEntry[1](resolvedConfig, this);
+                    plugin.config = _.defaultsDeep(this.get(`plugins.${plugin.name}`, {}), plugin.config);
+                    return commandEntry[1]();
                 }
             }
         }
@@ -59,17 +61,23 @@ class Fractal {
         });
     }
 
+    load() {
+        const loaders = [];
+        this._sources.forEach(function(source){
+            loaders.push(source.load());
+        });
+        return Promise.all(loaders);
+    }
+
     plugin(plugin, config) {
-        const plug = new Plugin();
-        _.isString(plugin) ? require(plugin)(plug) : plugin(plug);
-        if (!plug.name) {
+        const instance = new Plugin();
+        const init = _.isString(plugin) ? require(plugin) : plugin;
+        init.bind(instance)(config, this);
+        if (!instance.name) {
             logger.error(`Plugins must provide a valid 'name' value.`);
             return;
         }
-        this._plugins.set(plug.name, {
-            plugin: plug,
-            config: config || {}
-        });
+        this._plugins.set(instance.name, instance);
     }
 
     command(name, callback) {
@@ -95,7 +103,6 @@ class Fractal {
             const config = this.get('components');
             const source = new Components(this.get('components.path'), {
                 name:       'components',
-                status:     config.status.default,
                 layout:     config.preview.layout,
                 display:    config.preview.display,
                 context:    config.context,

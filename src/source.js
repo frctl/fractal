@@ -5,7 +5,13 @@ const Promise      = require('bluebird');
 const _            = require('lodash');
 const chokidar     = require('chokidar');
 const utils        = require('./utils');
+const logger       = require('./logger');
 const Collection   = require('./collection');
+const fs           = require('./fs');
+
+// Promise.config({
+//     cancellation: true
+// });
 
 class Source extends Collection {
 
@@ -18,8 +24,9 @@ class Source extends Collection {
         this.path       = '';
         this.sourcePath = sourcePath;
         this.ext        = props.ext;
-        this.loaded     = false;
+        this.isLoaded   = false;
         this.engine     = props.engine;
+        this._loading    = null;
         this._app       = props.app;
         this._monitor   = null;
         this._defaults  = {};
@@ -53,18 +60,32 @@ class Source extends Collection {
         return new Collection({}, this.filterItems(this.items(), predicate));
     }
 
-    load(){
-        return this._load().then(source => {
-            this.emit('loaded', this);
-            return source;
-        });
+    load(force){
+        if (this._loading) {
+            return this._loading;
+        }
+        if (force || !this.isLoaded) {
+            return this._build().then(source => {
+                this.emit('loaded', this);
+                this.isLoaded = true;
+                return source;
+            });
+        }
+        return Promise.resolve(this);
     }
 
     refresh() {
-        return this.loaded ? this._load().then(source => {
+        if (!this.isLoaded) {
+            return this.load();
+        }
+        if (this._loading) {
+            return this._loading;
+        }
+        return this._build().then(source => {
             this.emit('changed', this);
+            this.isLoaded = true;
             return source;
-        }) : this.load();
+        });
     }
 
     watch(){
@@ -98,6 +119,16 @@ class Source extends Collection {
             this._engines.set(this.engine, instance);
         }
         return this._engines.get(this.engine);
+    }
+
+    _build() {
+        this._loading = fs.describe(this.sourcePath).then(fileTree => {
+            this._loading = null;
+            return this.transform(fileTree, this);
+        }).catch(e => {
+            logger.error(e);
+        });
+        return this._loading;
     }
 
 }

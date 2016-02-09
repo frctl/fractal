@@ -29,10 +29,19 @@ module.exports = class Variant {
         this.display = props.display || p._display;
 
         const pfs = this._parent.files;
+
+        const isRelated = (f) => {
+            if (f.name.includes(this._source.splitter)) {
+                return f.name === this.handle;
+            }
+            return true;
+        };
         this.files = {
             view:   pfs.variants.filter(f => f.base === this.view)[0] || pfs.view,
             binary: pfs.binary,
-            other:  pfs.other,
+            other:  pfs.other.filter(isRelated).sort((f) => {
+                return f.name.includes(this._source.splitter);
+            }),
         };
     }
 

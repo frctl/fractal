@@ -23,12 +23,12 @@ module.exports = class Page {
         this._parent  = props.parent;
         this._source  = props.source;
         this._context = props.context || {};
-        this.path     = props.path || _.trimStart(`${this._parent.path}/${this.handle}`, '/').replace(/\/index$/, '');
+        this.path     = props.path || _.trim(_.trimStart(`${this._parent.path}/${this.handle}`, '/').replace('index', ''),'/');
 
         this._context.title = this._context.title || this.title;
         this._context.label = this._context.label || this.label;
     }
-    
+
     get alias() {
         return null;
     }

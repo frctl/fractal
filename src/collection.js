@@ -97,7 +97,7 @@ module.exports = class Collection {
                 ret = _.concat(ret, this.flattenItems(item.items()));
             } else {
                 if (deep && _.isFunction(item.flatten)) {
-                    ret.push(item.flatten());
+                    ret = _.concat(ret, item.flatten());
                 } else {
                     ret.push(item);
                 }
@@ -109,6 +109,9 @@ module.exports = class Collection {
     squashItems(items) {
         const squashed = [];
         function squash(items){
+            items = _.sortBy(items, function(i){
+                return i.type === 'collection' ? 1 : 0;
+            });
             for (let item of items) {
                 if (item.type === 'collection') {
                     const children = item.items();

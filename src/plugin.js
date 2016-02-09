@@ -10,7 +10,7 @@ module.exports = class Plugin {
         this.version   = null;
         this.title     = null;
         this._commands = new Map();
-        this.defaults  = {};
+        this.config    = {};
     }
 
     command(name, callback) {
