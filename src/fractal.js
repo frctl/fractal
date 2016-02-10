@@ -23,6 +23,7 @@ class Fractal {
         };
         this.engine('handlebars', '@frctl/handlebars-engine');
         this.engine('nunjucks', '@frctl/nunjucks-engine');
+        this.engine('consolidate', '@frctl/consolidate-engine');
         this.plugin('@frctl/web-plugin');
     }
 
