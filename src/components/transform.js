@@ -55,7 +55,8 @@ module.exports = function (fileTree, source) {
 
         if (!parent) {
             collection = source;
-            source.context = dirConfig.context || {};
+            source.setContext(dirConfig.context || {});
+            source.setTags(dirConfig.tags || []);
             source._status  = dirConfig.status || source._status;
             source._preview = dirConfig.preview || source._preview;
             source._display = dirConfig.display || source._display;

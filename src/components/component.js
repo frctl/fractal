@@ -29,6 +29,7 @@ module.exports = class Component {
         this._source       = props.source;
         this._variants     = new Map();
         this._context      = props.context || {};
+        this._tags         = props.tags || [];
 
         const p            = this._parent;
         this._status       = props.status  || p._status;
@@ -48,6 +49,14 @@ module.exports = class Component {
         return _.defaultsDeep(this._context, this._parent.context);
     }
 
+    get tags() {
+        return _.uniq(_.concat(this._tags, this._parent.tags));
+    }
+
+    hasTag(tag) {
+        return _.includes(this.tags, tag);
+    }
+
     get variants() {
         return this.getVariants();
     }
@@ -59,6 +68,10 @@ module.exports = class Component {
 
     get variantCount() {
         return this._variants.size;
+    }
+
+    get parent() {
+        return this._parent;
     }
 
     flatten(){

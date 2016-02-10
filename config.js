@@ -22,6 +22,7 @@ module.exports = {
         splitter: "--",
         ext: ".hbs",
         context: {},
+        props: {},
         engine: 'handlebars',
         status: {
             default: "ready",

@@ -20,4 +20,8 @@ module.exports = class Entities extends Collection {
         this.path      = props.path || _.trimStart(`${this._parent.path}/${this.handle}`, '/');
     }
 
+    get parent() {
+        return this._parent;
+    }
+
 };

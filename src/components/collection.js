@@ -10,6 +10,7 @@ module.exports = class ComponentCollection extends Entities {
         this._status  = props.status  || this._parent._status;
         this._preview = props.preview || this._parent._preview;
         this._display = props.display || this._parent._display;
+        this._tags    = props.tags    || this._parent._tags;
     }
 
     find(handle) {
@@ -27,6 +28,10 @@ module.exports = class ComponentCollection extends Entities {
                 if (variant) return variant;
             }
         }
+    }
+
+    get tags() {
+        return _.uniq(_.concat(this._tags, this._parent.tags));
     }
 
 };

@@ -26,21 +26,35 @@ class Source extends Collection {
         this.ext        = props.ext;
         this.isLoaded   = false;
         this.engine     = props.engine;
-        this._loading    = null;
+        this._loading   = null;
         this._app       = props.app;
         this._monitor   = null;
         this._defaults  = {};
+        this._engines   = new Map();
         this._context   = _.cloneDeep(props.context || {});
-        this._engines = new Map();
+        this._tags      = _.cloneDeep(props.tags || {});
         this._defaults.context = _.cloneDeep(props.context || {});
+        this._defaults.tags    = _.clone(props.tags || []);
     }
 
-    set context(context) {
-        this._context = _.defaultsDeep(context, this._defaults.context);
+    get parent() {
+        return null;
     }
 
     get context() {
         return this._context;
+    }
+
+    get tags() {
+        return this._tags;
+    }
+
+    setTags(tags){
+        this._tags = _.uniq(_.concat(tags, this._defaults.tags));
+    }
+
+    setContext(context){
+        this._context = _.defaultsDeep(context, this._defaults.context);
     }
 
     setItems(items) {

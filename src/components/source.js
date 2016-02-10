@@ -1,7 +1,9 @@
 'use strict';
 
+const Promise   = require('bluebird');
 const _         = require('lodash');
 const co        = require('co');
+const fs        = Promise.promisifyAll(require('fs'));
 const anymatch  = require('anymatch');
 const transform = require('./transform');
 const logger    = require('../logger');
@@ -31,9 +33,24 @@ module.exports = class ComponentSource extends Source {
         return this.render(variant, variant.context, layout);
     }
 
+    renderString(str, context) {
+        return engine.render(null, str, context);
+    }
+
     render(entity, context, layout) {
+        if (!entity) {
+            return Promise.reject(null);
+        }
+
         const self = this;
         const engine  = self.getEngine();
+
+        if (_.isString(entity)) {
+            return fs.readFileAsync(entity, 'utf8').then(function(content){
+                return engine.render(entity, content, context);
+            });
+        }
+        
         const variant = entity.getVariant();
         const renderContext = context || variant.context;
         return co(function* (){

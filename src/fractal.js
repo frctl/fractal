@@ -100,6 +100,7 @@ class Fractal {
                 layout:     config.preview.layout,
                 display:    config.preview.display,
                 context:    config.context,
+                tags:       config.tags,
                 ext:        config.ext,
                 splitter:   config.splitter,
                 yield:      config.preview.yield,

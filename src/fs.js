@@ -42,7 +42,7 @@ function build(filePath, stat) {
             p.isBinary = yield isBinary(filePath, null);
             p.buffer   = yield readFile(filePath);
             p.toString = function () {
-                return p.isBinary ? null : p.buffer.toString();
+                return p.isBinary ? null : p.buffer.toString('utf8');
             };
         }
         return p;

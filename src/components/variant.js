@@ -70,7 +70,7 @@ module.exports = class Variant {
     }
 
     get content() {
-        return this.files.view.buffer.toString();
+        return this.files.view.buffer.toString('utf8');
     }
 
     getVariant() {
