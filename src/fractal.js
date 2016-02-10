@@ -2,12 +2,12 @@
 
 const Promise    = require('bluebird');
 const _          = require('lodash');
-const minimist   = require('minimist');
 const logger     = require('./logger');
 const Components = require('./components/source');
 const Pages      = require('./pages/source');
 const Plugin     = require('./plugin');
 const highlight  = require('./highlighter');
+const utils      = require('./utils');
 
 class Fractal {
 
@@ -27,17 +27,19 @@ class Fractal {
         this.plugin('@frctl/web-plugin');
     }
 
-    run(command) {
+    run(command, args, opts) {
         if (!command) {
-            const argv = minimist(process.argv.slice(2));
-            if (argv._.length) {
-                command = argv._[0];
-            } else {
+            const input = utils.parseArgv();
+            if (!input.command) {
                 logger.error('No command specified.');
                 return;
+            } else {
+                command = input.command;
+                args    = input.args;
+                opts    = input.opts;
             }
         }
-        this._runCommand(command);
+        this._runCommand(command, args, opts);
     }
 
     source(type) {
@@ -144,16 +146,16 @@ class Fractal {
         return _.get(this._config, setting, defaultVal || undefined);
     }
 
-    _runCommand(command){
+    _runCommand(command, args, opts){
         if (this._commands.has(command)) {
-            return this._commands.get(command)(this);
+            return this._commands.get(command)(args, opts, this);
         }
         for (let plugin of this._plugins.values()) {
             for (let commandEntry of plugin.commands().entries()) {
                 if (commandEntry[0] === command) {
                     logger.started('Booting Fractal...');
                     plugin.config = _.defaultsDeep(this.get(`plugins.${plugin.name}`, {}), plugin.config);
-                    return commandEntry[1]();
+                    return commandEntry[1](args, opts, this);
                 }
             }
         }

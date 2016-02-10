@@ -2,6 +2,7 @@
 
 const Promise   = require('bluebird');
 const Path      = require('path');
+const minimist  = require('minimist');
 const anymatch  = require('anymatch');
 const fang      = require('@allmarkedup/fang');
 const _         = require('lodash');
@@ -41,5 +42,19 @@ module.exports = {
 
     escapeForRegexp(str) {
         return str.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
-    }
+    },
+
+    parseArgv() {
+       const argv = minimist(process.argv.slice(2));
+       const args = argv._;
+       const command = args.length ? args.shift() : null;
+       const opts = argv;
+       delete opts._;
+       delete opts.$0;
+       return {
+           command: command,
+           args: args,
+           opts: opts
+       };
+   }
 };
