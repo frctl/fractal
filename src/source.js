@@ -25,7 +25,7 @@ class Source extends Collection {
         this.sourcePath = sourcePath;
         this.ext        = props.ext;
         this.isLoaded   = false;
-        this.engine     = props.engine;
+        this._engine    = props.engine;
         this._loading   = null;
         this._app       = props.app;
         this._monitor   = null;
@@ -120,9 +120,9 @@ class Source extends Collection {
         this._monitor = null;
     }
 
-    getEngine(){
-        if (!this._engines.has(this.engine)) {
-            const engine = this._app.engine(this.engine);
+    engine(){
+        if (!this._engines.has(this._engine)) {
+            const engine = this._app.engine(this._engine);
             if (!engine) {
                 throw new Error('Engine not found')
             }
@@ -130,9 +130,9 @@ class Source extends Collection {
                 engine.engine = require(engine.engine);
             }
             const instance = engine.engine(this, engine.config);
-            this._engines.set(this.engine, instance);
+            this._engines.set(this._engine, instance);
         }
-        return this._engines.get(this.engine);
+        return this._engines.get(this._engine);
     }
 
     _build() {

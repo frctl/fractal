@@ -24,7 +24,7 @@ module.exports = class PageSource extends Source {
 
     render(page, context) {
         const self = this;
-        const engine  = self.getEngine();
+        const engine  = self.engine();
         const renderContext = context || page.context;
         return co(function* (){
             const source = yield (self.isLoaded ? Promise.resolve(self) : self.load());

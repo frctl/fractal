@@ -43,7 +43,7 @@ module.exports = class ComponentSource extends Source {
         }
 
         const self = this;
-        const engine  = self.getEngine();
+        const engine  = self.engine();
 
         if (_.isString(entity)) {
             return fs.readFileAsync(entity, 'utf8').then(function(content){

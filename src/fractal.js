@@ -41,28 +41,28 @@ class Fractal {
 
     source(type) {
         if (type === 'components') {
-            return this.components();
+            return this.components;
         } else if (type === 'pages') {
-            return this.pages();
+            return this.pages;
         } else {
             throw new Error(`Source type ${type} not recognised`);
         }
     }
 
     watch() {
-        this.components().watch();
-        this.pages().watch();
+        this.components.watch();
+        this.pages.watch();
     }
 
     unwatch() {
-        this.components().unwatch();
-        this.pages().unwatch();
+        this.components.unwatch();
+        this.pages.unwatch();
     }
 
     load() {
         return Promise.props({
-            components: this.components().load(),
-            pages: this.pages().load()
+            components: this.components.load(),
+            pages: this.pages.load()
         });
     }
 
@@ -92,7 +92,7 @@ class Fractal {
         }
     }
 
-    components() {
+    get components() {
         if (!this._sources.has('components')) {
             const config = this.get('components');
             const source = new Components(this.get('components.path'), {
@@ -113,7 +113,7 @@ class Fractal {
         return this._sources.get('components');
     }
 
-    pages() {
+    get pages() {
         if (!this._sources.has('pages')) {
             const config = this.get('pages');
             const source = new Pages(this.get('pages.path'), {
@@ -144,8 +144,8 @@ class Fractal {
     }
 
     _runCommand(command){
-        this.components();
-        this.pages();
+        this.source('components');
+        this.source('pages');
         if (this._commands.has(command)) {
             return this._commands.get(command)(this);
         }
