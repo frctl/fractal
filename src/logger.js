@@ -7,7 +7,7 @@ const chalk   = require('chalk');
 const logger = module.exports = {
 
     started(str) {
-        console.log(chalk.magenta(`${str}`));
+        console.log(chalk.magenta(`⚑ ${str}`));
     },
 
     ended(str) {

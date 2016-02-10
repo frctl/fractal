@@ -145,14 +145,13 @@ class Fractal {
     }
 
     _runCommand(command){
-        this.source('components');
-        this.source('pages');
         if (this._commands.has(command)) {
             return this._commands.get(command)(this);
         }
         for (let plugin of this._plugins.values()) {
             for (let commandEntry of plugin.commands().entries()) {
                 if (commandEntry[0] === command) {
+                    logger.started('Booting Fractal...');
                     plugin.config = _.defaultsDeep(this.get(`plugins.${plugin.name}`, {}), plugin.config);
                     return commandEntry[1]();
                 }
