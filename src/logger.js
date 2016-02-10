@@ -10,6 +10,14 @@ const logger = module.exports = {
         console.log(chalk.magenta(`⚑ ${str}`));
     },
 
+    log(str) {
+        console.log(str);
+    },
+
+    logInfo(str) {
+        console.log(chalk.grey(`⚑ ${str}`));
+    },
+
     ended(str) {
         console.log(str);
     },

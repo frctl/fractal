@@ -80,6 +80,7 @@ class Source extends Collection {
         }
         if (force || !this.isLoaded) {
             return this._build().then(source => {
+                logger.logInfo(`Finished parsing ${this.name} directory`);
                 this.emit('loaded', this);
                 this.isLoaded = true;
                 return source;
@@ -96,6 +97,7 @@ class Source extends Collection {
             return this._loading;
         }
         return this._build().then(source => {
+            logger.logInfo(`Finished parsing ${this.name} directory`);
             this.emit('changed', this);
             this.isLoaded = true;
             return source;
@@ -103,12 +105,14 @@ class Source extends Collection {
     }
 
     watch(){
-        if (!this._monitor) {
+        if (!this._monitor && this.sourcePath) {
+            logger.started(`Watching ${this.name} directory - ${this.sourcePath}`);
             this._monitor = chokidar.watch(this.sourcePath, {
                 ignored: /[\/\\]\./
             });
             this._monitor.on('ready', () => {
                 this._monitor.on('all', (event, path) => {
+                    logger.logInfo(`Change in ${this.name} directory`);
                     this.refresh();
                 });
             });
