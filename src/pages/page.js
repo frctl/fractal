@@ -16,6 +16,7 @@ module.exports = class Page {
         this.order    = props.order;
         this.isHidden = props.isHidden;
         this.filePath = props.filePath;
+        this.viewPath = this.filePath;
         this.label    = this.isIndex ? props.source.indexLabel : (props.label || utils.titlize(props.name));
         this.title    = props.title || this.label;
         this._raw     = content;
@@ -47,7 +48,7 @@ module.exports = class Page {
 
     static create(props) {
         props.buffer = props.buffer || new Buffer();
-        var parsed   = matter(props.buffer.toString('UTF-8'));
+        var parsed   = matter(props.buffer.toString());
         props        = _.defaultsDeep(parsed.data || {}, props);
         return Promise.resolve(new Page(props, parsed.content));
     }

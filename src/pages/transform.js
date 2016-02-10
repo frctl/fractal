@@ -26,7 +26,7 @@ module.exports = function (fileTree, source) {
 
         if (!parent) {
             collection = source;
-            source.context = dirConfig.context || {};
+            source.setContext(dirConfig.context || {});
         } else {
             collection = new Collection(dirConfig);
             collection._source = source;
