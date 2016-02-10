@@ -1,5 +1,11 @@
 # Fractal Changelog
 
+## 0.4.0
+
+Big update, lots of breaking changes.
+
+Split out non-core functionality into plugins, engines and themes.
+
 ## 0.2.2
 
 #### Fixed
