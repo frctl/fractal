@@ -8,33 +8,35 @@ const Variant = require('./variant');
 const logger  = require('../logger');
 const data    = require('../data');
 const utils   = require('../utils');
+const md      = require('../markdown');
 
 module.exports = class Component {
 
     constructor(props, files) {
 
-        this.type          = 'component';
-        this._config       = props;
-        this.name          = utils.slugify(props.name);
-        this.handle        = this.name; // component's handles are the same as their names
-        this.order         = props.order;
-        this.isHidden      = props.isHidden;
-        this.label         = props.label || utils.titlize(this.name);
-        this.title         = props.title || this.label;
-        this.defaultName   = props.default || 'default';
-        this.notes         = props.notes || props.readme || (files.readme ? files.readme.toString() : null);
-        this._view         = props.view;
-        this._viewName     = props.viewName;
-        this._parent       = props.parent;
-        this._source       = props.source;
-        this._variants     = new Map();
-        this._context      = props.context || {};
-        this._tags         = props.tags || [];
+        const notes      = props.notes || props.readme || (files.readme ? files.readme.toString() : null)
+        const p          = props.parent;
 
-        const p            = this._parent;
-        this._status       = props.status  || p._status;
-        this._preview      = props.preview || p._preview;
-        this._display      = props.display || p._display;
+        this.type        = 'component';
+        this._config     = props;
+        this.name        = utils.slugify(props.name);
+        this.handle      = this.name; // component's handles are the same as their names
+        this.order       = props.order;
+        this.isHidden    = props.isHidden;
+        this.label       = props.label || utils.titlize(this.name);
+        this.title       = props.title || this.label;
+        this.defaultName = props.default || 'default';
+        this.notes       = notes ? md(notes) : null;
+        this._view       = props.view;
+        this._viewName   = props.viewName;
+        this._parent     = props.parent;
+        this._source     = props.source;
+        this._variants   = new Map();
+        this._context    = props.context || {};
+        this._tags       = props.tags || [];
+        this._status     = props.status  || p._status;
+        this._preview    = props.preview || p._preview;
+        this._display    = props.display || p._display;
 
         this.files = {
             view:     files.view,

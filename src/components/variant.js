@@ -4,19 +4,20 @@ const Promise = require('bluebird');
 const _       = require('lodash');
 const utils   = require('../utils');
 const data    = require('../data');
+const md      = require('../markdown');
 
 module.exports = class Variant {
 
     constructor(props) {
         this.type     = 'variant';
-        this.name     = props.name;
-        this.handle   = props.handle;
+        this.name     = props.name.toLowerCase();
+        this.handle   = props.handle.toLowerCase();
         this.order    = props.order || 10000;
         this.view     = props.view;
         this.label    = props.label || utils.titlize(this.name);
         this.title    = props.title || this.label;
         this.viewPath = props.viewPath;
-        this.notes    = props.notes || null;
+        this.notes    = props.notes ? md(props.notes) : null;
         this.display  = props.display || {};
         this._parent  = props.parent;
         this._source  = this._parent._source;
