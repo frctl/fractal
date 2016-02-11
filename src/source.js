@@ -9,10 +9,6 @@ const logger       = require('./logger');
 const Collection   = require('./collection');
 const fs           = require('./fs');
 
-// Promise.config({
-//     cancellation: true
-// });
-
 class Source extends Collection {
 
     constructor(sourcePath, props, items){
@@ -150,6 +146,16 @@ class Source extends Collection {
             logger.error(e);
         });
         return this._loading;
+    }
+
+    toJSON(){
+        const self    = super.toJSON();
+        self.name     = this.name;
+        self.label    = this.label;
+        self.title    = this.title;
+        self.viewExt  = this.ext;
+        self.isLoaded = this.isLoaded;
+        return self;
     }
 
 }

@@ -25,9 +25,10 @@ module.exports = class Collection {
     }
 
     toJSON() {
-        const result = utils.toJSON(this);
-        result.items = this.items().map(i => i.toJSON());
-        return result;
+        return {
+            type: this.type,
+            items: this.items().map(i => i.toJSON())
+        };
     }
 
     find(str) {

@@ -79,7 +79,30 @@ module.exports = class Variant {
     }
 
     toJSON() {
-        return utils.toJSON(this);
+        return {
+            type:     this.type,
+            name:     this.name,
+            handle:   this.handle,
+            alias:    this.alias,
+            label:    this.label,
+            title:    this.title,
+            notes:    this.notes,
+            status:   this.status,
+            display:  this.display,
+            viewPath: this.viewPath,
+            content:  this.content,
+            preview:  this.preview,
+            context:  this.context,
+            files:    _.mapValues(this.files, f => {
+                if (!f) {
+                    return null;
+                }
+                if (_.isArray(f)) {
+                    return f.map(f => f.toJSON());
+                }
+                return f.toJSON();
+            })
+        };
     }
 
 };

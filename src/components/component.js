@@ -18,7 +18,6 @@ module.exports = class Component {
         const p          = props.parent;
 
         this.type        = 'component';
-        this._config     = props;
         this.name        = utils.slugify(props.name);
         this.handle      = this.name; // component's handles are the same as their names
         this.order       = props.order;
@@ -121,7 +120,28 @@ module.exports = class Component {
     }
 
     toJSON() {
-        return utils.toJSON(this);
+        return {
+            type:     this.type,
+            name:     this.name,
+            handle:   this.handle,
+            label:    this.label,
+            title:    this.title,
+            notes:    this.notes,
+            status:   this.status,
+            tags:     this.tags,
+            isHidden: this.isHidden,
+            order:    this.order,
+            variants: this.variants.map(v => v.toJSON()),
+            files:    _.mapValues(this.files, f => {
+                if (!f) {
+                    return null;
+                }
+                if (_.isArray(f)) {
+                    return f.map(f => f.toJSON());
+                }
+                return f.toJSON();
+            })
+        };
     }
 
     static create(props, files) {

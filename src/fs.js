@@ -40,9 +40,14 @@ function build(filePath, stat) {
             p.type     = 'file';
             p.lang     = utils.lang(filePath);
             p.isBinary = yield isBinary(filePath, null);
-            p.buffer   = yield readFile(filePath);
+            p.buffer   = p.isBinary ? null : yield readFile(filePath);
             p.toString = function () {
                 return p.isBinary ? null : p.buffer.toString('utf8');
+            };
+            p.toJSON = function(){
+                const self = _.clone(p);
+                delete self.buffer;
+                return self;
             };
         }
         return p;
