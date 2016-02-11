@@ -58,6 +58,9 @@ module.exports = {
                         return Promise.resolve(p._cachedContents);
                     };
                 }
+                p.toString = function(){
+                    return p.path;
+                };
                 p.toJSON = function(){
                     const self = _.clone(this);
                     delete self._cachedContents;
