@@ -1,5 +1,6 @@
 'use strict';
 
+const Promise    = require('bluebird');
 const co         = require('co');
 const _          = require('lodash');
 const Page       = require('./page');
@@ -36,17 +37,19 @@ module.exports = function (fileTree, source) {
             if (source.isPage(item)) {
                 const nameMatch = `${item.name}.`;
                 const configFile = _.find(configs, f => f.name.startsWith(nameMatch));
-                return data.getConfig(configFile, {
+                const contents = item.read();
+                const props = data.getConfig(configFile, {
                     name:     item.name,
                     isHidden: item.isHidden,
                     order:    item.order,
                     lang:     item.lang,
-                    buffer:   item.buffer,
-                    filePath: item.path
-                }).then(c => {
-                    c.parent = collection;
-                    c.source = source;
-                    return Page.create(c);
+                    filePath: item.path,
+                    file:     item
+                });
+                return Promise.join(props, contents, function(props, contents){
+                    props.parent = collection;
+                    props.source = source;
+                    return Page.create(props, contents);
                 });
             } else if (item.isDirectory) {
                 return build(item, collection);
