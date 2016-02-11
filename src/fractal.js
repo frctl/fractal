@@ -72,7 +72,7 @@ class Fractal {
     plugin(plugin, config) {
         const instance = new Plugin();
         const init = _.isString(plugin) ? require(plugin) : plugin;
-        init.bind(instance)(config, this);
+        init.bind(instance)(config || {}, this);
         if (!instance.name) {
             logger.error(`Plugins must provide a valid 'name' value.`);
             return;
@@ -154,7 +154,7 @@ class Fractal {
             for (let commandEntry of plugin.commands().entries()) {
                 if (commandEntry[0] === command) {
                     logger.started('Booting Fractal...');
-                    plugin.config = _.defaultsDeep(this.get(`plugins.${plugin.name}`, {}), plugin.config);
+                    plugin.config = _.defaultsDeep(_.clone(this.get(`plugins.${plugin.name}`, {})), plugin.config);
                     return commandEntry[1](args, opts, this);
                 }
             }
