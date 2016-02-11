@@ -31,7 +31,13 @@ class Fractal {
         if (!command) {
             const input = utils.parseArgv();
             if (!input.command) {
-                logger.error('No command specified.');
+                const commands = this._getCommands();
+                if (commands.length) {
+                    logger.logInfo('No command specified. The following commands are available:');
+                    commands.forEach(c => logger.logLn(`★ ${c}`));
+                    return;
+                }
+                logger.error('No commands available.');
                 return;
             } else {
                 command = input.command;
@@ -160,6 +166,16 @@ class Fractal {
             }
         }
         logger.error(`Command '${command}' not recognised`);
+    }
+
+    _getCommands(){
+        const commands = Array.from(this._commands.keys());
+        for (let plugin of this._plugins.values()) {
+            for (let commandEntry of plugin.commands().entries()) {
+                commands.push(commandEntry[0]);
+            }
+        }
+        return commands;
     }
 
 }

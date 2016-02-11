@@ -10,7 +10,7 @@ const logger = module.exports = {
         console.log(chalk.magenta(`⚑ ${str}`));
     },
 
-    log(str) {
+    logLn(str) {
         console.log(str);
     },
 
