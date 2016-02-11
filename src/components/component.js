@@ -14,7 +14,7 @@ module.exports = class Component {
 
     constructor(props, files) {
 
-        const notes      = props.notes || props.readme || (files.readme ? files.readme.toString() : null)
+        const notes      = props.notes || props.readme || (files.readme ? files.readme.readSync() : null)
         const p          = props.parent;
 
         this.type        = 'component';

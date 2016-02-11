@@ -71,11 +71,15 @@ module.exports = class Variant {
     }
 
     get content() {
-        return this.files.view.buffer.toString('utf8');
+        return this.files.view.readSync();
     }
 
     getVariant() {
         return this;
+    }
+
+    getContent(useAsync) {
+        return useAsync ? this.files.view.read() : this.content;
     }
 
     toJSON() {

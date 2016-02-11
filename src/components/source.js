@@ -50,13 +50,14 @@ module.exports = class ComponentSource extends Source {
                 return engine.render(entity, content, context);
             });
         }
-        
+
         const variant = entity.getVariant();
         const renderContext = context || variant.context;
         return co(function* (){
             const source   = yield (self.isLoaded ? Promise.resolve(self) : self.load());
             const context  = yield self.resolve(renderContext);
-            const rendered = yield engine.render(variant.viewPath, variant.content, context);
+            const content  = yield variant.getContent(true);
+            const rendered = yield engine.render(variant.viewPath, content, context);
             if (layout && variant.preview) {
                 let layout = source.find(variant.preview);
                 if (!layout) {
@@ -65,9 +66,10 @@ module.exports = class ComponentSource extends Source {
                 }
                 layout = layout.getVariant();
                 let layoutContext = yield source.resolve(layout.context);
+                const layoutContent = yield layout.getContent(true);
                 layoutContext._variant = variant.toJSON();
                 layoutContext[self.yield] = rendered;
-                return engine.render(layout.viewPath, layout.content, layoutContext);
+                return engine.render(layout.viewPath, layoutContent, layoutContext);
             }
             return rendered;
         });
