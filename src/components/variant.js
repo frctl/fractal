@@ -67,7 +67,7 @@ module.exports = class Variant {
     }
 
     get siblings() {
-        return this._parent.variants;
+        return this._parent.variants();
     }
 
     get content() {

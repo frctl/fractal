@@ -58,12 +58,12 @@ module.exports = class Component {
         return _.includes(this.tags, tag);
     }
 
-    get variants() {
-        return this.getVariants();
+    variants() {
+        return this.variants();
     }
 
     get status(){
-        const variantStatuses = _.compact(_.uniq(_.map(this.variants, v => v._status)));
+        const variantStatuses = _.compact(_.uniq(_.map(this.variants(), v => v._status)));
         return this._source.statusInfo(variantStatuses);
     }
 
@@ -76,7 +76,7 @@ module.exports = class Component {
     }
 
     flatten(){
-        return this.getVariants();
+        return this.variants();
     }
 
     addVariants(variants) {
@@ -103,7 +103,7 @@ module.exports = class Component {
         return this.getVariant(parts[1]);
     }
 
-    getVariants() {
+    variants() {
         return _.sortBy(Array.from(this._variants.values()), ['order', '_name']);
     }
 
@@ -131,7 +131,7 @@ module.exports = class Component {
             tags:     this.tags,
             isHidden: this.isHidden,
             order:    this.order,
-            variants: this.variants.map(v => v.toJSON()),
+            variants: this.variants().map(v => v.toJSON()),
             files:    _.mapValues(this.files, f => {
                 if (!f) {
                     return null;

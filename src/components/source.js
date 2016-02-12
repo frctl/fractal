@@ -106,7 +106,7 @@ module.exports = class ComponentSource extends Source {
     variants(){
         let items = [];
         for (let component of this.components()) {
-            items = _.concat(items, component.getVariants());
+            items = _.concat(items, component.variants());
         }
         return this.newSelf(items);
     }
