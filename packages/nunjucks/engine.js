@@ -46,7 +46,7 @@ module.exports = function(source, config){
     });
 
     function loadViews(source) {
-        viewCache = source.flatten(true).items();
+        viewCache = source.flattenDeep().items();
     }
 
     source.on('loaded', loadViews);
