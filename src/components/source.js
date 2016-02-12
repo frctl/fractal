@@ -59,7 +59,7 @@ module.exports = class ComponentSource extends Source {
             const content  = yield variant.getContent(true);
             const rendered = yield engine.render(variant.viewPath, content, context);
             if (layout && variant.preview) {
-                let layout = source.find(variant.preview);
+                let layout = source.find(`@${variant.preview.replace('@','')}`);
                 if (!layout) {
                     logger.error(`Preview layout ${variant.preview} for component ${variant._parent.handle} not found.`);
                     return rendered;
