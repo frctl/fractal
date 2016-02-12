@@ -17,7 +17,7 @@ module.exports = function(source, config){
     });
 
     function loadViews(source) {
-        for (let item of source.flatten(true)) {
+        for (let item of source.flattenDeep()) {
             Handlebars.registerPartial(item.handle, item.content);
             if (item.alias) {
                 Handlebars.registerPartial(item.alias, item.content);
