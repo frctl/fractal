@@ -2,6 +2,7 @@
 
 const _        = require('lodash');
 const Entities = require('../entities');
+const Source   = require('./source');
 
 module.exports = class ComponentCollection extends Entities {
 
@@ -13,21 +14,8 @@ module.exports = class ComponentCollection extends Entities {
         this._tags    = props.tags    || this._parent._tags;
     }
 
-    find(handle) {
-        if (!handle) {
-            return null;
-        }
-        for (let item of this) {
-            if (item.type === 'collection') {
-                const search = item.find(handle);
-                if (search) return search;
-            } else if (item.type === 'component' && (item.handle === handle || `@${item.handle}` === handle)) {
-                return item;
-            } else if (item.type === 'component') {
-                let variant = item.getVariantByHandle(handle);
-                if (variant) return variant;
-            }
-        }
+    find() {
+        return this._source.find.apply(this, arguments);
     }
 
     get tags() {

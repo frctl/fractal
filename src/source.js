@@ -44,7 +44,7 @@ class Source extends Collection {
     get tags() {
         return this._tags;
     }
-
+    
     setTags(tags){
         this._tags = _.uniq(_.concat(tags, this._defaults.tags));
     }

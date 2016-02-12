@@ -99,19 +99,22 @@ module.exports = class ComponentSource extends Source {
         return this._statuses.options[handle];
     }
 
-    find(handle) {
-        if (!handle) {
-            return null;
+    find() {
+        if (this.size === 0 || arguments.length === 0) {
+            return;
         }
         for (let item of this) {
             if (item.type === 'collection') {
-                const search = item.find(handle);
+                const search = item.find.apply(item, arguments);
                 if (search) return search;
-            } else if (item.type === 'component' && (item.handle === handle || `@${item.handle}` === handle)) {
-                return item;
             } else if (item.type === 'component') {
-                let variant = item.getVariantByHandle(handle);
-                if (variant) return variant;
+
+                const matcher = this._makePredicate.apply(null, arguments);
+                if (matcher(item)) return item;
+                if (arguments.length == 1 && _.isString(arguments[0]) && arguments[0].startsWith('@')) {
+                    let variant = item.getVariantByHandle(arguments[0].replace('@',''));
+                    if (variant) return variant;
+                }
             }
         }
     }

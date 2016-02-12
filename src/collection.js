@@ -54,31 +54,31 @@ module.exports = class Collection {
         return this.newSelf(Array.from(this._items).filter(i => i.type === 'collection'));
     }
 
-    find(str) {
-        if (this.size === 0) {
-            return undefined;
+    find() {
+        if (this.size === 0 || arguments.length === 0) {
+            return;
         }
         for (let item of this) {
             if (item.type === 'collection') {
-                const search = item.find(str);
+                const search = item.find.apply(item, arguments);
                 if (search) return search;
-            } else if (item.handle === str || `@${item.handle}` === str) {
-                return item;
+            } else {
+
+                const matcher = this._makePredicate.apply(null, arguments);
+                if (matcher(item)) return item;
             }
         }
     }
 
-    findCollection(str) {
-        const type = str.startsWith('@') ? 'handle' : (str.includes('/') ? 'path' : 'handle');
-        if (this.size === 0) {
-            return undefined;
+    findCollection() {
+        if (this.size === 0 || arguments.length === 0) {
+            return;
         }
         for (let item of this) {
             if (item.type === 'collection') {
-                if (item[type] === str || `@${item[type]}` === str)  {
-                    return item;
-                }
-                const search = item.findCollection(str);
+                const matcher = this._makePredicate.apply(null, arguments);
+                if (matcher(item)) return item;
+                const search = item.findCollection.apply(item, arguments);
                 if (search) return search;
             }
         }
@@ -92,15 +92,12 @@ module.exports = class Collection {
         return this.newSelf(this.squashItems(this.items()));
     }
 
-    filter(predicate, value){
-        if (_.isString(predicate) && !_.isUndefined(value)) {
-            predicate = [predicate, value];
-        }
+    filter(predicate){
         return this.newSelf(this.filterItems(this.items(), predicate));
     }
 
     filterItems(items, predicate) {
-        let matcher = _.iteratee(predicate);
+        let matcher = this._makePredicate.apply(null, Array.prototype.slice.call(arguments, 1));
         let ret = [];
         for (let item of items) {
             if (item.type === 'collection') {
@@ -169,8 +166,14 @@ module.exports = class Collection {
         return this.items()[Symbol.iterator]();
     }
 
+    _makePredicate(){
+        if (arguments.length == 1 && _.isString(arguments[0]) && arguments[0].startsWith('@')) {
+            return _.iteratee(['handle', arguments[0].replace('@','')]);
+        }
+        if (arguments.length === 2){
+            return _.iteratee([arguments[0], arguments[1]]);
+        }
+        return _.iteratee(arguments[0]);
+    }
+
 };
-
-function makePredicate(args){
-
-}

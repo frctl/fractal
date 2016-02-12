@@ -34,18 +34,6 @@ module.exports = class PageSource extends Source {
         });
     }
 
-    findByPath(path) {
-        path = _.trim(path, '/');
-        for (let item of this) {
-            if (item.type === 'collection') {
-                const search = item.findByPath(path);
-                if (search) return search;
-            } else if (item.path === path) {
-                return item;
-            }
-        }
-    }
-
     isPage(file) {
         return anymatch(`**/*${this.ext}`, file.path);
     }
