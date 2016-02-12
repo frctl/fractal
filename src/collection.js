@@ -120,7 +120,8 @@ module.exports = class Collection {
                     const collections = children.filter(c => c.type == 'collection');
                     if (entities.length) {
                         squashed.push(item.newSelf(entities));
-                    } else {
+                    }
+                    if (collections.length) {
                         squash(collections);
                     }
                 } else {
