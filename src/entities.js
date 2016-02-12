@@ -23,8 +23,8 @@ module.exports = class Entities extends Collection {
     get parent() {
         return this._parent;
     }
-    
-    toJSON(){
+
+    toJSON() {
         const self    = super.toJSON();
         self.name     = this.name;
         self.label    = this.label;

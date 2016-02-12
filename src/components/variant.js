@@ -54,7 +54,7 @@ module.exports = class Variant {
         return null;
     }
 
-    get status(){
+    get status() {
         return this._source.statusInfo(this._status);
     }
 

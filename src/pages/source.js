@@ -19,7 +19,7 @@ module.exports = class PageSource extends Source {
         this.transform = transform;
     }
 
-    pages(){
+    pages() {
         return super.entities();
     }
 
@@ -31,7 +31,7 @@ module.exports = class PageSource extends Source {
         const self = this;
         const engine  = self.engine();
         const renderContext = context || page.context;
-        return co(function* (){
+        return co(function* () {
             const source = yield (self.isLoaded ? Promise.resolve(self) : self.load());
             const context  = yield self.resolve(renderContext);
             let rendered = yield engine.render(page.filePath, page.content, context);
@@ -47,4 +47,4 @@ module.exports = class PageSource extends Source {
         return anymatch(`**/*.config.{js,json,yaml,yml}`, file.path);
     }
 
-}
+};

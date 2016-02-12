@@ -37,7 +37,7 @@ module.exports = {
                     p.type     = 'directory';
                 } else {
                     p._cachedContents = null;
-                    p.isCacheable  = !! noCache;
+                    p.isCacheable  = !!noCache;
                     p.type     = 'file';
                     p.lang     = utils.lang(filePath);
                     p.isBinary = yield isBinary(filePath, null);
@@ -47,10 +47,10 @@ module.exports = {
                         }
                         return p._cachedContents;
                     };
-                    p.read = function(){
+                    p.read = function () {
                         if (!p.isCacheable || (p.isCacheable && !p._cachedContents)) {
                             var read = p.isBinary ? readFile(filePath) : readFile(filePath, 'utf8');
-                            return read.then(function(contents){
+                            return read.then(function (contents) {
                                 p._cachedContents = contents;
                                 return contents;
                             });
@@ -58,10 +58,10 @@ module.exports = {
                         return Promise.resolve(p._cachedContents);
                     };
                 }
-                p.toString = function(){
+                p.toString = function () {
                     return p.path;
                 };
-                p.toJSON = function(){
+                p.toJSON = function () {
                     const self = _.clone(this);
                     delete self._cachedContents;
                     return self;

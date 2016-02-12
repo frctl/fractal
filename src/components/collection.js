@@ -17,11 +17,11 @@ module.exports = class ComponentCollection extends Entities {
         return this._source.find.apply(this, arguments);
     }
 
-    components(){
+    components() {
         return super.entities();
     }
 
-    variants(){
+    variants() {
         return this._source.variants.apply(this, arguments);
     }
 

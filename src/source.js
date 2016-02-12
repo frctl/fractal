@@ -11,7 +11,7 @@ const fs           = require('./fs');
 
 class Source extends Collection {
 
-    constructor(sourcePath, props, items){
+    constructor(sourcePath, props, items) {
         super(props, items);
         this.name       = utils.slugify(props.name.toLowerCase());
         this.label      = props.label || utils.titlize(props.name);
@@ -45,11 +45,11 @@ class Source extends Collection {
         return this._tags;
     }
 
-    setTags(tags){
+    setTags(tags) {
         this._tags = _.uniq(_.concat(tags, this._defaults.tags));
     }
 
-    setContext(context){
+    setContext(context) {
         this._context = _.defaultsDeep(context, this._defaults.context);
     }
 
@@ -58,7 +58,7 @@ class Source extends Collection {
         return this;
     }
 
-    load(force){
+    load(force) {
         if (this._loading) {
             return this._loading;
         }
@@ -88,7 +88,7 @@ class Source extends Collection {
         });
     }
 
-    watch(){
+    watch() {
         if (!this._monitor && this.sourcePath) {
             logger.started(`Watching ${this.name} directory - ${this.sourcePath}`);
             this._monitor = chokidar.watch(this.sourcePath, {
@@ -103,16 +103,16 @@ class Source extends Collection {
         }
     }
 
-    unwatch(){
+    unwatch() {
         this._monitor.close();
         this._monitor = null;
     }
 
-    engine(){
+    engine() {
         if (!this._engines.has(this._engine)) {
             const engine = this._app.engine(this._engine);
             if (!engine) {
-                throw new Error('Engine not found')
+                throw new Error('Engine not found');
             }
             if (_.isString(engine.engine)) {
                 engine.engine = require(engine.engine);
@@ -136,7 +136,7 @@ class Source extends Collection {
         return this._loading;
     }
 
-    toJSON(){
+    toJSON() {
         const self    = super.toJSON();
         self.name     = this.name;
         self.label    = this.label;

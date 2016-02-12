@@ -46,20 +46,20 @@ module.exports = class ComponentSource extends Source {
         const engine  = self.engine();
 
         if (_.isString(entity)) {
-            return fs.readFileAsync(entity, 'utf8').then(function(content){
+            return fs.readFileAsync(entity, 'utf8').then(function (content) {
                 return engine.render(entity, content, context);
             });
         }
 
         const variant = entity.getVariant();
         const renderContext = context || variant.context;
-        return co(function* (){
+        return co(function* () {
             const source   = yield (self.isLoaded ? Promise.resolve(self) : self.load());
             const context  = yield self.resolve(renderContext);
             const content  = yield variant.getContent(true);
             const rendered = yield engine.render(variant.viewPath, content, context);
             if (layout && variant.preview) {
-                let layout = source.find(`@${variant.preview.replace('@','')}`);
+                let layout = source.find(`@${variant.preview.replace('@', '')}`);
                 if (!layout) {
                     logger.error(`Preview layout ${variant.preview} for component ${variant._parent.handle} not found.`);
                     return rendered;
@@ -75,7 +75,7 @@ module.exports = class ComponentSource extends Source {
         });
     }
 
-    statusInfo(handle){
+    statusInfo(handle) {
         if (_.isUndefined(handle) || (_.isArray(handle) && !handle.length)) {
             return null;
         }
@@ -99,11 +99,11 @@ module.exports = class ComponentSource extends Source {
         return this._statuses.options[handle];
     }
 
-    components(){
+    components() {
         return super.entities();
     }
 
-    variants(){
+    variants() {
         let items = [];
         for (let component of this.components()) {
             items = _.concat(items, component.variants());
@@ -124,7 +124,7 @@ module.exports = class ComponentSource extends Source {
                 const matcher = this._makePredicate.apply(null, arguments);
                 if (matcher(item)) return item;
                 if (arguments.length == 1 && _.isString(arguments[0]) && arguments[0].startsWith('@')) {
-                    let variant = item.getVariantByHandle(arguments[0].replace('@',''));
+                    let variant = item.getVariantByHandle(arguments[0].replace('@', ''));
                     if (variant) return variant;
                 }
             }
@@ -147,4 +147,4 @@ module.exports = class ComponentSource extends Source {
         return anymatch(`**/readme.md`, file.path);
     }
 
-}
+};

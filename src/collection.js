@@ -31,11 +31,11 @@ module.exports = class Collection {
         };
     }
 
-    first(){
+    first() {
         return this.items()[0];
     }
 
-    last(){
+    last() {
         return this.items()[this.size - 1];
     }
 
@@ -50,7 +50,7 @@ module.exports = class Collection {
         return this.newSelf(Array.from(this._items).filter(i => i.type !== 'collection'));
     }
 
-    collections(){
+    collections() {
         return this.newSelf(Array.from(this._items).filter(i => i.type === 'collection'));
     }
 
@@ -92,11 +92,11 @@ module.exports = class Collection {
         return this.newSelf(this.flattenItems(this.items(), true));
     }
 
-    squash(){
+    squash() {
         return this.newSelf(this.squashItems(this.items()));
     }
 
-    filter(predicate){
+    filter(predicate) {
         return this.newSelf(this.filterItems(this.items(), predicate));
     }
 
@@ -136,8 +136,8 @@ module.exports = class Collection {
 
     squashItems(items) {
         const squashed = [];
-        function squash(items){
-            items = _.sortBy(items, function(i){
+        function squash(items) {
+            items = _.sortBy(items, function (i) {
                 return i.type === 'collection' ? 1 : 0;
             });
             for (let item of items) {
@@ -170,11 +170,11 @@ module.exports = class Collection {
         return this.items()[Symbol.iterator]();
     }
 
-    _makePredicate(){
+    _makePredicate() {
         if (arguments.length == 1 && _.isString(arguments[0]) && arguments[0].startsWith('@')) {
-            return _.iteratee(['handle', arguments[0].replace('@','')]);
+            return _.iteratee(['handle', arguments[0].replace('@', '')]);
         }
-        if (arguments.length === 2){
+        if (arguments.length === 2) {
             return _.iteratee([arguments[0], arguments[1]]);
         }
         return _.iteratee(arguments[0]);

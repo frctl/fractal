@@ -10,7 +10,7 @@ module.exports = class ComponentCollection extends Entities {
         super(props, items);
     }
 
-    pages(){
+    pages() {
         return super.entities();
     }
 };

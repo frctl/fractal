@@ -46,7 +46,7 @@ module.exports = function (fileTree, source) {
                     filePath: item.path,
                     file:     item
                 });
-                return Promise.join(props, contents, function(props, contents){
+                return Promise.join(props, contents, function (props, contents) {
                     props.parent = collection;
                     props.source = source;
                     return Page.create(props, contents);

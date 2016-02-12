@@ -3,4 +3,4 @@ module.exports = {
     transform: require('./transform'),
     context: require('./context'),
     Source: require('./source'),
-}
+};

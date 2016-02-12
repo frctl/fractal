@@ -11,7 +11,7 @@ const utils      = require('./utils');
 
 class Fractal {
 
-    constructor(){
+    constructor() {
         this._config   = require('../config');
         this._engines  = new Map();
         this._commands = new Map();
@@ -152,7 +152,7 @@ class Fractal {
         return _.get(this._config, setting, defaultVal || undefined);
     }
 
-    _runCommand(command, args, opts){
+    _runCommand(command, args, opts) {
         if (this._commands.has(command)) {
             return this._commands.get(command)(args, opts, this);
         }
@@ -168,7 +168,7 @@ class Fractal {
         logger.error(`Command '${command}' not recognised`);
     }
 
-    _getCommands(){
+    _getCommands() {
         const commands = Array.from(this._commands.keys());
         for (let plugin of this._plugins.values()) {
             for (let commandEntry of plugin.commands().entries()) {

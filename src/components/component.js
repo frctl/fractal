@@ -14,7 +14,7 @@ module.exports = class Component {
 
     constructor(props, files) {
 
-        const notes      = props.notes || props.readme || (files.readme ? files.readme.readSync() : null)
+        const notes      = props.notes || props.readme || (files.readme ? files.readme.readSync() : null);
         const p          = props.parent;
 
         this.type        = 'component';
@@ -62,7 +62,7 @@ module.exports = class Component {
         return this.variants();
     }
 
-    get status(){
+    get status() {
         const variantStatuses = _.compact(_.uniq(_.map(this.variants(), v => v._status)));
         return this._source.statusInfo(variantStatuses);
     }
@@ -75,7 +75,7 @@ module.exports = class Component {
         return this._parent;
     }
 
-    flatten(){
+    flatten() {
         return this.variants();
     }
 
