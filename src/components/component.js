@@ -91,8 +91,13 @@ module.exports = class Component {
         return this;
     }
 
-    getVariant(name) {
+    variant(name) {
         return (name && name !== this.defaultName) ? this._variants.get(name) : this.getDefaultVariant();
+    }
+
+    getVariant(name) {
+        logger.warn('Component.getVariant() is deprecated. Use Component.variant() instead.')
+        return this.variant(name);
     }
 
     getVariantByHandle(handle) {
@@ -111,8 +116,13 @@ module.exports = class Component {
         return this._variants.has(name);
     }
 
-    getDefaultVariant() {
+    defaultVariant(){
         return this._variants.get(this.defaultName);
+    }
+
+    getDefaultVariant() {
+        logger.warn('Component.getDefaultVariant() is deprecated. Use Component.defaultVariant() instead.')
+        return this.defaultVariant();
     }
 
     get content() {
@@ -156,12 +166,13 @@ module.exports = class Component {
 
         if (!hasDefaultConfigured) {
             variants.push(new Variant({
-                name:     comp.defaultName,
-                handle:   `${comp.handle}${source.splitter}${comp.defaultName}`.toLowerCase(),
-                view:     props.view,
-                viewPath: Path.join(props.dir, props.view),
-                dir:      props.dir,
-                parent:   comp
+                name:      comp.defaultName,
+                handle:    `${comp.handle}${source.splitter}${comp.defaultName}`.toLowerCase(),
+                view:      props.view,
+                viewPath:  Path.join(props.dir, props.view),
+                dir:       props.dir,
+                isDefault: true,
+                parent:    comp
             }));
         }
 
@@ -180,8 +191,9 @@ module.exports = class Component {
                 const view     = _.find(files.varViews, f => f.name.toLowerCase() === viewName);
                 p.view         = view ? view.base : props.view;
             }
-            p.viewPath = Path.join(p.dir, p.view);
-            p.handle = `${comp.name}${source.splitter}${p.name}`.toLowerCase();
+            p.isDefault = (p.name === comp.defaultName);
+            p.viewPath  = Path.join(p.dir, p.view);
+            p.handle    = `${comp.name}${source.splitter}${p.name}`.toLowerCase();
             variants.push(new Variant(p));
         });
 

@@ -19,6 +19,7 @@ module.exports = class Variant {
         this.viewPath = props.viewPath;
         this.notes    = props.notes ? md(props.notes) : null;
         this.display  = props.display || {};
+        this.isDefault = props.isDefault || false;
         this._parent  = props.parent;
         this._source  = this._parent._source;
         this._context = props.context || {};
@@ -84,20 +85,21 @@ module.exports = class Variant {
 
     toJSON() {
         return {
-            type:     this.type,
-            name:     this.name,
-            handle:   this.handle,
-            alias:    this.alias,
-            label:    this.label,
-            title:    this.title,
-            notes:    this.notes,
-            status:   this.status,
-            display:  this.display,
-            viewPath: this.viewPath,
-            content:  this.content,
-            preview:  this.preview,
-            context:  this.context,
-            files:    _.mapValues(this.files, f => {
+            type:      this.type,
+            name:      this.name,
+            handle:    this.handle,
+            alias:     this.alias,
+            label:     this.label,
+            title:     this.title,
+            notes:     this.notes,
+            status:    this.status,
+            display:   this.display,
+            viewPath:  this.viewPath,
+            content:   this.content,
+            preview:   this.preview,
+            context:   this.context,
+            isDefault: this.isDefault,
+            files:     _.mapValues(this.files, f => {
                 if (!f) {
                     return null;
                 }
