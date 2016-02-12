@@ -29,7 +29,7 @@ module.exports = class ComponentSource extends Source {
 
     renderPreview(entity, layout) {
         layout = layout !== false ? true : false;
-        const variant = entity.getVariant();
+        const variant = entity.defaultVariant();
         return this.render(variant, variant.context, layout);
     }
 
@@ -51,7 +51,7 @@ module.exports = class ComponentSource extends Source {
             });
         }
 
-        const variant = entity.getVariant();
+        const variant = entity.defaultVariant();
         const renderContext = context || variant.context;
         return co(function* () {
             const source   = yield (self.isLoaded ? Promise.resolve(self) : self.load());
@@ -64,7 +64,7 @@ module.exports = class ComponentSource extends Source {
                     logger.error(`Preview layout ${variant.preview} for component ${variant._parent.handle} not found.`);
                     return rendered;
                 }
-                layout = layout.getVariant();
+                layout = layout.defaultVariant();
                 let layoutContext = yield source.resolve(layout.context);
                 const layoutContent = yield layout.getContent(true);
                 layoutContext._variant = variant.toJSON();

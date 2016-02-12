@@ -49,7 +49,7 @@ module.exports = class Variant {
     }
 
     get alias() {
-        if (this.parent.getDefaultVariant().handle === this.handle) {
+        if (this.parent.defaultVariant().handle === this.handle) {
             return this.parent.handle;
         }
         return null;
@@ -75,7 +75,11 @@ module.exports = class Variant {
         return this.files.view.readSync();
     }
 
-    getVariant() {
+    variant() {
+        return this;
+    }
+
+    defaultVariant() {
         return this;
     }
 

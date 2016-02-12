@@ -92,7 +92,7 @@ module.exports = class Component {
     }
 
     variant(name) {
-        return (name && name !== this.defaultName) ? this._variants.get(name) : this.getDefaultVariant();
+        return (name && name !== this.defaultName) ? this._variants.get(name) : this.defaultVariant();
     }
 
     getVariant(name) {
@@ -126,7 +126,7 @@ module.exports = class Component {
     }
 
     get content() {
-        return this.getDefaultVariant().content;
+        return this.defaultVariant().content;
     }
 
     toJSON() {

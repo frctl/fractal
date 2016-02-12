@@ -23,7 +23,7 @@ module.exports = function (context, source) {
                 let entity   = source.find(handle);
                 if (entity && parts.length) {
                     if (entity.type === 'component') {
-                        entity = entity.getVariant();
+                        entity = entity.defaultVariant();
                     }
                     const entityContext = yield resolve(entity.context);
                     return _.get(entityContext, parts.join('.'), null);
