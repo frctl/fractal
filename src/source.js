@@ -44,7 +44,7 @@ class Source extends Collection {
     get tags() {
         return this._tags;
     }
-    
+
     setTags(tags){
         this._tags = _.uniq(_.concat(tags, this._defaults.tags));
     }
@@ -144,10 +144,6 @@ class Source extends Collection {
         self.viewExt  = this.ext;
         self.isLoaded = this.isLoaded;
         return self;
-    }
-
-    newSelf(items) {
-        return new Collection({}, items);
     }
 
 }

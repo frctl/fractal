@@ -99,6 +99,18 @@ module.exports = class ComponentSource extends Source {
         return this._statuses.options[handle];
     }
 
+    components(){
+        return super.entities();
+    }
+
+    variants(){
+        let items = [];
+        for (let component of this.components()) {
+            items = _.concat(items, component.getVariants());
+        }
+        return this.newSelf(items);
+    }
+
     find() {
         if (this.size === 0 || arguments.length === 0) {
             return;

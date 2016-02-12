@@ -2,7 +2,6 @@
 
 const _        = require('lodash');
 const Entities = require('../entities');
-const Source   = require('./source');
 
 module.exports = class ComponentCollection extends Entities {
 
@@ -16,6 +15,14 @@ module.exports = class ComponentCollection extends Entities {
 
     find() {
         return this._source.find.apply(this, arguments);
+    }
+
+    components(){
+        return super.entities();
+    }
+
+    variants(){
+        return this._source.variants.apply(this, arguments);
     }
 
     get tags() {

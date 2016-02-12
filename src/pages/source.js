@@ -8,6 +8,7 @@ const Source    = require('../source');
 const md        = require('../markdown');
 const resolve   = require('../context');
 const utils     = require('../utils');
+const Collection  = require('./collection');
 
 module.exports = class PageSource extends Source {
 
@@ -16,6 +17,10 @@ module.exports = class PageSource extends Source {
         this.indexLabel = props.indexLabel;
         this.markdown   = props.markdown;
         this.transform = transform;
+    }
+
+    pages(){
+        return super.entities();
     }
 
     resolve(context) {

@@ -84,8 +84,12 @@ module.exports = class Collection {
         }
     }
 
-    flatten(deep) {
-        return this.newSelf(this.flattenItems(this.items(), deep));
+    flatten() {
+        return this.newSelf(this.flattenItems(this.items()));
+    }
+
+    flattenDeep() {
+        return this.newSelf(this.flattenItems(this.items(), true));
     }
 
     squash(){
