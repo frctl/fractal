@@ -96,16 +96,19 @@ module.exports = class Collection {
         return this.newSelf(this.squashItems(this.items()));
     }
 
-    filter(predicate) {
-        return this.newSelf(this.filterItems(this.items(), predicate));
+    filter() {
+        const args = Array.from(arguments);
+        args.unshift(this.items());
+        return this.newSelf(this.filterItems.apply(this, args));
     }
 
-    filterItems(items, predicate) {
-        let matcher = this._makePredicate.apply(null, Array.prototype.slice.call(arguments, 1));
+    filterItems(items) {
+        const predicate = Array.prototype.slice.call(arguments, 1);
+        let matcher = this._makePredicate.apply(null, predicate);
         let ret = [];
         for (let item of items) {
             if (item.type === 'collection') {
-                let collection = item.filter(predicate);
+                let collection = item.filter.apply(item, predicate);
                 if (collection.size) {
                     ret.push(collection);
                 }

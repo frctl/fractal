@@ -105,7 +105,7 @@ module.exports = class Component {
         if (parts.length === 1 || parts[0] !== this.handle) {
             return null;
         }
-        return this.getVariant(parts[1]);
+        return this.variant(parts[1]);
     }
 
     variants() {
