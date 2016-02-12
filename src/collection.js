@@ -31,6 +31,29 @@ module.exports = class Collection {
         };
     }
 
+    first(){
+        return this.items()[0];
+    }
+
+    last(){
+        return this.items()[this.size - 1];
+    }
+
+    eq(pos) {
+        if (pos < 0) {
+            pos = (this.size + pos);
+        }
+        return this.items()[pos];
+    }
+
+    entities() {
+        return this.newSelf(Array.from(this._items).filter(i => i.type !== 'collection'));
+    }
+
+    collections(){
+        return this.newSelf(Array.from(this._items).filter(i => i.type === 'collection'));
+    }
+
     find(str) {
         if (this.size === 0) {
             return undefined;
@@ -69,7 +92,10 @@ module.exports = class Collection {
         return this.newSelf(this.squashItems(this.items()));
     }
 
-    filter(predicate){
+    filter(predicate, value){
+        if (_.isString(predicate) && !_.isUndefined(value)) {
+            predicate = [predicate, value];
+        }
         return this.newSelf(this.filterItems(this.items(), predicate));
     }
 
@@ -142,4 +168,9 @@ module.exports = class Collection {
     [Symbol.iterator]() {
         return this.items()[Symbol.iterator]();
     }
+
 };
+
+function makePredicate(args){
+
+}

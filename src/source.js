@@ -58,18 +58,6 @@ class Source extends Collection {
         return this;
     }
 
-    flatten(deep) {
-        return new Collection({}, this.flattenItems(this.items(), deep));
-    }
-
-    squash(){
-        return new Collection({}, this.squashItems(this.items()));
-    }
-
-    filter(predicate){
-        return new Collection({}, this.filterItems(this.items(), predicate));
-    }
-
     load(force){
         if (this._loading) {
             return this._loading;
@@ -156,6 +144,10 @@ class Source extends Collection {
         self.viewExt  = this.ext;
         self.isLoaded = this.isLoaded;
         return self;
+    }
+
+    newSelf(items) {
+        return new Collection({}, items);
     }
 
 }
