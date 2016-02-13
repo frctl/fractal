@@ -59,19 +59,25 @@ module.exports = class ComponentSource extends Source {
             const content  = yield variant.getContent(true);
             const rendered = yield engine.render(variant.viewPath, content, context);
             if (layout && variant.preview) {
-                let layout = source.find(`@${variant.preview.replace('@', '')}`);
-                if (!layout) {
-                    logger.error(`Preview layout ${variant.preview} for component ${variant._parent.handle} not found.`);
-                    return rendered;
-                }
-                layout = layout.defaultVariant();
-                let layoutContext = yield source.resolve(layout.context);
-                const layoutContent = yield layout.getContent(true);
-                layoutContext._variant = variant.toJSON();
-                layoutContext[self.yield] = rendered;
-                return engine.render(layout.viewPath, layoutContent, layoutContext);
+                return this.renderContentInPreview(variant.preview, rendered);
             }
             return rendered;
+        });
+    }
+
+    renderContentInPreview(previewHandle, content) {
+        return co(function* (){
+            let layout = source.find(previewHandle);
+            if (!layout) {
+                logger.error(`Preview layout ${previewHandle} not found.`);
+                return content;
+            }
+            layout = layout.defaultVariant();
+            let layoutContext = yield source.resolve(layout.context);
+            const layoutContent = yield layout.getContent(true);
+            layoutContext._variant = variant.toJSON();
+            layoutContext[self.yield] = content;
+            return engine.render(layout.viewPath, layoutContent, layoutContext);
         });
     }
 

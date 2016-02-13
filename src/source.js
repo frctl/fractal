@@ -65,8 +65,8 @@ class Source extends Collection {
         if (force || !this.isLoaded) {
             return this._build().then(source => {
                 logger.logInfo(`Finished parsing ${this.name} directory`);
-                this.emit('loaded', this);
                 this.isLoaded = true;
+                this.emit('loaded', this);
                 return source;
             });
         }
@@ -82,8 +82,8 @@ class Source extends Collection {
         }
         return this._build().then(source => {
             logger.logInfo(`Finished parsing ${this.name} directory`);
-            this.emit('changed', this);
             this.isLoaded = true;
+            this.emit('changed', this);
             return source;
         });
     }
