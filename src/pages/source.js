@@ -12,11 +12,13 @@ const Collection  = require('./collection');
 
 module.exports = class PageSource extends Source {
 
-    constructor(sourcePath, props, items) {
+    constructor(sourcePath, props, items, app) {
+        props.name = 'pages';
         super(sourcePath, props, items);
+        this._app       = app;
         this.indexLabel = props.indexLabel;
         this.markdown   = props.markdown;
-        this.transform = transform;
+        this.transform  = transform;
     }
 
     pages() {

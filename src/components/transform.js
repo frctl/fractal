@@ -30,7 +30,8 @@ module.exports = function (fileTree, source) {
             name:     dir.name,
             isHidden: dir.isHidden,
             order:    dir.order,
-            dir:      dir.path
+            dir:      dir.path,
+            collated: dir.collated
         });
         dirConfig.parent = parent;
 

@@ -11,6 +11,13 @@ const utils      = require('./utils');
 
 class Fractal {
 
+    /**
+     * Constructor. Sets up object and adds the bundled plugins and
+     * rendering engines ready for instantiation.
+     *
+     * @api public
+     */
+
     constructor() {
         this._config   = require('../config');
         this._engines  = new Map();
@@ -26,6 +33,15 @@ class Fractal {
         this.engine('consolidate', '@frctl/consolidate-engine');
         this.plugin('@frctl/web-plugin');
     }
+
+    /**
+     * Run the specified command.
+     *
+     * If no command is provided, this will parse argv to establish what command
+     * to run and what arguments and opts should be passed to that command.
+     *
+     * @api public
+     */
 
     run(command, args, opts) {
         if (!command) {
@@ -103,38 +119,14 @@ class Fractal {
 
     get components() {
         if (!this._sources.has('components')) {
-            const config = this.get('components');
-            const source = new Components(this.get('components.path'), {
-                name:       'components',
-                layout:     config.preview.layout,
-                display:    config.preview.display,
-                context:    config.context,
-                tags:       config.tags,
-                ext:        config.ext,
-                splitter:   config.splitter,
-                yield:      config.preview.yield,
-                engine:     config.engine,
-                status:     config.status,
-                app:        this
-            });
-            this._sources.set('components', source);
+            this._sources.set('components', new Components(this.get('components.path'), this.get('components'), [], this));
         }
         return this._sources.get('components');
     }
 
     get pages() {
         if (!this._sources.has('pages')) {
-            const config = this.get('pages');
-            const source = new Pages(this.get('pages.path'), {
-                name:       'pages',
-                context:    config.context,
-                indexLabel: config.indexLabel,
-                markdown:   config.markdown,
-                ext:        config.ext,
-                engine:     config.engine,
-                app:        this
-            });
-            this._sources.set('pages', source);
+            this._sources.set('pages', new Pages(this.get('pages.path'), this.get('pages'), [], this));
         }
         return this._sources.get('pages');
     }

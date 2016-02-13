@@ -23,7 +23,6 @@ class Source extends Collection {
         this.isLoaded   = false;
         this._engine    = props.engine;
         this._loading   = null;
-        this._app       = props.app;
         this._monitor   = null;
         this._defaults  = {};
         this._engines   = new Map();

@@ -25,8 +25,7 @@ module.exports = class Page {
         this._source  = props.source;
         this._context = props.context || {};
         this.path     = props.path || _.trim(_.trimStart(`${this._parent.path}/${this.handle}`, '/').replace('index', ''), '/');
-
-        this._tags       = props.tags || [];
+        this._tags    = props.tags || [];
         this._context.title = this._context.title || this.title;
         this._context.label = this._context.label || this.label;
     }

@@ -12,14 +12,17 @@ const resolve   = require('../context');
 
 module.exports = class ComponentSource extends Source {
 
-    constructor(sourcePath, props, items) {
+    constructor(sourcePath, props, items, app) {
+        props.name = 'components';
         super(sourcePath, props, items);
+        this._app      = app;
         this._status   = props.status.default;
-        this._preview  = props.preview;
-        this._display  = props.display;
-        this.yield    = props.yield;
-        this.splitter = props.splitter;
+        this._preview  = props.preview.layout;
+        this._display  = props.preview.display;
         this._statuses = props.status;
+        this.yield     = props.preview.yield;
+        this.collator  = props.preview.collator;
+        this.splitter  = props.splitter;
         this.transform = transform;
     }
 
@@ -27,58 +30,114 @@ module.exports = class ComponentSource extends Source {
         return resolve(context, this);
     }
 
-    renderPreview(entity, layout) {
-        layout = layout !== false ? true : false;
-        const variant = entity.defaultVariant();
-        return this.render(variant, variant.context, layout);
-    }
-
     renderString(str, context) {
-        return engine.render(null, str, context);
+        return this.engine().render(null, str, context);
     }
 
-    render(entity, context, layout) {
+    renderPreview(entity, useLayout) {
+        useLayout = useLayout !== false ? true : false;
+        const variant = entity.defaultVariant();
+        return this.render(variant, variant.context, {useLayout: true});
+    }
+
+    /**
+     * Main render method. Accepts a collection, component or variant
+     * and renders them appropriately.
+     *
+     * Rendering a component results in the rendering of the components' default variant,
+     * unless the collated option is 'true' - in this case it will return a collated rendering
+     * of all it's variants.
+     * Rendering a collection results in a collated rendering of
+     * all the descendent items.
+     *
+     * @param {Collection/Component/Variant} entity
+     * @param {Object} context
+     * @param {Object} opts
+     * @return {Promise}
+     * @api public
+     */
+
+    render(entity, context, opts) {
+
+        opts           = opts || {};
+        opts.useLayout = opts.useLayout || false;
+        opts.collated  = opts.collated  || false;
+
+        const self = this;
+
         if (!entity) {
             return Promise.reject(null);
         }
-
-        const self = this;
-        const engine  = self.engine();
-
         if (_.isString(entity)) {
-            return fs.readFileAsync(entity, 'utf8').then(function (content) {
-                return engine.render(entity, content, context);
+            return fs.readFileAsync(entity, 'utf8').then(content => {
+                return this.engine().render(entity, content, context);
             });
         }
 
-        const variant = entity.defaultVariant();
-        const renderContext = context || variant.context;
-        return co(function* () {
-            const source   = yield (self.isLoaded ? Promise.resolve(self) : self.load());
-            const context  = yield self.resolve(renderContext);
-            const content  = yield variant.getContent(true);
-            const rendered = yield engine.render(variant.viewPath, content, context);
-            if (layout && variant.preview) {
-                return this.renderContentInPreview(variant.preview, rendered);
+        return co(function* (){
+            const source = yield self.load();
+            if (_.includes(['component', 'variant' /*, 'collection' */], entity.type)) {
+                const rendered = yield self[`_render${_.upperFirst(entity.type)}`](entity, context);
+                if (opts.useLayout && entity.preview) {
+                    return yield self._wrapInLayout(rendered, entity.preview, {
+                        _target: entity.toJSON()
+                    });
+                }
+                return rendered;
+            } else {
+                throw new Error(`Cannot render entity of type ${entity.type}`);
             }
-            return rendered;
+        }).catch(err => {
+            logger.error(err);
         });
     }
 
-    renderContentInPreview(previewHandle, content) {
-        return co(function* (){
-            let layout = source.find(previewHandle);
-            if (!layout) {
-                logger.error(`Preview layout ${previewHandle} not found.`);
-                return content;
-            }
+    *_renderVariant(variant, context){
+        context = context || variant.context;
+        const content = yield variant.getContent(true);
+        const ctx     = yield this.resolve(context);
+        return this.engine().render(variant.viewPath, content, ctx);
+    }
+
+    *_renderComponent(component, context){
+        const variant = component.defaultVariant();
+        return self._renderVariant(variant, context);
+    }
+
+    // _renderCollatedComponent: function* (component, context){
+    //     const items = component.variants();
+    // }
+
+    // _renderCollection: function* (collection, context)  {
+    //     const items = collection.flattenDeep().items();
+    //     return this._renderCollated(items);
+    // }
+
+    // _renderCollated: function* (items, context){
+    //     context = context || {};
+    //     return (yield items.map(item => {
+    //         const ctx = context[item.handle] || item.
+    //         return this.render(item).then(markup => {
+    //             return _.isFunction(this.collator) ? this.collator(markup, item) : markup;
+    //         });
+    //     })).join('\n');
+    // }
+
+    *_wrapInLayout(content, previewHandle, context) {
+        console.log(previewHandle);
+        let layout = this.find(previewHandle);
+        if (!layout) {
+            logger.error(`Preview layout ${previewHandle} not found.`);
+            return content;
+        }
+        if (layout.type === 'component') {
             layout = layout.defaultVariant();
-            let layoutContext = yield source.resolve(layout.context);
-            const layoutContent = yield layout.getContent(true);
-            layoutContext._variant = variant.toJSON();
-            layoutContext[self.yield] = content;
-            return engine.render(layout.viewPath, layoutContent, layoutContext);
-        });
+        }
+        let layoutContext = yield this.resolve(layout.context);
+        let layoutContent = yield layout.getContent(true);
+        layoutContext = _.defaults(layoutContext, context || {});
+        layoutContext[this.yield] = content;
+        return this.engine().render(layout.viewPath, layoutContent, layoutContext);
     }
 
     statusInfo(handle) {

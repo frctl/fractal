@@ -17,7 +17,8 @@ module.exports = {
         preview: {
             layout: null,
             yield: "yield",
-            display: {}
+            display: {},
+            collator: function(markup, item) { return `<!-- Start: @${item.handle} -->\n${markup}\n<!-- End: @${item.handle} -->\n` }
         },
         splitter: "--",
         ext: ".hbs",
@@ -46,7 +47,7 @@ module.exports = {
             mixed: {
                 handle: 'mixed',
                 label: "Mixed",
-                description: "This component has variants of differing statuses",
+                description: "Contains items of differing statuses.",
                 color: "#666"
             }
         }

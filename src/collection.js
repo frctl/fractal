@@ -7,8 +7,8 @@ const utils        = require('./utils');
 module.exports = class Collection {
 
     constructor(props, items) {
-        this.type      = 'collection';
-        this._items    = new Set(items || []);
+        this.type   = 'collection';
+        this._items = new Set(items || []);
     }
 
     items() {
