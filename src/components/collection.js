@@ -8,7 +8,7 @@ module.exports = class ComponentCollection extends Entities {
 
     constructor(props, items) {
         super(props, items);
-        this.collated = props.collated || false;
+        this.isCollated = props.collated || false;
         this.collator = props.collator || function(markup, item){ return `<!-- Start: @${item.handle} -->\n${markup}\n<!-- End: @${item.handle} -->\n` };
         this._status  = props.status  || this._parent._status;
         this._preview = props.preview || this._parent._preview;
@@ -53,6 +53,38 @@ module.exports = class ComponentCollection extends Entities {
             return this._source.renderContentInPreview(this._preview, rendered);
         }
         return rendered;
+    }
+
+    getContent(useAsync){
+        const items = this.flattenDeep().items();
+        if (useAsync) {
+            return Promise.all(items.map(i => {
+                return i.getContent(true).then(c => {
+                    if (_.isFunction(this.collator)) {
+                        return this.collator(c, i);
+                    }
+                    return c;
+                });
+            })).then(i => i.join('\n'));
+        } else {
+            return items.map(i => {
+                if (_.isFunction(this.collator)) {
+                    return this.collator(i.content, i);
+                }
+                return i.content;
+            }).join('\n');
+        }
+    }
+
+    collatedContext(){
+        const items = this.flattenDeep().items();
+        const context = [];
+        items.forEach(i => context.push(i.context));
+        return context;
+    }
+
+    get content(){
+        return this.getContent();
     }
 
 };
