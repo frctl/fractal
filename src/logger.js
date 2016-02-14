@@ -9,23 +9,23 @@ const mute = process.env.NODE_ENV === 'TEST';
 const logger = module.exports = {
 
     started(str) {
-        mute ? console.log(chalk.magenta(`⚑ ${str}`)) : null;
+        mute ? null : console.log(chalk.magenta(`⚑ ${str}`));
     },
 
     logLn(str) {
-        mute ? console.log(str): null;
+        mute ? null : console.log(str);
     },
 
     logInfo(str) {
-        mute ? console.log(chalk.grey(`⚑ ${str}`)) : null;
+        mute ? null : console.log(chalk.grey(`⚑ ${str}`));
     },
 
     ended(str) {
-        mute ? console.log(str) : null;
+        mute ? null : console.log(str);
     },
 
     taskSuccess(str) {
-        mute ? console.log(chalk.green(`✔ ${str}`)) : null;
+        mute ? null : console.log(chalk.green(`✔ ${str}`));
     },
 
     dump(data) {
