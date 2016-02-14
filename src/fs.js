@@ -44,6 +44,7 @@ module.exports = {
                     p.readSync = function () {
                         if (!p.isCacheable || (p.isCacheable && !p._cachedContents)) {
                             p._cachedContents = p.isBinary ? fs.readFileSync(filePath) : fs.readFileSync(filePath, 'utf8');
+                            p._cachedContents = p._cachedContents.toString();
                         }
                         return p._cachedContents;
                     };
@@ -51,8 +52,8 @@ module.exports = {
                         if (!p.isCacheable || (p.isCacheable && !p._cachedContents)) {
                             var read = p.isBinary ? readFile(filePath) : readFile(filePath, 'utf8');
                             return read.then(function (contents) {
-                                p._cachedContents = contents;
-                                return contents;
+                                p._cachedContents = contents.toString();
+                                return p._cachedContents;
                             });
                         }
                         return Promise.resolve(p._cachedContents);
