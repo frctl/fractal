@@ -124,7 +124,6 @@ module.exports = class ComponentSource extends Source {
     // }
 
     *_wrapInLayout(content, previewHandle, context) {
-        console.log(previewHandle);
         let layout = this.find(previewHandle);
         if (!layout) {
             logger.error(`Preview layout ${previewHandle} not found.`);
