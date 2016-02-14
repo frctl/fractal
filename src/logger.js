@@ -4,26 +4,28 @@ const winston = require('winston');
 const _       = require('lodash');
 const chalk   = require('chalk');
 
+const mute = process.env.NODE_ENV === 'TEST';
+
 const logger = module.exports = {
 
     started(str) {
-        console.log(chalk.magenta(`⚑ ${str}`));
+        mute ? console.log(chalk.magenta(`⚑ ${str}`)) : null;
     },
 
     logLn(str) {
-        console.log(str);
+        mute ? console.log(str): null;
     },
 
     logInfo(str) {
-        console.log(chalk.grey(`⚑ ${str}`));
+        mute ? console.log(chalk.grey(`⚑ ${str}`)) : null;
     },
 
     ended(str) {
-        console.log(str);
+        mute ? console.log(str) : null;
     },
 
     taskSuccess(str) {
-        console.log(chalk.green(`✔ ${str}`));
+        mute ? console.log(chalk.green(`✔ ${str}`)) : null;
     },
 
     dump(data) {

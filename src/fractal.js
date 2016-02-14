@@ -77,11 +77,13 @@ class Fractal {
     watch() {
         this.components.watch();
         this.pages.watch();
+        return this;
     }
 
     unwatch() {
         this.components.unwatch();
         this.pages.unwatch();
+        return this;
     }
 
     load() {
@@ -100,10 +102,12 @@ class Fractal {
             return;
         }
         this._plugins.set(instance.name, instance);
+        return this;
     }
 
     command(name, callback) {
         this._commands.set(name, callback);
+        return this;
     }
 
     engine(name, engine, config) {
@@ -112,6 +116,7 @@ class Fractal {
                 engine: engine,
                 config: config || {},
             });
+            return this;
         } else if (name) {
             return this._engines.get(name);
         }
