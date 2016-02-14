@@ -17,6 +17,12 @@ module.exports = class ComponentCollection extends Entities {
         this._tags          = props.tags    || this._parent._tags;
     }
 
+    orderBy() {
+        const args = Array.prototype.slice.call(arguments);
+        args.unshift(this.items());
+        return this.newSelf(_.orderBy.apply(null, args));
+    }
+
     find() {
         return this._source.find.apply(this, arguments);
     }

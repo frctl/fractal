@@ -47,18 +47,18 @@ module.exports = class Collection {
     }
 
     entities() {
-        return this.newSelf(Array.from(this._items).filter(i => i.type !== 'collection'));
+        return this.newSelf(this.items().filter(i => i.type !== 'collection'));
     }
 
     collections() {
-        return this.newSelf(Array.from(this._items).filter(i => i.type === 'collection'));
+        return this.newSelf(this.items().filter(i => i.type === 'collection'));
     }
 
     find() {
         if (this.size === 0 || arguments.length === 0) {
             return;
         }
-        for (let item of this) {
+        for (let item of this.items()) {
             if (item.type === 'collection') {
                 const search = item.find.apply(item, arguments);
                 if (search) return search;
@@ -74,7 +74,7 @@ module.exports = class Collection {
         if (this.size === 0 || arguments.length === 0) {
             return;
         }
-        for (let item of this) {
+        for (let item of this.items()) {
             if (item.type === 'collection') {
                 const matcher = this._makePredicate.apply(null, arguments);
                 if (matcher(item)) return item;
@@ -140,9 +140,9 @@ module.exports = class Collection {
     squashItems(items) {
         const squashed = [];
         function squash(items) {
-            items = _.sortBy(items, function (i) {
-                return i.type === 'collection' ? 1 : 0;
-            });
+            // items = _.sortBy(items, function (i) {
+            //     return i.type === 'collection' ? 1 : 0;
+            // });
             for (let item of items) {
                 if (item.type === 'collection') {
                     const children = item.items();

@@ -24,6 +24,10 @@ module.exports = class Entities extends Collection {
         return this._parent;
     }
 
+    labelPathFrom(depth) {
+        return this.labelPath.split('/').slice(depth).join('/');
+    }
+
     toJSON() {
         const self    = super.toJSON();
         self.name     = this.name;
