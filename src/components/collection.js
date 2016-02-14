@@ -11,6 +11,7 @@ module.exports = class ComponentCollection extends Entities {
         this.isHidden       = props.isHidden;
         this.isCollated     = props.collated || false;
         this._status        = props.status  || this._parent._status;
+        this._prefix        = props.prefix  || this._parent._prefix;
         this._preview       = props.preview || this._parent._preview;
         this._display       = props.display || this._parent._display;
         this._tags          = props.tags    || this._parent._tags;

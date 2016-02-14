@@ -51,12 +51,12 @@ const self = module.exports = {
                     logger.error(`Error loading data file ${filePath}: JS files must return a JavaScript data object.`);
                     return Promise.reject(new Error('Error loading data file'));
                 }
-                return Promise.resolve(data);
+                return Promise.resolve(_.cloneDeep(data));
             } catch (e) {
                 return Promise.reject(e);
             }
         } else {
-            return fs.readFileAsync(filePath, 'UTF-8').then(contents => {
+            return fs.readFileAsync(filePath, 'utf8').then(contents => {
                 return self.parse(contents, format);
             }).catch(err => {
                 logger.error(`Error loading data file ${filePath}: ${err.message}`);

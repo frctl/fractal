@@ -72,7 +72,7 @@ module.exports = class Variant {
     }
 
     get content() {
-        return this.files.view.readSync();
+        return this.files.view.readSync().toString();
     }
 
     variant() {
@@ -84,7 +84,7 @@ module.exports = class Variant {
     }
 
     getContent(useAsync) {
-        return useAsync ? this.files.view.read() : this.content;
+        return useAsync ? this.files.view.read().then(c => c.toString()) : this.content.toString();
     }
 
     toJSON() {

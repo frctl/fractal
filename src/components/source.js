@@ -20,6 +20,7 @@ module.exports = class ComponentSource extends Source {
         this._preview  = props.preview.layout;
         this._display  = props.preview.display;
         this._statuses = props.status;
+        this._prefix   = props.prefix || null;
         this.yield     = props.preview.yield;
         this.collator  = props.preview.collator;
         this.splitter  = props.splitter;

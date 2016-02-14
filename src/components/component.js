@@ -19,10 +19,10 @@ module.exports = class Component {
 
         this.type        = 'component';
         this.name        = utils.slugify(props.name);
-        this.handle      = this.name; // component's handles are the same as their names
+        this.handle      = props.parent._prefix ? `${props.parent._prefix}-${this.name}` : this.name;
         this.order       = props.order;
         this.isHidden    = props.isHidden;
-        this.label       = props.label || utils.titlize(this.name);
+        this.label       = props.label || utils.titlize(props.name);
         this.title       = props.title || this.label;
         this.defaultName = props.default || 'default';
         this.notes       = notes ? md(notes) : null;
@@ -31,7 +31,7 @@ module.exports = class Component {
         this._parent     = props.parent;
         this._source     = props.source;
         this._variants   = new Map();
-        this._context    = props.context || {};
+        this._context    = _.clone(props.context) || {};
         this._tags       = props.tags || [];
         this._status     = props.status  || p._status;
         this._preview    = props.preview || p._preview;
@@ -193,7 +193,7 @@ module.exports = class Component {
             }
             p.isDefault = (p.name === comp.defaultName);
             p.viewPath  = Path.join(p.dir, p.view);
-            p.handle    = `${comp.name}${source.splitter}${p.name}`.toLowerCase();
+            p.handle    = `${comp.handle}${source.splitter}${p.name}`.toLowerCase();
             variants.push(new Variant(p));
         });
 
@@ -207,7 +207,7 @@ module.exports = class Component {
                 view:     f.base,
                 viewPath: f.path,
                 dir:      props.dir,
-                parent:   comp
+                parent:   comp,
             });
             variants.push(variant);
         });

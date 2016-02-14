@@ -61,6 +61,7 @@ module.exports = function (fileTree, source) {
             source._status  = dirConfig.status || source._status;
             source._preview = dirConfig.preview || source._preview;
             source._display = dirConfig.display || source._display;
+            source._prefix  = dirConfig.prefix || source._prefix;
         } else {
             collection = new Collection(dirConfig, []);
             collection._source = source;
