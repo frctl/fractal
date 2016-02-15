@@ -1,7 +1,7 @@
 ## Configuration
 
 * [Overview](#overview)
-* [Common configuration settings](#common-configuration-settings)
+* [Configuration options](#configuration-options)
 
 ## Overview
 
@@ -16,7 +16,6 @@ fractal.set('components.path', 'path/to/components');
 fractal.set('project.title', 'My Project Name');
 fractal.set('components.status.default', 'wip');
 ```
-
 ### Plugin configuration
 
 Fractal plugins can optionally expose their own set of configuration items. These are all access under the paths prefixed by `plugins.pluginName.` - for example, to set the `theme` configuration option for the [web preview plugin](https://github.com/frctl/web-plugin) you would use:
@@ -48,7 +47,7 @@ fractal.set('components.path', 'src/components');
 Which template engine to use for your component views. See the [template engines documentation](/docs/engines/overview.md) for more options and details on how to implement a custom engine if your desired template language is not supported out of the box.
 
 ```js
-app.set('components.engine', 'handlebars');
+fractal.set('components.engine', 'handlebars');
 ```
 * **Choices:** `handlebars | nunjucks | mustache`
 * **Default:** `handlebars`
@@ -58,7 +57,7 @@ app.set('components.engine', 'handlebars');
 The component file extension that Fractal will look for when parsing the component directory.
 
 ```js
-app.set('components.ext', '.hbs');
+fractal.set('components.ext', '.hbs');
 ```
 
 ##### Default status
@@ -86,7 +85,7 @@ fractal.set('pages.path', 'src/pages');
 Which template engine to use to render your pages. See the [template engines documentation](/docs/engines/overview.md) for more options and details on how to implement a custom engine if your desired template language is not supported out of the box.
 
 ```js
-app.set('pages.engine', 'handlebars');
+fractal.set('pages.engine', 'handlebars');
 ```
 * **Choices:** `handlebars | nunjucks | mustache`
 * **Default:** `handlebars`
