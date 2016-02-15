@@ -56,6 +56,8 @@ All commands must be run from within the root directory of your project. Command
 fractal <command> [args] [opts]
 ```
 
+You can see the available commands by running `fractal` in terminal and hitting enter.
+
 The default installation of Fractal provides two commands - `start` and `build`:
 
 ### Starting the preview UI server
