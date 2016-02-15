@@ -13,8 +13,12 @@ module.exports = class Plugin {
         this.config    = {};
     }
 
-    command(name, callback) {
-        this._commands.set(name, callback);
+    command(name, callback, opts) {
+        this._commands.set(name, {
+            name: name,
+            callback: callback,
+            opts: opts || {}
+        });
     }
 
     commands() {

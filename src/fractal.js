@@ -6,6 +6,7 @@ const logger     = require('./logger');
 const Components = require('./components/source');
 const Pages      = require('./pages/source');
 const Plugin     = require('./plugin');
+const commands   = require('./commands');
 const highlight  = require('./highlighter');
 const utils      = require('./utils');
 
@@ -32,6 +33,9 @@ class Fractal {
         this.engine('nunjucks', '@frctl/nunjucks-engine');
         this.engine('consolidate', '@frctl/consolidate-engine');
         this.plugin('@frctl/web-plugin');
+        _.forOwn(commands, (command, name) => {
+            this.command(name, command, {});
+        });
     }
 
     /**
@@ -43,25 +47,23 @@ class Fractal {
      * @api public
      */
 
-    run(command, args, opts) {
-        if (!command) {
+    run(name, args, opts) {
+        if (!name) {
             const input = utils.parseArgv();
             if (!input.command) {
-                const commands = this._getCommands();
-                if (commands.length) {
-                    logger.logInfo('No command specified. The following commands are available:');
-                    commands.forEach(c => logger.logLn(`★ ${c}`));
-                    return;
-                }
-                logger.error('No commands available.');
-                return;
+                return this.run('welcome');
             } else {
-                command = input.command;
+                name    = input.command;
                 args    = input.args;
                 opts    = input.opts;
             }
         }
-        this._runCommand(command, args, opts);
+        const command = this._findCommand(name);
+        if (command) {
+            this._initPlugins();
+            return this._runCommand(command, args, opts);
+        }
+        logger.error(`Command ${name} not recognised`);
     }
 
     source(type) {
@@ -105,14 +107,19 @@ class Fractal {
         return this;
     }
 
-    command(name, callback) {
-        this._commands.set(name, callback);
+    command(name, callback, opts) {
+        this._commands.set(name, {
+            name: name,
+            callback: callback,
+            opts: opts || {}
+        });
         return this;
     }
 
     engine(name, engine, config) {
         if (arguments.length > 1) {
             this._engines.set(name, {
+                name: name,
                 engine: engine,
                 config: config || {},
             });
@@ -149,30 +156,41 @@ class Fractal {
         return _.get(this._config, setting, defaultVal || undefined);
     }
 
-    _runCommand(command, args, opts) {
-        if (this._commands.has(command)) {
-            return this._commands.get(command)(args, opts, this);
-        }
+    _initPlugins(name) {
         for (let plugin of this._plugins.values()) {
-            for (let commandEntry of plugin.commands().entries()) {
-                if (commandEntry[0] === command) {
-                    logger.started('Booting Fractal...');
-                    plugin.config = _.defaultsDeep(_.clone(this.get(`plugins.${plugin.name}`, {})), plugin.config);
-                    return commandEntry[1](args, opts, this);
-                }
-            }
+            plugin.config = _.defaultsDeep(_.clone(this.get(`plugins.${plugin.name}`, {})), plugin.config);
         }
-        logger.error(`Command '${command}' not recognised`);
+    }
+
+    _runCommand(command, args, opts) {
+        command = _.isString(command) ? this._findCommand(command) : command;
+        if (command) {
+            return command.callback(args, opts, this);
+        }
+    }
+
+    _findCommand(name) {
+        const command = this._getCommands()[name];
+        if (command) {
+            return command;
+        }
     }
 
     _getCommands() {
-        const commands = Array.from(this._commands.keys());
+        const commands = {};
+        for (let command of this._commands.entries()) {
+            commands[command[0]] = command[1];
+        }
         for (let plugin of this._plugins.values()) {
-            for (let commandEntry of plugin.commands().entries()) {
-                commands.push(commandEntry[0]);
+            for (let command of plugin.commands()) {
+                commands[command[0]] = command[1];
             }
         }
         return commands;
+    }
+
+    get version(){
+        return this.get('version');
     }
 
 }
