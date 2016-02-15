@@ -12,6 +12,12 @@ Fractal makes use of a number of ES6 features that mean it currently requires [N
 
 Transpilation may be considered in the future (i.e. when the project is stable) in order to make it compatible with earlier Node versions.
 
+## Documentation
+
+Fractal documentation is currently very much a work-in-progress.
+
+* [Installation and basic usage](docs/installation.md)
+
 ## Credits
 
 Fractal is developed and maintained by [Mark Perkins](http://github.com/allmarkedup) and the dev team at [Clearleft](http://clearleft.com).
