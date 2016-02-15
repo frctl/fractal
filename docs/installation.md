@@ -58,7 +58,7 @@ fractal <command> [args] [opts]
 
 The default installation of Fractal provides two commands - `start` and `build`:
 
-### Starting the preview web server
+### Starting the preview UI server
 
 The `start` command starts a web server to provide a nice visual way to browse the patterns in your component library. You can start the server from the CLI using the command:
 
@@ -66,7 +66,7 @@ The `start` command starts a web server to provide a nice visual way to browse t
 fractal start
 ```
 
-### Building a static version of the web preview
+### Building a static version of the preview UI
 
 If you want to export a static HTML version of the web preview interface, you can use the build command as follows:
 
