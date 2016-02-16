@@ -22,7 +22,6 @@ module.exports = function(source, config){
             if (item.alias) {
                 Handlebars.registerPartial('@' + item.alias, item.content);
             }
-            console.log('@' + item.handle);
         }
 
         viewsLoaded = true;
