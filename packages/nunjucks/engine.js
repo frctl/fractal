@@ -16,9 +16,10 @@ module.exports = function(source, config){
      */
 
     const StringLoader = nunjucks.Loader.extend({
-        getSource: function(name) {
+        getSource: function(handle) {
+            handle = handle.replace('@','');
             const view = _.find(viewCache, function(view){
-                return (view.handle === name || view.alias === name);
+                return (view.handle === handle || view.alias === handle);
             });
             if (view) {
                 return {
