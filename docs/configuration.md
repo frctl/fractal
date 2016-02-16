@@ -9,15 +9,17 @@
   - [Configuring individual components and pages](#configuring-individual-components-and-pages)
 - [General configuration options](#general-configuration-options)
       - [Project title](#project-title)
-- [Components configuration options](#components-configuration-options)
+- [Components configuration](#components-configuration)
     - [Directory path](#directory-path)
     - [Template engine](#template-engine)
     - [File extension](#file-extension)
     - [Default status](#default-status)
-- [Docs configuration options](#docs-configuration-options)
+- [Docs configuration](#docs-configuration)
     - [Directory path](#directory-path-1)
     - [Template engine](#template-engine-1)
     - [File extension](#file-extension-1)
+    - [Parse as markdown](#parse-as-markdown)
+    - [Index label](#index-label)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -121,4 +123,21 @@ The file extension for your documentation pages.
 
 ```js
 fractal.set('docs.ext', '.md');
+```
+
+#### Parse as markdown
+
+Whether or not to parse the body of documentation pages as markdown.
+
+```js
+fractal.set('docs.markdown', true);
+```
+* **Default:** `true`
+
+#### Index label
+
+The default label to use for index pages. Can be overridden on a page-by-page basis.
+
+```js
+fractal.set('docs.indexLabel', 'Overview');
 ```

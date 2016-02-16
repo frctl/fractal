@@ -1,4 +1,4 @@
-# Layouts
+# Commands
 
 <!-- START doctoc -->
 <!-- END doctoc -->

@@ -1,4 +1,4 @@
-# Guide: Creating components
+# Guide: Creating Components
 
 The following section will walk you through the process of creating a simple static component, making it dynamic by passing data into the view file and then building it out into a more complete example of a component.
 

@@ -1,4 +1,4 @@
-# Getting started
+# Getting Started
 
 Fractal is distributed as an NPM module, and currently **requires NodeJS v5.0+** to run.
 
