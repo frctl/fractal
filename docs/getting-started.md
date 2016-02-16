@@ -1,8 +1,26 @@
-# Installation and basic usage
+# Getting started
 
-Fractal is distributed as an NPM module, and currently requires NodeJS v5.0+ to run.
+Fractal is distributed as an NPM module, and currently **requires NodeJS v5.0+** to run.
 
-## 1. Install the CLI helper globally
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [Installation](#installation)
+  - [Install the CLI helper globally](#install-the-cli-helper-globally)
+  - [Create a new Fractal project](#create-a-new-fractal-project)
+    - [Either - Using the quick start repository](#either---using-the-quick-start-repository)
+    - [Or - Manual installation and setup](#or---manual-installation-and-setup)
+- [Running commands](#running-commands)
+  - [Checking Fractal has installed correctly](#checking-fractal-has-installed-correctly)
+  - [Starting the preview UI server](#starting-the-preview-ui-server)
+  - [Building a static version of the preview UI](#building-a-static-version-of-the-preview-ui)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## Installation
+
+### Install the CLI helper globally
 
 If you have never worked on a Fractal project before, you will first need to install a global Fractal instance to help run commands from the command line. You only need to do this **once per machine**.
 
@@ -10,14 +28,11 @@ If you have never worked on a Fractal project before, you will first need to ins
 npm i @frctl/fractal -g
 ```
 
-## 2. Create a new Fractal project
+### Create a new Fractal project
 
 There are a couple of ways to get started with Fractal:
 
-* [Using the quick start repository](#using-the-quick-start-repository)
-* [Manual installation](#manual-installation-and-setup)
-
-### Using the quick start repository
+#### Either - Using the quick start repository
 
 The easiest way to get started with Fractal is to grab a copy of the [quick start project boilerplate](https://github.com/frctl/quick-start) from Github and then customise it to fit your needs.
 
@@ -28,7 +43,7 @@ The easiest way to get started with Fractal is to grab a copy of the [quick star
 
 See the [frctl/quick-start](https://github.com/frctl/quick-start) repository for more details.
 
-### Manual installation and setup
+#### Or - Manual installation and setup
 
 Fractal needs to be installed as a per-project dependency. If you haven't already, create a new project directory and run `npm init` to create a `package.json` file.
 
@@ -48,17 +63,24 @@ const fractal = require('@frctl/fractal');
 fractal.set('components.path', 'path/to/components');
 ```
 
-## 3. Run commands!
+## Running commands
 
-All commands must be run from within the root directory of your project. Commands can be run from the command line using the following format:
+The standard way to interact with Fractal is via the command line. All commands must be run from within the root directory of your project and take the following format:
 
 ```shell
 fractal <command> [args] [opts]
 ```
+The default installation of Fractal provides two commands - `start` and `build`.
 
-You can see the available commands by running `fractal` in terminal and hitting enter.
+### Checking Fractal has installed correctly
 
-The default installation of Fractal provides two commands - `start` and `build`:
+You can check Fractal has installed correctly and see the available commands by running the `fractal` command with no further arguments:
+
+```shell
+fractal
+```
+
+You should see some information about Fractal, as well as a list of currently available commands that can be run.
 
 ### Starting the preview UI server
 

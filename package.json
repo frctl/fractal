@@ -51,7 +51,8 @@
   "scripts": {
     "test": "NODE_ENV=test ./node_modules/.bin/mocha --reporter spec",
     "lint": "jscs src",
-    "lint:fix": "jscs src --fix"
+    "lint:fix": "jscs src --fix",
+    "docs": "doctoc ./docs --github --notitle"
   },
   "devDependencies": {
     "chai": "^3.4.1",
@@ -59,6 +60,7 @@
     "jscs": "^2.9.0",
     "mocha": "^2.3.4",
     "proxyquire": "^1.7.3",
-    "sinon": "^1.17.2"
+    "sinon": "^1.17.2",
+    "doctoc": "^1.0.0"
   }
 }

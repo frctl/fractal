@@ -16,8 +16,13 @@ Transpilation may be considered in the future (i.e. when the project is stable) 
 
 Fractal documentation is currently very much a work-in-progress.
 
-* [Installation and basic usage](docs/installation.md)
-
+* [Getting Started](/docs/getting-started.md) (Including installation instructions)
+* [Global Configuration](/docs/configuration.md)
+* Components
+	* [Overview](/docs/components.md)
+* Guides
+	* [Creating components](/docs/guides/creating-components.md)
+	
 ## Credits
 
 Fractal is developed and maintained by [Mark Perkins](http://github.com/allmarkedup) and the dev team at [Clearleft](http://clearleft.com).
