@@ -10,8 +10,8 @@ The following section will walk you through the process of creating a simple sta
 - [2. Passing data to your view](#2-passing-data-to-your-view)
 - [3. Providing additional configuration](#3-providing-additional-configuration)
 - [4. Creating variants](#4-creating-variants)
-- [5. Associating related files](#5-associating-related-files)
-- [6. Adding a preview layout](#6-adding-a-preview-layout)
+- [5. Adding a preview layout](#5-adding-a-preview-layout)
+- [6. Associating related files](#6-associating-related-files)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -100,11 +100,13 @@ context:
 
 If you now refresh the page in your browser, you should see that the title and the status indicator for your blockquote component have now both changed.
 
-There are **plenty more configuration options** for components - check out the component configuration reference docs for full details.
+> There are **plenty more configuration options** for components - check out the [component configuration](/docs/components/configuration.md) docs for full details.
 
 ## 4. Creating variants
 
-Variants are useful for when you have a need for a slightly modified version of your component, but when the change is small enough that it doesn't really warrant creating a whole separate component. Variants can be thought of as roughly analogous to the concept of 'modifiers' in BEM.
+Variants are useful for when you have a need for a slightly modified version of your component, but when the change is small enough that it doesn't really warrant creating a whole separate component.
+
+> Variants can be thought of as roughly analogous to the concept of 'modifiers' in [BEM](http://getbem.com/). If you are would use a BEM modifier class to describe your (sub)component, it's probably a good fit to be a variant.
 
 There are a number of ways to create variants, each with their own pros and cons, but probably the simplest way is to create a separate variant view file. (For full details on creating and using variants see the full [variants documentation](/docs/components/variants.md)).
 
@@ -121,7 +123,54 @@ So our file tree now looks like this:
 
 If you refresh the web preview UI in your browser again you should see that a variant has appeared on the blockquote component page.
 
-## 5. Associating related files
+## 5. Adding a preview layout
+
+Preview layouts are templates that wrap your components to allow them to be rendered in the context of 'proper' HTML page. That means that you can include links to your CSS or JavaScript files just as you would in your site proper.
+
+Preview layouts are themselves components. That means you can use your actual site 'skeleton' component (if you have one), or you can create a separate one just for the purpose of wrapping your component previews. In this example, we we are going to do the latter and create a component called _preview.hbs in the root of our component directory, like so:
+
+```
+├── components
+│   ├── _preview.hbs
+│   ├── blockquote.config.yml
+│   ├── blockquote--fancy.hbs
+│   ├── blockquote.hbs
+```
+
+The `_` underscore prefixing the filename tells Fractal that this is a 'hidden' file, which means it will not show up in any component listings but can still be used as a preview layout (or included into other components). It's **not** manadatory that your preview layout components are hidden, but you may choose to do so if you like.
+
+The preview layout itself may look something like this:
+
+```handlebars
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/assets/main.css">
+    <title>Preview</title>
+</head>
+<body>
+
+{{{ yield }}}
+
+<script src="/assets/main.js"></script>
+</body>
+</html>
+```
+
+Note the `{{{ yield }}}` placeholder - this is where the rendered content of your component will be inserted when generating the preview.
+
+The last thing to do is to let Fractal know that this preview layout should be used as the default layout for our components. To do this we can set a [global configuration option](/docs/configuration.md) in our `fractal.js` file.
+
+```js
+fractal.set('components.preview.layout', '@preview');
+```
+
+> Note the way that we reference the preview layout using the special identifier `@preview`. This is called the component's 'handle'. You can read more details on using component and variant handles on the [components overview](/docs/components/overview.md) page.
+
+Now whenever your component is rendered as a preview (for example in the web UI) it will be wrapped in your preview layout.
+
+## 6. Associating related files
 
 In a real-life situation, components will often have more than just markup associated with them. They will likely have some styles, some JavaScript and other files like tests and so on.
 
@@ -129,6 +178,7 @@ In order to associate files with our blockquote component, we will need to turn 
 
 ```
 ├── components
+│   ├── _preview.hbs
 │   ├── blockquote
 │   │   ├── blockquote.config.yml
 │   │   ├── blockquote--fancy.hbs
@@ -139,8 +189,12 @@ In order to associate files with our blockquote component, we will need to turn 
 │   │   └── README.md
 ```
 
-README.md files, if present, will parsed and used by Fractal to generate notes about the component. Other files (which can be called anything you like) will be taken to be assciated with this component. Plugin such as the web UI can then display these alongside your component.
+`README.md` files, if present, will parsed and used by Fractal to generate notes about the component. Other files (which can be called anything you like) will be taken to be associated with this component. Plugin such as the web UI can then display these alongside the rendered views.
 
-## 6. Adding a preview layout
 
-Preview layouts allow the rendering of components within 
+
+
+
+
+
+

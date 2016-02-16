@@ -7,8 +7,8 @@ Fractal is distributed as an NPM module, and currently **requires NodeJS v5.0+**
 
 
 - [Installation](#installation)
-  - [Install the CLI helper globally](#install-the-cli-helper-globally)
-  - [Create a new Fractal project](#create-a-new-fractal-project)
+  - [1. Install the CLI helper globally](#1-install-the-cli-helper-globally)
+  - [2. Create a new Fractal project](#2-create-a-new-fractal-project)
     - [Either - Using the quick start repository](#either---using-the-quick-start-repository)
     - [Or - Manual installation and setup](#or---manual-installation-and-setup)
 - [Running commands](#running-commands)
@@ -20,7 +20,7 @@ Fractal is distributed as an NPM module, and currently **requires NodeJS v5.0+**
 
 ## Installation
 
-### Install the CLI helper globally
+### 1. Install the CLI helper globally
 
 If you have never worked on a Fractal project before, you will first need to install a global Fractal instance to help run commands from the command line. You only need to do this **once per machine**.
 
@@ -28,7 +28,7 @@ If you have never worked on a Fractal project before, you will first need to ins
 npm i @frctl/fractal -g
 ```
 
-### Create a new Fractal project
+### 2. Create a new Fractal project
 
 There are a couple of ways to get started with Fractal:
 

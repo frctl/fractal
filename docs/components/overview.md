@@ -9,6 +9,7 @@
 - [Component formats](#component-formats)
   - [Simple components](#simple-components)
   - [Compound components](#compound-components)
+- [Referencing components - @handle syntax](#referencing-components---@handle-syntax)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -86,4 +87,27 @@ Configuration files can of course be added, again following the same naming conv
 │   │   ├── README.md
 │   │   └── styles.css
 ```
+
+## Referencing components - @handle syntax
+
+When using Fractal, components (and their variants) are not referenced by their *path*, but instead by their **handle**. A handle is a bit like an ID, and using it instead of a file path means that you can move your components around without having to make updates to files that they are referenced in.
+
+Handles take the form:
+
+```js
+@component-name // component
+@component-name--variant-name // variant - note the double hyphen seperator.
+```
+
+And can be used in many places, such as when including another component via a partial. For instance, one component may include another component like this:
+
+```handlebars
+<div class="Parent-component">
+    <p>Parent component</p>
+    {{> @child-component}}
+</div>
+```
+
+Other places that handles are used include specifying a [preview layout](/docs/components/layouts.md) for a component or when referencing another components [context data](/docs/components/context.md).
+
 
