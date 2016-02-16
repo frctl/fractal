@@ -12,12 +12,12 @@
 - [Components configuration options](#components-configuration-options)
     - [Directory path](#directory-path)
     - [Template engine](#template-engine)
-    - [Component file extension](#component-file-extension)
+    - [File extension](#file-extension)
     - [Default status](#default-status)
-- [Pages configuration options](#pages-configuration-options)
+- [Docs configuration options](#docs-configuration-options)
     - [Directory path](#directory-path-1)
     - [Template engine](#template-engine-1)
-    - [Page file extension](#page-file-extension)
+    - [File extension](#file-extension-1)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -28,7 +28,7 @@ Every Fractal project needs a file called `fractal.js` located in it's root dire
 Config values can be set using `fractal.set(key, value)`. The `key` argument can be a dot notation path in order to set nested values. For example:
 
 ```js
-const fractal = require('@frctl/fractal');
+var fractal = require('@frctl/fractal');
 
 fractal.set('components.path', 'path/to/components');
 fractal.set('project.title', 'My Project Name');
@@ -42,7 +42,7 @@ Fractal plugins can optionally expose their own set of configuration items. Thes
 fractal.set('plugins.web.theme', 'my-custom-theme');
 ```
 
-Plugin-specific configuration options should be detailed in the plugin's documentation.
+Configuration options for plugins that are not bundled with the default install of Fractal should be detailed in that plugin's documentation.
 
 ### Configuring individual components and pages
 
@@ -58,7 +58,7 @@ Plugins such as the [web preview plugin](https://github.com/frctl/web-plugin) wi
 fractal.set('project.title', 'My Amazing Component Library');
 ```
 
-## Components configuration options
+## Components configuration
 
 #### Directory path
 
@@ -78,9 +78,9 @@ fractal.set('components.engine', 'handlebars');
 * **Choices:** `handlebars | nunjucks | mustache`
 * **Default:** `handlebars`
 
-#### Component file extension
+#### File extension
 
-The file extension for your component views that Fractal will look for when parsing the component directory.
+The file extension for your component views that Fractal will look for when parsing the components directory.
 
 ```js
 fractal.set('components.ext', '.hbs');
@@ -96,18 +96,18 @@ fractal.set('components.status.default', 'wip');
 * **Choices:** `prototype | wip | ready`
 * **Default:** `ready`
 
-## Pages configuration options
+## Docs configuration
 
 #### Directory path
 
-The path to the directory where your pages live.
+The path to the directory where your documentation pages live.
 
 ```js
 fractal.set('docs.path', 'src/pages');
 ```
 #### Template engine
 
-Which template engine to use to render your docs. See the [template engines documentation](/docs/engines/overview.md) for more options and details on how to implement a custom engine if your desired template language is not supported out of the box.
+Which template engine to use to render your documentation pages. See the [template engines documentation](/docs/engines/overview.md) for more options and details on how to implement a custom engine if your desired template language is not supported out of the box.
 
 ```js
 fractal.set('docs.engine', 'handlebars');
@@ -115,10 +115,10 @@ fractal.set('docs.engine', 'handlebars');
 * **Choices:** `handlebars | nunjucks | mustache`
 * **Default:** `handlebars`
 
-#### Page file extension
+#### File extension
 
-The file extension for your docs.
+The file extension for your documentation pages.
 
 ```js
-fractal.set('docs.ext', '.');
+fractal.set('docs.ext', '.md');
 ```
