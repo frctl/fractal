@@ -8,7 +8,7 @@ const expect          = chai.expect;
 
 const fractal         = require('../src/fractal');
 const ComponentSource = require('../src/components/source');
-const PageSource      = require('../src/docs/source');
+const DocsSource      = require('../src/docs/source');
 const config          = require('../config.js');
 
 chai.use(chaiAsPromised);
@@ -66,8 +66,8 @@ describe('fractal', function(){
             expect(fractal.source('components')).to.be.an.instanceof(ComponentSource);
             expect(fractal.source('components')).to.equal(fractal.source('components'));
         });
-        it('returns a PageSource singleton when type is \'page\'', function(){
-            expect(fractal.source('docs')).to.be.an.instanceof(PageSource);
+        it('returns a DocsSource singleton when type is \'page\'', function(){
+            expect(fractal.source('docs')).to.be.an.instanceof(DocsSource);
             expect(fractal.source('docs')).to.equal(fractal.source('docs'));
         });
     });
@@ -80,8 +80,8 @@ describe('fractal', function(){
     });
 
     describe('fractal.docs', function(){
-        it('is a PageSource singleton', function(){
-            expect(fractal.docs).to.be.an.instanceof(PageSource);
+        it('is a DocsSource singleton', function(){
+            expect(fractal.docs).to.be.an.instanceof(DocsSource);
             expect(fractal.docs).to.equal(fractal.docs);
         });
     });

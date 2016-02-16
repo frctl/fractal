@@ -103,7 +103,7 @@ fractal.set('components.status.default', 'wip');
 The path to the directory where your documentation pages live.
 
 ```js
-fractal.set('docs.path', 'src/pages');
+fractal.set('docs.path', 'src/docs');
 ```
 #### Template engine
 

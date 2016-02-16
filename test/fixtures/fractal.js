@@ -2,5 +2,5 @@ const fractal = require('../../.');
 
 fractal.set('components.path', 'src/components/hbs');
 
-const pages = fractal.source('pages');
+const docs = fractal.source('docs');
 const components = fractal.source('components');

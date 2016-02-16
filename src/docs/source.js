@@ -10,10 +10,10 @@ const resolve   = require('../context');
 const utils     = require('../utils');
 const Collection  = require('./collection');
 
-module.exports = class PageSource extends Source {
+module.exports = class DocsSource extends Source {
 
     constructor(sourcePath, props, items, app) {
-        props.name = 'pages';
+        props.name = 'documentation';
         super(sourcePath, props, items);
         this._app       = app;
         this.indexLabel = props.indexLabel;
@@ -22,6 +22,10 @@ module.exports = class PageSource extends Source {
     }
 
     pages() {
+        return super.entities();
+    }
+
+    docs() {
         return super.entities();
     }
 
