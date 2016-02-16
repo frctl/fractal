@@ -31,7 +31,7 @@ class Fractal {
         };
         this.engine('handlebars', '@frctl/handlebars-engine');
         this.engine('nunjucks', '@frctl/nunjucks-engine');
-        this.engine('consolidate', '@frctl/consolidate-engine');
+        this.engine('mustache', '@frctl/mustache-engine');
         this.plugin('@frctl/web-plugin');
         _.forOwn(commands, (command, name) => {
             this.command(name, command, {});
