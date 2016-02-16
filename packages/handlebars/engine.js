@@ -18,11 +18,13 @@ module.exports = function(source, config){
 
     function loadViews(source) {
         for (let item of source.flattenDeep()) {
-            Handlebars.registerPartial(item.handle, item.content);
+            Handlebars.registerPartial('@' + item.handle, item.content);
             if (item.alias) {
-                Handlebars.registerPartial(item.alias, item.content);
+                Handlebars.registerPartial('@' + item.alias, item.content);
             }
+            console.log('@' + item.handle);
         }
+
         viewsLoaded = true;
     }
 
