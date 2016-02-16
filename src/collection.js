@@ -31,6 +31,17 @@ module.exports = class Collection {
         };
     }
 
+    orderBy() {
+        let args;
+        if (arguments.length === 1 && _.isObject(arguments[0]) && !_.isArrayLikeObject(arguments[0])) {
+            args = [_.keys(arguments[0]), _.values(arguments[0])];
+        } else {
+            args = Array.prototype.slice.call(arguments);
+        }
+        args.unshift(this.items());
+        return this.newSelf(_.orderBy.apply(null, args));
+    }
+
     first() {
         return this.items()[0];
     }
