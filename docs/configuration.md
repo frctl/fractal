@@ -103,22 +103,22 @@ fractal.set('components.status.default', 'wip');
 The path to the directory where your pages live.
 
 ```js
-fractal.set('pages.path', 'src/pages');
+fractal.set('docs.path', 'src/pages');
 ```
 #### Template engine
 
-Which template engine to use to render your pages. See the [template engines documentation](/docs/engines/overview.md) for more options and details on how to implement a custom engine if your desired template language is not supported out of the box.
+Which template engine to use to render your docs. See the [template engines documentation](/docs/engines/overview.md) for more options and details on how to implement a custom engine if your desired template language is not supported out of the box.
 
 ```js
-fractal.set('pages.engine', 'handlebars');
+fractal.set('docs.engine', 'handlebars');
 ```
 * **Choices:** `handlebars | nunjucks | mustache`
 * **Default:** `handlebars`
 
 #### Page file extension
 
-The file extension for your pages.
+The file extension for your docs.
 
 ```js
-fractal.set('pages.ext', '.');
+fractal.set('docs.ext', '.');
 ```

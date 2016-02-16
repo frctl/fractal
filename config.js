@@ -52,7 +52,7 @@ module.exports = {
             }
         }
     },
-    pages: {
+    docs: {
         path: null,
         markdown: true,
         ext: '.md',

@@ -4,7 +4,7 @@ const Promise    = require('bluebird');
 const _          = require('lodash');
 const logger     = require('./logger');
 const Components = require('./components/source');
-const Pages      = require('./pages/source');
+const Docs       = require('./docs/source');
 const Plugin     = require('./plugin');
 const commands   = require('./commands');
 const highlight  = require('./highlighter');
@@ -69,8 +69,8 @@ class Fractal {
     source(type) {
         if (type === 'components') {
             return this.components;
-        } else if (type === 'pages') {
-            return this.pages;
+        } else if (type === 'docs') {
+            return this.docs;
         } else {
             throw new Error(`Source type ${type} not recognised`);
         }
@@ -78,20 +78,20 @@ class Fractal {
 
     watch() {
         this.components.watch();
-        this.pages.watch();
+        this.docs.watch();
         return this;
     }
 
     unwatch() {
         this.components.unwatch();
-        this.pages.unwatch();
+        this.docs.unwatch();
         return this;
     }
 
     load() {
         return Promise.props({
             components: this.components.load(),
-            pages: this.pages.load()
+            docs: this.docs.load()
         });
     }
 
@@ -136,11 +136,11 @@ class Fractal {
         return this._sources.get('components');
     }
 
-    get pages() {
-        if (!this._sources.has('pages')) {
-            this._sources.set('pages', new Pages(this.get('pages.path'), this.get('pages'), [], this));
+    get docs() {
+        if (!this._sources.has('docs')) {
+            this._sources.set('docs', new Docs(this.get('docs.path'), this.get('docs'), [], this));
         }
-        return this._sources.get('pages');
+        return this._sources.get('docs');
     }
 
     set(setting, val) {
