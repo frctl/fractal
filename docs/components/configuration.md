@@ -4,12 +4,37 @@ Each component can have it's own (optional) configuration file associated with i
 
 If you haven't already, you should read the [configuration file documentation](/docs/configuration-files.md) to learn more about how configuration files need to be named and formatted.
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [Component properties](#component-properties)
+  - [name](#name)
+  - [label](#label)
+  - [title](#title)
+  - [status](#status)
+  - [context](#context)
+  - [notes](#notes)
+  - [display](#display)
+  - [tags](#tags)
+  - [isHidden](#ishidden)
+  - [order](#order)
+  - [view](#view)
+  - [variants](#variants)
+- [Variant properties](#variant-properties)
+  - [name](#name-1)
+  - [status](#status-1)
+  - [view](#view-1)
+  - [notes](#notes-1)
+  - [display](#display-1)
+  - [context](#context-1)
+- [Example configuration file](#example-configuration-file)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Component properties
 
-#### name
+### name
 
 Overrides the component name, which is otherwise extracted from the component view filename. Name values must be all lowercase, and contain only alphanumeric characters with hyphens or underscores for word seperators.
 
@@ -19,7 +44,7 @@ Setting this will also have the affect of changing the [component's **handle**](
 name: 'mega-buttons'
 ```
 
-#### label
+### label
 
 The label is typically displayed in any UI navigation items that refer to the component. Defaults to a title-cased version of the component name if not specified.
 
@@ -27,14 +52,14 @@ The label is typically displayed in any UI navigation items that refer to the co
 label: 'Mega Buttons'
 ```
 
-#### title
+### title
 
 The title of a component is typically what is displayed at the top of any pages related to the component. Defaults to the same as the `label` if not specified.
 
 ```yaml
 title: 'Amazing Mega Buttons'
 ```
-#### status
+### status
 
 The status of a component. See the [statuses documentation](/docs/statuses.md) for information on using and customising component statuses.
 
@@ -45,37 +70,37 @@ status: 'wip'
 ```
 * **Choices:** `prototype | wip | ready`
 
-#### preview
+####preview
 
-#### context
+### context
 
-#### notes
+### notes
 
-#### display
+### display
 
-#### tags
+### tags
 
-#### isHidden
+### isHidden
 
-#### order
+### order
 
-#### view
+### view
 
-#### variants
+### variants
 
 ## Variant properties
 
-#### name
+### name
 
-#### status
+### status
 
-#### view
+### view
 
-#### notes
+### notes
 
-#### display
+### display
 
-#### context
+### context
 
 <!--The following primitive properties are inherited from upstream sources if not specified directly:
 

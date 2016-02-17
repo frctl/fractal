@@ -8,17 +8,18 @@
   - [Configuring plugins](#configuring-plugins)
   - [Configuring individual components and pages](#configuring-individual-components-and-pages)
 - [General project settings](#general-project-settings)
+    - [Project title](#project-title)
 - [Components settings](#components-settings)
-    - [Directory path](#directory-path)
-    - [Template engine](#template-engine)
-    - [File extension](#file-extension)
-    - [Default status](#default-status)
+  - [Directory path](#directory-path)
+  - [Template engine](#template-engine)
+  - [File extension](#file-extension)
+  - [Default status](#default-status)
 - [Documentation settings](#documentation-settings)
-    - [Directory path](#directory-path-1)
-    - [Template engine](#template-engine-1)
-    - [File extension](#file-extension-1)
-    - [Parse as markdown](#parse-as-markdown)
-    - [Index label](#index-label)
+  - [Directory path](#directory-path-1)
+  - [Template engine](#template-engine-1)
+  - [File extension](#file-extension-1)
+  - [Parse as markdown](#parse-as-markdown)
+  - [Index label](#index-label)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -51,7 +52,7 @@ The `fractal.js` file is where you will set all your **global** configuration op
 
 ## General project settings
 
-##### Project title
+#### Project title
 
 Plugins such as the [web preview plugin](https://github.com/frctl/web-plugin) will use this in their UI if set.
 
@@ -61,7 +62,7 @@ fractal.set('project.title', 'My Amazing Component Library');
 
 ## Components settings
 
-#### Directory path
+### Directory path
 
 The path to the directory where your components live.
 
@@ -69,7 +70,7 @@ The path to the directory where your components live.
 fractal.set('components.path', 'src/components');
 ```
 
-#### Template engine
+### Template engine
 
 Which template engine to use for your component views. See the [template engines documentation](/docs/engines/overview.md) for more options and details on how to implement a custom engine if your desired template language is not supported out of the box.
 
@@ -79,7 +80,7 @@ fractal.set('components.engine', 'handlebars');
 * **Choices:** `handlebars | nunjucks | mustache`
 * **Default:** `handlebars`
 
-#### File extension
+### File extension
 
 The file extension for your component views that Fractal will look for when parsing the components directory.
 
@@ -87,7 +88,7 @@ The file extension for your component views that Fractal will look for when pars
 fractal.set('components.ext', '.hbs');
 ```
 
-#### Default status
+### Default status
 
 The default status to use for a component. Statuses are fully configurable - see the [components documentation](/docs/components/statuses.md) for details.
 
@@ -99,14 +100,14 @@ fractal.set('components.status.default', 'wip');
 
 ## Documentation settings
 
-#### Directory path
+### Directory path
 
 The path to the directory where your documentation pages live.
 
 ```js
 fractal.set('docs.path', 'src/docs');
 ```
-#### Template engine
+### Template engine
 
 Which template engine to use to render your documentation pages. See the [template engines documentation](/docs/engines/overview.md) for more options and details on how to implement a custom engine if your desired template language is not supported out of the box.
 
@@ -116,7 +117,7 @@ fractal.set('docs.engine', 'handlebars');
 * **Choices:** `handlebars | nunjucks | mustache`
 * **Default:** `handlebars`
 
-#### File extension
+### File extension
 
 The file extension for your documentation pages.
 
@@ -124,7 +125,7 @@ The file extension for your documentation pages.
 fractal.set('docs.ext', '.md');
 ```
 
-#### Parse as markdown
+### Parse as markdown
 
 Whether or not to parse the body of documentation pages as markdown.
 
@@ -133,7 +134,7 @@ fractal.set('docs.markdown', true);
 ```
 * **Default:** `true`
 
-#### Index label
+### Index label
 
 The default label to use for index pages. Can be overridden on a page-by-page basis.
 
