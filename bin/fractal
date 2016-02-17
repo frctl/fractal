@@ -4,9 +4,6 @@
 
 const semver     = require('semver');
 const Liftoff    = require('liftoff');
-const yargs      = require('yargs');
-const logger     = require('winston');
-
 const cliPackage = require('../package.json');
 
 const Fractal = new Liftoff({
@@ -18,19 +15,15 @@ const Fractal = new Liftoff({
 Fractal.launch({}, function(env){
 
    if (!env.configPath) {
-       logger.error('No local fractal.js file found.');
+       console.log('Error: No local fractal.js file found.');
        process.exit(1);
    }
    if (!env.modulePath) {
-       logger.error("Local fractal module not found in %s \n\t Try running `npm install @frctl/fractal`", env.cwd);
+       console.log(`Error: Local fractal module not found in ${env.cwd} \n\t Try running 'npm install @frctl/fractal'`);
        process.exit(1);
    }
    if (semver.gt(cliPackage.version, env.modulePackage.version)) {
-       logger.warn(
-           "Fractal version mismatch:\n\t Global fractal is %s\n\t Local fractal is %s",
-           cliPackage.version,
-           env.modulePackage.version
-       );
+       console.log(`Error: Fractal version mismatch:\n\t Global fractal is ${cliPackage.version}\n\t Local fractal is ${env.modulePackage.version}`);
    }
 
    require(env.configPath);
