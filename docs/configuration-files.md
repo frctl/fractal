@@ -31,12 +31,12 @@ Components, collections and documentation pages all have different configuration
 
 ##### Components: 
 
-* [Component configuration](/docs/components/configuration-files.md)
+* [Component configuration](/docs/components/configuration.md)
 * [Collection configuration](/docs/components/collections.md)
 
 ##### Documentation
 
-* [Page configuration](/docs/documentation/configuration-files.md)
+* [Page configuration](/docs/documentation/configuration.md)
 * [Collection configuration](/docs/documentation/collections.md)
 
 ## Configuration file formats
