@@ -1,4 +1,4 @@
-## Configuring Fractal
+## Project settings
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -89,7 +89,7 @@ fractal.set('components.ext', '.hbs');
 
 #### Default status
 
-The default status to use for a component. Statuses are fully configurable - see the [components documentation](/docs/components/overview.md) for details.
+The default status to use for a component. Statuses are fully configurable - see the [components documentation](/docs/components/statuses.md) for details.
 
 ```js
 fractal.set('components.status.default', 'wip');

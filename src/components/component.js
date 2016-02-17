@@ -141,6 +141,8 @@ module.exports = class Component {
             tags:     this.tags,
             isHidden: this.isHidden,
             order:    this.order,
+            preview:  this._preview,
+            display:  this._display,
             variants: this.variants().map(v => v.toJSON()),
             files:    _.mapValues(this.files, f => {
                 if (!f) {
