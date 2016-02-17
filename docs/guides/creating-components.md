@@ -134,7 +134,7 @@ Preview layouts are themselves components. That means you can use your actual si
 │   ├── _preview.hbs
 │   ├── blockquote.config.yml
 │   ├── blockquote--fancy.hbs
-│   ├── blockquote.hbs
+│   └── blockquote.hbs
 ```
 
 The `_` underscore prefixing the filename tells Fractal that this is a 'hidden' file, which means it will not show up in any component listings but can still be used as a preview layout (or included into other components). It's **not** manadatory that your preview layout components are hidden, but you may choose to do so if you like.
