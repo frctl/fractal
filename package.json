@@ -41,7 +41,7 @@
     "fractal": "./bin/fractal"
   },
   "engines": {
-    "node": ">= 5.0.0"
+    "node": ">= 4.0.0"
   },
   "scripts": {
     "test": "NODE_ENV=test ./node_modules/.bin/mocha --reporter spec",

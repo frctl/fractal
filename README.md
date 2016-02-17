@@ -12,10 +12,10 @@ Fractal documentation is currently very much a work-in-progress. Pages may be pl
 
 * [Introduction](/docs/introduction.md)
 * [Getting Started](/docs/getting-started.md) (Including installation instructions)
-* [Project settings](/docs/global-configuration.md)
+* [Project settings](/docs/project-settings.md)
 * [Working with configuration files](/docs/configuration-files.md)
 * Components
-	* [Overview](/docs/components.md)
+	* [Overview](/docs/components/overview.md)
 * Guides
 	* [Creating components](/docs/guides/creating-components.md)
 
