@@ -6,8 +6,20 @@ Fractal helps you **assemble**, **preview** and **document** website component l
 
 You can think of Fractal as a tool that sits halfway between a component library UI generator like [Fabricator](https://fbrctr.github.io) or [PatternLab](http://patternlab.io), and a build tool like [Metalsmith](http://metalsmith.io) or [Assemble](https://github.com/assemble/assemble/).
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [Why Fractal?](#why-fractal)
+- [Core concepts and terminology](#core-concepts-and-terminology)
+  - [Components](#components)
+  - [Documentation](#documentation)
+  - [Collections](#collections)
+  - [Commands](#commands)
+  - [Plugins](#plugins)
+  - [Themes](#themes)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Why Fractal?
 
