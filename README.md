@@ -2,11 +2,9 @@
 
 A tool to help you **build**, **document** and **integrate** UI component libraries into your web projects.
 
-> _**Important:** Fractal is currently considered to be in beta. Until it reaches a 1.0 release there may be breaking changes in point-releases, as well as out-of date or incorrect documentation. Use at your own risk!_
+> _**Important:** Fractal is currently considered to be in beta. Until it reaches a 1.0 release there may be breaking changes in minor point-releases, as well as out-of date or incorrect documentation. Use at your own risk!_
 
 [![Build Status](https://img.shields.io/travis/frctl/fractal.svg?style=flat)](https://travis-ci.org/frctl/fractal)
-
-## Documentation
 
 Fractal documentation is currently very much a work-in-progress. Pages may be placeholders or incomplete.
 
