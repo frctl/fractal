@@ -9,7 +9,16 @@
   - [Configuring individual components and pages](#configuring-individual-components-and-pages)
 - [General project settings](#general-project-settings)
 - [Components settings](#components-settings)
+    - [Directory path](#directory-path)
+    - [Template engine](#template-engine)
+    - [File extension](#file-extension)
+    - [Default status](#default-status)
 - [Documentation settings](#documentation-settings)
+    - [Directory path](#directory-path-1)
+    - [Template engine](#template-engine-1)
+    - [File extension](#file-extension-1)
+    - [Parse as markdown](#parse-as-markdown)
+    - [Index label](#index-label)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 

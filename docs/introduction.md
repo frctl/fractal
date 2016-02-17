@@ -10,7 +10,7 @@ Existing tools to help you build these component libraries often force you to us
 
 **Fractal is different.**
 
-Fractal lets you create a component library without any restriction on which template language to use. You can use whatever build tool you are comfortable with (or none at all!) and it lets you organise your components in whatever way best matches the needs of your project. 
+Fractal lets you create a component library without any restriction on which template language to use. You can use whatever build tool you are comfortable with (or none at all!) and it lets you organise your components in whatever way best matches the needs of your project.
 
 It is built using an **extendable, plugin-based architecture**. The core component and documentation parser is available to build upon, helping you to better integrate your component library into your build system and even your production site.
 

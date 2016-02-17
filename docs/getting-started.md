@@ -9,6 +9,8 @@ Fractal is distributed as an NPM module, and currently **requires NodeJS v4.0+**
 - [Installation](#installation)
   - [1. Install the CLI helper globally](#1-install-the-cli-helper-globally)
   - [2. Create a new Fractal project](#2-create-a-new-fractal-project)
+    - [Either - Using the quick start repository](#either---using-the-quick-start-repository)
+    - [Or - Manual installation and setup](#or---manual-installation-and-setup)
 - [Running commands](#running-commands)
   - [Checking Fractal has installed correctly](#checking-fractal-has-installed-correctly)
   - [Starting the preview UI server](#starting-the-preview-ui-server)
