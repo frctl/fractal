@@ -1,6 +1,6 @@
 # Getting Started
 
-Fractal is distributed as an NPM module, and currently **requires NodeJS v5.0+** to run.
+Fractal is distributed as an NPM module, and currently **requires NodeJS v4.0+** to run.
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -9,8 +9,6 @@ Fractal is distributed as an NPM module, and currently **requires NodeJS v5.0+**
 - [Installation](#installation)
   - [1. Install the CLI helper globally](#1-install-the-cli-helper-globally)
   - [2. Create a new Fractal project](#2-create-a-new-fractal-project)
-    - [Either - Using the quick start repository](#either---using-the-quick-start-repository)
-    - [Or - Manual installation and setup](#or---manual-installation-and-setup)
 - [Running commands](#running-commands)
   - [Checking Fractal has installed correctly](#checking-fractal-has-installed-correctly)
   - [Starting the preview UI server](#starting-the-preview-ui-server)
@@ -53,7 +51,7 @@ Then install Fractal into your project using the command:
 npm i @frctl/fractal --save
 ```
 
-You should then create a `fractal.js` file in the root of your project. This is where you will configure your Fractal instance.
+You should then create a `fractal.js` file in the root of your project. This is where you will add your global project settings.
 
 At a bare minimum, this file should `require` the Fractal at the top as follows, and tell Fractal where to find your components directory:
 

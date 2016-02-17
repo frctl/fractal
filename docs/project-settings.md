@@ -1,4 +1,4 @@
-## Global Configuration
+## Configuring Fractal
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -7,25 +7,15 @@
 - [Overview](#overview)
   - [Configuring plugins](#configuring-plugins)
   - [Configuring individual components and pages](#configuring-individual-components-and-pages)
-- [General configuration options](#general-configuration-options)
-      - [Project title](#project-title)
-- [Components configuration](#components-configuration)
-    - [Directory path](#directory-path)
-    - [Template engine](#template-engine)
-    - [File extension](#file-extension)
-    - [Default status](#default-status)
-- [Docs configuration](#docs-configuration)
-    - [Directory path](#directory-path-1)
-    - [Template engine](#template-engine-1)
-    - [File extension](#file-extension-1)
-    - [Parse as markdown](#parse-as-markdown)
-    - [Index label](#index-label)
+- [General project settings](#general-project-settings)
+- [Components settings](#components-settings)
+- [Documentation settings](#documentation-settings)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Overview
 
-Every Fractal project needs a file called `fractal.js` located in it's root directory. This file is used to import the Fractal module and then set any configuration options as required.
+Every Fractal project needs a file called `fractal.js` located in it's root directory. This file is used to import the Fractal module and then to set application-level configuration options as required.
 
 Config values can be set using `fractal.set(key, value)`. The `key` argument can be a dot notation path in order to set nested values. For example:
 
@@ -50,7 +40,7 @@ Configuration options for plugins that are not bundled with the default install 
 
 The `fractal.js` file is where you will set all your **global** configuration options. Individual components and pages can also have their own local configuration files - details of these are covered in their respective docs.
 
-## General configuration options
+## General project settings
 
 ##### Project title
 
@@ -60,7 +50,7 @@ Plugins such as the [web preview plugin](https://github.com/frctl/web-plugin) wi
 fractal.set('project.title', 'My Amazing Component Library');
 ```
 
-## Components configuration
+## Components settings
 
 #### Directory path
 
@@ -98,7 +88,7 @@ fractal.set('components.status.default', 'wip');
 * **Choices:** `prototype | wip | ready`
 * **Default:** `ready`
 
-## Docs configuration
+## Documentation settings
 
 #### Directory path
 

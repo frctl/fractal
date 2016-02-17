@@ -62,7 +62,7 @@ First you will need to replace the text in your view file with variable placehol
 
 So now we just need a way to specify the data that should be passed to our view when rendering it as a preview. This is done by creating a **component configuration file**.
 
-Component configuration files can be written as JSON, YAML or as a CommonJS JavaScript module that returns a JSON object. For this example we'll be using [YAML](http://www.yaml.org/) but check out the full component configuration docs for details on using other data formats. Configuration files must reside in the same directory as the component they are intended to configure, and for YAML files must have a filename that looks like `component-name.config.yml` (replacing `component-name` with the name of your component).
+[Configuration files](/docs/configuration-files.md) can be written as JSON, YAML or as a CommonJS JavaScript module that returns a JSON object. For this example we'll be using [YAML](http://www.yaml.org/) but check out the full component configuration docs for details on using other data formats. Configuration files must reside in the same directory as the component they are intended to configure, and for YAML files must have a filename that looks like `component-name.config.yml` (replacing `component-name` with the name of your component).
 
 So let's create a config file, called `blockquote.config.yml` for our blockquote component. Our file tree now looks like:
 
@@ -160,7 +160,7 @@ The preview layout itself may look something like this:
 
 Note the `{{{ yield }}}` placeholder - this is where the rendered content of your component will be inserted when generating the preview.
 
-The last thing to do is to let Fractal know that this preview layout should be used as the default layout for our components. To do this we can set a [global configuration option](/docs/configuration.md) in our `fractal.js` file.
+The last thing to do is to let Fractal know that this preview layout should be used as the default layout for our components. To do this we can set a [global project configuration option](/docs/project-settings.md) in our `fractal.js` file.
 
 ```js
 fractal.set('components.preview.layout', '@preview');
@@ -190,11 +190,3 @@ In order to associate files with our blockquote component, we will need to turn 
 ```
 
 `README.md` files, if present, will parsed and used by Fractal to generate notes about the component. Other files (which can be called anything you like) will be taken to be associated with this component. Plugin such as the web UI can then display these alongside the rendered views.
-
-
-
-
-
-
-
-

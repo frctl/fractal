@@ -1,6 +1,6 @@
 # Fractal
 
-**A flexible tool for building, documenting and integrating website component libraries.**
+A tool to help you **build**, **document** and **integrate** UI component libraries into your web projects.
 
 > _**Important:** Fractal is currently considered to be in beta. Until it reaches a 1.0 release there may be breaking changes in point-releases, as well as out-of date or incorrect documentation. Use at your own risk!_
 
@@ -10,8 +10,10 @@
 
 Fractal documentation is currently very much a work-in-progress. Pages may be placeholders or incomplete.
 
+* [Introduction](/docs/introduction.md)
 * [Getting Started](/docs/getting-started.md) (Including installation instructions)
-* [Global Configuration](/docs/configuration.md)
+* [Project settings](/docs/global-configuration.md)
+* [Working with configuration files](/docs/configuration-files.md)
 * Components
 	* [Overview](/docs/components.md)
 * Guides
@@ -19,9 +21,7 @@ Fractal documentation is currently very much a work-in-progress. Pages may be pl
 
 ## Requirements
 
-Fractal makes use of a number of ES6 features that mean it currently requires [Node.js](https://nodejs.org) v5.0+ to run.
-
-Transpilation may be considered in the future (i.e. when the project is stable) in order to make it compatible with earlier Node versions.
+Fractal makes use of a number of ES6 features that mean it currently requires [Node.js](https://nodejs.org) v4.0+ to run.
 
 ## Credits
 

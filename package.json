@@ -1,7 +1,7 @@
 {
   "name": "@frctl/fractal",
   "version": "0.6.1",
-  "description": "An unopinionated UI component library generator.",
+  "description": "A toolkit to help you build, document and integrate component libraries into your web projects.",
   "main": "src/fractal.js",
   "repository": {
     "type": "git",
@@ -47,7 +47,7 @@
     "test": "NODE_ENV=test ./node_modules/.bin/mocha --reporter spec",
     "lint": "jscs src",
     "lint:fix": "jscs src --fix",
-    "docs": "doctoc ./docs --github --notitle"
+    "docs": "doctoc ./docs --github --notitle --maxlevel 3"
   },
   "devDependencies": {
     "chai": "^3.4.1",

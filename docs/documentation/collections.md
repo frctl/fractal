@@ -1,4 +1,4 @@
-# Component Config Reference 
+# Document Collections
 
 <!-- START doctoc -->
 <!-- END doctoc -->

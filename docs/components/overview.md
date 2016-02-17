@@ -1,4 +1,4 @@
-# Components 
+# Components
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -25,8 +25,8 @@ Unlike some other systems, Fractal does not enforce any specific nomenclature or
 
 In order for Fractal to recognise your components, they must:
 
-1. Live within the component directory that you specified in your [fractal.js configuration file](/docs/configuration.md).
-2. Have a 'view' file, containing the markup required to render your component. This should have a file extension that matches the one specified in your [fractal.js configuration file](/docs/configuration.md) (or be `.hbs` by default).
+1. Live within the component directory that you specified in your [project settings file](/docs/project-settings.md).
+2. Have a 'view' file, containing the markup required to render your component. This should have a file extension that matches the one specified in your [project settings file](/docs/project-settings.md) (or be `.hbs` by default).
 
 Optionally, components can also:
 
@@ -43,7 +43,7 @@ See the [template engine documentation](/docs/engines/overview.md) for more deta
 
 Components can be created in two ways. The simplest format is just as a single file containing your markup, whilst more complex, 'compound' components can be created as a directory of associated files.
 
-### Simple components 
+### Simple components
 
 The simplest component consists of just a single view file. The name of the component will be taken to be the name of that file, minus the file extension.
 
@@ -54,7 +54,7 @@ So a `button.hbs` file in the components directory will be identified as a compo
 │   └── button.hbs
 ```
 
-Simple components can have [configuration files](/docs/components/configuration.md) associated with them. These must must reside in the same directory and have the same name as the component but have a `.config.{js|json|yml}` file extension. So a JSON configuration file for the button component would be called `button.config.json`.
+Simple components can have [configuration files](/docs/configuration-files.md) associated with them. These must must reside in the same directory and have the same name as the component but have a `.config.{js|json|yml}` file extension. So a JSON configuration file for the button component would be called `button.config.json`.
 
 ```
 ├── components
@@ -108,6 +108,4 @@ And can be used in many places, such as when including another component via a p
 </div>
 ```
 
-Other places that handles are used include specifying a [preview layout](/docs/components/layouts.md) for a component or when referencing another components [context data](/docs/components/context.md).
-
-
+Other places that handles are used include when specifying a [preview layout](/docs/components/layouts.md) for a component or when referencing another components [context data](/docs/components/context.md).
