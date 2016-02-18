@@ -10,7 +10,8 @@ module.exports = {
 
     opts: {
         description: 'Create a new Fractal project',
-        private: true
+        private: true,
+        global: true
     },
 
     callback: function (args, opts, app) {

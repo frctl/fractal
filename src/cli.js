@@ -99,7 +99,9 @@ module.exports = {
             head: [],
             chars: { mid: chalk.dim('─'), 'left-mid': '│', 'mid-mid': chalk.dim('─'), 'right-mid': '│' }
         });
-        table.push([header]);
+        if (header) {
+            table.push([header]);
+        }
         body = [].concat(body);
         for (let line of body) {
             table.push([line]);

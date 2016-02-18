@@ -15,9 +15,16 @@ module.exports = {
 
     callback: function (args, opts, app) {
 
-        const header   = app.get('project.title');
+        const header   = app.global ? null : app.get('project.title');
         const footer   = `Powered by Fractal v${app.version}`;
-        const commands = _.sortBy(_.filter(app.commands.all(), c => c.opts.private !== true), 'name');
+        let commands = _.filter(app.commands.all(), c => c.opts.private !== true);
+
+        if (app.global) {
+            commands = _.filter(commands, c => c.opts.global == true);    
+        }
+
+        commands = _.sortBy(commands, 'name');
+
         let usage      = '';
 
         usage += `

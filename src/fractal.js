@@ -20,6 +20,7 @@ class Fractal {
      */
 
     constructor() {
+        this.global = false;
         this._config  = require('../config');
         this._engines = new Map();
         this._plugins = new Map();

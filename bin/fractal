@@ -36,6 +36,7 @@ Fractal.launch({}, function(env){
         var app = require(env.modulePath);
         app.run();
     } else {
+        frctl.global = true;
         frctl.run();
     }
 });
