@@ -78,7 +78,8 @@ module.exports = class ComponentSource extends Source {
         return co(function* (){
             const source = yield self.load();
             if (_.includes(['component', 'variant' /*, 'collection' */], entity.type)) {
-                const rendered = yield self[`_render${_.upperFirst(entity.type)}`](entity, context);
+                entity = entity.defaultVariant();
+                const rendered = yield self._renderVariant(entity, context);
                 if (opts.useLayout && entity.preview) {
                     return yield self._wrapInLayout(rendered, entity.preview, {
                         _target: entity.toJSON()
@@ -102,7 +103,7 @@ module.exports = class ComponentSource extends Source {
 
     *_renderComponent(component, context){
         const variant = component.defaultVariant();
-        return this._renderVariant(variant, context);
+        return yield this._renderVariant(variant, context);
     }
 
     // _renderCollatedComponent: function* (component, context){
