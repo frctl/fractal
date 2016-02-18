@@ -28,7 +28,8 @@ class Fractal {
         cli.debugging = this.get('env') === 'debug';
         this.utils = {
             highlight: highlight,
-            cli: cli
+            cli: cli,
+            helpers: utils
         };
         this.engine('handlebars', '@frctl/handlebars-engine');
         this.engine('nunjucks', '@frctl/nunjucks-engine');

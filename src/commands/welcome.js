@@ -9,14 +9,15 @@ module.exports = {
     name: 'welcome',
 
     opts: {
-        description: 'Default command'
+        description: 'Default command',
+        private: true
     },
 
     callback: function (args, opts, app) {
 
         const header   = app.get('project.title');
         const footer   = `Powered by Fractal v${app.version}`;
-        const commands = _.sortBy(app.commands.all(), 'name');
+        const commands = _.sortBy(_.filter(app.commands.all(), c => c.opts.private !== true), 'name');
         let usage      = '';
 
         usage += `
@@ -32,11 +33,9 @@ The following commands are available:
         });
 
         _.forEach(commands, command => {
-            if (command.name !== 'welcome') {
-                const description = command.opts && command.opts.description ? command.opts.description : '';
-                usage += `
+            const description = command.opts && command.opts.description ? command.opts.description : '';
+            usage += `
 ➜ ${chalk.magenta(_.padEnd(command.name, longest + 2))}${description}`;
-            }
         });
 
         usage += '\n';
