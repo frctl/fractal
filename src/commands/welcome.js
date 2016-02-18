@@ -16,7 +16,7 @@ module.exports = {
 
         const header   = app.get('project.title');
         const footer   = `Powered by Fractal v${app.version}`;
-        const commands = app.commands.all();
+        const commands = _.sortBy(app.commands.all(), 'name');
         let usage      = '';
 
         usage += `
@@ -24,10 +24,17 @@ Usage: ${chalk.magenta('fractal <command>')} [args] [opts]
 
 The following commands are available:
 `;
-        _.forEach(_.sortBy(commands, 'name'), command => {
+        let longest = 0;
+        _.forEach(commands, command => {
+            if (command.name.length > longest) {
+                longest = command.name.length;
+            }
+        });
+
+        _.forEach(commands, command => {
             if (command.name !== 'welcome') {
-                const description = command.opts && command.opts.description ? ' - ' + command.opts.description : '';
-                usage +=`\n➜ ${chalk.magenta(command.name)}${description}`;
+                const description = command.opts && command.opts.description ?command.opts.description : '';
+                usage +=`\n➜ ${chalk.magenta( _.padEnd(command.name, longest + 2))}${description}`;
             }
         });
 
