@@ -12,7 +12,7 @@ module.exports = {
         description: 'Default command'
     },
 
-    callback: function(args, opts, app) {
+    callback: function (args, opts, app) {
 
         const header   = app.get('project.title');
         const footer   = `Powered by Fractal v${app.version}`;
@@ -33,8 +33,9 @@ The following commands are available:
 
         _.forEach(commands, command => {
             if (command.name !== 'welcome') {
-                const description = command.opts && command.opts.description ?command.opts.description : '';
-                usage +=`\n➜ ${chalk.magenta( _.padEnd(command.name, longest + 2))}${description}`;
+                const description = command.opts && command.opts.description ? command.opts.description : '';
+                usage += `
+➜ ${chalk.magenta(_.padEnd(command.name, longest + 2))}${description}`;
             }
         });
 

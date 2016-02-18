@@ -12,7 +12,7 @@ module.exports = {
         description: 'Display project configuration info'
     },
 
-    callback: function(args, opts, app) {
+    callback: function (args, opts, app) {
         if (args[0]) {
             return cli.dump(app.get(args[0]));
         }

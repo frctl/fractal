@@ -45,7 +45,7 @@ module.exports = {
         this._theme = theme;
     },
 
-    themeValue(path, otherwise){
+    themeValue(path, otherwise) {
         return _.get(this._theme, path, otherwise);
     },
 
@@ -54,38 +54,38 @@ module.exports = {
         return this;
     },
 
-    br(){
+    br() {
         slog.clear();
         this.write('');
         return this;
     },
 
-    debug(text){
+    debug(text) {
         if (this.debugging) {
             this.write(text, 'debug');
         }
         return this;
     },
 
-    success(text){
+    success(text) {
         this.write(text, 'success');
         return this;
     },
 
-    error(text){
+    error(text) {
         this.unslog();
         text = text.toString().replace(/^Error: /, '');
         this.write(text, 'error');
         return this;
     },
 
-    notice(text){
+    notice(text) {
         this.write(text, 'notice');
         return this;
     },
 
-    dump(data){
-        if (!data || ! _.isObject(data)) {
+    dump(data) {
+        if (!data || !_.isObject(data)) {
             return this.write(data);
         }
         if (!_.isFunction(data.then)) {
@@ -97,7 +97,7 @@ module.exports = {
     box(header, body, footer) {
         const table = new Table({
             head: [],
-            chars: {'mid': chalk.dim('─'), 'left-mid': '│', 'mid-mid': chalk.dim('─'), 'right-mid': '│'}
+            chars: { mid: chalk.dim('─'), 'left-mid': '│', 'mid-mid': chalk.dim('─'), 'right-mid': '│' }
         });
         table.push([header]);
         body = [].concat(body);
@@ -111,7 +111,7 @@ module.exports = {
         return this;
     },
 
-    write(str, type){
+    write(str, type) {
         if (!this.isMuted()) {
             str = type ? this._format(str, type) : str;
             if (this.isPaused()) {
@@ -120,7 +120,8 @@ module.exports = {
                 if (this.isSlogging()) {
                     slog(str);
                 } else {
-                    process.stdout.write(`${str}\n`);
+                    process.stdout.write(`${str}
+`);
                 }
             }
         }
@@ -174,51 +175,51 @@ module.exports = {
     //
     // },
 
-    slog(){
+    slog() {
         this._slogging = true;
         return this;
     },
 
-    unslog(){
+    unslog() {
         this._slogging = false;
         slog.clear();
         return this;
     },
 
-    isSlogging(){
+    isSlogging() {
         return this._slogging;
     },
 
-    mute(){
+    mute() {
         this._muted = true;
         return this;
     },
 
-    unmute(){
+    unmute() {
         this._mute = false;
         return this;
     },
 
-    isMuted(){
+    isMuted() {
         return this._mute;
     },
 
-    pause(){
+    pause() {
         this._paused = true;
         return this;
     },
 
-    unpause(){
+    unpause() {
         this._paused = false;
         this._processQueue();
         return this;
     },
 
-    isPaused(){
+    isPaused() {
         return this._paused;
     },
 
-    _format(text, type){
+    _format(text, type) {
         const prefix = this.themeValue(`${type}.prefix`, '');
         const textStyle = this.themeValue(`${type}.style`, (str) => str);
         const prefixStyle = this.themeValue(`${type}.prefixStyle`, textStyle);

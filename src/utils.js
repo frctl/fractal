@@ -3,7 +3,6 @@
 const Promise   = require('bluebird');
 const Path      = require('path');
 const minimist  = require('minimist');
-const anymatch  = require('anymatch');
 const fang      = require('@allmarkedup/fang');
 const _         = require('lodash');
 
@@ -58,7 +57,7 @@ module.exports = {
        };
    },
 
-   stringify(data, indent){
+    stringify(data, indent) {
        return JSON.stringify(data, function (key, val) {
            if (this[key] instanceof Buffer) {
                return '<Buffer>';
@@ -66,11 +65,11 @@ module.exports = {
            if (this[key] instanceof Function) {
                return '<Function>';
            }
-           if (_.isPlainObject(this[key]) && ! _.size(this[key])) {
+           if (_.isPlainObject(this[key]) && !_.size(this[key])) {
                return '{}';
            }
            return val;
-       }, indent || 4)
+       }, indent || 4);
    }
 
 };

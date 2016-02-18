@@ -38,7 +38,7 @@ module.exports = class ComponentSource extends Source {
     renderPreview(entity, useLayout) {
         useLayout = useLayout !== false ? true : false;
         const variant = entity.defaultVariant();
-        return this.render(variant, variant.context, {useLayout: true});
+        return this.render(variant, variant.context, { useLayout: true });
     }
 
     /**
@@ -75,7 +75,7 @@ module.exports = class ComponentSource extends Source {
             });
         }
 
-        return co(function* (){
+        return co(function* () {
             const source = yield self.load();
             if (_.includes(['component', 'variant' /*, 'collection' */], entity.type)) {
                 entity = entity.defaultVariant();
@@ -94,14 +94,14 @@ module.exports = class ComponentSource extends Source {
         });
     }
 
-    *_renderVariant(variant, context){
+    *_renderVariant(variant, context) {
         context = context || variant.context;
         const content = yield variant.getContent(true);
         const ctx     = yield this.resolve(context);
         return this.engine().render(variant.viewPath, content, ctx);
     }
 
-    *_renderComponent(component, context){
+    *_renderComponent(component, context) {
         const variant = component.defaultVariant();
         return yield this._renderVariant(variant, context);
     }

@@ -116,12 +116,12 @@ module.exports = class Component {
         return this._variants.has(name);
     }
 
-    defaultVariant(){
+    defaultVariant() {
         return this._variants.get(this.defaultName);
     }
 
     getDefaultVariant() {
-        cli.debug('Component.getDefaultVariant() is deprecated. Use Component.defaultVariant() instead.')
+        cli.debug('Component.getDefaultVariant() is deprecated. Use Component.defaultVariant() instead.');
         return this.defaultVariant();
     }
 

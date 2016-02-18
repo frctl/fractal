@@ -5,7 +5,7 @@ const Promise      = require('bluebird');
 const _            = require('lodash');
 const chokidar     = require('chokidar');
 const utils        = require('./utils');
-const cli       = require('./cli');
+const cli          = require('./cli');
 const Collection   = require('./collection');
 const fs           = require('./fs');
 

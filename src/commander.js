@@ -2,7 +2,7 @@
 
 const _          = require('lodash');
 
-module.exports = function(defaults, app){
+module.exports = function (defaults, app) {
 
     const commands = new Map();
 
@@ -10,7 +10,7 @@ module.exports = function(defaults, app){
         add(command.name, command.callback, command.opts || {});
     });
 
-    function add(name, callback, opts){
+    function add(name, callback, opts) {
         commands.set(name, {
             name: name,
             callback: callback,
@@ -34,8 +34,8 @@ module.exports = function(defaults, app){
         },
 
         get(name) {
-            return commands.get(name)
+            return commands.get(name);
         }
-    }
+    };
 
 };

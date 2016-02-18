@@ -48,7 +48,7 @@ class Fractal {
     run(name, args, opts) {
 
         if (this.get('env') !== 'debug') {
-            process.on('uncaughtException', function(err){
+            process.on('uncaughtException', function (err) {
                 cli.error(err);
                 process.exit(1);
             });
@@ -148,8 +148,8 @@ class Fractal {
         return this._sources.get('docs');
     }
 
-    get version(){
-        return this.get('version').replace(/v/i,'');
+    get version() {
+        return this.get('version').replace(/v/i, '');
     }
 
     set(setting, val) {
