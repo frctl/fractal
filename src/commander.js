@@ -1,6 +1,7 @@
 'use strict';
 
-const _          = require('lodash');
+const _   = require('lodash');
+const cli = require('./cli');
 
 module.exports = function (defaults, app) {
 
@@ -11,6 +12,7 @@ module.exports = function (defaults, app) {
     });
 
     function add(name, callback, opts) {
+        opts.scope = opts.scope ? [].concat(opts.scope) : ['local'];
         commands.set(name, {
             name: name,
             callback: callback,
@@ -28,8 +30,13 @@ module.exports = function (defaults, app) {
 
         run(command, args, opts) {
             command = _.isString(command) ? this.get(command) : command;
+            const scope = app.global ? 'global' : 'local';
             if (command) {
-                return command.callback(args, opts, app);
+                if (_.includes(command.opts.scope, scope)) {
+                    return command.callback(args, opts, app);
+                } else {
+                    cli.error(`The '${command.name}' command cannot be run ${scope}ly.`);
+                }
             }
         },
 

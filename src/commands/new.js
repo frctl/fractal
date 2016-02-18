@@ -10,8 +10,8 @@ module.exports = {
 
     opts: {
         description: 'Create a new Fractal project',
-        private: true,
-        global: true
+        // private: true,
+        scope: ['global']
     },
 
     callback: function (args, opts, app) {
@@ -20,7 +20,7 @@ module.exports = {
             process.exit(1);
         }
         const newPath = args[0].startsWith('/') ? args[0] : Path.join(process.cwd(), args[0]);
-
+        console.log(newPath);
         return;
     }
 

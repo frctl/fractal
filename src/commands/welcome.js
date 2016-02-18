@@ -10,42 +10,42 @@ module.exports = {
 
     opts: {
         description: 'Default command',
-        private: true
+        private: true,
+        scope: ['global','local']
     },
 
     callback: function (args, opts, app) {
 
-        const header   = app.global ? null : app.get('project.title');
-        const footer   = `Powered by Fractal v${app.version}`;
+        const header = app.global ? null : app.get('project.title');
+        const footer = `Powered by Fractal v${app.version}`;
+        const scope  = app.global ? 'global' : 'local';
         let commands = _.filter(app.commands.all(), c => c.opts.private !== true);
-
-        if (app.global) {
-            commands = _.filter(commands, c => c.opts.global == true);    
-        }
-
-        commands = _.sortBy(commands, 'name');
+        commands     = _.filter(commands, c => _.includes(c.opts.scope, scope));
+        commands     = _.sortBy(commands, 'name');
 
         let usage      = '';
 
         usage += `
 Usage: ${chalk.magenta('fractal <command>')} [args] [opts]
+`
 
-The following commands are available:
-`;
-        let longest = 0;
-        _.forEach(commands, command => {
-            if (command.name.length > longest) {
-                longest = command.name.length;
-            }
-        });
+        if (commands.length) {
+            usage += `\nThe following commands are available:\n`;
 
-        _.forEach(commands, command => {
-            const description = command.opts && command.opts.description ? command.opts.description : '';
-            usage += `
+            let longest = 0;
+            _.forEach(commands, command => {
+                if (command.name.length > longest) {
+                    longest = command.name.length;
+                }
+            });
+
+            _.forEach(commands, command => {
+                const description = command.opts && command.opts.description ? command.opts.description : '';
+                usage += `
 ➜ ${chalk.magenta(_.padEnd(command.name, longest + 2))}${description}`;
-        });
-
-        usage += '\n';
+            });
+            usage += '\n';
+        }
 
         cli.box(header, usage, footer);
         return;
