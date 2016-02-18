@@ -25,10 +25,10 @@ class Fractal {
         this._plugins = new Map();
         this._sources = new Map();
         this.commands = commander(require('./commands'), this);
-        cli.debugging = ! _.includes(['test', 'production'], this.get('env'));
+        cli.debugging = this.get('env') === 'debug';
         this.utils = {
             highlight: highlight,
-            log: cli
+            cli: cli
         };
         this.engine('handlebars', '@frctl/handlebars-engine');
         this.engine('nunjucks', '@frctl/nunjucks-engine');
@@ -46,6 +46,14 @@ class Fractal {
      */
 
     run(name, args, opts) {
+
+        if (this.get('env') !== 'debug') {
+            process.on('uncaughtException', function(err){
+                cli.error(err);
+                process.exit(1);
+            });
+        }
+
         if (!name) {
             const input = utils.parseArgv();
             if (!input.command) {

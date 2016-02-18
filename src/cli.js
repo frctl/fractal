@@ -5,6 +5,8 @@ const _           = require('lodash');
 const Table       = require('cli-table2');
 const prettyjson  = require('prettyjson');
 const utils       = require('./utils');
+const slog        = require('single-line-log').stdout;
+const Spinner = require('cli-spinner').Spinner;
 
 module.exports = {
 
@@ -17,6 +19,8 @@ module.exports = {
     _queue: [],
 
     lineWidth: 40,
+
+    _slogging: false,
 
     _theme: {
         log: {},
@@ -37,8 +41,12 @@ module.exports = {
         }
     },
 
-    theme(theme) {
+    setTheme(theme) {
         this._theme = theme;
+    },
+
+    themeValue(path, otherwise){
+        return _.get(this._theme, path, otherwise);
     },
 
     log(text) {
@@ -47,6 +55,7 @@ module.exports = {
     },
 
     br(){
+        slog.clear();
         this.write('');
         return this;
     },
@@ -64,6 +73,7 @@ module.exports = {
     },
 
     error(text){
+        text = text.toString().replace('Error: ','');
         this.write(text, 'error');
         return this;
     },
@@ -96,7 +106,7 @@ module.exports = {
         if (footer) {
             table.push([chalk.dim(footer)]);
         }
-        this.write(table.toString());
+        this.write(table.toString(), null);
         return this;
     },
 
@@ -106,7 +116,11 @@ module.exports = {
             if (this.isPaused()) {
                 this._queue.push(str);
             } else {
-                console.log(str);
+                if (this.isSlogging()) {
+                    slog(str);
+                } else {
+                    process.stdout.write(`${str}\n`);
+                }
             }
         }
     },
@@ -120,17 +134,15 @@ module.exports = {
     //     return this;
     // },
 
-    // pending(text, doneText, callback){
+    // pending(text, callback){
+    //     callback = callback || () => {};
     //     const spinner = new Spinner(`%s ${text}...`);
     //     const done = () => {
     //         spinner.stop();
-    //         if (doneText) {
-    //             this.write(doneText, null, true);
-    //         }
     //         this.br();
-    //         this.unpause();
+    //         // this.unpause();
     //     };
-    //     this.pause();
+    //     // this.pause();
     //     spinner.setSpinnerString(18);
     //     spinner.start();
     //     callback(spinner, done);
@@ -161,6 +173,20 @@ module.exports = {
     //
     // },
 
+    slog(){
+        this._slogging = true;
+        return this;
+    },
+
+    unslog(){
+        this._slogging = false;
+        slog.clear();
+        return this;
+    },
+
+    isSlogging(){
+        return this._slogging;
+    },
 
     mute(){
         this._muted = true;
@@ -171,7 +197,6 @@ module.exports = {
         this._mute = false;
         return this;
     },
-
 
     isMuted(){
         return this._mute;
@@ -193,9 +218,9 @@ module.exports = {
     },
 
     _format(text, type){
-        const prefix = _.get(this._theme, `${type}.prefix`, '');
-        const textStyle = _.get(this._theme, `${type}.style`, (str) => str);
-        const prefixStyle = _.get(this._theme, `${type}.prefixStyle`, textStyle);
+        const prefix = this.themeValue(`${type}.prefix`, '');
+        const textStyle = this.themeValue(`${type}.style`, (str) => str);
+        const prefixStyle = this.themeValue(`${type}.prefixStyle`, textStyle);
         return `${prefixStyle(prefix)} ${textStyle(text)}`;
     },
 
