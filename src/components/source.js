@@ -102,7 +102,7 @@ module.exports = class ComponentSource extends Source {
 
     *_renderComponent(component, context){
         const variant = component.defaultVariant();
-        return self._renderVariant(variant, context);
+        return this._renderVariant(variant, context);
     }
 
     // _renderCollatedComponent: function* (component, context){
