@@ -73,6 +73,7 @@ module.exports = {
     },
 
     error(text){
+        this.unslog();
         text = text.toString().replace('Error: ','');
         this.write(text, 'error');
         return this;
