@@ -5,11 +5,9 @@ var packageJSON = require('./package.json');
 module.exports = {
     version: packageJSON.version,
     env: process.env.NODE_ENV || 'production',
-    log: {
-        level: "warn"
-    },
+
     project: {
-        title: "Fractal",
+        title: "My Component Library",
         version: null
     },
     components: {
@@ -23,7 +21,6 @@ module.exports = {
         splitter: "--",
         ext: ".hbs",
         context: {},
-        props: {},
         engine: 'handlebars',
         status: {
             default: "ready",

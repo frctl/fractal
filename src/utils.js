@@ -56,5 +56,21 @@ module.exports = {
            args: args,
            opts: opts
        };
+   },
+
+   stringify(data, indent){
+       return JSON.stringify(data, function (key, val) {
+           if (this[key] instanceof Buffer) {
+               return '<Buffer>';
+           }
+           if (this[key] instanceof Function) {
+               return '<Function>';
+           }
+           if (_.isPlainObject(this[key]) && ! _.size(this[key])) {
+               return '{}';
+           }
+           return val;
+       }, indent || 4)
    }
+
 };

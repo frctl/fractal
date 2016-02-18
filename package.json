@@ -16,14 +16,15 @@
   "dependencies": {
     "@allmarkedup/dirscribe": "^1.0.0",
     "@allmarkedup/fang": "^1.0.0",
-    "@frctl/mustache-engine": "^0.2.0",
     "@frctl/handlebars-engine": "^0.4.1",
+    "@frctl/mustache-engine": "^0.2.0",
     "@frctl/nunjucks-engine": "^0.4.0",
     "@frctl/web-plugin": "^0.4.0",
     "anymatch": "^1.3.0",
     "bluebird": "^3.1.4",
     "chalk": "^1.1.1",
     "chokidar": "^1.2.0",
+    "cli-table2": "^0.2.0",
     "co": "^4.6.0",
     "fs-extra": "^0.26.4",
     "gray-matter": "^2.0.1",
@@ -35,7 +36,7 @@
     "marked": "^0.3.5",
     "minimist": "^1.2.0",
     "semver": "^5.1.0",
-    "winston": "^2.1.1"
+    "prettyjson": "^1.1.3"
   },
   "bin": {
     "fractal": "./bin/fractal"
@@ -52,10 +53,10 @@
   "devDependencies": {
     "chai": "^3.4.1",
     "chai-as-promised": "^5.2.0",
+    "doctoc": "^1.0.0",
     "jscs": "^2.9.0",
     "mocha": "^2.3.4",
     "proxyquire": "^1.7.3",
-    "sinon": "^1.17.2",
-    "doctoc": "^1.0.0"
+    "sinon": "^1.17.2"
   }
 }

@@ -5,7 +5,7 @@ const Promise      = require('bluebird');
 const _            = require('lodash');
 const chokidar     = require('chokidar');
 const utils        = require('./utils');
-const logger       = require('./logger');
+const cli       = require('./cli');
 const Collection   = require('./collection');
 const fs           = require('./fs');
 
@@ -63,7 +63,7 @@ class Source extends Collection {
         }
         if (force || !this.isLoaded) {
             return this._build().then(source => {
-                logger.logInfo(`Finished parsing ${this.name} directory`);
+                cli.debug(`Finished parsing ${this.name} directory`);
                 this.isLoaded = true;
                 this.emit('loaded', this);
                 return source;
@@ -80,7 +80,7 @@ class Source extends Collection {
             return this._loading;
         }
         return this._build().then(source => {
-            logger.logInfo(`Finished parsing ${this.name} directory`);
+            cli.debug(`Finished parsing ${this.name} directory`);
             this.isLoaded = true;
             this.emit('changed', this);
             return source;
@@ -89,13 +89,13 @@ class Source extends Collection {
 
     watch() {
         if (!this._monitor && this.sourcePath) {
-            logger.started(`Watching ${this.name} directory - ${this.sourcePath}`);
+            cli.debug(`Watching ${this.name} directory - ${this.sourcePath}`);
             this._monitor = chokidar.watch(this.sourcePath, {
                 ignored: /[\/\\]\./
             });
             this._monitor.on('ready', () => {
                 this._monitor.on('all', (event, path) => {
-                    logger.logInfo(`Change in ${this.name} directory`);
+                    cli.debug(`Change in ${this.name} directory`);
                     this.refresh();
                 });
             });
@@ -130,7 +130,7 @@ class Source extends Collection {
             this._loading = null;
             return this.transform(fileTree, this);
         }).catch(e => {
-            logger.error(e);
+            cli.error(e);
         });
         return this._loading;
     }

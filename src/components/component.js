@@ -5,7 +5,7 @@ const _       = require('lodash');
 const co      = require('co');
 const Path    = require('path');
 const Variant = require('./variant');
-const logger  = require('../logger');
+const cli     = require('../cli');
 const data    = require('../data');
 const utils   = require('../utils');
 const md      = require('../markdown');
@@ -96,7 +96,7 @@ module.exports = class Component {
     }
 
     getVariant(name) {
-        logger.warn('Component.getVariant() is deprecated. Use Component.variant() instead.')
+        cli.debug('Component.getVariant() is deprecated. Use Component.variant() instead.');
         return this.variant(name);
     }
 
@@ -121,7 +121,7 @@ module.exports = class Component {
     }
 
     getDefaultVariant() {
-        logger.warn('Component.getDefaultVariant() is deprecated. Use Component.defaultVariant() instead.')
+        cli.debug('Component.getDefaultVariant() is deprecated. Use Component.defaultVariant() instead.')
         return this.defaultVariant();
     }
 
@@ -180,7 +180,7 @@ module.exports = class Component {
 
         varConfs.forEach(conf => {
             if (_.isUndefined(conf.name)) {
-                logger.error(`Could not create variant of ${comp.handle} - 'name' value is missing`);
+                cli.error(`Could not create variant of ${comp.handle} - 'name' value is missing`);
                 return null;
             }
             const p = _.defaults(conf, {

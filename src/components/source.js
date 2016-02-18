@@ -6,7 +6,7 @@ const co        = require('co');
 const fs        = Promise.promisifyAll(require('fs'));
 const anymatch  = require('anymatch');
 const transform = require('./transform');
-const logger    = require('../logger');
+const cli    = require('../cli');
 const Source    = require('../source');
 const resolve   = require('../context');
 
@@ -89,7 +89,7 @@ module.exports = class ComponentSource extends Source {
                 throw new Error(`Cannot render entity of type ${entity.type}`);
             }
         }).catch(err => {
-            logger.error(err);
+            cli.error(err);
         });
     }
 
@@ -127,7 +127,7 @@ module.exports = class ComponentSource extends Source {
     *_wrapInLayout(content, previewHandle, context) {
         let layout = this.find(previewHandle);
         if (!layout) {
-            logger.error(`Preview layout ${previewHandle} not found.`);
+            cli.error(`Preview layout ${previewHandle} not found.`);
             return content;
         }
         if (layout.type === 'component') {
@@ -158,7 +158,7 @@ module.exports = class ComponentSource extends Source {
             return this._statuses.mixed;
         }
         if (!this._statuses.options[handle]) {
-            logger.error(`Status ${handle} is not a known option.`);
+            cli.error(`Status ${handle} is not a known option.`);
             return this._statuses.options[this._statuses.default];
         }
         return this._statuses.options[handle];

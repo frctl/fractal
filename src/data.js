@@ -6,7 +6,7 @@ var _       = require('lodash');
 var Path    = require('path');
 var fs      = Promise.promisifyAll(require('fs'));
 var utils   = require('./utils');
-var logger  = require('./logger');
+var cli  = require('./cli');
 
 const self = module.exports = {
 
@@ -48,7 +48,7 @@ const self = module.exports = {
                     data = data();
                 }
                 if (!_.isObject(data)) {
-                    logger.error(`Error loading data file ${filePath}: JS files must return a JavaScript data object.`);
+                    cli.error(`Error loading data file ${filePath}: JS files must return a JavaScript data object.`);
                     return Promise.reject(new Error('Error loading data file'));
                 }
                 return Promise.resolve(_.cloneDeep(data));
@@ -59,7 +59,7 @@ const self = module.exports = {
             return fs.readFileAsync(filePath, 'utf8').then(contents => {
                 return self.parse(contents, format);
             }).catch(err => {
-                logger.error(`Error loading data file ${filePath}: ${err.message}`);
+                cli.error(`Error loading data file ${filePath}: ${err.message}`);
                 return {};
             });
         }
@@ -77,7 +77,7 @@ const self = module.exports = {
             return Promise.resolve(defaults);
         }
         return this.readFile(file.path).then(c => _.defaultsDeep(c, defaults)).catch(err => {
-            logger.error(`Error parsing data file ${file.path}: ${err.message}`);
+            cli.error(`Error parsing data file ${file.path}: ${err.message}`);
             return defaults;
         });
     }

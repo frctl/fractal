@@ -1,7 +1,7 @@
 'use strict';
 
 const _        = require('lodash');
-const logger   = require('../logger');
+const cli   = require('../cli');
 const Entities = require('../entities');
 
 module.exports = class ComponentCollection extends Entities {

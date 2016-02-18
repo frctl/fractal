@@ -2,7 +2,7 @@
 
 const co        = require('co');
 const _         = require('lodash');
-const logger    = require('./logger');
+const cli    = require('./cli');
 
 module.exports = function (context, source) {
 
@@ -28,7 +28,7 @@ module.exports = function (context, source) {
                     const entityContext = yield resolve(entity.context);
                     return _.get(entityContext, parts.join('.'), null);
                 }
-                logger.warn(`Could not resolve context reference for ${item}`);
+                cli.debug(`Could not resolve context reference for ${item}`);
                 return null;
             }
 

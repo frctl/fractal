@@ -2,11 +2,11 @@
 
 const Promise    = require('bluebird');
 const _          = require('lodash');
-const logger     = require('./logger');
+const cli        = require('./cli');
 const Components = require('./components/source');
 const Docs       = require('./docs/source');
 const Plugin     = require('./plugin');
-const commands   = require('./commands');
+const commander  = require('./commander');
 const highlight  = require('./highlighter');
 const utils      = require('./utils');
 
@@ -20,22 +20,20 @@ class Fractal {
      */
 
     constructor() {
-        this._config   = require('../config');
-        this._engines  = new Map();
-        this._commands = new Map();
-        this._plugins  = new Map();
-        this._sources  = new Map();
+        this._config  = require('../config');
+        this._engines = new Map();
+        this._plugins = new Map();
+        this._sources = new Map();
+        this.commands = commander(require('./commands'), this);
+        cli.debugging = ! _.includes(['test', 'production'], this.get('env'));
         this.utils = {
-            log: logger,
-            highlight: highlight
+            highlight: highlight,
+            log: cli
         };
         this.engine('handlebars', '@frctl/handlebars-engine');
         this.engine('nunjucks', '@frctl/nunjucks-engine');
         this.engine('mustache', '@frctl/mustache-engine');
         this.plugin('@frctl/web-plugin');
-        _.forOwn(commands, (command, name) => {
-            this.command(name, command, {});
-        });
     }
 
     /**
@@ -51,19 +49,19 @@ class Fractal {
         if (!name) {
             const input = utils.parseArgv();
             if (!input.command) {
-                return this.run('welcome');
+                return this.commands.run('welcome', null, null, this);
             } else {
                 name    = input.command;
                 args    = input.args;
                 opts    = input.opts;
             }
         }
-        const command = this._findCommand(name);
+        const command = this.commands.get(name);
         if (command) {
             this._initPlugins();
-            return this._runCommand(command, args, opts);
+            return this.commands.run(command, args, opts, this);
         }
-        logger.error(`Command ${name} not recognised`);
+        cli.error(`Command ${name} not recognised`);
     }
 
     source(type) {
@@ -100,19 +98,18 @@ class Fractal {
         const init = _.isString(plugin) ? require(plugin) : plugin;
         init.bind(instance)(config || {}, this);
         if (!instance.name) {
-            logger.error(`Plugins must provide a valid 'name' value.`);
+            cli.error(`Plugins must provide a valid 'name' value.`);
             return;
+        }
+        for (let command of instance.commands()) {
+            this.command(command[1].name, command[1].callback, command[1].opts || {});
         }
         this._plugins.set(instance.name, instance);
         return this;
     }
 
     command(name, callback, opts) {
-        this._commands.set(name, {
-            name: name,
-            callback: callback,
-            opts: opts || {}
-        });
+        this.commands.add(name, callback, opts);
         return this;
     }
 
@@ -143,8 +140,11 @@ class Fractal {
         return this._sources.get('docs');
     }
 
+    get version(){
+        return this.get('version').replace(/v/i,'');
+    }
+
     set(setting, val) {
-        logger.debug('Setting config value: %s = %s', setting, _.isObject(val) ? JSON.stringify(val, null, 2) : val);
         _.set(this._config, setting, val);
         return this;
     }
@@ -160,37 +160,6 @@ class Fractal {
         for (let plugin of this._plugins.values()) {
             plugin.config = _.defaultsDeep(_.clone(this.get(`plugins.${plugin.name}`, {})), plugin.config);
         }
-    }
-
-    _runCommand(command, args, opts) {
-        command = _.isString(command) ? this._findCommand(command) : command;
-        if (command) {
-            return command.callback(args, opts, this);
-        }
-    }
-
-    _findCommand(name) {
-        const command = this._getCommands()[name];
-        if (command) {
-            return command;
-        }
-    }
-
-    _getCommands() {
-        const commands = {};
-        for (let command of this._commands.entries()) {
-            commands[command[0]] = command[1];
-        }
-        for (let plugin of this._plugins.values()) {
-            for (let command of plugin.commands()) {
-                commands[command[0]] = command[1];
-            }
-        }
-        return commands;
-    }
-
-    get version(){
-        return this.get('version');
     }
 
 }
