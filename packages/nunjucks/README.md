@@ -1,3 +1,3 @@
-# Nunjucks Engine
+# Nunjucks Adapter
 
 Use [Nunjucks](http://mozilla.github.io/nunjucks/) templates with Fractal.
