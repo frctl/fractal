@@ -1,8 +1,34 @@
 'use strict';
 
+/*
+ * Require the Fractal module
+ */
 const fractal = require('@frctl/fractal');
 
-{{#if projectTitle}}fractal.set('project.title', '{{ projectTitle }}');{{/if}}
-{{#if componentsDir}}fractal.set('components.path', '{{ componentsDir }}');{{/if}}
-{{#if docsDir}}fractal.set('docs.path', '{{ docsDir }}');{{/if}}
-{{#if publicDir}}fractal.set('plugins.web.static.path', '{{ publicDir }}');{{/if}}
+{{#if projectTitle}}
+/*
+ * Give your project a title.
+ */
+fractal.set('project.title', '{{ projectTitle }}');
+{{/if}}
+
+{{#if componentsDir}}
+/*
+ * Tell Fractal where to look for components.
+ */
+fractal.set('components.path', '{{ componentsDir }}');
+{{/if}}
+
+{{#if docsDir}}
+/*
+ * Tell Fractal where to look for documentation pages.
+ */
+fractal.set('docs.path', '{{ docsDir }}');
+{{/if}}
+
+{{#if publicDir}}
+/*
+ * Tell the Fractal web preview plugin where to look for static assets.
+ */
+fractal.set('plugins.web.static.path', '{{ publicDir }}');
+{{/if}}

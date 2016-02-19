@@ -33,7 +33,6 @@ module.exports = {
         const skelPath         = Path.join(__dirname, '../../skel/new');
         const fractalFileTpl   = Path.join(skelPath, 'fractal.hbs');
         const docsIndexTpl     = Path.join(skelPath, 'docs/index.hbs');
-        const exampleComponent = Path.join(skelPath, 'components/example');
 
         if (helpers.fileExistsSync(basePath)) {
             throw new Error(`Cannot create new project: The directory ${basePath} already exists.`);
@@ -104,12 +103,11 @@ module.exports = {
                 if (answers.useGit) {
                     return Promise.all([
                         touch(Path.join(publicDir, '.gitkeep')),
+                        touch(Path.join(componentsDir, '.gitkeep')),
                         fs.writeFileAsync(gitIgnorePath, 'node_modules\n'),
                     ]);
                 }
                 return paths;
-            }).then(() => {
-                return fs.copyAsync(exampleComponent, Path.join(componentsDir, 'example'));
             }).then(() => {
                 return Promise.all([
                     fs.writeFileAsync(fractalFilePath, fractalContents),
@@ -119,7 +117,7 @@ module.exports = {
                 cli.notice('Installing NPM dependencies - this may take some time!');
                 shell.cd(basePath);
                 shell.exec('npm i @frctl/fractal --save').stdout;
-                cli.success(`Your new Fractal project has been set up!\n  Start the web preview server by running 'cd ${baseDir} && fractal start'`);
+                cli.success(`Your new Fractal project has been set up.`);
             }).catch(e => {
                 fs.remove(basePath);
                 cli.error(e);
