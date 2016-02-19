@@ -1,18 +1,18 @@
 {
-  "name": "@frctl/handlebars-engine",
+  "name": "@frctl/handlebars-adapter",
   "version": "0.4.1",
   "description": "Use Handlebars templates with Fractal.",
-  "main": "engine.js",
+  "main": "adapter.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/frctl/handlebars-engine.git"
+    "url": "https://github.com/frctl/handlebars-adapter.git"
   },
   "author": "Clearleft <dev@clearleft.com> (http://clearleft.com/)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/frctl/handlebars-engine/issues"
+    "url": "https://github.com/frctl/handlebars-adapter/issues"
   },
-  "homepage": "https://github.com/frctl/handlebars-engine",
+  "homepage": "https://github.com/frctl/handlebars-adapter",
   "dependencies": {
     "handlebars": "^4.0.5",
     "lodash": "^4.0.0"

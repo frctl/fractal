@@ -1,3 +1,3 @@
-# Handlebars Engine
+# Handlebars Adapter
 
 Use Handlebars templates with Fractal.

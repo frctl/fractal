@@ -34,7 +34,7 @@ module.exports = function(source, config){
         engine: Handlebars,
         render: function(path, str, context, meta){
             if (!viewsLoaded) loadViews(source);
-            var template = Handlebars.compile(str);
+            const template = Handlebars.compile(str);
             return Promise.resolve(template(context));
         }
     }
