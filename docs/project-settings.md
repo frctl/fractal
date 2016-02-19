@@ -13,6 +13,7 @@
   - [Directory path](#directory-path)
   - [Template engine](#template-engine)
   - [File extension](#file-extension)
+  - [Preview layout](#preview-layout)
   - [Default status](#default-status)
 - [Documentation settings](#documentation-settings)
   - [Directory path](#directory-path-1)
@@ -20,6 +21,9 @@
   - [File extension](#file-extension-1)
   - [Parse as markdown](#parse-as-markdown)
   - [Index label](#index-label)
+- [Web preview UI settings](#web-preview-ui-settings)
+  - [Static assets path](#static-assets-path)
+  - [Theme](#theme)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 

@@ -28,6 +28,7 @@ If you haven't already, you should read the [configuration file documentation](/
   - [notes](#notes-1)
   - [display](#display-1)
   - [context](#context-1)
+  - [preview](#preview)
 - [Example configuration file](#example-configuration-file)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->

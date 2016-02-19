@@ -1,7 +1,19 @@
 # Preview Layouts
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [Creating a preview layout](#creating-a-preview-layout)
+- [Specifying a preview layout for a component](#specifying-a-preview-layout-for-a-component)
+  - [Global (default) preview layout](#global-default-preview-layout)
+  - [In a parent collection's configuration file](#in-a-parent-collections-configuration-file)
+  - [In a component's configuration file](#in-a-components-configuration-file)
+- [Context in preview layouts](#context-in-preview-layouts)
+  - [The _target property](#the-_target-property)
+- [Preview rendering details](#preview-rendering-details)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 By default, when Fractal renders a component, it does so without wrapping it in any 'page' structure markup. That means that it is effectively an HTML *fragment*, as opposed to an HTML *page*. As a result, your components will appear unstyled; Fractal **does not** automatically insert any styles or behaviour into the rendered markup.
 
@@ -81,13 +93,13 @@ Setting it directly in a component's config file will override any defaults set 
 }
 ```
 
-### Context in preview layouts
+## Context in preview layouts
 
 Preview layouts are just components and can have their own configuration files associated with them, just like any other components. That means you can specify context data for the layout in the configuration file, and you will be able to access it from within the layout.
 
 You **will not** be able to access the layout's context data from within the component that is being rendered. The component is not *included* as a partial in the layout, but rather rendered first and then passed in as a property on the layout's context data.
 
-#### The _target property
+### The _target property
 
 The preview layout, when rendered as a layout and not as a component on it's own, will have access to a special context property called `_target`. This is a JSON representation of whichever component or variant is being rendered within the layout.
 
@@ -100,12 +112,12 @@ Having access to this means that you can do things like dynamically set the page
 ```
 Your page title would then match the component being rendered.
 
-### Preview rendering details
+## Preview rendering details
 
 It may be useful to understand the exact rendering order when a preview layout is used. The rendering works as follows:
 
-1. The component is rendered, using it's own set of context data.
-2. The rendered output of that is assigned to a special property, `yield`, which is attached to the preview layout's context data.
-3. A JSON representation of the component being rendered is assigned to the `_target` property of the layout's context.
-4. The layout is rendered using it's own context, complete with the additional `yield` and `_target` properties.
+1. The component view is rendered, using it's own set of context data.
+2. The rendered output is assigned to a special property, `yield`, which is attached to the preview layout's context data.
+3. A JSON representation of the component being rendered is assigned to the `_target` property of the layout's context data.
+4. The layout view file is rendered using it's own preview context data, complete with the additional `yield` and `_target` properties.
 
