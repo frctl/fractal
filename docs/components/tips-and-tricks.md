@@ -11,3 +11,7 @@
 ## Hiding components from listings
 
 [ Coming soon ]
+
+## Using a README for component notes
+
+[ Coming soon ]

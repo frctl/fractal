@@ -73,21 +73,85 @@ status: 'wip'
 
 ####preview
 
+Which layout (specified by [handle](/docs/components/overview.md#referencing-components---@handle-syntax)) to use to when rendering previews of this layout. See the [preview layouts](/docs/components/layouts.md) documentation for more details
+
+```yaml
+preview: '@my-preview-layout'
+```
+
 ### context
+
+The [context data](/docs/components/context.md) to pass to the template when rendering previews. 
+
+`context` is an **inheritable property**. Any context data set on the component will be *merged* with context data set upstream in the [configuration cascade](/docs/configuration-files.md#configuration-inheritance).
+
+```yaml
+context: 
+  buttonText: 'Click here!'
+  listItems: ['foo','bar','baz']
+```
 
 ### notes
 
-### display
+Any notes about the component. Displayed in the web preview UI if present. Any notes set here override content taken from the component's README.md file, if there is one. 
+
+```yaml
+notes: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore 	magna aliqua.
+```
 
 ### tags
 
+An array of tags to add to the component. Can be used by plugins and tasks to filter components.
+
+`tags` is an **inheritable property**. Tags set on the component will be *merged* with tags set upstream in the [configuration cascade](/docs/configuration-files.md#configuration-inheritance).
+
+```yaml
+tags: ['sprint-1', 'foobar']
+```
+
 ### isHidden
 
+Specifies whether the component [is hidden](/docs/components/tips-and-tricks.md#hiding-components-from-listings) (i.e. does not show up in listings or navigation) or not. Overrides the inferred value from an underscore-prefixed file name if set.
+
+```yaml
+isHidden: true
+```
 ### order
 
-### view
+An integer order value, used when sorting components. Overrides any order value set as a property of the filename if set.
+
+```yaml
+order: 4
+``` 
+
+### display
+
+CSS property key/value pairs that preview UIs *may* choose to use to apply to the preview rendering area. Useful for doing things like setting max-widths for components that are designed to only be used in sidebars.
+
+This *does not* leak into the styling of the component itself; it is just applied to the area (typically an iframe) that the component is previewed within in plugins such as the web preview UI.
+
+```yaml
+display:
+  max-width: 400px
+  min-width: 250px
+``` 
 
 ### variants
+
+An array of variant configuration objects. See the variant properties options (below) and the [variants documentation](/docs/components/variants.md) for more information on working with variants.
+
+Many variant properties are **inherited from the parent component**, and all apart from the `name` value are optional.
+
+```yaml
+variants:
+  - name: 'large'
+    status: 'ready'
+    context:
+      buttonText: "I'm a large button!"
+  - name: 'small'
+    context:
+      isSmall: true
+``` 
 
 ## Variant properties
 
