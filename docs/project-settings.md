@@ -141,3 +141,20 @@ The default label to use for index pages. Can be overridden on a page-by-page ba
 ```js
 fractal.set('docs.indexLabel', 'Overview');
 ```
+
+## Web preview UI settings
+
+### Static assets path
+
+The path to the directory where your static assets live. Any assets within this directory will be made available to your components and preview layouts at a URL path relative to this directory.
+
+```js
+fractal.set('plugins.web.static.path', 'public');
+```
+### Theme
+
+The theme you'd like to use for the web preview UI. Note that you must install the theme as a NPM dependency as well as specifying it's name here.
+
+```js
+fractal.set('plugins.web.theme', '@frctl/web-preview-theme');
+```

@@ -102,6 +102,8 @@ status: 'wip'
 
 ### context
 
+### preview
+
 <!--The following primitive properties are inherited from upstream sources if not specified directly:
 
 * `status` (default: `'ready'`)
