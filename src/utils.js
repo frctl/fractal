@@ -2,6 +2,7 @@
 
 const Promise   = require('bluebird');
 const Path      = require('path');
+const fs        = require('fs');
 const minimist  = require('minimist');
 const fang      = require('@allmarkedup/fang');
 const _         = require('lodash');
@@ -70,6 +71,15 @@ module.exports = {
            }
            return val;
        }, indent || 4);
+   },
+
+   fileExistsSync(path) {
+       try {
+           fs.accessSync(path, fs.F_OK);
+           return true;
+       } catch (e) {
+           return false;
+       }
    }
 
 };

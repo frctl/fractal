@@ -1,0 +1,8 @@
+'use strict';
+
+const fractal = require('@frctl/fractal');
+
+{{#if projectTitle}}fractal.set('project.title', '{{ projectTitle }}');{{/if}}
+{{#if componentsDir}}fractal.set('components.path', '{{ componentsDir }}');{{/if}}
+{{#if docsDir}}fractal.set('docs.path', '{{ docsDir }}');{{/if}}
+{{#if publicDir}}fractal.set('plugins.web.static.path', '{{ publicDir }}');{{/if}}
