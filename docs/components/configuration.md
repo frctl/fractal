@@ -71,7 +71,7 @@ status: 'wip'
 ```
 * **Choices:** `prototype | wip | ready`
 
-####preview
+### preview
 
 Which layout (specified by [handle](/docs/components/overview.md#referencing-components---@handle-syntax)) to use to when rendering previews of this layout. See the [preview layouts](/docs/components/layouts.md) documentation for more details
 
@@ -93,7 +93,7 @@ context:
 
 ### notes
 
-Any notes about the component. Displayed in the web preview UI if present. Any notes set here override content taken from the component's README.md file, if there is one. 
+Any notes about the component. Displayed in the web preview UI if present. Any notes set here override content taken from the component's README.md file, if there is one.  Accepts markdown.
 
 ```yaml
 notes: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore 	magna aliqua.
@@ -152,29 +152,71 @@ variants:
     context:
       isSmall: true
 ``` 
-
 ## Variant properties
+
+Variants can be defined in the parent components configuration file. See the [variants documentation](/docs/components/variants.md) for full details on creating and configuring variants.
 
 ### name
 
+The name of the variant. This is the only **mandatory property** for variant definitions.
+
+A variant with a name of 'large' that belongs to the component named 'button' will have a [handle](/docs/components/overview.md#referencing-components---@handle-syntax) of **@button--large**.
+
+```yaml
+name: 'unicorn'
+``` 
 ### status
 
-### view
+The status of the variant. Overrides the default status of it's parent component.
 
-### notes
-
-### display
+```yaml
+status: 'wip'
+```
+* **Choices:** `prototype | wip | ready`
 
 ### context
 
+The [context data](/docs/components/context.md) to pass to the variant view template when rendering previews. 
+
+Any context set on a variant will be merged with it's parent component's (inherited and merged) context data.
+
+```yaml
+context: 
+  buttonText: 'It's a unicorn button!'
+```
+
+### view
+
+The view file to use. If not specified and a view file matching the variant's handle is found (i.e. `component--variant.hbs` or similar) then that view will be used. If none is specified and no matching template is found, then the view file for the parent component will be used.
+
+```yaml
+view: 'component--funky.hbs'
+```
+### notes
+
+Any notes about the variant. Displayed in the web preview UI if present. Accepts markdown.
+
+```yaml
+notes: "Different from the default component because this one is *funky*."
+```
+### display
+
+See the component display property description for details. This is merged with any display properties assigned to the parent content.
+
+```yaml
+display:
+  max-width: 90000px
+``` 
+
 ### preview
 
-<!--The following primitive properties are inherited from upstream sources if not specified directly:
+Which layout (specified by [handle](/docs/components/overview.md#referencing-components---@handle-syntax)) to use to when rendering previews of this layout. See the [preview layouts](/docs/components/layouts.md) documentation for more details.
 
-* `status` (default: `'ready'`)
-* `preview` (default: `null`)
-* `isHidden` (default: `false`)
-* `prefix` (default: `null`)-->
+This overrides any the (inherited) `preview` value of the parent component.
+
+```yaml
+preview: '@my-special-layout'
+```
 
 ## Example configuration file
 
@@ -192,6 +234,7 @@ module.exports = {
 	},
 	variants: [{
 		name: 'large',
+		notes: 'Only use this when you need a really big button!',
 		context: {
 			modifier: 'is-large'
 		}
