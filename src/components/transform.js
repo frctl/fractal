@@ -39,7 +39,7 @@ module.exports = function (fileTree, source) {
 
         const view = _.find(matched.views, { name: dir.name });
         if (view) { // it is a component
-            const nameMatch = `${dir.name}.`;
+            const nameMatch = `${dir.name}`;
             dirConfig.view = view.base;
             dirConfig.viewName = dir.name;
             dirConfig.viewPath = view.path;
