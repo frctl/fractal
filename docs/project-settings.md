@@ -88,6 +88,14 @@ The file extension for your component views that Fractal will look for when pars
 fractal.set('components.ext', '.hbs');
 ```
 
+### Preview layout
+
+The default [preview layout](/docs/components/layouts.md) to use. Defaults to `null` if unspecified.
+
+```js
+fractal.set('components.preview.layout', '@my-preview');
+```
+
 ### Default status
 
 The default status to use for a component. Statuses are fully configurable - see the [components documentation](/docs/components/statuses.md) for details.
