@@ -16,6 +16,7 @@ Fractal documentation is currently very much a work-in-progress. Pages may be pl
 	* [Overview](/docs/components/overview.md)
 	* [Configuration options](/docs/components/configuration.md)
 	* [Using preview layouts](/docs/components/layouts.md)
+	* [Context data for components](/docs/components/context.md)
 * Guides	
 	* [Creating components](/docs/guides/creating-components.md)
 
