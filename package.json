@@ -16,9 +16,9 @@
   "dependencies": {
     "@allmarkedup/dirscribe": "^1.0.0",
     "@allmarkedup/fang": "^1.0.0",
-    "@frctl/handlebars-engine": "^0.4.1",
-    "@frctl/mustache-engine": "^0.2.0",
-    "@frctl/nunjucks-engine": "^0.4.0",
+    "@frctl/handlebars-adapter": "^0.4.2",
+    "@frctl/mustache-adapter": "^0.2.1",
+    "@frctl/nunjucks-adapter": "^0.4.1",
     "@frctl/web-plugin": "^0.5.2",
     "anymatch": "^1.3.0",
     "bluebird": "^3.1.4",

@@ -16,7 +16,7 @@ module.exports = {
 
     callback: function (args, opts, app) {
 
-        const header = 'Fractal CLI ' + (app.global ? '' : app.get('project.title'));
+        const header = 'Fractal CLI' + (app.global ? '' : ': ' + app.get('project.title'));
         const footer = `Powered by Fractal v${app.version}`;
         const scope  = app.global ? 'global' : 'local';
         let commands = _.filter(app.commands.all(), c => c.opts.private !== true);
