@@ -32,9 +32,9 @@ class Fractal {
             cli: cli,
             helpers: utils
         };
-        this.engine('handlebars', '@frctl/handlebars-engine');
-        this.engine('nunjucks', '@frctl/nunjucks-engine');
-        this.engine('mustache', '@frctl/mustache-engine');
+        this.engine('handlebars', '@frctl/handlebars-adapter');
+        this.engine('nunjucks', '@frctl/nunjucks-adapter');
+        this.engine('mustache', '@frctl/mustache-adapter');
         this.plugin('@frctl/web-plugin');
     }
 
