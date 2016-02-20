@@ -1,13 +1,15 @@
 'use strict';
 
-const co         = require('co');
-const _          = require('lodash');
-const Component  = require('./component');
-const Collection = require('./collection');
-const Source     = require('./source');
-const fs         = require('../fs');
-const data       = require('../data');
-const cli     = require('../cli');
+const co              = require('co');
+const _               = require('lodash');
+const Component       = require('./component');
+const Collection      = require('./collection');
+const Source          = require('./source');
+const Asset           = require('../assets/asset');
+const AssetCollection = require('../assets/collection');
+const fs              = require('../fs');
+const data            = require('../data');
+const cli             = require('../cli');
 
 module.exports = function (fileTree, source) {
 
@@ -20,10 +22,11 @@ module.exports = function (fileTree, source) {
         const matched     = {
             directories: directories,
             files:       files,
-            views:       files.filter(f => source.isView(f)),
-            varViews:    files.filter(f => source.isVarView(f)),
-            configs:     files.filter(f => source.isConfig(f)),
-            readmes:     files.filter(f => source.isReadme(f)),
+            views:       files.filter(source.isView),
+            varViews:    files.filter(source.isVarView),
+            configs:     files.filter(source.isConfig),
+            readmes:     files.filter(source.isReadme),
+            assets:      files.filter(source.isAsset),
         };
 
         const dirConfig = yield data.getConfig(_.find(matched.configs, f => f.name.startsWith(dir.name)), {
@@ -39,17 +42,17 @@ module.exports = function (fileTree, source) {
 
         const view = _.find(matched.views, { name: dir.name });
         if (view) { // it is a component
-            const nameMatch = `${dir.name}`;
-            dirConfig.view = view.base;
+            const nameMatch    = `${dir.name}`;
+            dirConfig.view     = view.base;
             dirConfig.viewName = dir.name;
             dirConfig.viewPath = view.path;
-            dirConfig.source = source;
+            dirConfig.source   = source;
+            const assets       = new AssetCollection(matched.assets.map(f => new Asset(f)));
             return Component.create(dirConfig, {
                 view:     view,
                 readme:   matched.readmes[0],
-                varViews: _.filter(matched.varViews, f => f.name.startsWith(nameMatch)),
-                other:    _.differenceBy(matched.files, _.flatten([matched.views, matched.varViews, matched.configs, matched.readmes, view]), 'path')
-            });
+                varViews: _.filter(matched.varViews, f => f.name.startsWith(nameMatch))
+            }, assets);
         }
 
         // not a component, so go through the items and group into components and collections
@@ -87,7 +90,6 @@ module.exports = function (fileTree, source) {
                     view: view,
                     readme: null,
                     varViews: matched.varViews.filter(f => f.name.startsWith(nameMatch)),
-                    other: []
                 });
             });
         });

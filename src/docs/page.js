@@ -64,7 +64,7 @@ module.exports = class Page {
             isHidden: this.isHidden,
             isIndex:  this.isIndex,
             tags:     this.tags,
-            content:  this.content,
+            content:  this.getContentSync(),
             lang:     this.lang,
             file:     this.file.toJSON(),
             context:  this.context

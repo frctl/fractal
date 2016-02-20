@@ -96,7 +96,7 @@ module.exports = class ComponentSource extends Source {
 
     *_renderVariant(variant, context) {
         context = context || variant.context;
-        const content = yield variant.getContent(true);
+        const content = yield variant.getContent();
         const ctx     = yield this.resolve(context);
         return this.engine().render(variant.viewPath, content, ctx);
     }
@@ -135,7 +135,7 @@ module.exports = class ComponentSource extends Source {
             layout = layout.defaultVariant();
         }
         let layoutContext = yield this.resolve(layout.context);
-        let layoutContent = yield layout.getContent(true);
+        let layoutContent = yield layout.getContent();
         layoutContext = _.defaults(layoutContext, context || {});
         layoutContext[this.yield] = content;
         return this.engine().render(layout.viewPath, layoutContent, layoutContext);
@@ -211,6 +211,10 @@ module.exports = class ComponentSource extends Source {
 
     isReadme(file) {
         return anymatch(`**/readme.md`, file.path);
+    }
+
+    isAsset(file) {
+        return anymatch([`!**/*${this.ext}`, `!**/*.config.{js,json,yaml,yml}`, `!**/readme.md`], file.path);
     }
 
 };
