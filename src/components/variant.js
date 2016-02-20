@@ -9,25 +9,29 @@ const md      = require('../markdown');
 module.exports = class Variant {
 
     constructor(props, view, assets) {
-        this.type      = 'variant';
-        this.name      = props.name.toLowerCase();
-        this.handle    = props.handle.toLowerCase();
-        this.order     = props.order || 10000;
-        this.view      = props.view;
-        this.label     = props.label || utils.titlize(this.name);
-        this.title     = props.title || this.label;
-        this.viewPath  = props.viewPath;
-        this.notes     = props.notes ? md(props.notes) : null;
-        this.display   = props.display || {};
-        this.isDefault = props.isDefault || false;
-        this._parent   = props.parent;
-        this._source   = this._parent._source;
-        this._context  = props.context || {};
-        this._config   = props;
-        this._status   = props.status  || this._paren._status;
-        this.preview   = props.preview || this._paren._preview;
-        this.display   = props.display || this._parent._display;
-        this.assets    = assets;
+        this.type        = 'variant';
+        this.name        = props.name.toLowerCase();
+        this.handle      = props.handle.toLowerCase();
+        this.order       = props.order || 10000;
+        this.view        = props.view;
+        this.label       = props.label || utils.titlize(this.name);
+        this.title       = props.title || this.label;
+        this.viewPath    = props.viewPath;
+        this.notes       = props.notes ? md(props.notes) : null;
+        this.display     = props.display || {};
+        this.isDefault   = props.isDefault || false;
+        this._parent     = props.parent;
+        this._source     = this._parent._source;
+        this._context    = props.context || {};
+        this._config     = props;
+        this._status     = props.status  || this._parent._status;
+        this.preview     = props.preview || this._parent._preview;
+        this.display     = props.display || this._parent._display;
+        this.lang        = view.lang.name;
+        this.editorMode  = view.lang.mode;
+        this.editorScope = view.lang.scope;
+        this._view       = view;
+        this.assets      = assets;
     }
 
     get alias() {
@@ -66,11 +70,11 @@ module.exports = class Variant {
     }
 
     getContent() {
-        return this.files.view.read().then(c => c.toString());
+        return this._view.read().then(c => c.toString());
     }
 
     getContentSync() {
-        return this.files.view.readSync().toString();
+        return this._view.readSync().toString();
     }
 
     toJSON() {

@@ -136,12 +136,11 @@ module.exports = class Component {
 
     static create(props, files, assets) {
 
-        assets            = assets || [];
-        const source      = props.source;
-        const props.notes = props.notes || props.readme || (files.readme ? files.readme.readSync() : null);
-        const comp        = new Component(props);
-        const varConfs    = props.variants || [];
-        const variants    = [];
+        const source   = props.source;
+        props.notes    = props.notes || props.readme || (files.readme ? files.readme.readSync() : null);
+        const comp     = new Component(props);
+        const varConfs = props.variants || [];
+        const variants = [];
 
         // first figure out if we need a 'default' variant.
         const hasDefaultConfigured = _.find(varConfs, ['name', comp.defaultName]);
@@ -165,7 +164,7 @@ module.exports = class Component {
                 dir:       props.dir,
                 isDefault: true,
                 parent:    comp
-            }, defaultViewFile, files.assets));
+            }, defaultViewFile, assets));
         }
 
         varConfs.forEach(conf => {
@@ -189,7 +188,7 @@ module.exports = class Component {
             p.viewPath  = Path.join(p.dir, p.view);
             p.handle    = `${comp.handle}${source.splitter}${p.name}`.toLowerCase();
             variants.push(
-                new Variant(p, viewFile, file.assets.filter(isRelated(p.handle)))
+                new Variant(p, viewFile, assets.filter(isRelated(p.handle)))
             );
         });
 
@@ -206,7 +205,7 @@ module.exports = class Component {
                 parent:   comp,
             };
             variants.push(
-                new Variant(p, viewFile, file.assets.filter(isRelated(p.handle)))
+                new Variant(p, viewFile, assets.filter(isRelated(p.handle)))
             );
         });
 

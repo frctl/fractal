@@ -22,11 +22,11 @@ module.exports = function (fileTree, source) {
         const matched     = {
             directories: directories,
             files:       files,
-            views:       files.filter(source.isView),
-            varViews:    files.filter(source.isVarView),
-            configs:     files.filter(source.isConfig),
-            readmes:     files.filter(source.isReadme),
-            assets:      files.filter(source.isAsset),
+            views:       files.filter(f => source.isView(f)),
+            varViews:    files.filter(f => source.isVarView(f)),
+            configs:     files.filter(f => source.isConfig(f)),
+            readmes:     files.filter(f => source.isReadme(f)),
+            assets:      files.filter(f => source.isAsset(f)),
         };
 
         const dirConfig = yield data.getConfig(_.find(matched.configs, f => f.name.startsWith(dir.name)), {
@@ -47,7 +47,7 @@ module.exports = function (fileTree, source) {
             dirConfig.viewName = dir.name;
             dirConfig.viewPath = view.path;
             dirConfig.source   = source;
-            const assets       = new AssetCollection(matched.assets.map(f => new Asset(f)));
+            const assets       = new AssetCollection({}, matched.assets.map(f => new Asset(f)));
             return Component.create(dirConfig, {
                 view:     view,
                 readme:   matched.readmes[0],
@@ -90,7 +90,7 @@ module.exports = function (fileTree, source) {
                     view: view,
                     readme: null,
                     varViews: matched.varViews.filter(f => f.name.startsWith(nameMatch)),
-                });
+                }, new AssetCollection({}, []));
             });
         });
 

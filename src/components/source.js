@@ -198,23 +198,23 @@ module.exports = class ComponentSource extends Source {
     }
 
     isView(file) {
-        return anymatch([`**/*${this.ext}`, `!**/*${this.splitter}*${this.ext}`], file.path);
+        return anymatch([`**/*${this.ext}`, `!**/*${this.splitter}*${this.ext}`], file.path.toLowerCase());
     }
 
     isVarView(file) {
-        return anymatch(`**/*${this.splitter}*${this.ext}`, file.path);
+        return anymatch(`**/*${this.splitter}*${this.ext}`, file.path.toLowerCase());
     }
 
     isConfig(file) {
-        return anymatch(`**/*.config.{js,json,yaml,yml}`, file.path);
+        return anymatch(`**/*.config.{js,json,yaml,yml}`, file.path.toLowerCase());
     }
 
     isReadme(file) {
-        return anymatch(`**/readme.md`, file.path);
+        return anymatch(`**/readme.md`, file.path.toLowerCase());
     }
 
     isAsset(file) {
-        return anymatch([`!**/*${this.ext}`, `!**/*.config.{js,json,yaml,yml}`, `!**/readme.md`], file.path);
+        return anymatch(['**/*.*', `!**/*${this.ext}`, `!**/*.config.{js,json,yaml,yml}`, `!**/readme.md`], file.path.toLowerCase());
     }
 
 };

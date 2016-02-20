@@ -1,6 +1,7 @@
 'use strict';
 
-const _  = require('lodash');
+const _     = require('lodash');
+const utils = require('../utils');
 
 module.exports = class Asset {
 
@@ -9,6 +10,7 @@ module.exports = class Asset {
         this._file       = file;
         this.path        = file.path;
         this.base        = file.base;
+        this.handle      = utils.slugify(file.base.replace('.','-'));
         this.name        = file.name;
         this.ext         = file.ext;
         this.lang        = file.lang.name;
