@@ -12,6 +12,10 @@ module.exports = class Collection {
     }
 
     items() {
+        return this.toArray();
+    }
+
+    toArray() {
         return Array.from(this._items);
     }
 
@@ -27,12 +31,8 @@ module.exports = class Collection {
     toJSON() {
         return {
             type: this.type,
-            items: this.items().map(i => i.toJSON())
+            items: this.toArray().map(i => i.toJSON())
         };
-    }
-
-    toArray() {
-        return this.items();
     }
 
     orderBy() {
@@ -42,38 +42,38 @@ module.exports = class Collection {
         } else {
             args = Array.prototype.slice.call(arguments);
         }
-        args.unshift(this.items());
+        args.unshift(this.toArray());
         return this.newSelf(_.orderBy.apply(null, args));
     }
 
     first() {
-        return this.items()[0];
+        return this.toArray()[0];
     }
 
     last() {
-        return this.items()[this.size - 1];
+        return this.toArray()[this.size - 1];
     }
 
     eq(pos) {
         if (pos < 0) {
             pos = (this.size + pos);
         }
-        return this.items()[pos];
+        return this.toArray()[pos];
     }
 
     entities() {
-        return this.newSelf(this.items().filter(i => i.type !== 'collection'));
+        return this.newSelf(this.toArray().filter(i => i.type !== 'collection'));
     }
 
     collections() {
-        return this.newSelf(this.items().filter(i => i.type === 'collection'));
+        return this.newSelf(this.toArray().filter(i => i.type === 'collection'));
     }
 
     find() {
         if (this.size === 0 || arguments.length === 0) {
             return;
         }
-        for (let item of this.items()) {
+        for (let item of this) {
             if (item.type === 'collection') {
                 const search = item.find.apply(item, arguments);
                 if (search) return search;
@@ -89,7 +89,7 @@ module.exports = class Collection {
         if (this.size === 0 || arguments.length === 0) {
             return;
         }
-        for (let item of this.items()) {
+        for (let item of this) {
             if (item.type === 'collection') {
                 const matcher = this._makePredicate.apply(null, arguments);
                 if (matcher(item)) return item;
@@ -100,20 +100,20 @@ module.exports = class Collection {
     }
 
     flatten() {
-        return this.newSelf(this.flattenItems(this.items()));
+        return this.newSelf(this.flattenItems(this.toArray()));
     }
 
     flattenDeep() {
-        return this.newSelf(this.flattenItems(this.items(), true));
+        return this.newSelf(this.flattenItems(this.toArray(), true));
     }
 
     squash() {
-        return this.newSelf(this.squashItems(this.items()));
+        return this.newSelf(this.squashItems(this.toArray()));
     }
 
     filter() {
         const args = Array.from(arguments);
-        args.unshift(this.items());
+        args.unshift(this.toArray());
         return this.newSelf(this.filterItems.apply(this, args));
     }
 
@@ -140,7 +140,7 @@ module.exports = class Collection {
         let ret = [];
         for (let item of items) {
             if (item.type === 'collection') {
-                ret = _.concat(ret, this.flattenItems(item.items(), deep));
+                ret = _.concat(ret, this.flattenItems(item.toArray(), deep));
             } else {
                 if (deep && _.isFunction(item.flatten)) {
                     ret = _.concat(ret, item.flatten());
@@ -155,12 +155,9 @@ module.exports = class Collection {
     squashItems(items) {
         const squashed = [];
         function squash(items) {
-            // items = _.sortBy(items, function (i) {
-            //     return i.type === 'collection' ? 1 : 0;
-            // });
             for (let item of items) {
                 if (item.type === 'collection') {
-                    const children = item.items();
+                    const children = item.toArray();
                     const entities = children.filter(c => c.type !== 'collection');
                     const collections = children.filter(c => c.type == 'collection');
                     if (entities.length) {
@@ -185,7 +182,7 @@ module.exports = class Collection {
     }
 
     [Symbol.iterator]() {
-        return this.items()[Symbol.iterator]();
+        return this.toArray()[Symbol.iterator]();
     }
 
     _makePredicate() {
