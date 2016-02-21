@@ -12,7 +12,7 @@ const md      = require('../markdown');
 
 module.exports = class Component {
 
-    constructor(props) {
+    constructor(props, assets) {
 
         this.type        = 'component';
         this.name        = utils.slugify(props.name);
@@ -31,6 +31,7 @@ module.exports = class Component {
         this._status     = props.status  || props.parent._status;
         this._preview    = props.preview || props.parent._preview;
         this._display    = props.display || props.parent._display;
+        this.assets      = assets;
     }
 
     get context() {
@@ -135,10 +136,10 @@ module.exports = class Component {
     }
 
     static create(props, files, assets) {
-        
+
         const source   = props.source;
         props.notes    = props.notes || props.readme || (files.readme ? files.readme.readSync() : null);
-        const comp     = new Component(props);
+        const comp     = new Component(props, assets);
         const varConfs = props.variants || [];
         const variants = [];
 
