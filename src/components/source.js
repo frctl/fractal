@@ -1,14 +1,15 @@
 'use strict';
 
-const Promise   = require('bluebird');
-const _         = require('lodash');
-const co        = require('co');
-const fs        = Promise.promisifyAll(require('fs'));
-const anymatch  = require('anymatch');
-const transform = require('./transform');
-const cli    = require('../cli');
-const Source    = require('../source');
-const resolve   = require('../context');
+const Promise         = require('bluebird');
+const _               = require('lodash');
+const co              = require('co');
+const fs              = Promise.promisifyAll(require('fs'));
+const anymatch        = require('anymatch');
+const transform       = require('./transform');
+const cli             = require('../cli');
+const Source          = require('../source');
+const resolve         = require('../context');
+const AssetCollection = require('../assets/collection');
 
 module.exports = class ComponentSource extends Source {
 
@@ -25,6 +26,14 @@ module.exports = class ComponentSource extends Source {
         this.collator  = props.preview.collator;
         this.splitter  = props.splitter;
         this.transform = transform;
+    }
+
+    getAssets(){
+        let assets = [];
+        for (let comp of this.flatten()) {
+            assets = assets.concat(comp.assets.toArray());
+        }
+        return new AssetCollection({}, assets);
     }
 
     resolve(context) {
