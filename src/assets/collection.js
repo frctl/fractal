@@ -11,7 +11,7 @@ module.exports = class AssetCollection extends Collection {
         super(props, items);
     }
 
-    assets() {
+    files() {
         return super.entities();
     }
 

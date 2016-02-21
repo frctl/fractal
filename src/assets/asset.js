@@ -30,7 +30,18 @@ module.exports = class Asset {
 
     toJSON() {
         return {
-            type: this.type,
+            type:        this.type,
+            path:        this.path,
+            path:        this.path,
+            base:        this.base,
+            handle:      this.handle,
+            name:        this.name,
+            ext:         this.ext,
+            lang:        this.lang,
+            editorMode:  this.editorMode,
+            editorScope: this.editorScope,
+            githubColor: this.githubColor,
+            isBinary:    this.isBinary,
         };
     }
 

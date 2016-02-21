@@ -135,7 +135,7 @@ module.exports = class Component {
     }
 
     static create(props, files, assets) {
-
+        
         const source   = props.source;
         props.notes    = props.notes || props.readme || (files.readme ? files.readme.readSync() : null);
         const comp     = new Component(props);
