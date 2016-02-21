@@ -34,8 +34,8 @@ module.exports = class VariantCollection extends Collection {
 
         function isRelated(variantHandle) {
             return function(file) {
-                if (f.name.includes(source.splitter)) {
-                    return f.name === variantHandle;
+                if (file.name.includes(source.splitter)) {
+                    return file.name === variantHandle;
                 }
                 return true;
             }
@@ -52,7 +52,7 @@ module.exports = class VariantCollection extends Collection {
                 parent:    component
             }, defaultView, assets));
         }
-        
+
         configured.forEach((conf, i) => {
             let viewFile = null;
             if (_.isUndefined(conf.name)) {
