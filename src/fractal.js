@@ -47,25 +47,30 @@ class Fractal {
      * @api public
      */
 
-    run(name, args, opts) {
-
+    run(name, opts) {
+        let args = [];
         if (this.get('env') !== 'debug') {
             process.on('uncaughtException', function (err) {
                 cli.error(err);
                 process.exit(1);
             });
         }
-
         if (!name) {
             const input = utils.parseArgv();
             if (!input.command) {
                 return this.commands.run('welcome', null, null, this);
             } else {
-                name    = input.command;
-                args    = input.args;
-                opts    = input.opts;
+                name = input.command;
+                opts = input.opts;
+                args = args.concat(input.args);
             }
         }
+
+        const nameParts = name.split(':');
+        const colonArgs = nameParts.slice(1);
+        name            = nameParts[0];
+        args            = colonArgs.concat(args);
+
         const command = this.commands.get(name);
         if (command) {
             this._initPlugins();
