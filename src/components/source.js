@@ -1,14 +1,15 @@
 'use strict';
 
-const Promise   = require('bluebird');
-const _         = require('lodash');
-const co        = require('co');
-const fs        = Promise.promisifyAll(require('fs'));
-const anymatch  = require('anymatch');
-const transform = require('./transform');
-const cli    = require('../cli');
-const Source    = require('../source');
-const resolve   = require('../context');
+const Promise         = require('bluebird');
+const _               = require('lodash');
+const co              = require('co');
+const fs              = Promise.promisifyAll(require('fs'));
+const anymatch        = require('anymatch');
+const transform       = require('./transform');
+const cli             = require('../cli');
+const Source          = require('../source');
+const resolve         = require('../context');
+const AssetCollection = require('../assets/collection');
 
 module.exports = class ComponentSource extends Source {
 
@@ -25,6 +26,14 @@ module.exports = class ComponentSource extends Source {
         this.collator  = props.preview.collator;
         this.splitter  = props.splitter;
         this.transform = transform;
+    }
+    
+    assets(){
+        let assets = [];
+        for (let comp of this.flatten()) {
+            assets = assets.concat(comp.assets().toArray());
+        }
+        return new AssetCollection({}, assets);
     }
 
     resolve(context) {
@@ -96,7 +105,7 @@ module.exports = class ComponentSource extends Source {
 
     *_renderVariant(variant, context) {
         context = context || variant.context;
-        const content = yield variant.getContent(true);
+        const content = yield variant.getContent();
         const ctx     = yield this.resolve(context);
         return this.engine().render(variant.viewPath, content, ctx);
     }
@@ -135,7 +144,7 @@ module.exports = class ComponentSource extends Source {
             layout = layout.defaultVariant();
         }
         let layoutContext = yield this.resolve(layout.context);
-        let layoutContent = yield layout.getContent(true);
+        let layoutContent = yield layout.getContent();
         layoutContext = _.defaults(layoutContext, context || {});
         layoutContext[this.yield] = content;
         return this.engine().render(layout.viewPath, layoutContent, layoutContext);
@@ -198,19 +207,23 @@ module.exports = class ComponentSource extends Source {
     }
 
     isView(file) {
-        return anymatch([`**/*${this.ext}`, `!**/*${this.splitter}*${this.ext}`], file.path);
+        return anymatch([`**/*${this.ext}`, `!**/*${this.splitter}*${this.ext}`], file.path.toLowerCase());
     }
 
     isVarView(file) {
-        return anymatch(`**/*${this.splitter}*${this.ext}`, file.path);
+        return anymatch(`**/*${this.splitter}*${this.ext}`, file.path.toLowerCase());
     }
 
     isConfig(file) {
-        return anymatch(`**/*.config.{js,json,yaml,yml}`, file.path);
+        return anymatch(`**/*.config.{js,json,yaml,yml}`, file.path.toLowerCase());
     }
 
     isReadme(file) {
-        return anymatch(`**/readme.md`, file.path);
+        return anymatch(`**/readme.md`, file.path.toLowerCase());
+    }
+
+    isAsset(file) {
+        return anymatch(['**/*.*', `!**/*${this.ext}`, `!**/*.config.{js,json,yaml,yml}`, `!**/readme.md`], file.path.toLowerCase());
     }
 
 };

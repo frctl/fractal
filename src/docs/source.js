@@ -38,9 +38,10 @@ module.exports = class DocsSource extends Source {
         const engine  = self.engine();
         const renderContext = context || page.context;
         return co(function* () {
-            const source = yield (self.isLoaded ? Promise.resolve(self) : self.load());
-            const context  = yield self.resolve(renderContext);
-            let rendered = yield engine.render(page.filePath, page.content, context);
+            const source  = yield (self.isLoaded ? Promise.resolve(self) : self.load());
+            const context = yield self.resolve(renderContext);
+            const content = yield page.getContent();
+            let rendered  = yield engine.render(page.filePath, content, context);
             return self.markdown ? md(rendered) : rendered;
         });
     }

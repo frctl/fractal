@@ -74,6 +74,7 @@ module.exports = {
 
     error(text) {
         this.unslog();
+        this.debug(text);
         text = text.toString().replace(/^Error: /, '');
         this.write(text, 'error');
         return this;

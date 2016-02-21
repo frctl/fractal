@@ -31,6 +31,10 @@ module.exports = class Collection {
         };
     }
 
+    toArray() {
+        return this.items();
+    }
+
     orderBy() {
         let args;
         if (arguments.length === 1 && _.isObject(arguments[0]) && !_.isArrayLikeObject(arguments[0])) {

@@ -25,6 +25,10 @@ module.exports = class ComponentCollection extends Entities {
         return super.entities();
     }
 
+    assets() {
+        return super.assets();
+    }
+
     variants() {
         return this._source.variants.apply(this, arguments);
     }
