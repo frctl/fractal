@@ -13,7 +13,6 @@ const md      = require('../markdown');
 module.exports = class Component {
 
     constructor(props, assets) {
-
         this.type        = 'component';
         this.name        = utils.slugify(props.name);
         this.handle      = props.parent._prefix ? `${props.parent._prefix}-${this.name}` : this.name;
@@ -31,7 +30,7 @@ module.exports = class Component {
         this._status     = props.status  || props.parent._status;
         this._preview    = props.preview || props.parent._preview;
         this._display    = props.display || props.parent._display;
-        this.assets      = assets;
+        this._assets     = assets;
     }
 
     get context() {
@@ -42,14 +41,6 @@ module.exports = class Component {
         return _.uniq(_.concat(this._tags, this._parent.tags));
     }
 
-    hasTag(tag) {
-        return _.includes(this.tags, tag);
-    }
-
-    variants() {
-        return this.variants();
-    }
-
     get status() {
         const variantStatuses = _.compact(_.uniq(_.map(this.variants(), v => v._status)));
         return this._source.statusInfo(variantStatuses);
@@ -58,9 +49,17 @@ module.exports = class Component {
     get variantCount() {
         return this._variants.size;
     }
-
+    
     get parent() {
         return this._parent;
+    }
+
+    hasTag(tag) {
+        return _.includes(this.tags, tag);
+    }
+
+    assets() {
+        return this._assets;
     }
 
     flatten() {

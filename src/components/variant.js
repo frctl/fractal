@@ -31,7 +31,7 @@ module.exports = class Variant {
         this.editorMode  = view.lang.mode;
         this.editorScope = view.lang.scope;
         this._view       = view;
-        this.assets      = assets;
+        this._assets     = assets;
     }
 
     get alias() {
@@ -69,6 +69,10 @@ module.exports = class Variant {
         return this.getContentSync();
     }
 
+    assets() {
+        return this._assets;
+    }
+
     getContent() {
         return this._view.read().then(c => c.toString());
     }
@@ -93,7 +97,7 @@ module.exports = class Variant {
             preview:   this.preview,
             context:   this.context,
             isDefault: this.isDefault,
-            assets:    this.assets.toJSON()
+            assets:    this.assets().toJSON()
         };
     }
 

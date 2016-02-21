@@ -27,11 +27,11 @@ module.exports = class ComponentSource extends Source {
         this.splitter  = props.splitter;
         this.transform = transform;
     }
-
-    getAssets(){
+    
+    assets(){
         let assets = [];
         for (let comp of this.flatten()) {
-            assets = assets.concat(comp.assets.toArray());
+            assets = assets.concat(comp.assets().toArray());
         }
         return new AssetCollection({}, assets);
     }
