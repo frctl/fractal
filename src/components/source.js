@@ -27,7 +27,7 @@ module.exports = class ComponentSource extends Source {
         this.splitter  = props.splitter;
         this.transform = transform;
     }
-    
+
     assets(){
         let assets = [];
         for (let comp of this.flatten()) {
@@ -46,8 +46,10 @@ module.exports = class ComponentSource extends Source {
 
     renderPreview(entity, useLayout) {
         useLayout = useLayout !== false ? true : false;
-        const variant = entity.defaultVariant();
-        return this.render(variant, variant.context, { useLayout: true });
+        if (entity.type === 'component') {
+            entity = entity.variants().default();
+        }
+        return this.render(entity, entity.context, { useLayout: true });
     }
 
     /**
@@ -87,7 +89,9 @@ module.exports = class ComponentSource extends Source {
         return co(function* () {
             const source = yield self.load();
             if (_.includes(['component', 'variant' /*, 'collection' */], entity.type)) {
-                entity = entity.defaultVariant();
+                if (entity.type == 'component') {
+                    entity = entity.variants().default();
+                }
                 const rendered = yield self._renderVariant(entity, context);
                 if (opts.useLayout && entity.preview) {
                     return yield self._wrapInLayout(rendered, entity.preview, {
@@ -111,7 +115,7 @@ module.exports = class ComponentSource extends Source {
     }
 
     *_renderComponent(component, context) {
-        const variant = component.defaultVariant();
+        const variant = component.variants().default();
         return yield this._renderVariant(variant, context);
     }
 
@@ -141,7 +145,7 @@ module.exports = class ComponentSource extends Source {
             return content;
         }
         if (layout.type === 'component') {
-            layout = layout.defaultVariant();
+            layout = layout.variants().default();
         }
         let layoutContext = yield this.resolve(layout.context);
         let layoutContent = yield layout.getContent();
@@ -181,7 +185,7 @@ module.exports = class ComponentSource extends Source {
     variants() {
         let items = [];
         for (let component of this.components()) {
-            items = _.concat(items, component.variants());
+            items = _.concat(items, component.variants().toArray());
         }
         return this.newSelf(items);
     }
@@ -195,11 +199,10 @@ module.exports = class ComponentSource extends Source {
                 const search = item.find.apply(item, arguments);
                 if (search) return search;
             } else if (item.type === 'component') {
-
                 const matcher = this._makePredicate.apply(null, arguments);
                 if (matcher(item)) return item;
                 if (arguments.length == 1 && _.isString(arguments[0]) && arguments[0].startsWith('@')) {
-                    let variant = item.getVariantByHandle(arguments[0].replace('@', ''));
+                    let variant = item.variants().find(arguments[0]);
                     if (variant) return variant;
                 }
             }

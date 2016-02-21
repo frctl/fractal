@@ -143,7 +143,7 @@ module.exports = class Collection {
                 ret = _.concat(ret, this.flattenItems(item.toArray(), deep));
             } else {
                 if (deep && _.isFunction(item.flatten)) {
-                    ret = _.concat(ret, item.flatten());
+                    ret = _.concat(ret, item.flatten().toArray());
                 } else {
                     ret.push(item);
                 }

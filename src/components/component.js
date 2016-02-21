@@ -4,7 +4,6 @@ const Promise           = require('bluebird');
 const _                 = require('lodash');
 const co                = require('co');
 const Path              = require('path');
-const Variant           = require('./variant');
 const cli               = require('../cli');
 const data              = require('../data');
 const utils             = require('../utils');
@@ -25,7 +24,6 @@ module.exports = class Component {
         this.notes       = props.notes ? md(props.notes) : null;
         this._parent     = props.parent;
         this._source     = props.source;
-        // this._variants   = new Map();
         this._context    = _.clone(props.context) || {};
         this._tags       = props.tags || [];
         this._status     = props.status  || props.parent._status;
@@ -45,7 +43,7 @@ module.exports = class Component {
     }
 
     get status() {
-        const variantStatuses = _.compact(_.uniq(_.map(this.variants(), v => v._status)));
+        const variantStatuses = _.compact(_.uniq(_.map(this.variants().toArray(), v => v._status)));
         return this._source.statusInfo(variantStatuses);
     }
 
@@ -54,7 +52,7 @@ module.exports = class Component {
     }
 
     get content() {
-        return this.defaultVariant().getContentSync();
+        return this.variants().default().getContentSync();
     }
 
     hasTag(tag) {
@@ -72,57 +70,6 @@ module.exports = class Component {
     variants() {
         return this._variants;
     }
-
-    //
-    // get variantCount() {
-    //     return this._variants.size;
-    // }
-    //
-    // addVariants(variants) {
-    //     variants.forEach(v => this.addVariant(v));
-    //     return this;
-    // }
-    //
-    // addVariant(variant) {
-    //     if (!this._variants.has(variant.name)) {
-    //         this._variants.set(variant.name, variant);
-    //     }
-    //     return this;
-    // }
-    //
-    // variant(name) {
-    //     return (name && name !== this.defaultName) ? this._variants.get(name) : this.defaultVariant();
-    // }
-    //
-    // getVariant(name) {
-    //     cli.debug('Component.getVariant() is deprecated. Use Component.variant() instead.');
-    //     return this.variant(name);
-    // }
-    //
-    // getVariantByHandle(handle) {
-    //     const parts = handle.split(this._source.splitter);
-    //     if (parts.length === 1 || parts[0] !== this.handle) {
-    //         return null;
-    //     }
-    //     return this.variant(parts[1]);
-    // }
-    //
-    // variants() {
-    //     return _.sortBy(Array.from(this._variants.values()), ['order', '_name']);
-    // }
-    //
-    // hasVariant(name) {
-    //     return this._variants.has(name);
-    // }
-    //
-    // defaultVariant() {
-    //     return this._variants.get(this.defaultName);
-    // }
-    //
-    // getDefaultVariant() {
-    //     cli.debug('Component.getDefaultVariant() is deprecated. Use Component.defaultVariant() instead.');
-    //     return this.defaultVariant();
-    // }
 
     toJSON() {
         return {

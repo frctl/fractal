@@ -1,18 +1,20 @@
 'use strict';
 
-const Promise  = require('bluebird');
-const _        = require('lodash');
+const Promise    = require('bluebird');
+const Path       = require('path');
+const _          = require('lodash');
+const Variant    = require('./variant');
 const Collection = require('../collection');
 
 module.exports = class VariantCollection extends Collection {
 
     constructor(props, items) {
         super(props, items);
-        this._parent        = props.parent;
-        this._status        = this._parent._status;
-        this._prefix        = this._parent._prefix;
-        this._preview       = this._parent._preview;
-        this._display       = this._parent._display;
+        this._parent  = props.parent;
+        this._status  = this._parent._status;
+        this._prefix  = this._parent._prefix;
+        this._preview = this._parent._preview;
+        this._display = this._parent._display;
     }
 
     default(){
@@ -21,12 +23,14 @@ module.exports = class VariantCollection extends Collection {
 
     static create(component, defaultView, configured, views, props){
 
+        configured     = configured || [];
+        views          = views || [];
+        const source   = component._source;
         const variants = [];
         const assets   = component.assets();
 
         // first figure out if we need a 'default' variant.
-        const hasDefaultConfigured = _.find(configured, ['name', comp.defaultName]);
-        const defaultView = files.view;
+        const hasDefaultConfigured = _.find(configured, ['name', component.defaultName]);
 
         function isRelated(variantHandle) {
             return function(file) {
@@ -39,25 +43,25 @@ module.exports = class VariantCollection extends Collection {
 
         if (!hasDefaultConfigured) {
             variants.push(new Variant({
-                name:      comp.defaultName,
-                handle:    `${comp.handle}${source.splitter}${comp.defaultName}`.toLowerCase(),
+                name:      component.defaultName,
+                handle:    `${component.handle}${source.splitter}${component.defaultName}`.toLowerCase(),
                 view:      props.view,
                 viewPath:  Path.join(props.dir, props.view),
                 dir:       props.dir,
                 isDefault: true,
-                parent:    comp
+                parent:    component
             }, defaultView, assets));
         }
-
+        
         configured.forEach((conf, i) => {
             let viewFile = null;
             if (_.isUndefined(conf.name)) {
-                cli.error(`Could not create variant of ${comp.handle} - 'name' value is missing`);
+                cli.error(`Could not create variant of ${component.handle} - 'name' value is missing`);
                 return null;
             }
             const p = _.defaults(conf, {
                 dir:    props.dir,
-                parent: comp,
+                parent: component,
                 order:  i
             });
             if (!p.view) {
@@ -67,9 +71,9 @@ module.exports = class VariantCollection extends Collection {
                 p.view         = viewFile ? viewFile.base : props.view;
             }
             viewFile = viewFile || defaultView;
-            p.isDefault = (p.name === comp.defaultName);
+            p.isDefault = (p.name === component.defaultName);
             p.viewPath  = Path.join(p.dir, p.view);
-            p.handle    = `${comp.handle}${source.splitter}${p.name}`.toLowerCase();
+            p.handle    = `${component.handle}${source.splitter}${p.name}`.toLowerCase();
             variants.push(
                 new Variant(p, viewFile, assets.filter(isRelated(p.handle)))
             );
@@ -81,11 +85,11 @@ module.exports = class VariantCollection extends Collection {
             const name = viewFile.name.split(source.splitter)[1];
             const p = {
                 name:     name.toLowerCase(),
-                handle:   `${comp.handle}${source.splitter}${name}`.toLowerCase(),
+                handle:   `${component.handle}${source.splitter}${name}`.toLowerCase(),
                 view:     viewFile.base,
                 viewPath: viewFile.path,
                 dir:      props.dir,
-                parent:   comp,
+                parent:   component,
             };
             variants.push(
                 new Variant(p, viewFile, assets.filter(isRelated(p.handle)))

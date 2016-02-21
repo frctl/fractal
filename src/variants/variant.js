@@ -35,7 +35,7 @@ module.exports = class Variant {
     }
 
     get alias() {
-        if (this.parent.defaultVariant().handle === this.handle) {
+        if (this.parent.variants().default().handle === this.handle) {
             return this.parent.handle;
         }
         return null;
