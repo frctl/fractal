@@ -12,6 +12,7 @@ module.exports = function (defaults, app) {
     });
 
     function add(name, callback, opts) {
+        opts = opts || {};
         opts.scope = opts.scope ? [].concat(opts.scope) : ['local'];
         commands.set(name, {
             name: name,
