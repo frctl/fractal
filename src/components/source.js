@@ -28,7 +28,7 @@ module.exports = class ComponentSource extends Source {
         this.transform = transform;
     }
 
-    assets(){
+    assets() {
         let assets = [];
         for (let comp of this.flatten()) {
             assets = assets.concat(comp.assets().toArray());

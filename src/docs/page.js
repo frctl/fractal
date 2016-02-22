@@ -46,11 +46,11 @@ module.exports = class Page {
         return _.uniq(_.concat(this._tags, this._parent.tags));
     }
 
-    getContent(){
+    getContent() {
         return Promise.resolve(this.content);
     }
 
-    getContentSync(){
+    getContentSync() {
         return this.content;
     }
 

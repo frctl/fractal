@@ -17,11 +17,11 @@ module.exports = class VariantCollection extends Collection {
         this._display = this._parent._display;
     }
 
-    default(){
+    default() {
         return this.find('name', this._parent.defaultName);
     }
 
-    static create(component, defaultView, configured, views, props){
+    static create(component, defaultView, configured, views, props) {
 
         configured     = configured || [];
         views          = views || [];
@@ -33,12 +33,12 @@ module.exports = class VariantCollection extends Collection {
         const hasDefaultConfigured = _.find(configured, ['name', component.defaultName]);
 
         function isRelated(variantHandle) {
-            return function(file) {
+            return function (file) {
                 if (file.name.includes(source.splitter)) {
                     return file.name === variantHandle;
                 }
                 return true;
-            }
+            };
         }
 
         if (!hasDefaultConfigured) {

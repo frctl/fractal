@@ -73,7 +73,7 @@ module.exports = {
        }, indent || 4);
    },
 
-   fileExistsSync(path) {
+    fileExistsSync(path) {
        try {
            fs.accessSync(path, fs.F_OK);
            return true;

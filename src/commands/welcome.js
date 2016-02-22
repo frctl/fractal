@@ -11,7 +11,7 @@ module.exports = {
     opts: {
         description: 'Default command',
         private: true,
-        scope: ['global','local']
+        scope: ['global', 'local']
     },
 
     callback: function (args, opts, app) {
@@ -27,10 +27,12 @@ module.exports = {
 
         usage += `
 Usage: ${chalk.magenta('fractal <command>')} [args] [opts]
-`
+`;
 
         if (commands.length) {
-            usage += `\nThe following commands are available:\n`;
+            usage += `
+The following commands are available:
+`;
 
             let longest = 0;
             _.forEach(commands, command => {

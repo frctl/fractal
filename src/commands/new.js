@@ -6,7 +6,7 @@ const Path       = require('path');
 const inquirer   = require('inquirer');
 const Handlebars = require('handlebars');
 const shell      = require('shelljs');
-const touch      = Promise.promisify(require("touch"));
+const touch      = Promise.promisify(require('touch'));
 const fs         = Promise.promisifyAll(require('fs-extra'));
 const cli        = require('../cli');
 
@@ -64,14 +64,14 @@ module.exports = {
                 default: 'public'
             },
             {
-                type: "confirm",
+                type: 'confirm',
                 name: 'useGit',
                 message: 'Will you use Git for version control on this project?',
                 default: true
             }
         ];
 
-        inquirer.prompt(questions, function( answers ) {
+        inquirer.prompt(questions, function (answers) {
 
             cli.notice('Generating project structure...');
 
@@ -85,10 +85,10 @@ module.exports = {
             const componentCopyTo = Path.join(componentsDir, 'example');
 
             const packageJSON = {
-                "name": helpers.slugify(answers.projectTitle),
-                "version": "0.1.0",
-                "dependencies": {
-                    '@frctl/fractal': shell.exec('npm show @frctl/fractal version', {silent:true}).output.replace(/^\s+|\s+$/g, '')
+                name: helpers.slugify(answers.projectTitle),
+                version: '0.1.0',
+                dependencies: {
+                    '@frctl/fractal': shell.exec('npm show @frctl/fractal version', { silent:true }).output.replace(/^\s+|\s+$/g, '')
                 }
             };
 
