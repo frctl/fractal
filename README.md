@@ -27,9 +27,17 @@ The core web UI plugin provides a **web-based component library browser** UI, ei
 
 Fractal can be used both as a command line tool and as a NPM module dependency in your projects.
 
+## Quick Start
+
+1. Install the Fractal CLI helper globally: `npm i  -g @frctl/fractal`
+2. Create a new project skeleton and install dependencies: `fractal new project-name`
+3. Switch into the project directory: `cd project-name`
+4. Start the Fractal [web UI](/docs/web/overview.md): `fractal start` and then browse to `http://localhost:3000` (there won't be much there to begin with!)
+5. Start [building components](/docs/guides/creating-components.md) and [writing documentation](/docs/documentation/overview.md), or slow down and read the [full documentation](/docs/README.md) first :-)
+
 ## Documentation
 
-The Fractal documentation is currently a work-in-progress, but should give you enough to get up and running. Feel free to [open an issue](https://github.com/frctl/fractal/issues) if anything that isn't clear!
+Fractal documentation is currently a work-in-progress. Feel free to [open an issue](https://github.com/frctl/fractal/issues) if anything that isn't clear!
 
 [**Read the documentation**](/docs/README.md).
 

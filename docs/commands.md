@@ -39,17 +39,17 @@ The `directory-name` argument will determine the name of the directory to create
 
 > This command is a global command and so is only available outside of existing projects.
 
-### Start the preview UI server
+### Start the web UI server
 
-The `start` command starts a web server to provide a nice visual way to browse the patterns in your component library. You can start the server from the CLI using the command:
+The `start` command starts a web server to provide a [nice visual way](/docs/web/overview.md) to browse the patterns in your component library. You can start the server from the CLI using the command:
 
 ```shell
 fractal start
 ```
 
-### Build a static version of the preview UI
+### Build a static version of the web UI
 
-If you want to export a static HTML version of the web preview interface, you can use the build command as follows:
+If you want to export a static HTML version of the [web UI](/docs/web/overview.md), you can use the build command as follows:
 
 ```shell
 fractal build

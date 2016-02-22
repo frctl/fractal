@@ -154,7 +154,9 @@ The default label to use for index pages. Can be overridden on a page-by-page ba
 fractal.set('docs.indexLabel', 'Overview');
 ```
 
-## Web preview UI settings
+## Web UI settings
+
+See the [web UI documentation](/docs/web/overview.md) for full details on configuration and usage.
 
 ### Static assets path
 
@@ -165,8 +167,16 @@ fractal.set('plugins.web.static.path', 'public');
 ```
 ### Theme
 
-The theme you'd like to use for the web preview UI. Note that you must install the theme as a NPM dependency as well as specifying it's name here. See the 
+The theme you'd like to use for the web preview UI. Note that you must install the theme as a NPM dependency as well as specifying it's name here. See the [web UI themes documentation](/docs/web/themes.md) for more information.
 
 ```js
-fractal.set('plugins.web.theme', '@frctl/web-preview-theme');
+fractal.set('plugins.web.theme', 'my-custom-theme');
+```
+
+#### Static build directory
+
+The directory within which any static builds of the web UI should be generated.
+
+```js
+fractal.set('plugins.web.build.dest', 'build');
 ```

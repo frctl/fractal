@@ -51,7 +51,7 @@ Fractal will first look at the [component directory](/docs/project-settings.md#d
 
 Fractal can render 'previews' of the components using the template files (in this example, the Handlebars files with `.hbs` extensions) and any preview [context data](/docs/components/context.md) that is found in the configuration files. It will optionally also wrap them in a [preview layout](/docs/components/layouts.md), if specified, ready for display.
 
-All this information, together with the information from the configuration files, will generate the **component tree**. This in turn can then be used in places such as the web preview UI to display a list of components and render them accordingly.
+All this information, together with the information from the configuration files, will generate the **component tree**. This in turn can then be used in places such as the [web UI](/docs/web/overview.md) to display a list of components and render them accordingly.
 
 It's worth noting that this is a very simple example, and there is a lot more you can do with your components - see the [components documentation](/docs/components/overview.md) for full details.
 

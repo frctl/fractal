@@ -1,4 +1,4 @@
-# Web UI Plugin
+# Web UI Themes
 
 <!-- START doctoc -->
 <!-- END doctoc -->
