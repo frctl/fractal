@@ -1,7 +1,15 @@
-# Context Data
+# Providing Context Data to Components
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+  - [Context and template partials](#context-and-template-partials)
+- [A title for the component](#a-title-for-the-component)
+    - [Passing context data from parent to child templates](#passing-context-data-from-parent-to-child-templates)
+  - [Referencing context from other components](#referencing-context-from-other-components)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 Each component or variant can have some **context data** associated with it. Context data is the **data that is used when rendering previews** of the component or variant.
 

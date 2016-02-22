@@ -54,7 +54,7 @@
     "test": "NODE_ENV=test ./node_modules/.bin/mocha --reporter spec",
     "lint": "jscs src",
     "lint:fix": "jscs src --fix",
-    "docs": "doctoc ./docs --github --notitle --maxlevel 4"
+    "docs": "grep 'DOCTOC SKIP' docs/*/*.md docs/*.md  -L | xargs doctoc --github --notitle --maxlevel 4"
   },
   "devDependencies": {
     "chai": "^3.4.1",
