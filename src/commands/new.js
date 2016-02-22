@@ -16,7 +16,6 @@ module.exports = {
 
     opts: {
         description: 'Create a new Fractal project',
-        // private: true,
         scope: ['global']
     },
 
@@ -33,6 +32,7 @@ module.exports = {
         const skelPath         = Path.join(__dirname, '../../skel/new');
         const fractalFileTpl   = Path.join(skelPath, 'fractal.hbs');
         const docsIndexTpl     = Path.join(skelPath, 'docs/index.hbs');
+        const exampleComponent = Path.join(skelPath, 'components/example');
 
         if (helpers.fileExistsSync(basePath)) {
             throw new Error(`Cannot create new project: The directory ${basePath} already exists.`);
@@ -82,6 +82,7 @@ module.exports = {
             const gitIgnorePath   = Path.join(basePath, '.gitignore');
             const fractalFilePath = Path.join(basePath, 'fractal.js');
             const docsIndexPath   = Path.join(docsDir, '01-index.md');
+            const componentCopyTo = Path.join(componentsDir, 'example');
 
             const packageJSON = {
                 "name": helpers.slugify(answers.projectTitle),
@@ -100,10 +101,11 @@ module.exports = {
                     fs.writeJsonAsync(packageJSONPath, packageJSON)
                 ]);
             }).then(paths => {
+                return fs.copy(exampleComponent, componentCopyTo);
+            }).then(() => {
                 if (answers.useGit) {
                     return Promise.all([
                         touch(Path.join(publicDir, '.gitkeep')),
-                        touch(Path.join(componentsDir, '.gitkeep')),
                         fs.writeFileAsync(gitIgnorePath, 'node_modules\n'),
                     ]);
                 }

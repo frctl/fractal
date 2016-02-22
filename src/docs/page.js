@@ -46,6 +46,14 @@ module.exports = class Page {
         return _.uniq(_.concat(this._tags, this._parent.tags));
     }
 
+    getContent(){
+        return Promise.resolve(this.content);
+    }
+
+    getContentSync(){
+        return this.content;
+    }
+
     static create(props, content) {
         var parsed   = matter(content);
         props        = _.defaults(parsed.data || {}, props);
