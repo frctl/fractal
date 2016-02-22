@@ -43,7 +43,7 @@ module.exports = {
                 type: 'input',
                 name: 'projectTitle',
                 message: 'What\'s the title of your project?',
-                default: 'My Component Library'
+                default: helpers.titlize(args[0])
             },
             {
                 type: 'input',
