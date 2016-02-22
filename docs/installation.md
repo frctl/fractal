@@ -13,7 +13,6 @@ Fractal installation happens in two parts - a global CLI (command line interface
   - [Using the `new` command](#using-the-new-command)
   - [Using the quick start repository](#using-the-quick-start-repository)
   - [Manual installation and setup](#manual-installation-and-setup)
-- [3. Check Fractal has installed correctly](#3-check-fractal-has-installed-correctly)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -71,10 +70,3 @@ const fractal = require('@frctl/fractal');
 
 fractal.set('components.path', 'path/to/components');
 ```
-
-## 3. Check Fractal has installed correctly
-
-You can check Fractal has installed correctly and see the available commands by running the `fractal` command with no further arguments. Running this should show you some information about Fractal, including as a list of currently available global commands that can be run.
-
-If all is good then go ahead and read the [commands documentation](/docs/commands.md) to learn about how to interact with Fractal via the command line. 
-
