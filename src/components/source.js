@@ -111,13 +111,14 @@ module.exports = class ComponentSource extends Source {
         context = context || variant.context;
         const content = yield variant.getContent();
         const ctx     = yield this.resolve(context);
+        ctx._self     = variant.toJSON();
         return this.engine().render(variant.viewPath, content, ctx);
     }
 
-    *_renderComponent(component, context) {
-        const variant = component.variants().default();
-        return yield this._renderVariant(variant, context);
-    }
+    // *_renderComponent(component, context) {
+    //     const variant = component.variants().default();
+    //     return yield this._renderVariant(variant, context);
+    // }
 
     // _renderCollatedComponent: function* (component, context){
     //     const items = component.variants();
