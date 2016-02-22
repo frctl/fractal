@@ -35,7 +35,6 @@ module.exports = class DocsSource extends Source {
 
     render(page, context) {
         const self = this;
-        const engine  = self.engine();
         const renderContext = context || page.context;
         const target = page.toJSON();
         return co(function* () {
@@ -43,8 +42,14 @@ module.exports = class DocsSource extends Source {
             const context = yield self.resolve(renderContext);
             context._self = target;
             const content = yield page.getContent();
-            let rendered  = yield engine.render(page.filePath, content, context);
+            let rendered  = yield self.engine().render(page.filePath, content, context);
             return self.markdown ? md(rendered) : rendered;
+        });
+    }
+
+    renderString(str, context){
+        return this.engine().render(null, str, context || {}).then(rendered => {
+            return this.markdown ? md(rendered) : rendered;
         });
     }
 

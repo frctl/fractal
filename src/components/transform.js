@@ -94,7 +94,8 @@ module.exports = function (fileTree, source) {
             });
         });
 
-        collection.setItems(_.orderBy(_.concat(components, collections), ['order', 'name']));
+        const items = yield (_.concat(components, collections));
+        collection.setItems(_.orderBy(items, ['order', 'name']));
         return collection;
     });
 

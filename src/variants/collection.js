@@ -2,6 +2,7 @@
 
 const Promise    = require('bluebird');
 const Path       = require('path');
+const co         = require('co');
 const _          = require('lodash');
 const cli        = require('../cli');
 const Variant    = require('./variant');
@@ -22,12 +23,12 @@ module.exports = class VariantCollection extends Collection {
         return this.find('name', this._parent.defaultName);
     }
 
-    static create(component, defaultView, configured, views, props) {
+    static *create(component, defaultView, configured, views, props) {
 
         configured     = configured || [];
         views          = views || [];
         const source   = component._source;
-        const variants = [];
+        let variants = [];
         const assets   = component.assets();
 
         // first figure out if we need a 'default' variant.
@@ -54,7 +55,7 @@ module.exports = class VariantCollection extends Collection {
             }, defaultView, assets));
         }
 
-        configured.forEach((conf, i) => {
+        let configuredVars = yield configured.map(co.wrap(function* (conf, i) {
             let viewFile = null;
             if (_.isUndefined(conf.name)) {
                 cli.error(`Could not create variant of ${component.handle} - 'name' value is missing`);
@@ -75,10 +76,16 @@ module.exports = class VariantCollection extends Collection {
             p.isDefault = (p.name === component.defaultName);
             p.viewPath  = Path.join(p.dir, p.view);
             p.handle    = `${component.handle}${source.splitter}${p.name}`.toLowerCase();
-            variants.push(
-                new Variant(p, viewFile, assets.filter(isRelated(p.handle)))
-            );
-        });
+            let notes;
+            if (p.notes) {
+                p.notes = yield props.source._app.docs.renderString(p.notes);
+            }
+            // variants.push(
+                return new Variant(p, viewFile, assets.filter(isRelated(p.handle)))
+            // );
+        }));
+
+        variants = variants.concat(configuredVars);
 
         const usedViews = variants.map(v => v.view);
 
@@ -99,7 +106,7 @@ module.exports = class VariantCollection extends Collection {
 
         return new VariantCollection({
             parent: component,
-        }, variants);
+        }, yield variants);
     }
 
 };

@@ -31,7 +31,11 @@ module.exports = class Component {
         this._display    = props.display || props.parent._display;
         this._assets     = assets;
 
-        this._variants = VariantCollection.create(this, files.view, props.variants, files.varViews, props);
+        this._variants = null;
+    }
+
+    setVariants(variantCollection){
+        this._variants = variantCollection;
     }
 
     get context() {
@@ -89,8 +93,18 @@ module.exports = class Component {
         };
     }
 
-    static create(props, files, assets) {
-        props.notes    = props.notes || props.readme || (files.readme ? files.readme.readSync() : null);
-        return new Component(props, files, assets);
+    static *create(props, files, assets) {
+
+            props.notes = props.notes || props.readme;
+            if (!props.notes && files.readme) {
+                props.notes = yield files.readme.read();
+            }
+            if (props.notes) {
+                props.notes = yield props.source._app.docs.renderString(props.notes);
+            }
+            const comp = new Component(props, files, assets);
+            const variants = yield VariantCollection.create(comp, files.view, props.variants, files.varViews, props);
+            comp.setVariants(variants);
+            return comp;
     }
 };
