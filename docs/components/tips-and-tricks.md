@@ -5,6 +5,7 @@
 
 
 - [Hiding components from listings](#hiding-components-from-listings)
+- [Ordering components](#ordering-components)
 - [Using a README for component notes](#using-a-readme-for-component-notes)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->

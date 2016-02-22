@@ -13,8 +13,10 @@
 	* [Configuration options](/docs/components/configuration.md)
 	* [Using preview layouts](/docs/components/layouts.md)
 	* [Providing context data to your components](/docs/components/context.md)
+* Generating Docs
+	* [Overview](/docs/documentation/overview.md)
 * Web UI
 	* [Overview](/docs/web/overview.md)
 * Guides
 	* [Creating components](/docs/guides/creating-components.md)
-* [Glossary](/docs/glossary.md)
+* [Glossary](/docs/glossary.md) [WIP]

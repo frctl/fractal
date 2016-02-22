@@ -3,6 +3,7 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+
   - [Overview](#overview)
   - [Context and template partials](#context-and-template-partials)
     - [Passing context data from parent to child templates](#passing-context-data-from-parent-to-child-templates)
@@ -43,7 +44,7 @@ For example, a template that includes the above `simple-text` component as a par
 ```handlebars
 <!-- parent.hbs -->
 <div class="parent">
-    <h1>{{ title }}</h1>
+    <img src="{{ imageUrl }}">
     {{> @simple-text }}
 </div>
 ```
@@ -52,13 +53,13 @@ If the parent component has a configuration file that looks like this:
 ```yaml
 # parent.config.yml
 context:
-  title: "A title for the component"
+  imageUrl: http://kittens.com/fluffy.png
 ```
 Then the output will not have any value for the `{{ text }}` placeholder in the child template:
 
 ```html
 <div class="parent">
-    <h1>A title for the component</h1>
+    <img src="http://kittens.com/fluffy.png">
     <p></p> <!-- no value! -->
 </div>
 ```
@@ -67,7 +68,7 @@ That is because only the markup from the child template has been included, not a
 ```yaml
 # parent.config.yml
 context:
-  title: "A title for the component"
+  imageUrl: http://kittens.com/fluffy.png
   text: 'Some text set by the parent component'
 ```
 

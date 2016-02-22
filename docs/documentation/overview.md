@@ -6,8 +6,17 @@ Additionally, if you need to generate more complex documentation, you can use a 
 
 Pages can be organised into as many folders and sub-folders as is necessary for your project, but must all reside in the documentation folder that you have configured in your `fractal.js` [project settings file](/docs/project-settings).
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [A simple page](#a-simple-page)
+- [Ordering pages](#ordering-pages)
+- [YAML front-matter](#yaml-front-matter)
+- [Using data in pages](#using-data-in-pages)
+  - [Accessing page metadata](#accessing-page-metadata)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## A simple page
 
