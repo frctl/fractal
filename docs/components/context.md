@@ -3,12 +3,14 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-
+  - [Overview](#overview)
   - [Context and template partials](#context-and-template-partials)
     - [Passing context data from parent to child templates](#passing-context-data-from-parent-to-child-templates)
   - [Referencing context from other components](#referencing-context-from-other-components)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## Overview
 
 Each component or variant can have some **context data** associated with it. Context data is the **data that is used when rendering previews** of the component or variant.
 
@@ -41,8 +43,8 @@ For example, a template that includes the above `simple-text` component as a par
 ```handlebars
 <!-- parent.hbs -->
 <div class="parent">
-<h1>{{ title }}</h1>
-{{> @simple-text }}
+    <h1>{{ title }}</h1>
+    {{> @simple-text }}
 </div>
 ```
 If the parent component has a configuration file that looks like this:
@@ -56,8 +58,8 @@ Then the output will not have any value for the `{{ text }}` placeholder in the 
 
 ```html
 <div class="parent">
-<h1>A title for the component</h1>
-<p></p> <!-- no value! -->
+    <h1>A title for the component</h1>
+    <p></p> <!-- no value! -->
 </div>
 ```
 That is because only the markup from the child template has been included, not any context data. This can be addressed (in most template engines - see the next section for details) by making sure to add a `text` value to the parent' component's context:

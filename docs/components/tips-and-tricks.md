@@ -13,6 +13,10 @@
 
 [ Coming soon ]
 
+## Ordering components
+
+[ Coming soon ]
+
 ## Using a README for component notes
 
 [ Coming soon ]
