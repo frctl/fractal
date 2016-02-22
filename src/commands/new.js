@@ -87,7 +87,9 @@ module.exports = {
             const packageJSON = {
                 "name": helpers.slugify(answers.projectTitle),
                 "version": "0.1.0",
-                "dependencies": {}
+                "dependencies": {
+                    '@frctl/fractal': shell.exec('npm show @frctl/fractal version', {silent:true}).output.replace(/^\s+|\s+$/g, '')
+                }
             };
 
             const fractalContents = Handlebars.compile(fs.readFileSync(fractalFileTpl, 'utf8'))(answers);
@@ -101,7 +103,7 @@ module.exports = {
                     fs.writeJsonAsync(packageJSONPath, packageJSON)
                 ]);
             }).then(paths => {
-                return fs.copy(exampleComponent, componentCopyTo);
+                return fs.copyAsync(exampleComponent, componentCopyTo);
             }).then(() => {
                 if (answers.useGit) {
                     return Promise.all([
