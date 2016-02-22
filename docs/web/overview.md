@@ -4,8 +4,19 @@ The Fractal web UI provides a web-based interface to browse your components and 
 
 The web UI functionality itself is actually just a [Fractal plugin](/docs/plugins/overview.md), although it comes bundled with Fractal by default so you won't ever need to install it separately.
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [Getting started with the web UI](#getting-started-with-the-web-ui)
+  - [Starting the local development server](#starting-the-local-development-server)
+  - [Building a static version of the web UI](#building-a-static-version-of-the-web-ui)
+- [Configuration options](#configuration-options)
+  - [Static assets path](#static-assets-path)
+  - [Theme](#theme)
+  - [Build directory](#build-directory)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Getting started with the web UI
 

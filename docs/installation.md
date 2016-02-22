@@ -10,8 +10,9 @@ Fractal installation happens in two parts - a global CLI (command line interface
 
 - [1. Install the CLI helper globally](#1-install-the-cli-helper-globally)
 - [2. Create a new Fractal project](#2-create-a-new-fractal-project)
-  - [Either - Using the quick start repository](#either---using-the-quick-start-repository)
-  - [Or - Manual installation and setup](#or---manual-installation-and-setup)
+  - [Using the `new` command](#using-the-new-command)
+  - [Using the quick start repository](#using-the-quick-start-repository)
+  - [Manual installation and setup](#manual-installation-and-setup)
 - [3. Check Fractal has installed correctly](#3-check-fractal-has-installed-correctly)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->

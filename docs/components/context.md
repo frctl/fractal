@@ -5,7 +5,6 @@
 
 
   - [Context and template partials](#context-and-template-partials)
-- [A title for the component](#a-title-for-the-component)
     - [Passing context data from parent to child templates](#passing-context-data-from-parent-to-child-templates)
   - [Referencing context from other components](#referencing-context-from-other-components)
 
@@ -24,7 +23,7 @@ As a very simple example, we could have a `simple-text` component with the follo
 
 ```yaml
 # simple-text.config.yml
-context: 
+context:
   text: "This is some paragraph text"
 ```
 ...will look like this when rendered as a preview:
@@ -50,7 +49,7 @@ If the parent component has a configuration file that looks like this:
 
 ```yaml
 # parent.config.yml
-context: 
+context:
   title: "A title for the component"
 ```
 Then the output will not have any value for the `{{ text }}` placeholder in the child template:
@@ -65,14 +64,14 @@ That is because only the markup from the child template has been included, not a
 
 ```yaml
 # parent.config.yml
-context: 
+context:
   title: "A title for the component"
   text: 'Some text set by the parent component'
 ```
 
 Often this is behaviour is beneficial - it means your 'parent' components are completely in control of configuring their 'child' components. However in some cases it can lead to repetition of context data in config files. In this case, you can use a special syntax to import context from one component into another - see below for details.
 
-### Passing context data from parent to child templates 
+### Passing context data from parent to child templates
 
 As mentioned above, most (but certainly not all!) template engines will pass through context data from the parent template to any included 'partial' child templates. An example of this was where the value of the `text` property was passed through to the `simple-text` partial even thought it was set in the parent components context data.
 

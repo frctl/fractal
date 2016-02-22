@@ -21,9 +21,10 @@
   - [File extension](#file-extension-1)
   - [Parse as markdown](#parse-as-markdown)
   - [Index label](#index-label)
-- [Web preview UI settings](#web-preview-ui-settings)
+- [Web UI settings](#web-ui-settings)
   - [Static assets path](#static-assets-path)
   - [Theme](#theme)
+  - [Static build directory](#static-build-directory)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -173,7 +174,7 @@ The theme you'd like to use for the web preview UI. Note that you must install t
 fractal.set('plugins.web.theme', 'my-custom-theme');
 ```
 
-#### Static build directory
+### Static build directory
 
 The directory within which any static builds of the web UI should be generated.
 

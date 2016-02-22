@@ -6,8 +6,8 @@
 
 - [Available commands](#available-commands)
   - [Create a new Fractal project](#create-a-new-fractal-project)
-  - [Start the preview UI server](#start-the-preview-ui-server)
-  - [Build a static version of the preview UI](#build-a-static-version-of-the-preview-ui)
+  - [Start the web UI server](#start-the-web-ui-server)
+  - [Build a static version of the web UI](#build-a-static-version-of-the-web-ui)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
