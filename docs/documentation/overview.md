@@ -65,7 +65,7 @@ title: Change Log
 This is the body of the page
 ```
 
-In this case we are specifying that we want the title of the page (used in the web UI and other place) to be 'Change Log'. To see a full list of available configuration items, check out the [documentation configuration reference](/docs/documentation/configuration.md).
+In this case we are specifying that we want the title of the page (used in the web UI and other places) to be 'Change Log'. To see a full list of available configuration items, check out the [documentation configuration reference](/docs/documentation/configuration.md).
 
 If you don't want to use YAML front matter, you can also use a [separate configuration file](/docs/configuration-files.md) in the same way as you would for a component. 
 

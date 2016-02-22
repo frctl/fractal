@@ -44,7 +44,7 @@ When you run the command, it will ask you a few questions about how you want you
 
 If you want a more fully-featured starting point, you can grab a copy of the [quick start project boilerplate](https://github.com/frctl/quick-start) from Github and then customise it to fit your needs.
 
-1. Download the [zip file of the quick start repository](https://github.com/frctl/skeleton/archive/master.zip).
+1. Download the [zip file of the quick start repository](https://github.com/frctl/quick-start/archive/master.zip).
 2. Unzip into a location of your choosing.
 3. Open the project folder in you command line tool of choice.
 4. Install the dependencies: `npm install`

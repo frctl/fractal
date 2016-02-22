@@ -29,10 +29,10 @@ module.exports = {
 
         const baseDir          = args[0];
         const basePath         = baseDir.startsWith('/') ? baseDir : Path.join(process.cwd(), baseDir);
-        const skelPath         = Path.join(__dirname, '../../skel/new');
-        const fractalFileTpl   = Path.join(skelPath, 'fractal.hbs');
-        const docsIndexTpl     = Path.join(skelPath, 'docs/index.hbs');
-        const exampleComponent = Path.join(skelPath, 'components/example');
+        const viewsPath         = Path.join(__dirname, '../../views/new');
+        const fractalFileTpl   = Path.join(viewsPath, 'fractal.hbs');
+        const docsIndexTpl     = Path.join(viewsPath, 'docs/index.hbs');
+        const exampleComponent = Path.join(viewsPath, 'components/example');
 
         if (helpers.fileExistsSync(basePath)) {
             throw new Error(`Cannot create new project: The directory ${basePath} already exists.`);
