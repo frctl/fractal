@@ -1,6 +1,6 @@
 # Fractal
 
-A tool to help you **build**, **document** and **integrate** component/pattern libraries into your web projects.
+A tool to help you **build**, **document** and **integrate** component/pattern libraries into your web projects. :snowflake:
 
 [![Build Status](https://img.shields.io/travis/frctl/fractal.svg?style=flat)](https://travis-ci.org/frctl/fractal)
 [![NPM Version](https://img.shields.io/npm/v/@frctl/fractal.svg?style=flat)](https://www.npmjs.com/package/@frctl/fractal)
@@ -49,7 +49,7 @@ Fractal makes use of a number of ES6 features that mean it currently requires [N
 
 Fractal is a project that has recently evolved rapidly and organically from a proof-of-concept prototype into a more stable, mature tool. Because of this it's currently pretty far behind where it should be in terms of test coverage. Any contributions on this front would be most welcome!
 
-Tests can be run using `npm test`.
+Existing tests can be run using the `npm test` command.
 
 ## Credits
 
