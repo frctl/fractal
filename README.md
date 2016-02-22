@@ -11,7 +11,7 @@ Component (or pattern) libraries are a way of designing and building websites in
 
 Fractal helps you **assemble**, **preview** and **document** website component libraries, and then **integrate** them into your web projects and build processes using custom commands and plugins.
 
-You can think of Fractal as a tool that sits halfway between a pattern library UI generator like [Fabricator](https://fbrctr.github.io) or [PatternLab](http://patternlab.io), and a static site build tool like [Metalsmith](http://metalsmith.io) or [Assemble](https://github.com/assemble/assemble/).
+You can think of Fractal as a tool that sits halfway between a pattern library UI generator like [Fabricator](https://fbrctr.github.io) or [PatternLab](http://patternlab.io), and build tools like [Metalsmith](http://metalsmith.io), [Gulp](http://gulpjs.com) or [Assemble](https://github.com/assemble/assemble/).
 
 > _**Important:** Fractal is currently considered to be in beta. Until it reaches a 1.0 release there may be breaking changes in minor point-releases, as well as out-of date or incorrect documentation. Use at your own risk!_
 
@@ -23,7 +23,7 @@ Existing tools to help you build these component libraries often force you to us
 
 It is built using an **extendable, plugin-based architecture**. The core component and documentation parser is available to build upon, helping you to better integrate your component library into your build system and even your production site.
 
-The core web UI plugin provides a **web-based component library browser** UI, either running as a local web server or as a static HTML export. A **powerful theme API** means you can create your own component library 'skins' from scratch or customise the default theme to your liking.
+The [web UI plugin](/docs/web/overview.md) provides a web-based way to browse your component library, either running as a local web server or as a static HTML export. A **powerful theme API** means you can create your own web UI themes from scratch or by customising the default theme to your liking.
 
 Fractal can be used both as a command line tool and as a NPM module dependency in your projects.
 
@@ -37,7 +37,7 @@ Fractal can be used both as a command line tool and as a NPM module dependency i
 
 ## Documentation
 
-Fractal documentation is currently a work-in-progress. Feel free to [open an issue](https://github.com/frctl/fractal/issues) if anything that isn't clear!
+Fractal documentation is currently a work-in-progress. Feel free to [open an issue](https://github.com/frctl/fractal/issues) if you find anything that is misleading or unclear!
 
 [**Read the documentation**](/docs/README.md).
 
