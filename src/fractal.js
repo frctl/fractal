@@ -33,8 +33,6 @@ class Fractal {
             helpers: utils
         };
         this.engine('handlebars', '@frctl/handlebars-adapter');
-        this.engine('nunjucks', '@frctl/nunjucks-adapter');
-        this.engine('mustache', '@frctl/mustache-adapter');
         this.plugin('@frctl/web-plugin');
     }
 
