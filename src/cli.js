@@ -73,10 +73,10 @@ module.exports = {
     },
 
     error(text) {
-        this.unslog();
-        this.debug(text);
-        text = text.toString().replace(/^Error: /, '');
-        this.write(text, 'error');
+        this.unslog().br();
+        var str = text.toString().replace(/^Error: /, '');
+        this.write(str, 'error');
+        if (text.stack) this.debug(text.stack);
         return this;
     },
 

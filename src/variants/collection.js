@@ -3,6 +3,7 @@
 const Promise    = require('bluebird');
 const Path       = require('path');
 const _          = require('lodash');
+const cli        = require('../cli');
 const Variant    = require('./variant');
 const Collection = require('../collection');
 
