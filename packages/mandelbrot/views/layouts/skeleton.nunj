@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+
+    <script>var cl = document.querySelector('html').classList; cl.remove('no-js'); cl.add('has-js');</script>
+
+    <link rel="stylesheet" type="text/css" href="/_theme/css/build.css?cachebust={{ frctl.web.theme.version }}">
+
+    <title>{% if sectionTitle %}{{ sectionTitle }} | {% endif %}{{ frctl.config.project.title }}</title>
+</head>
+<body>
+<div class="fr-wrapper" data-component="page">
+{% block page %}{% endblock %}
+</div>
+<script src="/_theme/js/build.js"></script>
+</body>
+</html>
