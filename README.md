@@ -4,6 +4,8 @@ A tool to help you **build**, **document** and **integrate** component/pattern l
 
 [![Build Status](https://img.shields.io/travis/frctl/fractal.svg?style=flat-square)](https://travis-ci.org/frctl/fractal)
 [![NPM Version](https://img.shields.io/npm/v/@frctl/fractal.svg?style=flat-square)](https://www.npmjs.com/package/@frctl/fractal)
+[![NPM Version](https://img.shields.io/david/frctl/fractal.svg?style=flat-square)](https://david-dm.org/frctl/fractal)
+
 
 ## Introduction
 
