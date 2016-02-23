@@ -1,0 +1,5 @@
+{% extends "layouts/skeleton.nunj" %}
+
+{% block page %}
+foo
+{% endblock %}
