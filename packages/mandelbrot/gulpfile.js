@@ -44,14 +44,17 @@ function compileJS(watch) {
     }
 }
 
-gulp.task('js', ['clean'], () => compileJS());
+gulp.task('js', ['clean:js'], () => compileJS());
 gulp.task('js:watch', () => compileJS(true));
 
-gulp.task('clean', function() {
-    return del(['./dist']);
+gulp.task('clean:js', function() {
+    return del(['./dist/js']);
+});
+gulp.task('clean:css', function() {
+    return del(['./dist/css']);
 });
 
-gulp.task('css', ['clean'], function() {
+gulp.task('css', ['clean:css'], function() {
   return gulp.src('./assets/scss/build.scss')
     .pipe(sourcemaps.init())
     .pipe(sassGlob())
@@ -60,7 +63,7 @@ gulp.task('css', ['clean'], function() {
         browsers: ['last 5 versions'],
     }))
     .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest('./dist/css/fractal.css'));
+    .pipe(gulp.dest('./dist/css'));
 });
 
 gulp.task('css:watch', function () {

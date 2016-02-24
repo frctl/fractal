@@ -492,11 +492,10 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 
 html {
   color: #333;
-  background: #555;
-  font-family: 'Open Sans', Helvetica, Arial, sans-serif; }
-
-body {
-  overflow: hidden; }
+  background: #efefef;
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+  height: 100%;
+  position: relative; }
 
 blockquote,
 dl,
@@ -589,7 +588,40 @@ pre {
 ::-webkit-scrollbar-corner {
   background: transparent; }
 
-* {
-  color: red; }
+.fr-wrapper {
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex; }
+  .fr-wrapper.is-full .gutter {
+    width: 0 !important; }
+  .fr-wrapper.is-full .fr-sidebar {
+    width: 0 !important; }
+  .fr-wrapper.is-full .fr-content {
+    width: 100% !important; }
+
+.fr-sidebar {
+  height: 100%;
+  background-color: #fff;
+  overflow: auto; }
+
+.fr-content {
+  height: 100%; }
+
+.gutter {
+  background-color: transparent;
+  border-left: 1px solid #ddd;
+  height: 100%; }
+
+.gutter.gutter-vertical,
+.gutter.gutter-horizontal {
+  cursor: -webkit-grab;
+  cursor: grab; }
 
 /*# sourceMappingURL=build.css.map */
