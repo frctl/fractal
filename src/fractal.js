@@ -1,8 +1,9 @@
 'use strict';
 
+const vorpal     = require('vorpal')();
+const console    = require('./console')(vorpal);
 const Promise    = require('bluebird');
 const _          = require('lodash');
-const cli        = require('./cli');
 const Components = require('./components/source');
 const Docs       = require('./docs/source');
 const Plugin     = require('./plugin');
@@ -25,56 +26,42 @@ class Fractal {
         this._engines = new Map();
         this._plugins = new Map();
         this._sources = new Map();
-        this.commands = commander(require('./commands'), this);
-        cli.debugging = this.get('env') === 'debug';
+        this._commander = commander(this, vorpal, require('./commands'));
         this.utils = {
             highlight: highlight,
-            cli: cli,
+            console: console,
             helpers: utils
         };
+        this.console = console;
         this.engine('handlebars', '@frctl/handlebars-adapter');
         this.plugin('@frctl/web-plugin');
     }
 
     /**
-     * Run the specified command.
-     *
-     * If no command is provided, this will parse argv to establish what command
-     * to run and what arguments and opts should be passed to that command.
+     * Run the command specified in the CLI arguments.
      *
      * @api public
      */
 
-    run(name, opts) {
-        let args = [];
+    run() {
+        this._init();
+        return this._commander.run();
+    }
+
+    // exec() {
+    //     this._initPlugins();
+    //     return this._commander.exec.apply(this._commander, Array.from(arguments));
+    // }
+
+    _init(){
+        console.debugging = this.get('env') === 'debug';
         if (this.get('env') !== 'debug') {
             process.on('uncaughtException', function (err) {
-                cli.error(err);
+                console.error(err);
                 process.exit(1);
             });
         }
-        if (!name) {
-            const input = utils.parseArgv();
-            if (!input.command) {
-                return this.commands.run('welcome', null, null, this);
-            } else {
-                name = input.command;
-                opts = input.opts;
-                args = args.concat(input.args);
-            }
-        }
-
-        const nameParts = name.split(':');
-        const colonArgs = nameParts.slice(1);
-        name            = nameParts[0];
-        args            = colonArgs.concat(args);
-
-        const command = this.commands.get(name);
-        if (command) {
-            this._initPlugins();
-            return this.commands.run(command, args, opts, this);
-        }
-        cli.error(`Command ${name} not recognised`);
+        this._initPlugins();
     }
 
     source(type) {
@@ -111,7 +98,7 @@ class Fractal {
         const init = _.isString(plugin) ? require(plugin) : plugin;
         init.bind(instance)(config || {}, this);
         if (!instance.name) {
-            cli.error(`Plugins must provide a valid 'name' value.`);
+            console.error(`Plugins must provide a valid 'name' value.`);
             return;
         }
         for (let command of instance.commands()) {
@@ -121,8 +108,8 @@ class Fractal {
         return this;
     }
 
-    command(name, callback, opts) {
-        this.commands.add(name, callback, opts);
+    command(name, opts, action) {
+        this._commander.add(name, opts, action);
         return this;
     }
 
@@ -155,6 +142,10 @@ class Fractal {
 
     get version() {
         return this.get('version').replace(/v/i, '');
+    }
+
+    get scope() {
+        return this.global ? 'global' : 'project';
     }
 
     set(setting, val) {

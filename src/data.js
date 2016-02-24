@@ -1,12 +1,12 @@
 'use strict';
 
-var Promise = require('bluebird');
-var yaml    = require('js-yaml');
-var _       = require('lodash');
-var Path    = require('path');
-var fs      = Promise.promisifyAll(require('fs'));
-var utils   = require('./utils');
-var cli  = require('./cli');
+const Promise = require('bluebird');
+const yaml    = require('js-yaml');
+const _       = require('lodash');
+const Path    = require('path');
+const fs      = Promise.promisifyAll(require('fs'));
+const utils   = require('./utils');
+const console = require('./console');
 
 const self = module.exports = {
 
@@ -48,7 +48,7 @@ const self = module.exports = {
                     data = data();
                 }
                 if (!_.isObject(data)) {
-                    cli.error(`Error loading data file ${filePath}: JS files must return a JavaScript data object.`);
+                    console.error(`Error loading data file ${filePath}: JS files must return a JavaScript data object.`);
                     return Promise.reject(new Error('Error loading data file'));
                 }
                 return Promise.resolve(_.cloneDeep(data));
@@ -59,7 +59,7 @@ const self = module.exports = {
             return fs.readFileAsync(filePath, 'utf8').then(contents => {
                 return self.parse(contents, format);
             }).catch(err => {
-                cli.error(`Error loading data file ${filePath}: ${err.message}`);
+                console.error(`Error loading data file ${filePath}: ${err.message}`);
                 return {};
             });
         }
@@ -77,7 +77,7 @@ const self = module.exports = {
             return Promise.resolve(defaults);
         }
         return this.readFile(file.path).then(c => _.defaultsDeep(c, defaults)).catch(err => {
-            cli.error(`Error parsing data file ${file.path}: ${err.message}`);
+            console.error(`Error parsing data file ${file.path}: ${err.message}`);
             return defaults;
         });
     }

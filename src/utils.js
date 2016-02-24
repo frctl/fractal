@@ -80,6 +80,10 @@ module.exports = {
        } catch (e) {
            return false;
        }
+   },
+
+   isPromise(value){
+       return (value && _.isFunction(value.then));
    }
 
 };

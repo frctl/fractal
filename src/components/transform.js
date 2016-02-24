@@ -9,7 +9,7 @@ const Asset           = require('../assets/asset');
 const AssetCollection = require('../assets/collection');
 const fs              = require('../fs');
 const data            = require('../data');
-const cli             = require('../cli');
+const console             = require('../console');
 
 module.exports = function (fileTree, source) {
 

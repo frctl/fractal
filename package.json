@@ -40,7 +40,8 @@
     "semver": "^5.1.0",
     "shelljs": "^0.6.0",
     "single-line-log": "^1.0.1",
-    "touch": "^1.0.0"
+    "touch": "^1.0.0",
+    "vorpal": "^1.9.5"
   },
   "bin": {
     "fractal": "./bin/fractal"

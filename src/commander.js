@@ -1,23 +1,32 @@
 'use strict';
 
-const _   = require('lodash');
-const cli = require('./cli');
+const _     = require('lodash');
+const chalk = require('chalk');
+const console   = require('./console');
+const utils = require('./utils');
 
-module.exports = function (defaults, app) {
+module.exports = function (app, vorpal, defaults) {
 
-    const commands = new Map();
+    const commands  = new Set();
+    const delimiter = chalk.magenta('fractal ➤');
 
-    _.forEach(defaults, command => {
-        add(command.name, command.callback, command.opts || {});
-    });
+    _.forEach(defaults, c => add(c.command, c.config || {}, c.action));
 
-    function add(name, callback, opts) {
-        opts = opts || {};
-        opts.scope = opts.scope ? [].concat(opts.scope) : ['local'];
-        commands.set(name, {
-            name: name,
-            callback: callback,
-            opts: opts || {}
+    function add(command, config, action) {
+        if (_.isFunction(config)) {
+            action = config;
+            config = {};
+        }
+        if (_.isString(config)) {
+            config = {
+                description: config
+            };
+        }
+        action = action || function(){};
+        commands.add({
+            command: command,
+            action:  action,
+            config:  config
         });
     }
 
@@ -25,24 +34,75 @@ module.exports = function (defaults, app) {
 
         add: add,
 
-        all() {
-            return Array.from(commands.values());
-        },
+        run() {
 
-        run(command, args, opts) {
-            command = _.isString(command) ? this.get(command) : command;
-            const scope = app.global ? 'global' : 'local';
-            if (command) {
-                if (_.includes(command.opts.scope, scope)) {
-                    return command.callback(args, opts, app);
+            const scope = app.scope;
+            const input = utils.parseArgv();
+
+            for (let item of commands.values()) {
+                let commandScope = item.config.scope ? [].concat(item.config.scope) : ['project'];
+                if (_.includes(commandScope, scope)) {
+                    // command is in scope
+                    const cmd = vorpal.command(item.command, item.config.description || ' ');
+                    cmd.action((args, done) => {
+                        let action = item.action.bind(app);
+                        return action(args, done);
+                    });
+                    (item.config.options || []).forEach(opt => {
+                        cmd.option(opt);
+                    });
+                    cmd.__scope = commandScope;
                 } else {
-                    cli.error(`The '${command.name}' command cannot be run ${scope}ly.`);
+                    // command not available in this scope
+                    const cmd = vorpal.command(item.command.replace(/\</g,'[').replace(/\>/g,']'), item.config.description || ' ');
+                    cmd.action((args, done) => {
+                        console.error(`This command is not available in a ${scope} context.`);
+                        done();
+                    })
+                    .hidden()
+                    .__scope = commandScope;
                 }
+            }
+
+            var command = vorpal.find(input.command);
+
+            if (command && !_.includes(command.__scope, scope)) {
+                console.error(`This command is not available in a ${scope} context.`);
+                return;
+            }
+
+            if (command && scope === 'global') {
+                vorpal.parse(process.argv);
+                return;
+            }
+
+            if (!command && scope === 'global') {
+                console.box(
+                    `Fractal CLI`,
+                    `${chalk.magenta('No local Fractal installation found.')}\nYou can use the 'fractal new' command to create a new project.`,
+                    `Powered by Fractal v${app.version}`
+                ).unslog();
+            } else {
+                console.slog().log('Initialising Fractal....');
+                return app.load().then(() => {
+                    app.watch();
+                    vorpal.delimiter(delimiter);
+                    vorpal.history('fractal');
+                    console.box(
+                        `Fractal interactive CLI`,
+                        `- Use the 'help' command to see all available commands.\n- Use the 'exit' command to exit the app.`,
+                        `Powered by Fractal v${app.version}`
+                    ).unslog().br();
+                    if (input.command) {
+                        vorpal.parse(process.argv);
+                    }
+                    vorpal.show();
+                });
             }
         },
 
-        get(name) {
-            return commands.get(name);
+        exec() {
+            // run()
         }
     };
 

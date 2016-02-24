@@ -7,7 +7,7 @@ const Page       = require('./page');
 const Collection = require('./collection');
 const fs         = require('../fs');
 const data       = require('../data');
-const cli     = require('../cli');
+const console     = require('../console');
 
 module.exports = function (fileTree, source) {
 

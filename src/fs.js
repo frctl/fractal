@@ -9,7 +9,7 @@ const fs        = require('fs');
 const readFile  = Promise.promisify(fs.readFile);
 const isBinary  = Promise.promisify(require('istextorbinary').isBinary);
 const utils     = require('./utils');
-const cli       = require('./cli');
+const console       = require('./console');
 
 module.exports = {
 

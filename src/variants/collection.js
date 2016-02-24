@@ -4,7 +4,7 @@ const Promise    = require('bluebird');
 const Path       = require('path');
 const co         = require('co');
 const _          = require('lodash');
-const cli        = require('../cli');
+const console        = require('../console');
 const Variant    = require('./variant');
 const Collection = require('../collection');
 
@@ -58,7 +58,7 @@ module.exports = class VariantCollection extends Collection {
         let configuredVars = yield configured.map(co.wrap(function* (conf, i) {
             let viewFile = null;
             if (_.isUndefined(conf.name)) {
-                cli.error(`Could not create variant of ${component.handle} - 'name' value is missing`);
+                console.error(`Could not create variant of ${component.handle} - 'name' value is missing`);
                 return null;
             }
             const p = _.defaults(conf, {

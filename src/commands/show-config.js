@@ -2,21 +2,20 @@
 
 const chalk = require('chalk');
 const _     = require('lodash');
-const cli   = require('../cli');
+const console   = require('../console');
 
 module.exports = {
 
-    name: 'show-config',
+    command: 'show-config [path]',
 
-    opts: {
-        description: 'Display project configuration info'
+    config: {
+        description: 'Display project configuration info',
+        scope: ['project']
     },
 
-    callback: function (args, opts, app) {
-        if (args[0]) {
-            return cli.dump(app.get(args[0]));
-        }
-        return cli.dump(app.get());
+    action: function (args, done) {
+        console.dump(this.get(args.path));
+        done();
     }
 
 };
