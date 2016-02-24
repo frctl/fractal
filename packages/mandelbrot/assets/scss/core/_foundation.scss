@@ -6,12 +6,14 @@
 
 html {
     color: #333;
-    background: #555;
+    background: #efefef;
     font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+    height: 100%;
+    position: relative;
 }
 
 body {
-    overflow: hidden;
+    // overflow: hidden;
 }
 
 blockquote,

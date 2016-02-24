@@ -1,5 +1,9 @@
-{% extends "layouts/skeleton.nunj" %}
+{% extends "layouts/standard.nunj" %}
 
-{% block page %}
-foo
+{% block content %}
+
+
+
+overview
+
 {% endblock %}
