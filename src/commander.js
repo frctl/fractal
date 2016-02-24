@@ -44,8 +44,10 @@ module.exports = function (app, vorpal, defaults) {
                 if (_.includes(commandScope, scope)) {
                     // command is in scope
                     const cmd = vorpal.command(item.command, item.config.description || ' ');
-                    cmd.action((args, done) => {
-                        let action = item.action.bind(app);
+                    cmd.action(function(args, done){
+                        this.console = console;
+                        this.fractal = app;
+                        let action = item.action.bind(this);
                         return action(args, done);
                     });
                     (item.config.options || []).forEach(opt => {
@@ -72,6 +74,7 @@ module.exports = function (app, vorpal, defaults) {
             }
 
             if (command && scope === 'global') {
+                console.br().notice('Creating new project.... just a few questions:');
                 vorpal.parse(process.argv);
                 return;
             }
