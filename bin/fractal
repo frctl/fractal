@@ -15,23 +15,12 @@ const Fractal = new Liftoff({
 
 Fractal.launch({}, function(env){
 
-    const cli  = frctl.utils.cli;
-
-    // if (!env.configPath) {
-    //     frctl.utils.cli.error('No local fractal.js file found.');
-    //     process.exit(1);
-    // }
-    // if (!env.modulePath) {
-    //     frctl.utils.cli.error(`Local fractal module not found in ${env.cwd} \n\t Try running 'npm install @frctl/fractal'`);
-    //     process.exit(1);
-    // }
-
     if (env.configPath) {
         require(env.configPath);
     }
     if (env.modulePath) {
         if (semver.gt(cliPackage.version, env.modulePackage.version)) {
-            frctl.utils.cli.notice(`Fractal version mismatch:\n\t Global fractal is ${cliPackage.version}\n\t Local fractal is ${env.modulePackage.version}`);
+            frctl.console.notice(`Fractal version mismatch:\n\t Global fractal is ${cliPackage.version}\n\t Local fractal is ${env.modulePackage.version}`);
         }
         var app = require(env.modulePath);
         app.run();
