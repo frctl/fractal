@@ -10,6 +10,7 @@ const watchify     = require('watchify');
 const babel        = require('babelify');
 const autoprefixer = require('gulp-autoprefixer');
 const sassGlob     = require('gulp-sass-glob');
+const uglify       = require('gulp-uglify');
 const del          = require('del');
 
 // CSS
@@ -99,6 +100,7 @@ function compileJS(watch) {
             })
             .pipe(source('build.js'))
             .pipe(buffer())
+            .pipe(uglify())
             .pipe(sourcemaps.init({loadMaps: true}))
             .pipe(sourcemaps.write('./'))
             .pipe(gulp.dest('./dist/js'));
