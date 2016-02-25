@@ -75,7 +75,7 @@
     }
 }
 .Tree-entityLink {
-    @include link-default(#0074D9, none)
+    @include link-default(#0074D9, none);
     display: flex;
     > * + * {
         margin-left: 6px;

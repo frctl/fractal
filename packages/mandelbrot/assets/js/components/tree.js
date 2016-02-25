@@ -9,7 +9,6 @@ class Tree {
         this._el = $(el);
         this._id = this._el[0].id;
         this._state = storage.get(`tree.${this._id}.state`, []);
-        console.log(this._state);
         this._collections = $.map(this._el.find('[data-behaviour="collection"]'), c => new TreeCollection(c, this));
         for (let collection of this._collections) {
             if (collection.containsCurrentItem()) {
