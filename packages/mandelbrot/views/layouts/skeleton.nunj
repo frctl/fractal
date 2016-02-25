@@ -16,6 +16,7 @@
 {% block page %}{% endblock %}
 
 <script src="/_theme/js/build.js"></script>
+
 {% if frctl.web.server %}
 <script src="{{ frctl.web.server.socketAddress }}/socket.io/socket.io.js"></script>
 <script>

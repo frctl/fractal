@@ -539,9 +539,9 @@ ul {
   padding: 0; }
 
 a {
-  color: blue; }
+  color: #0074D9; }
   a:visited, a:hover, a:active {
-    color: blue; }
+    color: #0074D9; }
 
 /**
  * Suppress the focus outline on links that cannot be accessed via keyboard.
@@ -599,21 +599,57 @@ pre {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
-  display: flex; }
+  display: flex;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1; }
+  .Frame.is-resizing .Frame-panel {
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+    pointer-events: none; }
+  .Frame.is-resizing .Frame-gutter {
+    background-color: #d8d8d8; }
 
 .Frame-panel {
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
   height: 100%;
   overflow: auto;
-  min-width: 300px; }
+  -webkit-overflow-scrolling: touch; }
 
 .Frame-panel--sidebar {
-  background-color: #fff; }
+  -webkit-flex-shrink: 0;
+      -ms-flex-negative: 0;
+          flex-shrink: 0;
+  background-color: #fff;
+  width: 280px;
+  min-width: 200px;
+  max-width: 400px;
+  padding: 20px 0 40px 0; }
+  .Frame-panel--sidebar ::-webkit-scrollbar-thumb {
+    background: #aaa; }
+  .Frame-panel--sidebar ::-webkit-scrollbar-thumb:hover {
+    background: #999; }
+  .Frame-panel--sidebar ::-webkit-scrollbar-thumb:active {
+    background: #888; }
+  .Frame-panel--sidebar.is-collapsed {
+    -webkit-transition: width 0.3s;
+    transition: width 0.3s;
+    width: 0;
+    min-width: 0; }
+
+.Frame-panel--main {
+  padding: 20px;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  overflow: scroll;
+  min-width: 270px; }
 
 .Frame-gutter {
+  width: 6px;
   -webkit-flex-shrink: 0;
       -ms-flex-negative: 0;
           flex-shrink: 0;
@@ -621,9 +657,13 @@ pre {
   cursor: -webkit-grab;
   cursor: grab;
   background-color: transparent;
-  background-color: #ddd;
+  background-color: #e6e6e6;
   height: 100%;
-  float: left; }
+  float: left;
+  -webkit-transition: background-color 0.1s;
+  transition: background-color 0.1s; }
+  .Frame-gutter:hover {
+    background-color: #ddd; }
 
 .Navigation-group {
   padding-right: 20px; }

@@ -7,32 +7,65 @@
     bottom: 0;
     overflow: hidden;
     display: flex;
+    flex-grow: 1;
+    &.is-resizing {
+        .Frame-panel {
+            user-select: none;
+            pointer-events: none;
+        }
+        .Frame-gutter {
+            background-color: #d8d8d8;
+        }
+    }
 }
 
 .Frame-panel {
-    user-select: none;
     height: 100%;
     overflow: auto;
-    // float: left;
-    min-width: 300px;
+    -webkit-overflow-scrolling: touch;
 }
 
 .Frame-panel--sidebar {
+    flex-shrink: 0;
     background-color: #fff;
-    // width: 25%;
-    // padding-top: 20px;
+    width: 280px;
+    min-width: 200px;
+    max-width: 400px;
+    padding: 20px 0 40px 0;
+    ::-webkit-scrollbar-thumb {
+        background: #aaa;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #999;
+    }
+    ::-webkit-scrollbar-thumb:active {
+          background: #888;
+    }
+    &.is-collapsed {
+        transition: width 0.3s;
+        width: 0;
+        min-width: 0;
+    }
 }
 
 .Frame-panel--main {
-
+    padding: 20px;
+    flex-grow: 1;
+    overflow: scroll;
+    min-width: 270px;
 }
 
 .Frame-gutter {
+    width: 6px;
     flex-shrink: 0;
     height: 100%;
     cursor: grab;
     background-color: transparent;
-    background-color: #ddd;
+    background-color: #e6e6e6;
     height: 100%;
     float: left;
+    transition: background-color 0.1s;
+    &:hover {
+        background-color: #ddd;
+    }
 }
