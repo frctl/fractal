@@ -13,9 +13,7 @@
 </head>
 <body>
 
-<div class="fr-wrapper" data-component="page">
 {% block page %}{% endblock %}
-</div>
 
 <script src="/_theme/js/build.js"></script>
 {% if frctl.web.server %}

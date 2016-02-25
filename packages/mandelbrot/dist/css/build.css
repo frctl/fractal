@@ -588,40 +588,176 @@ pre {
 ::-webkit-scrollbar-corner {
   background: transparent; }
 
-.fr-wrapper {
+.Frame {
   height: 100%;
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
+  overflow: hidden;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex; }
-  .fr-wrapper.is-full .gutter {
-    width: 0 !important; }
-  .fr-wrapper.is-full .fr-sidebar {
-    width: 0 !important; }
-  .fr-wrapper.is-full .fr-content {
-    width: 100% !important; }
 
-.fr-sidebar {
+.Frame-panel {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
   height: 100%;
-  background-color: #fff;
-  overflow: auto; }
+  overflow: auto;
+  min-width: 300px; }
 
-.fr-content {
-  height: 100%; }
+.Frame-panel--sidebar {
+  background-color: #fff; }
 
-.gutter {
-  background-color: transparent;
-  border-left: 1px solid #ddd;
-  height: 100%; }
-
-.gutter.gutter-vertical,
-.gutter.gutter-horizontal {
+.Frame-gutter {
+  -webkit-flex-shrink: 0;
+      -ms-flex-negative: 0;
+          flex-shrink: 0;
+  height: 100%;
   cursor: -webkit-grab;
-  cursor: grab; }
+  cursor: grab;
+  background-color: transparent;
+  background-color: #ddd;
+  height: 100%;
+  float: left; }
+
+.Navigation-group {
+  padding-right: 20px; }
+  .Navigation-group:after {
+    content: "";
+    display: table;
+    clear: both; }
+  .Navigation-group + .Navigation-group {
+    margin-top: 20px; }
+
+.Status {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center; }
+
+.Status-label {
+  display: inline-block;
+  font-size: 13px;
+  text-transform: uppercase;
+  color: #888;
+  margin-right: 10px; }
+
+.Status-dots {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex; }
+
+.Status-dot + .Status-dot {
+  margin-left: 3px; }
+
+.Status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 100%; }
+
+.Tree {
+  white-space: nowrap;
+  float: left;
+  clear: left;
+  min-width: 100%; }
+
+.Tree-title {
+  padding-left: 20px;
+  font-size: 14px;
+  text-transform: uppercase;
+  color: #666;
+  margin-bottom: 6px; }
+
+.Tree-collection {
+  border-top: 1px solid transparent;
+  padding-top: 5px;
+  padding-bottom: 5px; }
+  .Tree-collection.is-closed {
+    border-top: 1px solid transparent;
+    background-color: transparent; }
+    .Tree-collection.is-closed .Tree-collectionItems {
+      display: none; }
+    .Tree-collection.is-closed .Tree-collectionLabel span:before {
+      background-image: url("/_theme/img/icons/nav-arrow-right2.svg"); }
+
+.Tree-collectionLabel {
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: normal; }
+  .Tree-collectionLabel span {
+    position: relative;
+    display: block;
+    padding-left: 12px; }
+  .Tree-collectionLabel span:before {
+    position: absolute;
+    left: -2px;
+    top: 5px;
+    content: ' ';
+    background-image: url("/_theme/img/icons/nav-arrow-down2.svg");
+    background-size: 10px 10px;
+    background-repeat: no-repeat;
+    background-position: -0 50%;
+    display: inline-block;
+    width: 10px;
+    height: 10px; }
+
+.Tree-collectionItems {
+  margin-top: 5px; }
+
+.Tree-item {
+  font-size: 15px;
+  font-weight: normal; }
+
+.Tree-entity {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-right: 10px; }
+  .Tree-entity.is-current .Tree-entityLink {
+    font-weight: bold; }
+
+.Tree-entityLink {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex; }
+  .Tree-entityLink:link, .Tree-entityLink:visited, .Tree-entityLink:hover, .Tree-entityLink:active {
+    color: #0074D9;
+    text-decoration: none; }
+  .Tree-entityLink > * + * {
+    margin-left: 6px; }
+
+.Tree-depth-1 .Tree-entityLink {
+  padding-left: 20px; }
+
+.Tree-depth-1 .Tree-collectionLabel {
+  padding-left: 10px; }
+
+.Tree-depth-2 .Tree-entityLink {
+  padding-left: 30px; }
+
+.Tree-depth-2 .Tree-collectionLabel {
+  padding-left: 20px; }
+
+.Tree-depth-3 .Tree-entityLink {
+  padding-left: 40px; }
+
+.Tree-depth-3 .Tree-collectionLabel {
+  padding-left: 30px; }
+
+.Tree-depth-4 .Tree-entityLink {
+  padding-left: 50px; }
+
+.Tree-depth-4 .Tree-collectionLabel {
+  padding-left: 40px; }
 
 /*# sourceMappingURL=build.css.map */

@@ -1,0 +1,44 @@
+.Status {
+    display: flex;
+    align-items: center;
+}
+.Status-label {
+    display: inline-block;
+    font-size: 13px;
+    text-transform: uppercase;
+    color: #888;
+    margin-right: 10px;
+}
+.Status-dots {
+    display: flex;
+}
+.Status-dot + .Status-dot {
+    margin-left: 3px;
+}
+.Status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 100%;
+}
+
+// .Status--large {
+//     .Status-dot {
+//         width: 12px;
+//         height: 12px;
+//         + .Status-dot {
+//             margin-left: 5px;
+//         }
+//     }
+// }
+//
+// .Status--labelled {
+//     @extend .Status--large;
+//     display: flex;
+//     .Status-label {
+//         display: inline-block;
+//     }
+//     .Status-dots {
+//         position: relative;
+//         top: 1px;
+//     }
+// }

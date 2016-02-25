@@ -1,0 +1,32 @@
+{% macro _dot(color, label) %}
+<span class="Status-dot" style="background: {{ color }};" title="{{ label }}"></span>
+{% endmacro %}
+
+{% macro _dots(status) %}
+<div class="Status-dots">
+{% if status.statuses %}
+{% for stat in status.statuses %}
+{{ _dot(stat.color, stat.label) }}
+{% endfor %}
+{% else %}
+{{ _dot(status.color, status.label) }}
+{% endif %}
+</div>
+{% endmacro %}
+
+{% macro labelled(status, modifier) %}
+{% if status %}
+<div class="Status Status--labelled{% if modifier %} Status--{{ modifier }}{% endif %}">
+    <div class="Status-label">{{ status.label }}</div>
+    {{ _dots(status) }}
+</div>
+{% endif %}
+{% endmacro %}
+
+{% macro unlabelled(status) %}
+{% if status %}
+<div class="Status Status--unlabelled{% if modifier %} Status--{{ modifier }}{% endif %}">
+{{ _dots(status) }}
+</div>
+{% endif %}
+{% endmacro %}
