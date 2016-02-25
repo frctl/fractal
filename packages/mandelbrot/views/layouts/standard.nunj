@@ -1,14 +1,56 @@
 {% extends "layouts/skeleton.nunj" %}
+{% import "helpers/navigation.nunj" as nav %}
 
 {% block page %}
 
-<div class="fr-sidebar" id="sidebar">
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-</div>
+<div class="Frame" id="main-frame">
 
-<div class="fr-content" id="main">
-    <a href="#" id="toggle">toggle sidebar</a>
-    {% block content %}{% endblock %}
+    <div class="Frame-panel Frame-panel--sidebar" data-role="panel" data-size="25">
+
+        <nav class="Navigation">
+            <div class="Navigation-group">
+            {{ nav.tree(frctl.components, {handle: 'card'}) }}
+            </div>
+            <div class="Navigation-group">
+            {{ nav.tree(frctl.docs) }}
+            </div>
+        </nav>
+
+    {# {% set navDepth   = frctl.web.theme.options.nav.depth %}
+    {% set navSort    = frctl.web.theme.options.nav.sort %}
+    {% set components = frctl.components.filter(['isHidden', false]).orderBy(navSort) %}
+    {% if navDepth == 1 %}{% set components = components.squash() %}{% endif %}
+    {% set components = components.items() %}
+    {% set pages      = frctl.docs.filter(['isHidden', false]).squash().orderBy(navSort).items() %}
+
+    <div class="MainNav" data-behaviour="main-nav">
+        <ul class="MainNav-root">
+            <li class="MainNav-group">
+                <h4 class="MainNav-groupTitle">{{ frctl.components.title }}</h4>
+                <ul class="MainNav-sectionNav MainNav-sectionNav--components">
+                    {{ nav.components(components, component, 1, navDepth, navSort) }}
+                </ul>
+            </li>
+            {% if pages|length > 1 %}
+            <li class="MainNav-group">
+                <h4 class="MainNav-groupTitle">{{ frctl.docs.title }}</h4>
+                <ul class="MainNav-sectionNav MainNav-sectionNav--pages">
+                    {{ nav.pages(pages, page) }}
+                </ul>
+            </li>
+            {% endif %}
+        </ul>
+    </div> #}
+
+    </div>
+
+    <div class="Frame-gutter"></div>
+
+    <div class="Frame-panel Frame-panel--main" data-role="panel" data-size="75">
+        <a href="#" id="toggle">toggle sidebar</a>
+        {% block content %}{% endblock %}
+    </div>
+
 </div>
 
 {% endblock %}

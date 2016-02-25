@@ -16,9 +16,9 @@ $color-link: blue;
 // Core
 // -----------------------------------------------------------------------------
 
+@import 'core/mixins.scss';
 @import 'core/fonts.scss';
 @import 'core/foundation.scss';
-@import 'core/frame.scss';
 
 // -----------------------------------------------------------------------------
 // Components

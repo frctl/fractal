@@ -1,0 +1,38 @@
+.Frame {
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    display: flex;
+}
+
+.Frame-panel {
+    user-select: none;
+    height: 100%;
+    overflow: auto;
+    // float: left;
+    min-width: 300px;
+}
+
+.Frame-panel--sidebar {
+    background-color: #fff;
+    // width: 25%;
+    // padding-top: 20px;
+}
+
+.Frame-panel--main {
+
+}
+
+.Frame-gutter {
+    flex-shrink: 0;
+    height: 100%;
+    cursor: grab;
+    background-color: transparent;
+    background-color: #ddd;
+    height: 100%;
+    float: left;
+}

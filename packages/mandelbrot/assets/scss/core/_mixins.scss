@@ -1,0 +1,17 @@
+@mixin link-default($color, $decoration) {
+    &:link,
+    &:visited,
+    &:hover,
+    &:active {
+        color: $color;
+        text-decoration: $decoration;
+    }
+}
+
+@mixin clearfix {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
