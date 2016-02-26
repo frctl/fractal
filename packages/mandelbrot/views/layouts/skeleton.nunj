@@ -9,7 +9,7 @@
 
     <link rel="stylesheet" type="text/css" href="/_theme/css/build.css?cachebust={{ frctl.web.theme.version }}">
 
-    <title>{% if sectionTitle %}{{ sectionTitle }} | {% endif %}{{ frctl.config.project.title }}</title>
+    <title>{% if pageTitle %}{{ pageTitle }} | {% endif %}{{ frctl.config.project.title }}</title>
 </head>
 <body>
 

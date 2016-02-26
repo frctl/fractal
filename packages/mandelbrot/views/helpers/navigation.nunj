@@ -1,4 +1,5 @@
 {% import "helpers/status.nunj" as status %}
+{% import "helpers/utils.nunj" as utils %}
 
 {% macro tree(root, current) %}
 <div class="Tree" data-behaviour="tree" id="tree-{{ root.name }}">
@@ -21,9 +22,9 @@
             </ul>
         </li>
         {% else %}
-        {% set isCurrent = true if (current and (current.handle == item.handle)) else false %}
+        {% set isCurrent = true if (current and (current.id == item.id)) else false %}
         <li class="Tree-item Tree-entity{% if isCurrent %} is-current{% endif %}"{% if isCurrent %} data-state="current"{% endif %} data-role="item">
-            <a class="Tree-entityLink" href="#" data-pjax>
+            <a class="Tree-entityLink" href="{{ utils.urlFor(item) }}" data-pjax>
                 <span>{{ item.label }}</span>
                 {% if item.status %}{{ status.unlabelled(item.status) }}{% endif %}
             </a>
@@ -31,45 +32,3 @@
         {% endif %}
     {% endfor %}
 {% endmacro %}
-
-{# {% macro components(items, current, maxDepth, navSort, currentDepth) %}
-
-    {% for item in items %}
-        {% if item.type == 'collection' %}
-        <li class="MainNav-item MainNav-item--group MainNav-toggled">
-            <h4 class="MainNav-itemLabel MainNav-heading MainNav-subSectionToggle">{{ item.labelPathFrom(currentDepth-1) if currentDepth >= maxDepth else item.label }}</h4>
-            <ul class="MainNav-children">
-            {% set nextItems = item.squash() if (currentDepth + 1) >= maxDepth else item %}
-            {{ components(nextItems.orderBy(navSort).items(), current, (currentDepth + 1), maxDepth) }}
-            </ul>
-        </li>
-        {% else %}
-        <li class="MainNav-item MainNav-item--sub MainNav-item--component{% if current and (current.handle == item.handle) %} is-current{% endif %}" data-status="{{ status.name }}">
-            <a class="MainNav-itemLabel MainNav-link" href="{{ frctl.web.theme.urlFromRoute('component', {handle: item.handle }) }}" data-pjax>
-                <span>{{ item.label }}</span> {{ comp.status(item.status) }}
-            </a>
-        </li>
-        {% endif %}
-    {% endfor %}
-{% endmacro %}
-
-{% macro pages(items, current) %}
-    {% for item in items %}
-        {% if item.type == 'collection' %}
-        <li class="MainNav-item MainNav-item--group">
-            <h4 class="MainNav-itemLabel MainNav-heading MainNav-subSectionHeading">{{ item.labelPath }}</h4>
-            <ul class="MainNav-children">
-            {{ pages(item.items(), current) }}
-            </ul>
-        </li>
-        {% else %}
-        {% if item.path != '' %}
-        <li class="MainNav-item MainNav-item--sub MainNav-item--page{% if current and (current.handle == item.handle) %} is-current{% endif %}" data-status="{{ item.status.name }}">
-            <a class="MainNav-itemLabel MainNav-link" href="{{ frctl.web.theme.urlFromRoute('page', {path: item.path }) }}" data-pjax>
-                <span>{{ item.label }}</span>
-            </a>
-        </li>
-        {% endif %}
-        {% endif %}
-    {% endfor %}
-{% endmacro %} #}

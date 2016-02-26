@@ -15,18 +15,18 @@ module.exports = function(config){
 
     this.static(Path.join(__dirname, 'dist'), '/_theme');
 
-    const navOpts = config.nav || {};
-    this.options.nav = {
-        depth: navOpts.depth || 1,
-        sort: navOpts.sort || {
-            order: 'asc',
-            name:  'asc'
-        }
-    };
+    // const navOpts = config.nav || {};
+    // this.options.nav = {
+    //     depth: navOpts.depth || 1,
+    //     sort: navOpts.sort || {
+    //         order: 'asc',
+    //         name:  'asc'
+    //     }
+    // };
 
     this.route('/', {
         handle: 'overview',
-        view: 'pages/overview.nunj',
+        view: 'pages/page.nunj',
     });
 
     this.route('/docs', {
