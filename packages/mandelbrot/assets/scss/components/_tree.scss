@@ -60,8 +60,6 @@
 .Tree-entity {
     border-top: 1px solid transparent;
     border-bottom: 1px solid transparent;
-    padding-top: 5px;
-    padding-bottom: 5px;
     padding-right: 10px;
     &:hover {
         background-color: #f3f3f3;
@@ -79,6 +77,8 @@
     }
 }
 .Tree-entityLink {
+    padding-top: 5px;
+    padding-bottom: 5px;
     @include link-default(#0074D9, none);
     display: flex;
     align-items: center;

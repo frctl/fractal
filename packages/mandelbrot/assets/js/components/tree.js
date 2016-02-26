@@ -2,6 +2,15 @@
 
 const $       = global.jQuery;
 const storage = require('../storage');
+const events  = require('../events');
+
+function getTreeUrl(urlPath){
+    const parser    = document.createElement('a');
+    parser.href     = urlPath;
+    const pathParts = parser.pathname.split('/');
+    pathParts.push(pathParts.pop().split('--')[0]);
+    return pathParts.join('/');
+}
 
 class Tree {
 
@@ -16,10 +25,19 @@ class Tree {
             }
         }
         this._state = jQuery.unique(this._state);
-        this.applyState();
+        this._applyState();
+        events.on('main-content-preload', (e, url) => {
+            this.selectItem(getTreeUrl(url));
+        });
     }
 
-    applyState() {
+    selectItem(url) {
+        console.log(this._el.find(`[href="${url}"]`));
+        this._el.find('.is-current').removeClass('is-current');
+        this._el.find(`[href="${url}"]`).parent().addClass('is-current');
+    }
+
+    _applyState() {
         for (let collection of this._collections) {
             if (this._state.includes(collection.id)) {
                 collection.open(true);

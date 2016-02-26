@@ -852,8 +852,6 @@ pre {
 .Tree-entity {
   border-top: 1px solid transparent;
   border-bottom: 1px solid transparent;
-  padding-top: 5px;
-  padding-bottom: 5px;
   padding-right: 10px; }
   .Tree-entity:hover {
     background-color: #f3f3f3; }
@@ -869,6 +867,8 @@ pre {
       text-decoration: none; }
 
 .Tree-entityLink {
+  padding-top: 5px;
+  padding-bottom: 5px;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;

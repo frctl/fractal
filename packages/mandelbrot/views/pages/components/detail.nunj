@@ -1,4 +1,4 @@
-{% extends "layouts/frame.nunj" %}
+{% extends "layouts/pjax.nunj" if frctl.web.request.isPjax else "layouts/frame.nunj" %}
 
 {% set component = frctl.components.find('handle', frctl.web.request.params.handle) %}
 {% if not component or component.type == 'variant' or component.isHidden %}{% throw404 'Component not found' %}{% endif %}
