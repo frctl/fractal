@@ -78,7 +78,6 @@ module.exports = function (app, vorpal, defaults) {
             if (input.opts.nonint) {
                 if (command) {
                     app.load().then(function(){
-                        // app.watch();
                         vorpal.parse(process.argv);
                     });
                     return;

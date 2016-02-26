@@ -14,7 +14,7 @@ module.exports = {
     },
 
     action: function (args, done) {
-        console.dump(this.get(args.path));
+        console.dump(this.fractal.get(args.path));
         done();
     }
 

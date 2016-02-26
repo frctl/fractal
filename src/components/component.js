@@ -4,7 +4,7 @@ const Promise           = require('bluebird');
 const _                 = require('lodash');
 const co                = require('co');
 const Path              = require('path');
-const console               = require('../console');
+const console           = require('../console');
 const data              = require('../data');
 const utils             = require('../utils');
 const md                = require('../markdown');
@@ -14,6 +14,7 @@ module.exports = class Component {
 
     constructor(props, files, assets) {
         this.type        = 'component';
+        this.id          = utils.md5(files.view.path);
         this.name        = utils.slugify(props.name);
         this.handle      = props.parent._prefix ? `${props.parent._prefix}-${this.name}` : this.name;
         this.order       = props.order;
@@ -78,6 +79,7 @@ module.exports = class Component {
     toJSON() {
         return {
             type:     this.type,
+            id:       this.id,
             name:     this.name,
             handle:   this.handle,
             label:    this.label,

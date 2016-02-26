@@ -7,6 +7,7 @@ module.exports = class Asset {
 
     constructor(file) {
         this.type        = 'asset';
+        this.id          = utils.md5(file.path);
         this._file       = file;
         this.path        = file.path;
         this.base        = file.base;
@@ -31,6 +32,7 @@ module.exports = class Asset {
     toJSON() {
         return {
             type:        this.type,
+            id:          this.id,
             path:        this.path,
             path:        this.path,
             base:        this.base,

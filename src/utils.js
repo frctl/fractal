@@ -1,11 +1,12 @@
 'use strict';
 
-const Promise   = require('bluebird');
-const Path      = require('path');
-const fs        = require('fs');
-const minimist  = require('minimist');
-const fang      = require('@allmarkedup/fang');
-const _         = require('lodash');
+const Promise  = require('bluebird');
+const Path     = require('path');
+const fs       = require('fs');
+const crypto   = require('crypto');
+const minimist = require('minimist');
+const fang     = require('@allmarkedup/fang');
+const _        = require('lodash');
 
 module.exports = {
 
@@ -84,6 +85,10 @@ module.exports = {
 
    isPromise(value){
        return (value && _.isFunction(value.then));
+   },
+
+   md5(str) {
+       return crypto.createHash('md5').update(str).digest("hex");
    }
 
 };

@@ -9,6 +9,7 @@ module.exports = class Page {
 
     constructor(props, content) {
         this.type     = 'page';
+        this.id       = utils.md5(props.filePath);
         this.name     = utils.slugify(props.name.toLowerCase());
         this.handle   = this.name;
         this.isIndex  = this.name === 'index';
@@ -63,6 +64,7 @@ module.exports = class Page {
     toJSON() {
         return {
             type:     this.type,
+            id:       this.id,
             name:     this.name,
             handle:   this.handle,
             label:    this.label,
