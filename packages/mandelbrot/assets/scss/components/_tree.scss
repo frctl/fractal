@@ -1,8 +1,5 @@
 .Tree {
     white-space: nowrap;
-    float:left;
-    clear:left;
-    min-width: 100%;
 }
 .Tree-title {
     padding-left: 25px;
@@ -66,6 +63,12 @@
     padding-top: 5px;
     padding-bottom: 5px;
     padding-right: 10px;
+    &:hover {
+        background-color: #f3f3f3;
+        .Tree-entityLink {
+            @include link-default(darken(#0074D9, 15%), none);
+        }
+    }
     &.is-current {
         background-color: #eeeeef;
         border-top-color: #ddd;

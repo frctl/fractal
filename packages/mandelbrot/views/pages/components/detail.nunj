@@ -1,0 +1,11 @@
+{% extends "layouts/frame.nunj" %}
+
+{% set component = frctl.components.find('handle', frctl.web.request.params.handle) %}
+{% if not component or component.type == 'variant' or component.isHidden %}{% throw404 'Component not found' %}{% endif %}
+{% set pageTitle = component.title %}
+
+{% block content %}
+
+    <h1>{{ component.title }}</h1>
+
+{% endblock %}

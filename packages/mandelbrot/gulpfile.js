@@ -51,7 +51,7 @@ gulp.task('fonts', ['clean:fonts'], function() {
         './node_modules/source-sans-pro/WOFF/OTF/*.woff',
         './node_modules/source-sans-pro/WOFF2/OTF/**.woff2',
         './assets/fonts/hack/woff/*.woff',
-        './assets/fonts/hack/woff/*.woff2'
+        './assets/fonts/hack/woff2/*.woff2'
     ]).pipe(gulp.dest('./dist/fonts'));
 });
 

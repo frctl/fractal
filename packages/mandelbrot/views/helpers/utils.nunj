@@ -1,0 +1,11 @@
+{% macro urlFor(item) -%}
+{% if item.type == 'page' -%}
+    {% if item.path == '' -%}
+    {% set url = '/' -%}
+    {% else -%}
+    {% set url = frctl.web.theme.urlFromRoute('page', {path: item.path }) -%}
+    {% endif -%}
+{% else -%}
+    {% set url = frctl.web.theme.urlFromRoute('component', {handle: item.handle}) -%}
+{% endif -%}{{ url }}
+{%- endmacro -%}

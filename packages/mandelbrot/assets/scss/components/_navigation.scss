@@ -1,4 +1,6 @@
 .Navigation {
+    display: inline-block;
+    min-width: 100%;
     .Tree {
         .Status-dot {
             position: relative;
@@ -11,5 +13,4 @@
     & + & {
         margin-top: 25px;
     }
-    padding-right: 20px;
 }
