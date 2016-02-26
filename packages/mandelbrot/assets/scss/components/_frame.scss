@@ -53,14 +53,6 @@
     ::-webkit-scrollbar-thumb:active {
           background: #888;
     }
-    &.is-collapsed {
-        transition: width 0.3s;
-        width: 0;
-        min-width: 0;
-    }
-    @include mq($until: navCollapse) {
-        // width: 230px !important;
-    }
 }
 
 .Frame-panel--main {
