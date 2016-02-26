@@ -21,6 +21,8 @@ module.exports = {
 
     action: function (args, done) {
 
+        console.br().notice('Creating new project.... just a few questions:').br();
+
         const helpers          = this.fractal.utils.helpers;
         const baseDir          = args.path;
         const basePath         = baseDir.startsWith('/') ? baseDir : Path.join(process.cwd(), baseDir);
@@ -67,8 +69,6 @@ module.exports = {
             }
         ];
 
-        console.br();
-
         return inquirer.prompt(questions, function (answers) {
 
             console.notice('Generating project structure...');
@@ -92,7 +92,7 @@ module.exports = {
 
             const fractalContents = Handlebars.compile(fs.readFileSync(fractalFileTpl, 'utf8'))(answers);
             const indexContents   = Handlebars.compile(fs.readFileSync(docsIndexTpl, 'utf8'))(answers);
-            
+
             fs.ensureDirAsync(basePath).then(() => {
                 return Promise.all([
                     fs.ensureDirAsync(componentsDir),

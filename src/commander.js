@@ -1,9 +1,10 @@
 'use strict';
 
-const _     = require('lodash');
-const chalk = require('chalk');
-const console   = require('./console');
-const utils = require('./utils');
+const _        = require('lodash');
+const chalk    = require('chalk');
+const console  = require('./console');
+const utils    = require('./utils');
+const minimist = require('minimist');
 
 module.exports = function (app, vorpal, defaults) {
 
@@ -53,6 +54,7 @@ module.exports = function (app, vorpal, defaults) {
                     (item.config.options || []).forEach(opt => {
                         cmd.option(opt);
                     });
+                    cmd.option('--nonint', 'Run the command in non-interactive mode');
                     cmd.__scope = commandScope;
                 } else {
                     // command not available in this scope
@@ -73,8 +75,18 @@ module.exports = function (app, vorpal, defaults) {
                 return;
             }
 
-            if (command && scope === 'global') {
-                console.br().notice('Creating new project.... just a few questions:');
+            if (input.opts.nonint) {
+                if (command) {
+                    app.load().then(function(){
+                        // app.watch();
+                        vorpal.parse(process.argv);
+                    });
+                    return;
+                }
+                console.error(`Command ${command} not recognised`);
+            }
+
+            if (command && (scope === 'global')) {
                 vorpal.parse(process.argv);
                 return;
             }
