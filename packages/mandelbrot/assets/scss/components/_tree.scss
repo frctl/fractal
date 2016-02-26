@@ -6,7 +6,7 @@
 }
 .Tree-title {
     padding-left: 25px;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: bold;
     text-transform: uppercase;
     color: #666;
@@ -29,8 +29,9 @@
 }
 .Tree-collectionLabel {
     cursor: pointer;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: normal;
+    user-select: none;
     span {
         position: relative;
         display: block;
@@ -56,7 +57,7 @@
     margin-top: 5px;
 }
 .Tree-item {
-    font-size: 15px;
+    font-size: 16px;
     font-weight: normal;
 }
 .Tree-entity {

@@ -47,7 +47,12 @@ gulp.task('css:watch', function () {
 // Fonts
 
 gulp.task('fonts', ['clean:fonts'], function() {
-   gulp.src('./assets/fonts/**/*').pipe(gulp.dest('./dist/fonts'));
+    gulp.src([
+        './node_modules/source-sans-pro/WOFF/OTF/*.woff',
+        './node_modules/source-sans-pro/WOFF2/OTF/**.woff2',
+        './assets/fonts/hack/woff/*.woff',
+        './assets/fonts/hack/woff/*.woff2'
+    ]).pipe(gulp.dest('./dist/fonts'));
 });
 
 gulp.task('clean:fonts', function() {
@@ -74,7 +79,7 @@ gulp.task('img:watch', function () {
 
 // Task sets
 
-gulp.task('watch', ['css:watch', 'js:watch', 'fonts:watch', 'img:watch']);
+gulp.task('watch', ['css:watch', 'js:watch', /* 'fonts:watch', */ 'img:watch']);
 
 gulp.task('default', ['fonts', 'css', 'js', 'img', 'watch']);
 

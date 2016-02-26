@@ -448,50 +448,50 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 /* Hack */
 @font-face {
   font-family: 'Hack';
-  src: url("/_theme/fonts/hack/woff2/hack-regular-webfont.woff2?v=2.010") format("woff2"), url("/_theme/fonts/hack/woff/hack-regular-webfont.woff?v=2.010") format("woff");
+  src: url("/_theme/fonts/hack-regular-webfont.woff2") format("woff2"), url("/_theme/fonts/hack-regular-webfont.woff") format("woff");
   font-weight: 400;
   font-style: normal; }
 
 @font-face {
   font-family: 'Hack';
-  src: url("/_theme/fonts/hack/woff2/hack-bold-webfont.woff2?v=2.010") format("woff2"), url("/_theme/fonts/hack/woff/hack-bold-webfont.woff?v=2.010") format("woff");
+  src: url("/_theme/fonts/hack-bold-webfont.woff2") format("woff2"), url("/_theme/fonts/hack-bold-webfont.woff") format("woff");
   font-weight: 700;
   font-style: normal; }
 
 @font-face {
   font-family: 'Hack';
-  src: url("/_theme/fonts/hack/woff2/hack-regularoblique-webfont.woff2?v=2.010") format("woff2"), url("/_theme/fonts/hack/woff/hack-regularoblique-webfont.woff?v=2.010") format("woff");
+  src: url("/_theme/fonts/hack-regularoblique-webfont.woff2") format("woff2"), url("/_theme/fonts/hack-regularoblique-webfont.woff") format("woff");
   font-weight: 400;
   font-style: italic; }
 
 @font-face {
   font-family: 'Hack';
-  src: url("/_theme/fonts/hack/woff2/hack-boldoblique-webfont.woff2?v=2.010") format("woff2"), url("/_theme/fonts/hack/woff/hack-boldoblique-webfont.woff?v=2.010") format("woff");
+  src: url("/_theme/fonts/hack-boldoblique-webfont.woff2") format("woff2"), url("/_theme/fonts/hack-boldoblique-webfont.woff") format("woff");
   font-weight: 700;
   font-style: italic; }
 
-/* OPen Sans */
+/* Source Sans */
 @font-face {
-  font-family: 'Open Sans';
-  src: url("/_theme/fonts/open-sans/Regular/OpenSans-Regular.woff2?v=1.1.0") format("woff2"), url("/_theme/fonts/open-sans/Regular/OpenSans-Regular.woff?v=1.1.0") format("woff");
+  font-family: 'Source Sans';
+  src: url("/_theme/fonts/SourceSansPro-Regular.otf.woff2") format("woff2"), url("/_theme/fonts/SourceSansPro-Regular.otf.woff") format("woff");
   font-weight: normal;
   font-style: normal; }
 
 @font-face {
-  font-family: 'Open Sans';
-  src: url("/_theme/fonts/open-sans/Italic/OpenSans-Italic.woff2?v=1.1.0") format("woff2"), url("/_theme/fonts/open-sans/Italic/OpenSans-Italic.woff?v=1.1.0") format("woff");
+  font-family: 'Source Sans';
+  src: url("/_theme/fonts/SourceSansPro-Regular.otf.woff2") format("woff2"), url("/_theme/fonts/SourceSansPro-Regular.otf.woff") format("woff");
   font-weight: normal;
   font-style: italic; }
 
 @font-face {
-  font-family: 'Open Sans';
-  src: url("/_theme/fonts/open-sans/Bold/OpenSans-Bold.woff2?v=1.1.0") format("woff2"), url("/_theme/fonts/open-sans/Bold/OpenSans-Bold.woff?v=1.1.0") format("woff");
+  font-family: 'Source Sans';
+  src: url("/_theme/fonts/SourceSansPro-Bold.otf.woff2") format("woff2"), url("/_theme/fonts/SourceSansPro-Bold.otf.woff") format("woff");
   font-weight: bold;
   font-style: normal; }
 
 @font-face {
-  font-family: 'Open Sans';
-  src: url("/_theme/fonts/open-sans/BoldItalic/OpenSans-BoldItalic.woff2?v=1.1.0") format("woff2"), url("/_theme/fonts/open-sans/BoldItalic/OpenSans-BoldItalic.woff?v=1.1.0") format("woff");
+  font-family: 'Source Sans';
+  src: url("/_theme/fonts/SourceSansPro-Bold.otf.woff2") format("woff2"), url("/_theme/fonts/SourceSansPro-Bold.otf.woff") format("woff");
   font-weight: bold;
   font-style: italic; }
 
@@ -503,7 +503,7 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 html {
   color: #333;
   background: #fff;
-  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+  font-family: 'Source Sans', Helvetica, Arial, sans-serif;
   height: 100%;
   position: relative; }
 
@@ -736,7 +736,7 @@ pre {
 
 .Header-title {
   padding-left: 10px;
-  font-size: 15px;
+  font-size: 16px;
   position: relative;
   top: -1px; }
   .Header-title:link, .Header-title:visited, .Header-title:hover, .Header-title:active {
@@ -800,7 +800,7 @@ pre {
 
 .Tree-title {
   padding-left: 25px;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: bold;
   text-transform: uppercase;
   color: #666;
@@ -818,8 +818,12 @@ pre {
 
 .Tree-collectionLabel {
   cursor: pointer;
-  font-size: 15px;
-  font-weight: normal; }
+  font-size: 16px;
+  font-weight: normal;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none; }
   .Tree-collectionLabel span {
     position: relative;
     display: block;
@@ -842,7 +846,7 @@ pre {
   margin-top: 5px; }
 
 .Tree-item {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: normal; }
 
 .Tree-entity {

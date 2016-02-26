@@ -32,6 +32,7 @@
     "jquery-pjax": "git+https://github.com/defunkt/jquery-pjax.git",
     "normalize.css": "^3.0.3",
     "sass-mq": "^3.2.6",
+    "source-sans-pro": "git://github.com/adobe-fonts/source-sans-pro.git#release",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "vinyl-transform": "^1.0.0",
