@@ -3,28 +3,41 @@
 
 {% block page %}
 
-<div class="Frame" id="main-frame">
+<div class="Frame" id="frame">
 
-    <div class="Frame-panel Frame-panel--sidebar" data-role="sidebar">
-
-        <nav class="Navigation">
-            <div class="Navigation-group">
-            {{ nav.tree(frctl.components, {handle: 'card'}) }}
-            </div>
-            <div class="Navigation-group">
-            {{ nav.tree(frctl.docs) }}
-            </div>
-        </nav>
-
+    <div class="Frame-header">
+        <div class="Header">
+            <button class="Header-button Header-navToggle" data-action="toggle-sidebar">
+                <span class="Header-buttonText">Toggle sidebar</span>
+            </button>
+            <a href="/" class="Header-title" data-pjax>{{ frctl.config.project.title | default('Component Library') }}</a>
+        </div>
     </div>
 
-    <div class="Frame-gutter" data-role="gutter"></div>
+    <div class="Frame-body" data-role="body">
 
-    <div class="Frame-panel Frame-panel--main" data-role="main">
-        <a href="#" id="toggle">toggle sidebar</a>
-        {% block content %}{% endblock %}
+        <div class="Frame-panel Frame-panel--sidebar" data-role="sidebar">
+
+            <nav class="Navigation">
+                <div class="Navigation-group">
+                {{ nav.tree(frctl.components) }}
+                </div>
+                <div class="Navigation-group">
+                {{ nav.tree(frctl.docs) }}
+                </div>
+            </nav>
+
+        </div>
+
+        <div class="Frame-gutter" data-role="gutter"></div>
+
+        <div class="Frame-panel Frame-panel--main" data-role="main">
+            {% block content %}{% endblock %}
+        </div>
+
     </div>
 
 </div>
+
 
 {% endblock %}

@@ -435,6 +435,16 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 .hljs-strong {
   font-weight: bold; }
 
+.Header-button span {
+  margin: -1px;
+  padding: 0;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip: rect(0, 0, 0, 0);
+  position: absolute; }
+
 /* Hack */
 @font-face {
   font-family: 'Hack';
@@ -492,7 +502,7 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 
 html {
   color: #333;
-  background: #efefef;
+  background: #fff;
   font-family: 'Open Sans', Helvetica, Arial, sans-serif;
   height: 100%;
   position: relative; }
@@ -589,13 +599,8 @@ pre {
   background: transparent; }
 
 .Frame {
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -603,7 +608,13 @@ pre {
   -webkit-box-flex: 1;
   -webkit-flex-grow: 1;
       -ms-flex-positive: 1;
-          flex-grow: 1; }
+          flex-grow: 1;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column; }
+  .Frame.is-resizing .Frame-body,
   .Frame.is-resizing .Frame-panel {
     -webkit-user-select: none;
        -moz-user-select: none;
@@ -611,7 +622,27 @@ pre {
             user-select: none;
     pointer-events: none; }
   .Frame.is-resizing .Frame-gutter {
-    background-color: #d8d8d8; }
+    background-color: #ddd; }
+
+.Frame-header {
+  width: 100vw; }
+
+.Frame-body {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  height: 100%;
+  overflow: hidden; }
 
 .Frame-panel {
   height: 100%;
@@ -622,11 +653,11 @@ pre {
   -webkit-flex-shrink: 0;
       -ms-flex-negative: 0;
           flex-shrink: 0;
-  background-color: #fff;
+  background-color: #f9f9f9;
   width: 280px;
   min-width: 200px;
   max-width: 400px;
-  padding: 20px 0 40px 0; }
+  padding: 25px 0 40px 0; }
   .Frame-panel--sidebar ::-webkit-scrollbar-thumb {
     background: #aaa; }
   .Frame-panel--sidebar ::-webkit-scrollbar-thumb:hover {
@@ -646,10 +677,16 @@ pre {
       -ms-flex-positive: 1;
           flex-grow: 1;
   overflow: scroll;
-  min-width: 270px; }
+  min-width: 270px;
+  margin-left: -6px;
+  position: relative;
+  z-index: 1; }
 
 .Frame-gutter {
+  position: relative;
+  z-index: 2;
   width: 6px;
+  border-left: 1px solid #ccc;
   -webkit-flex-shrink: 0;
       -ms-flex-negative: 0;
           flex-shrink: 0;
@@ -658,12 +695,57 @@ pre {
   cursor: grab;
   background-color: transparent;
   background-color: #e6e6e6;
+  background-color: #fff;
   height: 100%;
-  float: left;
-  -webkit-transition: background-color 0.1s;
-  transition: background-color 0.1s; }
+  -webkit-transition: background-color 0.2s;
+  transition: background-color 0.2s; }
   .Frame-gutter:hover {
-    background-color: #ddd; }
+    background-color: #eee; }
+
+.Header {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  background-color: #376bfb;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
+  position: relative;
+  color: #fff;
+  z-index: 10; }
+
+.Header-button {
+  border: 0;
+  background: #376bfb url("/_theme/img/icons/menu.svg") no-repeat 50% 50%;
+  background-size: 16px 16px;
+  display: block;
+  height: 38px;
+  width: 38px;
+  -webkit-transition: background-color, 0.1s ease;
+  transition: background-color, 0.1s ease;
+  border-right: 1px solid #0546fa; }
+  .Header-button:focus, .Header-button:active {
+    outline: none; }
+  .Header-button:hover {
+    background-color: #2860fb; }
+  .Header-button:active {
+    background-color: #0546fa; }
+
+.Header-title {
+  padding-left: 10px;
+  font-size: 15px;
+  position: relative;
+  top: -1px; }
+  .Header-title:link, .Header-title:visited, .Header-title:hover, .Header-title:active {
+    color: #fff;
+    text-decoration: none; }
+
+.Navigation .Tree .Status-dot {
+  position: relative;
+  top: 1px; }
 
 .Navigation-group {
   padding-right: 20px; }
@@ -672,7 +754,7 @@ pre {
     display: table;
     clear: both; }
   .Navigation-group + .Navigation-group {
-    margin-top: 20px; }
+    margin-top: 25px; }
 
 .Status {
   display: -webkit-box;
@@ -695,14 +777,19 @@ pre {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
-  display: flex; }
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center; }
 
 .Status-dot + .Status-dot {
   margin-left: 3px; }
 
 .Status-dot {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
+  border: 2px solid transparent;
   border-radius: 100%; }
 
 .Tree {
@@ -712,23 +799,22 @@ pre {
   min-width: 100%; }
 
 .Tree-title {
-  padding-left: 20px;
-  font-size: 14px;
+  padding-left: 25px;
+  font-size: 13px;
+  font-weight: bold;
   text-transform: uppercase;
   color: #666;
   margin-bottom: 6px; }
 
 .Tree-collection {
-  border-top: 1px solid transparent;
   padding-top: 5px;
   padding-bottom: 5px; }
   .Tree-collection.is-closed {
-    border-top: 1px solid transparent;
     background-color: transparent; }
     .Tree-collection.is-closed .Tree-collectionItems {
       display: none; }
     .Tree-collection.is-closed .Tree-collectionLabel span:before {
-      background-image: url("/_theme/img/icons/nav-arrow-right2.svg"); }
+      background-image: url("/_theme/img/icons/nav-arrow-right.svg"); }
 
 .Tree-collectionLabel {
   cursor: pointer;
@@ -737,16 +823,17 @@ pre {
   .Tree-collectionLabel span {
     position: relative;
     display: block;
-    padding-left: 12px; }
+    padding-left: 12px;
+    margin-left: -22px; }
   .Tree-collectionLabel span:before {
     position: absolute;
-    left: -2px;
+    left: 0;
     top: 5px;
     content: ' ';
-    background-image: url("/_theme/img/icons/nav-arrow-down2.svg");
-    background-size: 10px 10px;
+    background-image: url("/_theme/img/icons/nav-arrow-down.svg");
+    background-size: 8px 8px;
     background-repeat: no-repeat;
-    background-position: -0 50%;
+    background-position: 0 50%;
     display: inline-block;
     width: 10px;
     height: 10px; }
@@ -769,35 +856,47 @@ pre {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
-  display: flex; }
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center; }
   .Tree-entityLink:link, .Tree-entityLink:visited, .Tree-entityLink:hover, .Tree-entityLink:active {
     color: #0074D9;
     text-decoration: none; }
   .Tree-entityLink > * + * {
     margin-left: 6px; }
 
+.Tree-depth-1 .Tree-collectionLabel,
 .Tree-depth-1 .Tree-entityLink {
-  padding-left: 20px; }
+  padding-left: 26px; }
 
-.Tree-depth-1 .Tree-collectionLabel {
-  padding-left: 10px; }
-
+.Tree-depth-2 .Tree-collectionLabel,
 .Tree-depth-2 .Tree-entityLink {
-  padding-left: 30px; }
+  padding-left: 36px; }
 
-.Tree-depth-2 .Tree-collectionLabel {
-  padding-left: 20px; }
-
+.Tree-depth-3 .Tree-collectionLabel,
 .Tree-depth-3 .Tree-entityLink {
-  padding-left: 40px; }
+  padding-left: 46px; }
 
-.Tree-depth-3 .Tree-collectionLabel {
-  padding-left: 30px; }
-
+.Tree-depth-4 .Tree-collectionLabel,
 .Tree-depth-4 .Tree-entityLink {
-  padding-left: 50px; }
+  padding-left: 56px; }
 
-.Tree-depth-4 .Tree-collectionLabel {
-  padding-left: 40px; }
+.Tree-depth-5 .Tree-collectionLabel,
+.Tree-depth-5 .Tree-entityLink {
+  padding-left: 66px; }
+
+.Tree-depth-6 .Tree-collectionLabel,
+.Tree-depth-6 .Tree-entityLink {
+  padding-left: 76px; }
+
+.Tree-depth-7 .Tree-collectionLabel,
+.Tree-depth-7 .Tree-entityLink {
+  padding-left: 86px; }
+
+.Tree-depth-8 .Tree-collectionLabel,
+.Tree-depth-8 .Tree-entityLink {
+  padding-left: 96px; }
 
 /*# sourceMappingURL=build.css.map */

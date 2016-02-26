@@ -9,9 +9,12 @@ module.exports = function(element){
 
     const el         = $(element);
     const id         = element[0].id;
-    const sidebar    = el.children('[data-role="sidebar"]').first();
-    const main       = el.children('[data-role="main"]').first();
-    const gutter     = el.children('[data-role="gutter"]').first();
+    const header     = el.children('[data-role="header"]').first();
+    const body       = el.children('[data-role="body"]').first();
+    const sidebar    = body.children('[data-role="sidebar"]').first();
+    const main       = body.children('[data-role="main"]').first();
+    const gutter     = body.children('[data-role="gutter"]').first();
+    const toggle     = el.find('[data-action="toggle-sidebar"]');
     const gutterSize = gutter.width();
     const win        = $(window);
     const panels     = main.add(sidebar);
@@ -75,16 +78,18 @@ module.exports = function(element){
     gutter.on('mousedown', startDrag);
 
     win.on('mouseup touchend touchcancel', stopDrag);
+    toggle.on('click', toggleSidebar);
+    events.on('toggle-sidebar', toggleSidebar);
 
     function closeSidebar(quick){
         if (quick) {
-            el.css({
+            body.css({
                 transition: 'none',
                 marginRight: (-1 * sidebarWidth) + 'px',
                 transform: `translate3d(${(-1 * sidebarWidth)}px, 0, 0)`
             });
         } else {
-            el.css({
+            body.css({
                 transition: '.3s ease all',
                 marginRight: (-1 * sidebarWidth) + 'px',
                 transform: `translate3d(${(-1 * sidebarWidth)}px, 0, 0)`
@@ -96,7 +101,7 @@ module.exports = function(element){
     }
 
     function openSidebar(){
-        el.css({
+        body.css({
             marginRight: 0,
             transition: '.3s ease all',
             transform: `translate3d(0, 0, 0)`
@@ -106,8 +111,8 @@ module.exports = function(element){
         storage.set(`frame.${id}.state`, sidebarState);
     }
 
-    events.on('toggle-sidebar', e => {
+    function toggleSidebar(){
         sidebarState == 'open' ? closeSidebar() : openSidebar();
-    });
-
+        return false;
+    }
 };

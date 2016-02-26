@@ -24,8 +24,8 @@
         {% set isCurrent = true if (current and (current.handle == item.handle)) else false %}
         <li class="Tree-item Tree-entity{% if isCurrent %} is-current{% endif %}"{% if isCurrent %} data-state="current"{% endif %} data-role="item">
             <a class="Tree-entityLink" href="#" data-pjax>
-                {% if item.status %}{{ status.unlabelled(item.status) }}{% endif %}
                 <span>{{ item.label }}</span>
+                {% if item.status %}{{ status.unlabelled(item.status) }}{% endif %}
             </a>
         </li>
         {% endif %}

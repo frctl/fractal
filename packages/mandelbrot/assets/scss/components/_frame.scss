@@ -1,22 +1,32 @@
+
 .Frame {
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
     display: flex;
     flex-grow: 1;
+    flex-direction: column;
     &.is-resizing {
+        .Frame-body,
         .Frame-panel {
             user-select: none;
             pointer-events: none;
         }
         .Frame-gutter {
-            background-color: #d8d8d8;
+            background-color: #ddd;
         }
     }
+}
+
+.Frame-header {
+    width: 100vw;
+}
+
+.Frame-body {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+    height: 100%;
+    overflow: hidden;
 }
 
 .Frame-panel {
@@ -27,11 +37,11 @@
 
 .Frame-panel--sidebar {
     flex-shrink: 0;
-    background-color: #fff;
+    background-color: #f9f9f9;
     width: 280px;
     min-width: 200px;
     max-width: 400px;
-    padding: 20px 0 40px 0;
+    padding: 25px 0 40px 0;
     ::-webkit-scrollbar-thumb {
         background: #aaa;
     }
@@ -53,19 +63,25 @@
     flex-grow: 1;
     overflow: scroll;
     min-width: 270px;
+    margin-left: -6px;
+    position: relative;
+    z-index: 1;
 }
 
 .Frame-gutter {
+    position: relative;
+    z-index: 2;
     width: 6px;
+    border-left: 1px solid #ccc;
     flex-shrink: 0;
     height: 100%;
     cursor: grab;
     background-color: transparent;
     background-color: #e6e6e6;
+    background-color: #fff;
     height: 100%;
-    float: left;
-    transition: background-color 0.1s;
+    transition: background-color 0.2s;
     &:hover {
-        background-color: #ddd;
+        background-color: #eee;
     }
 }
