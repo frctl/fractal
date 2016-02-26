@@ -1,0 +1,41 @@
+$header-bg: #376bfb;
+
+.Header {
+    display: flex;
+    align-items: center;
+    background-color: $header-bg;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
+    position:relative;
+    color: #fff;
+    z-index: 10;
+}
+.Header-button {
+    border: 0;
+    background: $header-bg url('/_theme/img/icons/menu.svg') no-repeat 50% 50%;
+    background-size: 16px 16px;
+    display: block;
+    height: 38px;
+    width: 38px;
+    transition: background-color, 0.1s ease;
+    span {
+        @extend %visuallyhidden;
+    }
+    &:focus,
+    &:active {
+        outline: none;
+    }
+    &:hover {
+        background-color: darken($header-bg, 3%);
+    }
+    &:active {
+        background-color: darken($header-bg, 10%);
+    }
+    border-right: 1px solid darken(#376bfb, 10%);
+}
+.Header-title {
+    padding-left: 10px;
+    @include link-default(#fff, none);
+    font-size: 15px;
+    position: relative;
+    top: -1px;
+}

@@ -1,10 +1,15 @@
 .Navigation {
-
+    .Tree {
+        .Status-dot {
+            position: relative;
+            top: 1px;
+        }
+    }
 }
 .Navigation-group {
     @include clearfix;
     & + & {
-        margin-top: 20px;
+        margin-top: 25px;
     }
     padding-right: 20px;
 }

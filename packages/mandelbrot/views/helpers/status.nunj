@@ -1,5 +1,5 @@
 {% macro _dot(color, label) %}
-<span class="Status-dot" style="background: {{ color }};" title="{{ label }}"></span>
+<span class="Status-dot" style="border-color: {{ color }};" title="{{ label }}"></span>
 {% endmacro %}
 
 {% macro _dots(status) %}

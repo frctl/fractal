@@ -11,10 +11,5 @@ const Tree       = require('./components/tree');
 
 fastclick(document.body);
 
-const mainFrame = frame($('#main-frame'));
+const mainFrame = frame($('#frame'));
 const navTrees  = $.map($('[data-behaviour="tree"]'), t => new Tree(t));
-
-$('#toggle').on('click', e => {
-    events.trigger('toggle-sidebar');
-    return false;
-});

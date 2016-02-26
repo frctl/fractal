@@ -11,13 +11,15 @@
 }
 .Status-dots {
     display: flex;
+    align-items: center;
 }
 .Status-dot + .Status-dot {
     margin-left: 3px;
 }
 .Status-dot {
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
+    border: 2px solid transparent;
     border-radius: 100%;
 }
 

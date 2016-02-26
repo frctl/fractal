@@ -5,30 +5,24 @@
     min-width: 100%;
 }
 .Tree-title {
-    padding-left: 20px;
-    font-size: 14px;
+    padding-left: 25px;
+    font-size: 13px;
+    font-weight: bold;
     text-transform: uppercase;
     color: #666;
     margin-bottom: 6px;
 }
 .Tree-collection {
-    border-top: 1px solid transparent;
     padding-top: 5px;
     padding-bottom: 5px;
-    // & .Tree-collection {
-        // border-top: 1px solid #ddd;
-        // background: rgba(0,0,0,0.05);
-    // }
     &.is-closed {
-        border-top: 1px solid transparent;
-        // padding-bottom: 5px;
         background-color: transparent;
         .Tree-collectionItems {
             display: none;
         }
         .Tree-collectionLabel {
             span:before {
-                background-image: url('/_theme/img/icons/nav-arrow-right2.svg');
+                background-image: url('/_theme/img/icons/nav-arrow-right.svg');
             }
         }
     }
@@ -41,16 +35,17 @@
         position: relative;
         display: block;
         padding-left: 12px;
+        margin-left: -22px;
     }
     span:before {
         position: absolute;
-        left: -2px;
+        left: 0;
         top: 5px;
         content: ' ';
-        background-image: url('/_theme/img/icons/nav-arrow-down2.svg');
-        background-size: 10px 10px;
+        background-image: url('/_theme/img/icons/nav-arrow-down.svg');
+        background-size: 8px 8px;
         background-repeat: no-repeat;
-        background-position: -0 50%;
+        background-position: 0 50%;
         display: inline-block;
         width: 10px;
         height: 10px;
@@ -77,39 +72,19 @@
 .Tree-entityLink {
     @include link-default(#0074D9, none);
     display: flex;
+    align-items: center;
     > * + * {
         margin-left: 6px;
     }
 }
-.Tree-depth-1 {
-    .Tree-entityLink {
-        padding-left: 20px;
-    }
-    .Tree-collectionLabel {
-        padding-left: 10px;
-    }
-}
-.Tree-depth-2 {
-    .Tree-entityLink {
-        padding-left: 30px;
-    }
-    .Tree-collectionLabel {
-        padding-left: 20px;
-    }
-}
-.Tree-depth-3 {
-    .Tree-entityLink {
-        padding-left: 40px;
-    }
-    .Tree-collectionLabel {
-        padding-left: 30px;
-    }
-}
-.Tree-depth-4 {
-    .Tree-entityLink {
-        padding-left: 50px;
-    }
-    .Tree-collectionLabel {
-        padding-left: 40px;
+
+@for $i from 1 through 8 {
+    .Tree-depth-#{$i} {
+        $padLeft: 16px + ($i * 10px);
+
+        .Tree-collectionLabel,
+        .Tree-entityLink {
+            padding-left: $padLeft;
+        }
     }
 }
