@@ -1,15 +1,17 @@
 'use strict';
 
 const $       = global.jQuery;
+const Hammer  = require('hammerjs');
 const storage = require('../storage');
 const utils   = require('../utils');
 const events  = require('../events');
 const config  = require('../config');
 
+
 module.exports = function(element){
 
     const el         = $(element);
-    const id         = element[0].id;
+    const id         = el[0].id;
     const header     = el.children('[data-role="header"]').first();
     const body       = el.children('[data-role="body"]').first();
     const sidebar    = body.children('[data-role="sidebar"]').first();
@@ -23,6 +25,10 @@ module.exports = function(element){
     const sidebarMax = parseInt(sidebar.css('max-width'), 10);
     const sidebarMin = parseInt(sidebar.css('min-width'), 10);
     const defWidth   = Math.max(sidebarMin, sidebar.width());
+    const touch      = new Hammer(body[0]);
+
+    touch.get('swipe').set({ direction: Hammer.DIRECTION_HORIZONTAL });
+
     let sidebarState = (doc.width() < config.breakpoints.navCollapse) ? 'closed' : storage.get(`frame.${id}.state`, 'open');
     let sidebarWidth = (doc.width() < config.breakpoints.navCollapse) ? 230 : storage.get(`frame.${id}.sidebar`, defWidth);
     let start        = null;
@@ -80,16 +86,28 @@ module.exports = function(element){
 
     win.on('mouseup touchend touchcancel', stopDrag);
     win.on('resize', utils.debounce(function(){
-        if (doc.width() < sidebarWidth + 50) {
+        if (sidebarState == 'open' && doc.width() < sidebarWidth + 50) {
             setSidebarWidth(doc.width() - 50);
         }
+        // if (doc.width() < sidebarMin) {
+        //     setSidebarWidth(sidebarMin);
+        // }
     }));
     toggle.on('click', toggleSidebar);
     events.on('toggle-sidebar', toggleSidebar);
 
-    function closeSidebar(quick){
+    touch.on('swipeleft', e => {
+        closeSidebar();
+    });
+
+    touch.on('swiperight', e => {
+        openSidebar();
+    });
+
+    function closeSidebar(initial){
+        if (!initial && sidebarState == 'closed') return;
         const w = sidebar.width();
-        if (quick) {
+        if (initial) {
             body.css({
                 transition: 'none',
                 marginRight: (-1 * w) + 'px',
@@ -104,13 +122,14 @@ module.exports = function(element){
         }
         gutter.hide();
         sidebarState = 'closed';
-        sidebar.addClass('is-closed');
+        el.addClass('is-closed');
         storage.set(`frame.${id}.state`, sidebarState);
     }
 
     function openSidebar(){
+        if (sidebarState == 'open') return;
         if (doc.width() < config.breakpoints.navCollapse) {
-            setSidebarWidth(sidebarMin)
+            setSidebarWidth(sidebarMin);
         }
         body.css({
             marginRight: 0,
@@ -119,7 +138,7 @@ module.exports = function(element){
         });
         gutter.show();
         sidebarState = 'open';
-        sidebar.removeClass('is-closed');
+        el.removeClass('is-closed');
         storage.set(`frame.${id}.state`, sidebarState);
     }
 

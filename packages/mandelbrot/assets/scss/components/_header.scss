@@ -11,13 +11,20 @@ $header-bg: #376bfb;
 }
 .Header-button {
     border: 0;
-    background: $header-bg url('/_theme/img/icons/menu.svg') no-repeat 50% 50%;
-    background-size: 16px 16px;
-    display: block;
     height: 38px;
     width: 38px;
-    transition: background-color, 0.1s ease;
+    display: none;
+    // @include mq($until: navCollapse) {
+        display: block;
+        background: $header-bg url('/_theme/img/icons/cross.svg') no-repeat 50% 50%;
+        background-size: 16px 16px;
+        .is-closed & {
+            background-image: url('/_theme/img/icons/menu.svg');
+        }
+    // }
+    // transition: background-color, 0.1s ease;
     span {
+        display: none;
         @extend %visuallyhidden;
     }
     &:focus,
@@ -38,4 +45,7 @@ $header-bg: #376bfb;
     font-size: 16px;
     position: relative;
     top: -1px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    vertical-align: middle;
 }

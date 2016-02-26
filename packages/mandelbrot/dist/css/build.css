@@ -665,11 +665,6 @@ pre {
     background: #999; }
   .Frame-panel--sidebar ::-webkit-scrollbar-thumb:active {
     background: #888; }
-  .Frame-panel--sidebar.is-collapsed {
-    -webkit-transition: width 0.3s;
-    transition: width 0.3s;
-    width: 0;
-    min-width: 0; }
 
 .Frame-panel--main {
   padding: 20px;
@@ -720,14 +715,17 @@ pre {
 
 .Header-button {
   border: 0;
-  background: #376bfb url("/_theme/img/icons/menu.svg") no-repeat 50% 50%;
-  background-size: 16px 16px;
-  display: block;
   height: 38px;
   width: 38px;
-  -webkit-transition: background-color, 0.1s ease;
-  transition: background-color, 0.1s ease;
+  display: none;
+  display: block;
+  background: #376bfb url("/_theme/img/icons/cross.svg") no-repeat 50% 50%;
+  background-size: 16px 16px;
   border-right: 1px solid #0546fa; }
+  .is-closed .Header-button {
+    background-image: url("/_theme/img/icons/menu.svg"); }
+  .Header-button span {
+    display: none; }
   .Header-button:focus, .Header-button:active {
     outline: none; }
   .Header-button:hover {
@@ -739,7 +737,10 @@ pre {
   padding-left: 10px;
   font-size: 16px;
   position: relative;
-  top: -1px; }
+  top: -1px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  vertical-align: middle; }
   .Header-title:link, .Header-title:visited, .Header-title:hover, .Header-title:active {
     color: #fff;
     text-decoration: none; }
@@ -758,6 +759,12 @@ pre {
 
 .Navigation-group + .Navigation-group {
   margin-top: 25px; }
+
+.Prose {
+  font-size: 17px;
+  line-height: 1.5; }
+  .Prose p, .Prose ul, .Prose ol {
+    margin: 0.9em 0; }
 
 .Status {
   display: -webkit-box;

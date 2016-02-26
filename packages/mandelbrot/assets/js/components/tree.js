@@ -32,7 +32,6 @@ class Tree {
     }
 
     selectItem(url) {
-        console.log(this._el.find(`[href="${url}"]`));
         this._el.find('.is-current').removeClass('is-current');
         this._el.find(`[href="${url}"]`).parent().addClass('is-current');
     }
