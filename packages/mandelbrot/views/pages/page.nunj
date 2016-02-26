@@ -1,4 +1,4 @@
-{% extends "layouts/frame.nunj" %}
+{% extends "layouts/pjax.nunj" if frctl.web.request.isPjax else "layouts/frame.nunj" %}
 
 {% set path = frctl.web.request.params.path if frctl.web.request.params.path else '' %}
 {% set page = frctl.docs.find('path', path) %}
