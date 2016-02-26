@@ -20,7 +20,7 @@
 
             <nav class="Navigation">
                 <div class="Navigation-group">
-                {{ nav.tree(frctl.components) }}
+                {{ nav.tree(frctl.components, {handle: 'card'}) }}
                 </div>
                 <div class="Navigation-group">
                 {{ nav.tree(frctl.docs) }}

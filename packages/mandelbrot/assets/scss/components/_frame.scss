@@ -1,10 +1,11 @@
 
 .Frame {
     height: 100vh;
-    width: 100vw;
+    width: 100%;
     display: flex;
     flex-grow: 1;
     flex-direction: column;
+    // min-width: 280px;
     &.is-resizing {
         .Frame-body,
         .Frame-panel {
@@ -18,7 +19,8 @@
 }
 
 .Frame-header {
-    width: 100vw;
+    float: left;
+    width: 100%;
 }
 
 .Frame-body {
@@ -38,8 +40,8 @@
 .Frame-panel--sidebar {
     flex-shrink: 0;
     background-color: #f9f9f9;
-    width: 280px;
-    min-width: 200px;
+    width: 230px;
+    min-width: 230px;
     max-width: 400px;
     padding: 25px 0 40px 0;
     ::-webkit-scrollbar-thumb {
@@ -55,6 +57,9 @@
         transition: width 0.3s;
         width: 0;
         min-width: 0;
+    }
+    @include mq($until: navCollapse) {
+        // width: 230px !important;
     }
 }
 
