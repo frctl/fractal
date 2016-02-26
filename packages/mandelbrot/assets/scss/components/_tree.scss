@@ -61,12 +61,17 @@
     font-weight: normal;
 }
 .Tree-entity {
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
     padding-top: 5px;
     padding-bottom: 5px;
     padding-right: 10px;
     &.is-current {
+        background-color: #eeeeef;
+        border-top-color: #ddd;
+        border-bottom-color: #ddd;
         .Tree-entityLink {
-            font-weight: bold;
+            @include link-default(darken(#0074D9, 15%), none);
         }
     }
 }

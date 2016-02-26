@@ -600,7 +600,7 @@ pre {
 
 .Frame {
   height: 100vh;
-  width: 100vw;
+  width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -625,7 +625,8 @@ pre {
     background-color: #ddd; }
 
 .Frame-header {
-  width: 100vw; }
+  float: left;
+  width: 100%; }
 
 .Frame-body {
   display: -webkit-box;
@@ -654,8 +655,8 @@ pre {
       -ms-flex-negative: 0;
           flex-shrink: 0;
   background-color: #f9f9f9;
-  width: 280px;
-  min-width: 200px;
+  width: 230px;
+  min-width: 230px;
   max-width: 400px;
   padding: 25px 0 40px 0; }
   .Frame-panel--sidebar ::-webkit-scrollbar-thumb {
@@ -850,11 +851,18 @@ pre {
   font-weight: normal; }
 
 .Tree-entity {
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid transparent;
   padding-top: 5px;
   padding-bottom: 5px;
   padding-right: 10px; }
-  .Tree-entity.is-current .Tree-entityLink {
-    font-weight: bold; }
+  .Tree-entity.is-current {
+    background-color: #eeeeef;
+    border-top-color: #ddd;
+    border-bottom-color: #ddd; }
+    .Tree-entity.is-current .Tree-entityLink:link, .Tree-entity.is-current .Tree-entityLink:visited, .Tree-entity.is-current .Tree-entityLink:hover, .Tree-entity.is-current .Tree-entityLink:active {
+      color: #004b8d;
+      text-decoration: none; }
 
 .Tree-entityLink {
   display: -webkit-box;
