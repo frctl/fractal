@@ -1,0 +1,3 @@
+<div id="pjax-container">
+{% block content %}{% endblock %}
+</div>
