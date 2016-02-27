@@ -27,8 +27,6 @@ module.exports = function(element){
     const defWidth   = Math.max(sidebarMin, sidebar.width());
     const touch      = new Hammer(body[0]);
 
-    touch.get('swipe').set({ direction: Hammer.DIRECTION_HORIZONTAL });
-
     let sidebarState = (doc.width() < config.breakpoints.navCollapse) ? 'closed' : storage.get(`frame.${id}.state`, 'open');
     let sidebarWidth = (doc.width() < config.breakpoints.navCollapse) ? 230 : storage.get(`frame.${id}.sidebar`, defWidth);
     let start        = null;
@@ -36,10 +34,30 @@ module.exports = function(element){
     let docWidth     = null;
     let isDragging   = false;
 
+    touch.get('swipe').set({ direction: Hammer.DIRECTION_HORIZONTAL });
+
     sidebar.width(sidebarWidth);
     if (sidebarState === 'closed') {
         closeSidebar(true);
     }
+
+    gutter.on('dblclick', e => setSidebarWidth(defWidth));
+    gutter.on('mousedown', startDrag);
+
+    win.on('mouseup touchend touchcancel', stopDrag);
+    win.on('resize', utils.debounce(function(){
+        if (sidebarState == 'open' && doc.width() < sidebarWidth + 50) {
+            setSidebarWidth(doc.width() - 50);
+        }
+    }));
+
+    toggle.on('click', toggleSidebar);
+    events.on('toggle-sidebar', toggleSidebar);
+
+    touch.on('swipeleft', function(){
+        closeSidebar();
+    });
+    touch.on('swiperight', openSidebar);
 
     function move(event) {
         let dragWidth = Math.min(sidebarMax, sidebarWidth + event.pageX - start);
@@ -80,29 +98,6 @@ module.exports = function(element){
         sidebar.width(width);
         storage.set(`frame.${id}.sidebar`, width);
     }
-
-    gutter.on('dblclick', e => setSidebarWidth(defWidth));
-    gutter.on('mousedown', startDrag);
-
-    win.on('mouseup touchend touchcancel', stopDrag);
-    win.on('resize', utils.debounce(function(){
-        if (sidebarState == 'open' && doc.width() < sidebarWidth + 50) {
-            setSidebarWidth(doc.width() - 50);
-        }
-        // if (doc.width() < sidebarMin) {
-        //     setSidebarWidth(sidebarMin);
-        // }
-    }));
-    toggle.on('click', toggleSidebar);
-    events.on('toggle-sidebar', toggleSidebar);
-
-    touch.on('swipeleft', e => {
-        closeSidebar();
-    });
-
-    touch.on('swiperight', e => {
-        openSidebar();
-    });
 
     function closeSidebar(initial){
         if (!initial && sidebarState == 'closed') return;

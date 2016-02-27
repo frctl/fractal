@@ -10,7 +10,7 @@
 @font-face {
     font-family: 'Hack';
     src: url('/_theme/fonts/hack-bold-webfont.woff2') format('woff2'), url('/_theme/fonts/hack-bold-webfont.woff') format('woff');
-    font-weight: 700;
+    font-weight: bold;
     font-style: normal;
 }
 
@@ -24,36 +24,36 @@
 @font-face {
     font-family: 'Hack';
     src: url('/_theme/fonts/hack-boldoblique-webfont.woff2') format('woff2'), url('/_theme/fonts/hack-boldoblique-webfont.woff') format('woff');
-    font-weight: 700;
+    font-weight: bold;
     font-style: italic;
 }
 
-/* Source Sans */
+/* Open Sans */
 
 @font-face {
-    font-family: 'Source Sans';
-    src: url("/_theme/fonts/SourceSansPro-Regular.otf.woff2") format("woff2"), url("/_theme/fonts/SourceSansPro-Regular.otf.woff") format("woff");
+    font-family: 'Open Sans';
+    src: url("/_theme/fonts/OpenSans-Regular.woff2") format("woff2"), url("/_theme/fonts/OpenSans-Regular.woff") format("woff");
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
-    font-family: 'Source Sans';
-    src: url("/_theme/fonts/SourceSansPro-Regular.otf.woff2") format("woff2"), url("/_theme/fonts/SourceSansPro-Regular.otf.woff") format("woff");
+    font-family: 'Open Sans';
+    src: url("/_theme/fonts/OpenSans-Italic.woff2") format("woff2"), url("/_theme/fonts/OpenSans-Italic.woff") format("woff");
     font-weight: normal;
     font-style: italic;
 }
 
 @font-face {
-    font-family: 'Source Sans';
-    src: url("/_theme/fonts/SourceSansPro-Bold.otf.woff2") format("woff2"), url("/_theme/fonts/SourceSansPro-Bold.otf.woff") format("woff");
+    font-family: 'Open Sans';
+    src: url("/_theme/fonts/OpenSans-Semibold.woff2") format("woff2"), url("/_theme/fonts/OpenSans-Semibold.woff") format("woff");
     font-weight: bold;
     font-style: normal;
 }
 
 @font-face {
-    font-family: 'Source Sans';
-    src: url("/_theme/fonts/SourceSansPro-Bold.otf.woff2") format("woff2"), url("/_theme/fonts/SourceSansPro-Bold.otf.woff") format("woff");
+    font-family: 'Open Sans';
+    src: url("/_theme/fonts/OpenSans-SemiboldItalic.woff2") format("woff2"), url("/_theme/fonts/OpenSans-SemiboldItalic.woff") format("woff");
     font-weight: bold;
     font-style: italic;
 }

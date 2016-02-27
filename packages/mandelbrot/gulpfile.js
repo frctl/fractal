@@ -25,7 +25,7 @@ gulp.task('clean:js', function() {
 // CSS
 
 gulp.task('css', ['clean:css'], function() {
-  return gulp.src('./assets/scss/build.scss')
+  return gulp.src('./assets/scss/*.scss')
     .pipe(sourcemaps.init())
     .pipe(sassGlob())
     .pipe(sass().on('error', sass.logError))
@@ -48,8 +48,14 @@ gulp.task('css:watch', function () {
 
 gulp.task('fonts', ['clean:fonts'], function() {
     gulp.src([
-        './node_modules/source-sans-pro/WOFF/OTF/*.woff',
-        './node_modules/source-sans-pro/WOFF2/OTF/**.woff2',
+        './node_modules/open-sans-fontface/fonts/Regular/OpenSans-Regular.woff',
+        './node_modules/open-sans-fontface/fonts/Regular/OpenSans-Regular.woff2',
+        './node_modules/open-sans-fontface/fonts/Semibold/OpenSans-Semibold.woff',
+        './node_modules/open-sans-fontface/fonts/Semibold/OpenSans-Semibold.woff2',
+        './node_modules/open-sans-fontface/fonts/Italic/OpenSans-Italic.woff',
+        './node_modules/open-sans-fontface/fonts/Italic/OpenSans-Italic.woff2',
+        './node_modules/open-sans-fontface/fonts/SemiboldItalic/OpenSans-SemiboldItalic.woff',
+        './node_modules/open-sans-fontface/fonts/SemiboldItalic/OpenSans-SemiboldItalic.woff2',
         './assets/fonts/hack/woff/*.woff',
         './assets/fonts/hack/woff2/*.woff2'
     ]).pipe(gulp.dest('./dist/fonts'));

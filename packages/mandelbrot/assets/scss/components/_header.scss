@@ -1,9 +1,7 @@
-$header-bg: #376bfb;
-
 .Header {
     display: flex;
     align-items: center;
-    background-color: $header-bg;
+    background-color: $color-accent;
     box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
     position:relative;
     color: #fff;
@@ -11,18 +9,15 @@ $header-bg: #376bfb;
 }
 .Header-button {
     border: 0;
-    height: 38px;
-    width: 38px;
+    height: 50px;
+    width: 50px;
     display: none;
-    // @include mq($until: navCollapse) {
-        display: block;
-        background: $header-bg url('/_theme/img/icons/cross.svg') no-repeat 50% 50%;
-        background-size: 16px 16px;
-        .is-closed & {
-            background-image: url('/_theme/img/icons/menu.svg');
-        }
-    // }
-    // transition: background-color, 0.1s ease;
+    display: block;
+    background: $color-accent url('/_theme/img/icon-close-white.svg') no-repeat 50% 50%;
+    background-size: 20px 20px;
+    .is-closed & {
+        background-image: url('/_theme/img/icon-menu-white.svg');
+    }
     span {
         display: none;
         @extend %visuallyhidden;
@@ -32,20 +27,19 @@ $header-bg: #376bfb;
         outline: none;
     }
     &:hover {
-        background-color: darken($header-bg, 3%);
+        background-color: rgba(#2E2F33, 0.25);
     }
     &:active {
-        background-color: darken($header-bg, 10%);
+        background-color: rgba(#2E2F33, 0.25);
     }
-    border-right: 1px solid darken(#376bfb, 10%);
+    border-right: 1px solid rgba(#2E2F33, 0.25);
 }
 .Header-title {
-    padding-left: 10px;
-    @include link-default(#fff, none);
-    font-size: 16px;
+    padding-left: 15px;
+    @include link-default($color-delta, none);
+    font-size: 18px;
     position: relative;
     top: -1px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding: 5px 15px;
     vertical-align: middle;
 }

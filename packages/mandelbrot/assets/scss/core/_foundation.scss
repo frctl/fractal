@@ -5,15 +5,13 @@
 }
 
 html {
-    color: #333;
-    background: #fff;
-    font-family: 'Source Sans', Helvetica, Arial, sans-serif;
+    color: $color-beta;
+    background: $color-delta;
+    font-family: 'Open Sans', Helvetica, Arial, sans-serif;
     height: 100%;
     position: relative;
-}
-
-body {
-    // overflow: hidden;
+    font-size: 16px;
+    line-height: 16/24;
 }
 
 blockquote,
@@ -65,11 +63,11 @@ ul {
 }
 
 a {
-    color: $color-link;
+    color: $color-accent;
     &:visited,
     &:hover,
     &:active {
-        color: $color-link;
+        color: $color-accent;
     }
 }
 
@@ -86,6 +84,8 @@ a {
 code,
 pre {
     font-family: Hack, Consolas, Monaco, 'Andale Mono', monospace;
+    font-size: 14px;
+    line-height: 14/24;
 }
 
 ::-webkit-scrollbar {
@@ -97,15 +97,15 @@ pre {
     height: 0px;
 }
 ::-webkit-scrollbar-thumb {
-    background: #ccc;
+    background: $color-alpha-tint-lighter;
     border: 0px none transparent;
     border-radius: 20px;
 }
 ::-webkit-scrollbar-thumb:hover {
-    background: #bbb;
+    background: $color-alpha-tint-lighter;
 }
 ::-webkit-scrollbar-thumb:active {
-      background: #aaa;
+      background: $color-alpha-tint-light;
 }
 ::-webkit-scrollbar-track {
     background: transparent;
@@ -120,4 +120,32 @@ pre {
 }
 ::-webkit-scrollbar-corner {
     background: transparent;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: $color-alpha;
+    font-weight: bold;
+}
+h1 {
+    font-size: 28px;
+    line-height: 28/32;
+}
+h2 {
+    font-size: 21px;
+    line-height: 21/24;
+}
+h3 {
+    font-size: 18px;
+    line-height: 18/24;
+}
+h4,
+h5,
+h6 {
+    font-size: 16px;
+    line-height: 16/24;
 }
