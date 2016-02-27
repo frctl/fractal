@@ -3,11 +3,13 @@
 }
 .Tree-title {
     padding-left: 25px;
-    font-size: 14px;
+    font-size: 11px;
+    line-height: 11/20;
     font-weight: bold;
+    letter-spacing: 1px;
     text-transform: uppercase;
-    color: #666;
-    margin-bottom: 6px;
+    color: $color-alpha;
+    margin-bottom: 10px;
 }
 .Tree-collection {
     padding-top: 5px;
@@ -19,14 +21,16 @@
         }
         .Tree-collectionLabel {
             span:before {
-                background-image: url('/_theme/img/icons/nav-arrow-right.svg');
+                background-image: url('/_theme/img/icon-navigation-closed.svg');
             }
         }
     }
 }
 .Tree-collectionLabel {
+    color: $color-alpha;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 13px;
+    line-height: 13/20;
     font-weight: normal;
     user-select: none;
     span {
@@ -40,7 +44,7 @@
         left: 0;
         top: 5px;
         content: ' ';
-        background-image: url('/_theme/img/icons/nav-arrow-down.svg');
+        background-image: url('/_theme/img/icon-navigation-opened.svg');
         background-size: 8px 8px;
         background-repeat: no-repeat;
         background-position: 0 50%;
@@ -54,7 +58,8 @@
     margin-top: 5px;
 }
 .Tree-item {
-    font-size: 16px;
+    font-size: 13px;
+    line-height: 13/20;
     font-weight: normal;
 }
 .Tree-entity {
@@ -62,24 +67,22 @@
     border-bottom: 1px solid transparent;
     padding-right: 10px;
     &:hover {
-        background-color: #f3f3f3;
+        background-color: lighten($color-alpha-tint-lightest, 30%);
         .Tree-entityLink {
-            @include link-default(darken(#0074D9, 15%), none);
+            @include link-default(darken($color-accent, 15%), none);
         }
     }
     &.is-current {
-        background-color: #eeeeef;
-        border-top-color: #ddd;
-        border-bottom-color: #ddd;
+        background-color: $color-alpha-tint-lightest;
         .Tree-entityLink {
-            @include link-default(darken(#0074D9, 15%), none);
+            @include link-default(darken($color-accent, 15%), none);
         }
     }
 }
 .Tree-entityLink {
     padding-top: 5px;
     padding-bottom: 5px;
-    @include link-default(#0074D9, none);
+    @include link-default($color-accent, none);
     display: flex;
     align-items: center;
     > * + * {
@@ -90,7 +93,6 @@
 @for $i from 1 through 8 {
     .Tree-depth-#{$i} {
         $padLeft: 16px + ($i * 10px);
-
         .Tree-collectionLabel,
         .Tree-entityLink {
             padding-left: $padLeft;

@@ -5,15 +5,11 @@
     display: flex;
     flex-grow: 1;
     flex-direction: column;
-    // min-width: 280px;
     &.is-resizing {
         .Frame-body,
         .Frame-panel {
             user-select: none;
             pointer-events: none;
-        }
-        .Frame-gutter {
-            background-color: #ddd;
         }
     }
 }
@@ -39,20 +35,11 @@
 
 .Frame-panel--sidebar {
     flex-shrink: 0;
-    background-color: #f9f9f9;
+    background-color: $color-gamma;
     width: 230px;
     min-width: 230px;
     max-width: 400px;
     padding: 25px 0 40px 0;
-    ::-webkit-scrollbar-thumb {
-        background: #aaa;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-        background: #999;
-    }
-    ::-webkit-scrollbar-thumb:active {
-          background: #888;
-    }
 }
 
 .Frame-panel--main {
@@ -69,16 +56,11 @@
     position: relative;
     z-index: 2;
     width: 6px;
-    border-left: 1px solid #ccc;
+    border-left: 1px solid $color-alpha-tint-light;
     flex-shrink: 0;
     height: 100%;
     cursor: grab;
     background-color: transparent;
-    background-color: #e6e6e6;
-    background-color: #fff;
     height: 100%;
     transition: background-color 0.2s;
-    &:hover {
-        background-color: #eee;
-    }
 }
