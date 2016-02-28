@@ -1,7 +1,17 @@
 .Prose {
-    font-size: 17px;
+    font-size: 16px;
     line-height: 1.5;
-    p, ul, ol {
-        margin: 0.9em 0;
+
+    p,
+    ul,
+    ol {
+        margin: 1.4em 0;
+    }
+
+    hr {
+        height: 0;
+        border: 0;
+        border-top: 1px solid $color-alpha-tint-light;
+        margin: 2em 0;
     }
 }

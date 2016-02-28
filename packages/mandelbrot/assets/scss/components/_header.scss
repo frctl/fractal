@@ -6,6 +6,7 @@
     position:relative;
     color: #fff;
     z-index: 10;
+    text-overflow: ellipsis;
 }
 .Header-button {
     border: 0;
@@ -42,4 +43,6 @@
     top: -1px;
     padding: 5px 15px;
     vertical-align: middle;
+    white-space: nowrap;
+    // text-overflow: ellipsis;
 }

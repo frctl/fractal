@@ -21,6 +21,15 @@
             {{ leaves(item.items(), root, current, (depth + 1)) }}
             </ul>
         </li>
+        {% elif item.type == 'component' and item.variants().size > 1 %}
+        <li class="Tree-item Tree-collection Tree-depth-{{ depth }}" data-behaviour="collection" id="tree-{{ root.name }}-collection-{{ item.handle }}">
+            <h4 class="Tree-collectionLabel" data-role="toggle">
+                <span>{{ item.label }}</span>
+            </h4>
+            <ul class="Tree-collectionItems" data-role="items">
+            {{ leaves(item.variants().items(), root, current, (depth + 1)) }}
+            </ul>
+        </li>
         {% else %}
         {% set isCurrent = true if (current and (current.id == item.id)) else false %}
         <li class="Tree-item Tree-entity{% if isCurrent %} is-current{% endif %}"{% if isCurrent %} data-state="current"{% endif %} data-role="item">
@@ -28,6 +37,15 @@
                 <span>{{ item.label }}</span>
                 {% if item.status %}{{ status.unlabelled(item.status) }}{% endif %}
             </a>
+            {# {% if item.type == 'component' and item.variants().size > 1 %}
+            <ul class="Tree-subItems">
+                {% for variant in item.variants().items() %}
+                <li class="Tree-subItem{% if variant.isDefault %} is-current{% endif %}">
+                    <a href="#" class="Tree-subItemLink">{{ variant.label }}</a> {% if variant.status %}{{ status.unlabelled(variant.status) }}{% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+            {% endif %} #}
         </li>
         {% endif %}
     {% endfor %}

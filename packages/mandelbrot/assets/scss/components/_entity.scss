@@ -1,0 +1,39 @@
+.Entity {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+.Entity-panel {
+    flex-direction: column;
+}
+.Entity-header {
+    display: flex;
+    background-color: $color-gamma;
+    padding: 10px 20px;
+    border-bottom: 1px solid $color-alpha-tint-light;
+    flex-grow: 0;
+    flex-shrink: 1;
+}
+.Entity-title {
+    font-size: 22px;
+}
+.Entity-titlePrefix {
+    font-weight: normal;
+    color: $color-beta;
+}
+.Entity-preview {
+    flex-grow: 1;
+    flex-shrink: 1;
+    position: relative;
+    border-bottom: 1px solid $color-alpha-tint-light;
+}
+.Entity-previewWindow {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+.Entity-detail {
+    flex-grow: 0;
+    flex-shrink: 0;
+}

@@ -75,7 +75,10 @@
     &.is-current {
         background-color: $color-alpha-tint-lightest;
         .Tree-entityLink {
-            @include link-default(darken($color-accent, 15%), none);
+            // @include link-default(darken($color-accent, 25%), none);
+        }
+        .Tree-subItems {
+            display: block;
         }
     }
 }
@@ -89,13 +92,35 @@
         margin-left: 6px;
     }
 }
-
+.Tree-subItems {
+    display: none;
+    margin-bottom: 5px;
+}
+.Tree-subItem {
+    display: flex;
+    > * + * {
+        margin-left: 6px;
+    }
+    &.is-current {
+        font-weight: bold;
+        .Tree-subItemLink {
+            @include link-default(darken($color-accent, 25%), none);
+        }
+    }
+}
+.Tree-subItemLink {
+    padding: 4px 0;
+    @include link-default($color-accent, none);
+}
 @for $i from 1 through 8 {
     .Tree-depth-#{$i} {
         $padLeft: 16px + ($i * 10px);
         .Tree-collectionLabel,
         .Tree-entityLink {
             padding-left: $padLeft;
+        }
+        .Tree-subItemLink {
+            padding-left: $padLeft + 11px;
         }
     }
 }
