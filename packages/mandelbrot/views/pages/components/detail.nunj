@@ -9,20 +9,22 @@
 
 <div class="Entity">
 
+    <div class="Entity-panel Entity-preview">
+        <div class="Preview">
+            <iframe class="Entity-previewWindow" src="{{ frctl.web.theme.urlFromRoute('render', {render: 'iframe', handle: entity.handle}) }}" sandbox="allow-same-origin allow-scripts" marginwidth="0" marginheight="0" frameborder="0" vspace="0" hspace="0" srcdoc="{{ entity | preview | escape }}"></iframe>
+        </div>
+    </div>
+
     <div class="Entity-panel Entity-header">
         <h1 class="Entity-title">
             {% if isVariant %}<span class="Entity-titlePrefix">{{ entity.parent.title }}: </span>{% endif %}{{ entity.title }}
         </h1>
     </div>
 
-    <div class="Entity-panel Entity-preview">
-        <iframe class="Entity-previewWindow" src="{{ frctl.web.theme.urlFromRoute('render', {render: 'iframe', handle: entity.handle}) }}"></iframe>
-    </div>
-
     <div class="Entity-panel Entity-detail">
-        <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-        </p>
+        <code class="Code Code--embedded Code--lang-{{lang}}">
+            <pre>{{ entity | render | highlight('html') }}</pre>
+        </code>
     </div>
 
 </div>
