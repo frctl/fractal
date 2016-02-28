@@ -1,11 +1,30 @@
 {% extends "layouts/pjax.nunj" if frctl.web.request.isPjax else "layouts/frame.nunj" %}
 
-{% set component = frctl.components.find('handle', frctl.web.request.params.handle) %}
-{% if not component or component.type == 'variant' or component.isHidden %}{% throw404 'Component not found' %}{% endif %}
-{% set pageTitle = component.title %}
+{% set entity = frctl.components.find('@' + frctl.web.request.params.handle) %}
+{% if not entity or entity.isHidden %}{% throw404 'Entity not found' %}{% endif %}
+{% set pageTitle = entity.title %}
+{% set isVariant = true if entity.type == 'variant' else false %}
 
 {% block content %}
 
-    <h1>{{ component.title }}</h1>
+<div class="Entity">
+
+    <div class="Entity-panel Entity-header">
+        <h1 class="Entity-title">
+            {% if isVariant %}<span class="Entity-titlePrefix">{{ entity.parent.title }}: </span>{% endif %}{{ entity.title }}
+        </h1>
+    </div>
+
+    <div class="Entity-panel Entity-preview">
+        <iframe class="Entity-previewWindow" src="{{ frctl.web.theme.urlFromRoute('render', {render: 'iframe', handle: entity.handle}) }}"></iframe>
+    </div>
+
+    <div class="Entity-panel Entity-detail">
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </p>
+    </div>
+
+</div>
 
 {% endblock %}

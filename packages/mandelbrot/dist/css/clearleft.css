@@ -505,9 +505,14 @@ html {
   background: white;
   font-family: 'Open Sans', Helvetica, Arial, sans-serif;
   height: 100%;
+  width: 100%;
   position: relative;
   font-size: 16px;
   line-height: 16/24; }
+
+body {
+  width: 100%;
+  height: 100%; }
 
 blockquote,
 dl,
@@ -629,9 +634,89 @@ h6 {
   font-size: 16px;
   line-height: 16/24; }
 
-.Frame {
-  height: 100vh;
+.Document {
+  padding: 30px; }
+
+.Document-header {
+  margin-bottom: 1.2em; }
+
+.Document-title {
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(56, 50, 46, 0.25);
+  margin-bottom: 0; }
+
+.Entity {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
   width: 100%;
+  height: 100%; }
+
+.Entity-panel {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column; }
+
+.Entity-header {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  background-color: #f8f7f7;
+  padding: 10px 20px;
+  border-bottom: 1px solid rgba(56, 50, 46, 0.25);
+  -webkit-box-flex: 0;
+  -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+          flex-grow: 0;
+  -webkit-flex-shrink: 1;
+      -ms-flex-negative: 1;
+          flex-shrink: 1; }
+
+.Entity-title {
+  font-size: 22px; }
+
+.Entity-titlePrefix {
+  font-weight: normal;
+  color: #625850; }
+
+.Entity-preview {
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  -webkit-flex-shrink: 1;
+      -ms-flex-negative: 1;
+          flex-shrink: 1;
+  position: relative;
+  border-bottom: 1px solid rgba(56, 50, 46, 0.25); }
+
+.Entity-previewWindow {
+  position: absolute;
+  height: 100%;
+  width: 100%; }
+
+.Entity-detail {
+  -webkit-box-flex: 0;
+  -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+          flex-grow: 0;
+  -webkit-flex-shrink: 0;
+      -ms-flex-negative: 0;
+          flex-shrink: 0; }
+
+.Frame {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -640,6 +725,7 @@ h6 {
   -webkit-flex-grow: 1;
       -ms-flex-positive: 1;
           flex-grow: 1;
+  position: relative;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
   -webkit-flex-direction: column;
@@ -655,7 +741,15 @@ h6 {
 
 .Frame-header {
   float: left;
-  width: 100%; }
+  width: 100%;
+  -webkit-box-flex: 0;
+  -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+          flex-grow: 0;
+  -webkit-flex-shrink: 0;
+      -ms-flex-negative: 0;
+          flex-shrink: 0;
+  height: 50px; }
 
 .Frame-body {
   display: -webkit-box;
@@ -663,20 +757,21 @@ h6 {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: row;
-      -ms-flex-direction: row;
-          flex-direction: row;
+  -webkit-box-direction: reverse;
+  -webkit-flex-direction: row-reverse;
+      -ms-flex-direction: row-reverse;
+          flex-direction: row-reverse;
   -webkit-box-flex: 1;
   -webkit-flex-grow: 1;
       -ms-flex-positive: 1;
           flex-grow: 1;
-  height: 100%;
-  overflow: hidden; }
+  height: 100%; }
 
 .Frame-panel {
-  height: 100%;
+  height: -webkit-calc(100% - 50px);
+  height: calc(100% - 50px);
   overflow: auto;
+  position: relative;
   -webkit-overflow-scrolling: touch; }
 
 .Frame-panel--sidebar {
@@ -690,16 +785,16 @@ h6 {
   padding: 25px 0 40px 0; }
 
 .Frame-panel--main {
-  padding: 20px;
   -webkit-box-flex: 1;
   -webkit-flex-grow: 1;
       -ms-flex-positive: 1;
           flex-grow: 1;
-  overflow: scroll;
+  overflow: auto;
   min-width: 270px;
   margin-left: -6px;
   position: relative;
-  z-index: 1; }
+  z-index: 1;
+  padding-bottom: 1px; }
 
 .Frame-gutter {
   position: relative;
@@ -709,13 +804,21 @@ h6 {
   -webkit-flex-shrink: 0;
       -ms-flex-negative: 0;
           flex-shrink: 0;
-  height: 100%;
   cursor: -webkit-grab;
   cursor: grab;
   background-color: transparent;
   height: 100%;
   -webkit-transition: background-color 0.2s;
   transition: background-color 0.2s; }
+
+.Frame-inner {
+  position: absolute;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: auto; }
 
 .Header {
   display: -webkit-box;
@@ -730,7 +833,8 @@ h6 {
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
   position: relative;
   color: #fff;
-  z-index: 10; }
+  z-index: 10;
+  text-overflow: ellipsis; }
 
 .Header-button {
   border: 0;
@@ -758,7 +862,8 @@ h6 {
   position: relative;
   top: -1px;
   padding: 5px 15px;
-  vertical-align: middle; }
+  vertical-align: middle;
+  white-space: nowrap; }
   .Header-title:link, .Header-title:visited, .Header-title:hover, .Header-title:active {
     color: white;
     text-decoration: none; }
@@ -779,10 +884,17 @@ h6 {
   margin-top: 25px; }
 
 .Prose {
-  font-size: 17px;
+  font-size: 16px;
   line-height: 1.5; }
-  .Prose p, .Prose ul, .Prose ol {
-    margin: 0.9em 0; }
+  .Prose p,
+  .Prose ul,
+  .Prose ol {
+    margin: 1.4em 0; }
+  .Prose hr {
+    height: 0;
+    border: 0;
+    border-top: 1px solid rgba(56, 50, 46, 0.25);
+    margin: 2em 0; }
 
 .Status {
   display: -webkit-box;
@@ -817,7 +929,7 @@ h6 {
 .Status-dot {
   width: 8px;
   height: 8px;
-  border: 2px solid transparent;
+  border: 1px solid transparent;
   border-radius: 100%;
   background-color: #fff; }
 
@@ -891,9 +1003,8 @@ h6 {
       text-decoration: none; }
   .Tree-entity.is-current {
     background-color: rgba(56, 50, 46, 0.05); }
-    .Tree-entity.is-current .Tree-entityLink:link, .Tree-entity.is-current .Tree-entityLink:visited, .Tree-entity.is-current .Tree-entityLink:hover, .Tree-entity.is-current .Tree-entityLink:active {
-      color: #411831;
-      text-decoration: none; }
+    .Tree-entity.is-current .Tree-subItems {
+      display: block; }
 
 .Tree-entityLink {
   padding-top: 5px;
@@ -912,36 +1023,83 @@ h6 {
   .Tree-entityLink > * + * {
     margin-left: 6px; }
 
+.Tree-subItems {
+  display: none;
+  margin-bottom: 5px; }
+
+.Tree-subItem {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex; }
+  .Tree-subItem > * + * {
+    margin-left: 6px; }
+  .Tree-subItem.is-current {
+    font-weight: bold; }
+    .Tree-subItem.is-current .Tree-subItemLink:link, .Tree-subItem.is-current .Tree-subItemLink:visited, .Tree-subItem.is-current .Tree-subItemLink:hover, .Tree-subItem.is-current .Tree-subItemLink:active {
+      color: #1c0a15;
+      text-decoration: none; }
+
+.Tree-subItemLink {
+  padding: 4px 0; }
+  .Tree-subItemLink:link, .Tree-subItemLink:visited, .Tree-subItemLink:hover, .Tree-subItemLink:active {
+    color: #792C5C;
+    text-decoration: none; }
+
 .Tree-depth-1 .Tree-collectionLabel,
 .Tree-depth-1 .Tree-entityLink {
   padding-left: 26px; }
+
+.Tree-depth-1 .Tree-subItemLink {
+  padding-left: 37px; }
 
 .Tree-depth-2 .Tree-collectionLabel,
 .Tree-depth-2 .Tree-entityLink {
   padding-left: 36px; }
 
+.Tree-depth-2 .Tree-subItemLink {
+  padding-left: 47px; }
+
 .Tree-depth-3 .Tree-collectionLabel,
 .Tree-depth-3 .Tree-entityLink {
   padding-left: 46px; }
+
+.Tree-depth-3 .Tree-subItemLink {
+  padding-left: 57px; }
 
 .Tree-depth-4 .Tree-collectionLabel,
 .Tree-depth-4 .Tree-entityLink {
   padding-left: 56px; }
 
+.Tree-depth-4 .Tree-subItemLink {
+  padding-left: 67px; }
+
 .Tree-depth-5 .Tree-collectionLabel,
 .Tree-depth-5 .Tree-entityLink {
   padding-left: 66px; }
+
+.Tree-depth-5 .Tree-subItemLink {
+  padding-left: 77px; }
 
 .Tree-depth-6 .Tree-collectionLabel,
 .Tree-depth-6 .Tree-entityLink {
   padding-left: 76px; }
 
+.Tree-depth-6 .Tree-subItemLink {
+  padding-left: 87px; }
+
 .Tree-depth-7 .Tree-collectionLabel,
 .Tree-depth-7 .Tree-entityLink {
   padding-left: 86px; }
 
+.Tree-depth-7 .Tree-subItemLink {
+  padding-left: 97px; }
+
 .Tree-depth-8 .Tree-collectionLabel,
 .Tree-depth-8 .Tree-entityLink {
   padding-left: 96px; }
+
+.Tree-depth-8 .Tree-subItemLink {
+  padding-left: 107px; }
 
 /*# sourceMappingURL=clearleft.css.map */

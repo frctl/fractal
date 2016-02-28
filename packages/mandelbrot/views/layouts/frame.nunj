@@ -16,6 +16,14 @@
 
     <div class="Frame-body" data-role="body">
 
+        <div class="Frame-panel Frame-panel--main" data-role="main">
+            <div class="Frame-inner" id="pjax-container">
+            {% block content %}{% endblock %}
+            </div>
+        </div>
+
+        <div class="Frame-gutter" data-role="gutter"></div>
+
         <div class="Frame-panel Frame-panel--sidebar" data-role="sidebar">
 
             <nav class="Navigation">
@@ -27,14 +35,6 @@
                 </div>
             </nav>
 
-        </div>
-
-        <div class="Frame-gutter" data-role="gutter"></div>
-
-        <div class="Frame-panel Frame-panel--main" data-role="main">
-            <div id="pjax-container">
-            {% block content %}{% endblock %}
-            </div>
         </div>
 
     </div>

@@ -1,9 +1,11 @@
 
 .Frame {
-    height: 100vh;
+    height: 100%;
     width: 100%;
+    overflow: hidden;
     display: flex;
     flex-grow: 1;
+    position: relative;
     flex-direction: column;
     &.is-resizing {
         .Frame-body,
@@ -17,19 +19,22 @@
 .Frame-header {
     float: left;
     width: 100%;
+    flex-grow: 0;
+    flex-shrink: 0;
+    height: 50px;
 }
 
 .Frame-body {
     display: flex;
-    flex-direction: row;
+    flex-direction: row-reverse;
     flex-grow: 1;
     height: 100%;
-    overflow: hidden;
 }
 
 .Frame-panel {
-    height: 100%;
+    height: calc(100% - 50px);
     overflow: auto;
+    position: relative;
     -webkit-overflow-scrolling: touch;
 }
 
@@ -43,13 +48,13 @@
 }
 
 .Frame-panel--main {
-    padding: 20px;
     flex-grow: 1;
-    overflow: scroll;
+    overflow: auto;
     min-width: 270px;
     margin-left: -6px;
     position: relative;
     z-index: 1;
+    padding-bottom: 1px;
 }
 
 .Frame-gutter {
@@ -58,9 +63,18 @@
     width: 6px;
     border-left: 1px solid $color-alpha-tint-light;
     flex-shrink: 0;
-    height: 100%;
     cursor: grab;
     background-color: transparent;
     height: 100%;
     transition: background-color 0.2s;
+}
+
+.Frame-inner {
+    position: absolute;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
 }
