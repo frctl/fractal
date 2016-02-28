@@ -679,7 +679,10 @@ h6 {
           flex-grow: 0;
   -webkit-flex-shrink: 1;
       -ms-flex-negative: 1;
-          flex-shrink: 1; }
+          flex-shrink: 1;
+  position: relative;
+  z-index: 100;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); }
 
 .Entity-title {
   font-size: 22px; }
@@ -702,16 +705,21 @@ h6 {
 .Entity-previewWindow {
   position: absolute;
   height: 100%;
-  width: 100%; }
+  width: 100%;
+  box-shadow: inset 1px 0 3px rgba(0, 0, 0, 0.2); }
 
 .Entity-detail {
+  max-height: 40%;
+  box-shadow: 0 -2px -3px rgba(0, 0, 0, 0.2);
+  padding: 20px;
   -webkit-box-flex: 0;
   -webkit-flex-grow: 0;
       -ms-flex-positive: 0;
           flex-grow: 0;
   -webkit-flex-shrink: 0;
       -ms-flex-negative: 0;
-          flex-shrink: 0; }
+          flex-shrink: 0;
+  overflow: scroll; }
 
 .Frame {
   height: 100%;
