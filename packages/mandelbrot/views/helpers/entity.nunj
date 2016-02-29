@@ -1,0 +1,11 @@
+{% import "helpers/status.nunj" as status %}
+
+{% macro header(title, entityStatus, subText, newWindow) %}
+<div class="Entity-header">
+    <div class="Entity-headerMain">
+        <h1 class="Entity-headerTitle">{{ title }}</h1>
+        {% if entityStatus %}{{ status.tag(entityStatus, 'large') }}{% endif %}
+    </div>
+    {% if subText %}<p class="Entity-headerSubText">{{ subText }}</p>{% endif %}
+</div>
+{% endmacro %}

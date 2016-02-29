@@ -1,47 +1,81 @@
 .Entity {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-}
-.Entity-panel {
-    flex-direction: column;
+    padding: 30px;
 }
 .Entity-header {
+    margin-bottom: 1.2em;
+    .Status {
+        margin-left: auto;
+    }
+}
+.Entity-headerMain {
     display: flex;
-    background-color: $color-gamma;
-    padding: 10px 20px;
-    border-bottom: 1px solid $color-alpha-tint-light;
-    flex-grow: 0;
-    flex-shrink: 1;
-    position: relative;
-    z-index: 100;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-}
-.Entity-title {
-    font-size: 22px;
-}
-.Entity-titlePrefix {
-    font-weight: normal;
-    color: $color-beta;
-}
-.Entity-preview {
-    flex-grow: 1;
-    flex-shrink: 1;
-    position: relative;
-    border-bottom: 1px solid $color-alpha-tint-light;
-}
-.Entity-previewWindow {
-    position: absolute;
-    height: 100%;
     width: 100%;
-    box-shadow: inset 1px 0 3px rgba(0, 0, 0, 0.2);
+    padding-bottom: 10px;
+    border-bottom: 1px solid $color-alpha-tint-light;
+    margin-bottom: 0;
 }
-.Entity-detail {
-    max-height: 40%;
-    box-shadow: 0 -2px -3px rgba(0, 0, 0, 0.2);
-    padding: 20px;
-    flex-grow: 0;
-    flex-shrink: 0;
-    overflow: scroll;
+.Entity-headerTitle {
+    margin: 0;
+    font-size: 28px;
 }
+.Entity-headerSubText {
+    margin: 5px 0 0 0;
+    font-size: 14px;
+    line-height: (22/14);
+    a {
+        @include link-default($color-accent, none);
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+
+
+// .Entity {
+//     display: flex;
+//     flex-direction: column;
+//     width: 100%;
+//     height: 100%;
+// }
+// .Entity-panel {
+//     flex-direction: column;
+// }
+// .Entity-header {
+//     display: flex;
+//     background-color: $color-gamma;
+//     padding: 10px 20px;
+//     border-bottom: 1px solid $color-alpha-tint-light;
+//     flex-grow: 0;
+//     flex-shrink: 1;
+//     position: relative;
+//     z-index: 100;
+//     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+// }
+// .Entity-title {
+//     font-size: 22px;
+// }
+// .Entity-titlePrefix {
+//     font-weight: normal;
+//     color: $color-beta;
+// }
+// .Entity-preview {
+//     flex-grow: 1;
+//     flex-shrink: 1;
+//     position: relative;
+//     border-bottom: 1px solid $color-alpha-tint-light;
+// }
+// .Entity-previewWindow {
+//     position: absolute;
+//     height: 100%;
+//     width: 100%;
+//     box-shadow: inset 1px 0 3px rgba(0, 0, 0, 0.2);
+// }
+// .Entity-detail {
+//     max-height: 40%;
+//     box-shadow: 0 -2px -3px rgba(0, 0, 0, 0.2);
+//     padding: 20px;
+//     flex-grow: 0;
+//     flex-shrink: 0;
+//     overflow: scroll;
+// }

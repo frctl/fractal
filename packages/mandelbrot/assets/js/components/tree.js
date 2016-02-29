@@ -7,7 +7,6 @@ const events  = require('../events');
 function getTreeUrl(urlPath){
     const parser    = document.createElement('a');
     parser.href     = urlPath;
-    return urlPath;
     const pathParts = parser.pathname.split('/');
     pathParts.push(pathParts.pop().split('--')[0]);
     return pathParts.join('/');

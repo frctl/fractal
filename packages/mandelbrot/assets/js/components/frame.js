@@ -7,6 +7,7 @@ const utils   = require('../utils');
 const events  = require('../events');
 const config  = require('../config');
 
+delete Hammer.defaults.cssProps.userSelect;
 
 module.exports = function(element){
 
@@ -26,38 +27,61 @@ module.exports = function(element){
     const sidebarMin = parseInt(sidebar.css('min-width'), 10);
     const defWidth   = Math.max(sidebarMin, sidebar.width());
     const touch      = new Hammer(body[0]);
-
+    let scrollPos    = storage.get(`frame.${id}.scrollPos`, 0);
     let sidebarState = (doc.width() < config.breakpoints.navCollapse) ? 'closed' : storage.get(`frame.${id}.state`, 'open');
     let sidebarWidth = (doc.width() < config.breakpoints.navCollapse) ? 230 : storage.get(`frame.${id}.sidebar`, defWidth);
     let start        = null;
     let lastStart    = null;
     let docWidth     = null;
     let isDragging   = false;
+    let dragOccuring = false;
+    let initialClose = false;
 
     touch.get('swipe').set({ direction: Hammer.DIRECTION_HORIZONTAL });
 
     sidebar.width(sidebarWidth);
     if (sidebarState === 'closed') {
-        closeSidebar(true);
+        initialClose = true;
+        closeSidebar();
     }
+
+    sidebar.scrollTop(scrollPos);
+
+    sidebar.on('scroll', utils.debounce((e) => {
+        scrollPos = sidebar.scrollTop();
+        storage.set(`frame.${id}.scrollPos`, scrollPos);
+    }, 50));
 
     gutter.on('dblclick', e => setSidebarWidth(defWidth));
     gutter.on('mousedown', startDrag);
 
     win.on('mouseup touchend touchcancel', stopDrag);
-    win.on('resize', utils.debounce(function(){
+    win.on('resize', () => {
         if (sidebarState == 'open' && doc.width() < sidebarWidth + 50) {
             setSidebarWidth(doc.width() - 50);
         }
-    }));
+    });
 
     toggle.on('click', toggleSidebar);
     events.on('toggle-sidebar', toggleSidebar);
 
-    touch.on('swipeleft', function(){
-        closeSidebar();
+    events.on('start-dragging', function(){
+        dragOccuring = true;
     });
+
+    events.on('end-dragging', function(){
+        setTimeout(function(){
+            dragOccuring = false;
+        }, 200);
+    });
+
+    touch.on('swipeleft', closeSidebar);
     touch.on('swiperight', openSidebar);
+
+    events.on('data-changed', function(){
+        // TODO: make this smarter?
+        document.location.reload(true);
+    });
 
     function move(event) {
         let dragWidth = Math.min(sidebarMax, sidebarWidth + event.pageX - start);
@@ -99,10 +123,10 @@ module.exports = function(element){
         storage.set(`frame.${id}.sidebar`, width);
     }
 
-    function closeSidebar(initial){
-        if (!initial && sidebarState == 'closed') return;
+    function closeSidebar(){
+        if (dragOccuring || (initialClose && sidebarState == 'closed')) return;
         const w = sidebar.width();
-        if (initial) {
+        if (initialClose) {
             body.css({
                 transition: 'none',
                 marginRight: (-1 * w) + 'px',
@@ -119,10 +143,11 @@ module.exports = function(element){
         sidebarState = 'closed';
         el.addClass('is-closed');
         storage.set(`frame.${id}.state`, sidebarState);
+        initialClose = false;
     }
 
     function openSidebar(){
-        if (sidebarState == 'open') return;
+        if (dragOccuring || sidebarState == 'open') return;
         if (doc.width() < config.breakpoints.navCollapse) {
             setSidebarWidth(sidebarMin);
         }

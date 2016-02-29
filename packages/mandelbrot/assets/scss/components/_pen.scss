@@ -1,0 +1,49 @@
+.Pen {
+    width: 100%;
+    & + & {
+        margin-top: 30px;
+    }
+}
+.Pen-header {
+    background-color: $color-gamma;
+    padding: 10px 15px;
+    border: 1px solid $color-alpha-tint-light;
+    border-bottom: 0;
+}
+.Pen-title {
+    font-size: 16px;
+    font-weight: bold;
+}
+.Pen-preview {
+    position: relative;
+    background: $color-gamma;
+    outline: solid $color-alpha-tint-light 1px;
+    outline-offset: -1px;
+}
+.Pen-previewWrapper {
+    background-color: #fff;
+    position: relative;
+    border: 1px solid $color-alpha-tint-light;
+    position: relative;
+    margin-right: -1px;
+    min-width: 280px;
+    max-width: 100%;
+    min-height: 50px;
+    max-height: 400px;
+    overflow: auto;
+}
+.Pen-previewWindow {
+    width: 100%;
+    height: 100px;
+    transition: height 0.05s;
+}
+.Pen-resizeHandle {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    display: block;
+    bottom: 0;
+    right: 0;
+    cursor: nwse-resize;
+    background: url('/_theme/img/grip.png') no-repeat;
+}

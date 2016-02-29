@@ -9,11 +9,18 @@ const doc        = $(document);
 const events     = require('./events');
 const frame      = require('./components/frame');
 const Tree       = require('./components/tree');
+const Pen        = require('./components/pen');
 
 fastclick(document.body);
+loadPens();
+
+global.fractal = {
+    events: events
+};
 
 const mainFrame = frame($('#frame'));
 const navTrees  = $.map($('[data-behaviour="tree"]'), t => new Tree(t));
+let pens        = [];
 
 doc.pjax('a[data-pjax]', '#pjax-container', {
     fragment: '#pjax-container'
@@ -22,3 +29,9 @@ doc.pjax('a[data-pjax]', '#pjax-container', {
 }).on('pjax:end', function(){
     events.trigger('main-content-loaded');
 });
+
+events.on('main-content-loaded', loadPens);
+
+function loadPens(){
+    pens = $.map($('[data-behaviour="pen"]'), p => new Pen(p));
+}

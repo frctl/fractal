@@ -1,5 +1,5 @@
 {% extends "layouts/pjax.nunj" if frctl.web.request.isPjax else "layouts/frame.nunj" %}
-{% import "helpers/document.nunj" as doc %}
+{% import "helpers/entity.nunj" as ent %}
 
 {% set path = frctl.web.request.params.path if frctl.web.request.params.path else '' %}
 {% set page = frctl.docs.find('path', path) %}
@@ -8,11 +8,11 @@
 
 {% block content %}
 
-<div class="Document">
+<div class="Entity">
 
-    {{ doc.title(page.title, null) }}
-    
-    <div class="Document-body Prose">
+    {{ ent.header(page.title, null) }}
+
+    <div class="Entity-text Prose">
 
     {% block pageContent %}
     {{ page | render }}
