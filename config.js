@@ -43,9 +43,9 @@ module.exports = {
             },
             mixed: {
                 handle: 'mixed',
-                label: "Mixed",
+                label: "Multiple",
                 description: "Contains items of differing statuses.",
-                color: "#666"
+                color: "#999"
             }
         }
     },

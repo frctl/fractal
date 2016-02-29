@@ -10,7 +10,7 @@ module.exports = class Variant {
 
     constructor(props, view, assets) {
         this.type        = 'variant';
-        this.id          = utils.md5(this.name + props.viewPath);
+        this.id          = utils.md5(props.name + props.viewPath);
         this.name        = props.name.toLowerCase();
         this.handle      = props.handle.toLowerCase();
         this.order       = props.order || 10000;
