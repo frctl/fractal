@@ -1,15 +1,15 @@
 {% extends "layouts/pjax.nunj" if frctl.web.request.isPjax else "layouts/frame.nunj" %}
-{% import "helpers/document.nunj" as doc %}
+{% import "helpers/entity.nunj" as ent %}
 
 {% set pageTitle = 'An error has occured' %}
 
 {% block content %}
 
-<div class="Document">
+<div class="Entity">
 
-    {{ doc.title(page.title, null) }}
+    {{ ent.header(page.title, null) }}
 
-    <div class="Document-body Prose">
+    <div class="Entity-text Prose">
 
     {% block pageContent %}
     {{ frctl.web.request.error.message }}

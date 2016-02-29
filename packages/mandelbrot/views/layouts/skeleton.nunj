@@ -15,14 +15,17 @@
 
 {% block page %}{% endblock %}
 
-<script src="/_theme/js/build.js"></script>
-
 {% if frctl.web.server %}
 <script src="{{ frctl.web.server.socketAddress }}/socket.io/socket.io.js"></script>
+{% endif %}
+<script src="/_theme/js/build.js"></script>
+{% if frctl.web.server %}
 <script>
 var socket = io.connect('{{ frctl.web.server.socketAddress }}');
 socket.on('changed', function (data) {
-    document.location.reload(true);
+    if (fractal) {
+        fractal.events.trigger('data-changed', data);
+    }
 });
 </script>
 {% endif %}

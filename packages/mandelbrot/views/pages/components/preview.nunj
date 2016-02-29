@@ -1,3 +1,7 @@
 {% set entity = frctl.components.find('@' + frctl.web.request.params.handle) -%}
 {% if not entity %}{% throw404 'Component not found' %}{% endif -%}
+{% if frctl.web.request.params.render == 'iframe' -%}
+{{ entity | preview | inject('<script src="/_theme/js/iframe.js"></script>') }}
+{% else -%}
 {{ entity | preview }}
+{% endif -%}

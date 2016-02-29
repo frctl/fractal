@@ -1,5 +1,0 @@
-{% macro title(title, status, kicker) %}
-<div class="Document-header">
-    <h1 class="Document-title">{{ title }}</h1>
-</div>
-{% endmacro %}

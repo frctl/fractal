@@ -12,7 +12,7 @@ html {
     width: 100%;
     position: relative;
     font-size: 16px;
-    line-height: 16/24;
+    line-height: (24/16);
 }
 
 body {
@@ -91,7 +91,7 @@ code,
 pre {
     font-family: Hack, Consolas, Monaco, 'Andale Mono', monospace;
     font-size: 14px;
-    line-height: 14/24;
+    line-height: (24/14);
 }
 
 ::-webkit-scrollbar {
@@ -139,19 +139,19 @@ h6 {
 }
 h1 {
     font-size: 28px;
-    line-height: 28/32;
+    line-height: (32/28);
 }
 h2 {
     font-size: 21px;
-    line-height: 21/24;
+    line-height: (24/21);
 }
 h3 {
     font-size: 18px;
-    line-height: 18/24;
+    line-height: (24/18);
 }
 h4,
 h5,
 h6 {
     font-size: 16px;
-    line-height: 16/24;
+    line-height: (24/16);
 }

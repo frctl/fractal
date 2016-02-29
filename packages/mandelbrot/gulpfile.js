@@ -11,15 +11,27 @@ const babel        = require('babelify');
 const autoprefixer = require('gulp-autoprefixer');
 const sassGlob     = require('gulp-sass-glob');
 const uglify       = require('gulp-uglify');
+const rename       = require('gulp-rename');
 const del          = require('del');
 
 // CSS
 
-gulp.task('js', ['clean:js'], () => compileJS());
+gulp.task('js', ['clean:js', 'copy:js'], () => {
+    compileJS()
+});
 gulp.task('js:watch', () => compileJS(true));
 
 gulp.task('clean:js', function() {
     return del(['./dist/js']);
+});
+
+gulp.task('copy:js', function() {
+    gulp.src('./node_modules/iframe-resizer/js/iframeResizer.contentWindow.min.js')
+    .pipe(rename("iframe.js"))
+    .pipe(gulp.dest('./dist/js'));
+
+    gulp.src('./node_modules/iframe-resizer/js/iframeResizer.contentWindow.map')
+    .pipe(gulp.dest('./dist/js'));
 });
 
 // CSS
@@ -83,6 +95,7 @@ gulp.task('img:watch', function () {
     gulp.watch('./assets/img/**/*', ['img']);
 });
 
+
 // Task sets
 
 gulp.task('watch', ['css:watch', 'js:watch', /* 'fonts:watch', */ 'img:watch']);
@@ -111,7 +124,7 @@ function compileJS(watch) {
             })
             .pipe(source('build.js'))
             .pipe(buffer())
-            .pipe(uglify())
+            // .pipe(uglify())
             .pipe(sourcemaps.init({loadMaps: true}))
             .pipe(sourcemaps.write('./'))
             .pipe(gulp.dest('./dist/js'));

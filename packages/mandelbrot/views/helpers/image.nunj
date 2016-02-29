@@ -1,0 +1,5 @@
+{% macro svg(name, fill='#222', width='20px', height='20px', viewbox='0 0 64 64') %}
+<svg width="{{ width }}" height="{{ height }}" viewBox="{{ viewbox }}" fill="{{ fill }}">
+{% include 'partials/svg/' + name + '.nunj' %}
+</svg>
+{% endmacro %}

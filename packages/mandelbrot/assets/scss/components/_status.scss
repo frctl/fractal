@@ -2,13 +2,6 @@
     display: flex;
     align-items: center;
 }
-.Status-label {
-    display: inline-block;
-    font-size: 13px;
-    text-transform: uppercase;
-    color: #888;
-    margin-right: 10px;
-}
 .Status-dots {
     display: flex;
     align-items: center;
@@ -22,4 +15,37 @@
     border: 1px solid transparent;
     border-radius: 100%;
     background-color: #fff;
+}
+
+.Status--tag {
+    .Status-label {
+        display: inline-block;
+        font-size: 11px;
+        text-transform: uppercase;
+        color: #fff;
+        padding: 0.15em 1.0em;
+        border-radius: 2em;
+    }
+    .Status-label + .Status-label {
+        margin-left: 5px;
+    }
+}
+
+.Status--labelled {
+    .Status-label {
+        display: inline-block;
+        font-size: 13px;
+        text-transform: uppercase;
+        color: #888;
+        margin-right: 10px;
+    }
+
+}
+
+.Status--large {
+    .Status-dot {
+        width: 14px;
+        height: 14px;
+        border: 3px solid transparent;
+    }
 }

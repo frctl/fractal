@@ -7,7 +7,9 @@
     flex-grow: 1;
     position: relative;
     flex-direction: column;
+    min-width: 280px;
     &.is-resizing {
+        cursor: grabbing;
         .Frame-body,
         .Frame-panel {
             user-select: none;
@@ -50,7 +52,6 @@
 .Frame-panel--main {
     flex-grow: 1;
     overflow: auto;
-    min-width: 270px;
     margin-left: -6px;
     position: relative;
     z-index: 1;
@@ -63,7 +64,7 @@
     width: 6px;
     border-left: 1px solid $color-alpha-tint-light;
     flex-shrink: 0;
-    cursor: grab;
+    cursor: col-resize;
     background-color: transparent;
     height: 100%;
     transition: background-color 0.2s;
