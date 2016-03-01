@@ -15,11 +15,27 @@
 }
 .Pen-header {
     flex: 0 0 auto;
+    display: flex;
     padding: 20px;
+    align-items: center;
+    .Status {
+        padding-left: 10px;
+        margin-left: auto;
+    }
 }
 .Pen-title {
     font-size: 18px;
-    font-weight: bold;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.Pen-newWindowLink {
+    position: relative;
+    top: 3px;
+    margin-left: 5px;
+    svg {
+        fill: $color-accent;
+    }
 }
 .Pen-preview {
     flex: 0 0 auto;
@@ -36,10 +52,11 @@
 }
 .Pen-handle {
     flex: 0 0 auto;
-    background-color: transparent;
     height: 20px;
     margin: 0 20px;
     cursor: ns-resize;
+    background: transparent url('/_theme/img/icon-drag--horizontal.svg') no-repeat 50% 50%;
+    background-size: 16px 3px; 
 }
 
 

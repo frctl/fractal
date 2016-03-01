@@ -51,8 +51,10 @@
     width: 20px;
     top: -1px;
     bottom: -1px;
-    right: -10px;
+    right: -20px;
     background-color: transparent;
     cursor: ew-resize;
     z-index: 100;
+    background: transparent url('/_theme/img/icon-drag--vertical.svg') no-repeat 50% 50%;
+    background-size: 3px 16px;
 }

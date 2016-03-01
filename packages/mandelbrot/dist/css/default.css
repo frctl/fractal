@@ -748,11 +748,9 @@ h6 {
   z-index: 2;
   width: 20px;
   cursor: ew-resize;
-  background-color: transparent;
   height: 100%;
-  -webkit-transition: background-color 0.2s;
-  transition: background-color 0.2s;
-  background-color: transparent; }
+  background: transparent url("/_theme/img/icon-drag--vertical.svg") no-repeat 50% 45%;
+  background-size: 3px 16px; }
 
 .Frame-inner {
   position: absolute;
@@ -787,9 +785,11 @@ h6 {
   display: block;
   background: #3366FF url("/_theme/img/icon-close-white.svg") no-repeat 50% 50%;
   background-size: 20px 20px;
+  background-color: rgba(46, 47, 51, 0.25);
   border-right: 1px solid rgba(46, 47, 51, 0.25); }
   .is-closed .Header-button {
-    background-image: url("/_theme/img/icon-menu-white.svg"); }
+    background-image: url("/_theme/img/icon-menu-white.svg");
+    background-color: transparent; }
   .Header-button span {
     display: none; }
   .Header-button:focus, .Header-button:active {
@@ -856,11 +856,31 @@ h6 {
   -webkit-flex: 0 0 auto;
       -ms-flex: 0 0 auto;
           flex: 0 0 auto;
-  padding: 20px; }
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 20px;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center; }
+  .Pen-header .Status {
+    padding-left: 10px;
+    margin-left: auto; }
 
 .Pen-title {
   font-size: 18px;
-  font-weight: bold; }
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden; }
+
+.Pen-newWindowLink {
+  position: relative;
+  top: 3px;
+  margin-left: 5px; }
+  .Pen-newWindowLink svg {
+    fill: #3366FF; }
 
 .Pen-preview {
   -webkit-box-flex: 0;
@@ -887,10 +907,11 @@ h6 {
   -webkit-flex: 0 0 auto;
       -ms-flex: 0 0 auto;
           flex: 0 0 auto;
-  background-color: transparent;
   height: 20px;
   margin: 0 20px;
-  cursor: ns-resize; }
+  cursor: ns-resize;
+  background: transparent url("/_theme/img/icon-drag--horizontal.svg") no-repeat 50% 50%;
+  background-size: 16px 3px; }
 
 .Preview {
   position: relative;
@@ -946,10 +967,12 @@ h6 {
   width: 20px;
   top: -1px;
   bottom: -1px;
-  right: -10px;
+  right: -20px;
   background-color: transparent;
   cursor: ew-resize;
-  z-index: 100; }
+  z-index: 100;
+  background: transparent url("/_theme/img/icon-drag--vertical.svg") no-repeat 50% 50%;
+  background-size: 3px 16px; }
 
 .Prose {
   font-size: 16px;

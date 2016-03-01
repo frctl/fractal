@@ -58,12 +58,11 @@
     position: relative;
     z-index: 2;
     width: 20px;
-    // border-left: 1px solid $color-alpha-tint-light;
     cursor: ew-resize;
-    background-color: transparent;
     height: 100%;
-    transition: background-color 0.2s;
-    background-color: transparent;
+    background: transparent url('/_theme/img/icon-drag--vertical.svg') no-repeat 50% 45%;
+    background-size: 3px 16px;
+
 }
 .Frame-inner {
     position: absolute;
