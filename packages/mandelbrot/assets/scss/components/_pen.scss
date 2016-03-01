@@ -16,7 +16,7 @@
 .Pen-header {
     flex: 0 0 auto;
     display: flex;
-    padding: 20px;
+    padding: 15px 20px;
     align-items: center;
     .Status {
         padding-left: 10px;
@@ -28,6 +28,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+    line-height: 1.5;
 }
 .Pen-newWindowLink {
     position: relative;
@@ -41,14 +42,8 @@
     flex: 0 0 auto;
     min-height: 150px;
     height: 50%;
-    max-height: calc(100% - 160px);
+    max-height: calc(100% - 200px);
     margin: 0 20px 0 20px;
-}
-.Pen-info {
-    margin: 0 20px 20px 20px;
-    background: $color-gamma;
-    flex: 1 1 auto;
-    overflow: scroll;
 }
 .Pen-handle {
     flex: 0 0 auto;
@@ -56,9 +51,15 @@
     margin: 0 20px;
     cursor: ns-resize;
     background: transparent url('/_theme/img/icon-drag--horizontal.svg') no-repeat 50% 50%;
-    background-size: 16px 3px; 
+    background-size: 16px 3px;
 }
-
+.Pen-info {
+    margin: 0 20px 20px 20px;
+    flex: 1 1 auto;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid $color-alpha-tint-light;
+}
 
 
 // .Pen-preview {

@@ -36,9 +36,58 @@
     <div class="Pen-handle" data-role="resize-handle"></div>
 
     <div class="Pen-panel Pen-info" data-role="info">
-        <code>
+        <div class="Browser" data-behaviour="browser" id="browser-{{ entity.id }}">
+
+            <div class="Browser-controls">
+                <ul class="Browser-tabs">
+                    <li class="Browser-tab is-active" data-role="tab">
+                        <a href="#browser-{{ entity.id }}-panel-code">{{ img.svg('icon-markup', '#666', '19px', '19px', '0 0 18 14' ) }} Code</a>
+                    </li>
+                    {% if entity.notes %}
+                    <li class="Browser-tab" data-role="tab">
+                        <a href="#browser-{{ entity.id }}-panel-notes">{{ img.svg('icon-notes', '#666', '19px', '19px' ) }} Notes</a>
+                    </li>
+                    {% endif %}
+                </ul>
+                {# <ul class="Browser-actions">
+                    <li class="Browser-action"><a href="#">collapse</a></li>
+                </ul> #}
+            </div>
+
+            <div class="Browser-panel Browser-code is-active" data-role="tab-panel" id="browser-{{ entity.id }}-panel-code">
+                <div class="Browser-codeHeader">
+                    {# <label for="">View: </label> #}
+                    <select class="Browser-fileSelector">
+                        <option value="source">Rendered Source</option>
+                        <option value="view">View Template</option>
+                        <option value="context">Context Data</option>
+                        <optgroup label="Assets">
+                            {% for asset in entity.assets().filter('isBinary', false).files().toArray() %}
+                            <option value="{{ asset.base }}">{{ asset.base }}</option>
+                            {% endfor %}
+                        </optgroup>
+                    </select>
+                </div>
+
+                <div class="Browser-files">
+                        <div class="Browser-fileContent is-active">
+                        <code class="Code Code--lang-html">
+                            <pre>{{ entity | render | highlight('html') }}</pre>
+                        </code>
+                    </div>
+                </div>
+            </div>
+
+            {% if entity.notes %}
+            <div class="Browser-panel Browser-notes Prose" data-role="tab-panel" id="browser-{{ entity.id }}-panel-notes">
+                {{ entity.notes }}
+            </div>
+            {% endif %}
+
+        </div>
+        {# <code>
             <pre>{{ entity | render | highlight('html') }}</pre>
-        </code>
+        </code> #}
     </div>
 
 </div>

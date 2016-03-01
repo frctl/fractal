@@ -16,7 +16,7 @@ class Preview {
         this._resizer        = this._el.children('[data-role="resizer"]');
         this._init();
     }
-
+    
     _init() {
         const initialWidth = storage.get(`preview.width`, this._resizer.outerWidth());
         if (initialWidth == this._el.outerWidth()) {

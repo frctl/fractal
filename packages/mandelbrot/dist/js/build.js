@@ -46,7 +46,52 @@ function loadPen() {
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"./components/frame":2,"./components/pen":3,"./components/tree":5,"./events":7,"fastclick":10,"jquery":18,"jquery-pjax":16,"jquery-resizable-dom/dist/jquery-resizable.js":17}],2:[function(require,module,exports){
+},{"./components/frame":3,"./components/pen":4,"./components/tree":6,"./events":8,"fastclick":11,"jquery":19,"jquery-pjax":17,"jquery-resizable-dom/dist/jquery-resizable.js":18}],2:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var $ = global.jQuery;
+var storage = require('../storage');
+var events = require('../events');
+
+var Browser = function () {
+    function Browser(el) {
+        _classCallCheck(this, Browser);
+
+        this._el = $(el);
+        this._tabs = this._el.find('[data-role="tab"]');
+        console.log(this._tabs);
+        this._tabPanels = this._el.find('[data-role="tab-panel"]');
+        this._initTabs();
+    }
+
+    _createClass(Browser, [{
+        key: '_initTabs',
+        value: function _initTabs() {
+            var _this = this;
+
+            this._tabs.on('click', function (e) {
+                _this._tabs.removeClass('is-active');
+                $(e.target).parent().addClass('is-active');
+                _this._tabPanels.removeClass('is-active');
+                _this._tabPanels.filter($(e.target).attr('href')).addClass('is-active');
+                return false;
+            });
+        }
+    }]);
+
+    return Browser;
+}();
+
+module.exports = Browser;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+
+},{"../events":8,"../storage":9}],3:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -196,7 +241,7 @@ module.exports = function (element) {
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"../config":6,"../events":7,"../storage":8,"../utils":9,"hammerjs":11}],3:[function(require,module,exports){
+},{"../config":7,"../events":8,"../storage":9,"../utils":10,"hammerjs":12}],4:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -208,6 +253,7 @@ var $ = global.jQuery;
 var storage = require('../storage');
 var events = require('../events');
 var Preview = require('./preview');
+var Browser = require('./browser');
 var resizeable = require('jquery-resizable-dom/dist/jquery-resizable.js');
 
 var Pen = function () {
@@ -217,6 +263,7 @@ var Pen = function () {
         this._el = $(el);
         this._id = this._el[0].id;
         this._previewPanel = this._el.find('[data-behaviour="preview"]');
+        this._browser = this._el.find('[data-behaviour="browser"]');
         this._handle = this._el.children('[data-role="resize-handle"]');
         this._init();
     }
@@ -227,8 +274,10 @@ var Pen = function () {
             var _this = this;
 
             var initialHeight = storage.get('pen.previewHeight', this._previewPanel.outerHeight());
-            this._previewPanel.outerHeight(initialHeight);
             var preview = new Preview(this._previewPanel);
+            var browser = new Browser(this._browser);
+
+            this._previewPanel.outerHeight(initialHeight);
 
             this._previewPanel.resizable({
                 handleSelector: this._handle,
@@ -255,7 +304,7 @@ module.exports = Pen;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"../events":7,"../storage":8,"./preview":4,"jquery-resizable-dom/dist/jquery-resizable.js":17}],4:[function(require,module,exports){
+},{"../events":8,"../storage":9,"./browser":2,"./preview":5,"jquery-resizable-dom/dist/jquery-resizable.js":18}],5:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -330,7 +379,7 @@ module.exports = Preview;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"../events":7,"../storage":8,"iframe-resizer":12,"jquery-resizable-dom/dist/jquery-resizable.js":17}],5:[function(require,module,exports){
+},{"../events":8,"../storage":9,"iframe-resizer":13,"jquery-resizable-dom/dist/jquery-resizable.js":18}],6:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -505,7 +554,7 @@ module.exports = Tree;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"../events":7,"../storage":8}],6:[function(require,module,exports){
+},{"../events":8,"../storage":9}],7:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -516,7 +565,7 @@ module.exports = {
 
 };
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -524,7 +573,7 @@ module.exports = global.jQuery({});
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -537,7 +586,7 @@ module.exports = {
     }
 };
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -558,7 +607,7 @@ module.exports = {
     }
 };
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 ;(function () {
 	'use strict';
 
@@ -1401,7 +1450,7 @@ module.exports = {
 	}
 }());
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 /*! Hammer.JS - v2.0.6 - 2015-12-23
  * http://hammerjs.github.io/
  *
@@ -3971,13 +4020,13 @@ if (typeof define === 'function' && define.amd) {
 
 })(window, document, 'Hammer');
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 
 'use strict';
 
 module.exports = require('./js');
 
-},{"./js":15}],13:[function(require,module,exports){
+},{"./js":16}],14:[function(require,module,exports){
 /*
  * File: iframeResizer.contentWindow.js
  * Desc: Include this file in any page being loaded into an iframe
@@ -5047,7 +5096,7 @@ module.exports = require('./js');
 
 })(window || {});
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 /*
  * File: iframeResizer.js
  * Desc: Force iframes to size to content.
@@ -6045,11 +6094,11 @@ module.exports = require('./js');
 
 })(window || {});
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 exports.iframeResizer = require('./iframeResizer');
 exports.iframeResizerContentWindow = require('./iframeResizer.contentWindow');
 
-},{"./iframeResizer":14,"./iframeResizer.contentWindow":13}],16:[function(require,module,exports){
+},{"./iframeResizer":15,"./iframeResizer.contentWindow":14}],17:[function(require,module,exports){
 /*!
  * Copyright 2012, Chris Wanstrath
  * Released under the MIT License
@@ -6976,7 +7025,7 @@ $.support.pjax ? enable() : disable()
 
 })(jQuery);
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 /// <reference path="jquery.js" />
 /*
 jquery-resizable
@@ -7106,7 +7155,7 @@ Licensed under MIT License
         });
     };
 })(jQuery,undefined);
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v2.2.1
  * http://jquery.com/
