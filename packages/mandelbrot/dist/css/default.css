@@ -692,6 +692,9 @@ h6 {
     .Browser-tab.is-active a:link, .Browser-tab.is-active a:visited, .Browser-tab.is-active a:hover, .Browser-tab.is-active a:active {
       color: #2e3038;
       text-decoration: none; }
+  .Browser-tab.is-disabled a {
+    opacity: 0.6;
+    font-weight: normal; }
 
 .Browser-actions {
   margin-left: auto;
@@ -762,6 +765,10 @@ h6 {
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex; }
+
+.Browser-isEmptyNote {
+  font-style: italic;
+  color: #999; }
 
 .Code {
   display: block;

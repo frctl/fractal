@@ -43,11 +43,9 @@
                     <li class="Browser-tab is-active" data-role="tab">
                         <a href="#browser-{{ entity.id }}-panel-code">{{ img.svg('icon-markup', '#666', '19px', '19px', '0 0 18 14' ) }} Code</a>
                     </li>
-                    {% if entity.notes %}
-                    <li class="Browser-tab" data-role="tab">
+                    <li class="Browser-tab {% if not entity.notes %} is-disabled{% endif %}" data-role="tab">
                         <a href="#browser-{{ entity.id }}-panel-notes">{{ img.svg('icon-notes', '#666', '19px', '19px' ) }} Notes</a>
                     </li>
-                    {% endif %}
                 </ul>
                 {# <ul class="Browser-actions">
                     <li class="Browser-action"><a href="#">collapse</a></li>
@@ -78,11 +76,14 @@
                 </div>
             </div>
 
-            {% if entity.notes %}
+
             <div class="Browser-panel Browser-notes Prose" data-role="tab-panel" id="browser-{{ entity.id }}-panel-notes">
+                {% if entity.notes %}
                 {{ entity.notes }}
+                {% else %}
+                <p class="Browser-isEmptyNote">There are no notes for this item.</p>
+                {% endif %}
             </div>
-            {% endif %}
 
         </div>
         {# <code>
