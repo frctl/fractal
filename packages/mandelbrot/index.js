@@ -37,8 +37,8 @@ module.exports = function(config){
         redirect: '/'
     });
 
-    this.route('/components/:render(preview|iframe)/:handle', {
-        handle: 'render',
+    this.route('/components/preview/:handle', {
+        handle: 'preview',
         view: 'pages/components/preview.nunj'
     });
 
@@ -59,13 +59,13 @@ module.exports = function(config){
 
         for (let comp of components.flatten()) {
             if (!comp.isHidden){
-                // builder.addRoute('render', {render:'iframe', 'handle':comp.handle});
-                // builder.addRoute('render', {render:'preview', 'handle':comp.handle});
+                // builder.addRoute('preview', {preview:'iframe', 'handle':comp.handle});
+                // builder.addRoute('preview', {preview:'preview', 'handle':comp.handle});
                 builder.addRoute('component', {'handle':comp.handle});
             }
             // for (let variant of comp.variants()) {
-            //     builder.addRoute('render', {render:'preview', 'handle':variant.handle});
-            //     builder.addRoute('render', {render:'iframe', 'handle':variant.handle});
+            //     builder.addRoute('preview', {preview:'preview', 'handle':variant.handle});
+            //     builder.addRoute('preview', {preview:'iframe', 'handle':variant.handle});
             // }
         }
 

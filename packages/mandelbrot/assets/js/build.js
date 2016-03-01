@@ -11,8 +11,10 @@ const frame      = require('./components/frame');
 const Tree       = require('./components/tree');
 const Pen        = require('./components/pen');
 
+const resizeable = require('jquery-resizable-dom/dist/jquery-resizable.js');
+
 fastclick(document.body);
-loadPens();
+loadPen();
 
 global.fractal = {
     events: events
@@ -30,8 +32,8 @@ doc.pjax('a[data-pjax]', '#pjax-container', {
     events.trigger('main-content-loaded');
 });
 
-events.on('main-content-loaded', loadPens);
+events.on('main-content-loaded', loadPen);
 
-function loadPens(){
+function loadPen(){
     pens = $.map($('[data-behaviour="pen"]'), p => new Pen(p));
 }

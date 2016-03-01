@@ -3,37 +3,45 @@
 const $          = global.jQuery;
 const storage    = require('../storage');
 const events     = require('../events');
-const Preview    = require('./preview');
+const ifr        = require('iframe-resizer');
 const resizeable = require('jquery-resizable-dom/dist/jquery-resizable.js');
 
-class Pen {
+class Preview {
 
     constructor(el){
         this._el             = $(el);
         this._id             = this._el[0].id;
-        this._previewPanel   = this._el.find('[data-behaviour="preview"]');
-        this._handleSelector = `#${this._id} > [data-role="resize-handle"]`;
+        this._handleSelector = `#${this._id} [data-role="resize-handle"]`;
         this._handle         = $(this._handleSelector);
+        this._iframe         = this._el.find('[data-role="window"]');
+        this._resizer        = this._el.find('[data-role="resizer"]');
         this._init();
     }
 
     _init() {
-        const preview = new Preview(this._previewPanel);
-        this._previewPanel.resizable({
+        this._resizer.resizable({
             handleSelector: this._handleSelector,
-            resizeWidth: false,
+            resizeHeight: false,
             onDragStart: () => {
                 this._el.addClass('is-resizing');
-                preview.disableEvents();
+                this.disableEvents();
                 events.trigger('start-dragging');
             },
             onDragEnd: () => {
                 this._el.removeClass('is-resizing');
-                preview.enableEvents();
+                this.enableEvents();
                 events.trigger('end-dragging');
             },
         });
     }
+
+    disableEvents() {
+        this._el.addClass('is-disabled');
+    }
+
+    enableEvents() {
+        this._el.removeClass('is-disabled');
+    }
 }
 
-module.exports = Pen;
+module.exports = Preview;

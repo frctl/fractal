@@ -1,33 +1,17 @@
-.Entity {
+.Document {
     padding: 30px;
 }
-.Entity-header {
-    margin-bottom: 1.2em;
-    .Status {
-        margin-left: auto;
-    }
-}
-.Entity-headerMain {
+.Document-header {
     display: flex;
     width: 100%;
     padding-bottom: 10px;
     border-bottom: 1px solid $color-alpha-tint-light;
-    margin-bottom: 0;
+    margin-bottom: 1.2em;
 }
-.Entity-headerTitle {
+
+.Document-title {
     margin: 0;
     font-size: 28px;
-}
-.Entity-headerSubText {
-    margin: 5px 0 0 0;
-    font-size: 14px;
-    line-height: (22/14);
-    a {
-        @include link-default($color-accent, none);
-        &:hover {
-            text-decoration: underline;
-        }
-    }
 }
 
 
