@@ -41,6 +41,12 @@
         @include link-default($color-alpha, none);
         border-bottom: 2px solid $color-beta;
     }
+    &.is-disabled {
+        a {
+            opacity: 0.6;
+            font-weight: normal;
+        }
+    }
 }
 .Browser-actions {
     margin-left: auto;
@@ -98,4 +104,8 @@
     // height: 100%;
     // overflow: auto;
     // padding: 10px 15px;
+}
+.Browser-isEmptyNote {
+    font-style: italic;
+    color: #999;
 }
