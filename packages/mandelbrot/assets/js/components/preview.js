@@ -11,16 +11,21 @@ class Preview {
     constructor(el){
         this._el             = $(el);
         this._id             = this._el[0].id;
-        this._handleSelector = `#${this._id} [data-role="resize-handle"]`;
-        this._handle         = $(this._handleSelector);
-        this._iframe         = this._el.find('[data-role="window"]');
-        this._resizer        = this._el.find('[data-role="resizer"]');
+        this._handle         = this._el.find('[data-role="resize-handle"]');
+        this._iframe         = this._el.children('[data-role="window"]');
+        this._resizer        = this._el.children('[data-role="resizer"]');
         this._init();
     }
 
     _init() {
+        const initialWidth = storage.get(`preview.width`, this._resizer.outerWidth());
+        if (initialWidth == this._el.outerWidth()) {
+            this._resizer.css('width', '100%');
+        } else {
+            this._resizer.outerWidth(initialWidth);
+        }
         this._resizer.resizable({
-            handleSelector: this._handleSelector,
+            handleSelector: this._handle,
             resizeHeight: false,
             onDragStart: () => {
                 this._el.addClass('is-resizing');
@@ -28,9 +33,14 @@ class Preview {
                 events.trigger('start-dragging');
             },
             onDragEnd: () => {
+                if (this._resizer.outerWidth() == this._el.outerWidth()) {
+                    this._resizer.css('width', '100%');
+                }
+                storage.set(`preview.width`, this._resizer.outerWidth());
                 this._el.removeClass('is-resizing');
                 this.enableEvents();
                 events.trigger('end-dragging');
+
             },
         });
     }
