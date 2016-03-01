@@ -61,124 +61,80 @@ delete Hammer.defaults.cssProps.userSelect;
 
 module.exports = function (element) {
 
-    var el = $(element);
-    var id = el[0].id;
-    var header = el.children('[data-role="header"]').first();
-    var body = el.children('[data-role="body"]').first();
-    var sidebar = body.children('[data-role="sidebar"]').first();
-    var main = body.children('[data-role="main"]').first();
-    var gutter = body.children('[data-role="gutter"]').first();
-    var toggle = el.find('[data-action="toggle-sidebar"]');
-    var gutterSize = gutter.width();
     var win = $(window);
     var doc = $(document);
-    var panels = main.add(sidebar);
-    var sidebarMax = parseInt(sidebar.css('max-width'), 10);
+    var el = $(element);
+    var id = el[0].id;
+    var header = el.find('> [data-role="header"]');
+    var body = el.find('> [data-role="body"]');
+    var toggle = el.find('[data-action="toggle-sidebar"]');
+    var sidebar = body.children('[data-role="sidebar"]');
+    var main = body.children('[data-role="main"]');
+    var handle = body.children('[data-role="frame-resize-handle"]');
     var sidebarMin = parseInt(sidebar.css('min-width'), 10);
-    var defWidth = Math.max(sidebarMin, sidebar.width());
-    var touch = new Hammer(body[0]);
-    var scrollPos = storage.get('frame.' + id + '.scrollPos', 0);
-    var sidebarState = doc.width() < config.breakpoints.navCollapse ? 'closed' : storage.get('frame.' + id + '.state', 'open');
-    var sidebarWidth = doc.width() < config.breakpoints.navCollapse ? 230 : storage.get('frame.' + id + '.sidebar', defWidth);
-    var start = null;
-    var lastStart = null;
-    var docWidth = null;
-    var isDragging = false;
+
+    var sidebarWidth = isSmallScreen() ? sidebarMin : storage.get('frame.sidebar', sidebar.outerWidth());
+    var sidebarState = isSmallScreen() ? 'closed' : storage.get('frame.state', 'open');
+    var scrollPos = storage.get('frame.scrollPos', 0);
     var dragOccuring = false;
-    var initialClose = false;
+    var isInitialClose = false;
 
-    touch.get('swipe').set({ direction: Hammer.DIRECTION_HORIZONTAL });
+    sidebar.outerWidth(sidebarWidth);
 
-    sidebar.width(sidebarWidth);
     if (sidebarState === 'closed') {
-        initialClose = true;
+        isInitialClose = true;
         closeSidebar();
     }
 
     sidebar.scrollTop(scrollPos);
 
-    sidebar.on('scroll', utils.debounce(function (e) {
-        scrollPos = sidebar.scrollTop();
-        storage.set('frame.' + id + '.scrollPos', scrollPos);
-    }, 50));
-
-    gutter.on('dblclick', function (e) {
-        return setSidebarWidth(defWidth);
-    });
-    gutter.on('mousedown', startDrag);
-
-    win.on('mouseup touchend touchcancel', stopDrag);
-    win.on('resize', function () {
-        if (sidebarState == 'open' && doc.width() < sidebarWidth + 50) {
-            setSidebarWidth(doc.width() - 50);
+    sidebar.resizable({
+        handleSelector: handle,
+        resizeHeight: false,
+        onDragStart: function onDragStart(e) {
+            el.addClass('is-resizing');
+            events.trigger('start-dragging');
+        },
+        onDragEnd: function onDragEnd(e) {
+            setSidebarWidth(sidebar.outerWidth());
+            el.removeClass('is-resizing');
+            events.trigger('end-dragging');
         }
     });
 
-    toggle.on('click', toggleSidebar);
-    events.on('toggle-sidebar', toggleSidebar);
+    sidebar.on('scroll', utils.debounce(function (e) {
+        storage.set('frame.scrollPos', sidebar.scrollTop());
+    }, 50));
 
-    events.on('start-dragging', function () {
-        dragOccuring = true;
+    toggle.on('click', toggleSidebar);
+
+    win.on('resize', function () {
+        if (sidebarState == 'open' && doc.outerWidth() < sidebarWidth + 50) {
+            setSidebarWidth(doc.outerWidth() - 50);
+        }
     });
 
+    // Global event listeners
+
+    events.on('toggle-sidebar', toggleSidebar);
+    events.on('start-dragging', function (e) {
+        return dragOccuring = true;
+    });
     events.on('end-dragging', function () {
         setTimeout(function () {
             dragOccuring = false;
         }, 200);
     });
 
-    touch.on('swipeleft', closeSidebar);
-    touch.on('swiperight', openSidebar);
-
     events.on('data-changed', function () {
         // TODO: make this smarter?
         document.location.reload(true);
     });
 
-    function move(event) {
-        var dragWidth = Math.min(sidebarMax, sidebarWidth + event.pageX - start);
-        var spWidth = Math.min(100, Math.max(0, dragWidth / docWidth * 100));
-        var mpWidth = 100 - spWidth;
-        sidebar.css('width', 'calc(' + spWidth + '% - ' + gutterSize / 2 + 'px)');
-        main.css('width', 'calc(' + mpWidth + '% - ' + gutterSize / 2 + 'px)');
-    };
-
-    function startDrag(event) {
-        if (isDragging) return;
-        start = event.pageX;
-        lastStart = start;
-        isDragging = true;
-        docWidth = doc.width();
-        el.addClass('is-resizing');
-        panels.on('selectstart dragstart', stopSelect);
-        win.on('mousemove touchmove', move);
-    };
-
-    function stopDrag() {
-        if (!isDragging) return;
-        win.off('mousemove touchmove', move);
-        panels.off('selectstart dragstart', stopSelect);
-        setSidebarWidth(sidebar.width());
-        main.width('');
-        start = null;
-        isDragging = false;
-        el.removeClass('is-resizing');
-    };
-
-    function stopSelect() {
-        return false;
-    }
-
-    function setSidebarWidth(width) {
-        sidebarWidth = width;
-        sidebar.width(width);
-        storage.set('frame.' + id + '.sidebar', width);
-    }
-
     function closeSidebar() {
-        if (dragOccuring || initialClose && sidebarState == 'closed') return;
-        var w = sidebar.width();
-        if (initialClose) {
+        if (dragOccuring || !isInitialClose && sidebarState == 'closed') return;
+        var w = sidebar.outerWidth() - handle.outerWidth();
+        if (isInitialClose) {
             body.css({
                 transition: 'none',
                 marginRight: -1 * w + 'px',
@@ -191,16 +147,16 @@ module.exports = function (element) {
                 transform: 'translate3d(' + -1 * w + 'px, 0, 0)'
             });
         }
-        gutter.hide();
+        handle.hide();
         sidebarState = 'closed';
         el.addClass('is-closed');
-        storage.set('frame.' + id + '.state', sidebarState);
-        initialClose = false;
+        storage.set('frame.state', sidebarState);
+        isInitialClose = false;
     }
 
     function openSidebar() {
         if (dragOccuring || sidebarState == 'open') return;
-        if (doc.width() < config.breakpoints.navCollapse) {
+        if (isSmallScreen()) {
             setSidebarWidth(sidebarMin);
         }
         body.css({
@@ -208,15 +164,25 @@ module.exports = function (element) {
             transition: '.3s ease all',
             transform: 'translate3d(0, 0, 0)'
         });
-        gutter.show();
+        handle.show();
         sidebarState = 'open';
         el.removeClass('is-closed');
-        storage.set('frame.' + id + '.state', sidebarState);
+        storage.set('frame.state', sidebarState);
     }
 
     function toggleSidebar() {
         sidebarState == 'open' ? closeSidebar() : openSidebar();
         return false;
+    }
+
+    function isSmallScreen() {
+        return doc.width() < config.breakpoints.navCollapse;
+    }
+
+    function setSidebarWidth(width) {
+        sidebarWidth = width;
+        sidebar.outerWidth(width);
+        storage.set('frame.sidebar', width);
     }
 };
 
@@ -243,8 +209,7 @@ var Pen = function () {
         this._el = $(el);
         this._id = this._el[0].id;
         this._previewPanel = this._el.find('[data-behaviour="preview"]');
-        this._handleSelector = '#' + this._id + ' > [data-role="resize-handle"]';
-        this._handle = $(this._handleSelector);
+        this._handle = this._el.children('[data-role="resize-handle"]');
         this._init();
     }
 
@@ -253,9 +218,12 @@ var Pen = function () {
         value: function _init() {
             var _this = this;
 
+            var initialHeight = storage.get('pen.previewHeight', this._previewPanel.outerHeight());
+            this._previewPanel.outerHeight(initialHeight);
             var preview = new Preview(this._previewPanel);
+
             this._previewPanel.resizable({
-                handleSelector: this._handleSelector,
+                handleSelector: this._handle,
                 resizeWidth: false,
                 onDragStart: function onDragStart() {
                     _this._el.addClass('is-resizing');
@@ -266,6 +234,7 @@ var Pen = function () {
                     _this._el.removeClass('is-resizing');
                     preview.enableEvents();
                     events.trigger('end-dragging');
+                    storage.set('pen.previewHeight', _this._previewPanel.outerHeight());
                 }
             });
         }
@@ -298,10 +267,9 @@ var Preview = function () {
 
         this._el = $(el);
         this._id = this._el[0].id;
-        this._handleSelector = '#' + this._id + ' [data-role="resize-handle"]';
-        this._handle = $(this._handleSelector);
-        this._iframe = this._el.find('[data-role="window"]');
-        this._resizer = this._el.find('[data-role="resizer"]');
+        this._handle = this._el.find('[data-role="resize-handle"]');
+        this._iframe = this._el.children('[data-role="window"]');
+        this._resizer = this._el.children('[data-role="resizer"]');
         this._init();
     }
 
@@ -310,8 +278,14 @@ var Preview = function () {
         value: function _init() {
             var _this = this;
 
+            var initialWidth = storage.get('preview.width', this._resizer.outerWidth());
+            if (initialWidth == this._el.outerWidth()) {
+                this._resizer.css('width', '100%');
+            } else {
+                this._resizer.outerWidth(initialWidth);
+            }
             this._resizer.resizable({
-                handleSelector: this._handleSelector,
+                handleSelector: this._handle,
                 resizeHeight: false,
                 onDragStart: function onDragStart() {
                     _this._el.addClass('is-resizing');
@@ -319,6 +293,10 @@ var Preview = function () {
                     events.trigger('start-dragging');
                 },
                 onDragEnd: function onDragEnd() {
+                    if (_this._resizer.outerWidth() == _this._el.outerWidth()) {
+                        _this._resizer.css('width', '100%');
+                    }
+                    storage.set('preview.width', _this._resizer.outerWidth());
                     _this._el.removeClass('is-resizing');
                     _this.enableEvents();
                     events.trigger('end-dragging');

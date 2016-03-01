@@ -17,7 +17,6 @@
         }
     }
 }
-
 .Frame-header {
     float: left;
     width: 100%;
@@ -25,51 +24,47 @@
     flex-shrink: 0;
     height: 50px;
 }
-
 .Frame-body {
     display: flex;
     flex-direction: row-reverse;
     flex-grow: 1;
     height: 100%;
 }
-
 .Frame-panel {
     height: calc(100% - 50px);
     overflow: auto;
     position: relative;
     -webkit-overflow-scrolling: touch;
 }
-
 .Frame-panel--sidebar {
-    flex-shrink: 0;
+    flex: 0 0 auto;
     background-color: $color-gamma;
     width: 230px;
     min-width: 230px;
     max-width: 400px;
     padding: 25px 0 40px 0;
+    border-right: 1px solid $color-alpha-tint-light;
 }
-
 .Frame-panel--main {
-    flex-grow: 1;
+    flex: 1 1 auto;
     overflow: auto;
     margin-left: -20px;
     position: relative;
     z-index: 1;
     padding-bottom: 1px;
 }
-
-.Frame-gutter {
+.Frame-handle {
+    flex: 0 0 auto;
     position: relative;
     z-index: 2;
     width: 20px;
-    border-left: 1px solid $color-alpha-tint-light;
-    flex-shrink: 0;
+    // border-left: 1px solid $color-alpha-tint-light;
     cursor: ew-resize;
     background-color: transparent;
     height: 100%;
     transition: background-color 0.2s;
+    background-color: transparent;
 }
-
 .Frame-inner {
     position: absolute;
     height: 100%;

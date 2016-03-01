@@ -12,15 +12,18 @@ class Pen {
         this._el             = $(el);
         this._id             = this._el[0].id;
         this._previewPanel   = this._el.find('[data-behaviour="preview"]');
-        this._handleSelector = `#${this._id} > [data-role="resize-handle"]`;
-        this._handle         = $(this._handleSelector);
+        this._handle         = this._el.children('[data-role="resize-handle"]');
         this._init();
     }
 
     _init() {
+        const initialHeight = storage.get(`pen.previewHeight`, this._previewPanel.outerHeight());
+        this._previewPanel.outerHeight(initialHeight);
         const preview = new Preview(this._previewPanel);
+
+
         this._previewPanel.resizable({
-            handleSelector: this._handleSelector,
+            handleSelector: this._handle,
             resizeWidth: false,
             onDragStart: () => {
                 this._el.addClass('is-resizing');
@@ -31,6 +34,7 @@ class Pen {
                 this._el.removeClass('is-resizing');
                 preview.enableEvents();
                 events.trigger('end-dragging');
+                storage.set(`pen.previewHeight`, this._previewPanel.outerHeight());
             },
         });
     }

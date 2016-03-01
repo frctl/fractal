@@ -717,39 +717,42 @@ h6 {
   -webkit-overflow-scrolling: touch; }
 
 .Frame-panel--sidebar {
-  -webkit-flex-shrink: 0;
-      -ms-flex-negative: 0;
-          flex-shrink: 0;
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 auto;
+      -ms-flex: 0 0 auto;
+          flex: 0 0 auto;
   background-color: #f8f7f7;
   width: 230px;
   min-width: 230px;
   max-width: 400px;
-  padding: 25px 0 40px 0; }
+  padding: 25px 0 40px 0;
+  border-right: 1px solid rgba(56, 50, 46, 0.25); }
 
 .Frame-panel--main {
   -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-      -ms-flex-positive: 1;
-          flex-grow: 1;
+  -webkit-flex: 1 1 auto;
+      -ms-flex: 1 1 auto;
+          flex: 1 1 auto;
   overflow: auto;
   margin-left: -20px;
   position: relative;
   z-index: 1;
   padding-bottom: 1px; }
 
-.Frame-gutter {
+.Frame-handle {
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 auto;
+      -ms-flex: 0 0 auto;
+          flex: 0 0 auto;
   position: relative;
   z-index: 2;
   width: 20px;
-  border-left: 1px solid rgba(56, 50, 46, 0.25);
-  -webkit-flex-shrink: 0;
-      -ms-flex-negative: 0;
-          flex-shrink: 0;
   cursor: ew-resize;
   background-color: transparent;
   height: 100%;
   -webkit-transition: background-color 0.2s;
-  transition: background-color 0.2s; }
+  transition: background-color 0.2s;
+  background-color: transparent; }
 
 .Frame-inner {
   position: absolute;
@@ -865,6 +868,9 @@ h6 {
       -ms-flex: 0 0 auto;
           flex: 0 0 auto;
   min-height: 150px;
+  height: 50%;
+  max-height: -webkit-calc(100% - 160px);
+  max-height: calc(100% - 160px);
   margin: 0 20px 0 20px; }
 
 .Pen-info {

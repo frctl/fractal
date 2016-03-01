@@ -11,122 +11,78 @@ delete Hammer.defaults.cssProps.userSelect;
 
 module.exports = function(element){
 
-    const el         = $(element);
-    const id         = el[0].id;
-    const header     = el.children('[data-role="header"]').first();
-    const body       = el.children('[data-role="body"]').first();
-    const sidebar    = body.children('[data-role="sidebar"]').first();
-    const main       = body.children('[data-role="main"]').first();
-    const gutter     = body.children('[data-role="gutter"]').first();
-    const toggle     = el.find('[data-action="toggle-sidebar"]');
-    const gutterSize = gutter.width();
-    const win        = $(window);
-    const doc        = $(document);
-    const panels     = main.add(sidebar);
-    const sidebarMax = parseInt(sidebar.css('max-width'), 10);
-    const sidebarMin = parseInt(sidebar.css('min-width'), 10);
-    const defWidth   = Math.max(sidebarMin, sidebar.width());
-    const touch      = new Hammer(body[0]);
-    let scrollPos    = storage.get(`frame.${id}.scrollPos`, 0);
-    let sidebarState = (doc.width() < config.breakpoints.navCollapse) ? 'closed' : storage.get(`frame.${id}.state`, 'open');
-    let sidebarWidth = (doc.width() < config.breakpoints.navCollapse) ? 230 : storage.get(`frame.${id}.sidebar`, defWidth);
-    let start        = null;
-    let lastStart    = null;
-    let docWidth     = null;
-    let isDragging   = false;
-    let dragOccuring = false;
-    let initialClose = false;
+    const win          = $(window);
+    const doc          = $(document);
+    const el           = $(element);
+    const id           = el[0].id;
+    const header       = el.find('> [data-role="header"]');
+    const body         = el.find('> [data-role="body"]');
+    const toggle       = el.find('[data-action="toggle-sidebar"]');
+    const sidebar      = body.children('[data-role="sidebar"]');
+    const main         = body.children('[data-role="main"]');
+    const handle       = body.children('[data-role="frame-resize-handle"]');
+    const sidebarMin   = parseInt(sidebar.css('min-width'), 10);
 
-    touch.get('swipe').set({ direction: Hammer.DIRECTION_HORIZONTAL });
+    let sidebarWidth   = isSmallScreen() ? sidebarMin : storage.get(`frame.sidebar`, sidebar.outerWidth());
+    let sidebarState   = isSmallScreen() ? 'closed' : storage.get(`frame.state`, 'open');
+    let scrollPos      = storage.get(`frame.scrollPos`, 0);
+    let dragOccuring   = false;
+    let isInitialClose = false;
 
-    sidebar.width(sidebarWidth);
+    sidebar.outerWidth(sidebarWidth);
+
     if (sidebarState === 'closed') {
-        initialClose = true;
+        isInitialClose = true;
         closeSidebar();
     }
 
     sidebar.scrollTop(scrollPos);
 
+    sidebar.resizable({
+        handleSelector: handle,
+        resizeHeight: false,
+        onDragStart: e => {
+            el.addClass('is-resizing');
+            events.trigger('start-dragging');
+        },
+        onDragEnd: e => {
+            setSidebarWidth(sidebar.outerWidth());
+            el.removeClass('is-resizing');
+            events.trigger('end-dragging');
+        },
+    });
+
     sidebar.on('scroll', utils.debounce((e) => {
-        scrollPos = sidebar.scrollTop();
-        storage.set(`frame.${id}.scrollPos`, scrollPos);
+        storage.set(`frame.scrollPos`, sidebar.scrollTop());
     }, 50));
 
-    gutter.on('dblclick', e => setSidebarWidth(defWidth));
-    gutter.on('mousedown', startDrag);
+    toggle.on('click', toggleSidebar);
 
-    win.on('mouseup touchend touchcancel', stopDrag);
     win.on('resize', () => {
-        if (sidebarState == 'open' && doc.width() < sidebarWidth + 50) {
-            setSidebarWidth(doc.width() - 50);
+        if (sidebarState == 'open' && doc.outerWidth() < sidebarWidth + 50) {
+            setSidebarWidth(doc.outerWidth() - 50);
         }
     });
 
-    toggle.on('click', toggleSidebar);
+    // Global event listeners
+
     events.on('toggle-sidebar', toggleSidebar);
-
-    events.on('start-dragging', function(){
-        dragOccuring = true;
-    });
-
+    events.on('start-dragging', e => (dragOccuring = true));
     events.on('end-dragging', function(){
         setTimeout(function(){
             dragOccuring = false;
         }, 200);
     });
 
-    touch.on('swipeleft', closeSidebar);
-    touch.on('swiperight', openSidebar);
-
     events.on('data-changed', function(){
         // TODO: make this smarter?
         document.location.reload(true);
     });
 
-    function move(event) {
-        let dragWidth = Math.min(sidebarMax, sidebarWidth + event.pageX - start);
-        let spWidth   = Math.min(100, Math.max(0, (dragWidth / docWidth) * 100));
-        let mpWidth   = 100 - spWidth;
-        sidebar.css('width', `calc(${spWidth}% - ${gutterSize / 2}px)`);
-        main.css('width', `calc(${mpWidth}% - ${gutterSize / 2}px)`);
-    };
-
-    function startDrag(event){
-        if (isDragging) return;
-        start      = event.pageX;
-        lastStart  = start;
-        isDragging = true;
-        docWidth   = doc.width();
-        el.addClass('is-resizing');
-        panels.on('selectstart dragstart', stopSelect);
-        win.on('mousemove touchmove', move);
-    };
-
-    function stopDrag(){
-        if (!isDragging) return;
-        win.off('mousemove touchmove', move);
-        panels.off('selectstart dragstart', stopSelect);
-        setSidebarWidth(sidebar.width());
-        main.width('');
-        start      = null;
-        isDragging = false;
-        el.removeClass('is-resizing');
-    };
-
-    function stopSelect(){
-        return false;
-    }
-
-    function setSidebarWidth(width){
-        sidebarWidth = width;
-        sidebar.width(width);
-        storage.set(`frame.${id}.sidebar`, width);
-    }
-
     function closeSidebar(){
-        if (dragOccuring || (initialClose && sidebarState == 'closed')) return;
-        const w = sidebar.width();
-        if (initialClose) {
+        if (dragOccuring || (!isInitialClose && sidebarState == 'closed')) return;
+        const w = sidebar.outerWidth() - handle.outerWidth();
+        if (isInitialClose) {
             body.css({
                 transition: 'none',
                 marginRight: (-1 * w) + 'px',
@@ -139,16 +95,16 @@ module.exports = function(element){
                 transform: `translate3d(${(-1 * w)}px, 0, 0)`
             });
         }
-        gutter.hide();
+        handle.hide();
         sidebarState = 'closed';
         el.addClass('is-closed');
-        storage.set(`frame.${id}.state`, sidebarState);
-        initialClose = false;
+        storage.set(`frame.state`, sidebarState);
+        isInitialClose = false;
     }
 
     function openSidebar(){
         if (dragOccuring || sidebarState == 'open') return;
-        if (doc.width() < config.breakpoints.navCollapse) {
+        if (isSmallScreen()) {
             setSidebarWidth(sidebarMin);
         }
         body.css({
@@ -156,14 +112,24 @@ module.exports = function(element){
             transition: '.3s ease all',
             transform: `translate3d(0, 0, 0)`
         });
-        gutter.show();
+        handle.show();
         sidebarState = 'open';
         el.removeClass('is-closed');
-        storage.set(`frame.${id}.state`, sidebarState);
+        storage.set(`frame.state`, sidebarState);
     }
 
     function toggleSidebar(){
         sidebarState == 'open' ? closeSidebar() : openSidebar();
         return false;
+    }
+
+    function isSmallScreen() {
+        return doc.width() < config.breakpoints.navCollapse;
+    }
+
+    function setSidebarWidth(width){
+        sidebarWidth = width;
+        sidebar.outerWidth(width);
+        storage.set(`frame.sidebar`, width);
     }
 };

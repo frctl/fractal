@@ -24,6 +24,8 @@
 .Pen-preview {
     flex: 0 0 auto;
     min-height: 150px;
+    height: 50%;
+    max-height: calc(100% - 160px);
     margin: 0 20px 0 20px;
 }
 .Pen-info {
