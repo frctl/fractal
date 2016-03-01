@@ -1,187 +1,57 @@
 {% extends "layouts/pjax.nunj" if frctl.web.request.isPjax else "layouts/frame.nunj" %}
-{% import "helpers/entity.nunj" as ent %}
 {% import "helpers/image.nunj" as img %}
 
-{% set component = frctl.components.find('handle', frctl.web.request.params.handle) %}
-{% if not component or not component.type == 'component' or component.isHidden %}{% throw404 'Component not found' %}{% endif %}
+{% set entity = frctl.components.find('@' + frctl.web.request.params.handle) %}
+{% if not entity or entity.isHidden %}{% throw404 'Item not found' %}{% endif %}
 
-{% set pageTitle   = component.title %}
-{% set previewUrl  = frctl.web.theme.urlFromRoute('render', {render:'preview', handle: component.handle}) %}
-{% set variants    = component.variants() %}
-{% set hasVariants = variants.size > 1 %}
+{% set pageTitle   = entity.title %}
+{% set previewUrl  = frctl.web.theme.urlFromRoute('preview', {handle: entity.handle}) %}
 
 {% block content %}
 
-<div class="Entity">
+<div class="Pen" data-behaviour="pen" id="pen-{{ entity.id }}">
 
-    {% if hasVariants %}
-    {% set variantString = "with " + variants.size + " variants: " %}
-    {# {% set comma = joiner(', ') %} #}
-    {% for variant in variants.toArray() %}
-        {% if not loop.first and not loop.last %}{% set variantString = variantString + ', ' %}{% endif %}
-        {% if loop.last %}{% set variantString = variantString + ' and ' %}{% endif %}
-        {% set variantString = variantString + '<a href="#variant-' + variant.handle + '">' + variant.title + '</a>' %}
-    {% endfor %}
-    {{ ent.header(component.title, component.status, variantString, previewUrl) }}
-    {% else %}
-    {{ ent.header(component.title, component.status) }}
-    {% endif %}
-
-    {% if component.notes %}
-    <div class="Entity-text Prose">
-        {{ component.notes }}
+    <div class="Pen-panel Pen-header">
+        <h1 class="Pen-title">{{ entity.title }}</h1>
     </div>
-    {% endif %}
 
-    <div class="Entity-items">
-    {% for variant in variants.toArray() %}
-
-        <div class="Pen" data-behaviour="pen" id="variant-{{ variant.handle }}">
-            {% if hasVariants %}
-            <div class="Pen-header">
-                <h2 class="Pen-title">{{ variant.title }}</h2>
-            </div>
-            {% endif %}
-            <div class="Pen-preview">
-                <div class="Pen-previewWrapper" data-role="preview-wrapper">
-                    <iframe id="variant-preview-{{ variant.id }}"
-                            class="Pen-previewWindow"
-                            data-role="preview-window"
-                            src="{{ frctl.web.theme.urlFromRoute('render', {render: 'iframe', handle: variant.handle}) }}"
-                            sandbox="allow-same-origin allow-scripts"
-                            srcdoc="{{ variant | preview | inject('<script src="/_theme/js/iframe.js"></script>') |  escape }}">
-                    </iframe>
-                    <span class="Pen-resizeHandle" data-role="resize-handle"></span>
-                </div>
-            </div>
-            <div class="Pen-details">
-
-                <div class="TabBox" data-behaviour="file-browser">
-                    {# {% set showTemplate = rendered != variant.getContentSync() %} #}
-                    <div class="FileBrowser-fileList">
-                        <ul class="FileBrowser-files">
-                            <li class="FileBrowser-fileListItem is-current">
-                                <a href="#variant-{{ variant.name }}-file-browser-source" class="FileBrowser-fileListLink">
-                                    <i class="FileBrowser-icon">{{ img.svg('icon-component-view', '#bbb', '20px', '16px' ) }}</i> Source
-                                </a>
-                            </li>
-                            {# {% if showTemplate %}
-                            <li class="FileBrowser-fileListItem">
-                                <a href="#variant-{{ variant.name }}-file-browser-view" class="FileBrowser-fileListLink">
-                                    <i class="FileBrowser-icon">{{ ui.svg('code', '#bbb', '20px', '16px' ) }}</i> View
-                                </a>
-                            </li>
-                            {% endif %}
-                            {% if context %}
-                            <li class="FileBrowser-fileListItem">
-                                <a href="#variant-{{ variant.name }}-file-browser-context" class="FileBrowser-fileListLink">
-                                    <i class="FileBrowser-icon">{{ ui.svg('code', '#bbb', '20px', '16px' ) }}</i> Context
-                                </a>
-                            </li>
-                            {% endif %}
-                            {% for asset in variant.assets().filter('isBinary', false).files().toArray() %}
-                            <li class="FileBrowser-fileListItem">
-                                <a href="#variant-{{ variant.name }}-file-browser-{{ asset.handle }}" class="FileBrowser-fileListLink" title="{{ asset.base }}">
-                                    <i class="FileBrowser-icon">{{ ui.svg('file-text', '#bbb', '20px', '16px' ) }}</i> {{ asset.base }}
-                                </a>
-                            </li>
-                            {% endfor %} #}
-                        </ul>
-                        <button class="ToggleButton is-inactive FileBrowser-toggle">
-                            {# <span class="ToggleButton-active">{{ ui.svg('close', '#999', '15px', '15px') }}</span>
-                            <span class="ToggleButton-inactive">{{ ui.svg('menu', '#999', '18px', '18px') }}</span> #}
-                        </button>
-                    </div>
-
-                    <div class="FileBrowser-content">
-{#
-                        {% set sourceCode = embeddedCode(rendered, true, 'html') %}
-                        {{ fileBrowserContentItem('variant-' + variant.name + '-file-browser-source', sourceCode, true) }}
-
-                        {% if showTemplate %}
-                         {% set viewCode = embeddedCode(variant.getContentSync(), true, variant.editorMode) %}
-                         {{ fileBrowserContentItem('variant-' + variant.name + '-file-browser-view', viewCode) }}
-                         {% endif %}
-
-                        {% if context %}
-                            {% set contextCode = embeddedCode(context, true, 'json') %}
-                            {{ fileBrowserContentItem('variant-' + variant.name + '-file-browser-context', contextCode) }}
-                        {% endif %}
-
-                        {% for asset in variant.assets().filter('isBinary', false).files().toArray() %}
-                            {% set code = embeddedCode(asset.getContentSync(), true, asset.editorMode) %}
-                            {{ fileBrowserContentItem('variant-' + variant.name + '-file-browser-' + asset.handle, code) }}
-                        {% endfor %} #}
-
-                    </div>
-
-                </div>
-            </div>
+    <div class="Pen-panel Pen-preview Preview" data-behaviour="preview" id="preview-{{ entity.id }}">
+        <div class="Preview-resizer" data-role="resizer">
+            <iframe
+                class="Preview-iframe"
+                data-role="window"
+                src="{{ previewUrl }}"
+                sandbox="allow-same-origin allow-scripts"
+                marginwidth="0" marginheight="0" frameborder="0" vspace="0" hspace="0" scrolling="yes"
+                srcdoc="{{ entity | preview | escape }}">
+            </iframe>
+            <div class="Preview-handle" data-role="resize-handle"></div>
         </div>
-
-    {% endfor %}
+        <div class="Preview-overlay"></div>
     </div>
 
-    {# <div class="Entity-panel Entity-preview">
-        <div class="Preview">
-            <iframe class="Entity-previewWindow" src="{{ frctl.web.theme.urlFromRoute('render', {render: 'iframe', handle: entity.handle}) }}" sandbox="allow-same-origin allow-scripts" marginwidth="0" marginheight="0" frameborder="0" vspace="0" hspace="0" srcdoc="{{ entity | preview | escape }}"></iframe>
-        </div>
-    </div>
+    <div class="Pen-handle" data-role="resize-handle"></div>
 
-    <div class="Entity-panel Entity-header">
-        <h1 class="Entity-title">
-            {% if isVariant %}<span class="Entity-titlePrefix">{{ entity.parent.title }}: </span>{% endif %}{{ entity.title }}
-        </h1>
-    </div>
-
-    <div class="Entity-panel Entity-detail">
-        <code class="Code Code--embedded Code--lang-{{lang}}">
+    <div class="Pen-panel Pen-info" data-role="info">
+        <code>
             <pre>{{ entity | render | highlight('html') }}</pre>
         </code>
-    </div> #}
+    </div>
 
 </div>
 
-{% endblock %}
+{# <div class="panel-container-vertical">
 
-
-{# {% set variants = component.variants() %}
-        {% set defaultVariant = variants.default() %}
-        {% set previewUrl = frctl.web.theme.urlFromRoute('render', {render:'preview', handle: component.handle}) %}
-        <div class="Component-header">
-            <h2 class="Component-title">{{ component.title }}</h2>
-            {% if variants.size == 1 %}
-            {{ comp.status(defaultVariant.status, 'labelled') }}
-            <a href="{{ previewUrl }}" target="_blank" class="IconLink IconLink--preview" title="Open preview in new window">
-                <i class="IconLink-icon">{{ ui.svg('arrow-new-window', '#999', '18px', '18px' ) }}</i><span class="IconLink-text">Preview</span>
-            </a>
-            {% else %}
-            {{ comp.status(component.status, 'labelled') }}
-            {% endif %}
-        </div>
-
-        {% if component.notes or variants.size > 1 %}
-        <div class="Component-info">
-            {% if component.notes %}
-            <div class="Component-description Prose">
-                {{ component.notes }}
+            <div class="panel-top">
+                top panel
             </div>
-            {% endif %}
 
-            {% if variants.size > 1 %}
-            {% set message = "This component has " + variants.size + " variants: " %}
-            {% set comma = joiner(', ') %}
-            {% for variant in variants.toArray() %}
-                {% set message = message + comma() + '<a href="#variant-' + variant.handle + '">' + variant.title + '</a>' %}
-            {% endfor %}
-            {{ ui.notification(message) }}
-            {% endif %}
-        </div> <!-- /.Component-info -->
-        {% endif %}
+            <div class="splitter-horizontal">
+            </div>
 
-        <div class="Component-variants">
-        {% set showHeader = variants.size > 1 %}
-        {% for variant in variants.toArray() %}
-        {% include 'partials/variant.nunj' %}
-        {% endfor %}
-        </div> <!-- /.Component-variants --> #}
+            <div class="panel-bottom">
+                bottom panel
+            </div>
+        </div> #}
+
+{% endblock %}

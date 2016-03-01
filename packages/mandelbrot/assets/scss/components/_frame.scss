@@ -52,7 +52,7 @@
 .Frame-panel--main {
     flex-grow: 1;
     overflow: auto;
-    margin-left: -6px;
+    margin-left: -20px;
     position: relative;
     z-index: 1;
     padding-bottom: 1px;
@@ -61,10 +61,10 @@
 .Frame-gutter {
     position: relative;
     z-index: 2;
-    width: 6px;
+    width: 20px;
     border-left: 1px solid $color-alpha-tint-light;
     flex-shrink: 0;
-    cursor: col-resize;
+    cursor: ew-resize;
     background-color: transparent;
     height: 100%;
     transition: background-color 0.2s;

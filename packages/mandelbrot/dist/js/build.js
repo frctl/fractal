@@ -13,8 +13,10 @@ var frame = require('./components/frame');
 var Tree = require('./components/tree');
 var Pen = require('./components/pen');
 
+var resizeable = require('jquery-resizable-dom/dist/jquery-resizable.js');
+
 fastclick(document.body);
-loadPens();
+loadPen();
 
 global.fractal = {
     events: events
@@ -34,9 +36,9 @@ doc.pjax('a[data-pjax]', '#pjax-container', {
     events.trigger('main-content-loaded');
 });
 
-events.on('main-content-loaded', loadPens);
+events.on('main-content-loaded', loadPen);
 
-function loadPens() {
+function loadPen() {
     pens = $.map($('[data-behaviour="pen"]'), function (p) {
         return new Pen(p);
     });
@@ -44,7 +46,7 @@ function loadPens() {
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"./components/frame":2,"./components/pen":3,"./components/tree":4,"./events":6,"fastclick":9,"jquery":17,"jquery-pjax":15}],2:[function(require,module,exports){
+},{"./components/frame":2,"./components/pen":3,"./components/tree":5,"./events":7,"fastclick":10,"jquery":18,"jquery-pjax":16,"jquery-resizable-dom/dist/jquery-resizable.js":17}],2:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -220,7 +222,7 @@ module.exports = function (element) {
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"../config":5,"../events":6,"../storage":7,"../utils":8,"hammerjs":10}],3:[function(require,module,exports){
+},{"../config":6,"../events":7,"../storage":8,"../utils":9,"hammerjs":11}],3:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -231,64 +233,38 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var $ = global.jQuery;
 var storage = require('../storage');
 var events = require('../events');
-var ifr = require('iframe-resizer');
+var Preview = require('./preview');
 var resizeable = require('jquery-resizable-dom/dist/jquery-resizable.js');
 
 var Pen = function () {
     function Pen(el) {
-        var _this = this;
-
         _classCallCheck(this, Pen);
 
         this._el = $(el);
         this._id = this._el[0].id;
-        this._windowWrapper = this._el.find('[data-role="preview-wrapper"]');
-        this._window = this._el.find('[data-role="preview-window"]');
-        this._handleSelector = '#' + this._id + ' [data-role="resize-handle"]';
-        this._handle = $('#' + this._id + ' [data-role="resize-handle"]');
-        this._windowWrapper.on('scroll', function (e) {
-            _this._handle.css('bottom', -1 * _this._windowWrapper.scrollTop());
-        });
-        this._hasDragged = false;
-        this._initWindow();
+        this._previewPanel = this._el.find('[data-behaviour="preview"]');
+        this._handleSelector = '#' + this._id + ' > [data-role="resize-handle"]';
+        this._handle = $(this._handleSelector);
+        this._init();
     }
 
     _createClass(Pen, [{
-        key: '_initWindow',
-        value: function _initWindow() {
-            var _this2 = this;
+        key: '_init',
+        value: function _init() {
+            var _this = this;
 
-            this._window.iFrameResize({
-                log: false,
-                scrolling: false,
-                heightCalculationMethod: navigator.userAgent.indexOf("MSIE") !== -1 ? 'max' : 'lowestElement',
-                resizedCallback: function resizedCallback(data) {
-                    if (_this2._hasDragged) {
-                        _this2._windowWrapper.css('max-height', data.height);
-                    }
-                }
-            }, this._window[0]);
-
-            this._windowWrapper.resizable({
-                handleSelector: '#' + this._id + ' [data-role="resize-handle"]',
+            var preview = new Preview(this._previewPanel);
+            this._previewPanel.resizable({
+                handleSelector: this._handleSelector,
+                resizeWidth: false,
                 onDragStart: function onDragStart() {
-                    _this2._hasDragged = true;
-                    _this2._windowWrapper.css({
-                        'max-height': _this2._window.height() + 10,
-                        'height': _this2._windowWrapper.outerHeight()
-                    });
-                    _this2._window.css('pointer-events', 'none');
+                    _this._el.addClass('is-resizing');
+                    preview.disableEvents();
                     events.trigger('start-dragging');
                 },
                 onDragEnd: function onDragEnd() {
-                    _this2._window.css('pointer-events', 'all');
-                    _this2._window.resize();
-                    _this2._window.focus();
-
-                    if (_this2._windowWrapper.outerWidth() >= _this2._windowWrapper.parent().outerWidth()) {
-                        _this2._windowWrapper.css('width', '100%');
-                    }
-
+                    _this._el.removeClass('is-resizing');
+                    preview.enableEvents();
                     events.trigger('end-dragging');
                 }
             });
@@ -302,7 +278,73 @@ module.exports = Pen;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"../events":6,"../storage":7,"iframe-resizer":11,"jquery-resizable-dom/dist/jquery-resizable.js":16}],4:[function(require,module,exports){
+},{"../events":7,"../storage":8,"./preview":4,"jquery-resizable-dom/dist/jquery-resizable.js":17}],4:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var $ = global.jQuery;
+var storage = require('../storage');
+var events = require('../events');
+var ifr = require('iframe-resizer');
+var resizeable = require('jquery-resizable-dom/dist/jquery-resizable.js');
+
+var Preview = function () {
+    function Preview(el) {
+        _classCallCheck(this, Preview);
+
+        this._el = $(el);
+        this._id = this._el[0].id;
+        this._handleSelector = '#' + this._id + ' [data-role="resize-handle"]';
+        this._handle = $(this._handleSelector);
+        this._iframe = this._el.find('[data-role="window"]');
+        this._resizer = this._el.find('[data-role="resizer"]');
+        this._init();
+    }
+
+    _createClass(Preview, [{
+        key: '_init',
+        value: function _init() {
+            var _this = this;
+
+            this._resizer.resizable({
+                handleSelector: this._handleSelector,
+                resizeHeight: false,
+                onDragStart: function onDragStart() {
+                    _this._el.addClass('is-resizing');
+                    _this.disableEvents();
+                    events.trigger('start-dragging');
+                },
+                onDragEnd: function onDragEnd() {
+                    _this._el.removeClass('is-resizing');
+                    _this.enableEvents();
+                    events.trigger('end-dragging');
+                }
+            });
+        }
+    }, {
+        key: 'disableEvents',
+        value: function disableEvents() {
+            this._el.addClass('is-disabled');
+        }
+    }, {
+        key: 'enableEvents',
+        value: function enableEvents() {
+            this._el.removeClass('is-disabled');
+        }
+    }]);
+
+    return Preview;
+}();
+
+module.exports = Preview;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+
+},{"../events":7,"../storage":8,"iframe-resizer":12,"jquery-resizable-dom/dist/jquery-resizable.js":17}],5:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -477,7 +519,7 @@ module.exports = Tree;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"../events":6,"../storage":7}],5:[function(require,module,exports){
+},{"../events":7,"../storage":8}],6:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -488,7 +530,7 @@ module.exports = {
 
 };
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -496,7 +538,7 @@ module.exports = global.jQuery({});
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -509,7 +551,7 @@ module.exports = {
     }
 };
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -530,7 +572,7 @@ module.exports = {
     }
 };
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 ;(function () {
 	'use strict';
 
@@ -1373,7 +1415,7 @@ module.exports = {
 	}
 }());
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 /*! Hammer.JS - v2.0.6 - 2015-12-23
  * http://hammerjs.github.io/
  *
@@ -3943,13 +3985,13 @@ if (typeof define === 'function' && define.amd) {
 
 })(window, document, 'Hammer');
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 
 'use strict';
 
 module.exports = require('./js');
 
-},{"./js":14}],12:[function(require,module,exports){
+},{"./js":15}],13:[function(require,module,exports){
 /*
  * File: iframeResizer.contentWindow.js
  * Desc: Include this file in any page being loaded into an iframe
@@ -5019,7 +5061,7 @@ module.exports = require('./js');
 
 })(window || {});
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 /*
  * File: iframeResizer.js
  * Desc: Force iframes to size to content.
@@ -6017,11 +6059,11 @@ module.exports = require('./js');
 
 })(window || {});
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 exports.iframeResizer = require('./iframeResizer');
 exports.iframeResizerContentWindow = require('./iframeResizer.contentWindow');
 
-},{"./iframeResizer":13,"./iframeResizer.contentWindow":12}],15:[function(require,module,exports){
+},{"./iframeResizer":14,"./iframeResizer.contentWindow":13}],16:[function(require,module,exports){
 /*!
  * Copyright 2012, Chris Wanstrath
  * Released under the MIT License
@@ -6948,7 +6990,7 @@ $.support.pjax ? enable() : disable()
 
 })(jQuery);
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 /// <reference path="jquery.js" />
 /*
 jquery-resizable
@@ -7078,7 +7120,7 @@ Licensed under MIT License
         });
     };
 })(jQuery,undefined);
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v2.2.1
  * http://jquery.com/

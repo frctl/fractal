@@ -1,0 +1,7 @@
+{% import "helpers/status.nunj" as status %}
+
+{% macro header(title) %}
+<div class="Document-header">
+    <h1 class="Document-title">{{ title }}</h1>
+</div>
+{% endmacro %}

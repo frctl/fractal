@@ -634,15 +634,10 @@ h6 {
   font-size: 16px;
   line-height: 1.5; }
 
-.Entity {
+.Document {
   padding: 30px; }
 
-.Entity-header {
-  margin-bottom: 1.2em; }
-  .Entity-header .Status {
-    margin-left: auto; }
-
-.Entity-headerMain {
+.Document-header {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -650,21 +645,11 @@ h6 {
   width: 100%;
   padding-bottom: 10px;
   border-bottom: 1px solid rgba(46, 48, 56, 0.25);
-  margin-bottom: 0; }
+  margin-bottom: 1.2em; }
 
-.Entity-headerTitle {
+.Document-title {
   margin: 0;
   font-size: 28px; }
-
-.Entity-headerSubText {
-  margin: 5px 0 0 0;
-  font-size: 14px;
-  line-height: 1.57143; }
-  .Entity-headerSubText a:link, .Entity-headerSubText a:visited, .Entity-headerSubText a:hover, .Entity-headerSubText a:active {
-    color: #3366FF;
-    text-decoration: none; }
-  .Entity-headerSubText a:hover {
-    text-decoration: underline; }
 
 .Frame {
   height: 100%;
@@ -747,7 +732,7 @@ h6 {
       -ms-flex-positive: 1;
           flex-grow: 1;
   overflow: auto;
-  margin-left: -6px;
+  margin-left: -20px;
   position: relative;
   z-index: 1;
   padding-bottom: 1px; }
@@ -755,12 +740,12 @@ h6 {
 .Frame-gutter {
   position: relative;
   z-index: 2;
-  width: 6px;
+  width: 20px;
   border-left: 1px solid rgba(46, 48, 56, 0.25);
   -webkit-flex-shrink: 0;
       -ms-flex-negative: 0;
           flex-shrink: 0;
-  cursor: col-resize;
+  cursor: ew-resize;
   background-color: transparent;
   height: 100%;
   -webkit-transition: background-color 0.2s;
@@ -839,53 +824,126 @@ h6 {
   margin-top: 25px; }
 
 .Pen {
-  width: 100%; }
-  .Pen + .Pen {
-    margin-top: 30px; }
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: stretch;
+  -webkit-align-items: stretch;
+      -ms-flex-align: stretch;
+          align-items: stretch;
+  height: 100%;
+  overflow: hidden;
+  background: #f7f7f8;
+  background: #fff; }
+  .Pen.is-resizing {
+    cursor: -webkit-grabbing;
+    cursor: grabbing; }
+    .Pen.is-resizing .Pen-handle {
+      cursor: -webkit-grabbing;
+      cursor: grabbing; }
 
 .Pen-header {
-  background-color: #f7f7f8;
-  padding: 10px 15px;
-  border: 1px solid rgba(46, 48, 56, 0.25);
-  border-bottom: 0; }
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 auto;
+      -ms-flex: 0 0 auto;
+          flex: 0 0 auto;
+  padding: 20px; }
 
 .Pen-title {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold; }
 
 .Pen-preview {
-  position: relative;
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 auto;
+      -ms-flex: 0 0 auto;
+          flex: 0 0 auto;
+  min-height: 150px;
+  margin: 0 20px 0 20px; }
+
+.Pen-info {
+  margin: 0 20px 20px 20px;
   background: #f7f7f8;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1 1 auto;
+      -ms-flex: 1 1 auto;
+          flex: 1 1 auto;
+  overflow: scroll; }
+
+.Pen-handle {
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 auto;
+      -ms-flex: 0 0 auto;
+          flex: 0 0 auto;
+  background-color: transparent;
+  height: 20px;
+  margin: 0 20px;
+  cursor: ns-resize; }
+
+.Preview {
+  position: relative;
+  background-color: #f7f7f8;
   outline: solid rgba(46, 48, 56, 0.25) 1px;
   outline-offset: -1px; }
+  .Preview.is-disabled .Preview-overlay {
+    display: block; }
+  .Preview.is-resizing {
+    cursor: -webkit-grabbing;
+    cursor: grabbing; }
+    .Preview.is-resizing * {
+      cursor: -webkit-grabbing !important;
+      cursor: grabbing !important; }
 
-.Pen-previewWrapper {
-  background-color: #fff;
-  position: relative;
-  border: 1px solid rgba(46, 48, 56, 0.25);
-  position: relative;
-  margin-right: -1px;
-  min-width: 280px;
-  max-width: 100%;
-  min-height: 50px;
-  max-height: 400px;
-  overflow: auto; }
-
-.Pen-previewWindow {
-  width: 100%;
-  height: 100px;
-  -webkit-transition: height 0.05s;
-  transition: height 0.05s; }
-
-.Pen-resizeHandle {
+.Preview-resizer {
   position: absolute;
-  width: 16px;
-  height: 16px;
-  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  min-width: 200px;
+  top: 0;
+  left: 0;
   bottom: 0;
+  border: 1px solid rgba(46, 48, 56, 0.25);
+  background-color: #fff; }
+
+.Preview-iframe {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0; }
+
+.Preview-overlay {
+  width: 100%;
+  position: absolute;
+  height: 100%;
+  top: 0;
   right: 0;
-  cursor: nwse-resize;
-  background: url("/_theme/img/grip.png") no-repeat; }
+  bottom: 0;
+  left: 0;
+  opacity: 0;
+  display: none; }
+
+.Preview-handle {
+  width: 100%;
+  position: absolute;
+  height: -webkit-calc(100% + 2px);
+  height: calc(100% + 2px);
+  width: 20px;
+  top: -1px;
+  bottom: -1px;
+  right: -10px;
+  background-color: transparent;
+  cursor: ew-resize;
+  z-index: 100; }
 
 .Prose {
   font-size: 16px;

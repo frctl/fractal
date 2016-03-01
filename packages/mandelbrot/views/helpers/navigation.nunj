@@ -12,13 +12,18 @@
 
 {% macro leaves(items, root, current, depth) %}
     {% for item in items %}
-        {% if item.type == 'collection' %}
+        {% if item.type == 'collection' or (item.type == 'component' and item.variants().size > 1) %}
         <li class="Tree-item Tree-collection Tree-depth-{{ depth }}" data-behaviour="collection" id="tree-{{ root.name }}-collection-{{ item.handle }}">
             <h4 class="Tree-collectionLabel" data-role="toggle">
                 <span>{{ item.label }}</span>
             </h4>
             <ul class="Tree-collectionItems" data-role="items">
-            {{ leaves(item.items(), root, current, (depth + 1)) }}
+            {% if item.type == 'component' %}
+            {% set items = item.variants().items() %}
+            {% else %}
+            {% set items = item.items() %}
+            {% endif %}
+            {{ leaves(items, root, current, (depth + 1)) }}
             </ul>
         </li>
         {% else %}
@@ -33,8 +38,7 @@
     {% endfor %}
 {% endmacro %}
 
-{# 
-{% macro variants(items, root, current) %}
+{% macro variants(item, root, depth, current) %}
 <li class="Tree-item Tree-collection Tree-depth-{{ depth }}" data-behaviour="collection" id="tree-{{ root.name }}-collection-{{ item.handle }}">
     <h4 class="Tree-collectionLabel" data-role="toggle">
         <span>{{ item.label }}</span>
@@ -43,4 +47,4 @@
     {{ leaves(item.variants().items(), root, current, (depth + 1)) }}
     </ul>
 </li>
-{% endmacro %} #}
+{% endmacro %}

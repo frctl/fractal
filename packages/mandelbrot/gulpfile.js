@@ -25,7 +25,7 @@ gulp.task('clean:js', function() {
     return del(['./dist/js']);
 });
 
-gulp.task('copy:js', function() {
+gulp.task('copy:js', ['clean:js'], function() {
     gulp.src('./node_modules/iframe-resizer/js/iframeResizer.contentWindow.min.js')
     .pipe(rename("iframe.js"))
     .pipe(gulp.dest('./dist/js'));

@@ -1,0 +1,58 @@
+.Preview {
+    position: relative;
+    background-color: $color-gamma;
+    outline: solid $color-alpha-tint-light 1px;
+    outline-offset: -1px;
+    &.is-disabled {
+        .Preview-overlay {
+             display: block;
+        }
+    }
+    &.is-resizing {
+        cursor: grabbing;
+        * {
+            cursor: grabbing !important;
+        }
+    }
+}
+.Preview-resizer {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    min-width: 200px;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    border: 1px solid $color-alpha-tint-light;
+    background-color: #fff;
+}
+.Preview-iframe {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+.Preview-overlay {
+    width: 100%;
+    position: absolute;
+    height: 100%;
+    @include trbl(0);
+    opacity: 0;
+    display: none;
+}
+.Preview-handle {
+    width: 100%;
+    position: absolute;
+    height: calc(100% + 2px);
+    width: 20px;
+    top: -1px;
+    bottom: -1px;
+    right: -10px;
+    background-color: transparent;
+    cursor: ew-resize;
+    z-index: 100;
+}

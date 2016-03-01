@@ -26,3 +26,10 @@
     clip: rect(0, 0, 0, 0);
     position: absolute;
 }
+
+@mixin trbl($val) {
+    top: $val;
+    right: $val;
+    bottom: $val;
+    left: $val;
+}

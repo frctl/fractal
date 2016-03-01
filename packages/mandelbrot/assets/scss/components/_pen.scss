@@ -1,49 +1,68 @@
 .Pen {
-    width: 100%;
-    & + & {
-        margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    height: 100%;
+    overflow: hidden;
+    background: $color-gamma;
+    background: #fff;
+    &.is-resizing {
+        cursor: grabbing;
+        .Pen-handle {
+            cursor: grabbing;
+        }
     }
 }
 .Pen-header {
-    background-color: $color-gamma;
-    padding: 10px 15px;
-    border: 1px solid $color-alpha-tint-light;
-    border-bottom: 0;
+    flex: 0 0 auto;
+    padding: 20px;
 }
 .Pen-title {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: bold;
 }
 .Pen-preview {
-    position: relative;
+    flex: 0 0 auto;
+    min-height: 150px;
+    margin: 0 20px 0 20px;
+}
+.Pen-info {
+    margin: 0 20px 20px 20px;
     background: $color-gamma;
-    outline: solid $color-alpha-tint-light 1px;
-    outline-offset: -1px;
+    flex: 1 1 auto;
+    overflow: scroll;
 }
-.Pen-previewWrapper {
-    background-color: #fff;
-    position: relative;
-    border: 1px solid $color-alpha-tint-light;
-    position: relative;
-    margin-right: -1px;
-    min-width: 280px;
-    max-width: 100%;
-    min-height: 50px;
-    max-height: 400px;
-    overflow: auto;
+.Pen-handle {
+    flex: 0 0 auto;
+    background-color: transparent;
+    height: 20px;
+    margin: 0 20px;
+    cursor: ns-resize;
 }
-.Pen-previewWindow {
-    width: 100%;
-    height: 100px;
-    transition: height 0.05s;
-}
-.Pen-resizeHandle {
-    position: absolute;
-    width: 16px;
-    height: 16px;
-    display: block;
-    bottom: 0;
-    right: 0;
-    cursor: nwse-resize;
-    background: url('/_theme/img/grip.png') no-repeat;
-}
+
+
+
+// .Pen-preview {
+//     position: relative;
+//     flex: 0 0 auto;
+//     margin: 0 20px 20px 20px;
+//     border: 1px solid $color-alpha-tint-light;
+//     iframe {
+//         width: 100%;
+//         position: absolute;
+//         height: 100%;
+//         @include trbl(0);
+//     }
+// }
+// .Pen-info {
+//     margin: 20px;
+//     background: $color-gamma;
+//     flex: 1 1 auto;
+//     overflow: scroll;
+// }
+// .Pen-splitter {
+//     flex: 0 0 auto;
+//     background: #999;
+//     height: 10px;
+//     width: 100%;
+// }
