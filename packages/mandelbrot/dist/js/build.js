@@ -72,12 +72,15 @@ module.exports = function (element) {
     var main = body.children('[data-role="main"]');
     var handle = body.children('[data-role="frame-resize-handle"]');
     var sidebarMin = parseInt(sidebar.css('min-width'), 10);
+    var touch = new Hammer(el[0]);
 
     var sidebarWidth = isSmallScreen() ? sidebarMin : storage.get('frame.sidebar', sidebar.outerWidth());
     var sidebarState = isSmallScreen() ? 'closed' : storage.get('frame.state', 'open');
     var scrollPos = storage.get('frame.scrollPos', 0);
     var dragOccuring = false;
     var isInitialClose = false;
+
+    touch.get('swipe').set({ direction: Hammer.DIRECTION_HORIZONTAL });
 
     sidebar.outerWidth(sidebarWidth);
 
@@ -113,6 +116,11 @@ module.exports = function (element) {
             setSidebarWidth(doc.outerWidth() - 50);
         }
     });
+
+    // Touch events
+
+    touch.on('swipeleft', closeSidebar);
+    touch.on('swiperight', openSidebar);
 
     // Global event listeners
 
