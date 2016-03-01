@@ -8,7 +8,7 @@ function getTreeUrl(urlPath){
     const parser    = document.createElement('a');
     parser.href     = urlPath;
     const pathParts = parser.pathname.split('/');
-    pathParts.push(pathParts.pop().split('--')[0]);
+    pathParts.push(pathParts.pop());
     return pathParts.join('/');
 }
 

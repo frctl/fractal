@@ -346,7 +346,7 @@ function getTreeUrl(urlPath) {
     var parser = document.createElement('a');
     parser.href = urlPath;
     var pathParts = parser.pathname.split('/');
-    pathParts.push(pathParts.pop().split('--')[0]);
+    pathParts.push(pathParts.pop());
     return pathParts.join('/');
 }
 

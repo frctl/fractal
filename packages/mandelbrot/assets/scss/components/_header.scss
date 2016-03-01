@@ -16,8 +16,10 @@
     display: block;
     background: $color-accent url('/_theme/img/icon-close-white.svg') no-repeat 50% 50%;
     background-size: 20px 20px;
+    background-color: rgba(#2E2F33, 0.25);
     .is-closed & {
         background-image: url('/_theme/img/icon-menu-white.svg');
+        background-color: transparent;
     }
     span {
         display: none;

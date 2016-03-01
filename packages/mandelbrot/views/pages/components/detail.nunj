@@ -1,5 +1,6 @@
 {% extends "layouts/pjax.nunj" if frctl.web.request.isPjax else "layouts/frame.nunj" %}
 {% import "helpers/image.nunj" as img %}
+{% import "helpers/status.nunj" as status %}
 
 {% set entity = frctl.components.find('@' + frctl.web.request.params.handle) %}
 {% if not entity or entity.isHidden %}{% throw404 'Item not found' %}{% endif %}
@@ -13,6 +14,8 @@
 
     <div class="Pen-panel Pen-header">
         <h1 class="Pen-title">{{ entity.title }}</h1>
+        <a class="Pen-newWindowLink" href="{{ previewUrl }}">{{ img.svg('icon-window', '#999', '22px', '22px' ) }}</a>
+        {{ status.tag(entity.status) }}
     </div>
 
     <div class="Pen-panel Pen-preview Preview" data-behaviour="preview" id="preview-{{ entity.id }}">
