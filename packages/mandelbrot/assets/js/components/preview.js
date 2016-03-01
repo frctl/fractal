@@ -3,7 +3,6 @@
 const $          = global.jQuery;
 const storage    = require('../storage');
 const events     = require('../events');
-const ifr        = require('iframe-resizer');
 const resizeable = require('jquery-resizable-dom/dist/jquery-resizable.js');
 
 class Preview {
@@ -16,7 +15,7 @@ class Preview {
         this._resizer        = this._el.children('[data-role="resizer"]');
         this._init();
     }
-    
+
     _init() {
         const initialWidth = storage.get(`preview.width`, this._resizer.outerWidth());
         if (initialWidth == this._el.outerWidth()) {
