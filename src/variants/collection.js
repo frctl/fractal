@@ -80,9 +80,8 @@ module.exports = class VariantCollection extends Collection {
             if (p.notes) {
                 p.notes = yield props.source._app.docs.renderString(p.notes);
             }
-            // variants.push(
-                return new Variant(p, viewFile, assets.filter(isRelated(p.handle)))
-            // );
+            return new Variant(p, viewFile, assets.filter(isRelated(p.handle)));
+
         }));
 
         variants = variants.concat(configuredVars);
