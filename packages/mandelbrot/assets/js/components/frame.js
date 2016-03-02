@@ -138,7 +138,17 @@ module.exports = function(element){
     }
 
     return {
+
         closeSidebar: closeSidebar,
-        openSidebar: openSidebar
+
+        openSidebar: openSidebar,
+
+        startLoad: function(){
+            main.addClass('is-loading');
+        },
+
+        endLoad: function(){
+            main.removeClass('is-loading');
+        }
     }
 };
