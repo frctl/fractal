@@ -7,12 +7,12 @@
 
     <script>var cl = document.querySelector('html').classList; cl.remove('no-js'); cl.add('has-js');</script>
 
-    <link rel="stylesheet" type="text/css" href="/_theme/css/{{ fractal.web.theme.options.skin | default('default') }}.css?cachebust={{ frctl.web.theme.version }}">
+    <link rel="stylesheet" type="text/css" href="/_theme/css/{{ frctl.web.theme.options.palette | default('default') }}.css?cachebust={{ frctl.web.theme.version }}">
 
     <title>{% if pageTitle %}{{ pageTitle }} | {% endif %}{{ frctl.config.project.title }}</title>
 </head>
 <body>
-
+    
 {% block page %}{% endblock %}
 
 <script src="/_theme/js/build.js"></script>
