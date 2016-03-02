@@ -29,7 +29,23 @@
     flex-direction: row-reverse;
     flex-grow: 1;
     height: 100%;
+    @include mq($until: navCollapse) {
+        transition: none;
+        margin-right: 230px;
+        transform: translate3d(-230px, 0, 0);
+    }
 }
+.Frame-inner {
+    position: absolute;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+    min-width: 280px;
+}
+
 .Frame-panel {
     height: calc(100% - 50px);
     overflow: auto;
@@ -44,6 +60,9 @@
     max-width: 400px;
     padding: 25px 0 40px 0;
     border-right: 1px solid $color-alpha-tint-light;
+    @include mq($until: navCollapse) {
+        max-width: 230px;
+    }
 }
 .Frame-panel--main {
     flex: 1 1 auto;
@@ -52,7 +71,6 @@
     position: relative;
     z-index: 1;
     padding-bottom: 1px;
-    // min-width: 280px;
 }
 .Frame-handle {
     flex: 0 0 auto;
@@ -63,13 +81,5 @@
     height: 100%;
     background: transparent url('/_theme/img/icon-drag--vertical.svg') no-repeat 50% 45%;
     background-size: 3px 16px;
-}
-.Frame-inner {
-    position: absolute;
-    height: 100%;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    overflow: auto;
+    @include dragHandle;
 }

@@ -1,5 +1,8 @@
 'use strict';
 
+const $      = global.jQuery;
+const config = require('./config');
+
 module.exports = {
 
     debounce(func, wait, immediate) {
@@ -15,6 +18,10 @@ module.exports = {
             timeout = setTimeout(later, wait);
             if (callNow) func.apply(context, args);
         };
+    },
+
+    isSmallScreen() {
+        return $(document).width() < config.breakpoints.navCollapse;
     }
 
 };

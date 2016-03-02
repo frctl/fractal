@@ -3,7 +3,7 @@
 {% endmacro %}
 
 {% macro _tag(color, label) %}
-<label class="Status-label" style="background-color: {{ color }};">{{ label }}</label>
+<label class="Status-label" style="background-color: {{ color }}; border-color: {{ color }};">{{ label }}</label>
 {% endmacro %}
 
 {% macro _dots(status) %}

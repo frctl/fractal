@@ -52,7 +52,7 @@
         width: 10px;
         height: 10px;
     }
-
+    touch-action: manipulation;
 }
 .Tree-collectionItems {
     margin-top: 5px;
@@ -111,6 +111,7 @@
 .Tree-subItemLink {
     padding: 4px 0;
     @include link-default($color-accent, none);
+    touch-action: manipulation;
 }
 @for $i from 1 through 8 {
     .Tree-depth-#{$i} {
