@@ -1115,8 +1115,7 @@ h6 {
   height: 50%;
   max-height: -webkit-calc(100% - 100px);
   max-height: calc(100% - 100px);
-  margin: -1px 20px 0 20px;
-  overflow: hidden; }
+  margin: -1px 20px 0 20px; }
   @media (max-width: 31.24em) {
     .Pen-preview {
       margin: 0;
