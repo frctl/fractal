@@ -23,6 +23,7 @@
         margin-left: auto;
     }
     @include mq($until: navCollapse) {
+        padding: 10px 15px;
         border-bottom: 1px solid $color-alpha-tint-light;
         box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
         margin-bottom: 2px;
@@ -47,11 +48,14 @@
     white-space: nowrap;
     overflow: hidden;
     line-height: 1.5;
+    a {
+        @include link-default($color-alpha, none);
+    }
 }
 .Pen-newWindowLink {
     position: relative;
     top: 3px;
-    margin-left: 5px;
+    margin-left: 2px;
     svg {
         fill: $color-accent;
     }

@@ -784,6 +784,9 @@ h6 {
 
 .Document {
   padding: 30px; }
+  @media (max-width: 31.24em) {
+    .Document {
+      padding: 20px; } }
 
 .Document-header {
   display: -webkit-box;
@@ -1049,6 +1052,7 @@ h6 {
     margin-left: auto; }
   @media (max-width: 31.24em) {
     .Pen-header {
+      padding: 10px 15px;
       border-bottom: 1px solid rgba(46, 48, 56, 0.25);
       box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
       margin-bottom: 2px; }
@@ -1071,11 +1075,14 @@ h6 {
   white-space: nowrap;
   overflow: hidden;
   line-height: 1.5; }
+  .Pen-title a:link, .Pen-title a:visited, .Pen-title a:hover, .Pen-title a:active {
+    color: #2e3038;
+    text-decoration: none; }
 
 .Pen-newWindowLink {
   position: relative;
   top: 3px;
-  margin-left: 5px; }
+  margin-left: 2px; }
   .Pen-newWindowLink svg {
     fill: #3366FF; }
 
