@@ -72,7 +72,7 @@ class Source extends Collection {
         return Promise.resolve(this);
     }
 
-    refresh() {
+    refresh(data) {
         if (!this.isLoaded) {
             return this.load();
         }
@@ -82,7 +82,7 @@ class Source extends Collection {
         return this._build().then(source => {
             console.debug(`Finished parsing ${this.name} directory`);
             this.isLoaded = true;
-            this.emit('changed', this);
+            this.emit('changed', this, data);
             return source;
         });
     }
@@ -96,7 +96,11 @@ class Source extends Collection {
             this._monitor.on('ready', () => {
                 this._monitor.on('all', (event, path) => {
                     console.debug(`Change in ${this.name} directory`);
-                    this.refresh();
+                    this.refresh({
+                        event: event,
+                        path: path,
+                        isAsset: this.isAsset({path: path})
+                    });
                 });
             });
         }
@@ -143,6 +147,10 @@ class Source extends Collection {
         self.viewExt  = this.ext;
         self.isLoaded = this.isLoaded;
         return self;
+    }
+
+    isAsset(){
+        return false;
     }
 
 }
