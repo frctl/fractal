@@ -11,10 +11,6 @@ const framer     = require('./components/frame');
 const Tree       = require('./components/tree');
 const Pen        = require('./components/pen');
 
-const resizeable = require('jquery-resizable-dom/dist/jquery-resizable.js');
-
-loadPen();
-
 global.fractal = {
     events: events
 };
@@ -23,12 +19,14 @@ const frame     = framer($('#frame'));
 const navTrees  = $.map($('[data-behaviour="tree"]'), t => new Tree(t));
 let pens        = [];
 
+loadPen();
+
 doc.pjax('a[data-pjax]', '#pjax-container', {
     fragment: '#pjax-container',
     timeout: 10000
 }).on('pjax:start', function(e, xhr, options){
     if (utils.isSmallScreen()) {
-        mainFrame.closeSidebar();
+        frame.closeSidebar();
     }
     frame.startLoad();
     events.trigger('main-content-preload', options.url);

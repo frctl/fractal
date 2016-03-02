@@ -13,10 +13,6 @@ var framer = require('./components/frame');
 var Tree = require('./components/tree');
 var Pen = require('./components/pen');
 
-var resizeable = require('jquery-resizable-dom/dist/jquery-resizable.js');
-
-loadPen();
-
 global.fractal = {
     events: events
 };
@@ -27,12 +23,14 @@ var navTrees = $.map($('[data-behaviour="tree"]'), function (t) {
 });
 var pens = [];
 
+loadPen();
+
 doc.pjax('a[data-pjax]', '#pjax-container', {
     fragment: '#pjax-container',
     timeout: 10000
 }).on('pjax:start', function (e, xhr, options) {
     if (utils.isSmallScreen()) {
-        mainFrame.closeSidebar();
+        frame.closeSidebar();
     }
     frame.startLoad();
     events.trigger('main-content-preload', options.url);
@@ -51,7 +49,7 @@ function loadPen() {
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"./components/frame":3,"./components/pen":4,"./components/tree":6,"./events":8,"./utils":10,"jquery":14,"jquery-pjax":12,"jquery-resizable-dom/dist/jquery-resizable.js":13}],2:[function(require,module,exports){
+},{"./components/frame":3,"./components/pen":4,"./components/tree":6,"./events":8,"./utils":10,"jquery":14,"jquery-pjax":12}],2:[function(require,module,exports){
 (function (global){
 'use strict';
 

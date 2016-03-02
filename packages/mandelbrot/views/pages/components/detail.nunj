@@ -19,8 +19,8 @@
 <div class="Pen" data-behaviour="pen" id="pen-{{ entity.id }}">
 
     <div class="Pen-panel Pen-header">
-        <h1 class="Pen-title">{{ entity.title }}</h1>
-        <a class="Pen-newWindowLink" href="{{ previewUrl }}">{{ img.svg('icon-window', '#999', '22px', '22px' ) }}</a>
+        <h1 class="Pen-title"><a href="{{ previewUrl }}" title="Open preview in new window">{{ entity.title }}</a></h1>
+        <a href="{{ previewUrl }}" class="Pen-newWindowLink">{{ img.svg('icon-window', '#999', '22px', '22px' ) }}</a>
         {{ status.tag(entity.status) }}
     </div>
 
