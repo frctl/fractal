@@ -15,14 +15,7 @@ module.exports = function(config){
 
     this.static(Path.join(__dirname, 'dist'), '/_theme');
 
-    // const navOpts = config.nav || {};
-    // this.options.nav = {
-    //     depth: navOpts.depth || 1,
-    //     sort: navOpts.sort || {
-    //         order: 'asc',
-    //         name:  'asc'
-    //     }
-    // };
+    this.options.palette = config.palette || 'default';
 
     this.route('/', {
         handle: 'overview',
