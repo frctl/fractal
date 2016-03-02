@@ -17,10 +17,13 @@
     border-bottom: 1px solid $color-alpha-tint-light;
 }
 .Browser-tabs {
-    // margin-left: auto;
+    width: 100%;
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: row;
 }
 .Browser-tab {
-    display: inline-block;
+    // display: inline-block;
     a {
         font-size: 14px;
         padding: 10px 5px;
@@ -30,6 +33,9 @@
     }
     & + & {
         margin-left: 20px;
+    }
+    & + &:last-child {
+        // margin-left: auto;
     }
     svg {
         margin-right: 5px;
@@ -48,6 +54,9 @@
         }
     }
 }
+// .Browser-tab--meta {
+//     margin-left: auto;
+// }
 .Browser-actions {
     margin-left: auto;
     display: none;

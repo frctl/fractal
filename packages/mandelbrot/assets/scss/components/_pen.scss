@@ -16,14 +16,17 @@
 .Pen-header {
     flex: 0 0 auto;
     display: flex;
-    padding: 15px 20px;
+    padding: 15px 0;
+    margin: 0 20px;
     align-items: center;
+    border-bottom: 1px solid $color-alpha-tint-light;
     .Status {
         padding-left: 10px;
         margin-left: auto;
     }
     @include mq($until: navCollapse) {
-        padding: 10px 15px;
+        padding: 10px 0;
+        margin: 0 15px;
         border-bottom: 1px solid $color-alpha-tint-light;
         box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
         margin-bottom: 2px;
@@ -64,7 +67,8 @@
     flex: 0 0 auto;
     height: 50%;
     max-height: calc(100% - 100px);
-    margin: 0 20px;
+    margin: -1px 20px 0 20px;
+    overflow: hidden;
     @include mq($until: navCollapse) {
         margin: 0;
         max-height: 100%;
