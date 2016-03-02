@@ -740,6 +740,7 @@ h6 {
           flex: 0 0 auto; }
 
 .Browser-files {
+  -webkit-overflow-scrolling: touch;
   -webkit-box-flex: 1;
   -webkit-flex: 1 1 auto;
       -ms-flex: 1 1 auto;
@@ -759,7 +760,9 @@ h6 {
   -webkit-box-flex: 1;
   -webkit-flex: 1 1 auto;
       -ms-flex: 1 1 auto;
-          flex: 1 1 auto; }
+          flex: 1 1 auto;
+  display: none;
+  -webkit-overflow-scrolling: touch; }
   .Browser-fileContent.is-active {
     display: -webkit-box;
     display: -webkit-flex;
@@ -772,10 +775,12 @@ h6 {
 
 .Code {
   display: block;
-  background-color: #f7f7f8; }
+  background-color: #f7f7f8;
+  -webkit-overflow-scrolling: touch; }
   .Code pre {
     background-color: #f7f7f8;
-    padding: 10px; }
+    padding: 10px;
+    -webkit-overflow-scrolling: touch; }
 
 .Document {
   padding: 30px; }
@@ -880,8 +885,7 @@ h6 {
   margin-left: -20px;
   position: relative;
   z-index: 1;
-  padding-bottom: 1px;
-  min-width: 280px; }
+  padding-bottom: 1px; }
 
 .Frame-handle {
   -webkit-box-flex: 0;
@@ -1032,10 +1036,9 @@ h6 {
   -webkit-flex: 0 0 auto;
       -ms-flex: 0 0 auto;
           flex: 0 0 auto;
-  min-height: 150px;
   height: 50%;
-  max-height: -webkit-calc(100% - 200px);
-  max-height: calc(100% - 200px);
+  max-height: -webkit-calc(100% - 100px);
+  max-height: calc(100% - 100px);
   margin: 0 20px 0 20px; }
 
 .Pen-handle {
@@ -1063,7 +1066,8 @@ h6 {
   position: relative;
   background-color: #f7f7f8;
   outline: solid rgba(46, 48, 56, 0.25) 1px;
-  outline-offset: -1px; }
+  outline-offset: -1px;
+  -webkit-overflow-scrolling: touch; }
   .Preview.is-disabled .Preview-overlay {
     display: block; }
   .Preview.is-resizing {
@@ -1083,10 +1087,13 @@ h6 {
   left: 0;
   bottom: 0;
   border: 1px solid rgba(46, 48, 56, 0.25);
-  background-color: #fff; }
+  background-color: #fff;
+  -webkit-overflow-scrolling: touch; }
 
 .Preview-iframe {
+  -webkit-overflow-scrolling: touch;
   position: absolute;
+  z-index: 0;
   width: 100%;
   height: 100%;
   top: 0;
