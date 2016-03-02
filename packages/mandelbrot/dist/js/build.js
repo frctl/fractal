@@ -9,7 +9,7 @@ var doc = $(document);
 
 var events = require('./events');
 var utils = require('./utils');
-var frame = require('./components/frame');
+var framer = require('./components/frame');
 var Tree = require('./components/tree');
 var Pen = require('./components/pen');
 
@@ -21,7 +21,7 @@ global.fractal = {
     events: events
 };
 
-var mainFrame = frame($('#frame'));
+var frame = framer($('#frame'));
 var navTrees = $.map($('[data-behaviour="tree"]'), function (t) {
     return new Tree(t);
 });
@@ -29,14 +29,16 @@ var pens = [];
 
 doc.pjax('a[data-pjax]', '#pjax-container', {
     fragment: '#pjax-container',
-    timeout: 5000
+    timeout: 10000
 }).on('pjax:start', function (e, xhr, options) {
     if (utils.isSmallScreen()) {
         mainFrame.closeSidebar();
     }
+    frame.startLoad();
     events.trigger('main-content-preload', options.url);
 }).on('pjax:end', function () {
     events.trigger('main-content-loaded');
+    frame.endLoad();
 });
 
 events.on('main-content-loaded', loadPen);
@@ -268,8 +270,18 @@ module.exports = function (element) {
     }
 
     return {
+
         closeSidebar: closeSidebar,
-        openSidebar: openSidebar
+
+        openSidebar: openSidebar,
+
+        startLoad: function startLoad() {
+            main.addClass('is-loading');
+        },
+
+        endLoad: function endLoad() {
+            main.removeClass('is-loading');
+        }
     };
 };
 

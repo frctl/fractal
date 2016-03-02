@@ -71,6 +71,14 @@
     position: relative;
     z-index: 1;
     padding-bottom: 1px;
+    &.is-loading {
+        background-image: url('/_theme/img/loader.svg');
+        background-repeat: no-repeat;
+        background-position: 50%;
+        .Frame-inner {
+            display: none;
+        }
+    }
 }
 .Frame-handle {
     flex: 0 0 auto;

@@ -25,18 +25,20 @@
     </div>
 
     <div class="Pen-panel Pen-preview Preview" data-behaviour="preview" id="preview-{{ entity.id }}">
-        <div class="Preview-resizer" data-role="resizer">
-            <iframe
-                class="Preview-iframe"
-                data-role="window"
-                src="{{ previewUrl }}"
-                sandbox="allow-same-origin allow-scripts"
-                srcdoc="{{ variant | preview | escape }}"
-                marginwidth="0" marginheight="0" frameborder="0" vspace="0" hspace="0" scrolling="yes">
-            </iframe>
+        <div class="Preview-wrapper" data-role="resizer">
+            <div class="Preview-resizer">
+                <iframe
+                    class="Preview-iframe"
+                    data-role="window"
+                    src="{{ previewUrl }}"
+                    sandbox="allow-same-origin allow-scripts"
+                    srcdoc="{{ variant | preview | escape }}"
+                    marginwidth="0" marginheight="0" frameborder="0" vspace="0" hspace="0" scrolling="yes">
+                </iframe>
+            </div>
             <div class="Preview-handle" data-role="resize-handle"></div>
+            <div class="Preview-overlay"></div>
         </div>
-        <div class="Preview-overlay"></div>
     </div>
 
     <div class="Pen-handle" data-role="resize-handle"></div>
