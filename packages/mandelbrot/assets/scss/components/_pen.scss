@@ -40,9 +40,8 @@
 }
 .Pen-preview {
     flex: 0 0 auto;
-    min-height: 150px;
     height: 50%;
-    max-height: calc(100% - 200px);
+    max-height: calc(100% - 100px);
     margin: 0 20px 0 20px;
 }
 .Pen-handle {
@@ -60,29 +59,3 @@
     position: relative;
     border: 1px solid $color-alpha-tint-light;
 }
-
-
-// .Pen-preview {
-//     position: relative;
-//     flex: 0 0 auto;
-//     margin: 0 20px 20px 20px;
-//     border: 1px solid $color-alpha-tint-light;
-//     iframe {
-//         width: 100%;
-//         position: absolute;
-//         height: 100%;
-//         @include trbl(0);
-//     }
-// }
-// .Pen-info {
-//     margin: 20px;
-//     background: $color-gamma;
-//     flex: 1 1 auto;
-//     overflow: scroll;
-// }
-// .Pen-splitter {
-//     flex: 0 0 auto;
-//     background: #999;
-//     height: 10px;
-//     width: 100%;
-// }

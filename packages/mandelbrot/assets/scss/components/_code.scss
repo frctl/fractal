@@ -1,8 +1,10 @@
 .Code {
     display: block;
     background-color: $color-gamma;
+    -webkit-overflow-scrolling: touch;
     pre {
         background-color: $color-gamma;
         padding: 10px;
+        -webkit-overflow-scrolling: touch;
     }
 }

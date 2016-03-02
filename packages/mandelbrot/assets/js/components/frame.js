@@ -22,7 +22,7 @@ module.exports = function(element){
     const main         = body.children('[data-role="main"]');
     const handle       = body.children('[data-role="frame-resize-handle"]');
     const sidebarMin   = parseInt(sidebar.css('min-width'), 10);
-    const touch        = new Hammer(el[0]);
+    // const touch        = new Hammer(el[0]);
 
     let sidebarWidth   = isSmallScreen() ? sidebarMin : storage.get(`frame.sidebar`, sidebar.outerWidth());
     let sidebarState   = isSmallScreen() ? 'closed' : storage.get(`frame.state`, 'open');
@@ -30,7 +30,7 @@ module.exports = function(element){
     let dragOccuring   = false;
     let isInitialClose = false;
 
-    touch.get('swipe').set({ direction: Hammer.DIRECTION_HORIZONTAL });
+    // touch.get('swipe').set({ direction: Hammer.DIRECTION_HORIZONTAL });
 
     sidebar.outerWidth(sidebarWidth);
 
@@ -69,8 +69,8 @@ module.exports = function(element){
 
     // Touch events
 
-    touch.on('swipeleft', closeSidebar);
-    touch.on('swiperight', openSidebar);
+    // touch.on('swipeleft', closeSidebar);
+    // touch.on('swiperight', openSidebar);
 
     // Global event listeners
 

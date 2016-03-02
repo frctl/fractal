@@ -3,6 +3,7 @@
     background-color: $color-gamma;
     outline: solid $color-alpha-tint-light 1px;
     outline-offset: -1px;
+    -webkit-overflow-scrolling: touch;
     &.is-disabled {
         .Preview-overlay {
              display: block;
@@ -26,9 +27,12 @@
     bottom: 0;
     border: 1px solid $color-alpha-tint-light;
     background-color: #fff;
+    -webkit-overflow-scrolling: touch;
 }
 .Preview-iframe {
+    -webkit-overflow-scrolling: touch;
     position: absolute;
+    z-index: 0;
     width: 100%;
     height: 100%;
     top: 0;

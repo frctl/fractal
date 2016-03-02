@@ -65,7 +65,11 @@ var Browser = function () {
         this._el = $(el);
         this._tabs = this._el.find('[data-role="tab"]');
         this._tabPanels = this._el.find('[data-role="tab-panel"]');
+        this._fileSwitcher = this._el.find('[data-role="switcher"]');
+        this._codeViews = this._el.find('[data-role="code"]');
+        this._activeClass = 'is-active';
         this._initTabs();
+        this._initFileSwitcher();
     }
 
     _createClass(Browser, [{
@@ -73,19 +77,40 @@ var Browser = function () {
         value: function _initTabs() {
             var _this = this;
 
-            var selectedIndex = Math.min(this._tabs.length - 1, storage.get('browser.selectedTabIndex', 0));
-            this._tabs.on('click', function (e) {
+            var ac = this._activeClass;
+            var tabs = this._tabs;
+            var selectedIndex = Math.min(tabs.length - 1, storage.get('browser.selectedTabIndex', 0));
+            tabs.on('click', function (e) {
                 var link = $(e.target);
                 var tab = link.parent();
-                _this._tabs.removeClass('is-active');
-                storage.set('browser.selectedTabIndex', _this._tabs.index(tab));
-                tab.addClass('is-active');
-                _this._tabPanels.removeClass('is-active');
-                _this._tabPanels.filter(link.attr('href')).addClass('is-active');
+                tabs.removeClass(ac);
+                storage.set('browser.selectedTabIndex', tabs.index(tab));
+                tab.addClass(ac);
+                _this._tabPanels.removeClass(ac);
+                _this._tabPanels.filter(link.attr('href')).addClass(ac);
                 return false;
             });
-            this._tabs.removeClass('is-active');
-            this._tabs.eq(selectedIndex).find('a').trigger('click');
+            tabs.removeClass('is-active');
+            tabs.eq(selectedIndex).find('a').trigger('click');
+        }
+    }, {
+        key: '_initFileSwitcher',
+        value: function _initFileSwitcher() {
+            var _this2 = this;
+
+            var ac = this._activeClass;
+            var switcher = this._fileSwitcher;
+            var defaultSelected = storage.get('browser.selectedCodeView', 'code-html');
+            switcher.on('change', function (e) {
+                var selected = $(e.target).val();
+                storage.set('browser.selectedCodeView', selected);
+                _this2._codeViews.removeClass(ac);
+                _this2._codeViews.filter('#' + selected).addClass(ac);
+            });
+            if (switcher.find('option[value="' + defaultSelected + '"]').length) {
+                switcher.val(defaultSelected);
+            }
+            switcher.trigger('change');
         }
     }]);
 
@@ -122,7 +147,7 @@ module.exports = function (element) {
     var main = body.children('[data-role="main"]');
     var handle = body.children('[data-role="frame-resize-handle"]');
     var sidebarMin = parseInt(sidebar.css('min-width'), 10);
-    var touch = new Hammer(el[0]);
+    // const touch        = new Hammer(el[0]);
 
     var sidebarWidth = isSmallScreen() ? sidebarMin : storage.get('frame.sidebar', sidebar.outerWidth());
     var sidebarState = isSmallScreen() ? 'closed' : storage.get('frame.state', 'open');
@@ -130,7 +155,7 @@ module.exports = function (element) {
     var dragOccuring = false;
     var isInitialClose = false;
 
-    touch.get('swipe').set({ direction: Hammer.DIRECTION_HORIZONTAL });
+    // touch.get('swipe').set({ direction: Hammer.DIRECTION_HORIZONTAL });
 
     sidebar.outerWidth(sidebarWidth);
 
@@ -169,8 +194,8 @@ module.exports = function (element) {
 
     // Touch events
 
-    touch.on('swipeleft', closeSidebar);
-    touch.on('swiperight', openSidebar);
+    // touch.on('swipeleft', closeSidebar);
+    // touch.on('swiperight', openSidebar);
 
     // Global event listeners
 

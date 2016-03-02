@@ -82,6 +82,7 @@
     flex: 0 0 auto;
 }
 .Browser-files {
+    -webkit-overflow-scrolling: touch;
     flex: 1 1 auto;
     display: flex;
     overflow: auto;
@@ -94,6 +95,8 @@
 
 .Browser-fileContent {
     flex: 1 1 auto;
+    display: none;
+    -webkit-overflow-scrolling: touch;
     &.is-active {
         display: flex;
     }
