@@ -24,8 +24,8 @@ module.exports = function(element){
     const sidebarMin   = parseInt(sidebar.css('min-width'), 10);
     // const touch        = new Hammer(el[0]);
 
-    let sidebarWidth   = isSmallScreen() ? sidebarMin : storage.get(`frame.sidebar`, sidebar.outerWidth());
-    let sidebarState   = isSmallScreen() ? 'closed' : storage.get(`frame.state`, 'open');
+    let sidebarWidth   = utils.isSmallScreen() ? sidebarMin : storage.get(`frame.sidebar`, sidebar.outerWidth());
+    let sidebarState   = utils.isSmallScreen() ? 'closed' : storage.get(`frame.state`, 'open');
     let scrollPos      = storage.get(`frame.scrollPos`, 0);
     let dragOccuring   = false;
     let isInitialClose = false;
@@ -89,7 +89,7 @@ module.exports = function(element){
 
     function closeSidebar(){
         if (dragOccuring || (!isInitialClose && sidebarState == 'closed')) return;
-        const w = sidebar.outerWidth() - handle.outerWidth();
+        const w = sidebar.outerWidth();
         if (isInitialClose) {
             body.css({
                 transition: 'none',
@@ -103,7 +103,7 @@ module.exports = function(element){
                 transform: `translate3d(${(-1 * w)}px, 0, 0)`
             });
         }
-        handle.hide();
+        handle.addClass('is-disabled');
         sidebarState = 'closed';
         el.addClass('is-closed');
         storage.set(`frame.state`, sidebarState);
@@ -112,7 +112,7 @@ module.exports = function(element){
 
     function openSidebar(){
         if (dragOccuring || sidebarState == 'open') return;
-        if (isSmallScreen()) {
+        if (utils.isSmallScreen()) {
             setSidebarWidth(sidebarMin);
         }
         body.css({
@@ -120,7 +120,7 @@ module.exports = function(element){
             transition: '.3s ease all',
             transform: `translate3d(0, 0, 0)`
         });
-        handle.show();
+        handle.removeClass('is-disabled');
         sidebarState = 'open';
         el.removeClass('is-closed');
         storage.set(`frame.state`, sidebarState);
@@ -131,13 +131,14 @@ module.exports = function(element){
         return false;
     }
 
-    function isSmallScreen() {
-        return doc.width() < config.breakpoints.navCollapse;
-    }
-
     function setSidebarWidth(width){
         sidebarWidth = width;
         sidebar.outerWidth(width);
         storage.set(`frame.sidebar`, width);
+    }
+
+    return {
+        closeSidebar: closeSidebar,
+        openSidebar: openSidebar
     }
 };

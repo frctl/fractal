@@ -3,7 +3,6 @@
     background-color: $color-gamma;
     outline: solid $color-alpha-tint-light 1px;
     outline-offset: -1px;
-    -webkit-overflow-scrolling: touch;
     &.is-disabled {
         .Preview-overlay {
              display: block;
@@ -14,6 +13,9 @@
         * {
             cursor: grabbing !important;
         }
+    }
+    @include mq($until: navCollapse) {
+        outline: none;
     }
 }
 .Preview-resizer {
@@ -28,9 +30,14 @@
     border: 1px solid $color-alpha-tint-light;
     background-color: #fff;
     -webkit-overflow-scrolling: touch;
+    overflow: auto;
+    @include mq($until: navCollapse) {
+        width: 100% !important; // override any JS-set widths
+        min-width: 100%;
+        border: 0;
+    }
 }
 .Preview-iframe {
-    -webkit-overflow-scrolling: touch;
     position: absolute;
     z-index: 0;
     width: 100%;
@@ -61,4 +68,8 @@
     z-index: 100;
     background: transparent url('/_theme/img/icon-drag--vertical.svg') no-repeat 50% 50%;
     background-size: 3px 16px;
+    @include dragHandle;
+    @include mq($until: navCollapse) {
+        display: none;
+    }
 }

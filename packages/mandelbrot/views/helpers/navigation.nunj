@@ -37,14 +37,3 @@
         {% endif %}
     {% endfor %}
 {% endmacro %}
-
-{% macro variants(item, root, depth, current) %}
-<li class="Tree-item Tree-collection Tree-depth-{{ depth }}" data-behaviour="collection" id="tree-{{ root.name }}-collection-{{ item.handle }}">
-    <h4 class="Tree-collectionLabel" data-role="toggle">
-        <span>{{ item.label }}</span>
-    </h4>
-    <ul class="Tree-collectionItems" data-role="items">
-    {{ leaves(item.variants().items(), root, current, (depth + 1)) }}
-    </ul>
-</li>
-{% endmacro %}

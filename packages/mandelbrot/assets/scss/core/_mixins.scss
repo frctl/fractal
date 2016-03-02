@@ -33,3 +33,14 @@
     bottom: $val;
     left: $val;
 }
+
+@mixin dragHandle {
+    &.is-disabled {
+        pointer-events: none;
+        visibility: hidden;
+    }
+    @include mq($until: navCollapse) {
+        pointer-events: none;
+        visibility: hidden;
+    }
+}
