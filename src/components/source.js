@@ -20,6 +20,7 @@ module.exports = class ComponentSource extends Source {
         this._status   = props.status.default;
         this._preview  = props.preview.layout;
         this._display  = props.preview.display;
+        this._collated = props.collated || false;
         this._statuses = props.status;
         this._prefix   = props.prefix || null;
         this.yield     = props.preview.yield;
@@ -88,7 +89,7 @@ module.exports = class ComponentSource extends Source {
 
         return co(function* () {
             const source = yield self.load();
-            if (_.includes(['component', 'variant' /*, 'collection' */], entity.type)) {
+            if (_.includes(['component', 'variant'], entity.type)) {
                 if (entity.type == 'component') {
                     entity = entity.variants().default();
                 }

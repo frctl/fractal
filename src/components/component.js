@@ -30,6 +30,7 @@ module.exports = class Component {
         this._status     = props.status  || props.parent._status;
         this._preview    = props.preview || props.parent._preview;
         this._display    = props.display || props.parent._display;
+        this._collated   = props.collated || props.parent._collated;
         this._assets     = assets;
 
         this._variants = null;

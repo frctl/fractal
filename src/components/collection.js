@@ -14,6 +14,7 @@ module.exports = class ComponentCollection extends Entities {
         this._prefix        = props.prefix  || this._parent._prefix;
         this._preview       = props.preview || this._parent._preview;
         this._display       = props.display || this._parent._display;
+        this._collated      = props.collated || this._parent._collated;
         this._tags          = props.tags    || this._parent._tags;
     }
 
