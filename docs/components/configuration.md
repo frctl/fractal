@@ -15,9 +15,10 @@ If you haven't already, you should read the [configuration file documentation](/
   - [status](#status)
   - [preview](#preview)
   - [context](#context)
+  - [collated](#collated)
   - [notes](#notes)
   - [tags](#tags)
-  - [isHidden](#ishidden)
+  - [hidden](#hidden)
   - [order](#order)
   - [display](#display)
   - [variants](#variants)
@@ -91,6 +92,14 @@ context:
   listItems: ['foo','bar','baz']
 ```
 
+### collated
+
+If set to true, individual variants of this component will not be visible in the web UI - instead the preview of this component will concatenate all variants together into a single preview.
+
+```yaml
+collated: false
+```
+
 ### notes
 
 Any notes about the component. Displayed in the web preview UI if present. Any notes set here override content taken from the component's README.md file, if there is one.  Accepts markdown.
@@ -109,12 +118,12 @@ An array of tags to add to the component. Can be used by plugins and tasks to fi
 tags: ['sprint-1', 'foobar']
 ```
 
-### isHidden
+### hidden
 
 Specifies whether the component [is hidden](/docs/components/tips-and-tricks.md#hiding-components-from-listings) (i.e. does not show up in listings or navigation) or not. Overrides the inferred value from an underscore-prefixed file name if set.
 
 ```yaml
-isHidden: true
+hidden: true
 ```
 ### order
 

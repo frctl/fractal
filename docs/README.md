@@ -7,6 +7,7 @@
 * [Overview](/docs/overview.md)
 * [Installation](/docs/installation.md)
 * [Project settings](/docs/project-settings.md)
+* [Running Commands](/docs/commands.md)
 * [Working with configuration files](/docs/configuration-files.md)
 * Components
 	* [Overview](/docs/components/overview.md)

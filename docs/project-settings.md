@@ -77,13 +77,11 @@ fractal.set('components.path', 'src/components');
 
 ### Template engine
 
-Which template engine to use for your component views. See the [template engines documentation](/docs/engines/overview.md) for more options and details on how to implement a custom engine if your desired template language is not supported out of the box.
+Which template engine to use for your component views. Fractal uses [Handlebars](http://handlebarsjs.com) by default, but you can use many others by installing the appropriate adapter. See the [template engines documentation](/docs/engines/overview.md) for more information.
 
 ```js
 fractal.set('components.engine', 'handlebars');
 ```
-* **Choices:** `handlebars | nunjucks | mustache`
-* **Default:** `handlebars`
 
 ### File extension
 
@@ -122,13 +120,11 @@ fractal.set('docs.path', 'src/docs');
 ```
 ### Template engine
 
-Which template engine to use to render your documentation pages. See the [template engines documentation](/docs/engines/overview.md) for more options and details on how to implement a custom engine if your desired template language is not supported out of the box.
+Which template engine to use to render your documentation pages. Fractal uses [Handlebars](http://handlebarsjs.com) by default, but you can use many others by installing the appropriate adapter. See the [template engines documentation](/docs/engines/overview.md) for more information.
 
 ```js
 fractal.set('docs.engine', 'handlebars');
 ```
-* **Choices:** `handlebars | nunjucks | mustache`
-* **Default:** `handlebars`
 
 ### File extension
 

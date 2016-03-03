@@ -1,6 +1,6 @@
 # Fractal Web UI
 
-The Fractal web UI provides a web-based interface to browse your components and their associated files, as well as read project documentation. The UI itself relies on themes to both generate the visual interface and to provide specific functionality. 
+The Fractal web UI provides a web-based interface to browse your components and their associated files, as well as read project documentation. The UI itself relies on themes to both generate the visual interface and to provide specific functionality.
 
 The web UI functionality itself is actually just a [Fractal plugin](/docs/plugins/overview.md), although it comes bundled with Fractal by default so you won't ever need to install it separately.
 
@@ -20,19 +20,22 @@ The web UI functionality itself is actually just a [Fractal plugin](/docs/plugin
 
 ## Getting started with the web UI
 
-The web UI can be generated in two ways:
+The web UI can be accessed in two ways:
 
 1. You can start a **local server** to run it *dynamically*, which will mean that any local changes to your components or documentation pages are immediately reflected in the UI. This is great for when you are *developing* your component library.
 2. You can generate a **static build** of the web UI, which is great for when you are ready to upload it to a server to share with others.
 
+> All commands for working with the web UI must be run from within the Fractal interactive CLI. To enter interactive mode, run the `fractal` command in your terminal (from within your project directory) before using the commands below.
+
 ### Starting the local development server
 
-You can use the command `fractal start` from within your project directory to start the local web server. It will start and then give you a local URL (for example `http://localhost:3000`) that you can use to view the web UI.
+You can use the command `start` from within your project directory to start the local web server. It will start and then give you a local URL (for example `http://localhost:3000`) that you can use to view the web UI. Fractal will automatically find an available port to run the server on and give you a URL once it has started.
 
-You can provide the following optional  command line options to override the default configuration:
+You can provide the following (optional) command line options to override the default configuration:
 
-* `--port` - the port number to use, for example `5000`
-* `--theme` - a custom theme to use. 
+* `-p, --port <port-number>` - the port number to use, for example `5000`.
+* `-t, --theme <theme-name>` - a custom theme to use.
+* `-s, --sync` - whether to use [BrowserSync](https://www.browsersync.io) to provide auto-refresh and syncing capabilities
 
 > Note that themes must be installed before they can be used. See the [themes documentation](/docs/web/themes.md) for more information on creating and using custom themes.
 
@@ -46,11 +49,11 @@ Would start the preview server at the URL `http://localhost:4000` using the cust
 
 ### Building a static version of the web UI
 
-You can use the `fractal build` command to build a static HTML/CSS/JS version of the web UI. The static version will be generated into the directory specified in your project configuration, or a directory called `build` if not specified.
+You can use the `build` command to build a static HTML/CSS/JS version of the web UI. The static version will be generated into the directory specified in your project configuration, or a directory called `build` if not specified.
 
 You can provide the following optional  command line options to override the default configuration:
 
-* `--theme` - a custom theme to use. 
+* `-t, --theme <theme-name>` - a custom theme to use.
 
 ```shell
 fractal build --theme my-custom-theme
@@ -88,6 +91,3 @@ The directory within which the static build should be generated.
 ```js
 fractal.set('plugins.web.build.dest', 'build');
 ```
-
-
-<!--Building custom themes is straightforward and themes have complete access to all core Fractal data and APIs.-->

@@ -4,10 +4,10 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 
-  - [Overview](#overview)
-  - [Context and template partials](#context-and-template-partials)
-    - [Passing context data from parent to child templates](#passing-context-data-from-parent-to-child-templates)
-  - [Referencing context from other components](#referencing-context-from-other-components)
+- [Overview](#overview)
+- [Context and template partials](#context-and-template-partials)
+  - [Passing context data from parent to child templates](#passing-context-data-from-parent-to-child-templates)
+- [Referencing context from other components](#referencing-context-from-other-components)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
