@@ -3,7 +3,7 @@
 const chalk   = require('chalk');
 const _       = require('lodash');
 const shell   = require('shelljs');
-var kexec = require('kexec');
+const kexec   = require('kexec');
 const console = require('../console');
 
 module.exports = {
