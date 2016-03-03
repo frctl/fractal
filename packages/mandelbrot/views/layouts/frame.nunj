@@ -11,9 +11,6 @@
                 <span class="Header-buttonText">Toggle sidebar</span>
             </button>
             <a href="/" class="Header-title" data-pjax>{{ frctl.config.project.title | default('Component Library') }}</a>
-            <button class="Header-button Header-viewToggle" data-action="toggle-view">
-                <span class="Header-buttonText">Toggle view</span>
-            </button>
         </div>
     </div>
 
