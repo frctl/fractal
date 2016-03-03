@@ -124,7 +124,7 @@ function compileJS(watch) {
             })
             .pipe(source('build.js'))
             .pipe(buffer())
-            // .pipe(uglify())
+            .pipe(uglify())
             .pipe(sourcemaps.init({loadMaps: true}))
             .pipe(sourcemaps.write('./'))
             .pipe(gulp.dest('./dist/js'));
