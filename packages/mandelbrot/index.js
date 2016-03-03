@@ -52,14 +52,13 @@ module.exports = function(config){
 
         for (let comp of components.flatten()) {
             if (!comp.isHidden){
-                // builder.addRoute('preview', {preview:'iframe', 'handle':comp.handle});
-                // builder.addRoute('preview', {preview:'preview', 'handle':comp.handle});
+                builder.addRoute('preview', {'handle':comp.handle});
                 builder.addRoute('component', {'handle':comp.handle});
             }
-            // for (let variant of comp.variants()) {
-            //     builder.addRoute('preview', {preview:'preview', 'handle':variant.handle});
-            //     builder.addRoute('preview', {preview:'iframe', 'handle':variant.handle});
-            // }
+            for (let variant of comp.variants()) {
+                builder.addRoute('preview', {'handle':variant.handle});
+                if (!comp.isCollated) builder.addRoute('component', {'handle':variant.handle});
+            }
         }
 
         builder.addRoute('overview');
