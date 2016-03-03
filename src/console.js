@@ -37,6 +37,10 @@ module.exports = function(vorpal){
             notice: {
                 prefix: '⚑'
             },
+            alert: {
+                prefix: '!',
+                style: chalk.blue,
+            },
             error: {
                 prefix: '✘',
                 style: chalk.red,
@@ -71,6 +75,11 @@ module.exports = function(vorpal){
 
         success(text) {
             this.write(text, 'success');
+            return this;
+        },
+
+        alert(text) {
+            this.write(text, 'alert');
             return this;
         },
 
