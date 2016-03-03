@@ -71,6 +71,10 @@ module.exports = class Component {
         return this._preview;
     }
 
+    get display() {
+        return this._display;
+    }
+
     hasTag(tag) {
         return _.includes(this.tags, tag);
     }
