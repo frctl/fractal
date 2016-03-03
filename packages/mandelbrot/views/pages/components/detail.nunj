@@ -5,13 +5,18 @@
 {% set entity = frctl.components.find('@' + frctl.web.request.params.handle) %}
 {% if not entity or entity.isHidden %}{% throw404 'Item not found' %}{% endif %}
 
-{% set pageTitle   = entity.title %}
-{% set previewUrl  = frctl.web.theme.urlFromRoute('preview', {handle: entity.handle}) %}
-{% set contextString = entity.context | stringify %}
-{% if entity.type == 'component' %}
-{% set variant = entity.variants().default() %}
+{% set pageTitle     = entity.title %}
+{% set previewUrl    = frctl.web.theme.urlFromRoute('preview', {handle: entity.handle}) %}
+
+{% if entity.type == 'component' and entity.collated %}
+    {% set viewContent   = entity.variants().getCollatedContentSync() %}
+    {% set contextString = entity.variants().getCollatedContext() | stringify %}
+{% elif entity.type == 'component' %}
+    {% set viewContent   = entity.variants().default().getContentSync() %}
+    {% set contextString = entity.variants().default().defaultVariant().context | stringify %}
 {% else %}
-{% set variant = entity %}
+    {% set viewContent   = entity.getContentSync() %}
+    {% set contextString = entity.context | stringify %}
 {% endif %}
 
 {% block content %}
@@ -32,7 +37,7 @@
                     data-role="window"
                     src="{{ previewUrl }}"
                     sandbox="allow-same-origin allow-scripts"
-                    {% if not frctl.web.server.sync %}srcdoc="{{ variant | preview | escape }}"{% endif %}
+                    {% if not frctl.web.server.sync %}srcdoc="{{ entity | preview | escape }}"{% endif %}
                     marginwidth="0" marginheight="0" frameborder="0" vspace="0" hspace="0" scrolling="yes">
                 </iframe>
             </div>
@@ -89,7 +94,7 @@
                     </div>
                     <div class="Browser-fileContent" data-role="code" id="code-view">
                         <code class="Code Code--lang-{{ variant.lang.editorMode }}">
-                            <pre>{{ variant.getContentSync() | highlight(variant.editorMode) }}</pre>
+                            <pre>{{ viewContent | highlight(entity.editorMode) }}</pre>
                         </code>
                     </div>
                     <div class="Browser-fileContent" data-role="code" id="code-context">
