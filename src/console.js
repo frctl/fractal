@@ -6,8 +6,6 @@ const Table       = require('cli-table2');
 const prettyjson  = require('prettyjson');
 const utils       = require('./utils');
 const slog        = require('single-line-log').stdout;
-const Spinner = require('cli-spinner').Spinner;
-
 
 module.exports = function(vorpal){
 
@@ -133,54 +131,6 @@ module.exports = function(vorpal){
                 }
             }
         },
-
-        // ascii(text, font){
-        //     this.write(figlet.textSync(text, {
-        //         font: font || 'Small Isometric1',
-        //         horizontalLayout: 'default',
-        //         verticalLayout: 'default'
-        //     }));
-        //     return this;
-        // },
-
-        // pending(text, callback){
-        //     callback = callback || () => {};
-        //     const spinner = new Spinner(`%s ${text}...`);
-        //     const done = () => {
-        //         spinner.stop();
-        //         this.br();
-        //         // this.unpause();
-        //     };
-        //     // this.pause();
-        //     spinner.setSpinnerString(18);
-        //     spinner.start();
-        //     callback(spinner, done);
-        //     return this;
-        // },
-
-        // progress(text, opts, callback){
-        //     var bar = new ProgressBar(`${text} [:bar]`, opts);
-        //     callback(bar);
-        //     return this;
-        // },
-
-        //
-        // taskStart(taskName){
-        //     sll('startinf....')
-        // },
-        //
-        // taskEnd(taskName){
-        //     sll('done!');
-        //
-        // },
-        //
-        // table(){
-        //
-        // },
-        //
-        // ask(text, handler) {
-        //
-        // },
 
         slog() {
             this._slogging = true;
