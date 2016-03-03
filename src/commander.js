@@ -2,9 +2,10 @@
 
 const _        = require('lodash');
 const chalk    = require('chalk');
+const minimist = require('minimist');
+const chokidar = require('chokidar');
 const console  = require('./console');
 const utils    = require('./utils');
-const minimist = require('minimist');
 
 module.exports = function (app, vorpal, defaults) {
 
@@ -31,12 +32,18 @@ module.exports = function (app, vorpal, defaults) {
         });
     }
 
+    function watchFractalFile(){
+        chokidar.watch('fractal.js').on('change', (path) => {
+            console.log('changed');
+        });
+    }
+
     return {
 
         add: add,
 
         run() {
-
+            
             const scope = app.scope;
             const input = utils.parseArgv();
 

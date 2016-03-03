@@ -2,20 +2,22 @@
 
 const chalk   = require('chalk');
 const _       = require('lodash');
+const shell   = require('shelljs');
+var kexec = require('kexec');
 const console = require('../console');
 
 module.exports = {
 
-    command: 'show-config [path]',
+    command: 'restart',
 
     config: {
-        description: 'Display project configuration info',
+        description: 'Restart Fractal after changes to your fractal.js file',
         scope: ['project'],
-        hidden: true
+        hidden: false
     },
 
     action: function (args, done) {
-        console.dump(this.fractal.get(args.path));
+        kexec('fractal');
         done();
     }
 
