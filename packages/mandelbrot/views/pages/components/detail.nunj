@@ -8,7 +8,7 @@
 {% set pageTitle     = entity.title %}
 {% set previewUrl    = frctl.web.theme.urlFromRoute('preview', {handle: entity.handle}) %}
 
-{% if entity.type == 'component' and entity.collated %}
+{% if entity.type == 'component' and entity.isCollated %}
     {% set viewContent   = entity.variants().getCollatedContentSync() %}
     {% set contextString = entity.variants().getCollatedContext() | stringify %}
 {% elif entity.type == 'component' %}
