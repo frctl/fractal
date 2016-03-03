@@ -56,6 +56,9 @@ module.exports = function (app, vorpal, defaults) {
                     });
                     cmd.option('--nonint', 'Run the command in non-interactive mode');
                     cmd.__scope = commandScope;
+                    if (item.config.hidden) {
+                        cmd.hidden();
+                    }
                 } else {
                     // command not available in this scope
                     const cmd = vorpal.command(item.command.replace(/\</g,'[').replace(/\>/g,']'), item.config.description || ' ');

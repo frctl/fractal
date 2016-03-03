@@ -10,7 +10,8 @@ module.exports = {
 
     config: {
         description: 'Display project configuration info',
-        scope: ['project']
+        scope: ['project'],
+        hidden: true
     },
 
     action: function (args, done) {
