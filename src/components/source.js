@@ -47,23 +47,18 @@ module.exports = class ComponentSource extends Source {
 
     renderPreview(entity, useLayout) {
         useLayout = useLayout !== false ? true : false;
-        if (entity.type === 'component') {
-            entity = entity.variants().default();
-        }
         return this.render(entity, entity.context, { useLayout: true });
     }
 
     /**
-     * Main render method. Accepts a collection, component or variant
+     * Main render method. Accepts a component or variant
      * and renders them appropriately.
      *
      * Rendering a component results in the rendering of the components' default variant,
      * unless the collated option is 'true' - in this case it will return a collated rendering
      * of all it's variants.
-     * Rendering a collection results in a collated rendering of
-     * all the descendent items.
      *
-     * @param {Collection/Component/Variant} entity
+     * @param {Component/Variant} entity
      * @param {Object} context
      * @param {Object} opts
      * @return {Promise}
@@ -74,7 +69,7 @@ module.exports = class ComponentSource extends Source {
 
         opts           = opts || {};
         opts.useLayout = opts.useLayout || false;
-        opts.collated  = opts.collated  || false;
+        // opts.collated  = opts.collated  || false;
 
         const self = this;
 
@@ -89,11 +84,18 @@ module.exports = class ComponentSource extends Source {
 
         return co(function* () {
             const source = yield self.load();
+            let rendered;
             if (_.includes(['component', 'variant'], entity.type)) {
                 if (entity.type == 'component') {
-                    entity = entity.variants().default();
+                    if (entity.collated) {
+                        rendered = yield self._renderCollatedComponent(entity, context);
+                    } else {
+                        entity = entity.variants().default();
+                        rendered = yield self._renderVariant(entity, context);
+                    }
+                } else {
+                    rendered = yield self._renderVariant(entity, context);
                 }
-                const rendered = yield self._renderVariant(entity, context);
                 if (opts.useLayout && entity.preview) {
                     return yield self._wrapInLayout(rendered, entity.preview, {
                         _target: entity.toJSON()
@@ -116,29 +118,16 @@ module.exports = class ComponentSource extends Source {
         return this.engine().render(variant.viewPath, content, ctx);
     }
 
-    // *_renderComponent(component, context) {
-    //     const variant = component.variants().default();
-    //     return yield this._renderVariant(variant, context);
-    // }
-
-    // _renderCollatedComponent: function* (component, context){
-    //     const items = component.variants();
-    // }
-
-    // _renderCollection: function* (collection, context)  {
-    //     const items = collection.flattenDeep().items();
-    //     return this._renderCollated(items);
-    // }
-
-    // _renderCollated: function* (items, context){
-    //     context = context || {};
-    //     return (yield items.map(item => {
-    //         const ctx = context[item.handle] || item.
-    //         return this.render(item).then(markup => {
-    //             return _.isFunction(this.collator) ? this.collator(markup, item) : markup;
-    //         });
-    //     })).join('\n');
-    // }
+    *_renderCollatedComponent(component, context) {
+        context = context || {};
+        return (yield component.variants().toArray().map(variant => {
+            return this.resolve(context[`@${variant.handle}`] || variant.context).then(ctx => {
+                return this.render(variant, ctx).then(markup => {
+                    return _.isFunction(this.collator) ? this.collator(markup, variant) : markup;
+                });
+            });
+        })).join('\n');
+    }
 
     *_wrapInLayout(content, previewHandle, context) {
         let layout = this.find(previewHandle);
@@ -196,17 +185,20 @@ module.exports = class ComponentSource extends Source {
         if (this.size === 0 || arguments.length === 0) {
             return;
         }
+        const isHandleFind = arguments.length == 1 && _.isString(arguments[0]) && arguments[0].startsWith('@');
         for (let item of this) {
             if (item.type === 'collection') {
                 const search = item.find.apply(item, arguments);
                 if (search) return search;
             } else if (item.type === 'component') {
-                const matcher = this._makePredicate.apply(null, arguments);
+                const matcher = isHandleFind ? this._makePredicate.apply(null, ['handle', arguments[0].replace('@','')]) : this._makePredicate.apply(null, arguments);
                 if (matcher(item)) return item;
-                if (arguments.length == 1 && _.isString(arguments[0]) && arguments[0].startsWith('@')) {
-                    let variant = item.variants().find(arguments[0]);
-                    if (variant) return variant;
-                }
+            }
+        }
+        if (isHandleFind) {
+            for (let item of this.entities()) {
+                let variant = item.variants().find(arguments[0]);
+                if (variant) return variant;
             }
         }
     }

@@ -23,6 +23,9 @@ module.exports = class Component {
         this.title       = props.title || this.label;
         this.defaultName = props.default || 'default';
         this.notes       = props.notes ? md(props.notes) : null;
+        this.lang        = files.view.lang.name;
+        this.editorMode  = files.view.lang.mode;
+        this.editorScope = files.view.lang.scope;
         this._parent     = props.parent;
         this._source     = props.source;
         this._context    = _.clone(props.context) || {};
@@ -32,8 +35,7 @@ module.exports = class Component {
         this._display    = props.display || props.parent._display;
         this._collated   = props.collated || props.parent._collated;
         this._assets     = assets;
-
-        this._variants = null;
+        this._variants   = null;
     }
 
     setVariants(variantCollection){
@@ -49,16 +51,24 @@ module.exports = class Component {
     }
 
     get status() {
-        const variantStatuses = _.compact(_.uniq(_.map(this.variants().toArray(), v => v._status)));
-        return this._source.statusInfo(variantStatuses);
+        // const variantStatuses = _.compact(_.uniq(_.map(this.variants().toArray(), v => v._status)));
+        return this._source.statusInfo(this._status);
     }
 
     get parent() {
         return this._parent;
     }
 
+    get collated() {
+        return this._collated;
+    }
+
     get content() {
         return this.variants().default().getContentSync();
+    }
+
+    get preview() {
+        return this._preview;
     }
 
     hasTag(tag) {

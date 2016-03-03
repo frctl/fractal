@@ -17,10 +17,26 @@ module.exports = class VariantCollection extends Collection {
         this._prefix  = this._parent._prefix;
         this._preview = this._parent._preview;
         this._display = this._parent._display;
+        this._collator = this._parent._source.collator;
     }
 
     default() {
         return this.find('name', this._parent.defaultName);
+    }
+
+    getCollatedContentSync() {
+        return (this.toArray().map(variant => {
+            const content = variant.getContentSync();
+            return _.isFunction(this._collator) ? this._collator(content, variant) : content;
+        })).join('\n');
+    }
+
+    getCollatedContext() {
+        let collated = {};
+        this.toArray().forEach(variant => {
+            collated[`@${variant.handle}`] = variant.context;
+        });
+        return collated;
     }
 
     static *create(component, defaultView, configured, views, props) {
