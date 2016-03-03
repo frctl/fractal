@@ -4,8 +4,9 @@ const chalk       = require('chalk');
 const _           = require('lodash');
 const Table       = require('cli-table2');
 const prettyjson  = require('prettyjson');
-const utils       = require('./utils');
+const columnify   = require('columnify');
 const slog        = require('single-line-log').stdout;
+const utils       = require('./utils');
 
 module.exports = function(vorpal){
 
@@ -130,6 +131,10 @@ module.exports = function(vorpal){
                     }
                 }
             }
+        },
+
+        columns(data, options) {
+            this.write(columnify(data, options));
         },
 
         slog() {

@@ -38,6 +38,10 @@ You can now enter commands to interact with your fractal project. Use the `help`
 
 To **exit** the interactive CLI and go back into your 'regular' terminal, use the `exit` command.
 
+### Using fractal commands in build scripts
+
+If you want to use a Fractal command in your NPM scripts or 
+
 ## Default project commands
 
 The default installation of Fractal provides a number of *project-level* commands.
