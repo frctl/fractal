@@ -2,14 +2,16 @@
 
 const _        = require('lodash');
 const chalk    = require('chalk');
+const minimist = require('minimist');
+const chokidar = require('chokidar');
 const console  = require('./console');
 const utils    = require('./utils');
-const minimist = require('minimist');
 
 module.exports = function (app, vorpal, defaults) {
 
     const commands  = new Set();
     const delimiter = chalk.magenta('fractal ➤');
+    // let hasChanged = false;
 
     _.forEach(defaults, c => add(c.command, c.config || {}, c.action));
 
@@ -28,6 +30,15 @@ module.exports = function (app, vorpal, defaults) {
             command: command,
             action:  action,
             config:  config
+        });
+    }
+
+    function watchFractalFile(){
+        chokidar.watch('fractal.js').on('change', (path) => {
+            if (!hasChanged) {
+                console.alert('Your fractal.js file has changed. You will need to run the \'restart\' command to see changes take effect.');
+                hasChanged = true;
+            }
         });
     }
 
@@ -100,16 +111,23 @@ module.exports = function (app, vorpal, defaults) {
                     `Powered by Fractal v${app.version}`
                 ).unslog();
             } else {
-                console.slog().log('Initialising Fractal....');
+                if (!input.opts.restart) {
+                    console.slog().log('Initialising Fractal....');
+                }
+                watchFractalFile();
                 return app.load().then(() => {
                     app.watch();
                     vorpal.delimiter(delimiter);
                     vorpal.history('fractal');
-                    console.box(
-                        `Fractal interactive CLI`,
-                        `- Use the 'help' command to see all available commands.\n- Use the 'exit' command to exit the app.`,
-                        `Powered by Fractal v${app.version}`
-                    ).unslog().br();
+                    if (!input.opts.restart) {
+                        console.box(
+                            `Fractal interactive CLI`,
+                            `- Use the 'help' command to see all available commands.\n- Use the 'exit' command to exit the app.`,
+                            `Powered by Fractal v${app.version}`
+                        ).unslog().br();
+                    } else {
+                        console.success('Fractal has been successfully restarted.');
+                    }
                     if (input.command) {
                         vorpal.parse(process.argv);
                     }

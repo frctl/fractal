@@ -1,8 +1,8 @@
 'use strict';
 
-const chalk = require('chalk');
-const _     = require('lodash');
-const console   = require('../console');
+const chalk   = require('chalk');
+const _       = require('lodash');
+const console = require('../console');
 
 module.exports = {
 

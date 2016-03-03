@@ -2,5 +2,6 @@
 
 module.exports = {
     showConfig: require('./show-config'),
-    new: require('./new'),
+    new:        require('./new'),
+    restart:    require('./restart'),
 };
