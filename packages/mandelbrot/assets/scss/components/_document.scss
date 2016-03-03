@@ -1,5 +1,6 @@
 .Document {
     padding: 30px;
+    max-width: 58em;
     @include mq($until: navCollapse) {
         padding: 20px;
     }

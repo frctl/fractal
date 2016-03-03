@@ -15,7 +15,7 @@ module.exports = function(config){
 
     this.static(Path.join(__dirname, 'dist'), '/_theme');
 
-    this.options.palette = config.palette || 'default';
+    this.options.colorscheme = config.colorscheme || config.palette || 'default';
 
     this.route('/', {
         handle: 'overview',
