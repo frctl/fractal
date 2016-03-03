@@ -1,3 +1,3 @@
 # Mandelbrot
 
-A theme for Fractal.
+The default web UI theme Fractal.

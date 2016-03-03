@@ -68,8 +68,8 @@ gulp.task('fonts', ['clean:fonts'], function() {
         './node_modules/open-sans-fontface/fonts/Italic/OpenSans-Italic.woff2',
         './node_modules/open-sans-fontface/fonts/SemiboldItalic/OpenSans-SemiboldItalic.woff',
         './node_modules/open-sans-fontface/fonts/SemiboldItalic/OpenSans-SemiboldItalic.woff2',
-        './assets/fonts/hack/woff/*.woff',
-        './assets/fonts/hack/woff2/*.woff2'
+        './node_modules/hack-font/build/webfonts/fonts/woff/*.woff',
+        './node_modules/hack-font/build/webfonts/fonts/woff2/*.woff2'
     ]).pipe(gulp.dest('./dist/fonts'));
 });
 
