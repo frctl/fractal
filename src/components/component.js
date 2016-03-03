@@ -59,7 +59,7 @@ module.exports = class Component {
         return this._parent;
     }
 
-    get collated() {
+    get isCollated() {
         return this._collated;
     }
 
@@ -93,20 +93,21 @@ module.exports = class Component {
 
     toJSON() {
         return {
-            type:     this.type,
-            id:       this.id,
-            name:     this.name,
-            handle:   this.handle,
-            label:    this.label,
-            title:    this.title,
-            notes:    this.notes,
-            status:   this.status,
-            tags:     this.tags,
-            isHidden: this.isHidden,
-            order:    this.order,
-            preview:  this._preview,
-            display:  this._display,
-            variants: this.variants().toJSON()
+            type:       this.type,
+            id:         this.id,
+            name:       this.name,
+            handle:     this.handle,
+            label:      this.label,
+            title:      this.title,
+            notes:      this.notes,
+            status:     this.status,
+            tags:       this.tags,
+            isHidden:   this.isHidden,
+            isCollated: this.isCollated,
+            order:      this.order,
+            preview:    this._preview,
+            display:    this._display,
+            variants:   this.variants().toJSON()
         };
     }
 

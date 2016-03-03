@@ -87,7 +87,7 @@ module.exports = class ComponentSource extends Source {
             let rendered;
             if (_.includes(['component', 'variant'], entity.type)) {
                 if (entity.type == 'component') {
-                    if (entity.collated) {
+                    if (entity.isCollated) {
                         rendered = yield self._renderCollatedComponent(entity, context);
                     } else {
                         entity = entity.variants().default();
