@@ -1,6 +1,6 @@
 {
   "name": "@frctl/fractal",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "A toolkit to help you build, document and integrate component libraries into your web projects.",
   "main": "src/fractal.js",
   "repository": {
