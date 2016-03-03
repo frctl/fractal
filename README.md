@@ -57,3 +57,5 @@ Existing tests can be run using the `npm test` command.
 ## Credits
 
 Fractal is developed and maintained by [Mark Perkins](http://github.com/allmarkedup) and the dev team at [Clearleft](http://clearleft.com).
+
+Many thanks to [Paul Lloyd](https://twitter.com/paulrobertlloyd) for his input and his design work on the [default web UI theme](https://github.com/frctl/mandelbrot).
