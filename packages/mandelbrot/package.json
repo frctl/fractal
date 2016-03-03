@@ -27,6 +27,7 @@
     "gulp-sass-glob": "0.0.8",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-uglify": "^1.5.3",
+    "hack-font": "git://github.com/chrissimpkins/Hack.git#master",
     "hammerjs": "^2.0.6",
     "highlight.js": "^9.1.0",
     "jquery": "^2.2.1",
