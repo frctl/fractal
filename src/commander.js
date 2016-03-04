@@ -11,7 +11,7 @@ module.exports = function (app, vorpal, defaults) {
 
     const commands  = new Set();
     const delimiter = chalk.magenta('fractal ➤');
-    // let hasChanged = false;
+    let hasChanged = false;
 
     _.forEach(defaults, c => add(c.command, c.config || {}, c.action));
 
@@ -111,7 +111,7 @@ module.exports = function (app, vorpal, defaults) {
                     `Powered by Fractal v${app.version}`
                 ).unslog();
             } else {
-                if (!input.opts.restart) {
+                if (!input.opts.reboot) {
                     console.slog().log('Initialising Fractal....');
                 }
                 watchFractalFile();
@@ -119,7 +119,7 @@ module.exports = function (app, vorpal, defaults) {
                     app.watch();
                     vorpal.delimiter(delimiter);
                     vorpal.history('fractal');
-                    if (!input.opts.restart) {
+                    if (!input.opts.reboot) {
                         console.box(
                             `Fractal interactive CLI`,
                             `- Use the 'help' command to see all available commands.\n- Use the 'exit' command to exit the app.`,
