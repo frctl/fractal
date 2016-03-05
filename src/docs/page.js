@@ -21,8 +21,6 @@ module.exports = class Page extends Entity {
         this.title    = opts.title || this.label;
         this.content  = content;
         this.file     = opts.file;
-
-        console.log(this.path);
     }
 
     get alias() {

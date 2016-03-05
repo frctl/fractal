@@ -36,7 +36,7 @@ module.exports = function (app, vorpal, defaults) {
     function watchFractalFile(){
         chokidar.watch('fractal.js').on('change', (path) => {
             if (!hasChanged) {
-                console.alert('Your fractal.js file has changed. You will need to run the \'restart\' command to see changes take effect.');
+                console.alert('Your fractal.js file has changed. You will need to run the \'reboot\' command to see changes take effect.');
                 hasChanged = true;
             }
         });
