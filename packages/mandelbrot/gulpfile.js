@@ -37,7 +37,7 @@ gulp.task('copy:js', ['clean:js'], function() {
 // CSS
 
 gulp.task('css', ['clean:css'], function() {
-  return gulp.src('./assets/scss/*.scss')
+  return gulp.src('./assets/scss/schemes/*.scss')
     .pipe(sourcemaps.init())
     .pipe(sassGlob())
     .pipe(sass().on('error', sass.logError))
@@ -100,7 +100,7 @@ gulp.task('img:watch', function () {
 
 gulp.task('watch', ['css:watch', 'js:watch', /* 'fonts:watch', */ 'img:watch']);
 
-gulp.task('default', ['fonts', 'css', 'js', 'img', 'watch']);
+gulp.task('default', ['fonts', 'css', 'js', 'img']);
 
 
 // Utils

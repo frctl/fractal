@@ -1,7 +1,7 @@
 .Prose {
     font-size: 16px;
     line-height: 1.5;
-    
+
     p,
     ul,
     ol {
@@ -66,14 +66,14 @@
             font-style: italic;
             font-size: 14px;
             color: $color-beta;
-            padding: 0.3em 0.4em;
+            padding: 0.6em 0.9em;
             // display: block;
             text-align: left;
         }
     }
 
     td, th {
-        padding: 0.3em 0.4em;
+        padding: 0.6em 0.9em;
         border: 1px solid $color-alpha-tint-lighter;
         text-align: left;
     }
