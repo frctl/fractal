@@ -5,6 +5,7 @@ const _               = require('lodash');
 const co              = require('co');
 const fs              = Promise.promisifyAll(require('fs'));
 const anymatch        = require('anymatch');
+const beautifyHTML    = require('js-beautify').html;
 const transform       = require('./transform');
 const console         = require('../console');
 const Source          = require('../source');
@@ -90,7 +91,7 @@ module.exports = class ComponentSource extends Source {
                         _target: entity.toJSON()
                     });
                 }
-                return rendered;
+                return beautifyHTML(rendered);
             } else {
                 throw new Error(`Cannot render entity of type ${entity.type}`);
             }
