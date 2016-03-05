@@ -59,6 +59,10 @@ class Source extends Collection {
         return this._app.get(`${this._namespace}.${key}`, fallback);
     }
 
+    statusInfo(handle) {
+        return null;
+    }
+
     setItems(items) {
         this._items = new Set(items || []);
         return this;
