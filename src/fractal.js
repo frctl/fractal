@@ -23,6 +23,7 @@ class Fractal {
 
     constructor() {
         this.global    = false;
+        this.interactive = false;
         this._settings = require('../settings');
         this._engines  = new Map();
         this._plugins  = new Map();

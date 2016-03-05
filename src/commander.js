@@ -89,18 +89,25 @@ module.exports = function (app, vorpal, defaults) {
                 return;
             }
 
-            if (input.opts.nonint) {
-                if (command) {
-                    app.load().then(function(){
-                        vorpal.parse(process.argv);
-                    });
-                    return;
-                }
-                console.error(`Command ${command} not recognised`);
-            }
+            // if (input.opts.nonint) {
+            //     if (command) {
+            //         app.load().then(function(){
+            //             vorpal.parse(process.argv);
+            //         });
+            //         return;
+            //     }
+            //     console.error(`Command ${command} not recognised`);
+            // }
 
             if (command && (scope === 'global')) {
                 vorpal.parse(process.argv);
+                return;
+            }
+
+            if (command) {
+                app.load().then(function(){
+                    vorpal.parse(process.argv);
+                });
                 return;
             }
 
@@ -111,6 +118,7 @@ module.exports = function (app, vorpal, defaults) {
                     `Powered by Fractal v${app.version}`
                 ).unslog();
             } else {
+                app.interactive = true;
                 if (!input.opts.reboot) {
                     console.slog().log('Initialising Fractal....');
                 }
