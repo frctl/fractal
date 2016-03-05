@@ -65,7 +65,6 @@ module.exports = function (app, vorpal, defaults) {
                     (item.config.options || []).forEach(opt => {
                         cmd.option(opt);
                     });
-                    cmd.option('--nonint', 'Run the command in non-interactive mode');
                     cmd.__scope = commandScope;
                     if (item.config.hidden) {
                         cmd.hidden();
