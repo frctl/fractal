@@ -9,7 +9,7 @@ const expect          = chai.expect;
 const fractal         = require('../src/fractal');
 const ComponentSource = require('../src/components/source');
 const DocsSource      = require('../src/docs/source');
-const config          = require('../config.js');
+const config          = require('../settings.js');
 
 chai.use(chaiAsPromised);
 
