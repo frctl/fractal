@@ -109,6 +109,14 @@ fractal.set('components.default.status', 'wip');
 * **Choices:** `prototype | wip | ready`
 * **Default:** `ready`
 
+### Title
+
+The title to give the components section in any UIs that use it.
+
+```js
+fractal.set('components.title', 'Patterns');
+```
+
 ## Documentation settings
 
 ### Directory path
@@ -149,6 +157,14 @@ The default label to use for index pages. Can be overridden on a page-by-page ba
 
 ```js
 fractal.set('docs.indexLabel', 'Overview');
+```
+
+### Title
+
+The title to give the documentation section in any UIs that use it.
+
+```js
+fractal.set('docs.title', 'Styleguide');
 ```
 
 ## Web UI settings
