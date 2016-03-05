@@ -14,7 +14,7 @@ module.exports = class Entities extends Collection {
         this.label     = opts.label || utils.titlize(opts.name);
         this.title     = opts.title || this.label;
         this.handle    = this.name;
-        this.order     = opts.order | 10000;
+        this.order     = parseInt(opts.order, 10) || 10000;
         this.isHidden  = opts.isHidden || false;
 
         this.setProps(opts);
