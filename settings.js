@@ -5,40 +5,44 @@ var packageJSON = require('./package.json');
 module.exports = {
     version: packageJSON.version,
     env: process.env.NODE_ENV || 'production',
-
     project: {
         title: "My Component Library",
         version: null
     },
     components: {
         path: null,
-        preview: {
-            layout: null,
-            yield: "yield",
-            display: {},
-            collator: function(markup, item) { return `<!-- Start: @${item.handle} -->\n${markup}\n<!-- End: @${item.handle} -->\n` }
-        },
+        label: 'components',
+        title: 'Components',
+        yield: "yield",
+        collator: function(markup, item) { return `<!-- Start: @${item.handle} -->\n${markup}\n<!-- End: @${item.handle} -->\n` },
         splitter: "--",
         ext: ".hbs",
-        context: {},
         engine: 'handlebars',
+        default: {
+            preview: null,
+            display: {},
+            context: {},
+            tags: [],
+            status: 'ready',
+            collated: false,
+            prefix: null
+        },
         status: {
-            default: "ready",
             options: {
                 prototype: {
                     label: "Prototype",
                     description: "Do not implement.",
-                    color: "red"
+                    color: "#FF3333"
                 },
                 wip: {
                     label: "WIP",
                     description: "Work in progress. Implemement with caution.",
-                    color: "orange"
+                    color: "#FF9233"
                 },
                 ready: {
                     label: "Ready",
                     description: "Ready to implement.",
-                    color: "green"
+                    color: "#29CC29"
                 }
             },
             mixed: {
@@ -51,10 +55,14 @@ module.exports = {
     },
     docs: {
         path: null,
+        label: 'documentation',
+        title: 'Documentation',
         markdown: true,
         ext: '.md',
         indexLabel: "Overview",
         engine: 'handlebars',
-        context: {},
+        default: {
+            context: {}
+        }
     }
 };

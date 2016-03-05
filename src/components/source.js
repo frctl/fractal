@@ -6,26 +6,15 @@ const co              = require('co');
 const fs              = Promise.promisifyAll(require('fs'));
 const anymatch        = require('anymatch');
 const transform       = require('./transform');
-const console             = require('../console');
+const console         = require('../console');
 const Source          = require('../source');
 const resolve         = require('../context');
 const AssetCollection = require('../assets/collection');
 
 module.exports = class ComponentSource extends Source {
 
-    constructor(sourcePath, props, items, app) {
-        props.name = 'components';
-        super(sourcePath, props, items);
-        this._app      = app;
-        this._status   = props.status.default;
-        this._preview  = props.preview.layout;
-        this._display  = props.preview.display;
-        this._collated = props.collated || false;
-        this._statuses = props.status;
-        this._prefix   = props.prefix || null;
-        this.yield     = props.preview.yield;
-        this.collator  = props.preview.collator;
-        this.splitter  = props.splitter;
+    constructor(items, app) {
+        super('components', items, app);
         this.transform = transform;
     }
 
@@ -123,7 +112,8 @@ module.exports = class ComponentSource extends Source {
         return (yield component.variants().toArray().map(variant => {
             return this.resolve(context[`@${variant.handle}`] || variant.context).then(ctx => {
                 return this.render(variant, ctx).then(markup => {
-                    return _.isFunction(this.collator) ? this.collator(markup, variant) : markup;
+                    const collator = this.setting('collator');
+                    return _.isFunction(collator) ? collator(markup, variant) : markup;
                 });
             });
         })).join('\n');
@@ -141,11 +131,12 @@ module.exports = class ComponentSource extends Source {
         let layoutContext = yield this.resolve(layout.context);
         let layoutContent = yield layout.getContent();
         layoutContext = _.defaults(layoutContext, context || {});
-        layoutContext[this.yield] = content;
+        layoutContext[this.setting('yield')] = content;
         return this.engine().render(layout.viewPath, layoutContent, layoutContext);
     }
 
     statusInfo(handle) {
+        const statuses = this.setting('status');
         if (_.isUndefined(handle) || (_.isArray(handle) && !handle.length)) {
             return null;
         }
@@ -155,18 +146,18 @@ module.exports = class ComponentSource extends Source {
                 return this.statusInfo(handles[0]);
             }
             const statuses = _.compact(handles.map(l => this.statusInfo(l)));
-            const details = _.clone(this._statuses.mixed);
+            const details = _.clone(statuses.mixed);
             details.statuses = statuses;
             return details;
         }
-        if (handle == this._statuses.mixed.handle) {
-            return this._statuses.mixed;
+        if (handle == statuses.mixed.handle) {
+            return statuses.mixed;
         }
-        if (!this._statuses.options[handle]) {
+        if (!statuses.options[handle]) {
             console.error(`Status ${handle} is not a known option.`);
-            return this._statuses.options[this._statuses.default];
+            return statuses.options[statuses.default];
         }
-        return this._statuses.options[handle];
+        return statuses.options[handle];
     }
 
     components() {
@@ -204,11 +195,11 @@ module.exports = class ComponentSource extends Source {
     }
 
     isView(file) {
-        return anymatch([`**/*${this.ext}`, `!**/*${this.splitter}*${this.ext}`], file.path.toLowerCase());
+        return anymatch([`**/*${this.setting('ext')}`, `!**/*${this.setting('splitter')}*${this.setting('ext')}`], file.path.toLowerCase());
     }
 
     isVarView(file) {
-        return anymatch(`**/*${this.splitter}*${this.ext}`, file.path.toLowerCase());
+        return anymatch(`**/*${this.setting('splitter')}*${this.setting('ext')}`, file.path.toLowerCase());
     }
 
     isConfig(file) {
@@ -220,7 +211,7 @@ module.exports = class ComponentSource extends Source {
     }
 
     isAsset(file) {
-        return anymatch(['**/*.*', `!**/*${this.ext}`, `!**/*.config.{js,json,yaml,yml}`, `!**/readme.md`], file.path.toLowerCase());
+        return anymatch(['**/*.*', `!**/*${this.setting('ext')}`, `!**/*.config.{js,json,yaml,yml}`, `!**/readme.md`], file.path.toLowerCase());
     }
 
 };

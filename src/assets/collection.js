@@ -8,7 +8,8 @@ const Collection = require('../collection');
 module.exports = class AssetCollection extends Collection {
 
     constructor(props, items) {
-        super(props, items);
+        super(items);
+        this.setProps(props);
     }
 
     files() {

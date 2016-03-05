@@ -4,47 +4,33 @@ const Promise = require('bluebird');
 const matter  = require('gray-matter');
 const _       = require('lodash');
 const utils   = require('../utils');
+const Entity  = require('../entity');
 
-module.exports = class Page {
+module.exports = class Page extends Entity {
 
-    constructor(props, content) {
-        this.type     = 'page';
-        this.id       = utils.md5(props.filePath);
-        this.name     = utils.slugify(props.name.toLowerCase());
+    constructor(opts, content) {
+        super('page', opts);
+
+        this.id       = utils.md5(opts.filePath);
         this.handle   = this.name;
-        this.isIndex  = this.name === 'index';
-        this.lang     = props.lang;
-        this.order    = props.order;
-        this.isHidden = props.isHidden;
-        this.filePath = props.filePath;
+        this.lang     = opts.lang;
+        this.filePath = opts.filePath;
         this.viewPath = this.filePath;
-        this.label    = this.isIndex ? props.source.indexLabel : (props.label || utils.titlize(props.name));
-        this.title    = props.title || this.label;
+        this.isIndex  = this.name === 'index';
+        this.label    = this.isIndex ? opts.source.setting('indexLabel') : (opts.label || utils.titlize(opts.name));
+        this.title    = opts.title || this.label;
         this.content  = content;
-        this.file     = props.file;
-        this._parent  = props.parent;
-        this._source  = props.source;
-        this._context = props.context || {};
-        this.path     = props.path || _.trim(_.trimStart(`${this._parent.path}/${this.handle}`, '/').replace('index', ''), '/');
-        this._tags    = props.tags || [];
-        this._context.title = this._context.title || this.title;
-        this._context.label = this._context.label || this.label;
+        this.file     = opts.file;
+
+        console.log(this.path);
     }
 
     get alias() {
         return null;
     }
 
-    get context() {
-        return _.defaultsDeep(this._context, this._parent.context);
-    }
-
-    get parent() {
-        return this._parent;
-    }
-
-    get tags() {
-        return _.uniq(_.concat(this._tags, this._parent.tags));
+    get status() {
+        return null;
     }
 
     getContent() {
@@ -55,10 +41,10 @@ module.exports = class Page {
         return this.content;
     }
 
-    static create(props, content) {
+    static create(opts, content) {
         var parsed   = matter(content);
-        props        = _.defaults(parsed.data || {}, props);
-        return Promise.resolve(new Page(props, parsed.content));
+        opts        = _.defaults(parsed.data || {}, opts);
+        return Promise.resolve(new Page(opts, parsed.content));
     }
 
     toJSON() {

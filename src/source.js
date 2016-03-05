@@ -5,51 +5,58 @@ const Promise      = require('bluebird');
 const _            = require('lodash');
 const chokidar     = require('chokidar');
 const utils        = require('./utils');
-const console          = require('./console');
+const console      = require('./console');
 const Collection   = require('./collection');
 const fs           = require('./fs');
 
 class Source extends Collection {
 
-    constructor(sourcePath, props, items) {
-        super(props, items);
-        this.name       = utils.slugify(props.name.toLowerCase());
-        this.label      = props.label || utils.titlize(props.name);
-        this.title      = props.title || this.label;
+    constructor(namespace, items, app) {
+
+        super(items);
+
         this.labelPath  = '';
         this.path       = '';
-        this.sourcePath = sourcePath;
-        this.ext        = props.ext;
         this.isLoaded   = false;
-        this._engine    = props.engine;
+        this.name       = namespace;
+
+        this._namespace = namespace;
+        this._app       = app;
         this._loading   = null;
         this._monitor   = null;
-        this._defaults  = {};
         this._engines   = new Map();
-        this._context   = _.cloneDeep(props.context || {});
-        this._tags      = _.cloneDeep(props.tags || {});
-        this._defaults.context = _.cloneDeep(props.context || {});
-        this._defaults.tags    = _.clone(props.tags || []);
+    }
+
+    get label() {
+        return this.setting('label') || utils.titlize(this.name);
+    }
+
+    get title() {
+        return this.setting('title') || this.label;
     }
 
     get parent() {
         return null;
     }
 
-    get context() {
-        return this._context;
+    get source() {
+        return this;
     }
 
-    get tags() {
-        return this._tags;
+    setProp(key, value) {
+        if (!_.isUndefined(this.setting(`default.${key}`))) {
+            this._props.set(key, value);
+        }
     }
 
-    setTags(tags) {
-        this._tags = _.uniq(_.concat(tags, this._defaults.tags));
+    getProp(key) {
+        const upstream = this.setting(`default.${key}`);
+        const prop     = this._props.get(key);
+        return utils.mergeProp(prop, upstream);
     }
 
-    setContext(context) {
-        this._context = _.defaultsDeep(context, this._defaults.context);
+    setting(key, fallback){
+        return this._app.get(`${this._namespace}.${key}`, fallback);
     }
 
     setItems(items) {
@@ -88,9 +95,10 @@ class Source extends Collection {
     }
 
     watch() {
-        if (!this._monitor && this.sourcePath) {
-            console.debug(`Watching ${this.name} directory - ${this.sourcePath}`);
-            this._monitor = chokidar.watch(this.sourcePath, {
+        const sourcePath = this.setting('path');
+        if (!this._monitor && sourcePath) {
+            console.debug(`Watching ${this.name} directory - ${sourcePath}`);
+            this._monitor = chokidar.watch(sourcePath, {
                 ignored: /[\/\\]\./
             });
             this._monitor.on('ready', () => {
@@ -112,8 +120,9 @@ class Source extends Collection {
     }
 
     engine() {
-        if (!this._engines.has(this._engine)) {
-            const engine = this._app.engine(this._engine);
+        const e = this.setting('engine');
+        if (!this._engines.has(e)) {
+            const engine = this._app.engine(e);
             if (!engine) {
                 throw new Error('Engine not found');
             }
@@ -121,16 +130,17 @@ class Source extends Collection {
                 engine.engine = require(engine.engine);
             }
             const instance = engine.engine(this, engine.config);
-            this._engines.set(this._engine, instance);
+            this._engines.set(e, instance);
         }
-        return this._engines.get(this._engine);
+        return this._engines.get(e);
     }
 
     _build() {
-        if (!this.sourcePath) {
+        const sourcePath = this.setting('path');
+        if (!sourcePath) {
             return Promise.resolve(this);
         }
-        this._loading = fs.describe(this.sourcePath).then(fileTree => {
+        this._loading = fs.describe(sourcePath).then(fileTree => {
             this._loading = null;
             return this.transform(fileTree, this);
         }).catch(e => {
@@ -144,7 +154,7 @@ class Source extends Collection {
         self.name     = this.name;
         self.label    = this.label;
         self.title    = this.title;
-        self.viewExt  = this.ext;
+        self.viewExt  = this.setting('ext');
         self.isLoaded = this.isLoaded;
         return self;
     }

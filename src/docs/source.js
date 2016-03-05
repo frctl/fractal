@@ -12,13 +12,9 @@ const Collection  = require('./collection');
 
 module.exports = class DocsSource extends Source {
 
-    constructor(sourcePath, props, items, app) {
-        props.name = 'documentation';
-        super(sourcePath, props, items);
-        this._app       = app;
-        this.indexLabel = props.indexLabel;
-        this.markdown   = props.markdown;
-        this.transform  = transform;
+    constructor(items, app) {
+        super('docs', items, app);
+        this.transform = transform;
     }
 
     pages() {
@@ -43,18 +39,18 @@ module.exports = class DocsSource extends Source {
             context._self = target;
             const content = yield page.getContent();
             let rendered  = yield self.engine().render(page.filePath, content, context);
-            return self.markdown ? md(rendered) : rendered;
+            return self.setting('markdown') ? md(rendered) : rendered;
         });
     }
 
     renderString(str, context){
         return this.engine().render(null, str, context || {}).then(rendered => {
-            return this.markdown ? md(rendered) : rendered;
+            return this.setting('markdown') ? md(rendered) : rendered;
         });
     }
 
     isPage(file) {
-        return anymatch(`**/*${this.ext}`, file.path);
+        return anymatch(`**/*${this.setting('ext')}`, file.path);
     }
 
     isConfig(file) {

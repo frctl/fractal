@@ -6,9 +6,29 @@ const utils        = require('./utils');
 
 module.exports = class Collection {
 
-    constructor(props, items) {
+    constructor(items) {
         this.type   = 'collection';
         this._items = new Set(items || []);
+        this._props = new Map();
+        this._source = null;
+    }
+
+    get source() {
+        return this._source;
+    }
+
+    setProp(key, value) {
+        this._props.set(key, value);
+    }
+
+    setProps(obj) {
+        _.forEach(obj, (value, key) => {
+            this.setProp(key, value);
+        });
+    }
+
+    getProp(key) {
+        this._props.get(key);
     }
 
     items() {

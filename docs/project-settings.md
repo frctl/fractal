@@ -96,7 +96,7 @@ fractal.set('components.ext', '.hbs');
 The default [preview layout](/docs/components/layouts.md) to use. Defaults to `null` if unspecified.
 
 ```js
-fractal.set('components.preview.layout', '@my-preview');
+fractal.set('components.default.preview', '@my-preview');
 ```
 
 ### Default status
@@ -104,7 +104,7 @@ fractal.set('components.preview.layout', '@my-preview');
 The default status to use for a component. Statuses are fully configurable - see the [components documentation](/docs/components/statuses.md) for details.
 
 ```js
-fractal.set('components.status.default', 'wip');
+fractal.set('components.default.status', 'wip');
 ```
 * **Choices:** `prototype | wip | ready`
 * **Default:** `ready`

@@ -5,29 +5,21 @@ const _       = require('lodash');
 const utils   = require('../utils');
 const data    = require('../data');
 const md      = require('../markdown');
+const Entity  = require('../entity');
 
-module.exports = class Variant {
+module.exports = class Variant extends Entity {
 
-    constructor(props, view, assets) {
-        this.type        = 'variant';
-        this.id          = utils.md5(props.name + props.viewPath);
-        this.name        = props.name.toLowerCase();
-        this.handle      = props.handle.toLowerCase();
-        this.order       = props.order || 10000;
-        this.view        = props.view;
-        this.label       = props.label || utils.titlize(this.name);
-        this.title       = props.title || `${props.parent.title}: ${this.label}`;
-        this.viewPath    = props.viewPath;
-        this.notes       = props.notes;
-        this.display     = props.display || {};
-        this.isDefault   = props.isDefault || false;
-        this._parent     = props.parent;
-        this._source     = this._parent._source;
-        this._context    = props.context || {};
-        this._config     = props;
-        this._status     = props.status  || this._parent._status;
-        this.preview     = props.preview || this._parent._preview;
-        this.display     = props.display || this._parent._display;
+    constructor(opts, view, assets) {
+        super('variant', opts);
+        this.id          = utils.md5(opts.name + opts.viewPath);
+        this.handle      = opts.handle.toLowerCase();
+        this.order       = opts.order || 10000;
+        this.view        = opts.view;
+        this.label       = opts.label || utils.titlize(this.name);
+        this.title       = opts.title || `${opts.parent.title}: ${this.label}`;
+        this.viewPath    = opts.viewPath;
+        this.notes       = opts.notes || this.parent.notes;
+        this.isDefault   = opts.isDefault || false;
         this.lang        = view.lang.name;
         this.editorMode  = view.lang.mode;
         this.editorScope = view.lang.scope;
@@ -42,20 +34,8 @@ module.exports = class Variant {
         return null;
     }
 
-    get status() {
-        return this._source.statusInfo(this._status);
-    }
-
-    get context() {
-        return _.defaultsDeep(this._context, this._parent.context);
-    }
-
-    get parent() {
-        return this._parent;
-    }
-
     get siblings() {
-        return this._parent.variants();
+        return this.parent.variants();
     }
 
     variant() {

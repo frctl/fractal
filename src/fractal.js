@@ -1,15 +1,16 @@
 'use strict';
 
-const vorpal     = require('vorpal')();
-const console    = require('./console')(vorpal);
-const Promise    = require('bluebird');
-const _          = require('lodash');
-const Components = require('./components/source');
-const Docs       = require('./docs/source');
-const Plugin     = require('./plugin');
-const commander  = require('./commander');
-const highlight  = require('./highlighter');
-const utils      = require('./utils');
+const vorpal       = require('vorpal')();
+const Promise      = require('bluebird');
+const _            = require('lodash');
+const console      = require('./console')(vorpal);
+const EventEmitter = require('events').EventEmitter;
+const Components   = require('./components/source');
+const Docs         = require('./docs/source');
+const Plugin       = require('./plugin');
+const commander    = require('./commander');
+const highlight    = require('./highlighter');
+const utils        = require('./utils');
 
 class Fractal {
 
@@ -21,11 +22,11 @@ class Fractal {
      */
 
     constructor() {
-        this.global = false;
-        this._config  = require('../config');
-        this._engines = new Map();
-        this._plugins = new Map();
-        this._sources = new Map();
+        this.global    = false;
+        this._settings = require('../settings');
+        this._engines  = new Map();
+        this._plugins  = new Map();
+        this._sources  = new Map();
         this._commander = commander(this, vorpal, require('./commands'));
         this.utils = {
             highlight: highlight,
@@ -128,14 +129,14 @@ class Fractal {
 
     get components() {
         if (!this._sources.has('components')) {
-            this._sources.set('components', new Components(this.get('components.path'), this.get('components'), [], this));
+            this._sources.set('components', new Components([], this));
         }
         return this._sources.get('components');
     }
 
     get docs() {
         if (!this._sources.has('docs')) {
-            this._sources.set('docs', new Docs(this.get('docs.path'), this.get('docs'), [], this));
+            this._sources.set('docs', new Docs([], this));
         }
         return this._sources.get('docs');
     }
@@ -149,15 +150,15 @@ class Fractal {
     }
 
     set(setting, val) {
-        _.set(this._config, setting, val);
+        _.set(this._settings, setting, val);
         return this;
     }
 
     get(setting, defaultVal) {
         if (_.isUndefined(setting)) {
-            return this._config;
+            return this._settings;
         }
-        return _.get(this._config, setting, defaultVal || undefined);
+        return _.get(this._settings, setting, defaultVal || undefined);
     }
 
     _initPlugins(name) {
@@ -167,5 +168,7 @@ class Fractal {
     }
 
 }
+
+_.extend(Fractal.prototype, EventEmitter.prototype);
 
 module.exports = new Fractal();
