@@ -10,7 +10,7 @@ npm i @frctl/nunjucks-adapter --save
 
 ## Usage
 
-To use the Nunjucks adapter, you now need to add a bit of configuration to your `fractal.js` setup file:
+In your `fractal.js` setup file:
 
 ```javascript
 // fractal.js
@@ -18,7 +18,7 @@ var fractal = require('@frctl/fractal');
 
 fractal.engine('nunjucks', '@frctl/nunjucks-adapter'); // register the Nunjucks adapter
 
-fractal.set('components.engine', 'consolidate'); // use Nunjucks for component views
+fractal.set('components.engine', 'nunjucks'); // use Nunjucks for component views
 fractal.set('components.ext', '.nunj'); // look for files with a .nunj file extension
 ```
 
