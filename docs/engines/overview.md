@@ -19,7 +19,7 @@ By default. Fractal uses a vanilla install of [Handlebars](http://handlebars.js)
 
 > It's worth noting that the capabilities of your components is mostly determined by your choice of templating language, rather than by Fractal itself. If you choose a language that has no support for including partials, for instance, Fractal will not 'add' that capability in.
 
-You can also one different template engine for you components, and another for your documentation pages, should you so wish.
+You can also use one template engine for you components, and another different engine for your documentation pages, should you so wish.
 
 ## Customising Handlebars
 
@@ -32,7 +32,7 @@ To specify a additional helpers on the default Handlebars instance, you can add 
 ```javascript
 fractal.engine('handlebars', '@frctl/handlebars-adapter', {
     helpers: {
-       // helpers go here
+        // helpers go here
     }
 });
 ```
@@ -45,7 +45,7 @@ var fractal = require('@frctl/fractal');
 
 fractal.engine('handlebars', '@frctl/handlebars-adapter', {
     helpers: {
-       uppercase: function(str) {
+        uppercase: function(str) {
             return new Handlebars.SafeString(str.toUpperCase());
         },
         lowercase: function(str) {
@@ -64,7 +64,7 @@ Which can then be used in your components or documentation pages as follows:
 ```
 ### Using a custom Handlebars instance
 
-Alternatively, you can pass the Handlebars template engine adapter a pre-configured instance of Handlebars.  The previous example could be re-written like this:
+Alternatively, you can pass the Handlebars template engine adapter a pre-configured instance of Handlebars. The previous example could be re-written like this:
 
 ```js
 // fractal.js
@@ -103,7 +103,7 @@ You would then have access to all of Swag's helpers in your component and page t
 
 If you don't wish to use Handlebars, you can use pretty much any other JavaScript-based template engine you like.
 
-Fractal uses *adapters*  to handle different template engines. Currently there are specific adapters implemented for [Handlebars](https://github.com/frctl/handlebars-adapter), [Mustache](https://github.com/frctl/mustache-adapter) and [Nunjucks](https://github.com/frctl/nunjucks-adapter). However, if you want to use something else, there is also a [generic adapter]() that uses the Consolidate.js library to provide compatibility with 30+ other template engines.
+Fractal uses *adapters* to handle different template engines. Currently there are specific adapters implemented for [Handlebars](https://github.com/frctl/handlebars-adapter), [Mustache](https://github.com/frctl/mustache-adapter) and [Nunjucks](https://github.com/frctl/nunjucks-adapter). However, if you want to use something else, there is also a [generic adapter]() that uses the Consolidate.js library to provide compatibility with 30+ other template engines.
 
 If that *still* doesn't have you covered, (or if the behaviour of any of these adapters is not to your liking) it is also straightforward to write your own [template engine adapter](/docs/engines/custom-adapters.md) to give you what you need.
 
@@ -164,8 +164,3 @@ fractal.engine('handlebars-docs', '@frctl/handlebars-adapter', {
 });
 fractal.set('docs.engine', 'handlebars-docs');
 ```
-
-
-
-
-
