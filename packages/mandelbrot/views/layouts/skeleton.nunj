@@ -7,7 +7,7 @@
 
     <script>var cl = document.querySelector('html').classList; cl.remove('no-js'); cl.add('has-js');</script>
 
-    <link rel="stylesheet" type="text/css" href="/_theme/css/{{ frctl.web.theme.options.colorscheme | default('default') }}.css?cachebust={{ frctl.web.theme.version }}">
+    <link rel="stylesheet" type="text/css" href="/{{ frctl.web.theme.options.assetsDir }}/css/{{ frctl.web.theme.options.colorscheme | default('default') }}.css?cachebust={{ frctl.web.theme.version }}">
 
     <title>{% if pageTitle %}{{ pageTitle }} | {% endif %}{{ frctl.config.project.title }}</title>
 </head>
@@ -15,6 +15,6 @@
 
 {% block page %}{% endblock %}
 
-<script src="/_theme/js/build.js"></script>
+<script src="/{{ frctl.web.theme.options.assetsDir }}/js/build.js"></script>
 </body>
 </html>
