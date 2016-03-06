@@ -12,16 +12,16 @@
 
 {% macro leaves(items, root, current, depth) %}
     {% for item in items %}
-        {% if item.type == 'collection' or (item.type == 'component' and not item.isCollated and item.variants().size > 1) %}
+        {% if item.type == 'collection' or (item.type == 'component' and not item.isCollated and item.variants().filter('isHidden', false).size > 1) %}
         <li class="Tree-item Tree-collection Tree-depth-{{ depth }}" data-behaviour="collection" id="tree-{{ root.name }}-collection-{{ item.handle }}">
             <h4 class="Tree-collectionLabel" data-role="toggle">
                 <span>{{ item.label }}</span>
             </h4>
             <ul class="Tree-collectionItems" data-role="items">
             {% if item.type == 'component' and not item.isCollated %}
-            {% set items = item.variants().items() %}
+            {% set items = item.variants().filter('isHidden', false).items() %}
             {% else %}
-            {% set items = item.items() %}
+            {% set items = item.filter('isHidden', false).items() %}
             {% endif %}
             {{ leaves(items, root, current, (depth + 1)) }}
             </ul>
