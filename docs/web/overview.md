@@ -25,7 +25,7 @@ The web UI can be accessed in two ways:
 1. You can start a **local server** to run it *dynamically*, which will mean that any local changes to your components or documentation pages are immediately reflected in the UI. This is great for when you are *developing* your component library.
 2. You can generate a **static build** of the web UI, which is great for when you are ready to upload it to a server to share with others.
 
-> This documentation assumes that you are using the [Fractal interactive CLI](/docs/commands.md##the-fractal-interactive-cli). To enter interactive mode, run the `fractal` command in your terminal (from within your project directory) before using the commands below.
+> This documentation assumes that you are using the [Fractal interactive CLI](/docs/commands.md#the-fractal-interactive-cli-sparkles). To enter interactive mode, run the `fractal` command in your terminal (from within your project directory) before using the commands below.
 
 ### Starting the local development server
 

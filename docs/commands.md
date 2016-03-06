@@ -4,12 +4,16 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 
-- [The Fractal interactive CLI](#the-fractal-interactive-cli)
+- [Overview](#overview)
+- [Running commands](#running-commands)
+  - [Standard format commands](#standard-format-commands)
+  - [The Fractal interactive CLI :sparkles:](#the-fractal-interactive-cli-sparkles)
+    - [Interactive CLI tips:](#interactive-cli-tips)
 - [Default project commands](#default-project-commands)
-  - [Show available commands](#show-available-commands)
   - [Start the web UI server](#start-the-web-ui-server)
   - [Stop all running servers](#stop-all-running-servers)
   - [Build a static version of the web UI](#build-a-static-version-of-the-web-ui)
+  - [Show available commands](#show-available-commands)
   - [Exit the interactive CLI](#exit-the-interactive-cli)
 - [Default global commands](#default-global-commands)
   - [Create a new Fractal project](#create-a-new-fractal-project)
@@ -26,7 +30,7 @@ The standard way to interact with Fractal is via the command line, for example u
 
 ## Running commands
 
-Fractal offers two ways to run commands. You can either run commands in a traditional format, or you can take advantage of Fractal's [interactive CLI](#the-fractal-interactive-cli) which offers a lot of usability and speed advantages.
+Fractal offers two ways to run commands. You can either run commands in a traditional format, or you can take advantage of Fractal's [interactive CLI](#the-fractal-interactive-cli-sparkles) which offers a lot of usability and speed advantages.
 
 ### Standard format commands
 
