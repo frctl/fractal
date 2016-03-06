@@ -63,7 +63,8 @@ module.exports = function (app, vorpal, defaults) {
                         return action(args, done);
                     });
                     (item.config.options || []).forEach(opt => {
-                        cmd.option(opt);
+                        opt = _.castArray(opt);
+                        cmd.option.apply(cmd, opt);
                     });
                     cmd.__scope = commandScope;
                     if (item.config.hidden) {
@@ -87,16 +88,6 @@ module.exports = function (app, vorpal, defaults) {
                 console.error(`This command is not available in a ${scope} context.`);
                 return;
             }
-
-            // if (input.opts.nonint) {
-            //     if (command) {
-            //         app.load().then(function(){
-            //             vorpal.parse(process.argv);
-            //         });
-            //         return;
-            //     }
-            //     console.error(`Command ${command} not recognised`);
-            // }
 
             if (command && (scope === 'global')) {
                 vorpal.parse(process.argv);
