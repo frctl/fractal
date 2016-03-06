@@ -29,7 +29,7 @@ In order to be recognised, configuration files must:
 
 Components, collections and documentation pages all have different configuration options available to them.
 
-##### Components: 
+##### Components:
 
 * [Component configuration](/docs/components/configuration.md)
 * [Collection configuration](/docs/components/collections.md)
@@ -138,7 +138,7 @@ Similarly, context data is inherited and merged from upstream sources. For examp
 ```js
 // in the fractal.js configuration file
 
-fractal.set('components.context', {
+fractal.set('components.default.context', {
 	'background': 'sparkly'
 });
 
