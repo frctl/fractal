@@ -25,7 +25,7 @@ The web UI can be accessed in two ways:
 1. You can start a **local server** to run it *dynamically*, which will mean that any local changes to your components or documentation pages are immediately reflected in the UI. This is great for when you are *developing* your component library.
 2. You can generate a **static build** of the web UI, which is great for when you are ready to upload it to a server to share with others.
 
-> All commands for working with the web UI must be run from within the Fractal interactive CLI. To enter interactive mode, run the `fractal` command in your terminal (from within your project directory) before using the commands below.
+> This documentation assumes that you are using the [Fractal interactive CLI](/docs/commands.md##the-fractal-interactive-cli). To enter interactive mode, run the `fractal` command in your terminal (from within your project directory) before using the commands below.
 
 ### Starting the local development server
 
@@ -42,7 +42,7 @@ You can provide the following (optional) command line options to override the de
 As an example, the command:
 
 ```shell
-fractal start --port 4000 --theme my-custom-theme
+start --port 4000 --theme my-custom-theme
 ```
 
 Would start the preview server at the URL `http://localhost:4000` using the custom theme `my-custom-theme`
@@ -56,7 +56,7 @@ You can provide the following optional  command line options to override the def
 * `-t, --theme <theme-name>` - a custom theme to use.
 
 ```shell
-fractal build --theme my-custom-theme
+build --theme my-custom-theme
 ```
 
 Would generate a static build using the custom theme `my-custom-theme`.

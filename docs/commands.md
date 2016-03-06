@@ -26,7 +26,9 @@ The standard way to interact with Fractal is via the command line, for example u
 
 ## Running commands
 
-Fractal offers two ways to run commands. You can either run commands in a traditional format, or you can take advantage of Fractal's [interactive CLI](#the-fractal-interactive-cli) which offeres
+Fractal offers two ways to run commands. You can either run commands in a traditional format, or you can take advantage of Fractal's [interactive CLI](#the-fractal-interactive-cli) which offers a lot of usability and speed advantages.
+
+### Standard format commands
 
 The standard way to run a command takes the format:
 
@@ -34,11 +36,15 @@ The standard way to run a command takes the format:
 fractal <command-name> [args] [opts]
 ```
 
+When running commands in this format, the command will run and then immediately exit (unless it is watching or running a server in the background).
 
+Commands in this format are useful for when you want to use them in NPM scripts as part of other build tasks, for example.
 
-### The Fractal interactive CLI
+### The Fractal interactive CLI :sparkles:
 
-Rather than just exposing a bunch of regular terminal commands, Fractal provides an 'interactive CLI' for you to work with on your projects. You launch the interactive CLI by running the `fractal` command in your terminal. This will drop you into interactive mode, and you should see an info box appear in your terminal, with a prompt beneath it.
+As well as exposing 'traditional' terminal commands, Fractal also provides an *interactive CLI* for you to work with on your projects. This greatly speeds up running commands on your project and allows you to do things like start a servers and then still be able to run subsequent commands in the same CLI window.
+
+You launch the interactive CLI by running the `fractal` command in your terminal. This will drop you into interactive mode, and you should see an info box appear in your terminal, with a prompt beneath it.
 
 You can tell when you are in interactive mode because your prompt will look like this:
 
@@ -46,23 +52,17 @@ You can tell when you are in interactive mode because your prompt will look like
 fractal ➤
 ```
 
-You can now enter commands to interact with your fractal project. Use the `help` command at any point to show all the available commands.
+You can now enter commands to interact with your fractal project. **The commands are identical to the standard-format commands, except that you no longer need to prefix them with `fractal`.**
 
-To **exit** the interactive CLI and go back into your 'regular' terminal, use the `exit` command.
+#### Interactive CLI tips:
 
-<!-- ### Using fractal commands in build scripts
-
-If you want to use a Fractal command in your NPM scripts or  -->
+* You can use the `help` command at any point to show all the available commands.
+* To **exit** the interactive CLI and go back into your 'regular' terminal, use the `exit` command.
+* Global (as opposed to project-level) commands cannot be run from within the interactive CLI.
 
 ## Default project commands
 
 The default installation of Fractal provides a number of *project-level* commands.
-
-> All project commands must be run inside the Fractal interactive CLI. Use the `fractal` command from within your project directory to enter interactive mode before running them.
-
-### Show available commands
-
-The `help` command will list all available commands, including any custom commands you have added.
 
 ### Start the web UI server
 
@@ -76,15 +76,21 @@ The `stop` command stops any servers that are currently running.
 
 The `build` command will export a static HTML version of the web UI into a directory in the root of your project. See the [web UI documentation](/docs/web/overview.md) for more details and options.
 
+### Show available commands
+
+> *Only available inside the interactive CLI.*
+
+The `help` command will list all available commands, including any custom commands you have added.
+
 ### Exit the interactive CLI
+
+> *Only available inside the interactive CLI.*
 
 Use the `exit` command to end your Fractal session and go back into 'regular' terminal mode.
 
 ## Default global commands
 
-The default installation of Fractal provides one **global** command.
-
-> Global commands *cannot* be run from inside of the interactive CLI or within an existing Fractal project.
+The default installation of Fractal provides one **global** command. Note that global commands *cannot* be run from inside of the interactive CLI or within an existing Fractal project.
 
 ### Create a new Fractal project
 
