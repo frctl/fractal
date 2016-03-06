@@ -19,7 +19,7 @@ By default. Fractal uses a vanilla install of [Handlebars](http://handlebars.js)
 
 > It's worth noting that the capabilities of your components is mostly determined by your choice of templating language, rather than by Fractal itself. If you choose a language that has no support for including partials, for instance, Fractal will not 'add' that capability in.
 
-You can also use one template engine for you components, and another different engine for your documentation pages, should you so wish.
+You can also use one template engine for your components, and another different engine for your documentation pages, should you so wish.
 
 ## Customising Handlebars
 
