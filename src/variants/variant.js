@@ -28,7 +28,7 @@ module.exports = class Variant extends Entity {
     }
 
     get alias() {
-        if (this.parent.variants().default().handle === this.handle) {
+        if (this.isDefault) {
             return this.parent.handle;
         }
         return null;
@@ -37,6 +37,10 @@ module.exports = class Variant extends Entity {
     get siblings() {
         return this.parent.variants();
     }
+    
+    get content() {
+        return this.getContentSync();
+    }
 
     variant() {
         return this;
@@ -44,10 +48,6 @@ module.exports = class Variant extends Entity {
 
     defaultVariant() {
         return this;
-    }
-
-    get content() {
-        return this.getContentSync();
     }
 
     assets() {
@@ -74,6 +74,8 @@ module.exports = class Variant extends Entity {
             notes:     this.notes,
             status:    this.status,
             display:   this.display,
+            isDefault: this.isDefault,
+            isHidden:  this.isHidden,
             viewPath:  this.viewPath,
             content:   this.getContentSync(),
             preview:   this.preview,

@@ -91,7 +91,11 @@ module.exports = class ComponentSource extends Source {
                         _target: entity.toJSON()
                     });
                 }
-                return beautifyHTML(rendered);
+                return beautifyHTML(rendered, {
+                    indent_size: 4,
+                    preserve_newlines: true,
+                    max_preserve_newlines: 1
+                });
             } else {
                 throw new Error(`Cannot render entity of type ${entity.type}`);
             }

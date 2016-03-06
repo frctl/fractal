@@ -62,7 +62,9 @@ module.exports = class VariantCollection extends Entities {
                 viewPath:  Path.join(opts.dir, opts.view),
                 dir:       opts.dir,
                 isDefault: true,
-                parent:    component
+                isHidden: false,
+                parent:    component,
+                order:     1
             }, defaultView, assets));
         }
 
@@ -74,8 +76,7 @@ module.exports = class VariantCollection extends Entities {
             }
             const p = _.defaults(conf, {
                 dir:    opts.dir,
-                parent: component,
-                order:  i
+                parent: component
             });
             if (!p.view) {
                 // no view file specified
@@ -83,10 +84,12 @@ module.exports = class VariantCollection extends Entities {
                 viewFile       = _.find(views, f => f.name.toLowerCase() === viewName);
                 p.view         = viewFile ? viewFile.base : opts.view;
             }
-            viewFile = viewFile || defaultView;
+            viewFile    = viewFile || defaultView;
             p.isDefault = (p.name === component.defaultName);
+            p.order     = conf.order || p.isDefault ? 1 : i + (hasDefaultConfigured ? 1 : 2);
             p.viewPath  = Path.join(p.dir, p.view);
             p.handle    = `${component.handle}${source.setting('splitter')}${p.name}`.toLowerCase();
+            p.isHidden  = _.isUndefined(conf.hidden) ? viewFile.isHidden : conf.hidden;
             if (p.notes) {
                 p.notes = yield opts.source._app.docs.renderString(p.notes);
             }
@@ -105,8 +108,10 @@ module.exports = class VariantCollection extends Entities {
                 handle:   `${component.handle}${source.setting('splitter')}${name}`.toLowerCase(),
                 view:     viewFile.base,
                 viewPath: viewFile.path,
+                order:    viewFile.order,
                 dir:      opts.dir,
-                parent:   component
+                parent:   component,
+                isHidden: viewFile.isHidden
             };
             variants.push(
                 new Variant(p, viewFile, assets.filter(isRelated(p.handle)))
@@ -115,7 +120,7 @@ module.exports = class VariantCollection extends Entities {
 
         return new VariantCollection({
             parent: component,
-        }, yield variants);
+        }, _.orderBy(yield variants, ['order', 'name']));
     }
 
 };
