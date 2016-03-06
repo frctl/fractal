@@ -21,8 +21,6 @@ module.exports = {
 
     action: function (args, done) {
 
-        console.br().notice('Creating new project.... just a few questions:').br();
-
         const helpers          = this.fractal.utils.helpers;
         const baseDir          = args.path;
         const basePath         = baseDir.startsWith('/') ? baseDir : Path.join(process.cwd(), baseDir);
@@ -35,6 +33,8 @@ module.exports = {
             console.error(`Cannot create new project: The directory ${basePath} already exists.`).br();
             process.exit();
         }
+
+        console.br().notice('Creating new project.... just a few questions:').br();
 
         const questions = [
             {

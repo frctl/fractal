@@ -16,15 +16,27 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+## Overview
+
 The standard way to interact with Fractal is via the command line, for example using an application such as Terminal.app if you are on an OS X machine.
 
-**Project-level** commands must be run from within the root directory of your project, and are only available to projects that have a `fractal.js` file already present. And example of a project-level command would be the `start` command that starts up a local web server.
+**Project-level** commands must be run from within the root directory of your project, and are only available to projects that have a `fractal.js` file already present. An example of a project-level command would be the `fractal start` command that starts up a local web server.
 
-Fractal provides an [interactive command line interface](#the-fractal-interactive-cli) to make running project-level commands fast and intuitive.
+**Global** commands can be run from anywhere *outside of a project folder* and do not require the presence of a `fractal.js` settings file. An example of a global command is the `fractal new <project-name>` command which helps you quickly create a new Fractal project file structure.
 
-**Global** commands can be run from anywhere *outside of a project folder* and do not require the presence of a `fractal.js` settings file. An example of a global command is the `fractal new` command which helps you quickly create a new Fractal project file structure.
+## Running commands
 
-## The Fractal interactive CLI
+Fractal offers two ways to run commands. You can either run commands in a traditional format, or you can take advantage of Fractal's [interactive CLI](#the-fractal-interactive-cli) which offeres
+
+The standard way to run a command takes the format:
+
+```shell
+fractal <command-name> [args] [opts]
+```
+
+
+
+### The Fractal interactive CLI
 
 Rather than just exposing a bunch of regular terminal commands, Fractal provides an 'interactive CLI' for you to work with on your projects. You launch the interactive CLI by running the `fractal` command in your terminal. This will drop you into interactive mode, and you should see an info box appear in your terminal, with a prompt beneath it.
 
