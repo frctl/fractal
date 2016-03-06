@@ -56,9 +56,7 @@ const self = module.exports = {
                 return Promise.reject(e);
             }
         } else {
-            return fs.readFileAsync(filePath, 'utf8').then(contents => {
-                return self.parse(contents, format);
-            }).catch(err => {
+            return fs.readFileAsync(filePath, 'utf8').then(contents => self.parse(contents, format)).catch(err => {
                 console.error(`Error loading data file ${filePath}: ${err.message}`);
                 return {};
             });

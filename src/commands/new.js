@@ -120,11 +120,11 @@ module.exports = {
                 shell.cd(basePath);
                 const install = shell.exec('npm i @frctl/fractal --save', {
                     silent: true,
-                }, function(){
+                }, function () {
                     console.success(`Your new Fractal project has been set up.`);
                     process.exit();
                 });
-                install.stdout.on('data', function(data){
+                install.stdout.on('data', function (data) {
                     console.log(data);
                 });
             }).catch(e => {

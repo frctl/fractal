@@ -20,10 +20,10 @@ module.exports = class Entity {
 
         for (let key of _.keys(this.source.setting('default'))) {
             Object.defineProperty(this, key, {
-                get: function() {
+                get: function () {
                     return this.getProp(key);
                 },
-                set: function(value) {
+                set: function (value) {
                     this.setProp(key, value);
                 },
                 enumerable: true,
@@ -36,12 +36,12 @@ module.exports = class Entity {
             get() {
                 let p = this.parent;
                 let pathParts = [];
-                while(p) {
+                while (p) {
                     pathParts.unshift(p.handle);
                     p = p.parent;
                 }
                 pathParts.push(this.handle);
-                return _.trim(_.compact(pathParts).join('/').replace(/index$/i,''),'/');
+                return _.trim(_.compact(pathParts).join('/').replace(/index$/i, ''), '/');
             }
         });
 

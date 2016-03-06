@@ -22,7 +22,7 @@ module.exports = class Entities extends Collection {
 
     getProp(key) {
         const upstream = this.parent.getProp(key);
-        const prop    = this._props.get(key)
+        const prop    = this._props.get(key);
         return utils.mergeProp(prop, upstream);
     }
 

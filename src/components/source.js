@@ -59,6 +59,7 @@ module.exports = class ComponentSource extends Source {
 
         opts           = opts || {};
         opts.useLayout = opts.useLayout || false;
+
         // opts.collated  = opts.collated  || false;
 
         const self = this;
@@ -187,7 +188,7 @@ module.exports = class ComponentSource extends Source {
                 const search = item.find.apply(item, arguments);
                 if (search) return search;
             } else if (item.type === 'component') {
-                const matcher = isHandleFind ? this._makePredicate.apply(null, ['handle', arguments[0].replace('@','')]) : this._makePredicate.apply(null, arguments);
+                const matcher = isHandleFind ? this._makePredicate.apply(null, ['handle', arguments[0].replace('@', '')]) : this._makePredicate.apply(null, arguments);
                 if (matcher(item)) return item;
             }
         }

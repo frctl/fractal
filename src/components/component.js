@@ -25,7 +25,7 @@ module.exports = class Component extends Entity {
         this.editorMode  = files.view.lang.mode;
         this.editorScope = files.view.lang.scope;
         this._assets     = assets;
-        this._variants   = new VariantCollection({parent: this}, []);
+        this._variants   = new VariantCollection({ parent: this }, []);
     }
 
     get isCollated() {
@@ -36,7 +36,7 @@ module.exports = class Component extends Entity {
         return this.variants().default().getContentSync();
     }
 
-    setVariants(variantCollection){
+    setVariants(variantCollection) {
         this._variants = variantCollection;
     }
 
@@ -78,16 +78,16 @@ module.exports = class Component extends Entity {
 
     static *create(opts, files, assets) {
 
-            opts.notes = opts.notes || opts.readme;
-            if (!opts.notes && files.readme) {
-                opts.notes = yield files.readme.read();
-            }
-            if (opts.notes) {
-                opts.notes = yield opts.source._app.docs.renderString(opts.notes);
-            }
-            const comp = new Component(opts, files, assets);
-            const variants = yield VariantCollection.create(comp, files.view, opts.variants, files.varViews, opts);
-            comp.setVariants(variants);
-            return comp;
+        opts.notes = opts.notes || opts.readme;
+        if (!opts.notes && files.readme) {
+            opts.notes = yield files.readme.read();
+        }
+        if (opts.notes) {
+            opts.notes = yield opts.source._app.docs.renderString(opts.notes);
+        }
+        const comp = new Component(opts, files, assets);
+        const variants = yield VariantCollection.create(comp, files.view, opts.variants, files.varViews, opts);
+        comp.setVariants(variants);
+        return comp;
     }
 };

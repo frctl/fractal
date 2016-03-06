@@ -25,7 +25,7 @@ module.exports = function (app, vorpal, defaults) {
                 description: config
             };
         }
-        action = action || function(){};
+        action = action || function () {};
         commands.add({
             command: command,
             action:  action,
@@ -33,7 +33,7 @@ module.exports = function (app, vorpal, defaults) {
         });
     }
 
-    function watchFractalFile(){
+    function watchFractalFile() {
         chokidar.watch('fractal.js').on('change', (path) => {
             if (!hasChanged) {
                 console.alert('Your fractal.js file has changed. You will need to run the \'reboot\' command to see changes take effect.');
@@ -56,7 +56,7 @@ module.exports = function (app, vorpal, defaults) {
                 if (_.includes(commandScope, scope)) {
                     // command is in scope
                     const cmd = vorpal.command(item.command, item.config.description || ' ');
-                    cmd.action(function(args, done){
+                    cmd.action(function (args, done) {
                         this.console = console;
                         this.fractal = app;
                         let action = item.action.bind(this);
@@ -72,7 +72,7 @@ module.exports = function (app, vorpal, defaults) {
                     }
                 } else {
                     // command not available in this scope
-                    const cmd = vorpal.command(item.command.replace(/\</g,'[').replace(/\>/g,']'), item.config.description || ' ');
+                    const cmd = vorpal.command(item.command.replace(/\</g, '[').replace(/\>/g, ']'), item.config.description || ' ');
                     cmd.action((args, done) => {
                         console.error(`This command is not available in a ${scope} context.`);
                         done();
@@ -95,7 +95,7 @@ module.exports = function (app, vorpal, defaults) {
             }
 
             if (command) {
-                app.load().then(function(){
+                app.load().then(function () {
                     vorpal.parse(process.argv);
                 });
                 return;
@@ -104,7 +104,8 @@ module.exports = function (app, vorpal, defaults) {
             if (!command && scope === 'global') {
                 console.box(
                     `Fractal CLI`,
-                    `${chalk.magenta('No local Fractal installation found.')}\nYou can use the 'fractal new' command to create a new project.`,
+                    `${chalk.magenta('No local Fractal installation found.')}
+You can use the 'fractal new' command to create a new project.`,
                     `Powered by Fractal v${app.version}`
                 ).unslog();
             } else {
@@ -120,7 +121,8 @@ module.exports = function (app, vorpal, defaults) {
                     if (!input.opts.reboot) {
                         console.box(
                             `Fractal interactive CLI`,
-                            `- Use the 'help' command to see all available commands.\n- Use the 'exit' command to exit the app.`,
+                            `- Use the 'help' command to see all available commands.
+- Use the 'exit' command to exit the app.`,
                             `Powered by Fractal v${app.version}`
                         ).unslog().br();
                     } else {

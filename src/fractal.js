@@ -55,7 +55,7 @@ class Fractal {
     //     return this._commander.exec.apply(this._commander, Array.from(arguments));
     // }
 
-    _init(){
+    _init() {
         console.debugging = this.get('env') === 'debug';
         if (this.get('env') !== 'debug') {
             process.on('uncaughtException', function (err) {

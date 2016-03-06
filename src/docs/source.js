@@ -43,10 +43,8 @@ module.exports = class DocsSource extends Source {
         });
     }
 
-    renderString(str, context){
-        return this.engine().render(null, str, context || {}).then(rendered => {
-            return this.setting('markdown') ? md(rendered) : rendered;
-        });
+    renderString(str, context) {
+        return this.engine().render(null, str, context || {}).then(rendered => (this.setting('markdown') ? md(rendered) : rendered));
     }
 
     isPage(file) {

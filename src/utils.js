@@ -83,15 +83,15 @@ module.exports = {
        }
    },
 
-   isPromise(value){
+    isPromise(value) {
        return (value && _.isFunction(value.then));
    },
 
-   md5(str) {
-       return crypto.createHash('md5').update(str).digest("hex");
+    md5(str) {
+       return crypto.createHash('md5').update(str).digest('hex');
    },
 
-   mergeProp(prop, upstream) {
+    mergeProp(prop, upstream) {
        if (_.isArray(upstream)) {
            return _.uniq(_.concat(upstream, _.castArray(prop)));
        } else if (_.isObject(upstream)) {

@@ -55,7 +55,7 @@ class Source extends Collection {
         return utils.mergeProp(prop, upstream);
     }
 
-    setting(key, fallback){
+    setting(key, fallback) {
         return this._app.get(`${this._namespace}.${key}`, fallback);
     }
 
@@ -111,7 +111,7 @@ class Source extends Collection {
                     this.refresh({
                         event: event,
                         path: path,
-                        isAsset: this.isAsset({path: path})
+                        isAsset: this.isAsset({ path: path })
                     });
                 });
             });
@@ -163,7 +163,7 @@ class Source extends Collection {
         return self;
     }
 
-    isAsset(){
+    isAsset() {
         return false;
     }
 

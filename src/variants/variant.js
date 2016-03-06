@@ -37,7 +37,7 @@ module.exports = class Variant extends Entity {
     get siblings() {
         return this.parent.variants();
     }
-    
+
     get content() {
         return this.getContentSync();
     }
