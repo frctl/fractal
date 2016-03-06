@@ -21,7 +21,7 @@
         }
         .Tree-collectionLabel {
             span:before {
-                background-image: url('/_theme/img/icon-navigation-closed.svg');
+                background-image: url('../img/icon-navigation-closed.svg');
             }
         }
     }
@@ -44,7 +44,7 @@
         left: 0;
         top: 5px;
         content: ' ';
-        background-image: url('/_theme/img/icon-navigation-opened.svg');
+        background-image: url('../img/icon-navigation-opened.svg');
         background-size: 8px 8px;
         background-repeat: no-repeat;
         background-position: 0 50%;

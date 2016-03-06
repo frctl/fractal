@@ -9,13 +9,14 @@ module.exports = function(config){
     this.title   = 'A theme fir Fractal.';
     this.version = packageJSON.version;
 
+    this.options.assetsDir = (config.assetsDir || 'theme').replace(/^\//, '').replace(/\/$/, '');
+    this.options.colorscheme = config.colorscheme || config.palette || 'default';
+
     this.views   = Path.join(__dirname, 'views');
     this.favicon = Path.join(__dirname, 'assets/favicon.ico');
     this.error   = 'pages/error.nunj';
 
-    this.static(Path.join(__dirname, 'dist'), '/_theme');
-
-    this.options.colorscheme = config.colorscheme || config.palette || 'default';
+    this.static(Path.join(__dirname, 'dist'), `/${this.options.assetsDir}`);
 
     this.route('/', {
         handle: 'overview',

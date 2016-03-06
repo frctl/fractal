@@ -80,7 +80,7 @@
     height: 20px;
     margin: 0 20px;
     cursor: ns-resize;
-    background: transparent url('/_theme/img/icon-drag--horizontal.svg') no-repeat 50% 50%;
+    background: transparent url('../img/icon-drag--horizontal.svg') no-repeat 50% 50%;
     background-size: 16px 3px;
     @include dragHandle;
     @include mq($until: navCollapse) {

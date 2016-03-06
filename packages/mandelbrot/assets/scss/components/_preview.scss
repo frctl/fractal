@@ -80,7 +80,7 @@
     background-color: transparent;
     cursor: ew-resize;
     z-index: 100;
-    background: transparent url('/_theme/img/icon-drag--vertical.svg') no-repeat 50% 50%;
+    background: transparent url('../img/icon-drag--vertical.svg') no-repeat 50% 50%;
     background-size: 3px 16px;
     @include dragHandle;
     @include mq($until: navCollapse) {

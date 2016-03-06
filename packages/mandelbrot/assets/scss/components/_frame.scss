@@ -72,7 +72,7 @@
     z-index: 1;
     padding-bottom: 1px;
     &.is-loading {
-        background-image: url('/_theme/img/loader.svg');
+        background-image: url('../img/loader.svg');
         background-repeat: no-repeat;
         background-position: 50%;
         .Frame-inner {
@@ -87,7 +87,7 @@
     width: 20px;
     cursor: ew-resize;
     height: 100%;
-    background: transparent url('/_theme/img/icon-drag--vertical.svg') no-repeat 50% 45%;
+    background: transparent url('../img/icon-drag--vertical.svg') no-repeat 50% 45%;
     background-size: 3px 16px;
     @include dragHandle;
 }
