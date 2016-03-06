@@ -15,7 +15,7 @@
 
 ## Overview
 
-By default. Fractal uses a vanilla install of [Handlebars](http://handlebars.js) as a template language for both components and documentation pages. However, it's straightforward to either customise the Handlebars instance (i.e. by adding helpers etc) or to install and use a completely different template engine.
+By default, Fractal uses a vanilla install of [Handlebars](http://handlebars.js) as a template language for both components and documentation pages. However, it's straightforward to either customise the Handlebars instance (i.e. by adding helpers etc) or to install and use a completely different template engine.
 
 > It's worth noting that the capabilities of your components is mostly determined by your choice of templating language, rather than by Fractal itself. If you choose a language that has no support for including partials, for instance, Fractal will not 'add' that capability in.
 
@@ -77,7 +77,7 @@ Handlebars.registerHelper('uppercase', function(str) {
 Handlebars.registerHelper('lowercase', function(str) {
     return new Handlebars.SafeString(str.toLowerCase());
 });
-    
+
 fractal.engine('handlebars', '@frctl/handlebars-adapter', {
     instance: Handlebars
 });
@@ -92,7 +92,7 @@ var Handlebars = require('handlebars');
 var Swag = require('swag');
 
 Swag.registerHelpers(Handlebars);
-    
+
 fractal.engine('handlebars', '@frctl/handlebars-adapter', {
     instance: Handlebars
 });
@@ -164,8 +164,3 @@ fractal.engine('handlebars-docs', '@frctl/handlebars-adapter', {
 });
 fractal.set('docs.engine', 'handlebars-docs');
 ```
-
-
-
-
-
