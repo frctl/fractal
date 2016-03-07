@@ -21,7 +21,7 @@ In order to faithfully render a component in the same way as it will look in you
 
 ## Creating a preview layout
 
-Preview layouts are just another component, and so must reside in your component directory. Like any other components, preview layouts can be [hidden](/docs/components/tips-and-tricks.md) by prefixing their name with an underscore if you don't want them to show up in listings or navigation.
+Preview layouts are just another component, and so must reside in your component directory. Like any other components, preview layouts can be [hidden](/docs/components/tips.md#hiding-components) by prefixing their name with an underscore if you don't want them to show up in listings or navigation.
 
 For example, we could create a preview layout called `_preview.hbs` in the root our components directory:
 
@@ -82,7 +82,7 @@ All components within this collection will have this set as their default previe
 	"preview": "@preview"
 }
 ```
-### In a component's configuration file 
+### In a component's configuration file
 
 Setting it directly in a component's config file will override any defaults set further upstream.
 
@@ -120,4 +120,3 @@ It may be useful to understand the exact rendering order when a preview layout i
 2. The rendered output is assigned to a special property, `yield`, which is attached to the preview layout's context data.
 3. A JSON representation of the component being rendered is assigned to the `_target` property of the layout's context data.
 4. The layout view file is rendered using it's own preview context data, complete with the additional `yield` and `_target` properties.
-

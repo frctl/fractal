@@ -11,10 +11,11 @@ Pages can be organised into as many folders and sub-folders as is necessary for 
 
 
 - [A simple page](#a-simple-page)
-- [Ordering pages](#ordering-pages)
 - [YAML front-matter](#yaml-front-matter)
 - [Using data in pages](#using-data-in-pages)
   - [Accessing page metadata](#accessing-page-metadata)
+- [Ordering pages](#ordering-pages)
+- [Hiding pages](#hiding-pages)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -40,19 +41,6 @@ Fractal will then take that and turn it into HTML ready for display:
 </ul>
 ```
 If there is no configuration data available (see below) then Fractal will generate metadata (such the title of the page) based on the file name.
-
-## Ordering pages
-
-Pages can be ordered by prefixing file names with a two digit number followed by a hyphen. For example:
-
-```
-├── pages
-│   ├── 01-index.md
-│   ├── 02-changelog.md
-│   └── 03-naming-conventions.md
-```
-
-Order prefixes are ignored when auto-generating page titles.
 
 ## YAML front-matter
 
@@ -104,3 +92,31 @@ Pages only have direct access to data specified within the `context` object. If 
 This is to prevent page configuration data clashing with context data intended to be used when rendering the page.
 
 Note that the `_self` variable is actually a JSON representation of the page object itself, and not just a regurgitation of configuration data (i.e. `title` will have a value whether or not it is overridden in the configuration, as Fractal generates one for every page).
+
+## Ordering pages
+
+Pages can be ordered by prefixing file names with a **two digit number** (with leading zero, if required) **followed by a hyphen**. For example:
+
+```
+├── pages
+│   ├── 01-index.md
+│   ├── 02-changelog.md
+│   └── 03-naming-conventions.md
+```
+
+Order prefixes are ignored when auto-generating page titles.
+
+Alternatively, you can use the `order` property in the [page's configuration settings](/docs/documentation/configuration.md) to specify an order without amending the filename.
+
+## Hiding pages
+
+Pages can be hidden from listings and navigation in two ways. You can either specify `hidden: true` in the pages's [configuration file](/docs/documentation/configuration.md) or you can prefix the page's filename with an underscore. So in the following example, the `changelog` page would not show up in any navigation:
+
+```
+├── pages
+│   ├── _changelog.md
+│   ├── index.md
+│   └── naming-conventions.md
+```
+
+> You can also combine *ordering* and *hiding* by constructing a filename such as `_01-changelog.md`.

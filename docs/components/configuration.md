@@ -77,7 +77,7 @@ display:
 
 ### hidden
 
-Specifies whether the component [is hidden](/docs/components/tips-and-tricks.md#hiding-components-from-listings) (i.e. does not show up in listings or navigation) or not. Overrides the inferred value from an underscore-prefixed file name if set.
+Specifies whether the component [is hidden](/docs/components/tips.md#hiding-components) (i.e. does not show up in listings or navigation) or not. Overrides the inferred value from an underscore-prefixed file name if set.
 
 ```yaml
 hidden: true
