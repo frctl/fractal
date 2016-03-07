@@ -166,7 +166,10 @@ class Fractal {
     }
 
     makeProjectPath(path) {
-        return Path.join(this.get('project.path'), path);
+        if (!path) {
+            return this.get('project.path');
+        }
+        return Path.join(this.get('project.path') || '', path);
     }
 
     _initPlugins(name) {
