@@ -5,8 +5,8 @@
 
 
 - [Overview](#overview)
-- [Configuration](#configuration)
-- [Configuration Properties](#configuration-properties)
+- [Configuration files](#configuration-files)
+- [Available configuration properties](#available-configuration-properties)
   - [label](#label)
   - [title](#title)
 
@@ -18,7 +18,7 @@ Collections are just groups of related components or documentation pages. When y
 
 However beyond just grouping items, collections are useful because they can have their own [configuration files](/docs/configuration-files.md) within which you can specify properties (such as [status](/docs/components/statuses.md) or [preview layout](/docs/components/layouts.md) for components) that will then be **applied to all child items** within that collection, saving you from having to specify them on each item. Of course, individual components, pages (or indeed sub-collections) can still [override these defaults](/docs/configuration-files.md#configuration-inheritance) on a case-by-case basis if needed.
 
-## Configuration
+## Configuration files
 
 A collection configuration file follows the same rules as component and documentation page configuration files. It must reside in the collection directory and have the same name as the directory itself, followed by `.config.{js|json|yml}`, depending on the format.
 
@@ -41,7 +41,7 @@ context:
     title: "My Website"
 ```
 
-## Configuration Properties
+## Available configuration properties
 
 The majority of properties set in a collection configuration file apply not to the collection itself, but rather cascade down to the items within it. The exception to this is the `label` and `title` properties.
 

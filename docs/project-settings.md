@@ -105,6 +105,8 @@ fractal.set('components.default.preview', '@my-preview');
 
 The default status to use for a component. Statuses are fully configurable - see the [components documentation](/docs/components/statuses.md) for details.
 
+To disable the setting of a default status, you can set the value to `null`.
+
 ```js
 fractal.set('components.default.status', 'wip');
 ```
