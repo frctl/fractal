@@ -8,9 +8,8 @@ module.exports = function(config){
     this.name    = 'mandelbrot';
     this.title   = 'A theme fir Fractal.';
     this.version = packageJSON.version;
-
-    this.options.assetsDir = (config.assetsDir || 'theme').replace(/^\//, '').replace(/\/$/, '');
-    this.options.colorscheme = config.colorscheme || config.palette || 'default';
+    
+    this.options.assetsDir = (this.options.assetsDir || 'theme').replace(/^\//, '').replace(/\/$/, '');
 
     this.views   = Path.join(__dirname, 'views');
     this.favicon = Path.join(__dirname, 'assets/favicon.ico');
