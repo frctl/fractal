@@ -16,6 +16,7 @@
 	* [Configuration options](/docs/components/configuration.md)
 	* [Using preview layouts](/docs/components/layouts.md)
 	* [Providing context data to your components](/docs/components/context.md)
+	* [Statuses](/docs/components/statuses.md)
 * Generating Docs
 	* [Overview](/docs/documentation/overview.md)
 	* [Configuration options](/docs/documentation/configuration.md)
