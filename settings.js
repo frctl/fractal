@@ -35,7 +35,7 @@ module.exports = {
             },
             wip: {
                 label: "WIP",
-                description: "Work in progress. Implemement with caution.",
+                description: "Work in progress. Implement with caution.",
                 color: "#FF9233"
             },
             ready: {
