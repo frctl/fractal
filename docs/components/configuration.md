@@ -53,12 +53,12 @@ collated: false
 ```
 ### context
 
-The [context data](/docs/components/context.md) to pass to the template when rendering previews. 
+The [context data](/docs/components/context.md) to pass to the template when rendering previews.
 
 `context` is an **inheritable property**. Any context data set on the component will be *merged* with context data set upstream in the [configuration cascade](/docs/configuration-files.md#configuration-inheritance).
 
 ```yaml
-context: 
+context:
   buttonText: 'Click here!'
   listItems: ['foo','bar','baz']
 ```
@@ -73,7 +73,7 @@ This *does not* leak into the styling of the component itself; it is just applie
 display:
   max-width: 400px
   min-width: 250px
-``` 
+```
 
 ### hidden
 
@@ -115,7 +115,7 @@ An integer order value, used when sorting components. Overrides any order value 
 
 ```yaml
 order: 4
-``` 
+```
 
 ### preview
 
@@ -168,19 +168,19 @@ variants:
   - name: 'small'
     context:
       isSmall: true
-``` 
+```
 ## Variant properties
 
 Variants can be defined in the parent components configuration file. See the [variants documentation](/docs/components/variants.md) for full details on creating and configuring variants.
 
 ### context
 
-The [context data](/docs/components/context.md) to pass to the variant view template when rendering previews. 
+The [context data](/docs/components/context.md) to pass to the variant view template when rendering previews.
 
 Any context set on a variant will be merged with it's parent component's (inherited and merged) context data.
 
 ```yaml
-context: 
+context:
   buttonText: 'It's a unicorn button!'
 ```
 
@@ -191,7 +191,7 @@ Set the component display property description for details. This is merged with 
 ```yaml
 display:
   max-width: 300px
-``` 
+```
 
 ### name
 
@@ -201,7 +201,7 @@ A variant with a name of 'large' that belongs to the component named 'button' wi
 
 ```yaml
 name: 'unicorn'
-``` 
+```
 
 ### notes
 
@@ -240,7 +240,7 @@ view: 'component--funky.hbs'
 
 ## Collection properties
 
-Collections can specify properties that should be applied to all child components of that collection via [configuration inheritance](/docs/configuration-files.md#configuration-inheritance). See the [documentation on collections](/docs/collections.md) for more details on how to work with collections.
+Collections can specify properties that should be applied to all child components of that collection via [configuration inheritance](/docs/configuration-files.md#configuration-inheritance). See the [documentation on collections](/docs/collections.md) for more details on how to work with collections, and for details on available non-inheritable properties like `label` and `title`.
 
 ### collated
 
@@ -252,10 +252,10 @@ collated: false
 
 ### context
 
-[Context data](/docs/components/context.md) to be applied to children of the collection Any context set on a collection will be merged into any contexts set by it's children.
+[Context data](/docs/components/context.md) to be applied to children of the collection. Any context set on a collection will be merged into any contexts set by it's children.
 
 ```yaml
-context: 
+context:
   buttonText: 'It's a unicorn button!'
 ```
 
@@ -266,7 +266,7 @@ Display property options for child components. This is merged with any display p
 ```yaml
 display:
   max-width: 300px
-``` 
+```
 
 ### preview
 

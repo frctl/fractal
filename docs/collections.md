@@ -6,7 +6,7 @@
 
 - [Overview](#overview)
 - [Configuration](#configuration)
-  - [Configuration Properties](#configuration-properties)
+- [Configuration Properties](#configuration-properties)
   - [label](#label)
   - [title](#title)
 
@@ -41,7 +41,7 @@ context:
     title: "My Website"
 ```
 
-### Configuration Properties
+## Configuration Properties
 
 The majority of properties set in a collection configuration file apply not to the collection itself, but rather cascade down to the items within it. The exception to this is the `label` and `title` properties.
 

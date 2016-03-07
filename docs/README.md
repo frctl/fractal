@@ -18,6 +18,7 @@
 	* [Providing context data to your components](/docs/components/context.md)
 * Generating Docs
 	* [Overview](/docs/documentation/overview.md)
+	* [Configuration options](/docs/documentation/configuration.md)
 * Web UI
 	* [Overview](/docs/web/overview.md)
 * Guides
