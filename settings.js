@@ -28,28 +28,20 @@ module.exports = {
             prefix: null
         },
         status: {
-            options: {
-                prototype: {
-                    label: "Prototype",
-                    description: "Do not implement.",
-                    color: "#FF3333"
-                },
-                wip: {
-                    label: "WIP",
-                    description: "Work in progress. Implemement with caution.",
-                    color: "#FF9233"
-                },
-                ready: {
-                    label: "Ready",
-                    description: "Ready to implement.",
-                    color: "#29CC29"
-                }
+            prototype: {
+                label: "Prototype",
+                description: "Do not implement.",
+                color: "#FF3333"
             },
-            mixed: {
-                handle: 'mixed',
-                label: "Multiple",
-                description: "Contains items of differing statuses.",
-                color: "#999"
+            wip: {
+                label: "WIP",
+                description: "Work in progress. Implemement with caution.",
+                color: "#FF9233"
+            },
+            ready: {
+                label: "Ready",
+                description: "Ready to implement.",
+                color: "#29CC29"
             }
         }
     },

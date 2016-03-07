@@ -143,30 +143,18 @@ module.exports = class ComponentSource extends Source {
 
     statusInfo(handle) {
         const statuses = this.setting('status');
+        const defaultStatus = this.setting('default.status')
         if (_.isNull(handle)) {
             return null;
         }
-        if (_.isUndefined(handle) || (_.isArray(handle) && !handle.length)) {
-            return statuses.options[statuses.default];
+        if (_.isUndefined(handle)) {
+            return statuses[defaultStatus];
         }
-        if (_.isArray(handle)) {
-            const handles = _.uniq(handle);
-            if (handles.length === 1) {
-                return this.statusInfo(handles[0]);
-            }
-            const statuses = _.compact(handles.map(l => this.statusInfo(l)));
-            const details = _.clone(statuses.mixed);
-            details.statuses = statuses;
-            return details;
-        }
-        if (handle == statuses.mixed.handle) {
-            return statuses.mixed;
-        }
-        if (!statuses.options[handle]) {
+        if (!statuses[handle]) {
             console.error(`Status ${handle} is not a known option.`);
-            return statuses.options[statuses.default];
+            return statuses[defaultStatus];
         }
-        return statuses.options[handle];
+        return statuses[handle];
     }
 
     components() {
