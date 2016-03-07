@@ -142,7 +142,7 @@ module.exports = class ComponentSource extends Source {
     }
 
     statusInfo(handle) {
-        const statuses = this.setting('status');
+        const statuses = this.setting('statuses');
         const defaultStatus = this.setting('default.status')
         if (_.isNull(handle)) {
             return null;

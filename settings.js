@@ -27,7 +27,7 @@ module.exports = {
             collated: false,
             prefix: null
         },
-        status: {
+        statuses: {
             prototype: {
                 label: "Prototype",
                 description: "Do not implement.",
