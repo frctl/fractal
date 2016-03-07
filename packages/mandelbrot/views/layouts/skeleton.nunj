@@ -13,7 +13,7 @@
 </head>
 <body>
 
-{{ frctl.web.theme.options.direction }}
+{% block page %}{% endblock %}
 
 <script src="/{{ frctl.web.theme.options.assetsDir }}/js/build.js"></script>
 </body>
