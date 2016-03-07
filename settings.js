@@ -1,13 +1,15 @@
 'use strict';
 
-var packageJSON = require('./package.json');
+const packageJSON = require('./package.json');
+const Path        = require('path');
 
 module.exports = {
     version: packageJSON.version,
     env: process.env.NODE_ENV || 'production',
     project: {
         title: "My Component Library",
-        version: null
+        version: null,
+        path: Path.dirname(require.main.filename)
     },
     components: {
         path: null,

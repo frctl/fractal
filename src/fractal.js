@@ -2,6 +2,7 @@
 
 const vorpal       = require('vorpal')();
 const Promise      = require('bluebird');
+const Path         = require('path');
 const _            = require('lodash');
 const console      = require('./console')(vorpal);
 const EventEmitter = require('events').EventEmitter;
@@ -22,12 +23,13 @@ class Fractal {
      */
 
     constructor() {
-        this.global    = false;
+        this.global      = false;
         this.interactive = false;
-        this._settings = require('../settings');
-        this._engines  = new Map();
-        this._plugins  = new Map();
-        this._sources  = new Map();
+        this._settings   = require('../settings');
+        this._data       = require('./data')(this);
+        this._engines    = new Map();
+        this._plugins    = new Map();
+        this._sources    = new Map();
         this._commander = commander(this, vorpal, require('./commands'));
         this.utils = {
             highlight: highlight,
@@ -37,6 +39,7 @@ class Fractal {
         this.console = console;
         this.engine('handlebars', '@frctl/handlebars-adapter');
         this.plugin('@frctl/web-plugin');
+
     }
 
     /**
@@ -160,6 +163,10 @@ class Fractal {
             return this._settings;
         }
         return _.get(this._settings, setting, defaultVal || undefined);
+    }
+
+    makeProjectPath(path) {
+        return Path.join(this.get('project.path'), path);
     }
 
     _initPlugins(name) {

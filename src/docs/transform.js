@@ -6,11 +6,11 @@ const _          = require('lodash');
 const Page       = require('./page');
 const Collection = require('./collection');
 const fs         = require('../fs');
-const data       = require('../data');
-const console     = require('../console');
+const console    = require('../console');
 
 module.exports = function (fileTree, source) {
 
+    const data  = require('../data');
     const build = co.wrap(function* (dir, parent) {
 
         let collection;

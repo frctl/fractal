@@ -8,11 +8,11 @@ const Source          = require('./source');
 const Asset           = require('../assets/asset');
 const AssetCollection = require('../assets/collection');
 const fs              = require('../fs');
-const data            = require('../data');
-const console             = require('../console');
+const console         = require('../console');
 
 module.exports = function (fileTree, source) {
 
+    const data            = require('../data');
     const build = co.wrap(function* (dir, parent) {
 
         let collection;

@@ -2,6 +2,7 @@
 
 const EventEmitter = require('events').EventEmitter;
 const Promise      = require('bluebird');
+const Path         = require('path')
 const _            = require('lodash');
 const chokidar     = require('chokidar');
 const utils        = require('./utils');
@@ -12,14 +13,9 @@ const fs           = require('./fs');
 class Source extends Collection {
 
     constructor(namespace, items, app) {
-
         super(items);
-
-        this.labelPath  = '';
-        this.path       = '';
         this.isLoaded   = false;
         this.name       = namespace;
-
         this._namespace = namespace;
         this._app       = app;
         this._loading   = null;
@@ -41,6 +37,10 @@ class Source extends Collection {
 
     get source() {
         return this;
+    }
+
+    get sourcePath() {
+        return this._app.makeProjectPath(this.setting('path'));
     }
 
     setProp(key, value) {
@@ -99,7 +99,7 @@ class Source extends Collection {
     }
 
     watch() {
-        const sourcePath = this.setting('path');
+        const sourcePath = this.sourcePath;
         if (!this._monitor && sourcePath) {
             console.debug(`Watching ${this.name} directory - ${sourcePath}`);
             this._monitor = chokidar.watch(sourcePath, {
@@ -140,7 +140,7 @@ class Source extends Collection {
     }
 
     _build() {
-        const sourcePath = this.setting('path');
+        const sourcePath = this.sourcePath;
         if (!sourcePath) {
             return Promise.resolve(this);
         }

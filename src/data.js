@@ -8,76 +8,86 @@ const fs      = Promise.promisifyAll(require('fs'));
 const utils   = require('./utils');
 const console = require('./console');
 
-const self = module.exports = {
+module.exports = function (app) {
 
-    parse(data, format) {
-        format = format.toLowerCase();
-        if (format === 'js' || format === 'javascript') {
-            return data;
-        } else if (format === 'json') {
-            return JSON.parse(data);
-        } else if (format === 'yaml') {
-            return yaml.safeLoad(data);
-        }
-        throw new Error('Data format not recognised');
-    },
+    module.exports = {
 
-    stringify(data, format) {
-        format = format.toLowerCase();
-        if (format === 'js' || format === 'javascript') {
-            return `module.exports = ${JSON.stringify(data, null, 4)};`;
-        } else if (format === 'json') {
-            return JSON.stringify(data, null, 4);
-        } else if (format === 'yaml') {
-            return yaml.safeDump(data);
-        }
-        throw new Error('Data format not recognised');
-    },
-
-    readFile(filePath) {
-        if (Path.isAbsolute(filePath)) {
-            return Promise.reject('Data file paths must be relative to the root of the project');
-        }
-        const format = utils.lang(filePath, true).mode;
-        if (format === 'js' || format === 'javascript') {
-            try {
-                filePath = Path.relative(__dirname, filePath);
-                delete require.cache[require.resolve(filePath)]; // Always fetch a fresh copy
-                let data = require(filePath);
-                if (typeof data === 'function') {
-                    data = data();
-                }
-                if (!_.isObject(data)) {
-                    console.error(`Error loading data file ${filePath}: JS files must return a JavaScript data object.`);
-                    return Promise.reject(new Error('Error loading data file'));
-                }
-                return Promise.resolve(_.cloneDeep(data));
-            } catch (e) {
-                return Promise.reject(e);
+        parse(data, format) {
+            format = format.toLowerCase();
+            if (format === 'js' || format === 'javascript') {
+                return data;
+            } else if (format === 'json') {
+                return JSON.parse(data);
+            } else if (format === 'yaml') {
+                return yaml.safeLoad(data);
             }
-        } else {
-            return fs.readFileAsync(filePath, 'utf8').then(contents => self.parse(contents, format)).catch(err => {
-                console.error(`Error loading data file ${filePath}: ${err.message}`);
-                return {};
+            throw new Error('Data format not recognised');
+        },
+
+        stringify(data, format) {
+            format = format.toLowerCase();
+            if (format === 'js' || format === 'javascript') {
+                return `module.exports = ${JSON.stringify(data, null, 4)};`;
+            } else if (format === 'json') {
+                return JSON.stringify(data, null, 4);
+            } else if (format === 'yaml') {
+                return yaml.safeDump(data);
+            }
+            throw new Error('Data format not recognised');
+        },
+
+        readFile(filePath) {
+            // if (Path.isAbsolute(filePath)) {
+            //     // return Promise.reject('Data file paths must be relative to the root of the project');
+            // }
+            const format = utils.lang(filePath, true).mode;
+            if (format === 'js' || format === 'javascript') {
+                try {
+                    filePath = Path.relative(__dirname, filePath);
+                    delete require.cache[require.resolve(filePath)]; // Always fetch a fresh copy
+                    let data = require(filePath);
+                    if (typeof data === 'function') {
+                        data = data();
+                    }
+                    if (!_.isObject(data)) {
+                        console.error(`Error loading data file ${filePath}: JS files must return a JavaScript data object.`);
+                        return Promise.reject(new Error('Error loading data file'));
+                    }
+                    return Promise.resolve(_.cloneDeep(data));
+                } catch (e) {
+                    return Promise.reject(e);
+                }
+            } else {
+                return fs.readFileAsync(filePath, 'utf8').then(contents => this.parse(contents, format)).catch(err => {
+                    console.error(`Error loading data file ${filePath}: ${err.message}`);
+                    return {};
+                });
+            }
+        },
+
+        writeFile(filePath, data) {
+            const pathInfo = path.parse(path.resolve(filePath));
+            const format = utils.lang(filePath, true).mode;
+            return fs.writeFileAsync(filePath, this.stringify(data, format));
+        },
+
+        getConfig(file, defaults) {
+            defaults = defaults || {};
+            if (!file) {
+                return Promise.resolve(defaults);
+            }
+            return this.readFile(file.path).then(c => _.defaultsDeep(c, defaults)).catch(err => {
+                console.error(`Error parsing data file ${file.path}: ${err}`);
+                return defaults;
             });
-        }
-    },
+        },
 
-    writeFile(filePath, data) {
-        const pathInfo = path.parse(path.resolve(filePath));
-        const format = utils.lang(filePath, true).mode;
-        return fs.writeFileAsync(filePath, this.stringify(data, format));
-    },
+        guessRootDir(dir) {
 
-    getConfig(file, defaults) {
-        defaults = defaults || {};
-        if (!file) {
-            return Promise.resolve(defaults);
         }
-        return this.readFile(file.path).then(c => _.defaultsDeep(c, defaults)).catch(err => {
-            console.error(`Error parsing data file ${file.path}: ${err.message}`);
-            return defaults;
-        });
-    }
+
+    };
+
+    return module.exports;
 
 };
