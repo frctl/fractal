@@ -3,7 +3,11 @@
 <!-- START doctoc -->
 <!-- END doctoc -->
 
- So as a trivial example you could do something like the following to generate an array of items that you can use in your component view template:
+[ Coming soon ]
+
+<!--This guide covers creating -->
+
+<!-- So as a trivial example you could do something like the following to generate an array of items that you can use in your component view template:
 
 
 ```js
@@ -19,4 +23,4 @@ module.exports = {
 };
 ```
 
-It's also worth noting that files in this format are imported by Fractal as a Node modules. The handy thing about this is that it means that you can `require` whichever files, libraries and NPM modules you like to use in generating your component's preview data.
+It's also worth noting that files in this format are imported by Fractal as a Node modules. The handy thing about this is that it means that you can `require` whichever files, libraries and NPM modules you like to use in generating your component's preview data.-->

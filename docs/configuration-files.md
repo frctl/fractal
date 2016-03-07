@@ -18,7 +18,7 @@
 
 ## Overview
 
-Components, collections and documentation pages can all have their own (optional) configuration files associated with them.
+Components, documentation pages and collections can all have their own (optional) configuration files associated with them.
 
 In order to be recognised, configuration files must:
 
@@ -27,17 +27,11 @@ In order to be recognised, configuration files must:
 
 ### Available configuration options
 
-Components, collections and documentation pages all have different configuration options available to them.
+Available configuration options depend on the type of the item being configured. See the relevant configuration reference for details:
 
-##### Components:
-
-* [Component configuration](/docs/components/configuration.md)
-* [Collection configuration](/docs/components/collections.md)
-
-##### Documentation
-
-* [Page configuration](/docs/documentation/configuration.md)
-* [Collection configuration](/docs/documentation/collections.md)
+* [Components](/docs/components/configuration.md)
+* [Pages](/docs/documentation/configuration.md)
+* [Collections](/docs/collections.md)
 
 ## Configuration file formats
 
