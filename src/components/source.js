@@ -143,8 +143,11 @@ module.exports = class ComponentSource extends Source {
 
     statusInfo(handle) {
         const statuses = this.setting('status');
-        if (_.isUndefined(handle) || (_.isArray(handle) && !handle.length)) {
+        if (_.isNull(handle)) {
             return null;
+        }
+        if (_.isUndefined(handle) || (_.isArray(handle) && !handle.length)) {
+            return statuses.options[statuses.default];
         }
         if (_.isArray(handle)) {
             const handles = _.uniq(handle);
