@@ -1,6 +1,6 @@
 # Documentation Configuration Reference
 
-Documentation pages and doc [collections](/docs/collections.md) can have their own (optional) configuration files associated with them. Alternatively, documentation pages can also specify their configuration in a [YAML front-matter section](/docs/overview.md#yaml-front-matter) of the page itself. See the [documentation overview](/docs/overview.md) for more information.
+Documentation pages and doc [collections](/docs/collections.md) can have their own (optional) configuration files associated with them. Alternatively, documentation pages can also specify their configuration in a [YAML front-matter section](/docs/documentation/overview.md#yaml-front-matter) of the page itself. See the [documentation overview](/docs/documentation/overview.md) for more information.
 
 If you are using standalone configuration files, you should read the [configuration file documentation](/docs/configuration-files.md) to learn more about how configuration files need to be named and formatted.
 
