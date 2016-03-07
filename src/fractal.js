@@ -165,9 +165,9 @@ class Fractal {
         return _.get(this._settings, setting, defaultVal || undefined);
     }
 
-    makeProjectPath(path) {
+    getProjectPath(path) {
         if (!path) {
-            return this.get('project.path');
+            return _.isNull(path) ? null : this.get('project.path');
         }
         return Path.join(this.get('project.path') || '', path);
     }

@@ -40,7 +40,7 @@ class Source extends Collection {
     }
 
     get sourcePath() {
-        return this._app.makeProjectPath(this.setting('path'));
+        return this._app.getProjectPath(this.setting('path'));
     }
 
     setProp(key, value) {

@@ -9,7 +9,7 @@ module.exports = {
     project: {
         title: "My Component Library",
         version: null,
-        path: Path.dirname(require.main.filename)
+        path: null
     },
     components: {
         path: null,
