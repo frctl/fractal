@@ -2,6 +2,7 @@
 
 const Promise = require('bluebird');
 const nunjucks = require('nunjucks');
+const helpers  = require('@frctl/nunjucks-helpers');
 const _        = require('lodash');
 
 module.exports = function(source, config){
@@ -39,8 +40,18 @@ module.exports = function(source, config){
 
     nj = Promise.promisifyAll(nj);
 
+    if (config.loadHelpers) {
+        helpers.use(source._app);
+        _.each(helpers.require('filters') || {}, function(filter, name){
+            addFilter(name, filter);
+        });
+        _.each(helpers.require('extensions') || {}, function(ext, name){
+            nj.addExtension(name, ext);
+        });
+    }
+
     _.each(config.filters || {}, function(filter, name){
-        nj.addFilter(name, filter);
+        addFilter(name, filter);
     });
     _.each(config.extensions || {}, function(ext, name){
         nj.addExtension(name, ext);
@@ -51,6 +62,14 @@ module.exports = function(source, config){
 
     function loadViews(source) {
         viewCache = source.flattenDeep().items();
+    }
+
+    function addFilter(name, filter){
+        if (typeof filter === 'function') {
+            nj.addFilter(name, filter);
+        } else if (typeof filter === 'object') {
+            nj.addFilter(name, filter.filter, filter.async);
+        }
     }
 
     source.on('loaded', loadViews);
