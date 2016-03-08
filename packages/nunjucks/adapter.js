@@ -1,5 +1,6 @@
 'use strict';
 
+const Promise = require('bluebird');
 const nunjucks = require('nunjucks');
 const _        = require('lodash');
 
@@ -32,9 +33,11 @@ module.exports = function(source, config){
         }
     });
 
-    const nj = new nunjucks.Environment(new StringLoader(), {
+    let nj = new nunjucks.Environment(new StringLoader(), {
         autoescape: false
     });
+
+    nj = Promise.promisifyAll(nj);
 
     _.each(config.filters || {}, function(filter, name){
         nj.addFilter(name, filter);
@@ -55,9 +58,9 @@ module.exports = function(source, config){
 
     return {
         engine: nj,
-        render: function(path, str, context, meta){
+        render: function(path, str, context, callback){
             if (!viewCache) loadViews(source);
-            return Promise.resolve(nj.renderString(str, context));
+            return nj.renderStringAsync(str, context);
         }
     };
 
