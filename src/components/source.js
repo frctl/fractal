@@ -136,11 +136,12 @@ module.exports = class ComponentSource extends Source {
         }
         let layoutContext = yield this.resolve(layout.context);
         let layoutContent = yield layout.getContent();
-        layoutContext = _.defaults(layoutContext, context || {});
+        layoutContext     = _.defaults(layoutContext, context || {});
         layoutContext[this.setting('yield')] = content;
-        return this.engine().render(layout.viewPath, layoutContent, layoutContext);
+        const renderMethod = (typeof this.engine().renderLayout === 'function') ? 'renderLayout' : 'render';
+        return this.engine()[renderMethod](layout.viewPath, layoutContent, layoutContext);
     }
-
+    
     statusInfo(handle) {
         const statuses = this.setting('statuses');
         const defaultStatus = this.setting('default.status')
