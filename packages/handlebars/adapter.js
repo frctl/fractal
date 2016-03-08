@@ -1,19 +1,38 @@
 'use strict';
 
-const Handlebars = require('handlebars');
-const _          = require('lodash');
+const promisedHbs = require('promised-handlebars');
+const Handlebars  = require('handlebars');
+const _           = require('lodash');
 
 module.exports = function(source, config){
 
-    config = config || {};
+    config       = config || {};
+    let instance = Handlebars;
+    let helpers  = {};
+    let partials = {};
 
-    const instance = config.instance || Handlebars;
+    if (config.instance) {
+        _.each(config.instance.helpers || {}, (helper, name) => {
+            if (!Handlebars.helpers[name]) {
+                helpers[name] = helper;
+            }
+        });
+        _.each(config.instance.partials || {}, (partial, name) => {
+            if (!Handlebars.partials[name]) {
+                partials[name] = partial;
+            }
+        });
+        instance = config.instance;
+    }
+
+    instance = promisedHbs(instance);
+
     let viewsLoaded = false;
 
-    _.each(config.helpers || {}, function(helper, name){
+    _.each(_.defaults(helpers, config.helpers || {}), function(helper, name){
         instance.registerHelper(name, helper);
     });
-    _.each(config.partials || {}, function(partial, name){
+    _.each(_.defaults(partials, config.partials || {}), function(partial, name){
         instance.registerPartial(name, partial);
     });
 
