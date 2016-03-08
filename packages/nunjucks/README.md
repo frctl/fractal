@@ -63,3 +63,18 @@ A message for you: {{ message|shorten }}
 {# Show the first 20 characters #}
 A message for you: {{ message|shorten(20) }}
 ```
+
+## Helpers
+
+The [Nunjucks helpers](https://github.com/frctl/nunjucks-helpers) library provides a set of Fractal-specific helpers for Nunjucks.
+
+You can make all helpers available to your project by setting the `loadHelpers` config property to `true` when registering the Nunjucks adapter:
+
+```javascript
+// fractal.js
+fractal.engine('nunjucks', '@frctl/nunjucks-adapter', {
+    loadHelpers: true
+});
+```
+
+See the [Nunjucks helpers README](https://github.com/frctl/nunjucks-helpers) for details on selectively loading helpers if you do not wish to autoload them in this fashion.
