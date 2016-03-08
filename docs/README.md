@@ -16,6 +16,7 @@
 	* [Configuration options](/docs/components/configuration.md)
 	* [Using preview layouts](/docs/components/layouts.md)
 	* [Providing context data to your components](/docs/components/context.md)
+ 	* [Defining variants](/docs/components/variants.md)
 	* [Statuses](/docs/components/statuses.md)
 	* [Tips and tricks](/docs/components/tips.md)
 * Generating Docs

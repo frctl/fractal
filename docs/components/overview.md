@@ -33,7 +33,7 @@ Optionally, components can also:
 * Have per-component configuration and preview data.
 * Be organised into directories and sub-directories as required.
 * Include as many related files (such as JavaScript, CSS, tests and READMEs) as you like.
-* Have one or more *variants* - useful for when you have one 'parent' component with a number of very similar variations.
+* Have one or more *variants* - useful for when you have a component which needs to have a number of very similar instances.
 
 The markup for a component can either be written as 'vanilla' HTML or using a template language of your choosing. By default, Fractal expects that you are using [Handlebars](handlebarsjs.com) templates for your component view files, and that these files will have a `.hbs` file extension.
 
@@ -73,7 +73,7 @@ The simplest compound component consists of a directory containing a single view
 ```
 ├── components
 │   └── blockquote
-│   │   └── blockquote.hbs
+│       └── blockquote.hbs
 ```
 
 Configuration files can of course be added, again following the same naming convention (`[component-name].config.{js|json|yml}`). Other files added to the directory will then be associated with the component. These files do not have to adhere to any particular naming convention. So a full example may look like:
