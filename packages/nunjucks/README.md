@@ -66,9 +66,9 @@ A message for you: {{ message|shorten(20) }}
 
 ## Helpers
 
-The [Nunjucks helpers](https://github.com/frctl/nunjucks-helpers) library provides a set of Fractal-specific helpers for Nunjucks.
+The [Nunjucks helpers](https://github.com/frctl/nunjucks-helpers) library provides a set of useful extensions and filters for your Fractal projects.
 
-You can make all helpers available to your project by setting the `loadHelpers` config property to `true` when registering the Nunjucks adapter:
+You can make *all* helpers available to your project by setting the `loadHelpers` config property to `true` when registering the Nunjucks adapter:
 
 ```javascript
 // fractal.js
