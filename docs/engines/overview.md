@@ -99,6 +99,28 @@ fractal.engine('handlebars', '@frctl/handlebars-adapter', {
 ```
 You would then have access to all of Swag's helpers in your component and page templates.
 
+### Installing the Fractal Handlebars helpers
+
+Fractal has a [small set of Handlebars helpers](https://github.com/frctl/handlebars-helpers) which can make your life easier when performing certain tasks.
+
+You can auto-load them using the `loadHelpers` property when configuring the handlebars adapter:
+
+```javascript
+// fractal.js
+var fractal = require('@frctl/fractal');
+
+fractal.engine('handlebars', '@frctl/handlebars-adapter', {
+    loadHelpers: true, // load the Fractal helper library
+    helpers: {
+        // other bespoke helpers here if needed
+    }
+});
+```
+
+You can also load helpers individually - see the [Handlebars helpers](https://github.com/frctl/handlebars-helpers) docs for more details.
+
+There is also a set of [Nunjucks helpers](https://github.com/frctl/nunjucks-helpers) available if you are using the Nunjucks template adapter instead.
+
 ## Using an alternative template engine
 
 If you don't wish to use Handlebars, you can use pretty much any other JavaScript-based template engine you like.
