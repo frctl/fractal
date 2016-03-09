@@ -8,6 +8,7 @@
 - [Customising Handlebars](#customising-handlebars)
   - [Adding to the default Handlebars instance](#adding-to-the-default-handlebars-instance)
   - [Using a custom Handlebars instance](#using-a-custom-handlebars-instance)
+  - [Installing the Fractal Handlebars helpers](#installing-the-fractal-handlebars-helpers)
 - [Using an alternative template engine](#using-an-alternative-template-engine)
 - [Using different template engines for components and docs](#using-different-template-engines-for-components-and-docs)
 
