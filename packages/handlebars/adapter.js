@@ -2,24 +2,25 @@
 
 const promisedHbs = require('promised-handlebars');
 const Handlebars  = require('handlebars');
+const helpers     = require('@frctl/handlebars-helpers');
 const _           = require('lodash');
 
 module.exports = function(source, config){
 
     config       = config || {};
     let instance = Handlebars;
-    let helpers  = {};
-    let partials = {};
+    let instanceHelpers  = {};
+    let instancePartials = {};
 
     if (config.instance) {
         _.each(config.instance.helpers || {}, (helper, name) => {
             if (!Handlebars.helpers[name]) {
-                helpers[name] = helper;
+                instanceHelpers[name] = helper;
             }
         });
         _.each(config.instance.partials || {}, (partial, name) => {
             if (!Handlebars.partials[name]) {
-                partials[name] = partial;
+                instancePartials[name] = partial;
             }
         });
         instance = config.instance;
@@ -29,10 +30,20 @@ module.exports = function(source, config){
 
     let viewsLoaded = false;
 
-    _.each(_.defaults(helpers, config.helpers || {}), function(helper, name){
+    if (config.loadHelpers) {
+      helpers.use(source._app);
+      _.each(helpers.require('helpers') || {}, function(helper, name){
+          instance.registerHelper(name, helper);
+      });
+      _.each(helpers.require('partials') || {}, function(partial, name){
+          instance.registerPartial(name, partial);
+      });
+  }
+
+    _.each(_.defaults(instanceHelpers, config.helpers || {}), function(helper, name){
         instance.registerHelper(name, helper);
     });
-    _.each(_.defaults(partials, config.partials || {}), function(partial, name){
+    _.each(_.defaults(instancePartials, config.partials || {}), function(partial, name){
         instance.registerPartial(name, partial);
     });
 
