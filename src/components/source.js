@@ -37,7 +37,13 @@ module.exports = class ComponentSource extends Source {
 
     renderPreview(entity, useLayout) {
         useLayout = useLayout !== false ? true : false;
-        return this.render(entity, entity.context, { useLayout: true });
+        let context;
+        if (entity.type == 'component') {
+            context = entity.variants().default().context;
+        } else {
+            context = entity.context;
+        }
+        return this.render(entity, context, { useLayout: useLayout });
     }
 
     /**
@@ -115,7 +121,7 @@ module.exports = class ComponentSource extends Source {
 
     *_renderCollatedComponent(component, context) {
         context = context || {};
-        return (yield component.variants().toArray().map(variant => {
+        return (yield component.variants().filter('isHidden', false).toArray().map(variant => {
             return this.resolve(context[`@${variant.handle}`] || variant.context).then(ctx => {
                 return this.render(variant, ctx).then(markup => {
                     const collator = this.setting('collator');
