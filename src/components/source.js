@@ -37,7 +37,13 @@ module.exports = class ComponentSource extends Source {
 
     renderPreview(entity, useLayout) {
         useLayout = useLayout !== false ? true : false;
-        return this.render(entity, entity.context, { useLayout: true });
+        let context;
+        if (entity.type == 'component') {
+            context = entity.variants().default().context;
+        } else {
+            context = entity.context;
+        }
+        return this.render(entity, context, { useLayout: useLayout });
     }
 
     /**
