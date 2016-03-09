@@ -24,6 +24,7 @@ module.exports = class Component extends Entity {
         this.lang        = files.view.lang.name;
         this.editorMode  = files.view.lang.mode;
         this.editorScope = files.view.lang.scope;
+        this.viewPath    = files.view.path;
         this._assets     = assets;
         this._variants   = new VariantCollection({ parent: this }, []);
     }
@@ -72,6 +73,7 @@ module.exports = class Component extends Entity {
             order:      this.order,
             preview:    this.preview,
             display:    this.display,
+            viewPath:   this.viewPath,
             variants:   this.variants().toJSON()
         };
     }

@@ -142,7 +142,7 @@ module.exports = class ComponentSource extends Source {
         if (layout.type == 'file') {
             layoutContext = {};
             layoutContent = yield layout.read();
-            viewpath = file.path;
+            viewpath = layout.path;
         } else {
             if (layout.type === 'component') {
                 layout = layout.variants().default();
@@ -212,7 +212,7 @@ module.exports = class ComponentSource extends Source {
     }
 
     isView(file) {
-        return anymatch([`**/*${this.setting('ext')}`, `!**/*${this.setting('splitter')}*${this.setting('ext')}`], file.path.toLowerCase());
+        return anymatch([`**/*${this.setting('ext')}`, `!**/*${this.setting('splitter')}*${this.setting('ext')}`, `!**/*.config.${this.setting('ext')}`], file.path.toLowerCase());
     }
 
     isVarView(file) {
