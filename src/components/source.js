@@ -115,7 +115,7 @@ module.exports = class ComponentSource extends Source {
 
     *_renderCollatedComponent(component, context) {
         context = context || {};
-        return (yield component.variants().toArray().map(variant => {
+        return (yield component.variants().filter('isHidden', false).toArray().map(variant => {
             return this.resolve(context[`@${variant.handle}`] || variant.context).then(ctx => {
                 return this.render(variant, ctx).then(markup => {
                     const collator = this.setting('collator');
