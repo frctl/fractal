@@ -7,7 +7,7 @@
     "type": "git",
     "url": "https://github.com/frctl/fractal.git"
   },
-  "author": "Clearleft <dev@clearleft.com> (http://clearleft.com/)",
+  "author": "Mark Perkins <mark@clearleft.com> (http://clearleft.com/)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/frctl/fractal/issues"
