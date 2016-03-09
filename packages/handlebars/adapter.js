@@ -1,14 +1,14 @@
 'use strict';
 
 const promisedHbs = require('promised-handlebars');
-const Handlebars  = require('handlebars');
+const Handlebars  = require('handlebars').create();
 const helpers     = require('@frctl/handlebars-helpers');
 const _           = require('lodash');
 
 module.exports = function(source, config){
 
-    config       = config || {};
-    let instance = Handlebars;
+    config               = config || {};
+    let instance         = Handlebars;
     let instanceHelpers  = {};
     let instancePartials = {};
 
@@ -31,14 +31,14 @@ module.exports = function(source, config){
     let viewsLoaded = false;
 
     if (config.loadHelpers) {
-      helpers.use(source._app);
-      _.each(helpers.require('helpers') || {}, function(helper, name){
-          instance.registerHelper(name, helper);
-      });
-      _.each(helpers.require('partials') || {}, function(partial, name){
-          instance.registerPartial(name, partial);
-      });
-  }
+        helpers.use(source._app);
+        _.each(helpers.require('helpers') || {}, function(helper, name){
+            instance.registerHelper(name, helper);
+        });
+        _.each(helpers.require('partials') || {}, function(partial, name){
+            instance.registerPartial(name, partial);
+        });
+    }
 
     _.each(_.defaults(instanceHelpers, config.helpers || {}), function(helper, name){
         instance.registerHelper(name, helper);
