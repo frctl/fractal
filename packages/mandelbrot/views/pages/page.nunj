@@ -11,7 +11,7 @@
 
 <div class="Document">
 
-    {{ doc.header(page.title) }}
+    {{ doc.header(page.title | default(frctl.config.project.title if frctl.config.project.title else 'Welcome to your component library' )) }}
 
     <div class="Entity-text Prose">
 
@@ -28,7 +28,7 @@
         <th>Label</th>
         <th>Description</th>
     </tr>
-    {% for handle, st in frctl.config.components.status.options %}
+    {% for handle, st in frctl.config.components.statuses %}
     <tr>
         <td>{{ status.tag(st) }}</td>
         <td>{{ st.description }}</td>
