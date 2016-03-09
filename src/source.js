@@ -21,6 +21,7 @@ class Source extends Collection {
         this._loading   = null;
         this._monitor   = null;
         this._engines   = new Map();
+        this._fileTree  = null;
     }
 
     get label() {
@@ -139,12 +140,32 @@ class Source extends Collection {
         return this._engines.get(e);
     }
 
+    findFile(filePath) {
+        filePath = Path.resolve(filePath);
+        if (this._fileTree) {
+            function findFile(items) {
+                for (let item of items) {
+                    if (item.type == 'file' && item.path === filePath) {
+                        return item;
+                    } else if (item.type == 'directory') {
+                        let result = findFile(item.children);
+                        if (result) {
+                            return result;
+                        }
+                    }
+                }
+            }
+            return findFile(this._fileTree.children);
+        }
+    }
+
     _build() {
         const sourcePath = this.sourcePath;
         if (!sourcePath) {
             return Promise.resolve(this);
         }
         this._loading = fs.describe(sourcePath).then(fileTree => {
+            this._fileTree = fileTree;
             this._loading = null;
             return this.transform(fileTree, this);
         }).catch(e => {

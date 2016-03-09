@@ -99,6 +99,7 @@ module.exports = class ComponentSource extends Source {
                     });
                 }
                 return beautifyHTML(rendered, {
+                    // TODO: move to config
                     indent_size: 4,
                     preserve_newlines: true,
                     max_preserve_newlines: 1
@@ -131,23 +132,31 @@ module.exports = class ComponentSource extends Source {
         })).join('\n');
     }
 
-    *_wrapInLayout(content, previewHandle, context) {
-        let layout = this.find(previewHandle);
+    *_wrapInLayout(content, identifier, context) {
+        let layout = this.find(identifier);
+        let layoutContext, layoutContent, viewpath;
         if (!layout) {
-            console.error(`Preview layout ${previewHandle} not found.`);
+            console.error(`Preview layout ${identifier} not found.`);
             return content;
         }
-        if (layout.type === 'component') {
-            layout = layout.variants().default();
+        if (layout.type == 'file') {
+            layoutContext = {};
+            layoutContent = yield layout.read();
+            viewpath = file.path;
+        } else {
+            if (layout.type === 'component') {
+                layout = layout.variants().default();
+            }
+            layoutContext = yield this.resolve(layout.context);
+            layoutContent = yield layout.getContent();
+            viewpath = layout.viewPath;
         }
-        let layoutContext = yield this.resolve(layout.context);
-        let layoutContent = yield layout.getContent();
-        layoutContext     = _.defaults(layoutContext, context || {});
+        layoutContext = _.defaults(layoutContext, context || {});
         layoutContext[this.setting('yield')] = content;
         const renderMethod = (typeof this.engine().renderLayout === 'function') ? 'renderLayout' : 'render';
-        return this.engine()[renderMethod](layout.viewPath, layoutContent, layoutContext);
+        return this.engine()[renderMethod](viewpath, layoutContent, layoutContext);
     }
-    
+
     statusInfo(handle) {
         const statuses = this.setting('statuses');
         const defaultStatus = this.setting('default.status')
@@ -180,19 +189,23 @@ module.exports = class ComponentSource extends Source {
         if (this.size === 0 || arguments.length === 0) {
             return;
         }
-        const isHandleFind = arguments.length == 1 && _.isString(arguments[0]) && arguments[0].startsWith('@');
+        const args = Array.from(arguments);
+        if (args.length == 1 && _.isString(args[0]) && !args[0].startsWith('@') && args[0].indexOf('.') !== -1) {
+            return this.findFile(args[0]);
+        }
+        const isHandleFind = args.length == 1 && _.isString(args[0]) && args[0].startsWith('@');
         for (let item of this) {
             if (item.type === 'collection') {
-                const search = item.find.apply(item, arguments);
+                const search = item.find.apply(item, args);
                 if (search) return search;
             } else if (item.type === 'component') {
-                const matcher = isHandleFind ? this._makePredicate.apply(null, ['handle', arguments[0].replace('@', '')]) : this._makePredicate.apply(null, arguments);
+                const matcher = isHandleFind ? this._makePredicate.apply(null, ['handle', args[0].replace('@', '')]) : this._makePredicate.apply(null, args);
                 if (matcher(item)) return item;
             }
         }
         if (isHandleFind) {
             for (let item of this.entities()) {
-                let variant = item.variants().find(arguments[0]);
+                let variant = item.variants().find(args[0]);
                 if (variant) return variant;
             }
         }
