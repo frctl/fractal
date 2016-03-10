@@ -16,22 +16,11 @@ const del          = require('del');
 
 // CSS
 
-gulp.task('js', ['clean:js', 'copy:js'], () => {
-    compileJS()
-});
+gulp.task('js', ['clean:js'], () => compileJS());
 gulp.task('js:watch', () => compileJS(true));
 
 gulp.task('clean:js', function() {
     return del(['./dist/js']);
-});
-
-gulp.task('copy:js', ['clean:js'], function() {
-    gulp.src('./node_modules/iframe-resizer/js/iframeResizer.contentWindow.min.js')
-    .pipe(rename("iframe.js"))
-    .pipe(gulp.dest('./dist/js'));
-
-    gulp.src('./node_modules/iframe-resizer/js/iframeResizer.contentWindow.map')
-    .pipe(gulp.dest('./dist/js'));
 });
 
 // CSS
@@ -95,47 +84,49 @@ gulp.task('img:watch', function () {
     gulp.watch('./assets/img/**/*', ['img']);
 });
 
-
 // Task sets
 
 gulp.task('watch', ['css:watch', 'js:watch', /* 'fonts:watch', */ 'img:watch']);
-
+ 
 gulp.task('default', ['fonts', 'css', 'js', 'img']);
-
 
 // Utils
 
 function compileJS(watch) {
 
-    var bundler = watchify(
-        browserify('./assets/js/build.js', {
-            debug: true
-        }).transform(babel, {
-            presets: ["es2015"]
-        })
-    );
+    let bundler = browserify('./assets/js/build.js', {
+        debug: true
+    }).transform(babel, {
+        presets: ["es2015"]
+    });
+
+    if (watch) {
+        bundler = watchify(bundler);
+        bundler.on('update', function () {
+            rebundle();
+        });
+    }
 
     function rebundle() {
-        return bundler
-            .bundle()
+        console.log('rebundline');
+        let bundle = bundler.bundle()
             .on('error', function (err) {
                 console.error(err.message);
                 // this.emit('end');
             })
             .pipe(source('build.js'))
-            .pipe(buffer())
-            .pipe(uglify())
-            .pipe(sourcemaps.init({loadMaps: true}))
+            .pipe(buffer());
+
+        if (!watch) {
+            bundle.pipe(uglify())
+        }
+
+        bundle.pipe(sourcemaps.init({loadMaps: true}))
             .pipe(sourcemaps.write('./'))
             .pipe(gulp.dest('./dist/js'));
+
+        return bundle;
     }
 
-    if (watch) {
-        bundler.on('update', function () {
-            rebundle();
-        });
-        rebundle()
-    } else {
-        rebundle();
-    }
+    rebundle();
 }

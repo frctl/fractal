@@ -15,6 +15,7 @@ module.exports = function(element){
     const doc          = $(document);
     const el           = $(element);
     const id           = el[0].id;
+    const dir          = $('html').attr('dir');
     const header       = el.find('> [data-role="header"]');
     const body         = el.find('> [data-role="body"]');
     const toggle       = el.find('[data-action="toggle-sidebar"]');
@@ -53,6 +54,7 @@ module.exports = function(element){
             el.removeClass('is-resizing');
             events.trigger('end-dragging');
         },
+        reverse: dir === 'rtl'
     });
 
     sidebar.on('scroll', utils.debounce((e) => {
@@ -90,19 +92,17 @@ module.exports = function(element){
     function closeSidebar(){
         if (dragOccuring || (!isInitialClose && sidebarState == 'closed')) return;
         const w = sidebar.outerWidth();
-        if (isInitialClose) {
-            body.css({
-                transition: 'none',
-                marginRight: (-1 * w) + 'px',
-                transform: `translate3d(${(-1 * w)}px, 0, 0)`
-            });
+        let translate = (dir == 'rtl') ? w + 'px' : (-1 * w) + 'px';
+        let sidebarProps = {
+            transform: `translate3d(${translate}, 0, 0)`
+        };
+        if (dir == 'rtl') {
+            sidebarProps.marginLeft = ((-1 * w) - 20) + 'px';
         } else {
-            body.css({
-                transition: '.3s ease all',
-                marginRight: (-1 * w) + 'px',
-                transform: `translate3d(${(-1 * w)}px, 0, 0)`
-            });
+            sidebarProps.marginRight = (-1 * w) + 'px';
         }
+        sidebarProps.transition = isInitialClose ? 'none' : '.3s ease all';
+        body.css(sidebarProps);
         handle.addClass('is-disabled');
         sidebarState = 'closed';
         el.addClass('is-closed');

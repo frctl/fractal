@@ -25,9 +25,14 @@
     max-width: calc(100% + 20px);
     min-width: 200px;
     top: 0;
-    left: 0;
     bottom: 0;
     background-color: transparent;
+    [dir="ltf"] & {
+        left: 0;
+    }
+    [dir="rtl"] & {
+        right: 0;
+    }
     @include mq($until: navCollapse) {
         max-width: 100%;
     }
@@ -39,12 +44,17 @@
     max-width: calc(100% - 20px);
     min-width: 200px;
     top: 0;
-    left: 0;
     bottom: 0;
     border: 1px solid $color-alpha-tint-light;
     background-color: #fff;
     -webkit-overflow-scrolling: touch;
     overflow: auto;
+    [dir="ltr"] & {
+        left: 0;
+    }
+    [dir="rtl"] & {
+        right: 0;
+    }
     @include mq($until: navCollapse) {
         width: 100% !important; // override any JS-set widths
         min-width: 100%;
@@ -76,12 +86,17 @@
     width: 20px;
     top: -1px;
     bottom: -1px;
-    right: 0;
     background-color: transparent;
     cursor: ew-resize;
     z-index: 100;
     background: transparent url('../img/icon-drag--vertical.svg') no-repeat 50% 50%;
     background-size: 3px 16px;
+    [dir="ltr"] & {
+        right: -20px;
+    }
+    [dir="rtl"] & {
+        left: -20px;
+    }
     @include dragHandle;
     @include mq($until: navCollapse) {
         display: none;
