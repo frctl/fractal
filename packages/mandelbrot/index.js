@@ -20,8 +20,6 @@ module.exports = function(config){
 
     this.options.accentColor = findScheme(this.options.colorscheme || 'default').accent;
 
-    console.log(this.options.accentColor);
-
     this.route('/', {
         handle: 'overview',
         view: 'pages/page.nunj',
