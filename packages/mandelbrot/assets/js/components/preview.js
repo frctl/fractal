@@ -17,12 +17,15 @@ class Preview {
     }
 
     _init() {
+        const dir  = $('html').attr('dir');
         const initialWidth = storage.get(`preview.width`, this._resizer.outerWidth());
+        
         if (initialWidth == this._el.outerWidth()) {
             this._resizer.css('width', '100%');
         } else {
             this._resizer.outerWidth(initialWidth);
         }
+
         this._resizer.resizable({
             handleSelector: this._handle,
             resizeHeight: false,
@@ -41,6 +44,7 @@ class Preview {
                 events.trigger('end-dragging');
 
             },
+            reverse: dir === 'rtl'
         });
     }
 

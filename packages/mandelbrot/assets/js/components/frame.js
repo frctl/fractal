@@ -97,7 +97,7 @@ module.exports = function(element){
             transform: `translate3d(${translate}, 0, 0)`
         };
         if (dir == 'rtl') {
-            sidebarProps.marginLeft = ((-1 * w) - 20) + 'px';
+            sidebarProps.marginLeft = (-1 * w) + 'px';
         } else {
             sidebarProps.marginRight = (-1 * w) + 'px';
         }
@@ -117,6 +117,7 @@ module.exports = function(element){
         }
         body.css({
             marginRight: 0,
+            marginLeft: 0,
             transition: '.3s ease all',
             transform: `translate3d(0, 0, 0)`
         });
