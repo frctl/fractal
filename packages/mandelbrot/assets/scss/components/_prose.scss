@@ -9,7 +9,7 @@
     }
 
     ul, ol {
-        padding-left: 1.3em;
+        @include padding-inline('start', 1.3em);
     }
 
     li {

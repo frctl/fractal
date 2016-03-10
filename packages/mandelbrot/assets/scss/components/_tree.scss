@@ -2,7 +2,7 @@
     white-space: nowrap;
 }
 .Tree-title {
-    padding-left: 25px;
+    @include padding-inline('start', 25px);
     font-size: 11px;
     line-height: 11/20;
     font-weight: bold;
@@ -21,7 +21,12 @@
         }
         .Tree-collectionLabel {
             span:before {
-                background-image: url('../img/icon-navigation-closed.svg');
+                [dir="ltr"] & {
+                    background-image: url('../img/icon-navigation-closed-ltr.svg');
+                }
+                [dir="rtl"] & {
+                    background-image: url('../img/icon-navigation-closed-rtl.svg');
+                }
             }
         }
     }
@@ -34,14 +39,14 @@
     font-weight: normal;
     user-select: none;
     span {
+        @include padding-inline('start', 12px);
+        @include margin-inline('start', -22px);
         position: relative;
         display: block;
-        padding-left: 12px;
-        margin-left: -22px;
     }
     span:before {
+        @include offset-inline('start');
         position: absolute;
-        left: 0;
         top: 5px;
         content: ' ';
         background-image: url('../img/icon-navigation-opened.svg');
@@ -63,9 +68,9 @@
     font-weight: normal;
 }
 .Tree-entity {
+    @include padding-inline('end', 10px);
     border-top: 1px solid transparent;
     border-bottom: 1px solid transparent;
-    padding-right: 10px;
     &:hover {
         background-color: lighten($color-alpha-tint-lightest, 30%);
         .Tree-entityLink {
@@ -89,7 +94,7 @@
     display: flex;
     align-items: center;
     > * + * {
-        margin-left: 6px;
+        @include margin-inline('start', 6px);
     }
 }
 .Tree-subItems {
@@ -99,7 +104,7 @@
 .Tree-subItem {
     display: flex;
     > * + * {
-        margin-left: 6px;
+        @include margin-inline('start', 6px);
     }
     &.is-current {
         font-weight: bold;
@@ -118,10 +123,10 @@
         $padLeft: 16px + ($i * 10px);
         .Tree-collectionLabel,
         .Tree-entityLink {
-            padding-left: $padLeft;
+            @include padding-inline('start', $padLeft);
         }
         .Tree-subItemLink {
-            padding-left: $padLeft + 11px;
+            @include padding-inline('start', $padLeft + 11px);
         }
     }
 }

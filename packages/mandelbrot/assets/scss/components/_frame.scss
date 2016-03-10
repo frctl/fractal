@@ -17,21 +17,21 @@
         }
     }
 }
-.Frame-header {
-    float: left;
-    width: 100%;
-    flex-grow: 0;
-    flex-shrink: 0;
-    height: 50px;
-}
+// .Frame-header {
+//     float: left;
+//     width: 100%;
+//     flex-grow: 0;
+//     flex-shrink: 0;
+//     height: 50px;
+// }
 .Frame-body {
     display: flex;
     flex-direction: row-reverse;
     flex-grow: 1;
     height: 100%;
     @include mq($until: navCollapse) {
+        @include margin-inline('end', 230px);
         transition: none;
-        margin-right: 230px;
         transform: translate3d(-230px, 0, 0);
     }
 }
@@ -53,13 +53,13 @@
     -webkit-overflow-scrolling: touch;
 }
 .Frame-panel--sidebar {
+    @include border-inline('end', 1px solid $color-alpha-tint-light);
     flex: 0 0 auto;
     background-color: $color-gamma;
     width: 230px;
     min-width: 230px;
     max-width: 400px;
     padding: 25px 0 40px 0;
-    border-right: 1px solid $color-alpha-tint-light;
     @include mq($until: navCollapse) {
         max-width: 230px;
     }
