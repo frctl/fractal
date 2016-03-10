@@ -1232,6 +1232,7 @@ h6 {
   width: -webkit-calc(100% + 20px);
   width: calc(100% + 20px);
   height: 100%;
+  width: 100%;
   max-width: -webkit-calc(100% + 20px);
   max-width: calc(100% + 20px);
   min-width: 200px;
@@ -1252,7 +1253,7 @@ h6 {
   height: 100%;
   max-width: -webkit-calc(100% - 20px);
   max-width: calc(100% - 20px);
-  min-width: 200px;
+  min-width: 180px;
   top: 0;
   bottom: 0;
   border: 1px solid rgba(46, 48, 56, 0.25);
@@ -1304,9 +1305,9 @@ h6 {
   background: transparent url("../img/icon-drag--vertical.svg") no-repeat 50% 50%;
   background-size: 3px 16px; }
   [dir="ltr"] .Preview-handle {
-    right: -20px; }
+    right: 0; }
   [dir="rtl"] .Preview-handle {
-    left: -20px; }
+    left: 0; }
   .Preview-handle.is-disabled {
     pointer-events: none;
     visibility: hidden; }

@@ -19,10 +19,10 @@ class Pen {
     }
 
     _init() {
-
+        
         const initialHeight = storage.get(`pen.previewHeight`, this._previewPanel.outerHeight());
-        const preview = new Preview(this._previewPanel);
-        const browser = new Browser(this._browser);
+        const preview       = new Preview(this._previewPanel);
+        const browser       = new Browser(this._browser);
 
         this._previewPanel.outerHeight(initialHeight);
 
@@ -39,7 +39,7 @@ class Pen {
                 preview.enableEvents();
                 events.trigger('end-dragging');
                 storage.set(`pen.previewHeight`, this._previewPanel.outerHeight());
-            },
+            }
         });
     }
 }

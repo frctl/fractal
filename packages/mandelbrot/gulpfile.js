@@ -87,7 +87,7 @@ gulp.task('img:watch', function () {
 // Task sets
 
 gulp.task('watch', ['css:watch', 'js:watch', /* 'fonts:watch', */ 'img:watch']);
- 
+
 gulp.task('default', ['fonts', 'css', 'js', 'img']);
 
 // Utils
@@ -103,12 +103,12 @@ function compileJS(watch) {
     if (watch) {
         bundler = watchify(bundler);
         bundler.on('update', function () {
+            console.log('Rebundling JS....');
             rebundle();
         });
     }
 
     function rebundle() {
-        console.log('rebundline');
         let bundle = bundler.bundle()
             .on('error', function (err) {
                 console.error(err.message);
