@@ -2,13 +2,14 @@
 
 const Path        = require('path');
 const packageJSON = require('./package.json');
+const schemes     = require('./assets/schemes.json');
 
 module.exports = function(config){
 
     this.name    = 'mandelbrot';
     this.title   = 'A theme fir Fractal.';
     this.version = packageJSON.version;
-    
+
     this.options.assetsDir = (this.options.assetsDir || 'theme').replace(/^\//, '').replace(/\/$/, '');
 
     this.views   = Path.join(__dirname, 'views');
@@ -16,6 +17,10 @@ module.exports = function(config){
     this.error   = 'pages/error.nunj';
 
     this.static(Path.join(__dirname, 'dist'), `/${this.options.assetsDir}`);
+
+    this.options.accentColor = findScheme(this.options.colorscheme || 'default').accent;
+
+    console.log(this.options.accentColor);
 
     this.route('/', {
         handle: 'overview',
@@ -70,3 +75,16 @@ module.exports = function(config){
 
     };
 };
+
+function findScheme(name) {
+    let fallback;
+    for (let scheme of schemes) {
+        if (scheme.name === name) {
+            return scheme;
+        }
+        if (scheme.name === 'default') {
+            fallback = scheme;
+        }
+    }
+    return fallback;
+}
