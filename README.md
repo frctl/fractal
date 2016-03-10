@@ -13,7 +13,7 @@ Component (or pattern) libraries are a way of designing and building websites in
 
 Fractal helps you **assemble**, **preview** and **document** website component libraries, and then **integrate** them into your web projects and build processes using custom commands and plugins.
 
-You can think of Fractal as a tool that sits halfway between a pattern library UI generator like [Fabricator](https://fbrctr.github.io) or [PatternLab](http://patternlab.io), and build tools like [Metalsmith](http://metalsmith.io), [Gulp](http://gulpjs.com) or [Assemble](https://github.com/assemble/assemble/).
+Fractal can be run from the command line or integrated into your project via it's API.
 
 > _**Important:** Fractal is currently considered to be in beta. Until it reaches a 1.0 release there may be breaking changes in minor point-releases (in accordance with [SemVer](http://semver.org/))._
 
@@ -25,11 +25,9 @@ Existing tools to help you build these component libraries often force you to us
 
 * **Flexible**: Complete freedom to use whichever templating language, build tool and organisational model best suits your project. Build your components using the same tools that you use for your production site.
 * **Extendable**: The core component and documentation parser is available to build upon, helping you to better integrate your component library into your build system and even your production site through plugins and custom commands.
-* **Data-driven**: Component preview data can hardcoded or dynamically generated any way you like - for instance using libraries such as Faker or from API calls.
+* **Data-driven**: Component preview data can hardcoded or dynamically generated any way you like - for instance using libraries such as Faker or from HTTP API calls.
 
 The [web UI plugin](/docs/web/overview.md) provides a web-based way to browse your component library, either running as a local web server or as a static HTML export. A **powerful theme API** means you can create your own web UI themes from scratch or by customising the default theme to your liking.
-
-Fractal can be used both as a command line tool and as a NPM module dependency in your projects.
 
 ## Quick Start
 
@@ -59,4 +57,4 @@ Existing tests can be run using the `npm test` command.
 
 Fractal is developed and maintained by [Mark Perkins](http://github.com/allmarkedup) and the dev team at [Clearleft](http://clearleft.com).
 
-Many thanks to [Paul Lloyd](https://twitter.com/paulrobertlloyd) for his input and his design work on the [default web UI theme](https://github.com/frctl/mandelbrot).
+Additional thanks to [Paul Lloyd](https://twitter.com/paulrobertlloyd) for his tireless work sniffing out bugs and his design input on the [default web UI theme](https://github.com/frctl/mandelbrot).
