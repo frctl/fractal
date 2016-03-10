@@ -53,10 +53,10 @@ class Fractal {
         return this._commander.run();
     }
 
-    // exec() {
-    //     this._initPlugins();
-    //     return this._commander.exec.apply(this._commander, Array.from(arguments));
-    // }
+    exec() {
+        this._init();
+        return this._commander.exec.apply(this._commander, Array.from(arguments));
+    }
 
     _init() {
         console.debugging = this.get('env') === 'debug';

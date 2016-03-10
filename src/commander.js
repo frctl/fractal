@@ -42,6 +42,39 @@ module.exports = function (app, vorpal, defaults) {
         });
     }
 
+    function loadCommands(scope){
+        for (let item of commands.values()) {
+            let commandScope = item.config.scope ? [].concat(item.config.scope) : ['project'];
+            if (_.includes(commandScope, scope)) {
+                // command is in scope
+                const cmd = vorpal.command(item.command, item.config.description || ' ');
+                cmd.action(function (args, done) {
+                    this.console = console;
+                    this.fractal = app;
+                    let action = item.action.bind(this);
+                    return action(args, done);
+                });
+                (item.config.options || []).forEach(opt => {
+                    opt = _.castArray(opt);
+                    cmd.option.apply(cmd, opt);
+                });
+                cmd.__scope = commandScope;
+                if (item.config.hidden) {
+                    cmd.hidden();
+                }
+            } else {
+                // command not available in this scope
+                const cmd = vorpal.command(item.command.replace(/\</g, '[').replace(/\>/g, ']'), item.config.description || ' ');
+                cmd.action((args, done) => {
+                    console.error(`This command is not available in a ${scope} context.`);
+                    done();
+                })
+                .hidden()
+                .__scope = commandScope;
+            }
+        }
+    }
+
     return {
 
         add: add,
@@ -51,36 +84,7 @@ module.exports = function (app, vorpal, defaults) {
             const scope = app.scope;
             const input = utils.parseArgv();
 
-            for (let item of commands.values()) {
-                let commandScope = item.config.scope ? [].concat(item.config.scope) : ['project'];
-                if (_.includes(commandScope, scope)) {
-                    // command is in scope
-                    const cmd = vorpal.command(item.command, item.config.description || ' ');
-                    cmd.action(function (args, done) {
-                        this.console = console;
-                        this.fractal = app;
-                        let action = item.action.bind(this);
-                        return action(args, done);
-                    });
-                    (item.config.options || []).forEach(opt => {
-                        opt = _.castArray(opt);
-                        cmd.option.apply(cmd, opt);
-                    });
-                    cmd.__scope = commandScope;
-                    if (item.config.hidden) {
-                        cmd.hidden();
-                    }
-                } else {
-                    // command not available in this scope
-                    const cmd = vorpal.command(item.command.replace(/\</g, '[').replace(/\>/g, ']'), item.config.description || ' ');
-                    cmd.action((args, done) => {
-                        console.error(`This command is not available in a ${scope} context.`);
-                        done();
-                    })
-                    .hidden()
-                    .__scope = commandScope;
-                }
-            }
+            loadCommands(scope);
 
             var command = vorpal.find(input.command);
 
@@ -88,19 +92,16 @@ module.exports = function (app, vorpal, defaults) {
                 console.error(`This command is not available in a ${scope} context.`);
                 return;
             }
-
             if (command && (scope === 'global')) {
                 vorpal.parse(process.argv);
                 return;
             }
-
             if (command) {
                 app.load().then(function () {
                     vorpal.parse(process.argv);
                 });
                 return;
             }
-
             if (!command && scope === 'global') {
                 console.box(
                     `Fractal CLI`,
@@ -136,8 +137,12 @@ You can use the 'fractal new' command to create a new project.`,
             }
         },
 
-        exec() {
-            // run()
+        exec(command) {
+            loadCommands(app.scope);
+            app.load().then(function () {
+                vorpal.exec(command);
+            });
+            return;
         }
     };
 
