@@ -9,7 +9,6 @@ const expect          = chai.expect;
 const fractal         = require('../src/fractal');
 const ComponentSource = require('../src/components/source');
 const DocsSource      = require('../src/docs/source');
-const config          = require('../settings.js');
 
 chai.use(chaiAsPromised);
 
@@ -105,6 +104,7 @@ describe('fractal', function(){
             expect(fractal.get('xyxyxyx')).to.equal(undefined);
         });
         it('returns the full configuration object if called without arguments', function(){
+            const config = require('../settings.js');
             expect(fractal.get()).to.equal(config);
         });
     });

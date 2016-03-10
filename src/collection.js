@@ -17,18 +17,24 @@ module.exports = class Collection {
         return this._source;
     }
 
+    get size() {
+        return this._items.size;
+    }
+
     setProp(key, value) {
         this._props.set(key, value);
+        return this;
     }
 
     setProps(obj) {
         _.forEach(obj, (value, key) => {
             this.setProp(key, value);
         });
+        return this;
     }
 
     getProp(key) {
-        this._props.get(key);
+        return this._props.get(key);
     }
 
     items() {
@@ -44,14 +50,10 @@ module.exports = class Collection {
         return this;
     }
 
-    get size() {
-        return this._items.size;
-    }
-
     toJSON() {
         return {
             type: this.type,
-            items: this.toArray().map(i => i.toJSON())
+            items: this.toArray().map(i => (i.toJSON ? i.toJSON() : i))
         };
     }
 
