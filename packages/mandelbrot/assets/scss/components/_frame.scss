@@ -67,10 +67,15 @@
 .Frame-panel--main {
     flex: 1 1 auto;
     overflow: auto;
-    margin-left: -20px;
     position: relative;
     z-index: 1;
     padding-bottom: 1px;
+    [dir="ltr"] & {
+        margin-left: -20px;
+    }
+    [dir="rtl"] & {
+        margin-right: -20px;
+    }
     &.is-loading {
         background-image: url('../img/loader.svg');
         background-repeat: no-repeat;
