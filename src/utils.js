@@ -23,7 +23,7 @@ module.exports = {
         return _.startCase(str);
     },
 
-    slugify: str => _.kebabCase(_.deburr(str)).toLowerCase(),
+    slugify: str => _.deburr(str).replace(/\s+/g, '-').toLowerCase(),
 
     toJSON(item) {
         const obj = {};
