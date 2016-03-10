@@ -32,13 +32,13 @@
         font-weight: bold;
     }
     & + & {
-        margin-left: 20px;
+        @include margin-inline('start', 20px);
     }
     & + &:last-child {
         // margin-left: auto;
     }
     svg {
-        margin-right: 5px;
+        @include margin-inline('end', 5px);
         position: relative;
         top: 3px;
         display: none;
@@ -55,10 +55,10 @@
     }
 }
 // .Browser-tab--meta {
-//     margin-left: auto;
+//     @include margin-inline('start', auto);
 // }
 .Browser-actions {
-    margin-left: auto;
+    @include margin-inline('start', auto);
     display: none;
 }
 .Browser-action {
@@ -73,7 +73,7 @@
     width: 100%;
     overflow: auto;
     position: relative;
-    padding: 15px 15px;
+    padding: 15px;
     display: none;
     &.is-active {
         display: block;

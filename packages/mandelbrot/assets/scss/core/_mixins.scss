@@ -44,3 +44,87 @@
         visibility: hidden;
     }
 }
+
+@mixin padding-inline($position, $amount) {
+    @if $position == start {
+        [dir="ltr"] & {
+            padding-left: $amount;
+        }
+        [dir="rtl"] & {
+            padding-right: $amount;
+        }
+        padding-inline-start: $amount;
+    }
+    @if $position == end {
+        [dir="ltr"] & {
+            padding-right: $amount;
+        }
+        [dir="rtl"] & {
+            padding-left: $amount;
+        }
+        padding-inline-end: $amount;
+    }
+}
+
+@mixin margin-inline($position, $amount) {
+    @if $position == 'start' {
+        [dir="ltr"] & {
+            margin-left: $amount;
+        }
+        [dir="rtl"] & {
+            margin-right: $amount;
+        }
+        margin-inline-start: $amount;
+    }
+    @if $position == 'end' {
+        [dir="ltr"] & {
+            margin-right: $amount;
+        }
+        [dir="rtl"] & {
+            margin-left: $amount;
+        }
+        margin-inline-end: $amount;
+    }
+}
+
+@mixin border-inline($position, $style) {
+    @if $position == 'start' {
+        [dir="ltr"] & {
+            border-left: $style;
+        }
+        [dir="rtl"] & {
+            border-right: $style;
+        }
+        border-inline-start: $style;
+    }
+    @if $position == 'end' {
+        [dir="ltr"] & {
+            border-right: $style;
+        }
+        [dir="rtl"] & {
+            border-left: $style;
+        }
+        border-inline-end: $style;
+    }
+}
+
+@mixin offset-inline($position, $value: 0) {
+  @if $position == 'start' {
+      [dir="ltr"] & {
+          left: $value;
+      }
+      [dir="rtl"] & {
+          right: $value;
+      }
+      offset-inline-start: $value;
+  }
+  @if $position == 'end' {
+      [dir="ltr"] & {
+          right: $value;
+      }
+      [dir="rtl"] & {
+          left: $value;
+      }
+      offset-inline-end: $value;
+  }
+}
