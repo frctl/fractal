@@ -1,6 +1,6 @@
 # Fractal
 
-A tool to help you **build**, **document** and **integrate** component/pattern libraries into your web projects. :snowflake:
+A tool to help you **build**, **document** and **integrate** component/pattern libraries into your web projects.
 
 [![Build Status](https://img.shields.io/travis/frctl/fractal.svg?style=flat-square)](https://travis-ci.org/frctl/fractal)
 [![NPM Version](https://img.shields.io/npm/v/@frctl/fractal.svg?style=flat-square)](https://www.npmjs.com/package/@frctl/fractal)
