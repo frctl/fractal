@@ -3,11 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+    <meta name="theme-color" content="{% include 'partials/schemes.nunj' %}">
+
+    <link rel="shortcut icon" href="/favicon.ico" type="image/ico">
+    <link rel="apple-touch-icon" href="/{{ frctl.web.theme.options.assetsDir }}/icons/icon-{{ frctl.web.theme.options.colorscheme | default('default') }}.png" type="image/png">
+    <link rel="mask-icon" href="/{{ frctl.web.theme.options.assetsDir }}/icons/icon.svg" color="{% include 'partials/schemes.nunj' %}">
 
     <script>var cl = document.querySelector('html').classList; cl.remove('no-js'); cl.add('has-js');</script>
 
-    <link rel="stylesheet" type="text/css" href="/{{ frctl.web.theme.options.assetsDir }}/css/{{ frctl.web.theme.options.colorscheme | default('default') }}.css?cachebust={{ frctl.web.theme.version }}">
+    <link rel="stylesheet" href="/{{ frctl.web.theme.options.assetsDir }}/css/{{ frctl.web.theme.options.colorscheme | default('default') }}.css?cachebust={{ frctl.web.theme.version }}" type="text/css">
 
     <title>{% if pageTitle %}{{ pageTitle }} | {% endif %}{{ frctl.config.project.title }}</title>
 </head>

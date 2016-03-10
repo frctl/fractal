@@ -556,9 +556,9 @@ ul {
   padding: 0; }
 
 a {
-  color: #ff4136; }
+  color: #f43; }
   a:visited, a:hover, a:active {
-    color: #ff4136; }
+    color: #f43; }
 
 /**
  * Suppress the focus outline on links that cannot be accessed via keyboard.
@@ -985,7 +985,7 @@ h6 {
   -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center;
-  background-color: #ff4136;
+  background-color: #f43;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
   position: relative;
   color: #fff;
@@ -1155,7 +1155,7 @@ h6 {
   [dir="rtl"] .Pen-newWindowLink {
     margin-right: 2px; }
   .Pen-newWindowLink svg {
-    fill: #ff4136; }
+    fill: #f43; }
 
 .Pen-preview {
   -webkit-box-flex: 0;
@@ -1377,7 +1377,7 @@ h6 {
     border: 1px solid rgba(46, 48, 56, 0.1);
     text-align: left; }
   .Prose a:link, .Prose a:visited, .Prose a:hover, .Prose a:active {
-    color: #ff4136;
+    color: #f43;
     text-decoration: underline; }
 
 .Status {
@@ -1549,7 +1549,7 @@ h6 {
   .Tree-entity:hover {
     background-color: rgba(115, 121, 140, 0.05); }
     .Tree-entity:hover .Tree-entityLink:link, .Tree-entity:hover .Tree-entityLink:visited, .Tree-entity:hover .Tree-entityLink:hover, .Tree-entity:hover .Tree-entityLink:active {
-      color: #e90d00;
+      color: #e61300;
       text-decoration: none; }
   .Tree-entity.is-current {
     background-color: rgba(46, 48, 56, 0.05); }
@@ -1568,7 +1568,7 @@ h6 {
       -ms-flex-align: center;
           align-items: center; }
   .Tree-entityLink:link, .Tree-entityLink:visited, .Tree-entityLink:hover, .Tree-entityLink:active {
-    color: #ff4136;
+    color: #f43;
     text-decoration: none; }
   .Tree-entityLink > * + * {
     -webkit-margin-start: 6px;
@@ -1599,7 +1599,7 @@ h6 {
   .Tree-subItem.is-current {
     font-weight: bold; }
     .Tree-subItem.is-current .Tree-subItemLink:link, .Tree-subItem.is-current .Tree-subItemLink:visited, .Tree-subItem.is-current .Tree-subItemLink:hover, .Tree-subItem.is-current .Tree-subItemLink:active {
-      color: #b60a00;
+      color: #b30f00;
       text-decoration: none; }
 
 .Tree-subItemLink {
@@ -1607,7 +1607,7 @@ h6 {
   -ms-touch-action: manipulation;
       touch-action: manipulation; }
   .Tree-subItemLink:link, .Tree-subItemLink:visited, .Tree-subItemLink:hover, .Tree-subItemLink:active {
-    color: #ff4136;
+    color: #f43;
     text-decoration: none; }
 
 .Tree-depth-1 .Tree-collectionLabel,
