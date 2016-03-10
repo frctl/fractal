@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="{% include 'partials/schemes.nunj' %}">
+    <meta name="theme-color" content="{{ frctl.web.theme.options.accentColor }}">
 
     <link rel="shortcut icon" href="/favicon.ico" type="image/ico">
     <link rel="apple-touch-icon" href="/{{ frctl.web.theme.options.assetsDir }}/icons/icon-{{ frctl.web.theme.options.colorscheme | default('default') }}.png" type="image/png">
-    <link rel="mask-icon" href="/{{ frctl.web.theme.options.assetsDir }}/icons/icon.svg" color="{% include 'partials/schemes.nunj' %}">
+    <link rel="mask-icon" href="/{{ frctl.web.theme.options.assetsDir }}/icons/icon.svg" color="{{ frctl.web.theme.options.accentColor }}">
 
     <script>var cl = document.querySelector('html').classList; cl.remove('no-js'); cl.add('has-js');</script>
 
