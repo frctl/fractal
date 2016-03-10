@@ -1,0 +1,17 @@
+{%- set colorscheme = frctl.web.theme.options.colorscheme -%}
+{%- if colorscheme == 'aqua' -%}#7df
+{%- elif colorscheme == 'black' -%}#111
+{%- elif colorscheme == 'blue' -%}#07d
+{%- elif colorscheme == 'fuchsia' -%}#e1b
+{%- elif colorscheme == 'green' -%}#3c4
+{%- elif colorscheme == 'grey' -%}#aaa
+{%- elif colorscheme == 'lime' -%}#0f7
+{%- elif colorscheme == 'maroon' -%}#815
+{%- elif colorscheme == 'navy' -%}#024
+{%- elif colorscheme == 'olive' -%}#497
+{%- elif colorscheme == 'orange' -%}#f82
+{%- elif colorscheme == 'purple' -%}#a1c
+{%- elif colorscheme == 'red' -%}#f43
+{%- elif colorscheme == 'teal' -%}#3cc
+{%- elif colorscheme == 'yellow' -%}#fd0
+{%- else -%}#07d{%- endif -%}

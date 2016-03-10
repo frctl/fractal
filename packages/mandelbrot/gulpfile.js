@@ -14,7 +14,7 @@ const uglify       = require('gulp-uglify');
 const rename       = require('gulp-rename');
 const del          = require('del');
 
-// CSS
+// JS
 
 gulp.task('js', ['clean:js'], () => compileJS());
 gulp.task('js:watch', () => compileJS(true));
@@ -84,11 +84,25 @@ gulp.task('img:watch', function () {
     gulp.watch('./assets/img/**/*', ['img']);
 });
 
+// Icons
+
+gulp.task('icons', ['clean:icons'], function() {
+   gulp.src('./assets/icons/**/*').pipe(gulp.dest('./dist/icons'));
+});
+
+gulp.task('clean:icons', function() {
+    return del(['./dist/icons']);
+});
+
+gulp.task('icons:watch', function () {
+    gulp.watch('./assets/icons/**/*', ['icons']);
+});
+
 // Task sets
 
-gulp.task('watch', ['css:watch', 'js:watch', /* 'fonts:watch', */ 'img:watch']);
+gulp.task('watch', ['css:watch', 'js:watch', /* 'fonts:watch', */ 'img:watch', 'icons:watch']);
 
-gulp.task('default', ['fonts', 'css', 'js', 'img']);
+gulp.task('default', ['fonts', 'css', 'js', 'img', 'icons']);
 
 // Utils
 
