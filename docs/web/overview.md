@@ -79,7 +79,7 @@ fractal.set('plugins.web.static.path', 'public');
 ```
 ### Theme
 
-The theme you'd like to use for the web preview UI. Note that you must install the theme as a NPM dependency as well as specifying it's name here. See the [web UI documentation](/docs/web/overview.md) for more information.
+The theme you'd like to use for the web preview UI. Note that you must install the theme as a NPM dependency as well as specifying it's name here. See the [themes documentation](/docs/web/themes.md) for more information.
 
 ```js
 fractal.set('plugins.web.theme', 'my-custom-theme');
