@@ -1,7 +1,7 @@
 'use strict';
 
 const promisedHbs = require('promised-handlebars');
-const Handlebars  = require('handlebars').create();
+const Handlebars  = require('handlebars');
 const helpers     = require('@frctl/handlebars-helpers');
 const _           = require('lodash');
 
@@ -13,13 +13,14 @@ module.exports = function(source, config){
     let instancePartials = {};
 
     if (config.instance) {
+        const defaultInstance = Handlebars.create();
         _.each(config.instance.helpers || {}, (helper, name) => {
-            if (!Handlebars.helpers[name]) {
+            if (!defaultInstance.helpers[name]) {
                 instanceHelpers[name] = helper;
             }
         });
         _.each(config.instance.partials || {}, (partial, name) => {
-            if (!Handlebars.partials[name]) {
+            if (!defaultInstance.partials[name]) {
                 instancePartials[name] = partial;
             }
         });
