@@ -6,6 +6,12 @@ const utils        = require('./utils');
 
 module.exports = class Collection {
 
+    /**
+     * Constructor. Takes optional array of items to populate
+     * the initial collection with.
+     * @param  {Array} items
+     * @return {Collection}
+     */
     constructor(items) {
         this.type   = 'collection';
         this._items = new Set(items || []);
@@ -13,19 +19,37 @@ module.exports = class Collection {
         this._source = null;
     }
 
+    /**
+     * Getter for private _source property
+     * @return {Source}
+     */
     get source() {
         return this._source;
     }
 
+    /**
+     * Return the length of the items set
+     * @return {Number}
+     */
     get size() {
         return this._items.size;
     }
 
+    /**
+     * Sets a property.
+     * @param {String} key
+     * @param {*} value
+     */
     setProp(key, value) {
         this._props.set(key, value);
         return this;
     }
 
+    /**
+     * Iterates over a supplied object and sets properties
+     * based on the object's key:value pairs
+     * @param {Object} obj An object of properties to set
+     */
     setProps(obj) {
         _.forEach(obj, (value, key) => {
             this.setProp(key, value);
@@ -33,28 +57,99 @@ module.exports = class Collection {
         return this;
     }
 
+    /**
+     * Return a property value
+     * @param  {String} key
+     * @return {*}
+     */
     getProp(key) {
         return this._props.get(key);
     }
 
+    /**
+     * Returns the collection items, converted to an array.
+     * Alias for toArray()
+     * @return {Array} The items in the collections
+     */
     items() {
         return this.toArray();
     }
 
+    /**
+     * Returns the collection items, converted to an array.
+     * @return {Array}
+     */
     toArray() {
         return Array.from(this._items);
     }
 
+    /**
+     * Replace the contents of the collection with
+     * a new set of items.
+     * @param {Array} items
+     * @return {Collection}
+     */
     setItems(items) {
         this._items = new Set(items || []);
         return this;
     }
 
+    /**
+     * Recursively converts the collection and it's contents to a
+     * JSON-serializable plain object.
+     * @return {Object}
+     */
     toJSON() {
         return {
             type: this.type,
             items: this.toArray().map(i => (i.toJSON ? i.toJSON() : i))
         };
+    }
+
+    /**
+     * Get the first item in the collections
+     * @return {Object|undefined} The first item in the array
+     */
+    first() {
+        return this.toArray()[0];
+    }
+
+    /**
+     * Get the last item in the array
+     * @return {object|undefined} The last item in the array
+     */
+    last() {
+        return this.toArray()[this.size - 1];
+    }
+
+    /**
+     * Get a collection item by index
+     * @param  {Number} pos        The index of the item to fetch
+     * @return {Object|undefined}  A collection item
+     */
+    eq(pos) {
+        if (pos < 0) {
+            pos = (this.size + pos);
+        }
+        return this.toArray()[pos];
+    }
+
+    /**
+     * Return a new collection that only includes
+     * non-collection-type items
+     * @return {Collection}
+     */
+    entities() {
+        return this.newSelf(this.toArray().filter(i => i.type !== 'collection'));
+    }
+
+    /**
+     * Return a new collection that only
+     * includes collection-type items
+     * @return {Collection}
+     */
+    collections() {
+        return this.newSelf(this.toArray().filter(i => i.type === 'collection'));
     }
 
     orderBy() {
@@ -66,29 +161,6 @@ module.exports = class Collection {
         }
         args.unshift(this.toArray());
         return this.newSelf(_.orderBy.apply(null, args));
-    }
-
-    first() {
-        return this.toArray()[0];
-    }
-
-    last() {
-        return this.toArray()[this.size - 1];
-    }
-
-    eq(pos) {
-        if (pos < 0) {
-            pos = (this.size + pos);
-        }
-        return this.toArray()[pos];
-    }
-
-    entities() {
-        return this.newSelf(this.toArray().filter(i => i.type !== 'collection'));
-    }
-
-    collections() {
-        return this.newSelf(this.toArray().filter(i => i.type === 'collection'));
     }
 
     find() {

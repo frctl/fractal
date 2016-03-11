@@ -16,12 +16,10 @@ const utils        = require('./utils');
 class Fractal {
 
     /**
-     * Constructor. Sets up object and adds the bundled plugins and
+     * Constructor. Sets up Fractal instance and adds the bundled plugins and
      * rendering engines ready for instantiation.
-     *
-     * @api public
+     * @return {Fratal}
      */
-
     constructor() {
         this.global      = false;
         this.interactive = false;
@@ -33,8 +31,8 @@ class Fractal {
         this._commander = commander(this, vorpal, require('./commands'));
         this.utils = {
             highlight: highlight,
-            console: console,
-            helpers: utils
+            console:   console,
+            helpers:   utils
         };
         this.console = console;
         this.engine('handlebars', '@frctl/handlebars-adapter');
@@ -43,32 +41,67 @@ class Fractal {
     }
 
     /**
-     * Run the command specified in the CLI arguments.
-     *
-     * @api public
+     * Getter for the components source
+     * @return {Components} The component source instance.
      */
+    get components() {
+        if (!this._sources.has('components')) {
+            this._sources.set('components', new Components([], this));
+        }
+        return this._sources.get('components');
+    }
 
+    /**
+     * Getter for the docs source
+     * @return {Source} The docs source instance
+     */
+    get docs() {
+        if (!this._sources.has('docs')) {
+            this._sources.set('docs', new Docs([], this));
+        }
+        return this._sources.get('docs');
+    }
+
+    /**
+     * Return a cleaned up version string
+     * @return {String} The version number
+     */
+    get version() {
+        return this.get('version').replace(/v/i, '');
+    }
+
+    /**
+     * Return the current scope that Fractal is running in.
+     * @return {String} Either 'global' or 'project'
+     */
+    get scope() {
+        return this.global ? 'global' : 'project';
+    }
+
+    /**
+     * Runs the command specified by the contents of process.argv
+     * @return {*} The return value of the command
+     */
     run() {
         this._init();
         return this._commander.run();
     }
 
-    exec() {
+    /**
+     * Execute a command specified by the CLI style string input.
+     * @param  {String} str The command line string to process
+     * @return {*}          The return value of the command
+     */
+    exec(str) {
         this._init();
-        return this._commander.exec.apply(this._commander, Array.from(arguments));
+        return this._commander.exec(str);
     }
 
-    _init() {
-        console.debugging = this.get('env') === 'debug';
-        if (this.get('env') !== 'debug') {
-            process.on('uncaughtException', function (err) {
-                console.error(err);
-                process.exit(1);
-            });
-        }
-        this._initPlugins();
-    }
-
+    /**
+     * Fetch a doc or component source by type
+     * @param  {String} type   'docs' or 'components'
+     * @return {Source|Error}
+     */
     source(type) {
         if (type === 'components') {
             return this.components;
@@ -131,28 +164,6 @@ class Fractal {
         }
     }
 
-    get components() {
-        if (!this._sources.has('components')) {
-            this._sources.set('components', new Components([], this));
-        }
-        return this._sources.get('components');
-    }
-
-    get docs() {
-        if (!this._sources.has('docs')) {
-            this._sources.set('docs', new Docs([], this));
-        }
-        return this._sources.get('docs');
-    }
-
-    get version() {
-        return this.get('version').replace(/v/i, '');
-    }
-
-    get scope() {
-        return this.global ? 'global' : 'project';
-    }
-
     set(setting, val) {
         _.set(this._settings, setting, val);
         return this;
@@ -172,7 +183,20 @@ class Fractal {
         return Path.join(this.get('project.path') || '', p);
     }
 
-    _initPlugins(name) {
+    /**
+     * Perform initial setup tasks before running commands.
+     * Initialises all plugins with any specified configuration values.
+     * @private
+     * @return {undefined}
+     */
+    _init() {
+        console.debugging = this.get('env') === 'debug';
+        if (this.get('env') !== 'debug') {
+            process.on('uncaughtException', function (err) {
+                console.error(err);
+                process.exit(1);
+            });
+        }
         for (let plugin of this._plugins.values()) {
             plugin.config = _.defaultsDeep(_.clone(this.get(`plugins.${plugin.name}`, {})), plugin.config);
         }
