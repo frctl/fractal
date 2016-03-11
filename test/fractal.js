@@ -14,7 +14,9 @@ chai.use(chaiAsPromised);
 
 describe('fractal', function(){
 
-    describe('fractal.engine()', function(){
+    
+
+    describe('.engine()', function(){
         it('adds an engine', function(){
             fractal.engine('foo', 'fooEngine', {foo:'bar'});
             expect(fractal.engine('foo')).to.be.an('object');
@@ -39,7 +41,7 @@ describe('fractal', function(){
         });
     });
 
-    describe('fractal.load()', function(){
+    describe('.load()', function(){
         it('returns a promise that resolves to an object of loaded sources', function(){
             const prom = fractal.load();
             expect(prom).to.eventually.be.an('object');
@@ -60,7 +62,7 @@ describe('fractal', function(){
         });
     });
 
-    describe('fractal.source(type)', function(){
+    describe('.source(type)', function(){
         it('returns a ComponentSource singleton when type is \'component\'', function(){
             expect(fractal.source('components')).to.be.an.instanceof(ComponentSource);
             expect(fractal.source('components')).to.equal(fractal.source('components'));
@@ -71,21 +73,21 @@ describe('fractal', function(){
         });
     });
 
-    describe('fractal.components', function(){
+    describe('.components', function(){
         it('is a ComponentSource singleton', function(){
             expect(fractal.components).to.be.an.instanceof(ComponentSource);
             expect(fractal.components).to.equal(fractal.components);
         });
     });
 
-    describe('fractal.docs', function(){
+    describe('.docs', function(){
         it('is a DocsSource singleton', function(){
             expect(fractal.docs).to.be.an.instanceof(DocsSource);
             expect(fractal.docs).to.equal(fractal.docs);
         });
     });
 
-    describe('fractal.set()', function(){
+    describe('.set()', function(){
         it('sets a config value', function(){
             fractal.set('foo', 'bar');
             expect(fractal.get('foo')).to.equal('bar');
@@ -95,7 +97,7 @@ describe('fractal', function(){
         });
     });
 
-    describe('fractal.get()', function(){
+    describe('.get()', function(){
         it('gets a config value', function(){
             fractal.set('bar', 'foo');
             expect(fractal.get('bar')).to.equal('foo');

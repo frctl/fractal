@@ -11,6 +11,7 @@ chai.use(chaiAsPromised);
 
 describe('collection', function(){
 
+    let collection, emptyCollection;
     const items = [
         {
             type: "component",
@@ -22,16 +23,21 @@ describe('collection', function(){
         }
     ];
 
+    beforeEach(function() {
+        collection      = new Collection(items)
+        emptyCollection = new Collection([]);
+    });
+
     describe('new instance', function(){
-        const collection = new Collection(items);
+        it('returns a Collection instance', function(){
+            expect(collection).to.be.instanceof(Collection);
+        });
         it('has a type property with a value of \'collection\'', function(){
             expect(collection.type).to.equal('collection');
         });
     });
 
     describe('.size', function(){
-        const collection      = new Collection(items)
-        const emptyCollection = new Collection([]);
         it('returns zero for an empty collection', function(){
             expect(emptyCollection.size).to.equal(0);
         });
@@ -41,39 +47,34 @@ describe('collection', function(){
     });
 
     describe('.source', function(){
-        const collection = new Collection([])
         it('is null if no source is set', function(){
             expect(collection.source).to.equal(null);
         });
     });
 
     describe('.setProp()', function(){
-        const collection = new Collection([]);
+        const ret = collection.setProp('baz', 'biz');
         it('sets a property', function(){
-            collection.setProp('foo', 'bar');
             expect(collection.getProp('foo')).to.equal('bar');
         });
         it('is chainable', function(){
-            const ret = collection.setProp('baz', 'biz');
             expect(ret).to.equal(collection);
         });
     });
 
     describe('.setProps()', function(){
-        const collection = new Collection([]);
         it('sets multiple properties', function(){
-            collection.setProps({'foo':'bar','baz':'biz'});
-            expect(collection.getProp('foo')).to.equal('bar');
-            expect(collection.getProp('baz')).to.equal('biz');
+            emptyCollection.setProps({'foo':'bar','baz':'biz'});
+            expect(emptyCollection.getProp('foo')).to.equal('bar');
+            expect(emptyCollection.getProp('baz')).to.equal('biz');
         });
         it('is chainable', function(){
-            const ret = collection.setProps({'foo':'bar','baz':'biz'});
-            expect(ret).to.equal(collection);
+            const ret = emptyCollection.setProps({'foo':'bar','baz':'biz'});
+            expect(ret).to.equal(emptyCollection);
         });
     });
 
     describe('.items()', function(){
-        const collection = new Collection(items);
         it('returns an array', function(){
             expect(collection.items()).to.be.an('array');
         });
@@ -84,21 +85,19 @@ describe('collection', function(){
 
     describe('.setItems()', function(){
         const collection = new Collection([{id: 3}]);
+        collection.setItems(items);
         it('replaces any existing items', function(){
-            collection.setItems(items);
             const collectionItems = collection.items();
             expect(collection.size).to.equal(2);
             expect(collectionItems[0].id).to.equal(1);
             expect(collectionItems[1].id).to.equal(2);
         });
         it('is chainable', function(){
-            const ret = collection.setItems(items);
             expect(ret).to.equal(collection);
         });
     });
 
     describe('.toJSON()', function(){
-        const collection = new Collection(items);
         it('returns a plain object', function(){
             expect(collection.toJSON()).to.be.an('object');
             expect(collection.toJSON()).to.not.be.instanceof(Collection);
@@ -110,7 +109,38 @@ describe('collection', function(){
             expect(collection.toJSON().items).to.be.an('array');
         });
 
-        it('calls toJSON() on items if they have at toJSON method');
+        it('calls toJSON() on items if they have a toJSON method');
+    });
+
+    describe('.first()', function(){
+        it('returns the first item in the collection');
+        it('returns undefined if collection is empty');
+    });
+
+    describe('.last()', function(){
+        it('returns the last item in the collection');
+        it('returns undefined if collection is empty');
+    });
+
+    describe('.eq()', function(){
+        it('returns the item at the specified position in the collection');
+        it('returns undefined if collection is empty');
+        it('returns undefined if the position is out of bounds');
+    });
+
+    describe('.entities()', function(){
+        it('returns a new collection');
+        it('...containing only non-collection type items');
+    });
+
+    describe('.collections()', function(){
+        it('returns a new collection');
+        it('...containing only items with a type of \'collection\'');
+    });
+
+    describe('.orderBy()', function(){
+        it('returns a new collection');
+        
     });
 
 });
