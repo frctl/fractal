@@ -27,7 +27,6 @@ gulp.task('clean:js', function() {
 
 gulp.task('css', ['clean:css'], function() {
   return gulp.src('./assets/scss/schemes/*.scss')
-    .pipe(sourcemaps.init())
     .pipe(sassGlob())
     .pipe(sass().on('error', sass.logError))
     .pipe(autoprefixer({

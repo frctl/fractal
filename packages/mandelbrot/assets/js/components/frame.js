@@ -54,7 +54,7 @@ module.exports = function(element){
             el.removeClass('is-resizing');
             events.trigger('end-dragging');
         },
-        reverse: dir === 'rtl'
+        resizeWidthFrom: dir === 'rtl' ? 'left' : 'right'
     });
 
     sidebar.on('scroll', utils.debounce((e) => {

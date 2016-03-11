@@ -8,18 +8,18 @@ const resizeable = require('jquery-resizable-dom/dist/jquery-resizable.js');
 class Preview {
 
     constructor(el){
-        this._el             = $(el);
-        this._id             = this._el[0].id;
-        this._handle         = this._el.find('[data-role="resize-handle"]');
-        this._iframe         = this._el.children('[data-role="window"]');
-        this._resizer        = this._el.children('[data-role="resizer"]');
+        this._el      = $(el);
+        this._id      = this._el[0].id;
+        this._handle  = this._el.find('[data-role="resize-handle"]');
+        this._iframe  = this._el.children('[data-role="window"]');
+        this._resizer = this._el.children('[data-role="resizer"]');
         this._init();
     }
 
     _init() {
         const dir  = $('html').attr('dir');
         const initialWidth = storage.get(`preview.width`, this._resizer.outerWidth());
-        
+
         if (initialWidth == this._el.outerWidth()) {
             this._resizer.css('width', '100%');
         } else {
@@ -44,7 +44,7 @@ class Preview {
                 events.trigger('end-dragging');
 
             },
-            reverse: dir === 'rtl'
+            resizeWidthFrom: dir === 'rtl' ? 'left' : 'right'
         });
     }
 
