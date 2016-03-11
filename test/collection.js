@@ -53,11 +53,12 @@ describe('collection', function(){
     });
 
     describe('.setProp()', function(){
-        const ret = collection.setProp('baz', 'biz');
         it('sets a property', function(){
-            expect(collection.getProp('foo')).to.equal('bar');
+            const ret = collection.setProp('baz', 'biz');
+            expect(collection.getProp('baz')).to.equal('biz');
         });
         it('is chainable', function(){
+            const ret = collection.setProp('baz', 'biz');
             expect(ret).to.equal(collection);
         });
     });
@@ -85,7 +86,7 @@ describe('collection', function(){
 
     describe('.setItems()', function(){
         const collection = new Collection([{id: 3}]);
-        collection.setItems(items);
+        const ret = collection.setItems(items);
         it('replaces any existing items', function(){
             const collectionItems = collection.items();
             expect(collection.size).to.equal(2);
@@ -140,7 +141,7 @@ describe('collection', function(){
 
     describe('.orderBy()', function(){
         it('returns a new collection');
-        
+
     });
 
 });
