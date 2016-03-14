@@ -1,23 +1,24 @@
 *,
-*:before,
-*:after {
-    box-sizing: border-box;
+*::before,
+*::after {
+    box-sizing: inherit;
 }
 
 html {
-    color: $color-beta;
-    background: $color-delta;
-    font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+    position: relative;
     height: 100%;
     width: 100%;
-    position: relative;
-    font-size: 16px;
-    line-height: (24/16);
+    background: $color-delta;
+    box-sizing: border-box;
+    font: 16px/#{(24/16)} $font-family-sans-serif;
+    color: $color-beta;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
 }
 
 body {
-    width: 100%;
     height: 100%;
+    width: 100%;
 }
 
 blockquote,
@@ -52,8 +53,8 @@ button:focus {
 }
 
 fieldset {
-    border: 0;
     margin: 0;
+    border: 0;
     padding: 0;
 }
 
@@ -63,13 +64,14 @@ iframe {
 
 ol,
 ul {
-    list-style: none;
     margin: 0;
     padding: 0;
+    list-style: none;
 }
 
 a {
     color: $color-accent;
+
     &:visited,
     &:hover,
     &:active {
@@ -89,41 +91,55 @@ a {
 
 code,
 pre {
-    font-family: Hack, Consolas, Monaco, 'Andale Mono', monospace;
-    font-size: 14px;
+    font-family: $font-family-monospace;
+    font-size: 0.875rem; //14px
     line-height: (24/14);
 }
 
+svg {
+    display: inline-block;
+    vertical-align: middle;
+    fill: currentColor;
+}
+
 ::-webkit-scrollbar {
-    width: 3px;
-    height: 3px;
+    height: 0.125rem;
+    width: 0.125rem;
 }
+
 ::-webkit-scrollbar-button {
-    width: 0px;
-    height: 0px;
+    height: 0;
+    width: 0;
 }
+
 ::-webkit-scrollbar-thumb {
     background: $color-alpha-tint-lighter;
-    border: 0px none transparent;
-    border-radius: 20px;
+    border: 0 none transparent;
+    border-radius: 0;
 }
+
 ::-webkit-scrollbar-thumb:hover {
     background: $color-alpha-tint-lighter;
 }
+
 ::-webkit-scrollbar-thumb:active {
-      background: $color-alpha-tint-light;
+    background: $color-alpha-tint-light;
 }
+
 ::-webkit-scrollbar-track {
     background: transparent;
-    border: 0px none transparent;
+    border: 0 none transparent;
     border-radius: 0;
 }
+
 ::-webkit-scrollbar-track:hover {
     background: transparent;
 }
+
 ::-webkit-scrollbar-track:active {
     background: transparent;
 }
+
 ::-webkit-scrollbar-corner {
     background: transparent;
 }
@@ -137,21 +153,22 @@ h6 {
     color: $color-alpha;
     font-weight: bold;
 }
+
 h1 {
-    font-size: 28px;
-    line-height: (32/28);
+    @include font(title);
 }
+
 h2 {
-    font-size: 21px;
-    line-height: (24/21);
+    @include font(heading);
 }
+
 h3 {
-    font-size: 18px;
-    line-height: (24/18);
+    @include font(subHeading);
 }
+
 h4,
 h5,
 h6 {
-    font-size: 16px;
-    line-height: (24/16);
+    @include font(body);
+    font-weight: bold;
 }

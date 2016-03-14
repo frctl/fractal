@@ -8,7 +8,8 @@ for (let scheme of schemes) {
 `
 $color-accent: ${scheme.accent};
 
-@import '../palettes/${scheme.palette}';
-@import '../core/all';
-@import "../components/**/*.scss";`);
+@import "../palettes/${scheme.palette}";
+@import "../core/all";
+@import "../components/**/*.scss";
+`);
 }

@@ -1,21 +1,18 @@
 // -----------------------------------------------------------------------------
 // Config
 // -----------------------------------------------------------------------------
-
-@import 'config';
+@import "config";
 
 // -----------------------------------------------------------------------------
-// Vendor
+// Vendor (node_modules)
 // -----------------------------------------------------------------------------
-
-@import '../../../node_modules/normalize.css/normalize';
-@import '../../../node_modules/sass-mq/_mq';
-@import '../../../node_modules/highlight.js/styles/github';
+@import "normalize.css/normalize";
+@import "sass-mq/_mq";
+@import "highlight.js/styles/github";
 
 // -----------------------------------------------------------------------------
 // Core
 // -----------------------------------------------------------------------------
-
-@import '../core/mixins.scss';
-@import '../core/fonts.scss';
-@import '../core/foundation.scss';
+@import "../core/mixins.scss";
+@import "../core/fonts.scss";
+@import "../core/foundation.scss";
