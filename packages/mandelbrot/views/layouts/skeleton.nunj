@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="{{ frctl.web.theme.options.lang | default('en') }}" dir="{{ frctl.web.theme.options.langdir | default('ltr') }}" class="no-js">
+<html lang="{{ frctl.theme.config('lang') | default('en') }}" dir="{{ 'rtl' if frctl.theme.config('rtl') else 'ltr' }}" class="no-js">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="{{ frctl.web.theme.options.accentColor }}">
+    <meta name="theme-color" content="{{ frctl.theme.config('accent') }}">
 
     <link rel="shortcut icon" href="/favicon.ico" type="image/ico">
-    <link rel="apple-touch-icon" href="/{{ frctl.web.theme.options.assetsDir }}/icons/icon-{{ frctl.web.theme.options.colorscheme | default('default') }}.png" type="image/png">
-    <link rel="mask-icon" href="/{{ frctl.web.theme.options.assetsDir }}/icons/icon.svg" color="{{ frctl.web.theme.options.accentColor }}">
+    <link rel="apple-touch-icon" href="/theme/icons/icon-{{ frctl.theme.config('skin') | default('default') }}.png" type="image/png">
+    <link rel="mask-icon" href="/theme/icons/icon.svg" color="{{ frctl.theme.config('accent') }}">
 
     <script>var cl = document.querySelector('html').classList; cl.remove('no-js'); cl.add('has-js');</script>
 
-    <link rel="stylesheet" href="/{{ frctl.web.theme.options.assetsDir }}/css/{{ frctl.web.theme.options.colorscheme | default('default') }}.css?cachebust={{ frctl.web.theme.version }}" type="text/css">
+    <link rel="stylesheet" href="/theme/css/{{ frctl.theme.config('skin') | default('default') }}.css?cachebust={{ frctl.theme.version }}" type="text/css">
 
     <title>{% if pageTitle %}{{ pageTitle }} | {% endif %}{{ frctl.config.project.title }}</title>
 </head>
@@ -19,6 +19,6 @@
 
 {% block page %}{% endblock %}
 
-<script src="/{{ frctl.web.theme.options.assetsDir }}/js/build.js"></script>
+<script src="/theme/js/build.js"></script>
 </body>
 </html>

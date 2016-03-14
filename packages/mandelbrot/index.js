@@ -4,21 +4,31 @@ const Path        = require('path');
 const packageJSON = require('./package.json');
 const schemes     = require('./assets/schemes.json');
 
-module.exports = function(config){
+module.exports = function(){
 
     this.name    = 'mandelbrot';
-    this.title   = 'A theme fir Fractal.';
+    this.title   = 'A theme for Fractal.';
     this.version = packageJSON.version;
 
-    this.options.assetsDir = (this.options.assetsDir || 'theme').replace(/^\//, '').replace(/\/$/, '');
+    this.defaults = {
+        skin: 'default',
+        rtl: false,
+        lang: 'en'
+    };
 
     this.views   = Path.join(__dirname, 'views');
     this.favicon = Path.join(__dirname, 'assets/favicon.ico');
     this.error   = 'pages/error.nunj';
 
-    this.static(Path.join(__dirname, 'dist'), `/${this.options.assetsDir}`);
+    this.config('accent', () => {
+        return findScheme(this.config('skin') || 'default').accent;
+    });
 
-    this.options.accentColor = findScheme(this.options.colorscheme || 'default').accent;
+    this.config('assetsDir', () => {
+        return this.config('assetsDir').replace(/^\//, '').replace(/\/$/, '');
+    });
+
+    this.static(Path.join(__dirname, 'dist'), `/theme`);
 
     this.route('/', {
         handle: 'overview',

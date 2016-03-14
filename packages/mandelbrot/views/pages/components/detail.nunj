@@ -6,7 +6,7 @@
 {% if not entity or entity.isHidden %}{% throw404 'Item not found' %}{% endif %}
 
 {% set pageTitle     = entity.title %}
-{% set previewUrl    = frctl.web.theme.urlFromRoute('preview', {handle: entity.handle}) %}
+{% set previewUrl    = frctl.theme.urlFromRoute('preview', {handle: entity.handle}) %}
 
 {% if entity.type == 'component' and entity.isCollated %}
     {% set viewContent   = entity.variants().getCollatedContentSync() %}
