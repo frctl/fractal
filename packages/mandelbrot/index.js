@@ -24,10 +24,6 @@ module.exports = function(){
         return findScheme(this.config('skin') || 'default').accent;
     });
 
-    this.config('assetsDir', () => {
-        return this.config('assetsDir').replace(/^\//, '').replace(/\/$/, '');
-    });
-
     this.static(Path.join(__dirname, 'dist'), `/theme`);
 
     this.route('/', {
