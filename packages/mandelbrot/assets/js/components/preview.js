@@ -19,12 +19,26 @@ class Preview {
     _init() {
         const dir  = $('html').attr('dir');
         const initialWidth = storage.get(`preview.width`, this._resizer.outerWidth());
+        let handleClicks    = 0;
 
         if (initialWidth == this._el.outerWidth()) {
             this._resizer.css('width', '100%');
         } else {
             this._resizer.outerWidth(initialWidth);
         }
+
+        this._handle.on('mousedown', e => {
+            handleClicks++;
+
+            setTimeout(function() {
+                handleClicks = 0;
+            }, 400);
+
+            if (handleClicks === 2) {
+                this._resizer.css('width', 'calc(100% + 0.75rem)');
+                return false;
+            }
+        });
 
         this._resizer.resizable({
             handleSelector: this._handle,

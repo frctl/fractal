@@ -30,6 +30,7 @@ module.exports = function(element){
     let scrollPos      = storage.get(`frame.scrollPos`, 0);
     let dragOccuring   = false;
     let isInitialClose = false;
+    let handleClicks   = 0;
 
     // touch.get('swipe').set({ direction: Hammer.DIRECTION_HORIZONTAL });
 
@@ -42,6 +43,20 @@ module.exports = function(element){
 
     sidebar.scrollTop(scrollPos);
 
+    handle.on('mousedown', e => {
+        handleClicks++;
+        setTimeout(function() {
+            handleClicks = 0;
+        }, 400);
+        if (handleClicks === 2) {
+            dragOccuring = false;
+            toggleSidebar();
+            handleClicks = 0;
+            e.stopImmediatePropagation();
+            return;
+        }
+    });
+
     sidebar.resizable({
         handleSelector: handle,
         resizeHeight: false,
@@ -53,6 +68,10 @@ module.exports = function(element){
             setSidebarWidth(sidebar.outerWidth());
             el.removeClass('is-resizing');
             events.trigger('end-dragging');
+            if (sidebarState === 'closed') {
+                dragOccuring = false;
+                openSidebar();
+            }
         },
         resizeWidthFrom: dir === 'rtl' ? 'left' : 'right'
     });
@@ -103,7 +122,7 @@ module.exports = function(element){
         }
         sidebarProps.transition = isInitialClose ? 'none' : '.3s ease all';
         body.css(sidebarProps);
-        handle.addClass('is-disabled');
+        // handle.addClass('is-disabled');
         sidebarState = 'closed';
         el.addClass('is-closed');
         storage.set(`frame.state`, sidebarState);
@@ -121,7 +140,7 @@ module.exports = function(element){
             transition: '.3s ease all',
             transform: `translate3d(0, 0, 0)`
         });
-        handle.removeClass('is-disabled');
+        // handle.removeClass('is-disabled');
         sidebarState = 'open';
         el.removeClass('is-closed');
         storage.set(`frame.state`, sidebarState);

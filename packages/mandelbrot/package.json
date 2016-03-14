@@ -36,7 +36,7 @@
     "highlight.js": "^9.1.0",
     "jquery": "^2.2.1",
     "jquery-pjax": "git+https://github.com/defunkt/jquery-pjax.git",
-    "jquery-resizable-dom": "git+ssh://git@github.com/allmarkedup/jquery-resizable.git#rtl-support",
+    "jquery-resizable-dom": "^0.16.0",
     "normalize.css": "^3.0.3",
     "open-sans-fontface": "^1.4.0",
     "sass-mq": "^3.2.6",
