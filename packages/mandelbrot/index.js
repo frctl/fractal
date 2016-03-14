@@ -10,19 +10,21 @@ module.exports = function(){
     this.title   = 'A theme for Fractal.';
     this.version = packageJSON.version;
 
-    this.defaults = {
+    this.defaults({
         skin: 'default',
         rtl: false,
         lang: 'en'
-    };
+    });
 
     this.views   = Path.join(__dirname, 'views');
     this.favicon = Path.join(__dirname, 'assets/favicon.ico');
     this.error   = 'pages/error.nunj';
 
-    this.config('accent', () => {
-        return findScheme(this.config('skin') || 'default').accent;
-    });
+    Object.defineProperty(this, 'accent', {
+        get: () => {
+            return findScheme(this.config.skin || 'default').accent;
+        }
+    })
 
     this.static(Path.join(__dirname, 'dist'), `/theme`);
 
