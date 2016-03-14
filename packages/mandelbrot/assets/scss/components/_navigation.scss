@@ -1,16 +1,12 @@
 .Navigation {
     display: inline-block;
     min-width: 100%;
-    .Tree {
-        .Status-dot {
-            position: relative;
-            top: 1px;
-        }
-    }
 }
+
 .Navigation-group {
     @include clearfix;
+
     & + & {
-        margin-top: 25px;
+        margin-top: 1.5rem;
     }
 }

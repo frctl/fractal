@@ -1,15 +1,16 @@
-
 .Frame {
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
     display: flex;
+    flex-direction: column;
     flex-grow: 1;
     position: relative;
-    flex-direction: column;
+    height: 100%;
+    width: 100%;
     min-width: 280px;
+    overflow: hidden;
+
     &.is-resizing {
         cursor: grabbing;
+
         .Frame-body,
         .Frame-panel {
             user-select: none;
@@ -17,82 +18,78 @@
         }
     }
 }
-// .Frame-header {
-//     float: left;
-//     width: 100%;
-//     flex-grow: 0;
-//     flex-shrink: 0;
-//     height: 50px;
-// }
+
+.Frame-header {
+    flex-shrink: 0;
+}
+
 .Frame-body {
     display: flex;
     flex-direction: row-reverse;
     flex-grow: 1;
-    height: 100%;
+    height: calc(100% - 3rem);
+
     @include mq($until: navCollapse) {
-        @include margin-inline('end', 230px);
+        @include margin-inline(end, $width-sidebar);
+        transform: translate3d(($width-sidebar * -1), 0, 0);
         transition: none;
-        transform: translate3d(-230px, 0, 0);
     }
 }
+
 .Frame-inner {
+    @include trbl(0);
     position: absolute;
     height: 100%;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    overflow: auto;
     min-width: 280px;
+    overflow: auto;
 }
 
 .Frame-panel {
-    height: calc(100% - 50px);
-    overflow: auto;
     position: relative;
+    overflow: auto;
     -webkit-overflow-scrolling: touch;
 }
+
 .Frame-panel--sidebar {
-    @include border-inline('end', 1px solid $color-alpha-tint-light);
+    @include border-inline(end, 1px solid $color-alpha-tint-light);
     flex: 0 0 auto;
+    width: $width-sidebar;
+    min-width: $width-sidebar;
+    max-width: ($width-sidebar * 2);
     background-color: $color-gamma;
-    width: 230px;
-    min-width: 230px;
-    max-width: 400px;
-    padding: 25px 0 40px 0;
+    padding: 1rem 0;
+
     @include mq($until: navCollapse) {
-        max-width: 230px;
+        max-width: $width-sidebar;
     }
 }
+
 .Frame-panel--main {
+    @include margin-inline(start, -$handle-size);
     flex: 1 1 auto;
-    overflow: auto;
     position: relative;
     z-index: 1;
-    padding-bottom: 1px;
-    [dir="ltr"] & {
-        margin-left: -20px;
-    }
-    [dir="rtl"] & {
-        margin-right: -20px;
-    }
+    overflow: auto;
+
     &.is-loading {
-        background-image: url('../img/loader.svg');
+        background-image: url("../img/loader.svg");
         background-repeat: no-repeat;
         background-position: 50%;
+
         .Frame-inner {
             display: none;
         }
     }
 }
+
 .Frame-handle {
+    @include dragHandle;
     flex: 0 0 auto;
     position: relative;
     z-index: 2;
-    width: 20px;
+    width: $handle-size;
     cursor: ew-resize;
     height: 100%;
-    background: transparent url('../img/icon-drag--vertical.svg') no-repeat 50% 45%;
+    background: transparent url("../img/icon-drag--vertical.svg") no-repeat 50% 45%;
     background-size: 3px 16px;
-    @include dragHandle;
 }

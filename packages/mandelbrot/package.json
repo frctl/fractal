@@ -10,7 +10,7 @@
   "bugs": {
     "url": "https://github.com/frctl/mandelbrot/issues"
   },
-  "author": "Clearleft <dev@clearleft.com> (http://clearleft.com/)",
+  "author": "Mark Perkins <mark@clearleft.com> (http://clearleft.com/)",
   "license": "MIT",
   "scripts": {
     "assets": "node ./assets/scss/build.js & gulp"
@@ -25,10 +25,11 @@
     "gulp-autoprefixer": "^3.1.0",
     "gulp-babel": "^6.1.2",
     "gulp-exit": "0.0.2",
-    "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.2.0",
     "gulp-sass-glob": "0.0.8",
     "gulp-sourcemaps": "^1.6.0",
+    "gulp-stylelint": "^0.2.0",
+    "gulp-stylelint-console-reporter": "^0.1.1",
     "gulp-uglify": "^1.5.3",
     "hack-font": "git://github.com/chrissimpkins/Hack.git#master",
     "hammerjs": "^2.0.6",
@@ -39,6 +40,7 @@
     "normalize.css": "^3.0.3",
     "open-sans-fontface": "^1.4.0",
     "sass-mq": "^3.2.6",
+    "stylelint-config-standard": "latest",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "vinyl-transform": "^1.0.0",

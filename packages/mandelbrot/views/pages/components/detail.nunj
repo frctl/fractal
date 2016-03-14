@@ -25,7 +25,7 @@
 
     <div class="Pen-panel Pen-header">
         <h1 class="Pen-title"><a href="{{ previewUrl }}" title="Open preview in new window">{{ entity.title }}</a></h1>
-        <a href="{{ previewUrl }}" class="Pen-newWindowLink">{{ img.svg('icon-window', '#999', '22px', '22px' ) }}</a>
+        <a href="{{ previewUrl }}" class="Pen-newWindowLink">{{ img.svg('icon-window', '#999', '24px', '24px' ) }}</a>
         {{ status.tag(entity.status) }}
     </div>
 
@@ -113,12 +113,14 @@
                 </div>
             </div>
 
-            <div class="Browser-panel Browser-notes Prose" data-role="tab-panel" id="browser-{{ entity.id }}-panel-notes">
-                {% if entity.notes %}
-                {{ entity.notes }}
-                {% else %}
-                <p class="Browser-isEmptyNote">There are no notes for this item.</p>
-                {% endif %}
+            <div class="Browser-panel Browser-notes" data-role="tab-panel" id="browser-{{ entity.id }}-panel-notes">
+                <div class="Prose">
+                    {% if entity.notes %}
+                    {{ entity.notes }}
+                    {% else %}
+                    <p class="Browser-isEmptyNote">There are no notes for this item.</p>
+                    {% endif %}
+                </div>
             </div>
 
             {# <div class="Browser-panel Browser-meta" data-role="tab-panel" id="browser-{{ entity.id }}-panel-meta">

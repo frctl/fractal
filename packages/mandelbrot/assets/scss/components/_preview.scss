@@ -1,104 +1,94 @@
 .Preview {
     position: relative;
-    background-color: $color-gamma;
-    outline: solid $color-alpha-tint-light 1px;
-    outline-offset: -1px;
+
     &.is-disabled {
         .Preview-overlay {
-             display: block;
+            display: block;
         }
     }
+
     &.is-resizing {
         cursor: grabbing;
+
         * {
             cursor: grabbing !important;
         }
     }
-    @include mq($until: navCollapse) {
-        outline: none;
+
+    @include mq(navCollapse) {
+        background-color: $color-gamma;
+        border: 1px solid $color-alpha-tint-light;
     }
 }
+
 .Preview-wrapper {
+    @include offset-inline(start, 0);
     position: absolute;
-    width: calc(100% + 20px);
-    height: 100%;
-    width: 100%;
-    max-width: calc(100% + 20px);
-    min-width: 200px;
     top: 0;
     bottom: 0;
+    height: 100%;
+    width: 100%;
+    width: calc(100% + #{$handle-size});
+    min-width: 200px;
+    max-width: calc(100% + #{$handle-size});
     background-color: transparent;
-    [dir="ltf"] & {
-        left: 0;
-    }
-    [dir="rtl"] & {
-        right: 0;
-    }
+
     @include mq($until: navCollapse) {
         max-width: 100%;
     }
 }
+
 .Preview-resizer {
+    @include offset-inline(start, 0);
+    @include border-inline(end, 1px solid $color-alpha-tint-light);
     position: absolute;
-    width: 100%;
-    height: 100%;
-    max-width: calc(100% - 20px);
-    min-width: 180px;
     top: 0;
     bottom: 0;
-    border: 1px solid $color-alpha-tint-light;
-    background-color: #fff;
-    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    height: 100%;
     overflow: auto;
-    [dir="ltr"] & {
-        left: 0;
-    }
-    [dir="rtl"] & {
-        right: 0;
-    }
+    max-width: calc(100% - #{$handle-size} + 1px);
+    min-width: 180px;
+    background-color: white;
+    -webkit-overflow-scrolling: touch;
+
     @include mq($until: navCollapse) {
         width: 100% !important; // override any JS-set widths
         min-width: 100%;
         border: 0;
     }
 }
+
 .Preview-iframe {
+    @include trbl(0);
     position: absolute;
     z-index: 0;
     width: 100%;
     height: 100%;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
 }
+
 .Preview-overlay {
-    width: 100%;
+    @include trbl(0);
+    display: none;
     position: absolute;
     height: 100%;
-    @include trbl(0);
-    opacity: 0;
-    display: none;
-}
-.Preview-handle {
     width: 100%;
+    opacity: 0;
+}
+
+.Preview-handle {
+    @include dragHandle;
+    @include offset-inline(end, 0);
     position: absolute;
-    height: calc(100% + 2px);
-    width: 20px;
     top: -1px;
     bottom: -1px;
-    background-color: transparent;
-    cursor: ew-resize;
     z-index: 100;
-    background: transparent url('../img/icon-drag--vertical.svg') no-repeat 50% 50%;
+    height: calc(100% + 2px);
+    width: $handle-size;
+    background: transparent url("../img/icon-drag--vertical.svg") no-repeat 60% 50%;
     background-size: 3px 16px;
-    [dir="ltr"] & {
-        right: 0;
-    }
-    [dir="rtl"] & {
-        left: 0;
-    }
-    @include dragHandle;
+    cursor: ew-resize;
+
     @include mq($until: navCollapse) {
         display: none;
     }

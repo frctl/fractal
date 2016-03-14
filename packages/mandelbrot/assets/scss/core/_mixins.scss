@@ -9,22 +9,22 @@
 }
 
 @mixin clearfix {
-  &:after {
-    content: "";
-    display: table;
-    clear: both;
-  }
+    &::after {
+        display: table;
+        clear: both;
+        content: "";
+    }
 }
 
 %visuallyhidden {
+    overflow: hidden;
+    position: absolute;
+    height: 1px;
+    width: 1px;
     margin: -1px;
     padding: 0;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
     clip: rect(0 0 0 0);
     clip: rect(0, 0, 0, 0);
-    position: absolute;
 }
 
 @mixin trbl($val) {
@@ -39,12 +39,51 @@
         pointer-events: none;
         visibility: hidden;
     }
+
     @include mq($until: navCollapse) {
         pointer-events: none;
         visibility: hidden;
     }
 }
 
+// Typography
+@mixin font($preset) {
+    @if $preset == title {
+        font: bold 1.75rem/#{(32 / 28)} $font-family-sans-serif;
+        font-feature-settings: "dlig" 1;
+        letter-spacing: -0.025em;
+    }
+
+    @if $preset == heading {
+        font: bold 1.3125rem/#{(24 / 21)} $font-family-sans-serif;
+        font-feature-settings: "dlig" 1;
+    }
+
+    @if $preset == subHeading {
+        font: bold 1.125rem/#{(24 / 18)} $font-family-sans-serif;
+        font-feature-settings: "dlig" 1;
+    }
+
+    @if $preset == body {
+        font: normal 1rem/#{(24 / 16)} $font-family-sans-serif;
+    }
+
+    @if $preset == code {
+        font: normal 0.875rem/#{(24 / 14)} $font-family-monospace;
+    }
+
+    @if $preset == navigation {
+        font: normal 0.8125rem/#{(20 / 13)} $font-family-sans-serif;
+    }
+
+    @if $preset == caption {
+        font: bold 0.6875rem/#{(20 / 11)} $font-family-sans-serif;
+        letter-spacing: 0.075em;
+        text-transform: uppercase;
+    }
+}
+
+// Logical positioning
 @mixin padding-inline($position, $amount) {
     @if $position == start {
         [dir="ltr"] & {
@@ -55,6 +94,7 @@
         }
         padding-inline-start: $amount;
     }
+
     @if $position == end {
         [dir="ltr"] & {
             padding-right: $amount;
@@ -67,7 +107,7 @@
 }
 
 @mixin margin-inline($position, $amount) {
-    @if $position == 'start' {
+    @if $position == start {
         [dir="ltr"] & {
             margin-left: $amount;
         }
@@ -76,7 +116,8 @@
         }
         margin-inline-start: $amount;
     }
-    @if $position == 'end' {
+
+    @if $position == end {
         [dir="ltr"] & {
             margin-right: $amount;
         }
@@ -88,7 +129,7 @@
 }
 
 @mixin border-inline($position, $style) {
-    @if $position == 'start' {
+    @if $position == start {
         [dir="ltr"] & {
             border-left: $style;
         }
@@ -97,7 +138,8 @@
         }
         border-inline-start: $style;
     }
-    @if $position == 'end' {
+
+    @if $position == end {
         [dir="ltr"] & {
             border-right: $style;
         }
@@ -109,22 +151,23 @@
 }
 
 @mixin offset-inline($position, $value: 0) {
-  @if $position == 'start' {
-      [dir="ltr"] & {
-          left: $value;
-      }
-      [dir="rtl"] & {
-          right: $value;
-      }
-      offset-inline-start: $value;
-  }
-  @if $position == 'end' {
-      [dir="ltr"] & {
-          right: $value;
-      }
-      [dir="rtl"] & {
-          left: $value;
-      }
-      offset-inline-end: $value;
-  }
+    @if $position == start {
+        [dir="ltr"] & {
+            left: $value;
+        }
+        [dir="rtl"] & {
+            right: $value;
+        }
+        offset-inline-start: $value;
+    }
+
+    @if $position == end {
+        [dir="ltr"] & {
+            right: $value;
+        }
+        [dir="rtl"] & {
+            left: $value;
+        }
+        offset-inline-end: $value;
+    }
 }

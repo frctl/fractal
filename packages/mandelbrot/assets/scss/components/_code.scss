@@ -2,9 +2,10 @@
     display: block;
     background-color: $color-gamma;
     -webkit-overflow-scrolling: touch;
+
     pre {
         background-color: $color-gamma;
-        padding: 10px;
+        padding: 0.75rem;
         -webkit-overflow-scrolling: touch;
     }
 }

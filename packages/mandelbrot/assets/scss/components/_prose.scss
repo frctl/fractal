@@ -1,23 +1,26 @@
 .Prose {
-    font-size: 16px;
-    line-height: 1.5;
+    @include font(body);
+    max-width: 44em;
+    font-feature-settings: "liga", "dlig", "kern", "onum";
+    hanging-punctuation: first;
 
-    p,
+    > * {
+        margin-bottom: 0.75em;
+    }
+
     ul,
     ol {
-        margin: 0.7em 0 1.4em 0;
+        @include padding-inline(start, 1.25em);
     }
 
-    ul, ol {
-        @include padding-inline('start', 1.3em);
-    }
-
-    li {
-        margin-bottom: 0.3em;
+    li,
+    li > ul,
+    li > ol {
+        margin-bottom: 0.25em;
     }
 
     ul li {
-        list-style-type: disc;
+        list-style-type: square;
     }
 
     ol li {
@@ -25,63 +28,92 @@
     }
 
     h1 {
-        padding-bottom: 8px;
-        border-bottom: 1px solid $color-alpha-tint-light;
-        margin: 1.2em 0 1.0em 0;
+        @include font(title);
     }
 
-    h2, h3 {
-        margin: 1.6em 0 0.6em 0;
+    h2 {
+        @include font(heading);
+        margin-bottom: 1em;
+        opacity: 0.9;
+    }
+
+    *:not(hr) + h2 {
+        margin-top: 2em;
+    }
+
+    h3 {
+        @include font(subHeading);
+        margin-bottom: 0.75em;
+        opacity: 0.8;
+    }
+
+    * + h3 {
+        margin-top: 2.25em;
     }
 
     hr {
         height: 0;
         border: 0;
-        border-top: 1px solid $color-alpha-tint-light;
+        border-top: 0.125rem solid $color-alpha-tint-lighter;
         margin: 2em 0;
+    }
+
+    abbr {
+        font-feature-settings: "c2sc";
     }
 
     code,
     code pre {
-        background-color: $color-gamma;
+        background-color: $color-alpha-tint-lightest;
     }
 
     p code,
     li code {
-        padding: 2px 5px;
-        color: $color-alpha;
+        padding: 0.125rem;
     }
 
     code pre {
-        padding: 6px 10px;
-        margin: 1.2em 0;
+        padding: 0.125rem 0.5rem;
+        margin: 1rem -0.5rem;
     }
 
     table {
-        border-collapse: collapse;
         width: 100%;
-        margin: 1.2em 0;
-        font-size: 15px;
-        caption {
-            font-style: italic;
-            font-size: 14px;
-            color: $color-beta;
-            padding: 0.6em 0.9em;
-            // display: block;
-            text-align: left;
-        }
+        margin: 1rem -0.5rem;
+        border-collapse: collapse;
+        font-size: 0.875rem;
+        font-feature-settings: "lnum" 1, "tnum" 1;
     }
 
-    td, th {
-        padding: 0.6em 0.9em;
-        border: 1px solid $color-alpha-tint-lighter;
-        text-align: left;
+    caption {
+        @include font(navigation);
+        padding: 0 0.5rem;
+        font-style: italic;
+        text-align: start;
+        color: $color-beta;
+        opacity: 0.8;
+    }
+
+    td,
+    th {
+        padding: 0.75em 0.5rem;
+        text-align: start;
+
+        // text-align: start is fully supported for th elements
+        [dir="ltr"] & { text-align: left; }
+        [dir="rtl"] & { text-align: right; }
+    }
+
+    tr:nth-child(even) {
+        background-color: $color-gamma;
+    }
+
+    th {
+        background-color: $color-gamma;
+        border-bottom: 1px solid $color-alpha-tint-lighter;
     }
 
     a {
         @include link-default($color-accent, underline);
-        // &:hover {
-        //     text-decoration: underline;
-        // }
     }
 }

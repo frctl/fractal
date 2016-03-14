@@ -1,50 +1,39 @@
-.Status {
-    display: flex;
-    align-items: center;
-}
+.Status,
 .Status-dots {
     display: flex;
     align-items: center;
 }
+
 .Status-dot + .Status-dot {
-    @include margin-inline('start', 3px);
+    @include margin-inline(start, 3px);
 }
+
 .Status-dot {
-    width: 8px;
-    height: 8px;
+    width: 0.5rem;
+    height: 0.5rem;
+    background-color: white;
     border: 1px solid transparent;
     border-radius: 100%;
-    background-color: #fff;
 }
 
 .Status--tag {
     .Status-label {
+        @include font(caption);
         display: inline-block;
-        font-size: 11px;
-        text-transform: uppercase;
-        color: #fff;
-        padding: 0.15em 1.0em;
-        border-radius: 2em;
+        border-radius: 2rem;
+        padding: 0.125rem 0.75rem;
+        color: white;
     }
+
     .Status-label + .Status-label {
-        @include margin-inline('start', 5px);
+        @include margin-inline(start, 0.25rem);
     }
 }
 
 .Status--labelled {
     .Status-label {
-        @include margin-inline('end', 10px);
+        @include font(caption);
+        @include margin-inline(end, 0.75rem);
         display: inline-block;
-        font-size: 13px;
-        text-transform: uppercase;
-        color: #888;
-    }
-}
-
-.Status--large {
-    .Status-dot {
-        width: 14px;
-        height: 14px;
-        border: 3px solid transparent;
     }
 }

@@ -1,132 +1,105 @@
 .Tree {
     white-space: nowrap;
 }
+
 .Tree-title {
-    @include padding-inline('start', 25px);
-    font-size: 11px;
-    line-height: 11/20;
-    font-weight: bold;
-    letter-spacing: 1px;
-    text-transform: uppercase;
+    @include font(caption);
+    @include padding-inline(start, 1rem);
     color: $color-alpha;
-    margin-bottom: 10px;
+    margin-bottom: 0.5rem;
+    opacity: 0.6;
 }
+
 .Tree-collection {
-    padding-top: 5px;
-    padding-bottom: 5px;
     &.is-closed {
         background-color: transparent;
+
         .Tree-collectionItems {
             display: none;
         }
+
         .Tree-collectionLabel {
-            span:before {
+            span::before {
                 [dir="ltr"] & {
-                    background-image: url('../img/icon-navigation-closed-ltr.svg');
+                    background-image: url("../img/icon-navigation-closed-ltr.svg");
                 }
                 [dir="rtl"] & {
-                    background-image: url('../img/icon-navigation-closed-rtl.svg');
+                    background-image: url("../img/icon-navigation-closed-rtl.svg");
                 }
             }
         }
     }
 }
+
 .Tree-collectionLabel {
+    @include font(navigation);
+    padding-top: 0.375rem;
+    padding-bottom: 0.375rem;
     color: $color-alpha;
     cursor: pointer;
-    font-size: 13px;
-    line-height: 13/20;
-    font-weight: normal;
+    touch-action: manipulation;
     user-select: none;
+
     span {
-        @include padding-inline('start', 12px);
-        @include margin-inline('start', -22px);
-        position: relative;
+        @include padding-inline(start, 0.75rem);
+        @include margin-inline(start, -1.75rem);
         display: block;
+        position: relative;
     }
-    span:before {
-        @include offset-inline('start');
+
+    span::before {
+        @include offset-inline(start);
+        display: inline-block;
         position: absolute;
-        top: 5px;
-        content: ' ';
-        background-image: url('../img/icon-navigation-opened.svg');
+        top: 0.25rem;
+        background-image: url("../img/icon-navigation-opened.svg");
         background-size: 8px 8px;
         background-repeat: no-repeat;
         background-position: 0 50%;
-        display: inline-block;
-        width: 10px;
-        height: 10px;
+        width: 0.75rem;
+        height: 0.75rem;
+        opacity: 0.5;
+        content: "";
     }
-    touch-action: manipulation;
 }
-.Tree-collectionItems {
-    margin-top: 5px;
-}
+
 .Tree-item {
-    font-size: 13px;
-    line-height: 13/20;
-    font-weight: normal;
+    @include font(navigation);
 }
+
 .Tree-entity {
-    @include padding-inline('end', 10px);
-    border-top: 1px solid transparent;
-    border-bottom: 1px solid transparent;
     &:hover {
         background-color: lighten($color-alpha-tint-lightest, 30%);
+
         .Tree-entityLink {
             @include link-default(darken($color-accent, 15%), none);
         }
     }
+
     &.is-current {
         background-color: $color-alpha-tint-lightest;
-        .Tree-entityLink {
-            // @include link-default(darken($color-accent, 25%), none);
-        }
-        .Tree-subItems {
-            display: block;
-        }
     }
 }
+
 .Tree-entityLink {
-    padding-top: 5px;
-    padding-bottom: 5px;
     @include link-default($color-accent, none);
     display: flex;
     align-items: center;
+    padding-top: 0.375rem;
+    padding-bottom: 0.375rem;
+
     > * + * {
-        @include margin-inline('start', 6px);
+        @include margin-inline(start, 0.5rem);
     }
 }
-.Tree-subItems {
-    display: none;
-    margin-bottom: 5px;
-}
-.Tree-subItem {
-    display: flex;
-    > * + * {
-        @include margin-inline('start', 6px);
-    }
-    &.is-current {
-        font-weight: bold;
-        .Tree-subItemLink {
-            @include link-default(darken($color-accent, 25%), none);
-        }
-    }
-}
-.Tree-subItemLink {
-    padding: 4px 0;
-    @include link-default($color-accent, none);
-    touch-action: manipulation;
-}
+
 @for $i from 1 through 8 {
     .Tree-depth-#{$i} {
-        $padLeft: 16px + ($i * 10px);
+        $padLeft: ($i * 1rem);
+
         .Tree-collectionLabel,
         .Tree-entityLink {
-            @include padding-inline('start', $padLeft);
-        }
-        .Tree-subItemLink {
-            @include padding-inline('start', $padLeft + 11px);
+            @include padding-inline(start, $padLeft);
         }
     }
 }
