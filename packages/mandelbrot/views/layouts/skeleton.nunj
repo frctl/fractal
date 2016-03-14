@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="{{ frctl.theme.config('lang') | default('en') }}" dir="{{ 'rtl' if frctl.theme.config('rtl') else 'ltr' }}" class="no-js">
+<html lang="{{ frctl.theme.config.lang | default('en') }}" dir="{{ 'rtl' if frctl.theme.config.rtl else 'ltr' }}" class="no-js">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="{{ frctl.theme.config('accent') }}">
+    <meta name="theme-color" content="{{ frctl.theme.config.accent }}">
 
     <link rel="shortcut icon" href="/favicon.ico" type="image/ico">
-    <link rel="apple-touch-icon" href="/theme/icons/icon-{{ frctl.theme.config('skin') | default('default') }}.png" type="image/png">
-    <link rel="mask-icon" href="/theme/icons/icon.svg" color="{{ frctl.theme.config('accent') }}">
+    <link rel="apple-touch-icon" href="/theme/icons/icon-{{ frctl.theme.config.skin | default('default') }}.png" type="image/png">
+    <link rel="mask-icon" href="/theme/icons/icon.svg" color="{{ frctl.theme.accent }}">
 
     <script>var cl = document.querySelector('html').classList; cl.remove('no-js'); cl.add('has-js');</script>
 
-    <link rel="stylesheet" href="/theme/css/{{ frctl.theme.config('skin') | default('default') }}.css?cachebust={{ frctl.theme.version }}" type="text/css">
+    <link rel="stylesheet" href="/theme/css/{{ frctl.theme.config.skin | default('default') }}.css?cachebust={{ frctl.theme.version }}" type="text/css">
 
     <title>{% if pageTitle %}{{ pageTitle }} | {% endif %}{{ frctl.config.project.title }}</title>
 </head>
