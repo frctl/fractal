@@ -195,5 +195,5 @@ fractal.set('plugins.web.theme', 'my-custom-theme');
 The directory within which any static builds of the web UI should be generated.
 
 ```js
-fractal.set('plugins.web.build.dest', 'build');
+fractal.set('plugins.web.build.path', 'build');
 ```

@@ -36,7 +36,6 @@ You can provide the following (optional) command line options to override the de
 * `-p, --port <port-number>` - the port number to use, for example `5000`.
 * `-t, --theme <theme-name>` - a custom theme to use.
 * `-s, --sync` - whether to use [BrowserSync](https://www.browsersync.io) to provide auto-refresh and syncing capabilities
-* `-c, --colorscheme <scheme-name>` - The theme colour scheme to use (if supported by your theme)
 
 > Note that themes must be installed before they can be used. See the [themes documentation](/docs/web/themes.md) for more information on creating and using custom themes.
 
@@ -90,5 +89,5 @@ fractal.set('plugins.web.theme', 'my-custom-theme');
 The directory within which the static build should be generated.
 
 ```js
-fractal.set('plugins.web.build.dest', 'build');
+fractal.set('plugins.web.build.path', 'build');
 ```
