@@ -24,7 +24,7 @@ module.exports = function(){
         get: () => {
             return findScheme(this.config.skin || 'default').accent;
         }
-    })
+    });
 
     this.static(Path.join(__dirname, 'dist'), `/theme`);
 
@@ -68,7 +68,9 @@ module.exports = function(){
             }
             for (let variant of comp.variants()) {
                 builder.addRoute('preview', {'handle':variant.handle});
-                if (!comp.isCollated) builder.addRoute('component', {'handle':variant.handle});
+                if (!comp.isCollated){
+                    builder.addRoute('component', {'handle':variant.handle});
+                }
             }
         }
 

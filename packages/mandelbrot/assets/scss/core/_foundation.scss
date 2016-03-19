@@ -4,6 +4,10 @@
     box-sizing: inherit;
 }
 
+::selection {
+    background-color: rgba($color-link, 0.075);
+}
+
 html {
     position: relative;
     height: 100%;
@@ -70,12 +74,15 @@ ul {
 }
 
 a {
-    color: $color-accent;
+    color: $color-link;
+    transition: all 0.15s ease-out;
 
-    &:visited,
-    &:hover,
     &:active {
-        color: $color-accent;
+        color: $color-link;
+    }
+
+    &:hover {
+        color: darken($color-link, 15%);
     }
 }
 
@@ -98,7 +105,7 @@ pre {
 
 svg {
     display: inline-block;
-    vertical-align: middle;
+    vertical-align: text-bottom;
     fill: currentColor;
 }
 

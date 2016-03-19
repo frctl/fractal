@@ -34,7 +34,7 @@
     h2 {
         @include font(heading);
         margin-bottom: 1em;
-        opacity: 0.9;
+        color: $color-beta;
     }
 
     *:not(hr) + h2 {
@@ -99,7 +99,7 @@
         padding: 0.75em 0.5rem;
         text-align: start;
 
-        // text-align: start is fully supported for th elements
+        // text-align: start isn't fully supported for th elements
         [dir="ltr"] & { text-align: left; }
         [dir="rtl"] & { text-align: right; }
     }
@@ -111,9 +111,5 @@
     th {
         background-color: $color-gamma;
         border-bottom: 1px solid $color-alpha-tint-lighter;
-    }
-
-    a {
-        @include link-default($color-accent, underline);
     }
 }

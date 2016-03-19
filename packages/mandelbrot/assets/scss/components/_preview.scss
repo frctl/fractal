@@ -40,7 +40,6 @@
 
 .Preview-resizer {
     @include offset-inline(start, 0);
-    @include border-inline(end, 1px solid $color-alpha-tint-light);
     position: absolute;
     top: 0;
     bottom: 0;
@@ -77,6 +76,7 @@
 }
 
 .Preview-handle {
+    @include border-inline(start, 1px solid $color-alpha-tint-light);
     @include dragHandle;
     @include offset-inline(end, 0);
     position: absolute;
@@ -85,7 +85,7 @@
     z-index: 100;
     height: calc(100% + 2px);
     width: $handle-size;
-    background: transparent url("../img/icon-drag--vertical.svg") no-repeat 60% 50%;
+    background: transparent url("../img/icon-drag--vertical.svg") no-repeat 50%;
     background-size: 3px 16px;
     cursor: ew-resize;
 
