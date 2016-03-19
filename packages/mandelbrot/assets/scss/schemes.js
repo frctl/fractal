@@ -1,7 +1,14 @@
+'use strict';
 
-$color-accent: #f2d;
-$color-complement: #402;
-$color-link: #a06;
+const fs = require('fs');
+const schemes = require('../schemes.json');
+
+for (let scheme of schemes) {
+    fs.writeFile(`./assets/scss/schemes/${scheme.name}.scss`,
+`
+$color-accent: ${scheme.accent};
+$color-complement: ${scheme.complement};
+$color-link: ${scheme.links};
 
 $hue: hue($color-accent);
 
@@ -15,3 +22,5 @@ $color-delta: hsl($hue, 10, 100);
 
 @import "../core/all";
 @import "../components/**/*.scss";
+`);
+}

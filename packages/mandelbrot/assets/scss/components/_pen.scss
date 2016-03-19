@@ -19,8 +19,7 @@
     display: flex;
     flex: 0 0 auto;
     max-height: 3rem;
-    margin: 0 $handle-size;
-    padding: 0.75rem 0;
+    padding: 0.75rem;
     align-items: center;
 
     .Status {
@@ -53,16 +52,18 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-
-    a {
-        @include link-default($color-alpha, none);
-    }
 }
 
-.Pen-newWindowLink {
-    margin: 0 0.125rem;
-    position: relative;
-    top: -0.125rem;
+.Pen-previewLink {
+    @include link-default($color-beta, none);
+
+    svg {
+        fill: $color-link;
+    }
+
+    &:hover svg {
+        fill: darken($color-link, 15%);
+    }
 }
 
 .Pen-preview {
@@ -83,10 +84,10 @@
     @include dragHandle;
     flex: 0 0 auto;
     height: $handle-size;
-    margin: 0 1rem;
-    cursor: ns-resize;
+    margin: 0 $handle-size;
     background: transparent url("../img/icon-drag--horizontal.svg") no-repeat 50% 50%;
     background-size: 16px 3px;
+    cursor: ns-resize;
 
     @include mq($until: navCollapse) {
         display: none;

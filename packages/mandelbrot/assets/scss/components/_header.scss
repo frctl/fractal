@@ -4,13 +4,13 @@
     position: relative;
     z-index: 10;
     background-color: $color-accent;
-    box-shadow: 0 2px 2px $color-alpha-tint-light;
+    box-shadow: inset 0 -1px 0 0 $color-alpha-tint-light, 0 2px 0 $color-alpha-tint-lighter;
     text-overflow: ellipsis;
-    color: white;
+    color: $color-complement;
 }
 
 .Header-title {
-    @include link-default($color-delta, none);
+    @include link-default($color-complement, none);
     padding: 0.75rem 1rem;
     font-size: 1.125rem; // 18px
     line-height: (24 / 18);
@@ -18,16 +18,12 @@
 }
 
 .Header-button {
-    @include border-inline(end, 1px solid $color-alpha-tint-light);
+    @include border-inline(end, 1px solid rgba($color-complement, 0.2));
     display: block;
     border: 0;
     height: 3rem;
     width: 3rem;
     touch-action: manipulation;
-
-    span {
-        @extend %visuallyhidden;
-    }
 
     &:focus,
     &:active {
@@ -44,11 +40,44 @@
 }
 
 .Header-navToggle {
-    background-image: url("../img/icon-close-white.svg");
-    background-repeat: no-repeat;
-    background-position: 50% 50%;
+    svg {
+        display: block;
+        margin: 0 auto;
+    }
+}
 
-    .is-closed & {
-        background-image: url("../img/icon-menu-white.svg");
+.Header-menuIcon {
+    path {
+        transition: all 0.1s ease-out;
+    }
+
+    path:nth-of-type(1) {
+        transform: rotate(45deg) scaleX(1.3333);
+        transform-origin: top left;
+    }
+
+    path:nth-of-type(2) {
+        width: 0%;
+        opacity: 0;
+    }
+
+    path:nth-of-type(3) {
+        transform: rotate(-45deg) scaleX(1.3333);
+        transform-origin: bottom left;
+    }
+}
+
+.is-closed .Header-menuIcon {
+    path:nth-of-type(1) {
+        transform: rotate(0) scaleX(1);
+    }
+
+    path:nth-of-type(2) {
+        width: 100%;
+        opacity: 1;
+    }
+
+    path:nth-of-type(3) {
+        transform: rotate(0) scaleX(1);
     }
 }

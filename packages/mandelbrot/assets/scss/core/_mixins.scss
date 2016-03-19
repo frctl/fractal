@@ -16,7 +16,7 @@
     }
 }
 
-%visuallyhidden {
+@mixin visuallyhidden {
     overflow: hidden;
     position: absolute;
     height: 1px;
@@ -35,6 +35,13 @@
 }
 
 @mixin dragHandle {
+    transition: all 0.15s ease-out;
+
+    &:hover,
+    &:active {
+        background-color: $color-alpha-tint-lightest;
+    }
+
     &.is-disabled {
         pointer-events: none;
         visibility: hidden;
@@ -147,6 +154,28 @@
             border-left: $style;
         }
         border-inline-end: $style;
+    }
+}
+
+@mixin border-inline-color($position, $color) {
+    @if $position == start {
+        [dir="ltr"] & {
+            border-left-color: $color;
+        }
+        [dir="rtl"] & {
+            border-right-color: $color;
+        }
+        border-inline-start-color: $color;
+    }
+
+    @if $position == end {
+        [dir="ltr"] & {
+            border-right-color: $color;
+        }
+        [dir="rtl"] & {
+            border-left-color: $color;
+        }
+        border-inline-end-color: $color;
     }
 }
 

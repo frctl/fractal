@@ -24,8 +24,11 @@
 <div class="Pen" data-behaviour="pen" id="pen-{{ entity.id }}">
 
     <div class="Pen-panel Pen-header">
-        <h1 class="Pen-title"><a href="{{ previewUrl }}" title="Open preview in new window">{{ entity.title }}</a></h1>
-        <a href="{{ previewUrl }}" class="Pen-newWindowLink">{{ img.svg('icon-window', '#999', '24px', '24px' ) }}</a>
+        <h1 class="Pen-title">
+            <a class="Pen-previewLink" href="{{ previewUrl }}" title="Open preview in new window">
+                {{ entity.title }}{{ img.svg('icon-window', '#999', '24', '24', '0 0 240 240' ) }}
+            </a>
+        </h1>
         {{ status.tag(entity.status) }}
     </div>
 
@@ -57,7 +60,7 @@
                     <li class="Browser-tab Browser-tab--code is-active" data-role="tab">
                         <a href="#browser-{{ entity.id }}-panel-code">{{ img.svg('icon-markup', '#666', '19px', '19px', '0 0 18 14' ) }} Code</a>
                     </li>
-                    <li class="Browser-tab Browser-tab--notes {% if not entity.notes %} is-disabled{% endif %}" data-role="tab">
+                    <li class="Browser-tab Browser-tab--notes{% if not entity.notes %} is-disabled{% endif %}" data-role="tab">
                         <a href="#browser-{{ entity.id }}-panel-notes">{{ img.svg('icon-notes', '#666', '19px', '19px' ) }} Notes</a>
                     </li>
                     {# <li class="Browser-tab Browser-tab--meta" data-role="tab">

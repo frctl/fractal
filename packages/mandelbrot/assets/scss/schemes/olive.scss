@@ -1,6 +1,17 @@
 
-$color-accent: #497;
+$color-accent: #276;
+$color-complement: #efd;
+$color-link: #054;
 
-@import "../palettes/cool";
+$hue: hue($color-accent);
+
+$color-alpha: hsl($hue, 10, 20);
+$color-alpha-tint-light: rgba($color-alpha, 0.25);
+$color-alpha-tint-lighter: rgba($color-alpha, 0.1);
+$color-alpha-tint-lightest: rgba($color-alpha, 0.05);
+$color-beta: hsl($hue, 10, 35);
+$color-gamma: hsl($hue, 10, 97);
+$color-delta: hsl($hue, 10, 100);
+
 @import "../core/all";
 @import "../components/**/*.scss";

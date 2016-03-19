@@ -13,7 +13,7 @@
   "author": "Mark Perkins <mark@clearleft.com> (http://clearleft.com/)",
   "license": "MIT",
   "scripts": {
-    "assets": "node ./assets/scss/build.js & gulp"
+    "assets": "node ./assets/scss/schemes.js & gulp"
   },
   "devDependencies": {
     "babel-preset-es2015": "^6.5.0",
