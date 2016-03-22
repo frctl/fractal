@@ -19,7 +19,7 @@ Fractal.launch({}, function(env){
     }
     if (env.modulePath) {
         if (semver.gt(cliPackage.version, env.modulePackage.version)) {
-            frctl.console.notice(`Fractal version mismatch:\n\t Global fractal is ${cliPackage.version}\n\t Local fractal is ${env.modulePackage.version}`);
+            console.log(`Fractal version mismatch! Global: ${cliPackage.version} / Local: ${env.modulePackage.version}`);
         }
         var app = require(env.modulePath);
         app.run();
