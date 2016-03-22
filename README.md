@@ -59,4 +59,4 @@ Fractal is developed and maintained by [Mark Perkins](http://github.com/allmarke
 
 Additional thanks to [Paul Lloyd](https://twitter.com/paulrobertlloyd) for his tireless work sniffing out bugs and his design input on the [default web UI theme](https://github.com/frctl/mandelbrot).
 
-![Clearleft](http://clearleft.com/assets/img/logo.png)
+[![Clearleft](http://clearleft.com/assets/img/logo.png)](http://clearleft.com)
