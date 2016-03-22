@@ -6,12 +6,13 @@ const minimist = require('minimist');
 const chokidar = require('chokidar');
 const console  = require('./console');
 const utils    = require('./utils');
+const spawn    = require('child_process').spawn;
 
 module.exports = function (app, vorpal, defaults) {
 
     const commands  = new Set();
     const delimiter = chalk.magenta('fractal ➤');
-    let hasChanged = false;
+    let hasChanged  = false;
 
     _.forEach(defaults, c => add(c.command, c.config || {}, c.action));
 
@@ -36,7 +37,8 @@ module.exports = function (app, vorpal, defaults) {
     function watchFractalFile() {
         chokidar.watch('fractal.js').on('change', (path) => {
             if (!hasChanged) {
-                console.alert('Your fractal.js file has changed. You will need to run the \'reboot\' command to see changes take effect.');
+                console.alert('Your fractal.js file has changed.');
+                console.alert('Exit & restart the Fractal CLI to see your changes take effect.');
                 hasChanged = true;
             }
         });
@@ -103,17 +105,20 @@ module.exports = function (app, vorpal, defaults) {
                 return;
             }
             if (!command && scope === 'global') {
+
                 console.box(
                     `Fractal CLI`,
                     `${chalk.magenta('No local Fractal installation found.')}
 You can use the 'fractal new' command to create a new project.`,
                     `Powered by Fractal v${app.version}`
                 ).unslog();
+
             } else {
+
                 app.interactive = true;
-                if (!input.opts.reboot) {
-                    console.slog().log('Initialising Fractal....');
-                }
+                // if (!input.opts.reboot) {
+                console.slog().log('Initialising Fractal....');
+                // }
                 watchFractalFile();
                 return app.load().then(() => {
                     app.watch();
@@ -130,10 +135,11 @@ You can use the 'fractal new' command to create a new project.`,
                         console.success('Fractal has been successfully restarted.');
                     }
                     if (input.command) {
-                        vorpal.parse(process.argv);
+                        vorpal.parse(proc.argv);
                     }
                     vorpal.show();
                 });
+
             }
         },
 

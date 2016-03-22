@@ -38,8 +38,8 @@ module.exports = function (vorpal) {
                 prefix: '⚑'
             },
             alert: {
-                prefix: '!',
-                style: chalk.blue,
+                prefix: '★',
+                style: chalk.yellow.bold,
             },
             error: {
                 prefix: '✘',
