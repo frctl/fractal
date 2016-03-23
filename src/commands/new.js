@@ -6,7 +6,6 @@ const Path       = require('path');
 const Handlebars = require('handlebars');
 const inquirer   = require('inquirer');
 const shell      = require('shelljs');
-const touch      = Promise.promisify(require('touch'));
 const fs         = Promise.promisifyAll(require('fs-extra'));
 const console    = require('../console');
 
@@ -104,10 +103,8 @@ module.exports = {
                 return fs.copyAsync(exampleComponent, componentCopyTo);
             }).then(() => {
                 if (answers.useGit) {
-                    return Promise.all([
-                        touch(Path.join(publicDir, '.gitkeep')),
-                        fs.writeFileAsync(gitIgnorePath, 'node_modules\n'),
-                    ]);
+                    shell.touch(Path.join(publicDir, '.gitkeep'));
+                    return fs.writeFileAsync(gitIgnorePath, 'node_modules\n');
                 }
                 return paths;
             }).then(() => {

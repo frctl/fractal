@@ -3,8 +3,6 @@
 const chalk       = require('chalk');
 const _           = require('lodash');
 const Table       = require('cli-table2');
-const prettyjson  = require('prettyjson');
-const columnify   = require('columnify');
 const slog        = require('single-line-log').stdout;
 const utils       = require('./utils');
 
@@ -105,7 +103,7 @@ module.exports = function (vorpal) {
             if (!_.isFunction(data.then)) {
                 data = Promise.resolve(data);
             }
-            data.then(data => this.write(prettyjson.renderString(utils.stringify(data))));
+            data.then(data => this.write(utils.stringify(data)));
         },
 
         box(header, body, footer) {
@@ -143,6 +141,7 @@ module.exports = function (vorpal) {
         },
 
         columns(data, options) {
+            const columnify = require('columnify');
             this.write(columnify(data, options));
         },
 

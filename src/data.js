@@ -37,9 +37,6 @@ module.exports = function (app) {
         },
 
         readFile(filePath) {
-            // if (Path.isAbsolute(filePath)) {
-            //     // return Promise.reject('Data file paths must be relative to the root of the project');
-            // }
             const format = utils.lang(filePath, true).mode;
             if (format === 'js' || format === 'javascript') {
                 try {

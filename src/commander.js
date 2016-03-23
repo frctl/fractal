@@ -115,28 +115,28 @@ You can use the 'fractal new' command to create a new project.`,
 
             } else {
 
+                if (input.command) {
+                    console.error(`The ${input.command} command is not recognised.`);
+                    return;
+                }
+
                 app.interactive = true;
-                // if (!input.opts.reboot) {
+
                 console.slog().log('Initialising Fractal....');
-                // }
+
                 watchFractalFile();
                 return app.load().then(() => {
                     app.watch();
                     vorpal.delimiter(delimiter);
                     vorpal.history('fractal');
-                    if (!input.opts.reboot) {
-                        console.box(
-                            `Fractal interactive CLI`,
-                            `- Use the 'help' command to see all available commands.
+
+                    console.box(
+                        `Fractal interactive CLI`,
+                        `- Use the 'help' command to see all available commands.
 - Use the 'exit' command to exit the app.`,
-                            `Powered by Fractal v${app.version}`
-                        ).unslog().br();
-                    } else {
-                        console.success('Fractal has been successfully restarted.');
-                    }
-                    if (input.command) {
-                        vorpal.parse(proc.argv);
-                    }
+                        `Powered by Fractal v${app.version}`
+                    ).unslog().br();
+                    
                     vorpal.show();
                 });
 

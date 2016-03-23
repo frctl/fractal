@@ -18,7 +18,7 @@ class Fractal {
     /**
      * Constructor. Sets up Fractal instance and adds the bundled plugins and
      * rendering engines ready for instantiation.
-     * @return {Fratal}
+     * @return {Fractal}
      */
     constructor() {
         this.global      = false;
