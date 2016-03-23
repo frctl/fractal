@@ -78,6 +78,7 @@ class Source extends Collection {
                 console.debug(`Finished parsing ${this.name} directory`);
                 this.isLoaded = true;
                 this.emit('loaded', this);
+                this._app.emit('loaded', this.name, this);
                 return source;
             });
         }
@@ -95,6 +96,7 @@ class Source extends Collection {
             console.debug(`Finished parsing ${this.name} directory`);
             this.isLoaded = true;
             this.emit('changed', this, data);
+            this._app.emit('changed', this.name, this, data);
             return source;
         });
     }
