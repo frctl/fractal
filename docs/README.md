@@ -7,10 +7,12 @@
 * [Overview](/docs/overview.md)
 * [Installation](/docs/installation.md)
 * [Project settings](/docs/project-settings.md)
-* [Running Commands](/docs/commands.md)
 * [Working with configuration files](/docs/configuration-files.md)
 * [Template engines](/docs/engines/overview.md)
 * [Collections](/docs/collections.md)
+* Commands
+	* [Overview](/docs/commands/overview.md)
+	* [Writing your own commands](/docs/commands/custom.md)
 * Components
 	* [Overview](/docs/components/overview.md)
 	* [Configuration options](/docs/components/configuration.md)
