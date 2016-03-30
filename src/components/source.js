@@ -74,9 +74,17 @@ module.exports = class ComponentSource extends Source {
             return Promise.reject(null);
         }
         if (_.isString(entity)) {
-            return fs.readFileAsync(entity, 'utf8').then(content => {
-                return this.engine().render(entity, content, context);
-            });
+            let str = entity;
+            if (entity.indexOf('@') === 0) {
+                entity = this.find(entity);
+                if (!entity) {
+                    throw new Error(`Cannot find component ${str}`);
+                }
+            } else {
+                return fs.readFileAsync(entity, 'utf8').then(content => {
+                    return this.engine().render(entity, content, context);
+                });
+            }
         }
 
         return co(function* () {

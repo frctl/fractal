@@ -31,6 +31,24 @@ module.exports = class DocsSource extends Source {
 
     render(page, context) {
         const self = this;
+
+        if (!page) {
+            return Promise.reject(null);
+        }
+        if (_.isString(page)) {
+            let str = page;
+            if (page.indexOf('@') === 0) {
+                page = this.find(page);
+                if (!page) {
+                    throw new Error(`Cannot find page ${str}`);
+                }
+            } else {
+                return fs.readFileAsync(page, 'utf8').then(content => {
+                    return this.engine().render(page, content, context);
+                });
+            }
+        }
+
         const renderContext = context || page.context;
         const target = page.toJSON();
         return co(function* () {
