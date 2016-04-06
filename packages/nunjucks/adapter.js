@@ -10,6 +10,7 @@ module.exports = function(source, config){
     config = config || {};
 
     let viewCache = null;
+    const loaders = [];
 
     /**
      * Create a custom string loader and instantiate a new Nunjucks environment object with it.
@@ -30,11 +31,27 @@ module.exports = function(source, config){
                     noCache: true
                 };
             }
-            throw new Error('Partial template not found.');
         }
     });
+    loaders.push(new StringLoader());
 
-    let nj = new nunjucks.Environment(new StringLoader(), {
+    /**
+     * If the user has specified any paths for directly loading templates,
+     * also include a FileSystemLoader instance.
+     */
+
+    if (config.paths) {
+        loaders.push(new nunjucks.FileSystemLoader(config.paths, {
+            watch: true
+        }));
+    }
+    
+    /**
+     * Now instantiate the Nunjucks environment instance
+     * and load any helpers etc.
+     */
+
+    let nj = new nunjucks.Environment(loaders, {
         autoescape: false
     });
 
