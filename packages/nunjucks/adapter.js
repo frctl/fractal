@@ -20,6 +20,9 @@ module.exports = function(source, config){
 
     const StringLoader = nunjucks.Loader.extend({
         getSource: function(handle) {
+            if (handle.indexOf('@') !== 0) {
+                return;
+            }
             handle = handle.replace('@','');
             const view = _.find(viewCache, function(view){
                 return (view.handle === handle || view.alias === handle);
@@ -45,7 +48,7 @@ module.exports = function(source, config){
             watch: true
         }));
     }
-    
+
     /**
      * Now instantiate the Nunjucks environment instance
      * and load any helpers etc.
