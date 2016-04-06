@@ -4,9 +4,10 @@ const Promise    = require('bluebird');
 const Path       = require('path');
 const co         = require('co');
 const _          = require('lodash');
-const console    = require('../console');
 const Variant    = require('./variant');
+const console    = require('../console');
 const Entities   = require('../entities');
+const utils      = require('../utils');
 
 module.exports = class VariantCollection extends Entities {
 
@@ -74,6 +75,7 @@ module.exports = class VariantCollection extends Entities {
                 console.error(`Could not create variant of ${component.handle} - 'name' value is missing`);
                 return null;
             }
+            conf.name = utils.slugify(conf.name.toLowerCase());
             const p = _.defaults(conf, {
                 dir:    opts.dir,
                 parent: component
@@ -102,10 +104,10 @@ module.exports = class VariantCollection extends Entities {
         const usedViews = variants.map(v => v.view);
 
         views.filter(f => !_.includes(usedViews, f.base)).forEach(viewFile => {
-            const name = viewFile.name.split(source.setting('splitter'))[1];
+            const name = utils.slugify(viewFile.name.split(source.setting('splitter'))[1]).toLowerCase();
             const p = {
-                name:     name.toLowerCase(),
-                handle:   `${component.handle}${source.setting('splitter')}${name}`.toLowerCase(),
+                name:     name,
+                handle:   `${component.handle}${source.setting('splitter')}${name}`,
                 view:     viewFile.base,
                 viewPath: viewFile.path,
                 order:    viewFile.order,
