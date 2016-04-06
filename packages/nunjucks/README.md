@@ -64,6 +64,27 @@ A message for you: {{ message|shorten }}
 A message for you: {{ message|shorten(20) }}
 ```
 
+## Including and extending non-component view templates
+
+By default, the nunjucks adapter expects you to use the Fractal component `@handle` syntax to refer to components to include or extend in your templates.
+
+However, if you wish to include (or extend) non-component templates, you can also pass a path (or an array of paths) of directories for Nunjucks to search in for non-component templates. For example:
+
+```javascript
+// fractal.js
+fractal.engine('nunjucks', '@frctl/nunjucks-adapter', {
+    paths: ['path/to/files']
+});
+```
+
+```html
+{% include 'foo.html' %}
+```
+
+In this example the file `foo.html` would be searched for in the `path/to/files` directory and included if found.
+
+> Using additional search paths in this manner **does not** prevent standard `@handle` syntax includes working as well.
+
 ## Helpers
 
 The [Nunjucks helpers](https://github.com/frctl/nunjucks-helpers) library provides a set of useful extensions and filters for your Fractal projects.
