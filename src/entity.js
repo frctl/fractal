@@ -9,8 +9,8 @@ module.exports = class Entity {
 
         this.type     = type;
         this.name     = utils.slugify(opts.name.toLowerCase());
-        this.order     = parseInt(opts.order, 10) || 10000;
-        this.isHidden  = opts.isHidden || false;
+        this.order    = parseInt(opts.order, 10) || 10000;
+        this.isHidden = opts.isHidden || false;
 
         this._props   = new Map();
         this._parent  = opts.parent;
