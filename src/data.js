@@ -50,7 +50,7 @@ module.exports = function (app) {
                         console.error(`Error loading data file ${filePath}: JS files must return a JavaScript data object.`);
                         return Promise.reject(new Error('Error loading data file'));
                     }
-                    return Promise.resolve(_.cloneDeep(data));
+                    return Promise.resolve(data);
                 } catch (e) {
                     return Promise.reject(e);
                 }
@@ -77,12 +77,7 @@ module.exports = function (app) {
                 console.error(`Error parsing data file ${file.path}: ${err}`);
                 return defaults;
             });
-        },
-
-        guessRootDir(dir) {
-
         }
-
     };
 
     return module.exports;
