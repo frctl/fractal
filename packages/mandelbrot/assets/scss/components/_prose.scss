@@ -19,11 +19,11 @@
         margin-bottom: 0.25em;
     }
 
-    ul li {
+    ul > li {
         list-style-type: square;
     }
 
-    ol li {
+    ol > li {
         list-style-type: decimal;
     }
 
