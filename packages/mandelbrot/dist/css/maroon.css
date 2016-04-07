@@ -1383,9 +1383,9 @@ h6 {
   .Prose li > ul,
   .Prose li > ol {
     margin-bottom: 0.25em; }
-  .Prose ul li {
+  .Prose ul > li {
     list-style-type: square; }
-  .Prose ol li {
+  .Prose ol > li {
     list-style-type: decimal; }
   .Prose h1 {
     font: bold 1.75rem / 1.14286 "Open Sans", Helvetica, Arial, sans-serif;
