@@ -26,7 +26,7 @@ Existing tools to help you build these component libraries often force you to us
 **Fractal is different:**
 
 * **Flexible**: Complete freedom to use whichever templating language, build tool and organisational model best suits your project. Build your components using the same tools that you use for your production site.
-* **Integrated**: Use the core Fractal module in your site or application to give you programmatic access to your components. Integrate your component library into your build system and even your production site through plugins and custom commands.
+* **Integrated**: Fractal can help you seamlessly integrate your component library into your site, app or build tools by including it as a dependency in your build. Plugins and custom commands can help you build a smart, component-focussed workflow to ensure your component library is a living part of your application.
 * **Data-driven**: Component preview data can hardcoded or dynamically generated any way you like - for instance using libraries such as Faker or from HTTP API calls.
 
 The [web UI plugin](/docs/web/overview.md) provides a web-based way to browse your component library, either running as a local web server or as a static HTML export. A **powerful theme API** means you can create your own web UI themes from scratch or by customising the default theme to your liking.
