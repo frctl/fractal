@@ -69,7 +69,7 @@ In all cases, the preview layout must be referenced by the **handle** of the lay
 In your `fractal.js` project settings file:
 
 ```js
-fractal.set('components.preview.layout', '@preview');
+fractal.set('components.default.preview', '@preview');
 ```
 
 ### In a parent collection's configuration file
