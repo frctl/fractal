@@ -21,7 +21,7 @@ let pens        = [];
 
 loadPen();
 
-doc.pjax('a[data-pjax]', '#pjax-container', {
+doc.pjax('a[data-pjax], code a[href]', '#pjax-container', {
     fragment: '#pjax-container',
     timeout: 10000
 }).on('pjax:start', function(e, xhr, options){
