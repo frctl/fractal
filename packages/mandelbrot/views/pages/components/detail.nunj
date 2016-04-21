@@ -98,7 +98,7 @@
                     </div>
                     <div class="Browser-fileContent" data-role="code" id="code-view">
                         <code class="Code Code--lang-{{ variant.lang.editorMode }}">
-                            <pre>{{ viewContent | highlight(entity.editorMode) }}</pre>
+                            <pre>{{ viewContent | highlight(entity.editorMode) | linkHandles('component', 'handle') }}</pre>
                         </code>
                     </div>
                     <div class="Browser-fileContent" data-role="code" id="code-context">
