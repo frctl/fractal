@@ -7,5 +7,12 @@
         background-color: $color-gamma;
         padding: 0.75rem;
         -webkit-overflow-scrolling: touch;
+
+        a {
+            text-decoration: none;
+            &:hover {
+                text-decoration: underline;
+            }
+        }
     }
 }

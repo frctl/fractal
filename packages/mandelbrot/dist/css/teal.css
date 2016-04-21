@@ -825,6 +825,10 @@ h6 {
     background-color: #f7f8f8;
     padding: 0.75rem;
     -webkit-overflow-scrolling: touch; }
+    .Code pre a {
+      text-decoration: none; }
+      .Code pre a:hover {
+        text-decoration: underline; }
 
 .Document {
   padding: 1.5rem 2rem; }
