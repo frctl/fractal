@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="{{ frctl.theme.config.accent }}">
 
-    <link rel="shortcut icon" href="/favicon.ico" type="image/ico">
-    <link rel="apple-touch-icon" href="/theme/icons/icon-{{ frctl.theme.config.skin | default('default') }}.png" type="image/png">
-    <link rel="mask-icon" href="/theme/icons/icon.svg" color="{{ frctl.theme.accent }}">
+    <link rel="shortcut icon" href="{{ frctl.theme.urlPath('favicon.ico') }}" type="image/ico">
+    <link rel="apple-touch-icon" href="{{ frctl.theme.urlPath('/theme/icons/') }}icon-{{ frctl.theme.config.skin | default('default') }}.png" type="image/png">
+    <link rel="mask-icon" href="{{ frctl.theme.urlPath('/theme/icons/icon.svg') }}" color="{{ frctl.theme.accent }}">
 
     <script>var cl = document.querySelector('html').classList; cl.remove('no-js'); cl.add('has-js');</script>
 
-    <link rel="stylesheet" href="/theme/css/{{ frctl.theme.config.skin | default('default') }}.css?cachebust={{ frctl.theme.version }}" type="text/css">
+    <link rel="stylesheet" href="{{ frctl.theme.urlPath('/theme/css/') }}{{ frctl.theme.config.skin | default('default') }}.css?cachebust={{ frctl.theme.version }}" type="text/css">
 
     <title>{% if pageTitle %}{{ pageTitle }} | {% endif %}{{ frctl.config.project.title }}</title>
 </head>
@@ -19,6 +19,6 @@
 
 {% block page %}{% endblock %}
 
-<script src="/theme/js/build.js"></script>
+<script src="{{ frctl.theme.urlPath('/theme/js/build.js') }}"></script>
 </body>
 </html>
