@@ -68,7 +68,7 @@ module.exports = {
             }
         ];
 
-        return inquirer.prompt(questions, function (answers) {
+        inquirer.prompt(questions).then(function(answers) {
 
             console.notice('Generating project structure...');
 
