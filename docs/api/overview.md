@@ -80,6 +80,8 @@ const fractal = require('./fractal.js'); // <-- Import the fractal.js module ins
 
 #### .engine(name, moduleName, [config])
 
+#### .on(event, callback)
+
 ## Properties
 
 #### .components
