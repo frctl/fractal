@@ -15,7 +15,7 @@
                     <path d="M48,272 L48,256 L272,256 L272,272 L48,272 Z"/>
                 </svg>
             </button>
-            <a href="/" class="Header-title" data-pjax>{{ frctl.config.project.title | default('Component Library') }}</a>
+            <a href="{{ frctl.theme.urlPath('/') }}" class="Header-title" data-pjax>{{ frctl.config.project.title | default('Component Library') }}</a>
         </div>
     </div>
 
