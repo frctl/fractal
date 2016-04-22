@@ -37,7 +37,7 @@ You can provide the following (optional) command line options to override the de
 * `-t, --theme <theme-name>` - a custom theme to use.
 * `-s, --sync` - whether to use [BrowserSync](https://www.browsersync.io) to provide auto-refresh and syncing capabilities
 
-If you are *not* using the [Fractal interactive CLI](/docs/commands.md#the-fractal-interactive-cli-sparkles) and are instead using 'regular' terminal commands, then it's important to note that by default Fractal will not be watching your filesystem for changes. In this case you may want to use the watch flag to make sure your changes show up in the web UI:
+If you are *not* using the [Fractal interactive CLI](/docs/overview.md#the-fractal-interactive-cli-sparkles) and are instead using 'regular' terminal commands, then it's important to note that by default Fractal will not be watching your filesystem for changes. In this case you may want to use the watch flag to make sure your changes show up in the web UI:
 
 * `-w, --watch` - whether to watch components and documentation pages for changes
 

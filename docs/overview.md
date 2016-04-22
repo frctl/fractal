@@ -6,7 +6,7 @@ Fractal takes a static directory structure of folders, view (template) files, as
 
 It can also (optionally) look at a directory of documentation pages and configuration data and generate a [documentation](/docs/documentation/overview.md) tree from it.
 
-[Plugins](/docs/plugins/overview.md) and [commands](/docs/commands.md) can then be used to run tasks or to provide functionality that builds upon the data that is generated from parsing the filesystem.
+[Plugins](/docs/plugins/overview.md) and [commands](/docs/overview.md) can then be used to run tasks or to provide functionality that builds upon the data that is generated from parsing the filesystem.
 
 Fractal can also optionally 'watch' the file system and re-build the data trees when changes are made.
 

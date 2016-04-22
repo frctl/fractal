@@ -24,7 +24,7 @@ You can then configure your Fractal instance just as you would [in your fractal.
 
 ### Or: Import a pre-configured Fractal instance
 
-If you've already configured your Fractal install in the `fractal.js` file, then you should instead import the configured Fractal instance from that to avoid having to duplicate configuration information. This involves two steps:
+If you've already configured your Fractal install for CLI use in a `fractal.js` file, then you should instead import the configured Fractal instance from there to avoid having to duplicate configuration information. This involves two steps:
 
 #### 1. Export the configured Fractal instance
 
@@ -52,7 +52,7 @@ In whichever file you want to use Fractal in you can now `require` your `fractal
 // somefile.js
 'use strict';
 
-const fractal = require('./fractal.js'); // <-- Import the fractal.js module instead of requiring the @frctl/fractal package directly
+const fractal = require('./fractal.js'); // <-- Import the fractal.js file instead of requiring the @frctl/fractal package directly
 
 //... do stuff here!
 
@@ -62,17 +62,80 @@ const fractal = require('./fractal.js'); // <-- Import the fractal.js module ins
 
 ## Methods
 
-#### .set(settingPath, settingValue)
+#### .set(path, value)
 
-#### .get(settingPath)
+* `path` - *String*
+* `value` - *String | Object*
+
+Set the value of a configuration setting, identified by it's `path`. For a complete list of configuration values see the [project settings](/docs/project-settings.md) documentation.
+
+```js
+fractal.set('components.statuses.prototype.color', 'pink');
+
+fractal.set('components.default', {
+	preview: '@preview',
+	context: {
+		foo: 'bar'
+	}
+});
+```
+
+#### .get(path)
+
+* `path` - *String*
+
+Get the value of a configuration setting, identified by it's `path`. For a complete list of configuration values see the [project settings](/docs/project-settings.md) documentation.
+
+```js
+console.log(fractal.get('components.statuses.prototype.color'));
+// -> 'pink'
+```
 
 #### .exec(command, [stdoutCallback])
 
+* `command` - *String*
+* `stdoutCallback` - *Function* [optional]
+
+Execute [a command](/docs/commands/overview.md), optionally providing a callback to handle the output.
+
+```js
+fractal.exec('build');
+
+fractal.exec('start --watch', function(stdout){
+	myApp.logger.log(stdout);
+});
+```
+
+#### .load()
+
+Perform an initial parse of the component and documentation directories. Returns a `Promise`.
+
+```js
+fractal.load().then(function(){
+	console.log('Finished parsing components and documentation!');
+});
+```
+
 #### .watch()
+
+Start a watch task to monitor the project component and documentation directories for changes.
 
 #### .unwatch()
 
-#### .load()
+Stop any currently running watch tasks.
+
+#### .on(event, callback)
+
+* `event` - *String*
+* `callback` - *Function* 
+
+Listen out and respond to lifecycle events.
+
+```js
+fractal.on('changed', function(type, source, data){
+	console.log(`Change in ${type} directory`);
+});
+```
 
 #### .plugin(moduleName, [config])
 
@@ -80,7 +143,7 @@ const fractal = require('./fractal.js'); // <-- Import the fractal.js module ins
 
 #### .engine(name, moduleName, [config])
 
-#### .on(event, callback)
+
 
 ## Properties
 

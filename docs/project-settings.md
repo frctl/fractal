@@ -32,7 +32,7 @@
 
 ## Overview
 
-Every Fractal project needs a file called `fractal.js` located in it's root directory. This file is used to import the Fractal module and then to set application-level configuration options as required.
+Every Fractal project that uses the [command-line interface](/docs/commands/overview.md) needs a file called `fractal.js` located in it's root directory. This file is used to import the Fractal module and then to set application-level configuration options as required.
 
 Config values can be set using `fractal.set(key, value)`. The `key` argument can be a dot notation path in order to set nested values. For example:
 

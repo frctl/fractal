@@ -1,4 +1,4 @@
-# Guide: Integrating your component library and site
+# Guide: Integrating your component library
 
 <!-- START doctoc -->
 <!-- END doctoc -->
