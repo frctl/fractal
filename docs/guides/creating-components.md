@@ -163,7 +163,7 @@ Note the `{{{ yield }}}` placeholder - this is where the rendered content of you
 The last thing to do is to let Fractal know that this preview layout should be used as the default layout for our components. To do this we can set a [global project configuration option](/docs/project-settings.md) in our `fractal.js` file.
 
 ```js
-fractal.set('components.preview.layout', '@preview');
+fractal.set('components.default.preview', '@preview');
 ```
 
 > Note the way that we reference the preview layout using the special identifier `@preview`. This is called the component's 'handle'. You can read more details on using component and variant handles on the [components overview](/docs/components/overview.md) page.

@@ -41,7 +41,7 @@ var fractal = require('@frctl/fractal');
 
 fractal.set('components.path', 'path/to/components');
 fractal.set('project.title', 'My Project Name');
-fractal.set('components.status.default', 'wip');
+fractal.set('components.default.status', 'wip');
 ```
 ### Configuring plugins
 

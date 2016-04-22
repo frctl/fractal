@@ -4,7 +4,7 @@ Fractal makes it easy to create documentation for your project. Documentation pa
 
 Additionally, if you need to generate more complex documentation, you can use a template language of your choosing (as for [components](/docs/components/overview.md), the default is [Handlebars](http://handlebarsjs.com)) to help dynamically generate pages.
 
-Pages can be organised into as many folders and sub-folders as is necessary for your project, but must all reside in the documentation folder that you have configured in your `fractal.js` [project settings file](/docs/project-settings).
+Pages can be organised into as many folders and sub-folders as is necessary for your project, but must all reside in the documentation folder that you have configured in your `fractal.js` [project settings file](/docs/project-settings.md#documentation-settingss).
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->

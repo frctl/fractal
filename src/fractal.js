@@ -90,11 +90,12 @@ class Fractal {
     /**
      * Execute a command specified by the CLI style string input.
      * @param  {String} str The command line string to process
+     * @param  {Function} onStdout A callback function to handle stdout output
      * @return {*}          The return value of the command
      */
-    exec(str) {
+    exec(str, onStdout) {
         this._init();
-        return this._commander.exec(str);
+        return this._commander.exec(str, onStdout);
     }
 
     /**

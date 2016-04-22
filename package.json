@@ -1,6 +1,6 @@
 {
   "name": "@frctl/fractal",
-  "version": "0.10.4",
+  "version": "0.10.7",
   "description": "A toolkit to help you build, document and integrate component libraries into your web projects.",
   "main": "src/fractal.js",
   "repository": {
@@ -25,11 +25,11 @@
     "cli-table2": "^0.2.0",
     "co": "^4.6.0",
     "columnify": "^1.5.4",
-    "fs-extra": "^0.26.5",
+    "fs-extra": "^0.28.0",
     "gray-matter": "^2.0.2",
     "handlebars": "^4.0.5",
     "highlight.js": "^9.2.0",
-    "inquirer": "^0.12.0",
+    "inquirer": "^1.0.2",
     "istextorbinary": "^1.0.2",
     "js-beautify": "^1.6.2",
     "js-yaml": "^3.5.3",
@@ -58,7 +58,7 @@
     "chai": "^3.5.0",
     "chai-as-promised": "^5.2.0",
     "doctoc": "^1.0.0",
-    "jscs": "^2.11.0",
+    "jscs": "^3.0.3",
     "mocha": "^2.4.5",
     "proxyquire": "^1.7.4",
     "sinon": "^1.17.3"

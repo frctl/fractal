@@ -36,7 +36,7 @@ The [web UI plugin](/docs/web/overview.md) provides a web-based way to browse yo
 1. Install the Fractal CLI helper globally: `npm i  -g @frctl/fractal`
 2. Create a new project skeleton and install dependencies: `fractal new project-name`
 3. Switch into the project directory: `cd project-name`
-4. Launch the [web UI](/docs/web/overview.md) server using the `fractal start` [command](/docs/commands.md) and then browse to `http://localhost:3000` (there won't be much there to begin with!)
+4. Launch the [web UI](/docs/web/overview.md) server using the `fractal start --watch` [command](/docs/commands.md) and then browse to `http://localhost:3000` (there won't be much there to begin with!)
 5. Start [building components](/docs/guides/creating-components.md) and [writing documentation](/docs/documentation/overview.md), or slow down and read the [full documentation](/docs/README.md) first :-)
 
 ## Documentation

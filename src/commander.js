@@ -136,15 +136,28 @@ You can use the 'fractal new' command to create a new project.`,
 - Use the 'exit' command to exit the app.`,
                         `Powered by Fractal v${app.version}`
                     ).unslog().br();
-                    
+
                     vorpal.show();
                 });
 
             }
         },
 
-        exec(command) {
+        exec(command, onStdout) {
             loadCommands(app.scope);
+            if (onStdout) {
+                const outputPipe = function(output){
+                    if (output) {
+                        output = output[0];
+                        const ret = onStdout(output);
+                        if (ret) {
+                            return ret;
+                        }
+                        return '';
+                    }
+                }
+                vorpal.pipe(outputPipe);
+            }
             app.load().then(function () {
                 vorpal.exec(command);
             });

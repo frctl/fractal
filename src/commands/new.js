@@ -68,7 +68,7 @@ module.exports = {
             }
         ];
 
-        return inquirer.prompt(questions, function (answers) {
+        inquirer.prompt(questions).then(function(answers) {
 
             console.notice('Generating project structure...');
 
@@ -101,13 +101,13 @@ module.exports = {
                 ]);
             }).then(paths => {
                 return fs.copyAsync(exampleComponent, componentCopyTo);
-            }).then(() => {
+            }).then(paths => {
                 if (answers.useGit) {
                     shell.touch(Path.join(publicDir, '.gitkeep'));
                     return fs.writeFileAsync(gitIgnorePath, 'node_modules\n');
                 }
                 return paths;
-            }).then(() => {
+            }).then(paths => {
                 return Promise.all([
                     fs.writeFileAsync(fractalFilePath, fractalContents),
                     fs.writeFileAsync(docsIndexPath, indexContents),
