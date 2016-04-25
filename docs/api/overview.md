@@ -127,7 +127,7 @@ Stop any currently running watch tasks.
 #### .on(event, callback)
 
 * `event` - *String*
-* `callback` - *Function* 
+* `callback` - *Function*
 
 Listen out and respond to lifecycle events.
 
@@ -137,18 +137,54 @@ fractal.on('changed', function(type, source, data){
 });
 ```
 
+#### .engine(name, moduleName, [config])
+
+* `name` - *String*
+* `moduleName` - *String*
+* `config` - *Object* [optional]
+
+Register a custom template adapter to use for rendering components and/or documentation pages. The `name` value is a reference that can then be used to reference the configured adapter.
+
+```js
+fractal.engine('nunjucks-with-helpers', '@frctl/nunjucks-adapter', {
+    loadHelpers: true
+});
+
+fractal.set('components.engine', 'nunjucks-with-helpers'); // use it to render components
+```
+
 #### .plugin(moduleName, [config])
+
+* `moduleName` - *String*
+* `config` - *Object* [optional]
+
+Register a plugin (optionally with initial configuration data). The `moduleName` should be a string that is resolvable via NodeJS's `require` method.
+
+```js
+fractal.plugin('../plugins/my-custom-plugin');
+
+fractal.plugin('@frctl/api-plugin');
+```
 
 #### .command(name, [options], action)
 
-#### .engine(name, moduleName, [config])
+* `name` - *String*
+* `options` - *String | Object* [optional]
+* `action` - *Function*
 
+Register a [custom command](/docs/commands/custom.md).
 
 
 ## Properties
 
 #### .components
 
+A [Source object](/docs/api/source.md) describing the components in the project.
+
 #### .docs
 
+A [Source object](/docs/api/source.md) describing the documentation pages in the project.
+
 #### .version
+
+The version of the local Fractal install.
