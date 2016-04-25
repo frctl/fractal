@@ -34,7 +34,6 @@ module.exports = class Asset {
             type:        this.type,
             id:          this.id,
             path:        this.path,
-            path:        this.path,
             base:        this.base,
             handle:      this.handle,
             name:        this.name,

@@ -1,10 +1,10 @@
 # API - Source Objects
 
-Source objects are a special sub-class of [Collection objects](/docs/api/collections.md). Like collections, they represent a set of entities and/or sub-collections. *Unlike* collections however, they also additionally provide source-type specific methods for working with the entities they contain, as well as holding information about the source (directory) itself.
+Source objects are a special sub-class of [Collection objects](/docs/api/collection.md). Like collections, they represent a set of entities and/or sub-collections. *Unlike* collections however, they also additionally provide source-type specific methods for working with the entities they contain, as well as holding information about the source (directory) itself.
 
 Fractal exposes two different types source objects - a **component source** and a **docs source**.
 
-All methods and properties that are provided by Collection objects are also available on source objects, plus the following additional methods/properties:
+All methods and properties that are provided by [Collection objects](/docs/api/collection.md) are also available on source objects, plus the additional methods/properties detailed below.
 
 <!-- START doctoc -->
 <!-- END doctoc -->

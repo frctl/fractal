@@ -2,7 +2,7 @@
 
 *Collection objects* are immutable objects that contain a set of items. The items can either be entities such as components, or collections themselves.
 
-Collection objects are ES6 iterators that can be used in statements such as `for...of` loops.
+Collection objects are also ES6 iterators that can be used in statements such as `for...of` loops.
 
 Fractal has four different types of collections (components, variants, pages and assets), all of which share a common set of methods and properties. Each specific type then additionally exposes a number of type-specific methods.
 
@@ -40,6 +40,8 @@ Fractal has four different types of collections (components, variants, pages and
 #### .toArray()
 
 #### .toJSON()
+
+#### .parent
 
 #### .size
 
