@@ -60,7 +60,7 @@ const fractal = require('./fractal.js'); // <-- Import the fractal.js file inste
 
 <!--  For more information on how to best integrate your component library with your production application, see the [integration guide](/docs/guides/integration.md). -->
 
-## Methods
+## Methods and properties
 
 #### .set(path, value)
 
@@ -173,9 +173,6 @@ fractal.plugin('@frctl/api-plugin');
 * `action` - *Function*
 
 Register a [custom command](/docs/commands/custom.md).
-
-
-## Properties
 
 #### .components
 
