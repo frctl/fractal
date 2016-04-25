@@ -101,3 +101,13 @@ The directory within which the static build should be generated.
 ```js
 fractal.set('plugins.web.build.path', 'build');
 ```
+
+### Build path root
+
+If you want to deploy your exported static build to a subfolder as opposed to a top level domain/subdomain, you'll need to specify a root path prefix so that the generated paths resolve correctly.
+
+For example, if you were going to deploy the build to `http://example.com/my-subfolder` you could set the build root path as follows:
+
+```js
+fractal.set('plugins.web.build.root', 'my-subfolder');
+```
