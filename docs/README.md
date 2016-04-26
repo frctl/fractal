@@ -26,8 +26,13 @@
 	* [Configuration options](/docs/documentation/configuration.md)
 * Web UI
 	* [Overview](/docs/web/overview.md)
-* Fractal API docs
+* Fractal API docs [WIP]
 	* [Overview](/docs/api/overview.md)
+	* [Fractal](/docs/api/fractal.md)
+	* [Entity](/docs/api/entity.md)
+	* [Collection](/docs/api/collection.md)
+	* [Source](/docs/api/source.md)
 * Guides
 	* [Creating components](/docs/guides/creating-components.md)
+	* [Integrations](/docs/guides/integration.md) [WIP]
 * [Glossary](/docs/glossary.md) [WIP]
