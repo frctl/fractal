@@ -1,26 +1,4 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
-
-- [API - Fractal](#api---fractal)
-  - [API](#api)
-      - [.set(path, value)](#setpath-value)
-      - [.get(path)](#getpath)
-      - [.exec(command, [stdoutCallback])](#execcommand-stdoutcallback)
-      - [.load()](#load)
-      - [.watch()](#watch)
-      - [.unwatch()](#unwatch)
-      - [.on(event, callback)](#onevent-callback)
-      - [.engine(name, moduleName, [config])](#enginename-modulename-config)
-      - [.plugin(moduleName, [config])](#pluginmodulename-config)
-      - [.command(name, [options], action)](#commandname-options-action)
-      - [.components](#components)
-      - [.docs](#docs)
-      - [.version](#version)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-# API - Fractal 
+# API - Fractal
 
 When you `require` the Fractal module, you are returned a singleton `fractal` object instance.
 
@@ -41,6 +19,27 @@ fractal.load().then(function(){
     console.log(buttonStatus);
 });
 ```
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [API](#api)
+    - [.set(path, value)](#setpath-value)
+    - [.get(path)](#getpath)
+    - [.exec(command, [stdoutCallback])](#execcommand-stdoutcallback)
+    - [.load()](#load)
+    - [.watch()](#watch)
+    - [.unwatch()](#unwatch)
+    - [.on(event, callback)](#onevent-callback)
+    - [.engine(name, moduleName, [config])](#enginename-modulename-config)
+    - [.plugin(moduleName, [config])](#pluginmodulename-config)
+    - [.command(name, [options], action)](#commandname-options-action)
+    - [.components](#components)
+    - [.docs](#docs)
+    - [.version](#version)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## API
 
