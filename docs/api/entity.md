@@ -1,5 +1,7 @@
 # API - Entity
 
+Entity object represent _things_  in your Fractal project. Fractal has four different types of entity (components, variants, pages and assets), all of which share a common set of methods and properties. Each specific type then additionally exposes a number of type-specific methods.
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
@@ -22,6 +24,7 @@
     - [.editorScope](#editorscope)
     - [.viewPath](#viewpath)
 - [Variant entities API](#variant-entities-api)
+    - [.assets()](#assets-1)
     - [.alias](#alias)
     - [.siblings](#siblings)
 - [Page entities API](#page-entities-api)
@@ -37,8 +40,6 @@
     - [.isBinary](#isbinary)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-Entity object represent _things_  in your Fractal project. Fractal has four different types of entity (components, variants, pages and assets), all of which share a common set of methods and properties. Each specific type then additionally exposes a number of type-specific methods.
 
 ## Common API
 
@@ -64,6 +65,8 @@ Entity object represent _things_  in your Fractal project. Fractal has four diff
 #### .viewPath
 
 ## Variant entities API
+
+#### .assets()
 
 #### .alias
 #### .siblings
