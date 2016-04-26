@@ -15,6 +15,7 @@ The web UI functionality itself is actually just a [Fractal plugin](/docs/plugin
   - [Static assets path](#static-assets-path)
   - [Theme](#theme)
   - [Build directory](#build-directory)
+  - [Build path root](#build-path-root)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 

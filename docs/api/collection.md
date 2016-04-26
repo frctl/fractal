@@ -6,10 +6,44 @@ Collection objects are also ES6 iterators that can be used in statements such as
 
 Fractal has four different types of collections (components, variants, pages and assets), all of which share a common set of methods and properties. Each specific type then additionally exposes a number of type-specific methods.
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-## Common methods and properties
+
+- [Collection API](#collection-api)
+    - [.items()](#items)
+    - [.first()](#first)
+    - [.last()](#last)
+    - [.eq(pos)](#eqpos)
+    - [.entities()](#entities)
+    - [.collections();](#collections)
+    - [.find(...args);](#findargs)
+    - [.findCollection(...args);](#findcollectionargs)
+    - [.flatten();](#flatten)
+    - [.flattenDeep();](#flattendeep)
+    - [.squash();](#squash)
+    - [.filter();](#filter)
+    - [.orderBy(...args);](#orderbyargs)
+    - [.toArray()](#toarray)
+    - [.toJSON()](#tojson)
+    - [.parent](#parent)
+    - [.size](#size)
+    - [.source](#source)
+- [Component Collection API](#component-collection-api)
+    - [.variants()](#variants)
+    - [.components()](#components)
+    - [.assets()](#assets)
+- [Docs Collection API](#docs-collection-api)
+    - [.pages()](#pages)
+- [Asset Collection API](#asset-collection-api)
+    - [.files()](#files)
+    - [.match()](#match)
+- [Variant Collection API](#variant-collection-api)
+    - [.default()](#default)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## Collection API
 
 #### .items()
 
@@ -48,7 +82,7 @@ Fractal has four different types of collections (components, variants, pages and
 #### .source
 
 
-## Component collections
+## Component Collection API
 
 #### .variants()
 
@@ -57,18 +91,17 @@ Fractal has four different types of collections (components, variants, pages and
 #### .assets()
 
 
-## Docs pages collections
+## Docs Collection API
 
 #### .pages()
 
-
-## Asset collections
+## Asset Collection API
 
 #### .files()
 
 #### .match()
 
 
-## Variant collections
+## Variant Collection API
 
 #### .default()

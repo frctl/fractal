@@ -1,7 +1,12 @@
 # Writing your own commands
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [Simple example](#simple-example)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 Fractal lets you easily define custom commands to help you with your project workflow, integration or debugging needs.
 
