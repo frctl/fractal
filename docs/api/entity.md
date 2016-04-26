@@ -6,15 +6,15 @@ Entity object represent _things_  in your Fractal project. Fractal has four diff
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 
-- [Common API](#common-api)
-    - [.toJSON()](#tojson)
+- [API](#api)
+  - [Common](#common)
     - [.id](#id)
     - [.name](#name)
     - [.type](#type)
     - [.handle](#handle)
     - [.order](#order)
     - [.isHidden](#ishidden)
-- [Component entities](#component-entities)
+- [Components](#components)
     - [.assets()](#assets)
     - [.variants()](#variants)
     - [.hasTag(tag)](#hastagtag)
@@ -23,13 +23,13 @@ Entity object represent _things_  in your Fractal project. Fractal has four diff
     - [.editorMode](#editormode)
     - [.editorScope](#editorscope)
     - [.viewPath](#viewpath)
-- [Variant entities API](#variant-entities-api)
+  - [Variants](#variants)
     - [.assets()](#assets-1)
     - [.alias](#alias)
     - [.siblings](#siblings)
-- [Page entities API](#page-entities-api)
+  - [Pages](#pages)
     - [.getContent()](#getcontent)
-- [Asset entities API](#asset-entities-api)
+  - [Assets](#assets)
     - [.path](#path)
     - [.base](#base)
     - [.ext](#ext)
@@ -41,9 +41,9 @@ Entity object represent _things_  in your Fractal project. Fractal has four diff
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## Common API
+## API
 
-#### .toJSON()
+### Common
 
 #### .id
 #### .name
@@ -52,7 +52,7 @@ Entity object represent _things_  in your Fractal project. Fractal has four diff
 #### .order
 #### .isHidden
 
-## Component entities
+## Components
 
 #### .assets()
 #### .variants()
@@ -64,14 +64,14 @@ Entity object represent _things_  in your Fractal project. Fractal has four diff
 #### .editorScope
 #### .viewPath
 
-## Variant entities API
+### Variants
 
 #### .assets()
 
 #### .alias
 #### .siblings
 
-## Page entities API
+### Pages
 
 #### .getContent()
 
@@ -80,7 +80,7 @@ Entity object represent _things_  in your Fractal project. Fractal has four diff
 #### .isIndex
 #### .content
 
-## Asset entities API
+### Assets
 
 #### .path
 #### .base
