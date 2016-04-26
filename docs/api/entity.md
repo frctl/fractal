@@ -14,7 +14,7 @@ Entity object represent _things_  in your Fractal project. Fractal has four diff
     - [.handle](#handle)
     - [.order](#order)
     - [.isHidden](#ishidden)
-- [Components](#components)
+  - [Components](#components)
     - [.assets()](#assets)
     - [.variants()](#variants)
     - [.hasTag(tag)](#hastagtag)
@@ -52,7 +52,7 @@ Entity object represent _things_  in your Fractal project. Fractal has four diff
 #### .order
 #### .isHidden
 
-## Components
+### Components
 
 #### .assets()
 #### .variants()
