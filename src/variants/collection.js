@@ -76,6 +76,7 @@ module.exports = class VariantCollection extends Entities {
                 return null;
             }
             conf.name = utils.slugify(conf.name.toLowerCase());
+
             const p = _.defaults(conf, {
                 dir:    opts.dir,
                 parent: component
@@ -85,6 +86,8 @@ module.exports = class VariantCollection extends Entities {
                 const viewName = `${opts.viewName}${source.setting('splitter')}${p.name}`.toLowerCase();
                 viewFile       = _.find(views, f => f.name.toLowerCase() === viewName);
                 p.view         = viewFile ? viewFile.base : opts.view;
+            } else {
+                viewFile    = _.find(views, f => f.base.toLowerCase() === p.view);
             }
             viewFile    = viewFile || defaultView;
             p.isDefault = (p.name === component.defaultName);

@@ -72,9 +72,10 @@ const library = require('my-component-library');
 
 library.components.load().then(function(components){
     // render the @button component with some context data
-    const buttonHTML = components.render('@button', {
+    components.render('@button', {
         buttonText: 'Some text for the button'
+    }).then(function(html){
+        console.log(html);
     });
-    console.log(buttonHTML);
 });
 ```
