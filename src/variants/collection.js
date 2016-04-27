@@ -22,8 +22,8 @@ module.exports = class VariantCollection extends Entities {
     getCollatedContentSync() {
         return (this.toArray().map(variant => {
             const content = variant.getContentSync();
-            const collator = this.parent.source.setting('collator');
-            return _.isFunction(this.collator) ? this.collator(content, variant) : content;
+            const collator = this.parent.collator;
+            return _.isFunction(collator) ? collator(content, variant) : content;
         })).join('\n');
     }
 
