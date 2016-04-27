@@ -134,7 +134,7 @@ module.exports = class ComponentSource extends Source {
             return this.resolve(context[`@${variant.handle}`] || variant.context).then(ctx => {
                 ctx._self = variant.toJSON();
                 return this.render(variant, ctx).then(markup => {
-                    const collator = this.setting('collator');
+                    const collator = component.collator;
                     return _.isFunction(collator) ? collator(markup, variant) : markup;
                 });
             });
