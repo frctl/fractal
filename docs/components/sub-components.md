@@ -1,4 +1,4 @@
-# Sub-components
+# Using sub-components
 
 <!-- START doctoc -->
 <!-- END doctoc -->
@@ -26,6 +26,7 @@ As you can see, the `search-box.hbs` component view file uses the standard [Hand
 It's important to note that the syntax for including one component's view template within another **will depend on which [template engine](/docs/engines/overview.md) you are using**. For instance, if you were using the [Nunjucks engine](https://github.com/frctl/nunjucks-adapter) you would use Nunjuck's `include` tag to include sub components. For example:
 
 ```html
+<!-- parent.nunj -->
 <div class="parent">
     {% include '@child' %}
 </div>
@@ -35,6 +36,129 @@ It's important to note that the syntax for including one component's view templa
 
 When you include a sub-component in the manner described above, it's important to note that you are effectively just including the contents sub-component's view file. **It will not automatically include any [context data](/docs/components) that you may have defined for that sub-component.**
 
-To pass context data into your included sub-components, you have a number of options.
+To handle passing context data for your included sub-components, you have a number of options:
 
-* Define 
+* A) Define a complete set of context data in the parent component's config file
+* B) Reference context data for sub-components using the '@handle' [static data reference syntax](/docs/components/context.md#referencing-context-from-other-components) from within the parent component's context data.
+* C) Use a helper function, such as the `render` helper that is provided by the [Fractal Handlebars helpers](https://github.com/frctl/handlebars-helpers) to render the sub-component in-place along with it's own context data.
+
+Let's look at how each of these might work in turn.
+
+### A) Define all context data in the parent component's config
+
+This is a good approach for when you want to render an instance of the sub-component that should use a **different set of context data** to that which is provided in the sub-component's config file.
+
+For example, you may want to render a 'prose' component on it's own with a set of Lorem Ipsum default content, but when pulled into a 'homepage' component you may want to override that with page-specific content.
+
+An example might look like this:
+
+```handlebars
+<!-- button.hbs -->
+<button type="button" name="submit">{{ button.text }}</button>
+```
+
+```yaml
+# button.config.yml
+context:
+  button: 
+    text: A Button
+```
+
+```handlebars
+<!-- search-box.hbs -->
+<div class="searchbox">
+    <label for="search">{{ label }}</label>
+    <input type="search" name="keywords" id="search">
+    {{> @button }}
+</div>
+```
+
+```yaml
+# search-box.config.yml
+context:
+  label: Search    
+  button: 
+    text: Go!
+```
+You can see that in this case, the parent (`search-box`) component is providing a whole new set of context data, including the `button` object with it's `text` property. The rendered output of both of these components would look like:
+
+```html
+<!-- @button -->
+<button type="button" name="submit">A Button</button>
+```
+
+```html
+<!-- @search-box -->
+<div class="searchbox">
+    <label for="search">Search</label>
+    <input type="search" name="keywords" id="search">
+    <button type="button" name="submit">Go!</button>
+</div>
+```
+So in this case the parent component is responsible for defining the context data used by both itself *and* and data needed by any sub-components.
+
+### B) Use context data '@handle' references
+
+If you *don't* want to specify new data for all the sub-components in the parent's configuration file, but would rather import the default context data for a sub-component from it's own config file, you can use the  '@handle' [static data reference syntax](/docs/components/context.md#referencing-context-from-other-components) to dynamically pull it in to the parent component's context.
+
+If we re-work the example above to do this, it would look like this:
+
+```handlebars
+<!-- button.hbs -->
+<button type="button" name="submit">{{ button.text }}</button>
+```
+
+```yaml
+# button.config.yml
+context:
+  button: 
+    text: A Button
+```
+
+```handlebars
+<!-- search-box.hbs -->
+<div class="searchbox">
+    <label for="search">{{ label }}</label>
+    <input type="search" name="keywords" id="search">
+    {{> @button }}
+</div>
+```
+
+```yaml
+# search-box.config.yml
+context:
+  label: Search    
+  button: "@button"
+```
+The last line in the `search-box.config.yml` file (`button: "@button"`) ensures that the `button` context data property will be set to the value of the context data object defined in the button component; this is a reference that is resolved when the parent component is rendered.
+
+In this case, when rendered the components will look like:
+
+```html
+<!-- @button -->
+<button type="button" name="submit">A Button</button>
+```
+
+```html
+<!-- @search-box -->
+<div class="searchbox">
+    <label for="search">Search</label>
+    <input type="search" name="keywords" id="search">
+    <button type="button" name="submit">A Button</button>
+</div>
+```
+
+You can see that in the `@search-box` component the button text is now the same as the text defined in the `button.config.yml` file.
+
+See the [documentation on referencing other component's data](/docs/components/context.md#referencing-context-from-other-components) for more information on using this technique.
+
+### C) Use a `render` helper
+
+Both the default [Handlebars template engine](/docs/engines/overview.md) and the [Nunjucks engine](https://github.com/frctl/nunjucks-adapter#helpers) (and possibly others!) give you the option of using a `render` helper in your templates.
+
+Unlike the standard partial/include syntax, the render helper renders a sub-component in-place, using it's own context data (unless overridden by any other data that has been passed into it). This is a good solution if you want to render a sub-component with it's own context data, AND you don't mind using a custom helper function to handle the rendering.
+
+> If you are planning on consuming your template files outside of Fractal, you may **not** want to use a custom helper if it is will not be supported in your target environment.
+
+See the template engine documentation for details on how to load custom helpers.
+
