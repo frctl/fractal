@@ -65,9 +65,8 @@ module.exports = class ComponentSource extends Source {
 
         opts           = opts || {};
         opts.useLayout = opts.useLayout || false;
-
-        // opts.collated  = opts.collated  || false;
-
+        opts.collate   = opts.collate  || false;
+        
         const self = this;
 
         if (!entity) {
@@ -92,7 +91,7 @@ module.exports = class ComponentSource extends Source {
             let rendered;
             if (_.includes(['component', 'variant'], entity.type)) {
                 if (entity.type == 'component') {
-                    if (entity.isCollated) {
+                    if (entity.isCollated && opts.collate) {
                         rendered = yield self._renderCollatedComponent(entity, context);
                     } else {
                         entity = entity.variants().default();

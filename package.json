@@ -1,6 +1,6 @@
 {
   "name": "@frctl/fractal",
-  "version": "0.10.9",
+  "version": "0.10.10",
   "description": "A toolkit to help you build, document and integrate component libraries into your web projects.",
   "main": "src/fractal.js",
   "repository": {
@@ -17,7 +17,7 @@
     "@allmarkedup/dirscribe": "^1.0.0",
     "@allmarkedup/fang": "^1.0.0",
     "@frctl/handlebars-adapter": "^0.4.4",
-    "@frctl/web-plugin": "^0.9.1",
+    "@frctl/web-plugin": "^0.9.7",
     "anymatch": "^1.3.0",
     "bluebird": "^3.3.3",
     "chalk": "^1.1.1",

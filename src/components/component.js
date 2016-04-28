@@ -84,9 +84,9 @@ module.exports = class Component extends Entity {
         if (!opts.notes && files.readme) {
             opts.notes = yield files.readme.read();
         }
-        if (opts.notes) {
-            opts.notes = yield opts.source._app.docs.renderString(opts.notes);
-        }
+        // if (opts.notes) {
+        //     opts.notes = yield opts.source._app.docs.renderString(opts.notes);
+        // }
         const comp = new Component(opts, files, assets);
         const variants = yield VariantCollection.create(comp, files.view, opts.variants, files.varViews, opts);
         comp.setVariants(variants);
