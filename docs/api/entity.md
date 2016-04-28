@@ -28,6 +28,7 @@ const assets = button.assets().first(); // an Asset entity
     - [.assets()](#assets)
     - [.variants()](#variants)
     - [.hasTag(tag)](#hastagtag)
+    - [.tags](#tags)
     - [.notes](#notes)
     - [.lang](#lang)
     - [.editorMode](#editormode)

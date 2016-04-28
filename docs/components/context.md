@@ -5,7 +5,7 @@
 
 
 - [Overview](#overview)
-- [Context and template partials](#context-and-template-partials)
+- [Context and template partials/sub-components](#context-and-template-partialssub-components)
   - [Passing context data from parent to child templates](#passing-context-data-from-parent-to-child-templates)
 - [Referencing context from other components](#referencing-context-from-other-components)
 

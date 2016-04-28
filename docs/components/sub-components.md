@@ -1,7 +1,16 @@
 # Including sub-components
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [Overview](#overview)
+- [Providing context data to sub-components](#providing-context-data-to-sub-components)
+  - [A) Using the `render` helper](#a-using-the-render-helper)
+  - [B) Define all context data in the parent component's config](#b-define-all-context-data-in-the-parent-components-config)
+  - [C) Use context data '@handle' references](#c-use-context-data-@handle-references)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Overview
 
