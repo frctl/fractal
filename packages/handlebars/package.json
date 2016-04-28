@@ -14,7 +14,7 @@
   },
   "homepage": "https://github.com/frctl/handlebars-adapter",
   "dependencies": {
-    "@frctl/handlebars-helpers": "^0.2.0",
+    "@frctl/handlebars-helpers": "^0.3.0",
     "handlebars": "^4.0.5",
     "lodash": "^4.0.0",
     "promised-handlebars": "^1.0.3"
