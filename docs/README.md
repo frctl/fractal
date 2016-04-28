@@ -19,6 +19,7 @@
 	* [Using preview layouts](/docs/components/layouts.md)
 	* [Providing context data to your components](/docs/components/context.md)
  	* [Defining variants](/docs/components/variants.md)
+	* [Including sub-components](/docs/components/sub-components.md)
 	* [Statuses](/docs/components/statuses.md)
 	* [Tips and tricks](/docs/components/tips.md)
 * Generating Docs

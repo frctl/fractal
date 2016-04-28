@@ -35,9 +35,9 @@ context:
 <p>This is some paragraph text</p>
 ```
 
-## Context and template partials
+## Context and template partials/sub-components
 
-When including a components as a partial in another component, it's important to understand that **only the markup, not the context data** is included.
+When including components as [sub-components](/docs/components/sub-components.md) within a parent component, it's important to understand that **only the markup, not the context data** is included.
 
 For example, a template that includes the above `simple-text` component as a partial may look like this:
 
@@ -73,6 +73,8 @@ context:
 ```
 
 Often this is behaviour is beneficial - it means your 'parent' components are completely in control of configuring their 'child' components. However in some cases it can lead to repetition of context data in config files. In this case, you can use a special syntax to import context from one component into another - see below for details.
+
+> The [documentation on sub-components](/docs/components/sub-components.md) contains more information on the various options available for rendering sub-components using their own context data.
 
 ### Passing context data from parent to child templates
 
