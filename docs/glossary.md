@@ -15,7 +15,7 @@
 
 ### Collections
 
-Collections are just groups of related components, pages or assets. If you put a set of components or pages into a folder, you are creating a collection. Component and page collections can also have configuration data associated with them, including data that can [cascade down to the items within them](/docs/configuration-files.md#configuration-inheritance). 
+Collections are just groups of related components, pages or assets. If you put a set of components or pages into a folder, you are creating a collection. Component and page collections can also have configuration data associated with them, including data that can [cascade down to the items within them](/docs/configuration-files.md#configuration-inheritance).
 
 Fractal places no limitation on how deeply you can nest component and page collections and sub-collections, or what they should be called or how they should be organised.
 
@@ -27,7 +27,11 @@ It's easy to create your own commands to run any custom tasks you might need.
 
 ### Components
 
-Components (sometimes referred to as 'patterns' or 'materials' by other tools) are the main building blocks of the system. You can define components using a template language of your choosing, supply preview ([context](/docs/components/context.md)) data to render them with when not in a 'live' environment, and much more. 
+Components (sometimes referred to as 'patterns' or 'materials' by other tools) are the main building blocks of the system. You can define components using a template language of your choosing, supply preview ([context](/docs/components/context.md)) data to render them with when not in a 'live' environment, and much more.
+
+### Sub-components
+
+[Sub-components](/docs/components/sub-components.md) are components that are included within other components, typically using whatever partial/include syntax is supported by the template engine that the project is using.
 
 ### Documentation
 

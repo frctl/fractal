@@ -1,4 +1,8 @@
-# Guide: Integrating your component library
+# Guide: Integration guide
+
+> This guide is currently a **work in progress** and may be incomplete at this time.
+
+Once you've built your component library, you can use Fractal's API to help integrate your components into your site, application or build workflow.
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -9,8 +13,6 @@
   - [2. Require as a dependency in your application / site / build tool](#2-require-as-a-dependency-in-your-application--site--build-tool)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-Once you've built your component library, you can use Fractal's API to integrate your components into your build tool or site.
 
 ## Integration as an NPM dependency
 

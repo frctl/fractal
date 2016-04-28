@@ -10,6 +10,7 @@
 * [Working with configuration files](/docs/configuration-files.md)
 * [Template engines](/docs/engines/overview.md)
 * [Collections](/docs/collections.md)
+* [Assets](/docs/assets.md)
 * Commands
 	* [Overview](/docs/commands/overview.md)
 	* [Writing your own commands](/docs/commands/custom.md)

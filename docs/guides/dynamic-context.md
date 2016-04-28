@@ -1,11 +1,10 @@
-# Guide: Dynamic Context Data
+<!-- DOCTOC SKIP -->
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+# Guide: Dynamic Context Data
 
 Fractal provides the option [to use CommonJS-style modules](/docs/configuration-files.md#javascript-module-format) to define configuration data for components and documentation pages.
 
-Whilst slightly more complex than using JSON or YAML as a data format, it has the advantage of letting you be able to use the full power of JavaScript to generate [context data](/docs/components/context.md) for your components. This can be handy if you want to provide data to your components from an API, or to use a library such as [Faker](https://github.com/marak/Faker.js/) to generate placeholder data for your components.
+Whilst slightly more complex than using JSON or YAML as a data format, it has the advantage of letting you be able to use the full power of JavaScript to generate [context data](/docs/components/context.md) for your components. This can be handy if you want to provide data to your components from an API, or to use a library such as [Faker](https://github.com/marak/Faker.js) to generate placeholder data for your components.
 
 To give some examples of this in action, we will look at a few different ways that we could generate context data for a 'member list' component. The view template for this component looks like this:
 
@@ -48,7 +47,7 @@ That works fine. But what if we wanted to have 10 people in our list? Or even 10
 
 ## Generating dynamic data with Faker
 
-To save us hard-coding lots of context data into our data file, we can use the excellent [faker.js](https://github.com/marak/Faker.js/) library to generate a list of members for us.
+To save us hard-coding lots of context data into our data file, we can use the excellent [faker.js](https://github.com/marak/Faker.js) library to generate a list of members for us.
 
 First you'll need to make sure you have installed Faker in your component library project - `npm install faker --save`.
 
@@ -80,13 +79,13 @@ When our component is now rendered with this data, we will get a list of ten mem
 
 Obviously this is a simple example, but the principle can often be useful when you want to preview components with large amounts of data in them.
 
-## Using data from an API 
+## Using data from an API
 
 If you already have an API for your site or application, and you want to preview your components using 'real' data (or indeed if you want to use content from any other APIs) then you can handle that in your component configuration files too.
 
 The key to this is that if any values in the context data are [Promises](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise), Fractal will first wait for those promises to be resolved before rendering the template using the context data. So we can use a Promise-based request module (such as [request-promise](https://github.com/request/request-promise)) to make API requests and then just pass the returned promise into our context data object.
 
-In the following example, we are going to make a request to our fictional members API endpoint, which returns a JSON-encoded list of members. 
+In the following example, we are going to make a request to our fictional members API endpoint, which returns a JSON-encoded list of members.
 
 ```js
 // member-list.config.js

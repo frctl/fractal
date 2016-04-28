@@ -46,3 +46,4 @@ If you add a README.md file into a component directory, the contents will be use
 
 > **Note**: Any H1 headings from the file will be stripped from this file before being displayed in any UI. This means you can still have an main heading in your README without duplicate headings showing up in places that use contents of the README, such as in the web UI.
 
+It's worth noting that the content in your components' README files is all rendered using the same process as the rest of your [project documentation](/docs/documentation/overview.md). That means that prior to being run through the Markdown parser, the template are parsed using whichever [template engine](/docs/engines/overview.md) is configured for your documentation pages (Handlebars is the default). 
