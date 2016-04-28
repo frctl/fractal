@@ -16,7 +16,7 @@ Once you've built your component library, you can use Fractal's API to integrate
 
 This example shows how you can publish your Fractal project as an NPM module which you can then pull into your build tool or application/site as a dependency.
 
-### 1. Update your Component library
+#### 1. Update your Component library
 
 First make sure that all paths in your fractal.js file are relative to the fractal.js file itself. You can do this using by prefixing them using Node's `__dirname` global. You also then need to export the configured fractal instance using the `module.exports` statement.
 
@@ -46,7 +46,7 @@ Then in your project's `package.json`, set the `main` property to be your `fract
 
 Depending on your desired workflow, you should then **publish your Fractal project as an NPM module**, or alternatively just **push it to a remote git repository** - NPM can happily handle both cases. For brevity, in this example we'll assume it's been published as a NPM module.
 
-### 2. Require as a dependency in your application / site / build tool
+#### 2. Require as a dependency in your application / site / build tool
 
 You can now `npm install` your component library as a versioned dependency into your main project. The project could be a static site build tool, an fully-fledged Node web application or anything in between.
 
