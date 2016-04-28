@@ -95,9 +95,9 @@ module.exports = class VariantCollection extends Entities {
             p.viewPath  = Path.join(p.dir, p.view);
             p.handle    = `${component.handle}${source.setting('splitter')}${p.name}`.toLowerCase();
             p.isHidden  = _.isUndefined(conf.hidden) ? viewFile.isHidden : conf.hidden;
-            if (p.notes) {
-                p.notes = yield opts.source._app.docs.renderString(p.notes);
-            }
+            // if (p.notes) {
+            //     p.notes = yield opts.source._app.docs.renderString(p.notes);
+            // }
             return new Variant(p, viewFile, assets.filter(isRelated(p.handle)));
 
         }));
