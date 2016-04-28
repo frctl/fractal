@@ -119,7 +119,7 @@
             <div class="Browser-panel Browser-notes" data-role="tab-panel" id="browser-{{ entity.id }}-panel-notes">
                 <div class="Prose">
                     {% if entity.notes %}
-                    {{ entity.notes }}
+                    {{ entity.notes | render }}
                     {% else %}
                     <p class="Browser-isEmptyNote">There are no notes for this item.</p>
                     {% endif %}
