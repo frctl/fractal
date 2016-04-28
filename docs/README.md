@@ -35,5 +35,6 @@
 	* [Source](/docs/api/source.md)
 * Guides
 	* [Creating components](/docs/guides/creating-components.md)
+	* [Generating dynamic context data](/docs/guides/dynamic-context.md)
 	* [Integrations](/docs/guides/integration.md) [WIP]
 * [Glossary](/docs/glossary.md) [WIP]
