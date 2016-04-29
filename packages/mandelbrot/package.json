@@ -14,7 +14,6 @@
   "license": "MIT",
   "scripts": {
     "assets": "node ./assets/scss/schemes.js & gulp",
-    "preinstall": "npm install --ignore-scripts",
     "postinstall": "npm run assets"
   },
   "devDependencies": {
