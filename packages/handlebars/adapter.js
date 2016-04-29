@@ -48,7 +48,7 @@ module.exports = function(source, config){
         instance.registerPartial(name, partial);
     });
 
-    function loadViews(source) {
+    function loadViews() {
         for (let item of source.flattenDeep()) {
             instance.registerPartial('@' + item.handle, item.content);
             if (item.alias) {
