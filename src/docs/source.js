@@ -69,8 +69,13 @@ module.exports = class DocsSource extends Source {
         return anymatch(`**/*${this.setting('ext')}`, file.path);
     }
 
-    isConfig(file) {
-        return anymatch(`**/*.config.{js,json,yaml,yml}`, file.path);
+    fileType(file) {
+        if (this.isConfig(file)) {
+            return 'config';
+        }
+        if (this.isPage(file)) {
+            return 'page';
+        }
     }
 
 };

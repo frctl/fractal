@@ -66,7 +66,7 @@ module.exports = class ComponentSource extends Source {
         opts           = opts || {};
         opts.useLayout = opts.useLayout || false;
         opts.collate   = opts.collate  || false;
-        
+
         const self = this;
 
         if (!entity) {
@@ -219,24 +219,35 @@ module.exports = class ComponentSource extends Source {
         }
     }
 
+    fileType(file) {
+        if (this.isAsset(file)) {
+            return 'asset';
+        }
+        if (this.isConfig(file)) {
+            return 'config';
+        }
+        if (this.isView(file) || this.isVarView(file)) {
+            return 'view';
+        }
+        if (this.isReadme(file)) {
+            return 'readme';
+        }
+    }
+
     isView(file) {
-        return anymatch([`**/*${this.setting('ext')}`, `!**/*${this.setting('splitter')}*${this.setting('ext')}`, `!**/*.config.${this.setting('ext')}`], file.path.toLowerCase());
+        return anymatch([`**/*${this.setting('ext')}`, `!**/*${this.setting('splitter')}*${this.setting('ext')}`, `!**/*.config.${this.setting('ext')}`], this._getPath(file));
     }
 
     isVarView(file) {
-        return anymatch(`**/*${this.setting('splitter')}*${this.setting('ext')}`, file.path.toLowerCase());
+        return anymatch(`**/*${this.setting('splitter')}*${this.setting('ext')}`, this._getPath(file));
     }
-
-    isConfig(file) {
-        return anymatch(`**/*.config.{js,json,yaml,yml}`, file.path.toLowerCase());
-    }
-
+    
     isReadme(file) {
-        return anymatch(`**/readme.md`, file.path.toLowerCase());
+        return anymatch(`**/readme.md`, this._getPath(file));
     }
 
     isAsset(file) {
-        return anymatch(['**/*.*', `!**/*${this.setting('ext')}`, `!**/*.config.{js,json,yaml,yml}`, `!**/readme.md`], file.path.toLowerCase());
+        return anymatch(['**/*.*', `!**/*${this.setting('ext')}`, `!**/*.config.{js,json,yaml,yml}`, `!**/readme.md`], this._getPath(file));
     }
 
 };

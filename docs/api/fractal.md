@@ -113,7 +113,7 @@ Stop any currently running watch tasks.
 Listen out and respond to lifecycle events.
 
 ```js
-fractal.on('changed', function(type, source, data){
+fractal.on('source:changed', function(type, source, data){
 	console.log(`Change in ${type} directory`);
 });
 ```

@@ -5,6 +5,7 @@ const Promise      = require('bluebird');
 const Path         = require('path')
 const _            = require('lodash');
 const chokidar     = require('chokidar');
+const anymatch     = require('anymatch');
 const utils        = require('./utils');
 const console      = require('./console');
 const Collection   = require('./collection');
@@ -78,14 +79,14 @@ class Source extends Collection {
                 console.debug(`Finished parsing ${this.name} directory`);
                 this.isLoaded = true;
                 this.emit('loaded', this);
-                this._app.emit('loaded', this.name, this);
+                this._app.emit('source:loaded', this.name, this);
                 return source;
             });
         }
         return Promise.resolve(this);
     }
 
-    refresh(data) {
+    refresh() {
         if (!this.isLoaded) {
             return this.load();
         }
@@ -95,8 +96,6 @@ class Source extends Collection {
         return this._build().then(source => {
             console.debug(`Finished parsing ${this.name} directory`);
             this.isLoaded = true;
-            this.emit('changed', this, data);
-            this._app.emit('changed', this.name, this, data);
             return source;
         });
     }
@@ -111,11 +110,21 @@ class Source extends Collection {
             this._monitor.on('ready', () => {
                 this._monitor.on('all', (event, path) => {
                     console.debug(`Change in ${this.name} directory`);
-                    this.refresh({
+
+                    const data = {
                         event: event,
                         path: path,
-                        isAsset: this.isAsset({ path: path })
+                        type: this.fileType(path)
+                    };
+
+                    this.emit('changed', this, data);
+                    this._app.emit('source:changed', this.name, this, data);
+
+                    this.refresh().then(source => {
+                        this.emit('updated', this, data);
+                        this._app.emit('source:updated', this.name, this, data);
                     });
+
                 });
             });
         }
@@ -186,8 +195,19 @@ class Source extends Collection {
         return self;
     }
 
-    isAsset() {
-        return false;
+    fileType(file) {
+        if (this.isConfig(file)) {
+            return 'config';
+        }
+    }
+
+    isConfig(file) {
+        return anymatch(`**/*.config.{js,json,yaml,yml}`, this._getPath(file));
+    }
+
+    _getPath(file) {
+        const filePath = _.isString(file) ? file : file.path;
+        return filePath.toLowerCase();
     }
 
 }
