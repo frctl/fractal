@@ -66,7 +66,7 @@ module.exports = class DocsSource extends Source {
     }
 
     isPage(file) {
-        return anymatch(`**/*${this.setting('ext')}`, file.path);
+        return anymatch(`**/*${this.setting('ext')}`, this._getPath(file));
     }
 
     fileType(file) {

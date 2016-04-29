@@ -21,6 +21,7 @@ module.exports = class Component extends Entity {
         this.title       = opts.title || this.label;
         this.defaultName = opts.default ? utils.slugify(opts.default.toLowerCase()) : 'default';
         this.notes       = opts.notes || null;
+        this.notesFromFile = opts.notesFromFile || false;
         this.lang        = files.view.lang.name;
         this.editorMode  = files.view.lang.mode;
         this.editorScope = files.view.lang.scope;
@@ -81,12 +82,10 @@ module.exports = class Component extends Entity {
     static *create(opts, files, assets) {
 
         opts.notes = opts.notes || opts.readme;
-        if (!opts.notes && files.readme) {
+        if (!opts.notes && files.readme || opts.notesFromFile && files.readme) {
+            opts.notesFromFile = true;
             opts.notes = yield files.readme.read();
         }
-        // if (opts.notes) {
-        //     opts.notes = yield opts.source._app.docs.renderString(opts.notes);
-        // }
         const comp = new Component(opts, files, assets);
         const variants = yield VariantCollection.create(comp, files.view, opts.variants, files.varViews, opts);
         comp.setVariants(variants);
