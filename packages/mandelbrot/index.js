@@ -2,7 +2,7 @@
 
 const Path        = require('path');
 const packageJSON = require('./package.json');
-const schemes     = require('./assets/schemes.json');
+// const schemes     = require('./assets/schemes.json');
 
 module.exports = function(){
 
@@ -20,11 +20,11 @@ module.exports = function(){
     this.favicon = Path.join(__dirname, 'assets/favicon.ico');
     this.error   = 'pages/error.nunj';
 
-    Object.defineProperty(this, 'accent', {
-        get: () => {
-            return findScheme(this.config.skin || 'default').accent;
-        }
-    });
+    // Object.defineProperty(this, 'accent', {
+    //     get: () => {
+    //         return findScheme(this.config.skin || 'default').accent;
+    //     }
+    // });
 
     this.static(Path.join(__dirname, 'dist'), `/theme`);
 
@@ -84,15 +84,15 @@ module.exports = function(){
     };
 };
 
-function findScheme(name) {
-    let fallback;
-    for (let scheme of schemes) {
-        if (scheme.name === name) {
-            return scheme;
-        }
-        if (scheme.name === 'default') {
-            fallback = scheme;
-        }
-    }
-    return fallback;
-}
+// function findScheme(name) {
+//     let fallback;
+//     for (let scheme of schemes) {
+//         if (scheme.name === name) {
+//             return scheme;
+//         }
+//         if (scheme.name === 'default') {
+//             fallback = scheme;
+//         }
+//     }
+//     return fallback;
+// }

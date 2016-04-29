@@ -3,16 +3,16 @@
 const gulp              = require('gulp');
 const sass              = require('gulp-sass');
 const sourcemaps        = require('gulp-sourcemaps');
-const source            = require('vinyl-source-stream');
-const buffer            = require('vinyl-buffer');
-const browserify        = require('browserify');
-const watchify          = require('watchify');
-const babel             = require('babelify');
 const autoprefixer      = require('gulp-autoprefixer');
 const sassGlob          = require('gulp-sass-glob');
 const stylelint         = require('gulp-stylelint').default;
 const stylelintReporter = require('gulp-stylelint-console-reporter').default;
 const uglify            = require('gulp-uglify');
+const browserify        = require('browserify');
+const watchify          = require('watchify');
+const babel             = require('babelify');
+const source            = require('vinyl-source-stream');
+const buffer            = require('vinyl-buffer');
 const del               = require('del');
 
 
@@ -26,8 +26,8 @@ gulp.task('clean:js', function() {
 
 
 // CSS
-gulp.task('css', ['clean:css'], function() {
-  return gulp.src('./assets/scss/schemes/*.scss')
+gulp.task('css', ['css:clean'], function() {
+  return gulp.src('./assets/scss/mandelbrot.scss')
     .pipe(stylelint({
         reporters: [stylelintReporter()]
     }))
@@ -40,7 +40,7 @@ gulp.task('css', ['clean:css'], function() {
     .pipe(gulp.dest('./dist/css'));
 });
 
-gulp.task('clean:css', function() {
+gulp.task('css:clean', function() {
     return del(['./dist/css']);
 });
 
@@ -50,22 +50,12 @@ gulp.task('css:watch', function () {
 
 
 // Fonts
-gulp.task('fonts', ['clean:fonts'], function() {
-    gulp.src([
-        './node_modules/open-sans-fontface/fonts/Regular/OpenSans-Regular.woff',
-        './node_modules/open-sans-fontface/fonts/Regular/OpenSans-Regular.woff2',
-        './node_modules/open-sans-fontface/fonts/Semibold/OpenSans-Semibold.woff',
-        './node_modules/open-sans-fontface/fonts/Semibold/OpenSans-Semibold.woff2',
-        './node_modules/open-sans-fontface/fonts/Italic/OpenSans-Italic.woff',
-        './node_modules/open-sans-fontface/fonts/Italic/OpenSans-Italic.woff2',
-        './node_modules/open-sans-fontface/fonts/SemiboldItalic/OpenSans-SemiboldItalic.woff',
-        './node_modules/open-sans-fontface/fonts/SemiboldItalic/OpenSans-SemiboldItalic.woff2',
-        './node_modules/hack-font/build/webfonts/fonts/woff/*.woff',
-        './node_modules/hack-font/build/webfonts/fonts/woff2/*.woff2'
-    ]).pipe(gulp.dest('./dist/fonts'));
+
+gulp.task('fonts', ['fonts:clean'], function() {
+   gulp.src('./assets/fonts/**/*').pipe(gulp.dest('./dist/fonts'));
 });
 
-gulp.task('clean:fonts', function() {
+gulp.task('fonts:clean', function() {
     return del(['./dist/fonts']);
 });
 
@@ -75,11 +65,11 @@ gulp.task('fonts:watch', function () {
 
 
 // Images
-gulp.task('img', ['clean:img'], function() {
+gulp.task('img', ['img:clean'], function() {
    gulp.src('./assets/img/**/*').pipe(gulp.dest('./dist/img'));
 });
 
-gulp.task('clean:img', function() {
+gulp.task('img:clean', function() {
     return del(['./dist/img']);
 });
 
@@ -88,30 +78,16 @@ gulp.task('img:watch', function () {
 });
 
 
-// Icons
-gulp.task('icons', ['clean:icons'], function() {
-   gulp.src('./assets/icons/**/*').pipe(gulp.dest('./dist/icons'));
-});
-
-gulp.task('clean:icons', function() {
-    return del(['./dist/icons']);
-});
-
-gulp.task('icons:watch', function () {
-    gulp.watch('./assets/icons/**/*', ['icons']);
-});
-
-
 // Task sets
-gulp.task('watch', ['css:watch', 'js:watch', 'img:watch', 'icons:watch']);
+gulp.task('watch', ['css:watch', 'js:watch', 'img:watch']);
 
-gulp.task('default', ['fonts', 'css', 'js', 'img', 'icons']);
+gulp.task('default', ['fonts', 'css', 'js', 'img']);
 
 
 // Utils
 function compileJS(watch) {
 
-    let bundler = browserify('./assets/js/build.js', {
+    let bundler = browserify('./assets/js/mandelbrot.js', {
         debug: true
     }).transform(babel, {
         presets: ["es2015"]
@@ -131,7 +107,7 @@ function compileJS(watch) {
                 console.error(err.message);
                 // this.emit('end');
             })
-            .pipe(source('build.js'))
+            .pipe(source('mandelbrot.js'))
             .pipe(buffer());
 
         if (!watch) {

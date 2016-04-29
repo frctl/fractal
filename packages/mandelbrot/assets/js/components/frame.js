@@ -1,13 +1,10 @@
 'use strict';
 
 const $       = global.jQuery;
-const Hammer  = require('hammerjs');
 const storage = require('../storage');
 const utils   = require('../utils');
 const events  = require('../events');
 const config  = require('../config');
-
-delete Hammer.defaults.cssProps.userSelect;
 
 module.exports = function(element){
 
@@ -23,7 +20,6 @@ module.exports = function(element){
     const main         = body.children('[data-role="main"]');
     const handle       = body.children('[data-role="frame-resize-handle"]');
     const sidebarMin   = parseInt(sidebar.css('min-width'), 10);
-    // const touch        = new Hammer(el[0]);
 
     let sidebarWidth   = utils.isSmallScreen() ? sidebarMin : storage.get(`frame.sidebar`, sidebar.outerWidth());
     let sidebarState   = utils.isSmallScreen() ? 'closed' : storage.get(`frame.state`, 'open');
@@ -31,8 +27,6 @@ module.exports = function(element){
     let dragOccuring   = false;
     let isInitialClose = false;
     let handleClicks   = 0;
-
-    // touch.get('swipe').set({ direction: Hammer.DIRECTION_HORIZONTAL });
 
     sidebar.outerWidth(sidebarWidth);
 
@@ -88,11 +82,6 @@ module.exports = function(element){
         }
     });
 
-    // Touch events
-
-    // touch.on('swipeleft', closeSidebar);
-    // touch.on('swiperight', openSidebar);
-
     // Global event listeners
 
     events.on('toggle-sidebar', toggleSidebar);
@@ -122,7 +111,6 @@ module.exports = function(element){
         }
         sidebarProps.transition = isInitialClose ? 'none' : '.3s ease all';
         body.css(sidebarProps);
-        // handle.addClass('is-disabled');
         sidebarState = 'closed';
         el.addClass('is-closed');
         storage.set(`frame.state`, sidebarState);
@@ -140,7 +128,6 @@ module.exports = function(element){
             transition: '.3s ease all',
             transform: `translate3d(0, 0, 0)`
         });
-        // handle.removeClass('is-disabled');
         sidebarState = 'open';
         el.removeClass('is-closed');
         storage.set(`frame.state`, sidebarState);
