@@ -26,7 +26,7 @@ The web UI can be accessed in two ways:
 1. You can start a **local server** to run it *dynamically*, which will mean that any local changes to your components or documentation pages are immediately reflected in the UI. This is great for when you are *developing* your component library.
 2. You can generate a **static build** of the web UI, which is great for when you are ready to upload it to a server to share with others.
 
-> This documentation assumes that you are using the [Fractal interactive CLI](/docs/commands/overview.md#the-fractal-interactive-cli-sparkles). To enter interactive mode, run the `fractal` command in your terminal (from within your project directory) before using the commands below.
+> If you are using the [Fractal interactive CLI](/docs/commands/overview.md#the-fractal-interactive-cli-sparkles) then these commands can be run without the `fractal` prefix once you have dropped into interactive mode.
 
 ### Starting the local development server
 
@@ -37,26 +37,19 @@ You can provide the following (optional) command line options to override the de
 * `-p, --port <port-number>` - the port number to use, for example `5000`.
 * `-t, --theme <theme-name>` - a custom theme to use.
 * `-s, --sync` - whether to use [BrowserSync](https://www.browsersync.io) to provide auto-refresh and syncing capabilities
-
-If you are *not* using the [Fractal interactive CLI](/docs/overview.md#the-fractal-interactive-cli-sparkles) and are instead using 'regular' terminal commands, then it's important to note that by default Fractal will not be watching your filesystem for changes. In this case you may want to use the watch flag to make sure your changes show up in the web UI:
-
 * `-w, --watch` - whether to watch components and documentation pages for changes
 
-like so:
-
-```
-fractal start --watch
-```
-
-> Note that themes must be installed before they can be used. See the [themes documentation](/docs/web/themes.md) for more information on creating and using custom themes.
+> If you using the [Fractal interactive CLI](/docs/overview.md#the-fractal-interactive-cli-sparkles) then you don't need to use the watch command - Fractal will automatically be watching your filesystem for changes.
 
 As an example, the command:
 
 ```shell
-start --port 4000 --theme my-custom-theme
+fractal start --watch --port 4000 --theme my-custom-theme
 ```
 
-Would start the preview server at the URL `http://localhost:4000` using the custom theme `my-custom-theme`
+Would start the preview server at the URL `http://localhost:4000` using the custom theme `my-custom-theme` and then watch the filesystem for changes.
+
+> Note that themes must be installed before they can be used. See the [themes documentation](/docs/web/themes.md) for more information on creating and using custom themes.
 
 ### Building a static version of the web UI
 
@@ -67,7 +60,7 @@ You can provide the following optional  command line options to override the def
 * `-t, --theme <theme-name>` - a custom theme to use.
 
 ```shell
-build --theme my-custom-theme
+fractal build --theme my-custom-theme
 ```
 
 Would generate a static build using the custom theme `my-custom-theme`.
