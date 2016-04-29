@@ -80,7 +80,7 @@ module.exports = function(source, config){
         nj.addGlobal(name, value);
     });
 
-    function loadViews(source) {
+    function loadViews() {
         viewCache = source.flattenDeep().items();
     }
 
