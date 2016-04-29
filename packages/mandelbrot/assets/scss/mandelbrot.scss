@@ -1,0 +1,49 @@
+// $color-accent: #14f;
+// $color-complement: #fff;
+// $color-link: #28f;
+
+// General
+
+$color-link: #28f;
+$color-text: #505462;
+
+$font-family-monospace: Hack, Consolas, Monaco, "Andale Mono", monospace;
+$font-family-sans-serif: "Open Sans", Helvetica, Arial, sans-serif;
+
+
+// Header
+
+$color-header-bg: $color-accent !default;
+$color-header-content: #fff !default;
+$color-header-splitter: #fff !default;
+
+// Sidebar
+
+
+$color-sidebar-bg: #f7f7f8;
+$color-sidebar-heading: ; // section headings such as 'components', 'docs'
+
+// $frame-border-color: ;
+//
+// $code-bg-color: ;
+
+
+
+
+
+
+
+
+
+$hue: hue($color-accent);
+
+$color-alpha: hsl($hue, 10, 20);
+$color-alpha-tint-light: rgba($color-alpha, 0.25);
+$color-alpha-tint-lighter: rgba($color-alpha, 0.1);
+$color-alpha-tint-lightest: rgba($color-alpha, 0.05);
+$color-beta: hsl($hue, 10, 35);
+$color-gamma: hsl($hue, 10, 97);
+$color-delta: hsl($hue, 10, 100);
+
+@import "core/all";
+@import "components/**/*.scss";
