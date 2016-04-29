@@ -78,8 +78,8 @@ class Source extends Collection {
             return this._build().then(source => {
                 console.debug(`Finished parsing ${this.name} directory`);
                 this.isLoaded = true;
-                this.emit('loaded', this);
-                this._app.emit('source:loaded', this.name, this);
+                this.emit('loaded');
+                this._app.emit('source:loaded', this);
                 return source;
             });
         }
@@ -117,12 +117,13 @@ class Source extends Collection {
                         type: this.fileType(path)
                     };
 
-                    this.emit('changed', this, data);
-                    this._app.emit('source:changed', this.name, this, data);
+                    this.emit('changed', data);
+                    this._app.emit('source:changed', this, data);
 
                     this.refresh().then(source => {
-                        this.emit('updated', this, data);
-                        this._app.emit('source:updated', this.name, this, data);
+                        this.emit('updated', data);
+                        this._app.emit('source:updated', this, data);
+                        return source;
                     });
 
                 });

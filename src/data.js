@@ -10,8 +10,8 @@ const console = require('./console');
 
 module.exports = function (app) {
 
-    app.on('source:changed', function(type, source, data){
-        if (type === 'components' && data.type === 'config') {
+    app.on('source:changed', function(source, data){
+        if (data.type === 'config') {
             let filePath = Path.relative(__dirname, data.path);
             filePath = require.resolve(filePath);
             if (require.cache[filePath]) {

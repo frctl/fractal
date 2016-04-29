@@ -143,3 +143,7 @@ When you access the `.docs` property on the [main fractal object](/docs/api/frac
 * `context` - *Object* [optional]
 
 Render a documentation page using the [template engine](/docs/engines/overview.md) that has has been configured for the source.
+
+<!-- ## Source Events
+
+Each source is also a Node EventEmitter. -->

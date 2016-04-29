@@ -113,8 +113,8 @@ Stop any currently running watch tasks.
 Listen out and respond to lifecycle events.
 
 ```js
-fractal.on('source:changed', function(type, source, data){
-	console.log(`Change in ${type} directory`);
+fractal.on('source:changed', function(sourceType, source, data){
+	console.log(`Change in ${sourceType} directory`);
 });
 ```
 
@@ -166,3 +166,47 @@ A [Source object](/docs/api/source.md) describing the documentation pages in the
 #### .version
 
 The version of the local Fractal install.
+
+## events
+
+The main Fractal instance emits events that can be listened to via using the .on() method documented above.
+
+Available events to listen for are described below:
+
+#### source:loaded
+
+Emitted when Fractal has finished the initial parse of the source directory.
+
+```js
+fractal.on('source:loaded', function(source){
+	console.log(`${source.name} has been loaded`);
+});
+```
+
+* `source` - the [Source](/docs/api/source.md) object that has finished loading
+
+#### source:changed
+
+Emitted when one or more files in a component or documentation source are added, removed or edited, but _before_ Fractal has re-parsed the contents of the source directory.
+
+```js
+fractal.on('source:changed', function(source, eventData){
+	console.log(`Change in ${source.name} directory`);
+});
+```
+
+* `source` - the [Source](/docs/api/source.md) object for the source that has had a change to one of it's files
+* `eventData` - an event data object, e.g. `{ event: 'change', path: 'path/to/file.scss', type: 'asset' }`
+
+#### source:updated
+
+Emitted when Fractal has finished re-parsing the source directory after a change.
+
+```js
+fractal.on('source:updated', function(source, eventData){
+	console.log(`${source.name} has been updated`);
+});
+```
+
+* `source` - the [Source](/docs/api/source.md) object that has been updated
+* `eventData` - an event data object, e.g. `{ event: 'change', path: 'path/to/file.scss', type: 'asset' }`
