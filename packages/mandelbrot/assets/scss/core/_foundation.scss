@@ -5,17 +5,17 @@
 }
 
 ::selection {
-    background-color: rgba($link-color, 0.075);
+    background-color: rgba($color-link, 0.075);
 }
 
 html {
     position: relative;
     height: 100%;
     width: 100%;
-    background: $color-delta;
+    background: $color-body-bg;
     box-sizing: border-box;
     font: 16px/#{(24/16)} $font-family-sans-serif;
-    color: $color-beta;
+    color: $color-text;
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
 }
@@ -109,17 +109,17 @@ svg {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: $color-alpha-tint-lighter;
+    background: $color-scrollbar-thumb;
     border: 0 none transparent;
     border-radius: 0;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: $color-alpha-tint-lighter;
+    background: $color-scrollbar-thumb-hover;
 }
 
 ::-webkit-scrollbar-thumb:active {
-    background: $color-alpha-tint-light;
+    background: $color-scrollbar-thumb-hover;
 }
 
 ::-webkit-scrollbar-track {
@@ -146,7 +146,7 @@ h3,
 h4,
 h5,
 h6 {
-    color: $color-alpha;
+    color: $color-heading;
     font-weight: bold;
 }
 

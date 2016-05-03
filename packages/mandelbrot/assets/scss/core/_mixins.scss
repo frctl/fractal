@@ -39,7 +39,7 @@
 
     &:hover,
     &:active {
-        background-color: $color-alpha-tint-lightest;
+        background-color: $color-draghandle-hover;
     }
 
     &.is-disabled {
