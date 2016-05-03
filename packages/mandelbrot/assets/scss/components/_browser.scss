@@ -12,7 +12,7 @@
     flex: 0 0 auto;
     align-items: center;
     width: 100%;
-    box-shadow: inset 0 -1px 0 0 $color-alpha-tint-lighter;
+    box-shadow: inset 0 -1px 0 0 $color-frame-border;
 }
 
 .Browser-tabs {
@@ -24,13 +24,16 @@
 
 .Browser-tab {
     @include border-inline(start, 0.125rem solid transparent);
-    @include border-inline(end, 1px solid $color-alpha-tint-lighter);
+    @include border-inline(end, 1px solid $color-frame-border);
 
     a {
         @include font(navigation);
-        @include link-default($color-beta, none);
+        @include link-default($color-text, none);
         display: block;
         padding: 0.625rem 0.75rem;
+        &:hover {
+            
+        }
     }
 
     svg {
@@ -39,13 +42,13 @@
     }
 
     &:hover {
-        background-color: $color-alpha-tint-lightest;
+        // background-color: $color-browser-panel-bg;
     }
 
     &.is-active {
         @include border-inline-color(start, $color-link);
-        @include border-inline-color(end, $color-alpha-tint-lighter);
-        background-color: $color-gamma;
+        @include border-inline-color(end, $color-frame-border);
+        background-color: $color-browser-panel-bg;
 
         a {
             font-weight: bold;
@@ -69,7 +72,7 @@
     overflow: auto;
     position: relative;
     width: 100%;
-    background-color: $color-gamma;
+    background-color: $color-browser-panel-bg;
 
     &.is-active {
         display: block;
@@ -87,7 +90,7 @@
 
 .Browser-codeHeader {
     flex: 0 0 auto;
-    border-bottom: 1px solid $color-alpha-tint-lighter;
+    border-bottom: 1px solid $color-frame-border;
     padding: 0.5rem;
 }
 
@@ -95,13 +98,13 @@
     flex: 1 1 auto;
     display: flex;
     overflow: auto;
-    background-color: $color-gamma;
+    background-color: $color-browser-code-bg;
     -webkit-overflow-scrolling: touch;
 }
 
 .Browser-fileSelector {
     @include font(navigation);
-    border: 1px solid $color-alpha-tint-light;
+    border: 1px solid $color-frame-border;
 }
 
 .Browser-fileContent {
@@ -120,5 +123,6 @@
 
 .Browser-isEmptyNote {
     font-style: italic;
-    color: $color-alpha-tint-light;
+    color: $color-text;
+    opacity: 0.6;
 }

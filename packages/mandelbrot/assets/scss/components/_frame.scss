@@ -51,12 +51,12 @@
 }
 
 .Frame-panel--sidebar {
-    @include border-inline(end, 1px solid $color-alpha-tint-light);
+    @include border-inline(end, 1px solid $color-frame-border);
     flex: 0 0 auto;
     width: $width-sidebar;
     min-width: $width-sidebar;
     max-width: ($width-sidebar * 2);
-    background-color: $color-gamma;
+    background-color: $color-sidebar-bg;
     padding: 1rem 0;
 
     @include mq($until: navCollapse) {

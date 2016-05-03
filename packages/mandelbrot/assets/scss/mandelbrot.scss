@@ -1,49 +1,47 @@
-// $color-accent: #14f;
-// $color-complement: #fff;
-// $color-link: #28f;
+$theme-accent: #14f;
+$theme-complement: #fff;
+$theme-link: #28f;
 
-// General
+$theme-background: #fff;
+$theme-background-contrast: #f7f7f8;
 
-$color-link: #28f;
+
+// Specifics
+
+$color-link: $theme-link;
 $color-text: #505462;
+$color-heading: #444;
 
 $font-family-monospace: Hack, Consolas, Monaco, "Andale Mono", monospace;
 $font-family-sans-serif: "Open Sans", Helvetica, Arial, sans-serif;
 
+$color-body-bg: #fff;
 
-// Header
+$color-scrollbar-thumb: #ddd;
+$color-scrollbar-thumb-hover: #ccc;
+$color-frame-border: #ddd;
+$color-draghandle-hover: #fffff5;
+$color-code-bg: $theme-background-contrast;
 
-$color-header-bg: $color-accent !default;
-$color-header-content: #fff !default;
-$color-header-splitter: #fff !default;
+$color-header-bg: $theme-accent !default;
+$color-header-content: $theme-complement !default;
+$color-header-splitter: $theme-complement !default;
 
-// Sidebar
+$color-sidebar-bg: $theme-background-contrast;
+$color-sidebar-heading: #ccc; // section headings such as 'components', 'docs'
 
+$color-navigation-heading: #ccc;
+$color-navigation-group-name: #444;
+$color-navigation-item-hover: #f1f1f1;
+$color-navigation-item-current: #e3e3e5;
 
-$color-sidebar-bg: #f7f7f8;
-$color-sidebar-heading: ; // section headings such as 'components', 'docs'
+$color-browser-panel-bg: $theme-background-contrast;
+$color-browser-code-bg: $theme-background-contrast;
 
-// $frame-border-color: ;
-//
-// $code-bg-color: ;
+$color-preview-bg: $theme-background-contrast;
 
-
-
-
-
-
-
-
-
-$hue: hue($color-accent);
-
-$color-alpha: hsl($hue, 10, 20);
-$color-alpha-tint-light: rgba($color-alpha, 0.25);
-$color-alpha-tint-lighter: rgba($color-alpha, 0.1);
-$color-alpha-tint-lightest: rgba($color-alpha, 0.05);
-$color-beta: hsl($hue, 10, 35);
-$color-gamma: hsl($hue, 10, 97);
-$color-delta: hsl($hue, 10, 100);
+$color-prose-caption: #bbb;
+$color-prose-tr: $theme-background-contrast;
 
 @import "core/all";
 @import "components/**/*.scss";

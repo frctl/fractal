@@ -34,7 +34,7 @@
     h2 {
         @include font(heading);
         margin-bottom: 1em;
-        color: $color-beta;
+        color: $color-heading;
     }
 
     *:not(hr) + h2 {
@@ -54,7 +54,7 @@
     hr {
         height: 0;
         border: 0;
-        border-top: 0.125rem solid $color-alpha-tint-lighter;
+        border-top: 0.125rem solid $color-frame-border;
         margin: 2em 0;
     }
 
@@ -64,7 +64,7 @@
 
     code,
     code pre {
-        background-color: $color-alpha-tint-lightest;
+        background-color: $color-code-bg;
     }
 
     p code,
@@ -90,7 +90,7 @@
         padding: 0 0.5rem;
         font-style: italic;
         text-align: start;
-        color: $color-beta;
+        color: $color-prose-caption;
         opacity: 0.8;
     }
 
@@ -105,11 +105,11 @@
     }
 
     tr:nth-child(even) {
-        background-color: $color-gamma;
+        background-color: $color-prose-tr;
     }
 
     th {
-        background-color: $color-gamma;
-        border-bottom: 1px solid $color-alpha-tint-lighter;
+        background-color: $color-prose-tr;
+        border-bottom: 1px solid $color-frame-border;
     }
 }

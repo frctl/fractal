@@ -6,7 +6,7 @@
     @include font(caption);
     @include padding-inline(start, 1rem);
     margin-bottom: 0.5rem;
-    opacity: 0.6;
+    color: $color-sidebar-heading;
 }
 
 .Tree-collection {
@@ -37,9 +37,10 @@
     cursor: pointer;
     touch-action: manipulation;
     user-select: none;
+    color: $color-navigation-group-name;
 
     &:hover {
-        background-color: $color-alpha-tint-lightest;
+        background-color: $color-navigation-item-hover;
     }
 
     span {
@@ -77,11 +78,11 @@
     text-decoration: none;
 
     &:hover {
-        background-color: $color-alpha-tint-lightest;
+        background-color: $color-navigation-item-hover;
     }
 
     .is-current & {
-        background-color: $color-alpha-tint-lighter;
+        background-color: $color-navigation-item-current;
     }
 
     .Status {

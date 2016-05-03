@@ -3,14 +3,14 @@
     align-items: center;
     position: relative;
     z-index: 10;
-    background-color: $color-accent;
-    box-shadow: inset 0 -1px 0 0 $color-alpha-tint-light, 0 2px 0 $color-alpha-tint-lighter;
+    background-color: $color-header-bg;
+    // box-shadow: inset 0 -1px 0 0 $color-alpha-tint-light, 0 2px 0 $color-alpha-tint-lighter;
     text-overflow: ellipsis;
-    color: $color-complement;
+    color: $color-header-content;
 }
 
 .Header-title {
-    @include link-default($color-complement, none);
+    @include link-default($color-header-content, none);
     padding: 0.75rem 1rem;
     font-size: 1.125rem; // 18px
     line-height: (24 / 18);
@@ -18,7 +18,7 @@
 }
 
 .Header-button {
-    @include border-inline(end, 1px solid rgba($color-complement, 0.2));
+    @include border-inline(end, 1px solid rgba($color-header-splitter, 0.2));
     display: block;
     border: 0;
     height: 3rem;
@@ -31,11 +31,11 @@
     }
 
     &:hover {
-        background-color: $color-alpha-tint-lightest;
+        // background-color: $color-alpha-tint-lightest;
     }
 
     &:active {
-        background-color: $color-alpha-tint-lighter;
+        // background-color: $color-alpha-tint-lighter;
     }
 }
 
