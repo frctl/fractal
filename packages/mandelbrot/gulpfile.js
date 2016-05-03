@@ -26,8 +26,28 @@ gulp.task('clean:js', function() {
 
 
 // CSS
-gulp.task('css', ['css:clean'], function() {
-  return gulp.src('./assets/scss/mandelbrot.scss')
+
+gulp.task('css:skins', function() {
+    const fs = require('fs');
+    const skins = require('./assets/scss/skins/_skins.json');
+
+    for (let skin of skins) {
+        fs.writeFile(`./assets/scss/skins/${skin.name}.scss`,
+`
+$color-header-bg: ${skin.accent};
+$color-header-content: ${skin.complement};
+$color-header-splitter: ${skin.complement};
+$color-link: ${skin.links};
+
+@import "../theme";
+@import "../core/all";
+@import "../components/**/*.scss";
+`);
+    }
+});
+
+gulp.task('css', ['css:clean', 'css:skins'], function() {
+  return gulp.src('./assets/scss/skins/*.scss')
     .pipe(stylelint({
         reporters: [stylelintReporter()]
     }))

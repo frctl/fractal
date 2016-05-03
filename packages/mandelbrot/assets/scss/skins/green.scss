@@ -1,0 +1,9 @@
+
+$color-header-bg: #3c4;
+$color-header-content: #fff;
+$color-header-splitter: #fff;
+$color-link: #172;
+
+@import "../theme";
+@import "../core/all";
+@import "../components/**/*.scss";

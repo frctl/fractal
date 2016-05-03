@@ -2,7 +2,6 @@
 
 const Path        = require('path');
 const packageJSON = require('./package.json');
-// const schemes     = require('./assets/schemes.json');
 
 module.exports = function(){
 
@@ -13,18 +12,21 @@ module.exports = function(){
     this.defaults({
         skin: 'default',
         rtl: false,
-        lang: 'en'
+        lang: 'en',
+        stylesheet: null,
+        head: null,
+        foot: null
     });
 
     this.views   = Path.join(__dirname, 'views');
     this.favicon = Path.join(__dirname, 'assets/favicon.ico');
     this.error   = 'pages/error.nunj';
 
-    // Object.defineProperty(this, 'accent', {
-    //     get: () => {
-    //         return findScheme(this.config.skin || 'default').accent;
-    //     }
-    // });
+    Object.defineProperty(this, 'stylesheet', {
+       get: () => {
+           return this.config.stylesheet || `${this.urlPath('/theme/css')}/${this.config.skin || 'default'}.css` ;
+       }
+    });
 
     this.static(Path.join(__dirname, 'dist'), `/theme`);
 
@@ -83,16 +85,3 @@ module.exports = function(){
 
     };
 };
-
-// function findScheme(name) {
-//     let fallback;
-//     for (let scheme of schemes) {
-//         if (scheme.name === name) {
-//             return scheme;
-//         }
-//         if (scheme.name === 'default') {
-//             fallback = scheme;
-//         }
-//     }
-//     return fallback;
-// }
