@@ -2,7 +2,10 @@
 <html lang="{{ frctl.theme.config.lang | default('en') }}" dir="{{ 'rtl' if frctl.theme.config.rtl else 'ltr' }}" class="no-js">
 <head>
     {% if frctl.theme.config.head -%}
-    {{ frctl.theme.config.head }}
+    {{ frctl.theme.config.head | parse({
+        pageTitle: pageTitle,
+        frctl: frctl
+    }) }}
     {%- else -%}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -19,7 +22,10 @@
 {% block page %}{% endblock %}
 
 {% if frctl.theme.config.foot -%}
-{{ frctl.theme.config.foot }}
+{{ frctl.theme.config.foot | parse({
+    pageTitle: pageTitle,
+    frctl: frctl
+}) }}
 {%- else -%}
 <script src="{{ frctl.theme.urlPath('/theme/js/mandelbrot.js') }}"></script>
 {%- endif %}
