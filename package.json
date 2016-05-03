@@ -18,7 +18,7 @@
     "@allmarkedup/fang": "^1.0.0",
     "@frctl/handlebars-adapter": "^0.4.4",
     "@frctl/web-plugin": "^0.9.10",
-    "@frctl/mandelbrot": "^0.3.6",
+    "@frctl/mandelbrot": "^0.4.0",
     "anymatch": "^1.3.0",
     "bluebird": "^3.3.3",
     "chalk": "^1.1.1",
