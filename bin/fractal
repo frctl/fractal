@@ -2,15 +2,35 @@
 
 'use strict';
 
-const semver     = require('semver');
-const Liftoff    = require('liftoff');
-const cliPackage = require('../package.json');
+const semver         = require('semver');
+const Liftoff        = require('liftoff');
+const chalk          = require('chalk');
+const updateNofifier = require('update-notifier');
+const cliPackage     = require('../package.json');
+
+const notifier = updateNofifier({
+    pkg: cliPackage
+});
 
 const Fractal = new Liftoff({
     processTitle: 'fractal',
     moduleName: '@frctl/fractal',
     configName: 'fractal',
 });
+
+if (notifier.update) {
+    process.on('exit', function () {
+        console.log('');
+        const table = new (require('cli-table2'))({
+            head: [],
+            chars: { mid: chalk.dim('─'), 'left-mid': '│', 'mid-mid': chalk.dim('─'), 'right-mid': '│' }
+        });
+        table.push([`Fractal update available! ${chalk.dim(notifier.update.current)} → ${chalk.green(notifier.update.latest)}`]);
+        table.push([`Run ${chalk.cyan('npm i -g ' + notifier.update.name)} to update.`]);
+        console.log(table.toString());
+        console.log('');
+	});
+}
 
 Fractal.launch({}, function(env){
 

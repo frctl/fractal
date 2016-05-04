@@ -7,7 +7,7 @@ const slog        = require('single-line-log').stdout;
 const utils       = require('./utils');
 
 module.exports = function (vorpal) {
-
+    
     module.exports = {
 
         debugging: false,
