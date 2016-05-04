@@ -2,8 +2,22 @@
 
 The web UI supports the use of *themes*. Themes are very powerful, and allow complete control over everything from look and feel to URLs and functionality. Themes can be used to customise the look and feel of the web UI to match your project or even to give a completely different 'view' of your component library to different project stakeholders - for instance a 'no code' theme for people that might only be interested in reviewing the component previews.
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [Default Theme - Mandelbrot](#default-theme---mandelbrot)
+  - [Configuration options](#configuration-options)
+    - [skin](#skin)
+    - [stylesheet](#stylesheet)
+    - [head](#head)
+    - [foot](#foot)
+    - [contextFormat](#contextformat)
+    - [lang](#lang)
+    - [rtl](#rtl)
+- [Developing a custom theme](#developing-a-custom-theme)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Default Theme - Mandelbrot
 

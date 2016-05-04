@@ -38,6 +38,10 @@ fractal.load().then(function(){
     - [.components](#components)
     - [.docs](#docs)
     - [.version](#version)
+- [events](#events)
+    - [source:loaded](#sourceloaded)
+    - [source:changed](#sourcechanged)
+    - [source:updated](#sourceupdated)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 

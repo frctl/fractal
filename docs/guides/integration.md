@@ -9,8 +9,8 @@ Once you've built your component library, you can use Fractal's API to help inte
 
 
 - [Integration as an NPM dependency](#integration-as-an-npm-dependency)
-  - [1. Update your Component library](#1-update-your-component-library)
-  - [2. Require as a dependency in your application / site / build tool](#2-require-as-a-dependency-in-your-application--site--build-tool)
+    - [1. Update your Component library](#1-update-your-component-library)
+    - [2. Require as a dependency in your application / site / build tool](#2-require-as-a-dependency-in-your-application--site--build-tool)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 

@@ -7,6 +7,7 @@
 - [Collections](#collections)
 - [Commands](#commands)
 - [Components](#components)
+- [Sub-components](#sub-components)
 - [Documentation](#documentation)
 - [Plugins](#plugins)
 - [Themes](#themes)

@@ -1,3 +1,11 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [Managing Assets](#managing-assets)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Managing Assets
 
 **Fractal does not do any asset management, compilation or other build tasks for you.** It expects you to BYOBT (Bring Your Own Build Tool) which means you can use it just fine with Grunt, Gulp, Broccoli... whatever you like.
