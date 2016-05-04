@@ -93,7 +93,7 @@
                 <div class="Browser-files">
                     <div class="Browser-fileContent is-active" data-role="code" id="code-html">
                         <code class="Code Code--lang-html">
-                            <pre>{{ entity | render | highlight('html') }}</pre>
+                            <pre>{{ entity | render({ useLayout: false, collate: true }) | highlight('html') }}</pre>
                         </code>
                     </div>
                     <div class="Browser-fileContent" data-role="code" id="code-view">
