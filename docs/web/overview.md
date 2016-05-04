@@ -1,6 +1,6 @@
 # Fractal Web UI
 
-The Fractal web UI provides a web-based interface to browse your components and their associated files, as well as read project documentation. The UI itself relies on themes to both generate the visual interface and to provide specific functionality.
+The Fractal web UI provides a web-based interface to browse your components and their associated files, as well as read project documentation. The UI itself relies on [themes](/docs/web/themes.md) to both generate the visual interface and to provide specific functionality.
 
 The web UI functionality itself is actually just a [Fractal plugin](/docs/plugins/overview.md), although it comes bundled with Fractal by default so you won't ever need to install it separately.
 

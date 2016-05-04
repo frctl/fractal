@@ -28,6 +28,7 @@
 	* [Configuration options](/docs/documentation/configuration.md)
 * Web UI
 	* [Overview](/docs/web/overview.md)
+	* [Themes](/docs/web/themes.md)
 * Fractal API docs [WIP]
 	* [Overview](/docs/api/overview.md)
 	* [Fractal](/docs/api/fractal.md)
