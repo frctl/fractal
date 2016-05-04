@@ -15,7 +15,8 @@ module.exports = function(){
         lang: 'en',
         stylesheet: null,
         head: null,
-        foot: null
+        foot: null,
+        contextFormat: 'json'
     });
 
     this.views   = Path.join(__dirname, 'views');
