@@ -7,17 +7,20 @@
 
 {% set pageTitle     = entity.title %}
 {% set previewUrl    = frctl.theme.urlFromRoute('preview', {handle: entity.handle}) %}
+{% set contextFormat = frctl.theme.config.contextFormat | lower %}
 
 {% if entity.type == 'component' and entity.isCollated %}
     {% set viewContent   = entity.variants().getCollatedContentSync() %}
-    {% set contextString = entity.variants().getCollatedContext() | stringify %}
+    {% set ctx = entity.variants().getCollatedContext() %}
 {% elif entity.type == 'component' %}
     {% set viewContent   = entity.variants().default().getContentSync() %}
-    {% set contextString = entity.variants().default().defaultVariant().context | stringify %}
+    {% set ctx = entity.variants().default().defaultVariant().context %}
 {% else %}
     {% set viewContent   = entity.getContentSync() %}
-    {% set contextString = entity.context | stringify %}
+    {% set ctx = entity.context %}
 {% endif %}
+
+{% set contextString = ctx | stringify(contextFormat) %}
 
 {% block content %}
 
@@ -102,9 +105,16 @@
                         </code>
                     </div>
                     <div class="Browser-fileContent" data-role="code" id="code-context">
-                        <code class="Code Code--lang-json">
-                            <pre>{{ contextString | highlight('json') }}</pre>
+
+                        {% if ctx | dump == '{}' %}
+                        <code class="Code Code--lang-js">
+                            <pre>{{ '/* No context defined for this component. */' | highlight('js') }}</pre>
                         </code>
+                        {% else %}
+                        <code class="Code Code--lang-{{ contextFormat }}">
+                            <pre>{{ contextString | highlight(contextFormat) }}</pre>
+                        </code>
+                        {% endif %}
                     </div>
                     {% for asset in entity.assets().filter('isBinary', false).files().toArray() %}
                     <div class="Browser-fileContent" data-role="code" id="code-{{ asset.handle }}">
