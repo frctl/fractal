@@ -20,7 +20,7 @@
     {% set ctx = entity.context %}
 {% endif %}
 
-{% set contextString = ctx | stringify(contextFormat) %}
+{% set contextString = ctx | resolve | stringify(contextFormat) %}
 
 {% block content %}
 
