@@ -21,15 +21,21 @@ module.exports = function (context, source) {
                 const parts  = item.split('.');
                 const handle = parts.shift();
                 let entity   = source.find(handle);
-                if (entity && parts.length) {
+                if (entity) {
                     if (entity.type === 'component') {
                         entity = entity.variants().default();
                     }
                     const entityContext = yield resolve(entity.context);
-                    return _.get(entityContext, parts.join('.'), null);
+                    if (parts.length) {
+                        return _.get(entityContext, parts.join('.'), null);
+                    }
+                    return entityContext;
                 }
                 console.debug(`Could not resolve context reference for ${item}`);
                 return null;
+            }
+            if (_.isString(item) && _.startsWith(item, '\\@')) {
+                return item.replace(/^\\@/, '@');
             }
 
             return item;
