@@ -10,15 +10,15 @@ const console = require('./console');
 
 module.exports = function (app) {
 
-    app.on('source:changed', function(source, data){
-        if (data.type === 'config') {
-            let filePath = Path.relative(__dirname, data.path);
-            filePath = require.resolve(filePath);
-            if (require.cache[filePath]) {
-                delete require.cache[filePath];
-            }
-        }
-    });
+    // app.on('source:changed', function(source, data){
+    //     if (data.type === 'config') {
+    //         let filePath = Path.relative(__dirname, data.path);
+    //         filePath = require.resolve(filePath);
+    //         if (require.cache[filePath]) {
+    //             delete require.cache[filePath];
+    //         }
+    //     }
+    // });
 
     module.exports = {
 
@@ -50,8 +50,8 @@ module.exports = function (app) {
             const format = utils.lang(filePath, true).mode;
             if (format === 'js' || format === 'javascript') {
                 try {
-                    // filePath = Path.relative(__dirname, filePath);
-                    // delete require.cache[require.resolve(filePath)]; // Always fetch a fresh copy
+                    filePath = Path.relative(__dirname, filePath);
+                    delete require.cache[require.resolve(filePath)]; // Always fetch a fresh copy
                     let data = require(filePath);
                     if (typeof data === 'function') {
                         data = data();
