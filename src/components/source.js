@@ -130,12 +130,11 @@ module.exports = class ComponentSource extends Source {
     *_renderCollatedComponent(component, context) {
         context = context || {};
         return (yield component.variants().filter('isHidden', false).toArray().map(variant => {
-            return this.resolve(context[`@${variant.handle}`] || variant.context).then(ctx => {
-                ctx._self = variant.toJSON();
-                return this.render(variant, ctx).then(markup => {
-                    const collator = component.collator;
-                    return _.isFunction(collator) ? collator(markup, variant) : markup;
-                });
+            let ctx = context[`@${variant.handle}`] || variant.context;
+            ctx._self = variant.toJSON();
+            return this.render(variant, ctx).then(markup => {
+                const collator = component.collator;
+                return _.isFunction(collator) ? collator(markup, variant) : markup;
             });
         })).join('\n');
     }
@@ -241,7 +240,7 @@ module.exports = class ComponentSource extends Source {
     isVarView(file) {
         return anymatch(`**/*${this.setting('splitter')}*${this.setting('ext')}`, this._getPath(file));
     }
-    
+
     isReadme(file) {
         return anymatch(`**/readme.md`, this._getPath(file));
     }
