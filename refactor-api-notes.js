@@ -15,15 +15,16 @@ const adapter    = require('@frctl/handlebars-adapter').create();
 adapter.set('engine', handlebars);
 adapter.set('extension', '.hbs');
 
-
-fractal.components.engine(adapter);
-
 fractal.engine(handlebars);
+
+const adapter = fractal.components.engine();
+
+fractal.config.set()
 
 
 // CLI ----------------------------------
 
-fractal.cli.theme('my-theme');
+fractal.cli.theme('my-cli-theme');
 
 fractal.cli.command('foo-command', function(){
     // do something
@@ -51,3 +52,8 @@ const server1 = fractal.web.start({
 });
 
 server2.stop();
+
+
+// API ----------------------------------
+
+fractal.config.set();

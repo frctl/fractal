@@ -12,7 +12,11 @@ class Fractal {
 
     }
 
-    web() {
+    get web() {
+
+    }
+
+    get cli() {
 
     }
 
