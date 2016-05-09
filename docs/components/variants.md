@@ -21,7 +21,7 @@ Variants are useful when you have one component that has a **multiple different 
 
 A component can have as many variants as you like. Behind the scenes, *every* component has at least one variant - when you are previewing or rendering a component you are actually seeing it's 'default' variant, even if you have not explicitly defined one.
 
-Variants will typically use the default view template for the component they belong to; the variation comes from the ability to define a different set of [context data](/docs/components/context.md) to will be used when rendering previews. However it is also possible to use a completely different view template if desired (which itself can include the main view template as a partial should you so wish).
+Variants will typically use the default view template for the component they belong to; the variation comes from the ability to define a different set of [context data](/docs/components/context.md) that will be used when rendering previews. However it is also possible to use a completely different view template if desired (which itself can include the main view template as a partial should you so wish).
 
 ## Creating variants
 
