@@ -16,6 +16,7 @@ const Fractal = new Liftoff({
     processTitle: 'fractal',
     moduleName: '@frctl/fractal',
     configName: 'fractal',
+    v8flags: ['--harmony']
 });
 
 if (notifier.update) {
@@ -34,18 +35,22 @@ if (notifier.update) {
 
 Fractal.launch({}, function(env){
 
+    let app;
+    let scope = 'global';
+
     if (env.configPath) {
         require(env.configPath);
+        scope = 'project';
     }
     if (env.modulePath) {
         if (semver.gt(cliPackage.version, env.modulePackage.version)) {
             console.log(`Fractal version mismatch! Global: ${cliPackage.version} / Local: ${env.modulePackage.version}`);
         }
-        var app = require(env.modulePath);
-        app.run();
+        app = require(env.modulePath);
     } else {
-        const frctl  = require('../.');
-        frctl.global = true;
-        frctl.run();
+        app = require('../.');
     }
+    
+    app.cli.scope = scope;
+    app.cli.exec();
 });

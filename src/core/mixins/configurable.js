@@ -1,12 +1,13 @@
 'use strict';
 
 const _ = require('lodash');
+const mixin = require('mixwith').Mixin;
 
-let Configurable = (superclass) => class extends (superclass || Object) {
+module.exports = mixin((superclass) => class Configurable extends superclass {
 
-    constructor(config) {
+    constructor(){
         super();
-        this._config = config || {};
+        this._config = {};
     }
 
     set(config, val) {
@@ -21,6 +22,4 @@ let Configurable = (superclass) => class extends (superclass || Object) {
         return _.get(this._config, config, defaultVal || undefined);
     }
 
-};
-
-module.exports = Configurable;
+});

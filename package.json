@@ -58,7 +58,7 @@
     "node": ">= 4.0.0"
   },
   "scripts": {
-    "test": "NODE_ENV=test mocha --reporter spec",
+    "test": "NODE_ENV=test mocha --reporter spec --harmony",
     "lint": "jscs src",
     "lint:fix": "jscs src --fix",
     "docs": "grep 'DOCTOC SKIP' docs/*/*.md docs/*.md  -L | xargs doctoc --github --notitle --maxlevel 4"

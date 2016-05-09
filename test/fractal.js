@@ -1,38 +1,46 @@
 'use strict';
 
 const chai            = require('chai');
-const chaiAsPromised  = require('chai-as-promised');
-const sinon           = require('sinon');
 const expect          = chai.expect;
 
+const pkg             = require('../package.json');
 const fractal         = require('../src/fractal');
-const Configurable    = require('../src/core/mixins/configurable');
+const Cli             = require('../src/cli');
+const Web             = require('../src/web');
+const ComponentSource = require('../src/core/api/components');
 
-chai.use(chaiAsPromised);
+describe('Fractal', function(){
 
-describe('fractal', function(){
+    it('is configurable');
 
-    it('is configurable', function(){
-        // console.log(fractal.fractal);
-        // expect(fractal.fractal instanceof (Configurable(Object))).to.be.true;
-    });
+    it('is an event emitter');
 
     describe('.cli', function(){
-        it('is a command line interface handler');
+        it('is a command line interface handler', function(){
+            expect(fractal.cli).to.be.instanceof(Cli);
+        });
     });
 
     describe('.web', function(){
-        it('is a web interface handler');
+        it('is a web interface handler', function(){
+            expect(fractal.web).to.be.instanceof(Web);
+        });
     });
 
     describe('.components', function(){
-        it('is a component source instance');
+        it('is a component source instance', function(){
+            expect(fractal.components).to.be.instanceof(ComponentSource);
+        });
     });
 
     describe('.docs', function(){
         it('is a documentation source instance');
     });
 
-
+    describe('.version', function(){
+        it('matches the version number set in the package.json file', function(){
+            expect(fractal.version).to.equal(pkg.version);
+        });
+    });
 
 });

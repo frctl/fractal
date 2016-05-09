@@ -1,23 +1,21 @@
 'use strict';
 
 const packageJSON = require('./package.json');
-// const Path        = require('path');
 
 module.exports = {
     version: packageJSON.version,
     env: process.env.NODE_ENV || 'production',
     project: {
-        title: "My Component Library",
+        title: 'My Component Library',
         version: null,
-        // path: null
     },
     components: {
         path: null,
         label: 'components',
         title: 'Components',
-        yield: "yield",
-        splitter: "--",
-        ext: ".hbs",
+        yield: 'yield',
+        splitter: '--',
+        ext: '.hbs',
         engine: 'handlebars',
         default: {
             collator: function(markup, item) { return `<!-- Start: @${item.handle} -->\n${markup}\n<!-- End: @${item.handle} -->\n` },
@@ -31,19 +29,19 @@ module.exports = {
         },
         statuses: {
             prototype: {
-                label: "Prototype",
-                description: "Do not implement.",
-                color: "#FF3333"
+                label: 'Prototype',
+                description: 'Do not implement.',
+                color: '#FF3333'
             },
             wip: {
-                label: "WIP",
-                description: "Work in progress. Implement with caution.",
-                color: "#FF9233"
+                label: 'WIP',
+                description: 'Work in progress. Implement with caution.',
+                color: '#FF9233'
             },
             ready: {
-                label: "Ready",
-                description: "Ready to implement.",
-                color: "#29CC29"
+                label: 'Ready',
+                description: 'Ready to implement.',
+                color: '#29CC29'
             }
         }
     },
@@ -53,7 +51,7 @@ module.exports = {
         title: 'Documentation',
         markdown: true,
         ext: '.md',
-        indexLabel: "Overview",
+        indexLabel: 'Overview',
         engine: 'handlebars',
         default: {
             context: {}

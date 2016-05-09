@@ -1,14 +1,18 @@
 'use strict';
 
-const chai            = require('chai');
-const expect          = chai.expect;
+const chai         = require('chai');
+const expect       = chai.expect;
 
-const Configurable    = require('../src/core/mixins/configurable');
+const Configurable = require('../src/core/mixins/configurable')(Object);
 
 describe('Configurable', function(){
-    
-    const config = new (Configurable(Object));
 
+    let config;
+
+    before(function(){
+        config = new Configurable;
+    });
+    
     describe('.set()', function(){
         it('sets a config value', function(){
             config.set('foo', 'bar');
