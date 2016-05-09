@@ -1,15 +1,17 @@
 'use strict';
 
-const EventEmitter = require('events').EventEmitter;
+const mix = require('mixwith');
+const settings = require('../settings');
+const Configurable = require('./core/mixins/configurable');
 
-class Fractal {
+class Fractal extends Configurable(Object) {
 
     /**
      * Constructor.
      * @return {Fractal}
      */
     constructor() {
-
+        super();
     }
 
     get web() {
@@ -20,8 +22,18 @@ class Fractal {
 
     }
 
-}
+    get components() {
 
-_.extend(Fractal.prototype, EventEmitter.prototype);
+    }
+
+    get docs() {
+
+    }
+
+    get version() {
+        // return this.get('version').replace(/v/i, '');
+    }
+
+}
 
 module.exports = new Fractal();

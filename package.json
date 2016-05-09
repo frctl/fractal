@@ -37,11 +37,19 @@
     "lodash": "^4.6.1",
     "marked": "^0.3.5",
     "minimist": "^1.2.0",
+    "mixwith": "^0.1.1",
     "semver": "^5.1.0",
     "shelljs": "^0.6.0",
     "single-line-log": "^1.1.1",
     "update-notifier": "^0.6.3",
-    "vorpal": "^1.10.8"
+    "vorpal": "^1.10.8",
+    "chai": "^3.5.0",
+    "chai-as-promised": "^5.2.0",
+    "doctoc": "^1.0.0",
+    "jscs": "^3.0.3",
+    "mocha": "^2.4.5",
+    "proxyquire": "^1.7.4",
+    "sinon": "^1.17.3"
   },
   "bin": {
     "fractal": "./bin/fractal"
@@ -50,7 +58,7 @@
     "node": ">= 4.0.0"
   },
   "scripts": {
-    "test": "NODE_ENV=test ./node_modules/.bin/mocha --reporter spec",
+    "test": "NODE_ENV=test mocha --reporter spec",
     "lint": "jscs src",
     "lint:fix": "jscs src --fix",
     "docs": "grep 'DOCTOC SKIP' docs/*/*.md docs/*.md  -L | xargs doctoc --github --notitle --maxlevel 4"

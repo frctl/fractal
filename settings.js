@@ -1,7 +1,7 @@
 'use strict';
 
 const packageJSON = require('./package.json');
-const Path        = require('path');
+// const Path        = require('path');
 
 module.exports = {
     version: packageJSON.version,
@@ -9,7 +9,7 @@ module.exports = {
     project: {
         title: "My Component Library",
         version: null,
-        path: null
+        // path: null
     },
     components: {
         path: null,
