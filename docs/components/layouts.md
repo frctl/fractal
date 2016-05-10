@@ -58,7 +58,7 @@ You can put as much or as little as you want into your preview layouts, but it's
 
 ## Specifying a preview layout for a component
 
-You can specify the which preview layout to use on a global basis (in your `fractal.js` [project settings](/docs/project-settings.md) file) or on a [component-by-component basis](/docs/components/configuration.md#preview) (allowing different layouts for different use-cases).
+You can specify which preview layout to use on a global basis (in your `fractal.js` [project settings](/docs/project-settings.md) file) or on a [component-by-component basis](/docs/components/configuration.md#preview) (allowing different layouts for different use-cases).
 
 You can also take advantage of the [configuration cascade](/docs/configuration-files.md#configuration-inheritance) and specify preview layouts on a per-collection basis as the default for all components in that collection.
 
