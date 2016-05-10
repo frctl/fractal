@@ -7,6 +7,7 @@ const settings        = require('../settings');
 const Cli             = require('./cli');
 const Web             = require('./web');
 const Log             = require('./core/log');
+const utils           = require('./core/utils');
 const ComponentSource = require('./core/api/components');
 const DocSource       = require('./core/api/docs');
 const Base            = require('./core/mixins/base');
@@ -29,6 +30,11 @@ class Fractal extends mix(Base).with(Configurable, Emitter) {
         this.web        = new Web(this);
         this.components = new ComponentSource(this);
         this.docs       = new DocSource(this);
+
+        this.utils = {
+            console:   this.cli.console,
+            helpers:   utils
+        };
 
         if (this.get('env') !== 'debug') {
             process.on('uncaughtException', function (err) {

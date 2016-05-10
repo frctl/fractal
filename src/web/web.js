@@ -11,7 +11,7 @@ class Web extends mix(Base).with(Configurable) {
         this.setConfig(app.get('web'));
     }
 
-    start() {
+    serve() {
 
     }
 

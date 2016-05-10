@@ -1,12 +1,12 @@
 'use strict';
 
-const chai      = require('chai');
-const sinon     = require('sinon');
-const expect    = chai.expect;
+const chai    = require('chai');
+const sinon   = require('sinon');
+const expect  = chai.expect;
 
-const app       = require('../src/fractal');
-const Cli       = require('../src/cli');
-const Console    = require('../src/cli/console');
+const app     = require('../src/fractal');
+const Cli     = require('../src/cli');
+const Console = require('../src/cli/console');
 
 describe('Cli', function(){
 
@@ -14,11 +14,11 @@ describe('Cli', function(){
 
     beforeEach(function(){
         cli = new Cli(app);
-        cli.setLogger(new Console({
+        cli.logger = new Console({
             log: function(){}
-        }, app));
+        });
     });
-
+    
     it('is configurable');
 
     describe('.console', function(){

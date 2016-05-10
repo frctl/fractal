@@ -20,44 +20,51 @@ const Fractal = new Liftoff({
     v8flags: ['--harmony']
 });
 
-if (notifier.update) {
-    process.on('exit', function () {
-        console.log('');
-        const table = new (require('cli-table2'))({
-            head: [],
-            chars: { mid: chalk.dim('─'), 'left-mid': '│', 'mid-mid': chalk.dim('─'), 'right-mid': '│' }
-        });
-        table.push([`Fractal update available! ${chalk.dim(notifier.update.current)} → ${chalk.green(notifier.update.latest)}`]);
-        table.push([`Run ${chalk.cyan('npm i -g ' + notifier.update.name)} to update.`]);
-        console.log(table.toString());
-        console.log('');
-	});
-}
-
 Fractal.launch({}, function(env){
 
     let app;
     let scope = 'global';
+    let configPath = env.configPath;
 
-    if (env.configPath) {
-        require(env.configPath);
+    if (configPath) {
+        require(configPath);
         scope = 'project';
     } else {
-        const projectPackage = require(Path.join(env.cwd, 'package.json'));
-        if (projectPackage.fractal && projectPackage.fractal.main) {
-            require(Path.join(env.cwd, projectPackage.fractal.main));
-            scope = 'project';
+        try {
+            const projectPackage = require(Path.join(env.cwd, 'package.json'));
+            if (projectPackage.fractal && projectPackage.fractal.main) {
+                configPath = Path.join(env.cwd, projectPackage.fractal.main);
+                require(configPath);
+                scope = 'project';
+            }
+        } catch(e) {
+            configPath = null;
         }
     }
+
     if (env.modulePath) {
-        if (semver.gt(cliPackage.version, env.modulePackage.version)) {
-            console.log(`Fractal version mismatch! Global: ${cliPackage.version} / Local: ${env.modulePackage.version}`);
-        }
         app = require(env.modulePath);
+        if (!semver.satisfies(env.modulePackage.version, `^${cliPackage.version}`)) {
+            console.log(chalk.red(`The Fractal version used by your project (v${env.modulePackage.version}) is too old to be run by this version of the CLI helper (v${cliPackage.version})`));
+            process.exit();
+        }
+        if (semver.gt(cliPackage.version, env.modulePackage.version)) {
+            app.cli.notify.versionMismatch({
+                cli: cliPackage.version,
+                local: env.modulePackage.version
+            });
+        }
     } else {
         app = require('../.');
     }
 
-    app.cli.scope = scope;
+    if (notifier.update) {
+        process.on('exit', function () {
+            app.cli.notify.updateAvailable(notifier.update);
+    	});
+    }
+
+    app.cli.setConfigPath(configPath);
+    app.cli.setScope(scope);
     app.cli.exec();
 });
