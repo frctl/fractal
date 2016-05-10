@@ -1,9 +1,16 @@
 'use strict';
 
-const mixin = require('mixwith').Mixin;
-const utils = require('../utils');
+const _         = require('lodash')
+const mixin     = require('mixwith').Mixin;
+const mix       = require('mixwith').mix;
+const utils     = require('../utils');
+const Heritable = require('./heritable');
 
-module.exports = mixin((superclass) => class Source extends superclass {
+module.exports = mixin((superclass) => class Source extends Heritable(superclass) {
+
+    constructor(){
+        super(...arguments);
+    }
 
     get label() {
         return this.get('label') || utils.titlize(this.name);
@@ -27,6 +34,12 @@ module.exports = mixin((superclass) => class Source extends superclass {
 
     unwatch() {
 
+    }
+
+    getProp(key) {
+        const upstream = this.get(`default.${key}`);
+        const prop     = this._props.get(key);
+        return utils.mergeProp(prop, upstream);
     }
 
 });

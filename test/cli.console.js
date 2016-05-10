@@ -3,14 +3,16 @@
 const chai   = require('chai');
 const expect = chai.expect;
 
-const Logger  = require('../src/cli/logger');
+const Console  = require('../src/cli/console');
 
-describe('Logger', function(){
+describe('Console', function(){
 
     let logger;
 
     before(function(){
-        logger = new Logger(console);
+        logger = new Console({
+            log: function(){}
+        });
     });
 
     describe('.theme()', function(){

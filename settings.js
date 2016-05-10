@@ -16,7 +16,6 @@ module.exports = {
         yield: 'yield',
         splitter: '--',
         ext: '.hbs',
-        engine: 'handlebars',
         default: {
             collator: function(markup, item) { return `<!-- Start: @${item.handle} -->\n${markup}\n<!-- End: @${item.handle} -->\n` },
             preview: null,
@@ -56,5 +55,11 @@ module.exports = {
         default: {
             context: {}
         }
+    },
+    cli: {
+
+    },
+    web: {
+
     }
 };

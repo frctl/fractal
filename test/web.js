@@ -3,14 +3,15 @@
 const chai   = require('chai');
 const expect = chai.expect;
 
+const app    = require('../src/fractal');
 const Web    = require('../src/web');
 
-describe('fractal', function(){
+describe('Web', function(){
 
     let web;
 
     before(function(){
-        web = new Web();
+        web = new Web(app);
     });
 
     it('is configurable');

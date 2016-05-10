@@ -1,14 +1,19 @@
 'use strict';
 
+const _               = require('lodash');
 const Promise         = require('bluebird');
 const mix             = require('mixwith').mix;
 const settings        = require('../settings');
 const Cli             = require('./cli');
 const Web             = require('./web');
+const Log             = require('./core/log');
 const ComponentSource = require('./core/api/components');
-const Base            = require('./core/mixins/base.js');
+const DocSource       = require('./core/api/docs');
+const Base            = require('./core/mixins/base');
 const Configurable    = require('./core/mixins/configurable');
 const Emitter         = require('./core/mixins/emitter');
+
+const sources         = ['components', 'docs'];
 
 class Fractal extends mix(Base).with(Configurable, Emitter) {
 
@@ -18,30 +23,56 @@ class Fractal extends mix(Base).with(Configurable, Emitter) {
      */
     constructor() {
         super();
-        this._config    = settings;
+        this.setConfig(settings);
+
         this.cli        = new Cli(this);
         this.web        = new Web(this);
         this.components = new ComponentSource(this);
-        // this.docs       = new DocsSource(this);
+        this.docs       = new DocSource(this);
+
+        if (this.get('env') !== 'debug') {
+            process.on('uncaughtException', function (err) {
+                Log.error(err);
+                process.exit(1);
+            });
+        }
     }
 
     get version() {
         return this.get('version').replace(/v/i, '');
     }
 
-    watch() {
+    get debug() {
+        return this.get('env').toLowerCase() === 'debug';
+    }
 
+    watch() {
+        sources.forEach(s => this[s].watch());
     }
 
     unwatch() {
+        sources.forEach(s => this[s].unwatch());
+    }
 
+    engine() {
+        if (!arguments.length) {
+            const ret = {};
+            sources.forEach(s => (ret[s] = this[s].engine()));
+            return ret;
+        } else {
+            sources.forEach(s => this[s].engine(...arguments));
+        }
     }
 
     load() {
-        return Promise.all([
-            this.components.load(),
-            // this.docs.load()
-        ]);
+        return Promise.all(sources.map(s => this[s].load()));
+    }
+
+    source(type) {
+        if (_.includes(sources, type)) {
+            return this[type];
+        }
+        throw new Error(`Source type ${type} not recognised`);
     }
 
 }

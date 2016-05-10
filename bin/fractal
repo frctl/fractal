@@ -1,7 +1,8 @@
-#! /usr/bin/env node
+#! /usr/bin/env node --harmony
 
 'use strict';
 
+const Path           = require('path');
 const semver         = require('semver');
 const Liftoff        = require('liftoff');
 const chalk          = require('chalk');
@@ -41,6 +42,12 @@ Fractal.launch({}, function(env){
     if (env.configPath) {
         require(env.configPath);
         scope = 'project';
+    } else {
+        const projectPackage = require(Path.join(env.cwd, 'package.json'));
+        if (projectPackage.fractal && projectPackage.fractal.main) {
+            require(Path.join(env.cwd, projectPackage.fractal.main));
+            scope = 'project';
+        }
     }
     if (env.modulePath) {
         if (semver.gt(cliPackage.version, env.modulePackage.version)) {
@@ -50,7 +57,7 @@ Fractal.launch({}, function(env){
     } else {
         app = require('../.');
     }
-    
+
     app.cli.scope = scope;
     app.cli.exec();
 });

@@ -1,18 +1,37 @@
 'use strict';
 
 const _            = require('lodash');
+const mix          = require('mixwith').mix;
 const chalk        = require('chalk');
 const minimist     = require('minimist');
 const Vorpal       = require('vorpal');
+const Console      = require('./console');
+const Log          = require('../core/log');
+const Base         = require('../core/mixins/base');
+const Configurable = require('../core/mixins/configurable');
 const utils        = require('../core/utils');
 
-class Commander {
+class Cli extends mix(Base).with(Configurable) {
 
-    constructor(vorpal, logger, app) {
-        this._vorpal   = vorpal || new Vorpal();
+    constructor(app){
+
+        super(app);
+
+        this.setConfig(app.get('cli'));
+
         this._app      = app;
-        this._logger   = logger;
         this._commands = new Set();
+        this._vorpal   = new Vorpal();
+        this.scope     = 'project';
+        this.console   = new Console(this._vorpal);
+        this.console.debugMode(app.debug);
+
+        for (let method of ['log', 'error', 'alert', 'debug']) {
+            this[method] = (msg) => {
+                this.console[method](msg);
+            }
+            Log.on(method, msg => this[method](msg));
+        }
     }
 
     has(command) {
@@ -23,9 +42,9 @@ class Commander {
         return this._vorpal.find(command);
     }
 
-    add(command, config, action) {
+    command(command, config, action) {
 
-        const logger = this._logger;
+        const console = this.console;
         const vorpal  = this._vorpal;
         const app     = this._app;
 
@@ -43,7 +62,7 @@ class Commander {
         const cmd = this._vorpal.command(command, config.description || ' ');
 
         cmd.action(function (args, done) {
-            this.console = logger;
+            this.console = console;
             this.fractal = app;
             return action.bind(this)(args, done);
         });
@@ -100,7 +119,7 @@ class Commander {
     _execFromArgv(){
 
         const input   = utils.parseArgv();
-        const console = this._logger;
+        const console = this.console;
         const vorpal  = this._vorpal;
         const app     = this._app;
 
@@ -121,7 +140,7 @@ class Commander {
                 return;
             }
 
-            if (this._app.cli.scope == 'project') {
+            if (this.scope == 'project') {
 
                 console.slog().log('Initialising Fractal....');
 
@@ -142,7 +161,7 @@ class Commander {
                 });
 
             } else {
-                
+
                 console.box(
                     `Fractal CLI`,
                     `${chalk.magenta('No local Fractal configuration found.')}
@@ -156,6 +175,18 @@ You can use the 'fractal new' command to create a new project.`,
         }
     }
 
+    theme(theme) {
+        if (_.isString(theme)) {
+            theme = require(theme);
+        }
+        this.console.theme(theme);
+        return this;
+    }
+
+    setLogger(logger) {
+        this.console = logger;
+    }
+
 }
 
-module.exports = Commander;
+module.exports = Cli;

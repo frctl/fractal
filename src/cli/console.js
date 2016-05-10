@@ -7,7 +7,7 @@ const slog         = require('single-line-log').stdout;
 const theme        = require('./theme');
 const utils        = require('../core/utils');
 
-class Logger {
+class Console {
 
     constructor(logger){
         this._logger    = logger || console;
@@ -33,6 +33,10 @@ class Logger {
 
     debug(text) {
         if (this._debugging) {
+            if (this._slogging) {
+                this.unslog();
+                this.br();
+            }
             this.write(text, 'debug');
         }
         return this;
@@ -133,6 +137,10 @@ class Logger {
         return _.get(this._theme, path, otherwise);
     }
 
+    debugMode(status) {
+        this._debugging = !! status;
+    }
+
 }
 
-module.exports = Logger;
+module.exports = Console;

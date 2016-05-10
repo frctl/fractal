@@ -8,18 +8,17 @@
 
 const fractal = require('@frctl/fractal');
 
+const engine = fractal.components.engine();
+
 // CORE ----------------------------------
 
-const handlebars = require('handlebars');
-const adapter    = require('@frctl/fractal-handlebars').create();
+const fhbs    = require('@frctl/handlebars-adapter');
+const handlebarsAdapter = fhbs({
+    useHelpers: true
+});
 
-// adapter.set('engine', handlebars);
-// adapter.set('extension', '.hbs');
+fractal.engine(handlebarsAdapter); // register an engine to use for a specific extension
 
-fractal.components.engine('hbs', adapter); // register an engine to use for a specific extension
-fractal.components.set('engine', 'hbs');
-
-//
 // const adapter = fractal.components.engine();
 //
 // fractal.components.set({
