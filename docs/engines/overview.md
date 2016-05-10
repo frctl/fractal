@@ -28,7 +28,7 @@ If you wish to add custom helpers to the Handlebar's instance, there are a few w
 
 ### Adding to the default Handlebars instance
 
-To specify a additional helpers on the default Handlebars instance, you can add the following to your `fractal.js` file:
+To specify additional helpers on the default Handlebars instance, you can add the following to your `fractal.js` file:
 
 ```javascript
 fractal.engine('handlebars', '@frctl/handlebars-adapter', {
