@@ -82,4 +82,6 @@ class Fractal extends mix(Configurable, Emitter) {
 
 }
 
+Fractal.Theme = 'foo';
+
 module.exports = new Fractal();
