@@ -2,7 +2,7 @@
 
 # Overview
 
-Fractal is a tool to help you build, document and integrate component libraries into web projects. It's focus is on providing a flexible tool that can be used for both [component library development](/docs/web/overview.md) _and_ for helping [integrate those components](/docs/guides/integration.md) into your site, application or build pipelines.
+Fractal is a tool to help you build, document and integrate component libraries into web projects. Its focus is on providing a flexible tool that can be used for both [component library development](/docs/web/overview.md) _and_ for helping [integrate those components](/docs/guides/integration.md) into your site, application or build pipelines.
 
 Fractal can also help you generate living [documentation pages](/docs/documentation/overview.md) for your component library to ensure that your components and documentation never need to go out of sync again.
 
