@@ -3,8 +3,8 @@
 const chai       = require('chai');
 const expect     = chai.expect;
 
-// const app        = require('../src/fractal');
-const Collection = require('../src/core/mixins/collection')(Object);
+const mix        = require('../src/core/mixins/mix');
+const Collection = mix(require('../src/core/mixins/collection'));
 
 const items = [
     {

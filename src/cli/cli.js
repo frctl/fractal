@@ -1,20 +1,20 @@
 'use strict';
 
 const _            = require('lodash');
-const mix          = require('mixwith').mix;
 const chalk        = require('chalk');
 const chokidar     = require('chokidar');
 const minimist     = require('minimist');
 const Vorpal       = require('vorpal');
 const Console      = require('./console');
 const Notifier     = require('./notifier');
-const commands     = require('./commands');
+const requireAll   = require('require-all');
 const Log          = require('../core/log');
-const Base         = require('../core/mixins/base');
+const mix          = require('../core/mixins/mix');
 const Configurable = require('../core/mixins/configurable');
+const Emitter      = require('../core/mixins/emitter');
 const utils        = require('../core/utils');
 
-class Cli extends mix(Base).with(Configurable) {
+class Cli extends mix(Configurable, Emitter) {
 
     constructor(app){
 
@@ -28,6 +28,7 @@ class Cli extends mix(Base).with(Configurable) {
         this._interactive    = false;
         this._configPath     = null;
         this._scope          = 'project';
+        this._commandsDir    = `${__dirname}/commands`;
 
         this.console = new Console(this._vorpal);
         this.console.debugMode(app.debug);
@@ -50,35 +51,37 @@ class Cli extends mix(Base).with(Configurable) {
         return this._vorpal.find(command);
     }
 
-    command(command, config, action) {
+    isInteractive() {
+        return this._interactive;
+    }
+
+    command(command, action, config) {
 
         const console    = this.console;
         const vorpal     = this._vorpal;
         const app        = this._app;
-        let commandScope = config.scope ? [].concat(config.scope) : ['project'];
 
-        if (!_.includes(commandScope, this._scope)) {
-            // command not available in this scope
-            const cmd = vorpal.command(command.replace(/\</g, '[').replace(/\>/g, ']'), config.description || ' ');
-            cmd.action((args, done) => {
-                console.error(`This command is not available in a ${this._scope} context.`);
-                done();
-            })
-            .hidden()
-            .__scope = commandScope;
-            return;
-        }
-
-        if (_.isFunction(config)) {
-            action = config;
-            config = {};
-        }
+        action = action || function () {};
+        config = config || {};
         if (_.isString(config)) {
             config = {
                 description: config
             };
         }
-        action = action || function () {};
+
+        let commandScope = config.scope ? [].concat(config.scope) : ['project'];
+
+        if (!_.includes(commandScope, this._scope)) {
+
+            // command not available in this scope
+            const cmd = vorpal.command(command.replace(/\</g, '[').replace(/\>/g, ']'), config.description || ' ');
+            cmd.action((args, done) => {
+                console.error(`This command is not available in a ${this._scope} context.`);
+                done();
+            }).hidden().__scope = commandScope;
+            cmd.action = undefined; // prevent this from being overridden now it is bound
+            return;
+        }
 
         const cmd = this._vorpal.command(command, config.description || ' ');
 
@@ -87,21 +90,24 @@ class Cli extends mix(Base).with(Configurable) {
             this.fractal = app;
             return action.bind(this)(args, done);
         });
+        cmd.action = undefined; // prevent this from being overridden now it is bound
 
         (config.options || []).forEach(opt => {
             opt = _.castArray(opt);
             cmd.option.apply(cmd, opt);
         });
-
         if (config.hidden) {
             cmd.hidden();
         }
-
+        if (config.alias) {
+            cmd.alias(config.alias);
+        }
         cmd.__scope = commandScope;
+        return cmd;
     }
 
     exec(){
-        _.forEach(commands, c => this.command(c.command, c.config || {}, c.action));
+        _.forEach(requireAll(this._commandsDir), c => this.command(c.command, c.action, c.config || {}));
         return arguments.length ? this._execFromString(...arguments) : this._execFromArgv();
     }
 
@@ -115,10 +121,12 @@ class Cli extends mix(Base).with(Configurable) {
 
     setConfigPath(path) {
         this._configPath = path;
+        return this;
     }
 
     setScope(scope) {
         this._scope = scope;
+        return this;
     }
 
     /**

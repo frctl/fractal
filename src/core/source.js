@@ -1,20 +1,19 @@
 'use strict';
 
 const _            = require('lodash')
-const mix          = require('mixwith').mix;
 const chokidar     = require('chokidar');
 const anymatch     = require('anymatch');
 
 const fs           = require('./fs');
 const utils        = require('./utils');
 const Log          = require('./log');
-const Base         = require('./mixins/base');
+const mix          = require('./mixins/mix');
 const Configurable = require('./mixins/configurable');
 const Collection   = require('./mixins/collection');
 const Emitter      = require('./mixins/emitter');
 const Heritable    = require('./mixins/heritable');
 
-class Source extends mix(Base).with(Configurable, Heritable, Emitter, Collection) {
+class Source extends mix(Configurable, Heritable, Emitter, Collection) {
 
     constructor(name, app){
         super(app);
@@ -40,6 +39,10 @@ class Source extends mix(Base).with(Configurable, Heritable, Emitter, Collection
         return this.get('title') || this.label;
     }
 
+    exists() {
+        return this.get('path') && utils.fileExistsSync(this.get('path'));
+    }
+
     engine(engine, config) {
         if (!arguments.length) {
             if (this._engine === null) {
@@ -61,6 +64,10 @@ class Source extends mix(Base).with(Configurable, Heritable, Emitter, Collection
 
     load(force) {
         if (!this.get('path')) {
+            return Promise.resolve(this);
+        }
+        if (!utils.fileExistsSync(this.get('path'))) {
+            Log.error(`The ${this.name} directory (${this.get('path')}) does not exist.`);
             return Promise.resolve(this);
         }
         if (this._loading) {
@@ -153,7 +160,7 @@ class Source extends mix(Base).with(Configurable, Heritable, Emitter, Collection
     isConfig(file) {
         return anymatch(`**/*.config.{js,json,yaml,yml}`, this._getPath(file));
     }
-    
+
     _build() {
         if (!this.get('path')) {
             return Promise.resolve(this);

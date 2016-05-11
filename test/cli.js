@@ -14,11 +14,11 @@ describe('Cli', function(){
 
     beforeEach(function(){
         cli = new Cli(app);
-        cli.logger = new Console({
+        cli.console = new Console({
             log: function(){}
         });
     });
-    
+
     it('is configurable');
 
     describe('.console', function(){

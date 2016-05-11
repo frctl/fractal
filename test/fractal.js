@@ -7,14 +7,17 @@ const pkg             = require('../package.json');
 const app             = require('../src/fractal');
 const Cli             = require('../src/cli');
 const Web             = require('../src/web');
-const ComponentSource = require('../src/core/api/components');
-const DocSource       = require('../src/core/api/docs');
+const ComponentSource = require('../src/api/components');
+const DocSource       = require('../src/api/docs');
 
 describe('Fractal', function(){
 
-    it('is configurable');
-
-    it('is an event emitter');
+    it('is an event emitter', function(){
+        expect(app.hasMixedIn('Emitter')).to.be.true;
+    });
+    it('is configurable', function(){
+        expect(app.hasMixedIn('Configurable')).to.be.true;
+    });
 
     describe('.cli', function(){
         it('is a command line interface handler', function(){

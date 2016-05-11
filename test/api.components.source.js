@@ -4,7 +4,7 @@ const _       = require('lodash');
 const chai    = require('chai');
 const expect  = chai.expect;
 
-const ComponentSource = require('../src/core/api/components');
+const ComponentSource = require('../src/api/components');
 const app             = require('../src/fractal');
 
 describe('ComponentSource', function(){
@@ -38,18 +38,5 @@ describe('ComponentSource', function(){
             expect(components.getHeritable('foo')).to.deep.equal(_.keys(app.get('components.default')));
         });
     });
-
-    describe('mixins', function(){
-
-        it('is an event emitter');
-        it('is configurable');
-        it('is a source');
-
-        it('is a collection', function(){
-            expect(components).to.respondTo('items');
-            expect(components).to.have.property('size');
-        });
-    });
-
-
+    
 });

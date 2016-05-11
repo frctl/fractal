@@ -7,6 +7,7 @@ module.exports = mixin((superclass) => class Configurable extends superclass {
 
     constructor(){
         super(...arguments);
+        super.addMixedIn('Configurable');
         this._config = {};
     }
 

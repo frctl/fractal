@@ -8,6 +8,7 @@ module.exports = mixin((superclass) => class Heritable extends superclass {
 
     constructor(){
         super(...arguments);
+        super.addMixedIn('Heritable');
         this._props     = new Map();
         this._parent    = null;
         this._heritable = null;
@@ -40,7 +41,7 @@ module.exports = mixin((superclass) => class Heritable extends superclass {
         }
         return this;
     }
-    
+
     /**
      * Iterates over a supplied object and sets properties
      * based on the object's key:value pairs

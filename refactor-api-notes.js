@@ -47,22 +47,32 @@ fractal.cli.error('this is a messsage');
 // WEB ----------------------------------
 
 const mandelbrot = require('@frctl/mandelbrot');
-mandelbrot.config({
-    foo: 'bar'
+
+const myTheme = mandelbrot({
+    skin: 'blue'
 });
 
-fractal.web.theme(mandelbrot);
+fractal.web.theme('mandelbrot', myTheme);
 
-fractal.web.start();
+fractal.web.set('server.port', '');
+fractal.web.set('server.sync', true);
 
-const server2 = fractal.web.start({
+fractal.web.set('builder.path', 'build');
+fractal.web.set('builder.root', true);
+
+const server2 = fractal.web.server({
     port: 1000,
-    theme: mandelbrot
+    theme: myTheme,
+    sync: {
+
+    }
 });
 
+server2.start(true);
+//
 server2.stop();
 
-fractal.web.build(config);
+fractal.web.builder(config).start();
 
 // API ----------------------------------
 

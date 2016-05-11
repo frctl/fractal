@@ -60,6 +60,17 @@ module.exports = {
 
     },
     web: {
-
+        server: {
+            port: null,
+            sync: false,
+        },
+        builder: {
+            concurrency: 100,
+            root: null
+        },
+        static: {
+            path: null,
+            mount: '/'
+        }
     }
 };

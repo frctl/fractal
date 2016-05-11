@@ -3,7 +3,8 @@
 const chai    = require('chai');
 const expect  = chai.expect;
 
-const Emitter = require('../src/core/mixins/emitter')(Object);
+const mix     = require('../src/core/mixins/mix');
+const Emitter = mix(require('../src/core/mixins/emitter'));
 
 describe('Emitter', function(){
 

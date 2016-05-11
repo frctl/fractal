@@ -1,7 +1,7 @@
 'use strict';
 
 const _            = require('lodash');
-const Source       = require('../../source');
+const Source       = require('../../core/source');
 
 class DocSource extends Source {
 

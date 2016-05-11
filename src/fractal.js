@@ -2,21 +2,20 @@
 
 const _               = require('lodash');
 const Promise         = require('bluebird');
-const mix             = require('mixwith').mix;
 const settings        = require('../settings');
 const Cli             = require('./cli');
 const Web             = require('./web');
+const ComponentSource = require('./api/components');
+const DocSource       = require('./api/docs');
 const Log             = require('./core/log');
 const utils           = require('./core/utils');
-const ComponentSource = require('./core/api/components');
-const DocSource       = require('./core/api/docs');
-const Base            = require('./core/mixins/base');
+const mix             = require('./core/mixins/mix');
 const Configurable    = require('./core/mixins/configurable');
 const Emitter         = require('./core/mixins/emitter');
 
-const sources         = ['components', 'docs'];
+const sources = ['components', 'docs'];
 
-class Fractal extends mix(Base).with(Configurable, Emitter) {
+class Fractal extends mix(Configurable, Emitter) {
 
     /**
      * Constructor.
@@ -32,8 +31,8 @@ class Fractal extends mix(Base).with(Configurable, Emitter) {
         this.docs       = new DocSource(this);
 
         this.utils = {
-            console:   this.cli.console,
-            helpers:   utils
+            console: this.cli.console,
+            helpers: utils
         };
 
         if (this.get('env') !== 'debug') {

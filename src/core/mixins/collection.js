@@ -1,11 +1,13 @@
 'use strict';
 
+const _     = require('lodash');
 const mixin = require('mixwith').Mixin;
 
 module.exports = mixin((superclass) => class Collection extends superclass {
 
     constructor(){
         super(...arguments);
+        this.addMixedIn('Collection');
         this._items = new Set([]);
     }
 

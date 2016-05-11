@@ -3,7 +3,8 @@
 const chai         = require('chai');
 const expect       = chai.expect;
 
-const Configurable = require('../src/core/mixins/configurable')(Object);
+const mix          = require('../src/core/mixins/mix');
+const Configurable = mix(require('../src/core/mixins/configurable'));
 
 describe('Configurable', function(){
 
@@ -12,7 +13,7 @@ describe('Configurable', function(){
     before(function(){
         config = new Configurable;
     });
-    
+
     describe('.set()', function(){
         it('sets a config value', function(){
             config.set('foo', 'bar');

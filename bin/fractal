@@ -17,6 +17,9 @@ const Fractal = new Liftoff({
     processTitle: 'fractal',
     moduleName: '@frctl/fractal',
     configName: 'fractal',
+    extensions: {
+        '.js': null
+    },
     v8flags: ['--harmony']
 });
 
@@ -38,16 +41,24 @@ Fractal.launch({}, function(env){
                 scope = 'project';
             }
         } catch(e) {
-            configPath = null;
+            if (e.code && e.code === 'MODULE_NOT_FOUND') {
+                // no config file found, must be global context.
+                configPath = null;
+            } else {
+                throw e;
+            }
         }
     }
-
+    
     if (env.modulePath) {
         app = require(env.modulePath);
         if (!semver.satisfies(env.modulePackage.version, `^${cliPackage.version}`)) {
-            console.log(chalk.red(`The Fractal version used by your project (v${env.modulePackage.version}) is too old to be run by this version of the CLI helper (v${cliPackage.version})`));
-            process.exit();
+            // Project is using a legacy version of Fractal
+            console.log(`Fractal version mismatch! Global: ${cliPackage.version} / Local: ${env.modulePackage.version}`);
+            app.run();
+            return;
         }
+
         if (semver.gt(cliPackage.version, env.modulePackage.version)) {
             app.cli.notify.versionMismatch({
                 cli: cliPackage.version,

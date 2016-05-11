@@ -26,8 +26,14 @@ describe('Source', function(){
         });
     });
 
-    // it('has properties', function(){
-    //     expect(source).to.respondTo('getProp');
-    // });
+    it('is an event emitter', function(){
+        expect(source.hasMixedIn('Emitter')).to.be.true;
+    });
+    it('is configurable', function(){
+        expect(source.hasMixedIn('Configurable')).to.be.true;
+    });
+    it('is a collection', function(){
+        expect(source.hasMixedIn('Collection')).to.be.true;
+    });
 
 });

@@ -2,7 +2,7 @@
 
 const _            = require('lodash');
 const anymatch     = require('anymatch');
-const Source       = require('../../source');
+const Source       = require('../../core/source');
 
 class ComponentSource extends Source {
 
@@ -11,7 +11,7 @@ class ComponentSource extends Source {
     }
 
     _parse(fileTree) {
-        
+
     }
 
     fileType(file) {
