@@ -1,68 +1,64 @@
 'use strict';
 
 const Path        = require('path');
+const _           = require('lodash');
+const Theme       = require('@frctl/fractal').WebTheme;
 const packageJSON = require('./package.json');
 
-module.exports = function(){
+module.exports = function(options){
 
-    this.name    = 'mandelbrot';
-    this.title   = 'A theme for Fractal.';
-    this.version = packageJSON.version;
+    options = _.clone(options || {});
 
-    this.defaults({
-        skin: 'default',
-        rtl: false,
-        lang: 'en',
-        stylesheet: null,
-        head: null,
-        foot: null,
-        contextFormat: 'json'
+    const theme = new Theme({
+        views: Path.join(__dirname, 'views'),
+        error: 'pages/error.nunj',
+        static: {
+            path: Path.join(__dirname, 'dist'),
+            mount: '/theme'
+        },
+        options: _.defaultsDeep(options, {
+            skin: 'default',
+            rtl: false,
+            lang: 'en',
+            stylesheet: null,
+            head: null,
+            foot: null,
+            contextFormat: 'json'
+        })
     });
 
-    this.views   = Path.join(__dirname, 'views');
-    this.favicon = Path.join(__dirname, 'assets/favicon.ico');
-    this.error   = 'pages/error.nunj';
-
-    Object.defineProperty(this, 'stylesheet', {
-       get: () => {
-           return this.config.stylesheet || `${this.urlPath('/theme/css')}/${this.config.skin || 'default'}.css` ;
-       }
-    });
-
-    this.static(Path.join(__dirname, 'dist'), `/theme`);
-
-    this.route('/', {
+    theme.route('/', {
         handle: 'overview',
         view: 'pages/page.nunj',
     });
 
-    this.route('/docs', {
+    theme.route('/docs', {
         redirect: '/'
     });
 
-    this.route('/components', {
+    theme.route('/components', {
         redirect: '/'
     });
 
-    this.route('/components/preview/:handle', {
+    theme.route('/components/preview/:handle', {
         handle: 'preview',
         view: 'pages/components/preview.nunj'
     });
 
-    this.route('/components/detail/:handle', {
+    theme.route('/components/detail/:handle', {
         handle: 'component',
         view: 'pages/components/detail.nunj'
     });
 
-    this.route('/docs/:path([^\?]+?)', {
+    theme.route('/docs/:path([^\?]+?)', {
         handle: 'page',
         view: 'pages/page.nunj'
     });
 
-    this.builder = function(builder, app){
+    theme.onBuild(function(builder, app){
 
-        const components = app.source('components');
-        const docs       = app.source('docs');
+        const components = app.components;
+        const docs       = app.docs;
 
         for (let comp of components.flatten()) {
             if (!comp.isHidden){
@@ -84,5 +80,7 @@ module.exports = function(){
             }
         }
 
-    };
+    });
+
+    return theme;
 };

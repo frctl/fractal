@@ -16,6 +16,9 @@
     "build": "gulp",
     "prepublish": "npm run build"
   },
+  "peerDependencies": {
+    "@frctl/fractal": "^1.0.0"
+  },
   "devDependencies": {
     "babel-preset-es2015": "^6.5.0",
     "babelify": "^7.2.0",
@@ -39,5 +42,8 @@
     "watchify": "^3.7.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
+  },
+  "dependencies": {
+    "lodash": "^4.12.0"
   }
 }
