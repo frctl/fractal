@@ -1,35 +1,80 @@
 'use strict';
 
+const _     = require('lodash');
 const chalk = require('chalk');
 
-module.exports = {
+module.exports = class Theme {
 
-    log: {},
+    constructor(config){
+        config = config || {};
+        this._delimiter = {
+            text: 'fractal ➤',
+            format: chalk.magenta
+        };
+        this._styles =  {
+            log: {
+                prefix: '',
+                format: s => s,
+            },
+            success: {
+                prefix: '✔',
+                format: chalk.green,
+            },
+            debug: {
+                prefix: '⚡',
+                format: chalk.dim,
+            },
+            notice: {
+                prefix: '⚑'
+            },
+            alert: {
+                prefix: '★',
+                format: chalk.yellow.bold,
+            },
+            error: {
+                prefix: '✘',
+                format: chalk.red,
+            }
+        };
 
-    success: {
-        prefix: '✔',
-        style: chalk.green,
-    },
+        if (config.delimiter) {
+            this.setDelimiter(config.delimiter.text, config.delimiter.format);
+        }
+        if (config.styles) {
+            _.forEach(config.styles, (value, key) => {
+                this.setStyle(key, value);
+            });
+        }
+    }
 
-    debug: {
-        prefix: '⚡',
-        style: chalk.dim,
-    },
+    setDelimiter(text, formatter) {
+        if (text) {
+            this._delimiter.text = text;
+        }
+        if (formatter) {
+            this._delimiter.format = formatter;
+        }
+    }
 
-    notice: {
-        prefix: '⚑'
-    },
+    setStyle(name, opts) {
+        this._styles[name] = opts;
+    }
 
-    alert: {
-        prefix: '★',
-        style: chalk.yellow.bold,
-    },
+    format(str, style, strip) {
+        style = style || 'log';
+        const prefix    = _.get(this._styles, `${style}.prefix`, '');
+        const formatter = _.get(this._styles, `${style}.format`, str => str);
+        const suffix    = _.get(this._styles, `${style}.suffix`, '');
+        return formatter(strip ? _.trim(str) : `${prefix} ${str} ${suffix}`);
+    }
 
-    error: {
-        prefix: '✘',
-        style: chalk.red,
-    },
+    style(name) {
+        return this._styles[name] ? this._styles[name] : this._styles['log'];
+    }
 
-    delimiter: chalk.magenta('fractal ➤')
+    delimiter() {
+        const formatter = this._delimiter.format || (s => s);
+        return formatter(this._delimiter.text);
+    }
 
-};
+}

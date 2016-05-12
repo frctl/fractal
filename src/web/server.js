@@ -147,28 +147,27 @@ module.exports = class Server extends mix(Emitter) {
     }
 
     _onRequest(req, res, next) {
-        res.send('foo').end();
-        // console.log(req);
 
-        // const match = theme.matchRoute(req.path);
-        // if (!match) {
-        //     res.locals.__request.params = {};
-        //     res.locals.__request.errorStatus = '404';
-        //     return next(new Error(`No matching route found for ${req.path}`));
-        // }
-        // if (match.route.redirect) {
-        //     return res.redirect(match.route.redirect);
-        // }
-        // res.locals.__request.params = match.params;
-        // res.locals.__request.route = match.route;
-        //
-        // getGlobals(res.locals).then(function(globals){
-        //     render.template(match.route.view, match.route.context, globals).then(v => res.send(v).end()).catch(err => next(err));
-        // });
+        const match = this._theme.matchRoute(req.path);
 
+        if (!match) {
+            res.locals.__request.params = {};
+            res.locals.__request.errorStatus = '404';
+            return next(new Error(`No matching route found for ${req.path}`));
+        }
+        if (match.route.redirect) {
+            return res.redirect(match.route.redirect);
+        }
+        res.locals.__request.params = match.params;
+        res.locals.__request.route = match.route;
+
+        render.template(match.route.view, match.route.context, this._context(res.locals))
+              .then(v => res.send(v).end())
+              .catch(err => next(err));
     }
 
     _onError(err, req, res, next) {
+
         if (res.headersSent || !this._theme.error) {
             return next(err);
         }
@@ -177,14 +176,14 @@ module.exports = class Server extends mix(Emitter) {
             res.status(res.locals.__request.errorStatus);
         }
         if (res.locals.__request.errorStatus === '404') {
-            console.notice(`404: ${err.message}`);
+            Log.notice(`404: ${err.message}`);
         } else {
-            console.error(err.message);
+            Log.error(err.message);
         }
 
-        getGlobals(res.locals).then(function(globals){
-            render.template(this._theme.error.view, this._theme.error.context, globals).then(v => res.send(v).end()).catch(err => next(err));
-        });
+        render.template(this._theme.error.view, this._theme.error.context, this._context(res.locals))
+              .then(v => res.send(v).end())
+              .catch(err => next(err));
     }
 
     _init() {
@@ -202,14 +201,30 @@ module.exports = class Server extends mix(Emitter) {
             next();
         });
 
-        // this._theme.static().forEach(s => {
-        //     this._server.use(s.mount, express.static(s.path));
-        // });
+        this._theme.static().forEach(s => {
+            this._server.use(s.mount, express.static(s.path));
+        });
 
         this._server.get(':path(*)', this._onRequest.bind(this));
 
-        this._server.use((err, req, res, next) => this._onError.bind(this));
+        if (!this._app.debug) {
+            this._server.use((err, req, res, next) => this._onError.bind(this));
+        }
+    }
 
+    _context(locals) {
+        return {
+            web: {
+                server: {
+                    address: this._urls.server,
+                    port: this._ports.server,
+                    syncPort: this._ports.sync,
+                    host: 'localhost',
+                    sync: this.isSynced
+                },
+                request: locals.__request
+            }
+        };
     }
 
 }
@@ -263,4 +278,3 @@ function findPorts(serverPort, useSync) {
 //         };
 //     });
 // }
-//

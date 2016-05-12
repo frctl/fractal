@@ -7,6 +7,7 @@ const Handlebars = require('handlebars');
 const inquirer   = require('inquirer');
 const shell      = require('shelljs');
 const fs         = Promise.promisifyAll(require('fs-extra'));
+const helpers    = require('../../core/utils');
 
 module.exports = {
 
@@ -20,7 +21,6 @@ module.exports = {
     action: function (args, done) {
 
         const console          = this.console;
-        const helpers          = this.fractal.utils.helpers;
         const baseDir          = args.path;
         const basePath         = baseDir.startsWith('/') ? baseDir : Path.join(process.cwd(), baseDir);
         const viewsPath        = Path.join(__dirname, '../../../views/new');

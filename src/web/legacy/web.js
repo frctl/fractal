@@ -97,7 +97,7 @@ module.exports = function (config, app) {
             throw new Error('Theme must specify a \'name\' attribute.');
         }
 
-        theme.setConfig(_.clone(app.get(`themes.${theme.name}`)));
+        theme.config(_.clone(app.get(`themes.${theme.name}`)));
 
         if (config.static.path) {
             theme.static(config.static.path, config.static.mount);

@@ -11,7 +11,10 @@ module.exports = mixin((superclass) => class Configurable extends superclass {
         this._config = {};
     }
 
-    setConfig(config) {
+    config(config) {
+        if (_.isUndefined(config)) {
+            return this._config;
+        }
         this._config = config || {};
         return this;
     }

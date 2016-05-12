@@ -12,7 +12,7 @@ module.exports = class Web extends mix(Configurable, Emitter) {
 
     constructor(app){
         super(app);
-        this.setConfig(app.get('web'));
+        this.config(app.get('web'));
         this._app          = app;
         this._servers      = new Map();
         this._themes       = new Map();
@@ -34,20 +34,26 @@ module.exports = class Web extends mix(Configurable, Emitter) {
     }
 
     theme(name, instance) {
-        instance = instance || require(name);
+        instance = instance || require(name)();
         this._themes.set(name, instance);
         this._defaultTheme = name;
         return this;
     }
 
     _loadTheme(theme){
+        if (!theme) {
+            theme = this._defaultTheme;
+        }
         if (_.isString(theme)) {
             if (this._themes.has(theme)) {
                 theme = this._themes.get(theme);
             } else {
-                theme = require(theme);
+                theme = require(theme)();
             }
         }
-        return new Theme(theme || this._themes.get(this._defaultTheme), this._app);
+        if (!theme instanceof Theme) {
+            throw new Error('Fractal themes must inherit from the base Theme class.');
+        }
+        return theme;
     }
 }

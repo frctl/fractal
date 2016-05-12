@@ -19,7 +19,7 @@ class Cli extends mix(Configurable, Emitter) {
     constructor(app){
 
         super(app);
-        this.setConfig(app.get('cli'));
+        this.config(app.get('cli'));
 
         this._app            = app;
         this._commands       = new Set();
@@ -35,7 +35,7 @@ class Cli extends mix(Configurable, Emitter) {
 
         this.notify = new Notifier(this.console, this._interactive);
 
-        for (let method of ['log', 'error', 'alert', 'debug']) {
+        for (let method of ['log', 'error', 'alert', 'debug', 'notice']) {
             this[method] = (msg) => {
                 this.console[method](msg);
             }
@@ -115,7 +115,7 @@ class Cli extends mix(Configurable, Emitter) {
         if (_.isString(theme)) {
             theme = require(theme);
         }
-        this.console.theme(theme);
+        this.console.theme = theme;
         return this;
     }
 
@@ -204,12 +204,12 @@ class Cli extends mix(Configurable, Emitter) {
                     app.watch();
                     this._watchConfigFile();
 
-                    vorpal.delimiter(console.themeValue('delimiter'));
+                    vorpal.delimiter(console.theme.delimiter());
                     vorpal.history('fractal');
 
                     console.box(
                         `Fractal interactive CLI`,
-                        `- Use the 'help' command to see all available commands.\n- Use the 'exit' command to exit the app.`,
+                        `- Use the ${chalk.magenta('help')} command to see all available commands.\n- Use the ${chalk.magenta('exit')} command to exit the app.`,
                         `Powered by Fractal v${app.version}`
                     ).unslog().br();
 
@@ -220,8 +220,8 @@ class Cli extends mix(Configurable, Emitter) {
 
                 console.box(
                     `Fractal CLI`,
-                    `${chalk.magenta('No local Fractal configuration found.')}
-You can use the 'fractal new' command to create a new project.`,
+                    `No local Fractal configuration found.
+You can use the ${chalk.magenta('fractal new')} command to create a new project.`,
                     `Powered by Fractal v${app.version}`
                 ).unslog();
 

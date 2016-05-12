@@ -6,7 +6,9 @@
 
  */
 
-const fractal = require('@frctl/fractal');
+const fractal = require('@frctl/fractal')();
+
+
 
 const engine = fractal.components.engine();
 

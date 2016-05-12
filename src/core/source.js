@@ -27,7 +27,7 @@ class Source extends mix(Configurable, Heritable, Emitter, Collection) {
         this._engine        = null;
         this._defaultEngine = '@frctl/handlebars-adapter';
 
-        this.setConfig(app.get(this.name));
+        this.config(app.get(this.name));
         this.setHeritable(_.keys(this.get('default')));
     }
 

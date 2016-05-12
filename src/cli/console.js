@@ -4,24 +4,32 @@ const _            = require('lodash');
 const chalk        = require('chalk');
 const Table        = require('cli-table2');
 const slog         = require('single-line-log').stdout;
-const theme        = require('./theme');
+const Theme        = require('./theme');
+const defaultTheme = require('./themes/default');
 const utils        = require('../core/utils');
 
 class Console {
 
     constructor(logger){
         this._logger    = logger || console;
-        this._theme     = theme;
+        this._theme     = defaultTheme;
         this._slogging  = false;
         this._debugging = false;
     }
 
-    theme(theme) {
-        this._theme = _.defaultsDeep(theme, this._theme);
+    set theme(theme) {
+        if (!theme instanceof Theme) {
+            throw new Error('Fractal themes must inherit from the base Theme class.');
+        }
+        this._theme = theme;
+    }
+
+    get theme() {
+        return this._theme;
     }
 
     log(text) {
-        this.write(text);
+        this.write(text, 'log');
         return this;
     }
 
@@ -127,14 +135,7 @@ class Console {
     }
 
     _format(text, type) {
-        const prefix = this.themeValue(`${type}.prefix`, '');
-        const textStyle = this.themeValue(`${type}.style`, (str) => str);
-        const prefixStyle = this.themeValue(`${type}.prefixStyle`, textStyle);
-        return `${prefixStyle(prefix)} ${textStyle(text)}`;
-    }
-
-    themeValue(path, otherwise) {
-        return _.get(this._theme, path, otherwise);
+        return this._theme.format(text, type);
     }
 
     debugMode(status) {

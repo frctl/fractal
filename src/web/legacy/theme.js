@@ -59,7 +59,7 @@ module.exports = function(){
         //     }
         // },
 
-        setConfig(conf) {
+        config(conf) {
             this._config = conf;
         },
 

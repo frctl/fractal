@@ -21,7 +21,7 @@ module.exports = {
             const header       = "Fractal web UI server is running!";
             const footer       = this.fractal.cli.isInteractive() ? `Use the 'stop' command to stop the server.` : `Use ^C to stop the server.`;
             const serverUrl    = server.urls.server;
-            const format       = this.console.themeValue('success.style', str => str);
+            const format       = str => this.console.theme.format(str, 'success', true);
             let body           = '';
 
             if (!server.isSynced) {

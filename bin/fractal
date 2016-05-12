@@ -8,12 +8,13 @@ const Liftoff        = require('liftoff');
 const chalk          = require('chalk');
 const updateNofifier = require('update-notifier');
 const cliPackage     = require('../package.json');
+const utils          = require('../src/core/utils');
 
 const notifier = updateNofifier({
     pkg: cliPackage
 });
 
-const Fractal = new Liftoff({
+const FractalCli = new Liftoff({
     processTitle: 'fractal',
     moduleName: '@frctl/fractal',
     configName: 'fractal',
@@ -23,50 +24,70 @@ const Fractal = new Liftoff({
     v8flags: ['--harmony']
 });
 
-Fractal.launch({}, function(env){
+FractalCli.launch({
+    configPath: './fractal.js'
+}, function(env){
 
     let app;
     let scope = 'global';
     let configPath = env.configPath;
 
+    /*
+     * Check for the presence of a Fractal config file:
+     *
+     * - First see if the standard fractal.js file is available.
+     * - If not, see if there is a package.json file present that contains a different name to look for
+     *
+     * If either of the above is found, it's a project context.
+     */
     if (configPath) {
-        require(configPath);
+        app = require(configPath);
         scope = 'project';
     } else {
-        try {
-            const projectPackage = require(Path.join(env.cwd, 'package.json'));
-            if (projectPackage.fractal && projectPackage.fractal.main) {
-                configPath = Path.join(env.cwd, projectPackage.fractal.main);
-                require(configPath);
+        const projectPackage = require(Path.join(env.cwd, 'package.json'));
+        if (projectPackage.fractal && projectPackage.fractal.main) {
+            configPath = Path.join(env.cwd, projectPackage.fractal.main);
+            if (utils.fileExistsSync(configPath)) {
+                app = require(configPath);
                 scope = 'project';
-            }
-        } catch(e) {
-            if (e.code && e.code === 'MODULE_NOT_FOUND') {
-                // no config file found, must be global context.
-                configPath = null;
-            } else {
-                throw e;
             }
         }
     }
-    
-    if (env.modulePath) {
-        app = require(env.modulePath);
+
+    /*
+     * If it's a project context check compare the local Fractal version with the CLI version.
+     * Also check that the config file is correctly exporting a configured fractal instance.
+     *
+     * If it's not a global context, then import the global Fractal module and create a fresh instance.
+     */
+
+    if (scope === 'project') {
+
         if (!semver.satisfies(env.modulePackage.version, `^${cliPackage.version}`)) {
-            // Project is using a legacy version of Fractal
+            // Project is using a legacy version of Fractal, load it the old way...
             console.log(`Fractal version mismatch! Global: ${cliPackage.version} / Local: ${env.modulePackage.version}`);
-            app.run();
+            let frctl = require(env.modulePath);
+            frctl.run();
             return;
         }
 
+        if (! app || ! app.__fractal) {
+            // looks like the configuration file is not correctly module.export'ing a fractal intance
+            console.log(`Configuration error: The CLI configuration file is not exporting an instance of Fractal.`);
+            return;
+        }
+
+        // Alert to any version mismatches.
         if (semver.gt(cliPackage.version, env.modulePackage.version)) {
             app.cli.notify.versionMismatch({
                 cli: cliPackage.version,
                 local: env.modulePackage.version
             });
         }
+
     } else {
-        app = require('../.');
+        // Global context
+        app = require('../.').create();
     }
 
     if (notifier.update) {

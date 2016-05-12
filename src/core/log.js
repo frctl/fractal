@@ -21,6 +21,10 @@ class Log extends mix(Emitter) {
         this.emit('log', msg);
     }
 
+    notice(msg, data) {
+        this.emit('notice', msg);
+    }
+
 }
 
 module.exports = new Log();
