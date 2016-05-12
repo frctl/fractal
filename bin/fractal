@@ -9,6 +9,7 @@ const chalk          = require('chalk');
 const updateNofifier = require('update-notifier');
 const cliPackage     = require('../package.json');
 const utils          = require('../src/core/utils');
+const Fractal        = require('../.').Fractal;
 
 const notifier = updateNofifier({
     pkg: cliPackage
@@ -18,40 +19,36 @@ const FractalCli = new Liftoff({
     processTitle: 'fractal',
     moduleName: '@frctl/fractal',
     configName: 'fractal',
-    extensions: {
-        '.js': null
-    },
     v8flags: ['--harmony']
 });
 
+/*
+ * Figure out what the Fractal CLI config file is called.
+ *
+ * - See if there is a package.json file present that contains a specific filename
+ * - Otherwise look for the default fractal.js
+ */
+
+let configPath = './fractal.js';
+try {
+    const projectPackage = require(Path.join(process.cwd(), 'package.json'));
+    if (projectPackage.fractal && projectPackage.fractal.main) {
+        configPath = Path.join(process.cwd(), projectPackage.fractal.main);
+    }
+} catch(e){}
+
 FractalCli.launch({
-    configPath: './fractal.js'
+    configPath: configPath
 }, function(env){
 
     let app;
     let scope = 'global';
     let configPath = env.configPath;
 
-    /*
-     * Check for the presence of a Fractal config file:
-     *
-     * - First see if the standard fractal.js file is available.
-     * - If not, see if there is a package.json file present that contains a different name to look for
-     *
-     * If either of the above is found, it's a project context.
-     */
     if (configPath) {
+        // Config file found - it's running in project context.
         app = require(configPath);
         scope = 'project';
-    } else {
-        const projectPackage = require(Path.join(env.cwd, 'package.json'));
-        if (projectPackage.fractal && projectPackage.fractal.main) {
-            configPath = Path.join(env.cwd, projectPackage.fractal.main);
-            if (utils.fileExistsSync(configPath)) {
-                app = require(configPath);
-                scope = 'project';
-            }
-        }
     }
 
     /*
@@ -71,9 +68,9 @@ FractalCli.launch({
             return;
         }
 
-        if (! app || ! app.__fractal) {
+        if (! app || ! (app instanceof Fractal)) {
             // looks like the configuration file is not correctly module.export'ing a fractal intance
-            console.log(`Configuration error: The CLI configuration file is not exporting an instance of Fractal.`);
+            console.log(`${chalk.red('Configuration error')}: The CLI configuration file is not exporting an instance of Fractal.`);
             return;
         }
 
@@ -90,11 +87,19 @@ FractalCli.launch({
         app = require('../.').create();
     }
 
+    /*
+     * Notify of any available updates on exit
+     */
+
     if (notifier.update) {
         process.on('exit', function () {
             app.cli.notify.updateAvailable(notifier.update);
     	});
     }
+
+    /*
+     * Kick things off...
+     */
 
     app.cli.setConfigPath(configPath);
     app.cli.setScope(scope);

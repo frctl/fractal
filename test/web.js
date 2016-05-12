@@ -3,7 +3,7 @@
 const chai   = require('chai');
 const expect = chai.expect;
 
-const app    = require('../src/fractal');
+const app    = require('../src/fractal')();
 const Web    = require('../src/web');
 
 describe('Web', function(){

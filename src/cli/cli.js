@@ -36,10 +36,10 @@ class Cli extends mix(Configurable, Emitter) {
         this.notify = new Notifier(this.console, this._interactive);
 
         for (let method of ['log', 'error', 'alert', 'debug', 'notice']) {
-            this[method] = (msg) => {
-                this.console[method](msg);
-            }
-            Log.on(method, msg => this[method](msg));
+            this[method] = function(){
+                this.console[method](...arguments);
+            };
+            Log.on(method, (msg, data) => this[method](msg, data));
         }
     }
 

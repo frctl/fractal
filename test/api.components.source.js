@@ -5,7 +5,7 @@ const chai    = require('chai');
 const expect  = chai.expect;
 
 const ComponentSource = require('../src/api/components');
-const app             = require('../src/fractal');
+const app             = require('../src/fractal')();
 
 describe('ComponentSource', function(){
 

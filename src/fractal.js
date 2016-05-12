@@ -3,8 +3,6 @@
 const _               = require('lodash');
 const Promise         = require('bluebird');
 const settings        = require('../settings');
-const ComponentSource = require('./api/components');
-const DocSource       = require('./api/docs');
 const Log             = require('./core/log');
 const utils           = require('./core/utils');
 const mix             = require('./core/mixins/mix');
@@ -12,8 +10,6 @@ const Configurable    = require('./core/mixins/configurable');
 const Emitter         = require('./core/mixins/emitter');
 
 const sources = ['components', 'docs'];
-
-let count = 0;
 
 class Fractal extends mix(Configurable, Emitter) {
 
@@ -24,24 +20,39 @@ class Fractal extends mix(Configurable, Emitter) {
     constructor(config) {
         super();
         this.config(_.defaultsDeep(config || {}, settings));
-        this.__fractal  = true
-        this._cli       = null;
-        this._web       = null;
-        this.components = new ComponentSource(this);
-        this.docs       = new DocSource(this);
+
+        this._cli        = null;
+        this._web        = null;
+        this._components = null;
+        this._docs       = null;
 
         if (this.get('env') !== 'debug') {
             process.on('uncaughtException', function (err) {
-                Log.error(err);
+                Log.error(err.toString(), err);
                 process.exit(1);
             });
         }
+
+    }
+
+    get components(){
+        if (!this._components) {
+            const ComponentSource = require('./api/components');
+            this._components = new ComponentSource(this);
+        }
+        return this._components;
+    }
+
+    get docs(){
+        if (!this._docs) {
+            const DocSource = require('./api/docs');
+            this._docs = new DocSource(this);
+        }
+        return this._docs;
     }
 
     get cli(){
         if (!this._cli) {
-            count++;
-            console.log(count);
             const Cli = require('./cli');
             this._cli = new Cli(this);
         }

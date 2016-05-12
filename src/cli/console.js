@@ -39,38 +39,44 @@ class Console {
         return this;
     }
 
-    debug(text) {
+    debug(text, data) {
         if (this._debugging) {
             if (this._slogging) {
                 this.unslog();
                 this.br();
             }
             this.write(text, 'debug');
+            if (data) this.dump(data);
         }
         return this;
     }
 
-    success(text) {
+    success(text, data) {
         this.write(text, 'success');
         return this;
     }
 
-    alert(text) {
+    alert(text, data) {
         this.write(text, 'alert');
         return this;
     }
 
-    error(text) {
+    error(text, data) {
         if (this.isSlogging()) {
             this.unslog().br();
         }
-        var str = text.toString().replace(/^Error: /, '');
-        this.write(str, 'error');
-        if (text.stack) this.debug(text.stack);
+        this.write(text, 'error');
+        if (data && this._debugging) {
+            if (data.stack) {
+                this.dump(data.stack.split('\n').slice(1).join('\n'))
+            } else {
+                this.dump(data);
+            }
+        }
         return this;
     }
 
-    notice(text) {
+    notice(text, data) {
         this.write(text, 'notice');
         return this;
     }
@@ -105,6 +111,7 @@ class Console {
     }
 
     write(str, type) {
+        str = _.isString(str) ? str : str.toString();
         str = type ? this._format(str, type) : str;
         if (this.isSlogging()) {
             slog(str);

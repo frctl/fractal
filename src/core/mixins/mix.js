@@ -6,7 +6,12 @@ const mix  = require('mixwith').mix;
 class Base {
 
     constructor(){
-        this._mixedIn = [];
+        Object.defineProperty(this, '_mixedIn', {
+            enumerable: false,
+            configurable: false,
+            writable: true,
+            value: []
+        });
     }
 
     hasMixedIn(name) {

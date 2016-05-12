@@ -6,6 +6,7 @@ const express      = require('express');
 const chokidar     = require('chokidar');
 const Path         = require('path');
 const portscanner  = Promise.promisifyAll(require('portscanner'));
+const render       = require('./render');
 const Log          = require('../core/log');
 const mix          = require('../core/mixins/mix');
 const Emitter      = require('../core/mixins/emitter');
@@ -23,6 +24,7 @@ module.exports = class Server extends mix(Emitter) {
         this._ports       = {};
         this._urls        = {};
         this._connections = {};
+        this._render      = render(theme, app);
         this._init();
     }
 
@@ -161,7 +163,7 @@ module.exports = class Server extends mix(Emitter) {
         res.locals.__request.params = match.params;
         res.locals.__request.route = match.route;
 
-        render.template(match.route.view, match.route.context, this._context(res.locals))
+        this._render.template(match.route.view, match.route.context, this._serverContext(res))
               .then(v => res.send(v).end())
               .catch(err => next(err));
     }
@@ -181,7 +183,7 @@ module.exports = class Server extends mix(Emitter) {
             Log.error(err.message);
         }
 
-        render.template(this._theme.error.view, this._theme.error.context, this._context(res.locals))
+        this._render.template(this._theme.error.view, this._theme.error.context, this._serverContext(res))
               .then(v => res.send(v).end())
               .catch(err => next(err));
     }
@@ -212,18 +214,16 @@ module.exports = class Server extends mix(Emitter) {
         }
     }
 
-    _context(locals) {
+    _serverContext(res) {
         return {
-            web: {
-                server: {
-                    address: this._urls.server,
-                    port: this._ports.server,
-                    syncPort: this._ports.sync,
-                    host: 'localhost',
-                    sync: this.isSynced
-                },
-                request: locals.__request
-            }
+            server: {
+                address: this._urls.server,
+                port: this._ports.server,
+                syncPort: this._ports.sync,
+                host: 'localhost',
+                sync: this.isSynced
+            },
+            request: res.locals.__request
         };
     }
 

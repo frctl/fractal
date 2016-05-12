@@ -16,7 +16,8 @@ module.exports = class Web extends mix(Configurable, Emitter) {
         this._app          = app;
         this._servers      = new Map();
         this._themes       = new Map();
-        this._defaultTheme = '@frctl/mandelbrot';
+        // this._defaultTheme = '@frctl/mandelbrot';
+        this._defaultTheme = require('./themes/test')();
     }
 
     server(config) {

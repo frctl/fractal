@@ -4,7 +4,7 @@ const chai    = require('chai');
 const sinon   = require('sinon');
 const expect  = chai.expect;
 
-const app     = require('../src/fractal');
+const app     = require('../src/fractal')();
 const Cli     = require('../src/cli');
 const Console = require('../src/cli/console');
 
@@ -28,13 +28,7 @@ describe('Cli', function(){
     });
 
     describe('.theme()', function(){
-        it('sets the theme from an object', function(){
-            let theme = {
-                delimiter: 'foo'
-            };
-            cli.theme(theme);
-            expect(cli.console.themeValue('delimiter', theme.delimiter));
-        });
+        it('sets the CLI theme');
     });
 
     describe('.add()', function(){

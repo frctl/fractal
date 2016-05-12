@@ -12,16 +12,15 @@ module.exports = class Theme extends mix(Configurable) {
 
     constructor(config){
         super();
-
-        this.options = this.config.bind(this);
-        this.setOption = this.set.bind(this);
-        this.getOption = this.get.bind(this);
-
-        this._staticPaths   = new Set();
-        this._routes        = new Map();
-        this._builder       = null;
-        this._errorView     = null;
-        this._viewsDir      = config.views || null;
+        config = config || {};
+        this.options      = this.config.bind(this);
+        this.setOption    = this.set.bind(this);
+        this.getOption    = this.get.bind(this);
+        this._staticPaths = new Set();
+        this._routes      = new Map();
+        this._builder     = null;
+        this._errorView   = null;
+        this._viewsDir    = config.views || null;
 
         if (config.static) {
             this.static(config.static.path || './', config.static.mount || '/');
@@ -32,6 +31,14 @@ module.exports = class Theme extends mix(Configurable) {
         if (config.error) {
             this.error(config.error);
         }
+    }
+
+    views(path) {
+        if (!arguments.length) {
+            return this._viewsDir;
+        }
+        this._viewsDir = path;
+        return this;
     }
 
     error(err) {
@@ -57,6 +64,7 @@ module.exports = class Theme extends mix(Configurable) {
             path: path,
             mount: mount
         });
+        return this;
     }
 
     route(path, opts) {

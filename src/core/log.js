@@ -6,23 +6,23 @@ const Emitter = require('./mixins/emitter');
 class Log extends mix(Emitter) {
 
     debug(msg, data) {
-        this.emit('debug', msg);
+        this.emit('debug', msg, data);
     }
 
     alert(msg, data) {
-        this.emit('alert', msg);
+        this.emit('alert', msg, data);
     }
 
     error(msg, data) {
-        this.emit('error', msg);
+        this.emit('error', msg, data);
     }
 
     log(msg, data) {
-        this.emit('log', msg);
+        this.emit('log', msg, data);
     }
 
     notice(msg, data) {
-        this.emit('notice', msg);
+        this.emit('notice', msg, data);
     }
 
 }

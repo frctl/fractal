@@ -16,13 +16,7 @@ describe('Console', function(){
     });
 
     describe('.theme()', function(){
-        let theme = {
-            delimiter: 'foo'
-        };
-        it('sets a theme from an object', function(){
-            logger.theme(theme);
-            expect(logger.themeValue('delimiter', theme.delimiter));
-        });
+        it('sets a theme');
     });
 
 });
