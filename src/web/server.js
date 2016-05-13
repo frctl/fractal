@@ -6,7 +6,6 @@ const express      = require('express');
 const chokidar     = require('chokidar');
 const Path         = require('path');
 const portscanner  = Promise.promisifyAll(require('portscanner'));
-const render       = require('./render');
 const Log          = require('../core/log');
 const mix          = require('../core/mixins/mix');
 const Emitter      = require('../core/mixins/emitter');
@@ -24,7 +23,6 @@ module.exports = class Server extends mix(Emitter) {
         this._ports       = {};
         this._urls        = {};
         this._connections = {};
-        this._render      = render(theme, app);
         this._init();
     }
 
@@ -162,8 +160,9 @@ module.exports = class Server extends mix(Emitter) {
         }
         res.locals.__request.params = match.params;
         res.locals.__request.route = match.route;
-
-        this._render.template(match.route.view, match.route.context, this._serverContext(res))
+        
+        this._theme.engine.setGlobal('web', this._serverContext(res));
+        this._theme.render(match.route.view, match.route.context)
               .then(v => res.send(v).end())
               .catch(err => next(err));
     }
@@ -183,9 +182,15 @@ module.exports = class Server extends mix(Emitter) {
             Log.error(err.message);
         }
 
-        this._render.template(this._theme.error.view, this._theme.error.context, this._serverContext(res))
-              .then(v => res.send(v).end())
-              .catch(err => next(err));
+        if (this._theme.error()) {
+            // this._theme.engine.setGlobal('web', this._serverContext(res));
+            this._theme.render(this._theme.error().view, this._theme.error().context)
+                  .then(v => res.send(v).end())
+                  .catch(err => next(err));
+        } else {
+            res.send(err.stack).end();
+        }
+
     }
 
     _init() {
@@ -210,7 +215,7 @@ module.exports = class Server extends mix(Emitter) {
         this._server.get(':path(*)', this._onRequest.bind(this));
 
         if (!this._app.debug) {
-            this._server.use((err, req, res, next) => this._onError.bind(this));
+            this._server.use(this._onError.bind(this));
         }
     }
 
@@ -261,20 +266,3 @@ function findPorts(serverPort, useSync) {
         }
     }
 }
-
-// function getGlobals(context) {
-//     return Promise.join(serverPort, syncPort, function(serverPort, syncPort){
-//         return {
-//             web: {
-//                 server: {
-//                     address: `http://localhost:${serverPort}`,
-//                     port: serverPort,
-//                     syncPort: syncPort,
-//                     host: 'localhost',
-//                     sync: useSync
-//                 },
-//                 request: context.__request
-//             }
-//         };
-//     });
-// }

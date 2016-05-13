@@ -6,7 +6,7 @@ module.exports = function(app, env) {
 
         name: 'nunj',
 
-        filter(str, context) => {
+        filter(str, context) {
             return env.renderString(str, context || {});
         },
 

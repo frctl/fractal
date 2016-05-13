@@ -12,7 +12,18 @@ module.exports = function(){
     theme.route('/', {
         handle: 'overview',
         view: 'index.nunj',
-    })
+    });
+
+    theme.on('init', function(env, app){
+        env.engine.addGlobal('foobar', 'PPPPP');
+        env.engine.addFilter('wow', function(str){
+            return str + 'wow';
+        });
+    });
+
+    // theme.on('build', function(builder, app){
+    //
+    // });
 
     return theme;
 

@@ -7,8 +7,9 @@ const fs           = Promise.promisifyAll(require('fs-extra'));
 const pr           = require('path-to-regexp');
 const mix          = require('../core/mixins/mix');
 const Configurable = require('../core/mixins/configurable');
+const Emitter      = require('../core/mixins/emitter');
 
-module.exports = class Theme extends mix(Configurable) {
+module.exports = class Theme extends mix(Configurable, Emitter) {
 
     constructor(config){
         super();
@@ -21,6 +22,10 @@ module.exports = class Theme extends mix(Configurable) {
         this._builder     = null;
         this._errorView   = null;
         this._viewsDir    = config.views || null;
+        this._filters     = [];
+        this._extensions  = [];
+        this._globals     = {};
+        this._env         = null;
 
         if (config.static) {
             this.static(config.static.path || './', config.static.mount || '/');
@@ -31,6 +36,26 @@ module.exports = class Theme extends mix(Configurable) {
         if (config.error) {
             this.error(config.error);
         }
+    }
+
+    init(env) {
+        this._env = env;
+        this.emit('init', env, this._app);
+    }
+
+    render(){
+        return this.engine.render(...arguments);
+    }
+
+    renderString(){
+        return this.engine.renderString(...arguments);
+    }
+
+    get engine(){
+        if (!this._env) {
+            throw new Error('Theme engine instance cannot be accessed before initialisation.');
+        }
+        return this._env;
     }
 
     views(path) {
@@ -121,13 +146,13 @@ module.exports = class Theme extends mix(Configurable) {
         return path;
     }
 
-    onBuild(buildCallback) {
-        this._builder = buildCallback;
-    }
-
-    hasBuilder(){
-        return !! this._builder;
-    }
+    // onBuild(buildCallback) {
+    //     this._builder = buildCallback;
+    // }
+    //
+    // hasBuilder(){
+    //     return !! this._builder;
+    // }
 
 }
 
