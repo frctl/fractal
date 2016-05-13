@@ -1,6 +1,7 @@
 'use strict';
 
 const Promise     = require('bluebird');
+const Path        = require('path');
 const nunjucks    = require('nunjucks');
 const yaml        = require('js-yaml');
 const _           = require('lodash');
@@ -13,8 +14,13 @@ module.exports = class Env {
     constructor(viewsPath, app){
 
         this._app = app;
+        viewsPath = [].concat(viewsPath);
 
-        const loader = new nunjucks.FileSystemLoader(viewsPath, {
+        const views = viewsPath.concat([
+            Path.join(__dirname, '../../../views/web'),
+        ]);
+
+        const loader = new nunjucks.FileSystemLoader(views, {
             watch: false,
             noCache: true
         });
@@ -32,7 +38,7 @@ module.exports = class Env {
             const f = factory(app, this._engine);
             this._engine.addFilter(f.name, f.filter, f.async);
         });
-        
+
         this._globals = {
             components: app.components,
             docs: app.docs,

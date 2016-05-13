@@ -11,31 +11,29 @@ const Emitter      = require('../core/mixins/emitter');
 
 module.exports = class Theme extends mix(Configurable, Emitter) {
 
-    constructor(config){
+    constructor(viewPaths, options){
         super();
-        config = config || {};
+
         this.options      = this.config.bind(this);
         this.setOption    = this.set.bind(this);
         this.getOption    = this.get.bind(this);
+
+        this.options(options || {});
+
         this._staticPaths = new Set();
         this._routes      = new Map();
         this._builder     = null;
-        this._errorView   = null;
-        this._viewsDir    = config.views || null;
+        this._views       = viewPaths ? [].concat(viewPaths) : [];
+
         this._filters     = [];
         this._extensions  = [];
         this._globals     = {};
         this._env         = null;
 
-        if (config.static) {
-            this.static(config.static.path || './', config.static.mount || '/');
-        }
-        if (config.options) {
-            this.options(config.options);
-        }
-        if (config.error) {
-            this.error(config.error);
-        }
+        this._errorView   = {
+            view: '__system/error.nunj',
+            context: {}
+        };
     }
 
     init(env) {
@@ -60,9 +58,9 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
 
     views(path) {
         if (!arguments.length) {
-            return this._viewsDir;
+            return this._views;
         }
-        this._viewsDir = path;
+        this._views = [].concat(path);
         return this;
     }
 
@@ -78,7 +76,8 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
             err = null;
         }
         err.context = err.context || {};
-        return this._errorView = err;
+        this._errorView = err;
+        return this;
     }
 
     static(path, mount) {

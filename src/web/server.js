@@ -5,6 +5,7 @@ const _            = require('lodash');
 const express      = require('express');
 const chokidar     = require('chokidar');
 const Path         = require('path');
+const util         = require('util');
 const portscanner  = Promise.promisifyAll(require('portscanner'));
 const Log          = require('../core/log');
 const mix          = require('../core/mixins/mix');
@@ -160,8 +161,18 @@ module.exports = class Server extends mix(Emitter) {
         }
         res.locals.__request.params = match.params;
         res.locals.__request.route = match.route;
-        
-        this._theme.engine.setGlobal('web', this._serverContext(res));
+
+        this._theme.engine.setGlobal('web', {
+            server: {
+                address: this._urls.server,
+                port: this._ports.server,
+                syncPort: this._ports.sync,
+                host: 'localhost',
+                sync: this.isSynced
+            },
+            request: res.locals.__request
+        });
+
         this._theme.render(match.route.view, match.route.context)
               .then(v => res.send(v).end())
               .catch(err => next(err));
@@ -182,15 +193,9 @@ module.exports = class Server extends mix(Emitter) {
             Log.error(err.message);
         }
 
-        if (this._theme.error()) {
-            // this._theme.engine.setGlobal('web', this._serverContext(res));
-            this._theme.render(this._theme.error().view, this._theme.error().context)
-                  .then(v => res.send(v).end())
-                  .catch(err => next(err));
-        } else {
-            res.send(err.stack).end();
-        }
-
+        this._theme.render(this._theme.error().view, this._theme.error().context)
+              .then(v => res.send(v).end())
+              .catch(err => next(err));
     }
 
     _init() {
@@ -217,19 +222,6 @@ module.exports = class Server extends mix(Emitter) {
         if (!this._app.debug) {
             this._server.use(this._onError.bind(this));
         }
-    }
-
-    _serverContext(res) {
-        return {
-            server: {
-                address: this._urls.server,
-                port: this._ports.server,
-                syncPort: this._ports.sync,
-                host: 'localhost',
-                sync: this.isSynced
-            },
-            request: res.locals.__request
-        };
     }
 
 }

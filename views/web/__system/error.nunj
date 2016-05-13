@@ -1,1 +1,57 @@
-{{ err.stack }}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+
+    <style media="screen">
+    html {
+        font-family: sans-serif;
+        color: #444;
+        padding: 20px;
+        font-size: 16px;
+        line-height: 1.5;
+        border-top: 2px solid red;
+    }
+    .Error-title {
+        font-size: 24px;
+        margin: 10px 0 20px 0;
+        color: #000;
+    }
+    .Error-message {
+        font-size: 18px;
+        margin: 20px 0 30px 0;
+    }
+    .Error-stack {
+        font-size: 14px;
+        margin: 20px 0;
+        padding: 16px 16px 20px 16px;
+        background-color: #f6f6f6;
+        display: block;
+        color: #000;
+        border: 1px solid #ddd;
+    }
+    .Error-stack pre {
+        margin: 0;
+    }
+    </style>
+
+    <title>Error</title>
+</head>
+<body>
+
+<div class="Error">
+    <h1 class="Error-title">{{ frctl.web.request.error.name }}</h1>
+
+    <div class="Error-message">
+    {{ frctl.web.request.error.message | markdown }}
+    </div>
+
+    {% if frctl.web.request.error.stack %}
+    <code class="Error-stack">
+        <pre>{{ frctl.web.request.error.stack }}</pre>
+    </code>
+    {% endif %}
+</div>
+
+</body>
+</html>

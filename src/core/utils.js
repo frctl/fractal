@@ -59,7 +59,7 @@ module.exports = {
        };
    },
 
-    stringify(data, indent) {
+   stringify(data, indent) {
        return JSON.stringify(data, function (key, val) {
            if (this[key] instanceof Buffer) {
                return '<Buffer>';

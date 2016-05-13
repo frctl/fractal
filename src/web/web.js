@@ -60,6 +60,7 @@ module.exports = class Web extends mix(Configurable, Emitter) {
         if (!theme instanceof Theme) {
             throw new Error('Fractal themes must inherit from the base Theme class.');
         }
+        
         theme.init(new Env(theme.views(), this));
         return theme;
     }

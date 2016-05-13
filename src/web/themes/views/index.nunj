@@ -1,2 +1,1 @@
-{{ foobar | wows }}
-asd
+{{ context | resolve(frctl.components) | format('yml') }}

@@ -5,9 +5,7 @@ const Theme       = require('../theme');
 
 module.exports = function(){
 
-    const theme = new Theme({
-        views: Path.join(__dirname, 'views')
-    });
+    const theme = new Theme(Path.join(__dirname, 'views'));
 
     theme.route('/', {
         handle: 'overview',
