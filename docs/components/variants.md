@@ -93,7 +93,7 @@ We can define the required variants in the component config file like this:
 ```
 This will give **three** variants; the default component variant, plus a `warning` and a `success` variant.
 
-In this example all of the variants will use the same view template, but will pass it different data when rendered as a preview. Because the default component configuration specifies a `closeButtonText` value in it's context data, the variants do no need to - they only need to override the properties that need to be different for that particular variant.
+In this example all of the variants will use the same view template, but will pass it different data when rendered as a preview. Because the default component configuration specifies a `closeButtonText` value in it's context data, the variants do not need to - they only need to override the properties that need to be different for that particular variant.
 
 Similarly, by specifying a top-level `status` value, all variants will *inherit* that status unless explictly specified, as the `success` variant does.
 
