@@ -9,23 +9,19 @@ module.exports = function(options){
 
     options = _.clone(options || {});
 
-    const theme = new Theme({
-        views: Path.join(__dirname, 'views'),
-        error: 'pages/error.nunj',
-        static: {
-            path: Path.join(__dirname, 'dist'),
-            mount: '/theme'
-        },
-        options: _.defaultsDeep(options, {
-            skin: 'default',
-            rtl: false,
-            lang: 'en',
-            stylesheet: null,
-            head: null,
-            foot: null,
-            contextFormat: 'json'
-        })
-    });
+    const theme = new Theme(Path.join(__dirname, 'views'), _.defaultsDeep(options, {
+        skin: 'default',
+        rtl: false,
+        lang: 'en',
+        stylesheet: null,
+        head: null,
+        foot: null,
+        contextFormat: 'json'
+    }));
+
+    theme.error('pages/error.nunj');
+
+    theme.static(Path.join(__dirname, 'dist'), '/theme');
 
     theme.route('/', {
         handle: 'overview',
