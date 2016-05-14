@@ -1,1 +1,5 @@
-{{ context | resolve(frctl.components) | format('yml') }}
+<p>
+    this is a theme
+</p>
+
+<code><pre>{{ context | context(frctl.components) | format('yml') }}</pre></code>

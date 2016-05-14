@@ -50,35 +50,42 @@ module.exports = class Server extends mix(Emitter) {
             this._ports = ports;
             this._sync  = sync;
 
-            this._instance = this._server.listen(ports.server, err => {
-                if (err) {
-                    return Log.error(`Could not start server on port ${this._ports.server}`);
-                }
+            return new Promise((resolve, reject) => {
 
-                this._urls.server = `http://localhost:${ports.server}`;
+                this._instance = this._server.listen(ports.server, (err) => {
 
-                if (this._sync) {
-                    return this._startSync();
-                }
+                    if (err) {
+                        Log.error(`Could not start server on port ${this._ports.server}`);
+                        return reject(err);
+                    }
 
-                this.emit('ready');
+                    this._urls.server = `http://localhost:${ports.server}`;
+
+                    if (this._sync) {
+                        return this._startSync();
+                    }
+
+                    this.emit('ready');
+
+                    resolve(this._instance);
+                });
+
+                this._instance.destroy = cb => {
+                    this._instance.close(cb);
+                    for (var key in this._connections) {
+                        this._connections[key].destroy();
+                    }
+                    this._instance.emit('destroy');
+                };
+
+                this._instance.on('connection', conn => {
+                    const key = `${conn.remoteAddress}:${conn.remotePort}`;
+                    this._connections[key] = conn;
+                    conn.on('close', () => delete this._connections[key]);
+                });
+
             });
 
-            this._instance.destroy = cb => {
-                this._instance.close(cb);
-                for (var key in this._connections) {
-                    this._connections[key].destroy();
-                }
-                this._instance.emit('destroy');
-            };
-
-            this._instance.on('connection', conn => {
-                const key = `${conn.remoteAddress}:${conn.remotePort}`;
-                this._connections[key] = conn;
-                conn.on('close', () => delete this._connections[key]);
-            });
-
-            return this;
         });
     }
 
@@ -149,6 +156,17 @@ module.exports = class Server extends mix(Emitter) {
 
     _onRequest(req, res, next) {
 
+        this._theme.engine.setGlobal('web', {
+            server: {
+                address: this._urls.server,
+                port: this._ports.server,
+                syncPort: this._ports.sync,
+                host: 'localhost',
+                sync: this.isSynced
+            },
+            request: res.locals.__request
+        });
+
         const match = this._theme.matchRoute(req.path);
 
         if (!match) {
@@ -162,17 +180,6 @@ module.exports = class Server extends mix(Emitter) {
         res.locals.__request.params = match.params;
         res.locals.__request.route = match.route;
 
-        this._theme.engine.setGlobal('web', {
-            server: {
-                address: this._urls.server,
-                port: this._ports.server,
-                syncPort: this._ports.sync,
-                host: 'localhost',
-                sync: this.isSynced
-            },
-            request: res.locals.__request
-        });
-
         this._theme.render(match.route.view, match.route.context)
               .then(v => res.send(v).end())
               .catch(err => next(err));
@@ -183,6 +190,7 @@ module.exports = class Server extends mix(Emitter) {
         if (res.headersSent || !this._theme.error) {
             return next(err);
         }
+
         res.locals.__request.error = err;
         if (res.locals.__request.errorStatus) {
             res.status(res.locals.__request.errorStatus);

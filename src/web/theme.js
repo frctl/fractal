@@ -119,6 +119,16 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
                 };
             }
         }
+        if (urlPath === '/') {
+            return {
+                route: {
+                    handle: '__system-index',
+                    view: '__system/index.nunj',
+                },
+                params: {}
+
+            };
+        }
         return false;
     }
 

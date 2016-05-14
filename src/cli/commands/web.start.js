@@ -15,8 +15,10 @@ module.exports = {
     },
 
     action: function (args, done) {
+        
         const server = this.fractal.web.server(args.options);
-        server.on('ready',() => {
+
+        server.on('ready', () => {
 
             const header       = "Fractal web UI server is running!";
             const footer       = this.fractal.cli.isInteractive() ? `Use the 'stop' command to stop the server.` : `Use ^C to stop the server.`;
@@ -36,8 +38,12 @@ module.exports = {
             return this.console.box(header, body, footer).unslog();
 
         });
-        server.start(args.options.sync);
-        done();
+
+        if (args.options.watch) {
+            this.fractal.watch();
+        }
+
+        return server.start(args.options.sync);
     }
 
 };

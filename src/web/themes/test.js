@@ -19,9 +19,9 @@ module.exports = function(){
         });
     });
 
-    // theme.on('build', function(builder, app){
-    //
-    // });
+    theme.on('build', function(builder, app){
+        builder.addRoute('overview');
+    });
 
     return theme;
 

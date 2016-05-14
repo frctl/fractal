@@ -65,6 +65,7 @@ module.exports = {
             sync: false,
         },
         builder: {
+            dest: null,
             concurrency: 100,
             root: null
         },

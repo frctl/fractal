@@ -5,7 +5,7 @@ const mix          = require('../core/mixins/mix');
 const Configurable = require('../core/mixins/configurable');
 const Emitter      = require('../core/mixins/emitter');
 const Server       = require('./server');
-const Builder      = require('./server');
+const Builder      = require('./builder');
 const Theme        = require('./theme');
 const Env          = require('./env');
 
@@ -22,16 +22,15 @@ module.exports = class Web extends mix(Configurable, Emitter) {
     }
 
     server(config) {
-        let opts   = _.defaultsDeep(config, this.get('server'));
+        let opts = _.defaultsDeep(config, this.get('server'));
         const theme  = this._loadTheme(opts.theme);
-        const server = new Server(theme, opts, this._app);
-        return server;
+        return new Server(theme, opts, this._app);
     }
 
     builder(config) {
-        const theme = this.get('builder')
-        const builder = new Builder(theme, opts, this._app);
-        return builder;
+        let opts = _.defaultsDeep(config, this.get('builder'));
+        const theme = this._loadTheme(opts.theme);
+        return new Builder(theme, opts, this._app);
     }
 
     theme(name, instance) {
@@ -60,7 +59,12 @@ module.exports = class Web extends mix(Configurable, Emitter) {
         if (!theme instanceof Theme) {
             throw new Error('Fractal themes must inherit from the base Theme class.');
         }
-        
+        const stat = [].concat(this.get('static'));
+        for (let s of stat) {
+            if (s.path) {
+                theme.static(s.path, s.mount || '/');
+            }
+        }
         theme.init(new Env(theme.views(), this));
         return theme;
     }
