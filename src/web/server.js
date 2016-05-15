@@ -55,7 +55,6 @@ module.exports = class Server extends mix(Emitter) {
                 this._instance = this._server.listen(ports.server, (err) => {
 
                     if (err) {
-                        Log.error(`Could not start server on port ${this._ports.server}`);
                         return reject(err);
                     }
 
@@ -164,6 +163,7 @@ module.exports = class Server extends mix(Emitter) {
                 host: 'localhost',
                 sync: this.isSynced
             },
+            builder: null,
             request: res.locals.__request
         });
 
@@ -196,7 +196,7 @@ module.exports = class Server extends mix(Emitter) {
             res.status(res.locals.__request.errorStatus);
         }
         if (res.locals.__request.errorStatus === '404') {
-            Log.notice(`404: ${err.message}`);
+            Log.write(`404: ${err.message}`);
         } else {
             Log.error(err.message);
         }
@@ -210,10 +210,12 @@ module.exports = class Server extends mix(Emitter) {
 
         this._server.use((req, res, next) => {
             res.locals.__request = {
-                isPjax:      !!req.header('X-PJAX'),
+                headers:      req.headers,
                 segments:    _.compact(req.path.split('/')),
                 params:      {},
                 path:        req.path,
+                query:       req.query,
+                url:         req.url,
                 error:       null,
                 errorStatus: null,
                 route:       null,

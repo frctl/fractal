@@ -35,7 +35,7 @@ class Cli extends mix(Configurable, Emitter) {
 
         this.notify = new Notifier(this.console, this._interactive);
 
-        for (let method of ['log', 'error', 'alert', 'debug', 'notice']) {
+        for (let method of ['log', 'error', 'alert', 'debug', 'success']) {
             this[method] = function(){
                 this.console[method](...arguments);
             };
@@ -76,7 +76,7 @@ class Cli extends mix(Configurable, Emitter) {
             // command not available in this scope
             const cmd = vorpal.command(command.replace(/\</g, '[').replace(/\>/g, ']'), config.description || ' ');
             cmd.action((args, done) => {
-                console.error(`This command is not available in a ${this._scope} context.`);
+                console.error(`No Fractal CLI configuration file found. Are you running this from the root directory of your project?`);
                 done();
             }).hidden().__scope = commandScope;
             cmd.action = undefined; // prevent this from being overridden now it is bound

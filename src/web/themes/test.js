@@ -12,6 +12,11 @@ module.exports = function(){
         view: 'index.nunj',
     });
 
+    theme.route('/foo/*?', {
+        handle: 'foo',
+        view: 'index.nunj',
+    });
+
     theme.on('init', function(env, app){
         env.engine.addGlobal('foobar', 'PPPPP');
         env.engine.addFilter('wow', function(str){
@@ -21,6 +26,7 @@ module.exports = function(){
 
     theme.on('build', function(builder, app){
         builder.addRoute('overview');
+        builder.addRoute('foo');
     });
 
     return theme;

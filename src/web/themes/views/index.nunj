@@ -1,5 +1,25 @@
-<p>
-    this is a theme
-</p>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="{{ '/styles.css' | url }}" media="screen" title="no title" charset="utf-8">
+        <title></title>
+    </head>
+    <body>
 
-<code><pre>{{ context | context(frctl.components) | format('yml') }}</pre></code>
+        <h1>{{ frctl.web.request.path }}</h1>
+
+        <p>
+            this is a theme <a href="{{ '/' | url }}">Home</a>
+            <ul>
+
+                <li><a href="{{ '/foo' | url }}">Foo page</a></li>
+            </ul>
+
+            {{ dump(frctl) }}
+        </p>
+
+        <code><pre>{{ context | context(frctl.components) | format('yml') }}</pre></code>
+
+    </body>
+</html>

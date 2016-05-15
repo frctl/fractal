@@ -6,6 +6,7 @@ const nunjucks    = require('nunjucks');
 const yaml        = require('js-yaml');
 const _           = require('lodash');
 const requireAll  = require('require-all');
+const Log         = require('../../core/log');
 const extensions  = requireAll(`${__dirname}/extensions`);
 const filters     = requireAll(`${__dirname}/filters`);
 
@@ -43,8 +44,15 @@ module.exports = class Env {
             components: app.components,
             docs: app.docs,
             config: app.config(),
-            web: {}
+            web: {},
+            log: Log
         };
+
+        this._engine.addGlobal('dump', function(obj, preformat) {
+            preformat = preformat === false ? false : true;
+            let output = JSON.stringify(obj, null, 4);
+            return preformat ? '<pre>' + output + '</pre>' : output;
+        });
     }
 
     get engine(){

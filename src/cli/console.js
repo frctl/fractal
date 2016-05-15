@@ -28,14 +28,14 @@ class Console {
         return this._theme;
     }
 
-    log(text) {
-        this.write(text, 'log');
-        return this;
-    }
-
     br() {
         slog.clear();
         this.write('');
+        return this;
+    }
+
+    log(text) {
+        this.write(text, 'log');
         return this;
     }
 
@@ -73,11 +73,6 @@ class Console {
                 this.dump(data);
             }
         }
-        return this;
-    }
-
-    notice(text, data) {
-        this.write(text, 'notice');
         return this;
     }
 

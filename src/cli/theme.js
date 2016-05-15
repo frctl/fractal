@@ -13,7 +13,7 @@ module.exports = class Theme {
         };
         this._styles =  {
             log: {
-                prefix: '',
+                prefix: '⚑',
                 format: s => s,
             },
             success: {
@@ -23,9 +23,6 @@ module.exports = class Theme {
             debug: {
                 prefix: '⚡',
                 format: chalk.dim,
-            },
-            notice: {
-                prefix: '⚑'
             },
             alert: {
                 prefix: '★',
@@ -65,7 +62,7 @@ module.exports = class Theme {
         const prefix    = _.get(this._styles, `${style}.prefix`, '');
         const formatter = _.get(this._styles, `${style}.format`, str => str);
         const suffix    = _.get(this._styles, `${style}.suffix`, '');
-        return formatter(strip ? _.trim(str) : `${prefix} ${str} ${suffix}`);
+        return formatter(strip ? _.trim(str) : `${prefix ? prefix + ' ' : ''}${str}${suffix ? ' ' + suffix : ''}`);
     }
 
     style(name) {

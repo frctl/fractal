@@ -20,7 +20,7 @@ Run ${chalk.cyan('npm i -g ' + details.name)} to update.`
     }
 
     versionMismatch(details) {
-        this._console.notice(`Fractal version mismatch! Global: ${details.cli} / Local: ${details.local}`);
+        this._console.log(`Fractal version mismatch! Global: ${details.cli} / Local: ${details.local}`);
     }
 }
 

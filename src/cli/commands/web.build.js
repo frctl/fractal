@@ -13,15 +13,16 @@ module.exports = {
 
     action: function (args, done) {
         const builder = this.fractal.web.builder(args.options);
+        
         builder.on('start', () => {
             this.console.success('Build started...');
         });
-        builder.start().then(() => {
-            this.console.success('Build Finished!');
-            done();
+
+        return builder.build().then(data => {
+            let e = data.errorCount;
+            this.console[e ? 'alert' : 'success'](`Build finished. There ${e == 1 ? 'was' : 'were'} ${e} error${e == 1 ? '' : 's'}.`);
         }).catch(e => {
             this.console.error(e);
-            done();
         });
     }
 

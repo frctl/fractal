@@ -11,7 +11,7 @@ const helpers    = require('../../core/utils');
 
 module.exports = {
 
-    command: 'new <path>',
+    command: 'new <folder-name>',
 
     config: {
         description: 'Create a new Fractal project',
@@ -29,11 +29,12 @@ module.exports = {
         const exampleComponent = Path.join(viewsPath, 'components/example');
 
         if (helpers.fileExistsSync(basePath)) {
-            console.error(`Cannot create new project: The directory ${basePath} already exists.`).br();
-            process.exit();
+            console.error(`Cannot create new project: The directory ${basePath} already exists.`);
+            done();
+            return;
         }
 
-        console.br().notice('Creating new project.... just a few questions:').br();
+        console.br().log('Creating new project.... just a few questions:').br();
 
         const questions = [
             {
@@ -68,9 +69,9 @@ module.exports = {
             }
         ];
 
-        inquirer.prompt(questions).then(function(answers) {
+        return inquirer.prompt(questions).then(function(answers) {
 
-            console.notice('Generating project structure...');
+            console.log('Generating project structure...');
 
             const componentsDir   = Path.join(basePath, answers.componentsDir);
             const docsDir         = Path.join(basePath, answers.docsDir);
@@ -92,7 +93,7 @@ module.exports = {
             const fractalContents = Handlebars.compile(fs.readFileSync(fractalFileTpl, 'utf8'))(answers);
             const indexContents   = Handlebars.compile(fs.readFileSync(docsIndexTpl, 'utf8'))(answers);
 
-            fs.ensureDirAsync(basePath).then(() => {
+            return fs.ensureDirAsync(basePath).then(() => {
                 return Promise.all([
                     fs.ensureDirAsync(componentsDir),
                     fs.ensureDirAsync(docsDir),
@@ -113,21 +114,24 @@ module.exports = {
                     fs.writeFileAsync(docsIndexPath, indexContents),
                 ]);
             }).finally(() => {
-                console.notice('Installing NPM dependencies - this may take some time!');
+                console.log('Installing NPM dependencies - this may take some time!');
                 shell.cd(basePath);
                 const install = shell.exec('npm i', {
                     silent: true,
                 }, function () {
                     console.success(`Your new Fractal project has been set up.`);
-                    process.exit();
+                    done();
                 });
                 install.stdout.on('data', function (data) {
+                    console.log(data);
+                });
+                install.stderr.on('data', function (data) {
                     console.log(data);
                 });
             }).catch(e => {
                 fs.remove(basePath);
                 console.error(e);
-                process.exit();
+                done();
             });
         });
 

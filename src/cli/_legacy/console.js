@@ -7,7 +7,7 @@ const slog        = require('single-line-log').stdout;
 const utils       = require('./utils');
 
 module.exports = function (vorpal) {
-    
+
     module.exports = {
 
         debugging: false,
@@ -88,11 +88,6 @@ module.exports = function (vorpal) {
             var str = text.toString().replace(/^Error: /, '');
             this.write(str, 'error');
             if (text.stack) this.debug(text.stack);
-            return this;
-        },
-
-        notice(text) {
-            this.write(text, 'notice');
             return this;
         },
 
