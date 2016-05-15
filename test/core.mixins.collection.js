@@ -70,8 +70,8 @@ describe('Collection', function(){
             expect(collection.toJSON()).to.be.an('object');
             expect(collection.toJSON()).to.not.be.instanceof(Collection);
         });
-        it('...with a \'type\' property set to \'collection\'', function(){
-            expect(collection.toJSON().type).to.equal('collection');
+        it('...with a \'isCollection\' property', function(){
+            expect(collection.toJSON().isCollection).to.be.true;
         });
         it('...with an items array', function(){
             expect(collection.toJSON().items).to.be.an('array');

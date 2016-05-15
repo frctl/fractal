@@ -7,7 +7,7 @@
     </head>
     <body>
 
-        <h1>{{ frctl.web.request.path }}</h1>
+        <h1>{{ frctl.web.request.path }} - {{ foobar | wow }}</h1>
 
         <p>
             this is a theme <a href="{{ '/' | url }}">Home</a>

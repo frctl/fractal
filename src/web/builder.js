@@ -31,11 +31,13 @@ module.exports = class Builder extends mix(Emitter) {
         let setup = fs.removeAsync(this._config.dest).then(() => fs.ensureDirAsync(this._config.dest));
 
         return setup.then(() => {
-            this._theme.emit('build', this, this._app);
-            let copyJobs = this._theme.static().map(p => this._copyStatic(p.path, p.mount));
+
             this._addTargets();
-            let routeJobs = this._buildTargets();
-            return Promise.all(copyJobs.concat(routeJobs));
+
+            this._theme.emit('build', this, this._app);
+
+            let copyStatic = this._theme.static().map(p => this._copyStatic(p.path, p.mount));
+            return Promise.all(copyStatic.concat(this._buildTargets()));
         }).then(() => {
             let stats = {
                 errorCount: this._errorCount
@@ -53,9 +55,10 @@ module.exports = class Builder extends mix(Emitter) {
     _copyStatic(source, dest) {
         dest = _.trimEnd(Path.join(this._config.dest, dest), '/');
         source = Path.resolve(source);
-        Log.debug(`Copying static asset directory '${source}' ==> '${dest}'`);
         return fs.copyAsync(source, dest, {
             clobber: true
+        }).then(() => {
+            Log.debug(`Copied static asset directory '${source}' ==> '${dest}'`);
         }).catch(e => {
             this._errorCount++;
         });
@@ -103,19 +106,18 @@ module.exports = class Builder extends mix(Emitter) {
                     web.request = this._fakeRequest(target);
                     this._theme.engine.setGlobal('web', web);
 
-                    return this._theme.render(target.route.view, target.route.context).then(html => {
+                    function write(html) {
+                        return fs.writeFileAsync(savePath, html).then(() => Log.debug(`Exported '${target.url}' ==> '${savePath}'`));
+                    }
 
-                        return fs.writeFileAsync(savePath, html).then(() => Log.debug(`Saved ${target.url} to ${savePath}`));
-
-                    }).catch(e => {
+                    return this._theme.render(target.route.view, target.route.context).then(html => write(html)).catch(e => {
 
                         Log.error(`Failed to export url ${target.url} - ${e.message}`);
+
                         this._errorCount++;
                         web.request.error = e;
 
-                        return this._theme.render(this._theme.error().view, this._theme.error().context).then(html => {
-                            return fs.writeFileAsync(savePath, html).then(() => Log.debug(`Saved ${target.url} to ${savePath}`));
-                        });
+                        return this._theme.render(this._theme.error().view, this._theme.error().context).then(html => write(html));
                     });
 
                 });

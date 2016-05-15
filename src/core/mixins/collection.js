@@ -9,8 +9,9 @@ module.exports = mixin((superclass) => class Collection extends superclass {
         super(...arguments);
         this.addMixedIn('Collection');
         this._items = new Set([]);
+        this.isCollection = true;
     }
-
+    
     /**
      * Return the length of the items set
      * @return {Number}
@@ -48,13 +49,23 @@ module.exports = mixin((superclass) => class Collection extends superclass {
     }
 
     /**
+     * Pushes an item onto the end of the collection
+     * @param  {Object} item  The item to add
+     * @return {Collection}
+     */
+    pushItem(item) {
+        this._items.add(item);
+        return this;
+    }
+
+    /**
      * Recursively converts the collection and it's contents to a
      * JSON-serializable plain object.
      * @return {Object}
      */
     toJSON() {
         return {
-            type: 'collection',
+            isCollection: true,
             items: this.toArray().map(i => (i.toJSON ? i.toJSON() : i))
         };
     }
@@ -88,21 +99,12 @@ module.exports = mixin((superclass) => class Collection extends superclass {
     }
 
     /**
-     * Return a new collection that only includes
-     * non-collection-type items
-     * @return {Collection}
-     */
-    entities() {
-        return this.newSelf(this.toArray().filter(i => i.type !== 'collection'));
-    }
-
-    /**
      * Return a new collection that only
      * includes collection-type items
      * @return {Collection}
      */
     collections() {
-        return this.newSelf(this.toArray().filter(i => i.type === 'collection'));
+        return this.newSelf(this.toArray().filter(i => i.isCollection));
     }
 
     orderBy() {
@@ -121,11 +123,10 @@ module.exports = mixin((superclass) => class Collection extends superclass {
             return;
         }
         for (let item of this) {
-            if (item.type === 'collection') {
+            if (item.isCollection) {
                 const search = item.find.apply(item, arguments);
                 if (search) return search;
             } else {
-
                 const matcher = this._makePredicate.apply(null, arguments);
                 if (matcher(item)) return item;
             }
@@ -137,7 +138,7 @@ module.exports = mixin((superclass) => class Collection extends superclass {
             return;
         }
         for (let item of this) {
-            if (item.type === 'collection') {
+            if (item.isCollection) {
                 const matcher = this._makePredicate.apply(null, arguments);
                 if (matcher(item)) return item;
                 const search = item.findCollection.apply(item, arguments);
@@ -169,7 +170,7 @@ module.exports = mixin((superclass) => class Collection extends superclass {
         let matcher = this._makePredicate.apply(null, predicate);
         let ret = [];
         for (let item of items) {
-            if (item.type === 'collection') {
+            if (item.isCollection) {
                 let collection = item.filter.apply(item, predicate);
                 if (collection.size) {
                     ret.push(collection);
@@ -186,7 +187,7 @@ module.exports = mixin((superclass) => class Collection extends superclass {
     flattenItems(items, deep) {
         let ret = [];
         for (let item of items) {
-            if (item.type === 'collection') {
+            if (item.isCollection) {
                 ret = _.concat(ret, this.flattenItems(item.toArray(), deep));
             } else {
                 if (deep && _.isFunction(item.flatten)) {
@@ -203,10 +204,10 @@ module.exports = mixin((superclass) => class Collection extends superclass {
         const squashed = [];
         function squash(items) {
             for (let item of items) {
-                if (item.type === 'collection') {
+                if (item.isCollection) {
                     const children = item.toArray();
-                    const entities = children.filter(c => c.type !== 'collection');
-                    const collections = children.filter(c => c.type == 'collection');
+                    const entities = children.filter(c => !c.isCollection);
+                    const collections = children.filter(c => c.isCollection);
                     if (entities.length) {
                         squashed.push(item.newSelf(entities));
                     }

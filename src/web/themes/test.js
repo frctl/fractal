@@ -15,28 +15,20 @@ module.exports = function(){
     theme.route('/foo/:foo?', {
         handle: 'foo',
         view: 'index.nunj',
-        params: function() {
+        build: function() {
             return [{
                 foo: 'one'
             },{
                 foo: 'two'
             },
-            {
-
-            }]
+            {}]
         }
     });
 
-
-        theme.route('/bar/baz/:test?', {
-            handle: 'woop',
-            view: 'index.nunj',
-            params: function() {
-                return [{
-                    test: 'one'
-                }]
-            }
-        });
+    theme.route('/bar/baz/one', {
+        handle: 'woop',
+        view: 'index.nunj',
+    });
 
     theme.on('init', function(env, app){
         env.engine.addGlobal('foobar', 'PPPPP');

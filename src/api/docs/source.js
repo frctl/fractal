@@ -1,9 +1,9 @@
 'use strict';
 
 const _            = require('lodash');
-const Source       = require('../../core/source');
+const EntitySource = require('../../core/entities/source');
 
-class DocSource extends Source {
+class DocSource extends EntitySource {
 
     constructor(app){
         super('docs', app);

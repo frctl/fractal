@@ -96,8 +96,8 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
         opts.path = path;
         opts.handle = opts.handle || path;
         opts.matcher = pr(path, keys);
-        if (opts.params) {
-            opts.params = _.isFunction(opts.params) ? opts.params() : [].concat(opts.params);
+        if (opts.build) {
+            opts.params = _.isFunction(opts.build) ? opts.build() : [].concat(opts.build);
         } else {
             opts.params = [];
         }

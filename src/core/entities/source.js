@@ -4,19 +4,21 @@ const _            = require('lodash')
 const chokidar     = require('chokidar');
 const anymatch     = require('anymatch');
 
-const fs           = require('./fs');
-const utils        = require('./utils');
-const Log          = require('./log');
-const mix          = require('./mixins/mix');
-const Configurable = require('./mixins/configurable');
-const Collection   = require('./mixins/collection');
-const Emitter      = require('./mixins/emitter');
-const Heritable    = require('./mixins/heritable');
+const fs           = require('../fs');
+const utils        = require('../utils');
+const Log          = require('../log');
+const Data         = require('../data');
+const mix          = require('../mixins/mix');
+const Configurable = require('../mixins/configurable');
+const Collection   = require('../mixins/collection');
+const Emitter      = require('../mixins/emitter');
+const Heritable    = require('../mixins/heritable');
 
-class Source extends mix(Configurable, Heritable, Emitter, Collection) {
+module.exports = class EntitySource extends mix(Configurable, Heritable, Emitter, Collection) {
 
     constructor(name, app){
-        super(app);
+        super();
+        this.isSource       = true;
         this.name           = name;
         this.isLoaded       = false;
         this._app           = app;
@@ -141,6 +143,10 @@ class Source extends mix(Configurable, Heritable, Emitter, Collection) {
         return utils.mergeProp(prop, upstream);
     }
 
+    statusInfo(handle) {
+        return null;
+    }
+
     toJSON() {
         const self    = super.toJSON();
         self.name     = this.name;
@@ -159,6 +165,17 @@ class Source extends mix(Configurable, Heritable, Emitter, Collection) {
 
     isConfig(file) {
         return anymatch(`**/*.config.{js,json,yaml,yml}`, this._getPath(file));
+    }
+
+    static getConfig(file, defaults) {
+        defaults = defaults || {};
+        if (!file) {
+            return Promise.resolve(defaults);
+        }
+        return Data.readFile(file.path).then(c => _.defaultsDeep(c, defaults)).catch(err => {
+            Log.error(`Error parsing data file ${file.path}: ${err}`);
+            return defaults;
+        });
     }
 
     _build() {
@@ -185,5 +202,3 @@ class Source extends mix(Configurable, Heritable, Emitter, Collection) {
     }
 
 };
-
-module.exports = Source;

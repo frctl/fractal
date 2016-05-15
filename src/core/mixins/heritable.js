@@ -14,9 +14,26 @@ module.exports = mixin((superclass) => class Heritable extends superclass {
         this._heritable = null;
     }
 
-    setHeritable(keys) {
-        keys = keys || [];
-        this._heritable = new Set(keys);
+    setHeritable(arg) {
+        if (!_.isArray(arg)) {
+            this._parent = arg;
+            return this.setHeritable(this._parent.getHeritable());
+        }
+        this._heritable = new Set(arg || []);
+
+        for (let key of this._heritable) {
+            Object.defineProperty(this, key, {
+                get() {
+                    return this.getProp(key);
+                },
+                set(value) {
+                    this.setProp(key, value);
+                },
+                enumerable: true,
+                configurable: true,
+            });
+        }
+
         return this;
     }
 
@@ -60,12 +77,20 @@ module.exports = mixin((superclass) => class Heritable extends superclass {
      * @return {*}
      */
     getProp(key) {
-        if (this._parent && typeof this._parent.getProp === 'Function') {
+        if (this._parent && typeof this._parent.getProp === 'function') {
             const upstream = this._parent.getProp(key);
             const prop     = this._props.get(key);
             return utils.mergeProp(prop, upstream);
         }
         return this._props.get(key);
+    }
+
+    getProps() {
+        let props = {};
+        for (let key of this.getHeritable()) {
+            props[key] = this.getProp(key);
+        }
+        return props;
     }
 
 });
