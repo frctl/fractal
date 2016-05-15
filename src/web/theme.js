@@ -96,7 +96,12 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
         opts.path = path;
         opts.handle = opts.handle || path;
         opts.matcher = pr(path, keys);
-        this._routes.set(opts.handle, opts);
+        if (opts.params) {
+            opts.params = _.isFunction(opts.params) ? opts.params() : [].concat(opts.params);
+        } else {
+            opts.params = [];
+        }
+        this._routes.set(opts.handle, _.clone(opts));
         return this;
     }
 
@@ -126,7 +131,6 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
                     view: '__system/index.nunj',
                 },
                 params: {}
-
             };
         }
         return false;

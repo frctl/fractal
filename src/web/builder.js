@@ -33,7 +33,8 @@ module.exports = class Builder extends mix(Emitter) {
         return setup.then(() => {
             this._theme.emit('build', this, this._app);
             let copyJobs = this._theme.static().map(p => this._copyStatic(p.path, p.mount));
-            let routeJobs = this._buildRoutes();
+            this._addTargets();
+            let routeJobs = this._buildTargets();
             return Promise.all(copyJobs.concat(routeJobs));
         }).then(() => {
             let stats = {
@@ -72,16 +73,29 @@ module.exports = class Builder extends mix(Emitter) {
         }
     }
 
-    _buildRoutes() {
+    _addTargets() {
+        this._theme.routes().forEach(route => {
+            if (route.params && route.params.length) {
+                for (let params of route.params) {
+                    this.addRoute(route.handle, params);
+                }
+            } else {
+                this.addRoute(route.handle);
+            }
+        });
+    }
+
+    _buildTargets() {
         const jobs = [];
+        const web = {
+            server: null,
+            builder: {},
+            request: {}
+        };
+
         for (let target of this._targets) {
-            const savePath = Path.join(this._config.dest, target.url, 'index.html');
+            const savePath = Path.join(this._config.dest, target.url) + (target.url == '/' ? 'index.html' : '.html');
             const pathInfo = Path.parse(savePath);
-            const web = {
-                server: null,
-                builder: {},
-                request: {}
-            };
             const job = this._throttle(() => {
 
                 return fs.ensureDirAsync(pathInfo.dir).then(() => {
@@ -90,22 +104,22 @@ module.exports = class Builder extends mix(Emitter) {
                     this._theme.engine.setGlobal('web', web);
 
                     return this._theme.render(target.route.view, target.route.context).then(html => {
+
                         return fs.writeFileAsync(savePath, html).then(() => Log.debug(`Saved ${target.url} to ${savePath}`));
+
+                    }).catch(e => {
+
+                        Log.error(`Failed to export url ${target.url} - ${e.message}`);
+                        this._errorCount++;
+                        web.request.error = e;
+
+                        return this._theme.render(this._theme.error().view, this._theme.error().context).then(html => {
+                            return fs.writeFileAsync(savePath, html).then(() => Log.debug(`Saved ${target.url} to ${savePath}`));
+                        });
                     });
 
-                }).catch(e => {
-
-                    Log.error(`Failed to export url ${target.url} - ${e.message}`);
-                    this._errorCount++;
-
-                    web.request = this._fakeRequest(target);
-                    web.request.error = e;
-                    this._theme.engine.setGlobal('web', web);
-                    
-                    return this._theme.render(this._theme.error().view, this._theme.error().context).then(html => {
-                        return fs.writeFileAsync(savePath, html).then(() => Log.debug(`Saved ${target.url} to ${savePath}`));
-                    });
                 });
+
             });
             jobs.push(job);
         }

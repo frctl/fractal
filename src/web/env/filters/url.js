@@ -12,10 +12,18 @@ module.exports = function(app, env) {
             if (_.get(frctl, 'web.server')) {
                 return str;
             }
-            const urlPath = _.get(frctl, 'web.request.path', '/');
-            const suffix = str.indexOf('.') === -1 ? '/index.html' : '';
-            return _.trimStart(Path.join(Path.relative(urlPath, str), suffix), '/');
+            const currentPath = _.get(frctl, 'web.request.path', '/');
+            const url = Path.extname(str) ? str : getStaticPagePath(str);
+            return _.trimStart(Path.relative(getStaticPagePath(currentPath), url), ['/']).replace(/^\.\.\//,'');
         }
     }
 
 };
+
+function getStaticPagePath(url) {
+    if (url == '/') {
+        return '/index.html'
+    }
+    const parts = Path.parse(url);
+    return Path.join(parts.dir, parts.name + '.html');
+}
