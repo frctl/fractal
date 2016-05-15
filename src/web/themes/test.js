@@ -12,7 +12,7 @@ module.exports = function(){
         view: 'index.nunj',
     });
 
-    theme.route('/foo/*?', {
+    theme.route('/foo/:foo?', {
         handle: 'foo',
         view: 'index.nunj',
     });

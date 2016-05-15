@@ -18,6 +18,7 @@ module.exports = class Builder extends mix(Emitter) {
         this._theme    = theme;
         this._targets  = [];
         this._throttle = require('throat')(Promise)(config.concurrency || 100);
+        this._errorCount = 0;
     }
 
     build() {
@@ -28,24 +29,23 @@ module.exports = class Builder extends mix(Emitter) {
         this.emit('start');
 
         let setup = fs.removeAsync(this._config.dest).then(() => fs.ensureDirAsync(this._config.dest));
-        let errorCount = 0;
 
         return setup.then(() => {
             this._theme.emit('build', this, this._app);
             let copyJobs = this._theme.static().map(p => this._copyStatic(p.path, p.mount));
             let routeJobs = this._buildRoutes();
-            return Promise.join(copyJobs, routeJobs).catch(e => {
-                errorCount++;
-            });
+            return Promise.all(copyJobs.concat(routeJobs));
         }).then(() => {
             let stats = {
-                errorCount: errorCount
+                errorCount: this._errorCount
             };
             this.emit('end', stats);
             return stats;
         }).catch(e => {
             this.emit('error', e);
             throw e;
+        }).finally(() => {
+            this._errorCount = 0;
         });
     }
 
@@ -55,6 +55,8 @@ module.exports = class Builder extends mix(Emitter) {
         Log.debug(`Copying static asset directory '${source}' ==> '${dest}'`);
         return fs.copyAsync(source, dest, {
             clobber: true
+        }).catch(e => {
+            this._errorCount++;
         });
     }
 
@@ -75,29 +77,39 @@ module.exports = class Builder extends mix(Emitter) {
         for (let target of this._targets) {
             const savePath = Path.join(this._config.dest, target.url, 'index.html');
             const pathInfo = Path.parse(savePath);
+            const web = {
+                server: null,
+                builder: {},
+                request: {}
+            };
             const job = this._throttle(() => {
+
                 return fs.ensureDirAsync(pathInfo.dir).then(() => {
 
-                    this._theme.engine.setGlobal('web', {
-                        server: null,
-                        builder: {},
-                        request: this._fakeRequest(target)
-                    });
+                    web.request = this._fakeRequest(target);
+                    this._theme.engine.setGlobal('web', web);
 
                     return this._theme.render(target.route.view, target.route.context).then(html => {
-                        return fs.writeFileAsync(savePath, html).then(() => {
-                            Log.debug(`Saved ${target.url} to ${savePath}`);
-                        });
+                        return fs.writeFileAsync(savePath, html).then(() => Log.debug(`Saved ${target.url} to ${savePath}`));
                     });
 
                 }).catch(e => {
+
                     Log.error(`Failed to export url ${target.url} - ${e.message}`);
-                    throw e;
+                    this._errorCount++;
+
+                    web.request = this._fakeRequest(target);
+                    web.request.error = e;
+                    this._theme.engine.setGlobal('web', web);
+                    
+                    return this._theme.render(this._theme.error().view, this._theme.error().context).then(html => {
+                        return fs.writeFileAsync(savePath, html).then(() => Log.debug(`Saved ${target.url} to ${savePath}`));
+                    });
                 });
             });
             jobs.push(job);
         }
-        return Promise.all(jobs);
+        return jobs;
     }
 
     _validate() {
