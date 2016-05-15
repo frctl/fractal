@@ -41,7 +41,7 @@ module.exports = mixin((superclass) => class Heritable extends superclass {
         if (this._heritable) {
             return Array.from(this._heritable);
         }
-        if (this._parent &&  typeof this._parent.getHeritable === 'Function') {
+        if (this._parent && _.isFunction(this._parent.getHeritable)) {
             return this._parent.getHeritable();
         }
         return [];
@@ -77,7 +77,7 @@ module.exports = mixin((superclass) => class Heritable extends superclass {
      * @return {*}
      */
     getProp(key) {
-        if (this._parent && typeof this._parent.getProp === 'function') {
+        if (this._parent && _.isFunction(this._parent.getProp)) {
             const upstream = this._parent.getProp(key);
             const prop     = this._props.get(key);
             return utils.mergeProp(prop, upstream);
