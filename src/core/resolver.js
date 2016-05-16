@@ -38,7 +38,7 @@ const resolver = module.exports = {
                         }
                         return entityContext;
                     }
-                    Log.debug(`Could not resolve context reference for ${item}`);
+                    Log.warn(`Could not resolve context reference for ${item}`);
                     return null;
                 }
                 if (_.isString(item) && _.startsWith(item, '\\@')) {

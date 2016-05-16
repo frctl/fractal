@@ -41,6 +41,15 @@ module.exports = class EntitySource extends mix(Configurable, Heritable, Emitter
     get title() {
         return this.get('title') || this.label;
     }
+    
+    /**
+     * Return a new collection that only includes
+     * non-collection-type items
+     * @return {Collection}
+     */
+    entities() {
+        return this.newSelf(this.toArray().filter(i => ! i.isCollection));
+    }
 
     exists() {
         return this.get('path') && utils.fileExistsSync(this.get('path'));

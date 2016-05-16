@@ -37,7 +37,7 @@ class Cli extends mix(Configurable, Emitter) {
 
         this.notify = new Notifier(this.console, this._interactive);
 
-        for (let method of ['log', 'error', 'alert', 'debug', 'success']) {
+        for (let method of ['log', 'error', 'warn', 'debug', 'success']) {
             this[method] = function(){
                 this.console[method](...arguments);
             };
@@ -251,8 +251,8 @@ You can use the ${chalk.magenta('fractal new')} command to create a new project.
         if (this._scope === 'project' && this._configPath) {
             let monitor = chokidar.watch(this._configPath);
             monitor.on('change', path => {
-                this.alert('Your configuration file has changed.');
-                this.alert('Exit & restart the current process to see your changes take effect.');
+                this.warn('Your configuration file has changed.');
+                this.warn('Exit & restart the current process to see your changes take effect.');
                 monitor.close();
             });
         }

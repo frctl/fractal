@@ -17,7 +17,7 @@ module.exports = class ComponentSource extends EntitySource {
     constructor(app){
         super('components', app);
     }
-    
+
     get source(){
         return this;
     }
@@ -77,7 +77,7 @@ module.exports = class ComponentSource extends EntitySource {
     }
 
     renderPreview(entity, preview) {
-        preview = preview !== false ? true : false;
+        preview = preview !== false ? preview : false;
         let context;
         if (entity.isComponent) {
             context = entity.variants().default().context;
@@ -130,7 +130,7 @@ module.exports = class ComponentSource extends EntitySource {
         return co(function* () {
             const source = yield self.load();
             let rendered;
-            if (_.includes(['component', 'variant'], entity.type)) {
+            if (entity.isComponent || entity.isVariant) {
                 if (entity.isComponent) {
                     if (entity.isCollated && opts.collate) {
                         rendered = yield self._renderCollatedComponent(entity, context);
@@ -144,16 +144,15 @@ module.exports = class ComponentSource extends EntitySource {
                 if (opts.preview && entity.preview) {
                     let target = entity.toJSON();
                     target.component = variant.parent.toJSON();
-                    return yield self._wrapInLayout(rendered, entity.preview, {
+                    let layout = _.isString(opts.preview) ? opts.preview : entity.preview;
+                    return yield self._wrapInLayout(rendered, layout, {
                         _target: target
                     });
                 }
                 return rendered;
             } else {
-                throw new Error(`Cannot render entity of type ${entity.type}`);
+                throw new Error(`Only components or variants can be rendered.`);
             }
-        }).catch(err => {
-            Log.error(err);
         });
     }
 
@@ -221,11 +220,12 @@ module.exports = class ComponentSource extends EntitySource {
     }
 
     fileType(file) {
+        let type = super.fileType(file);
+        if (type) {
+            return type;
+        }
         if (this.isAsset(file)) {
             return 'asset';
-        }
-        if (this.isConfig(file)) {
-            return 'config';
         }
         if (this.isView(file) || this.isVarView(file)) {
             return 'view';

@@ -22,6 +22,7 @@ module.exports = class Entity extends mix(Heritable, EntityMixin) {
             }
         });
 
+        this.setProps(config);
     }
 
     getResolvedContext() {

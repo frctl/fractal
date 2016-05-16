@@ -8,22 +8,26 @@ module.exports = class Component extends Entity {
 
     constructor(config, files, assets, parent){
         super(config.name, config, parent);
-        this.isComponent = true;
-        this.defaultName = config.default ? utils.slugify(config.default.toLowerCase()) : 'default';
-        this.notes       = config.notes || null;
+        this.isComponent   = true;
+        this.defaultName   = config.default ? utils.slugify(config.default.toLowerCase()) : 'default';
+        this.notes         = config.notes || null;
         this.notesFromFile = config.notesFromFile || false;
-        this.lang        = files.view.lang.name;
-        this.editorMode  = files.view.lang.mode;
-        this.editorScope = files.view.lang.scope;
-        this.viewPath    = files.view.path;
-        this._assets     = assets;
-        this._variants   = new VariantCollection({ name: `${this.name}-variants` }, [], parent);
+        this.lang          = files.view.lang.name;
+        this.editorMode    = files.view.lang.mode;
+        this.editorScope   = files.view.lang.scope;
+        this.viewPath      = files.view.path;
+        this._assets       = assets;
+        this._variants     = new VariantCollection({ name: `${this.name}-variants` }, [], parent);
+    }
+
+    _handle(config) {
+        return this.parent.getProp('prefix') ? `${this.parent.getProp('prefix')}-${config.name}` : config.name;
     }
 
     get isCollated() {
         return this.collated;
     }
-    
+
     get content() {
         return this.variants().default().getContentSync();
     }

@@ -16,8 +16,10 @@ const engine = fractal.components.engine();
 
 const fhbs    = require('@frctl/handlebars-adapter');
 const handlebarsAdapter = fhbs({
-    useHelpers: true
+    useHelpers: true,
 });
+
+// handlebarsAdapter.engine.registerPartial('doo')
 
 fractal.engine(handlebarsAdapter); // register an engine to use for a specific extension
 

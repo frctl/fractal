@@ -12,11 +12,41 @@ module.exports = class VariantCollection extends EntityCollection {
 
     constructor(config, items, parent){
         super(config.name, config, items, parent);
+    }
 
+    default() {
+        return this.find('name', this.parent.defaultName);
+    }
+
+    getCollatedContentSync() {
+        let view = this.default().view;
+        let sharedView = true;
+        let variantsArray = this.toArray();
+        variantsArray.map(variant => {
+            if (view !== variant.view) {
+                sharedView = false;
+            }
+        });
+        if (sharedView) {
+            return this.default().getContentSync();
+        }
+        return (variantsArray.map(variant => {
+            const content = variant.getContentSync();
+            const collator = this.parent.collator;
+            return _.isFunction(collator) ? collator(content, variant) : content;
+        })).join('\n');
+    }
+
+    getCollatedContext() {
+        let collated = {};
+        this.toArray().forEach(variant => {
+            collated[`@${variant.handle}`] = variant.context;
+        });
+        return collated;
     }
 
     static *create(component, defaultView, configured, views, opts) {
-        
+
         configured   = configured || [];
         views        = views || [];
         let variants = [];

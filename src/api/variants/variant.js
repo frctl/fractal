@@ -19,6 +19,10 @@ module.exports = class Variant extends Entity {
         this._assets     = assets;
     }
 
+    _title(config) {
+        return config.title || `${this.parent.title}: ${this.label}`;
+    }
+
     get alias() {
         if (this.isDefault) {
             return this.parent.handle;

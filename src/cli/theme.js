@@ -13,24 +13,24 @@ module.exports = class Theme {
         };
         this._styles =  {
             log: {
-                prefix: '⚑',
+                prefix: null,
                 format: s => s,
             },
-            success: {
-                prefix: '✔',
-                format: chalk.green,
-            },
             debug: {
-                prefix: '⚡',
+                prefix: '⚑',
                 format: chalk.dim,
             },
-            alert: {
-                prefix: '★',
-                format: chalk.yellow.bold,
+            warn: {
+                prefix: '‼︎',
+                format: chalk.yellow,
             },
             error: {
                 prefix: '✘',
                 format: chalk.red,
+            },
+            success: {
+                prefix: '✔',
+                format: chalk.green,
             }
         };
 

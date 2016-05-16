@@ -21,6 +21,7 @@ module.exports = class EntityCollection extends mix(Heritable, Collection, Entit
             }
         });
 
+        this.setProps(config);
     }
 
     /**

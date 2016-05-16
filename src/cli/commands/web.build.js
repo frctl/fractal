@@ -20,7 +20,7 @@ module.exports = {
 
         return builder.build().then(data => {
             let e = data.errorCount;
-            this.console[e ? 'alert' : 'success'](`Build finished. There ${e == 1 ? 'was' : 'were'} ${e} error${e == 1 ? '' : 's'}.`);
+            this.console[e ? 'warn' : 'success'](`Build finished. There ${e == 1 ? 'was' : 'were'} ${e} error${e == 1 ? '' : 's'}.`);
         }).catch(e => {
             this.console.error(e);
         });

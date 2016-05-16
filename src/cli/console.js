@@ -56,8 +56,8 @@ class Console {
         return this;
     }
 
-    alert(text, data) {
-        this.write(text, 'alert');
+    warn(text, data) {
+        this.write(text, 'warn');
         return this;
     }
 

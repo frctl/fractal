@@ -31,12 +31,16 @@ module.exports = mixin((superclass) => class Entity extends superclass {
         this._source  = parent.source;
         this._app     = parent.source._app;
         this.name     = utils.slugify(name.toLowerCase());
-        this.handle   = this._handle();
-        this.label    = config.label || this._label();
-        this.title    = config.title || this._title();
+        this.handle   = this._handle(config);
+        this.label    = config.label || this._label(config);
+        this.title    = config.title || this._title(config);
         this.order    = parseInt(config.order, 10) || 10000;
         this.isHidden = config.isHidden || config.hidden || false;
-        this.id       = this._id();
+        this.id       = this._id(config);
+    }
+
+    get alias() {
+        return null;
     }
 
     get source() {
@@ -47,19 +51,19 @@ module.exports = mixin((superclass) => class Entity extends superclass {
         return this._parent;
     }
 
-    _id() {
-        return utils.md5(this.path);
+    _id(config) {
+        return utils.md5(this.source.name + this.path);
     }
-    
-    _handle() {
+
+    _handle(config) {
         return this.name;
     }
 
-    _label() {
+    _label(config) {
         return utils.titlize(this.name);
     }
 
-    _title() {
+    _title(config) {
         return this.label;
     }
 
@@ -72,6 +76,7 @@ module.exports = mixin((superclass) => class Entity extends superclass {
             title:    this.title,
             order:    this.order,
             isHidden: this.isHidden,
+            alias:    this.alias,
         }
     }
 
