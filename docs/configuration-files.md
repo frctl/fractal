@@ -125,7 +125,7 @@ Properties with primitive (i.e. non-object) values, if specified on a downstream
 
 Properties with object or array values are treated slightly differently. Instead of overriding upstream values, they are **merged with them**.
 
-For example, if a collection has been assigned the tags `['sprint-1', 'dashboard']` and one of it's child components has the tags `['dashboard', 'needs-review']` specified in it's component configuration, then the resolved, **aggregate** tag list for the component will be `['dashboard', 'needs-review', sprint-1']`.
+For example, if a collection has been assigned the tags `['sprint-1', 'dashboard']` and one of it's child components has the tags `['dashboard', 'needs-review']` specified in it's component configuration, then the resolved, **aggregate** tag list for the component will be `['dashboard', 'needs-review', 'sprint-1']`.
 
 Similarly, context data is inherited and merged from upstream sources. For example, the following example set of configuration data:
 

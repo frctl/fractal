@@ -21,7 +21,7 @@ Variants are useful when you have one component that has a **multiple different 
 
 A component can have as many variants as you like. Behind the scenes, *every* component has at least one variant - when you are previewing or rendering a component you are actually seeing it's 'default' variant, even if you have not explicitly defined one.
 
-Variants will typically use the default view template for the component they belong to; the variation comes from the ability to define a different set of [context data](/docs/components/context.md) to will be used when rendering previews. However it is also possible to use a completely different view template if desired (which itself can include the main view template as a partial should you so wish).
+Variants will typically use the default view template for the component they belong to; the variation comes from the ability to define a different set of [context data](/docs/components/context.md) that will be used when rendering previews. However it is also possible to use a completely different view template if desired (which itself can include the main view template as a partial should you so wish).
 
 ## Creating variants
 
@@ -93,7 +93,7 @@ We can define the required variants in the component config file like this:
 ```
 This will give **three** variants; the default component variant, plus a `warning` and a `success` variant.
 
-In this example all of the variants will use the same view template, but will pass it different data when rendered as a preview. Because the default component configuration specifies a `closeButtonText` value in it's context data, the variants do no need to - they only need to override the properties that need to be different for that particular variant.
+In this example all of the variants will use the same view template, but will pass it different data when rendered as a preview. Because the default component configuration specifies a `closeButtonText` value in it's context data, the variants do not need to - they only need to override the properties that need to be different for that particular variant.
 
 Similarly, by specifying a top-level `status` value, all variants will *inherit* that status unless explictly specified, as the `success` variant does.
 
