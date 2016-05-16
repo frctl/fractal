@@ -39,7 +39,7 @@ module.exports = class Env {
             const f = factory(app, this._engine);
             this._engine.addFilter(f.name, f.filter, f.async);
         });
-
+        
         this._globals = {
             components: app.components,
             docs: app.docs,

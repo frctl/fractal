@@ -65,7 +65,7 @@ module.exports = class Web extends mix(Configurable, Emitter) {
                 theme.static(s.path, s.mount || '/');
             }
         }
-        theme.init(new Env(theme.views(), this));
+        theme.init(new Env(theme.views(), this._app));
         return theme;
     }
 }
