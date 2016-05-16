@@ -5,12 +5,14 @@ const Handlebars  = require('handlebars');
 const helpers     = require('@frctl/handlebars-helpers');
 const _           = require('lodash');
 
-module.exports = function(source, config){
+module.exports = function(config){
 
     config               = config || {};
+
     let instance         = Handlebars;
     let instanceHelpers  = {};
     let instancePartials = {};
+    let viewsLoaded      = false;
 
     if (config.instance) {
         const defaultInstance = Handlebars.create();
@@ -26,48 +28,50 @@ module.exports = function(source, config){
         });
         instance = config.instance;
     }
-
+    //
     instance = promisedHbs(instance);
 
-    let viewsLoaded = false;
-
-    if (config.loadHelpers) {
-        helpers.use(source._app);
-        _.each(helpers.require('helpers') || {}, function(helper, name){
-            instance.registerHelper(name, helper);
-        });
-        _.each(helpers.require('partials') || {}, function(partial, name){
-            instance.registerPartial(name, partial);
-        });
-    }
-
-    _.each(_.defaults(instanceHelpers, config.helpers || {}), function(helper, name){
-        instance.registerHelper(name, helper);
-    });
-    _.each(_.defaults(instancePartials, config.partials || {}), function(partial, name){
-        instance.registerPartial(name, partial);
-    });
-
-    function loadViews() {
+    function loadViews(source) {
         for (let item of source.flattenDeep()) {
             instance.registerPartial('@' + item.handle, item.content);
             if (item.alias) {
                 instance.registerPartial('@' + item.alias, item.content);
             }
         }
-
         viewsLoaded = true;
     }
 
-    source.on('loaded', loadViews);
-    source.on('changed', loadViews);
-
     return {
+
         engine: instance,
-        render: function(path, str, context, meta){
-            if (!viewsLoaded) loadViews(source);
+
+        register(source, app) {
+
+            if (config.loadHelpers) {
+                helpers.use(app);
+                _.each(helpers.require('helpers') || {}, function(helper, name){
+                    instance.registerHelper(name, helper);
+                });
+                _.each(helpers.require('partials') || {}, function(partial, name){
+                    instance.registerPartial(name, partial);
+                });
+            }
+
+            _.each(_.defaults(instanceHelpers, config.helpers || {}), function(helper, name){
+                instance.registerHelper(name, helper);
+            });
+            _.each(_.defaults(instancePartials, config.partials || {}), function(partial, name){
+                instance.registerPartial(name, partial);
+            });
+
+            source.on('loaded', source => loadViews(source));
+            source.on('changed', source => loadViews(source));
+        },
+
+        render(path, str, context, meta) {
             const template = instance.compile(str);
             return Promise.resolve(template(context));
         }
+
     }
 };
