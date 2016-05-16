@@ -11,7 +11,7 @@ const helpers    = require('../../core/utils');
 
 module.exports = {
 
-    command: 'new <folder-name>',
+    command: 'new <path>',
 
     config: {
         description: 'Create a new Fractal project',

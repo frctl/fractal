@@ -13,7 +13,7 @@ module.exports = {
 
     action: function (args, done) {
         const builder = this.fractal.web.builder(args.options);
-        
+
         builder.on('start', () => {
             this.console.success('Build started...');
         });

@@ -3,7 +3,7 @@
 /*
  * Require the Fractal module
  */
-const fractal = require('@frctl/fractal');
+const fractal = module.exports = require('@frctl/fractal').create();
 
 {{#if projectTitle}}
 /*
@@ -30,5 +30,5 @@ fractal.set('docs.path', '{{ docsDir }}');
 /*
  * Tell the Fractal web preview plugin where to look for static assets.
  */
-fractal.set('plugins.web.static.path', '{{ publicDir }}');
+fractal.set('web.static.path', '{{ publicDir }}');
 {{/if}}

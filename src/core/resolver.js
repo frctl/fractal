@@ -7,14 +7,14 @@ const Log       = require('./log');
 const resolver = module.exports = {
 
     entity(entity) {
-        if (entity.type === 'component') {
+        if (entity.isComponent) {
             entity = entity.variants().default();
         }
         return entity;
     },
 
     context(context, source) {
-        
+
         const resolve = co.wrap(function* (obj) {
 
             const mapper = co.wrap(function* (item, key) {

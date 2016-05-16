@@ -28,6 +28,8 @@ class Cli extends mix(Configurable, Emitter) {
         this._interactive    = false;
         this._configPath     = null;
         this._scope          = 'project';
+        this._cliPackage     = {};
+        this._env            = {};
         this._commandsDir    = `${__dirname}/commands`;
 
         this.console = new Console(this._vorpal);
@@ -119,14 +121,28 @@ class Cli extends mix(Configurable, Emitter) {
         return this;
     }
 
-    setConfigPath(path) {
-        this._configPath = path;
+    init(scope, configPath, env, cliPackage) {
+        this._scope      = scope;
+        this._configPath = configPath;
+        this._env        = env;
+        this._cliPackage = cliPackage;
         return this;
     }
 
-    setScope(scope) {
-        this._scope = scope;
-        return this;
+    get scope() {
+        return this._scope;
+    }
+
+    get configPath() {
+        return this._configPath;
+    }
+
+    get env() {
+        return this._env;
+    }
+
+    get cliPackage() {
+        return this._cliPackage;
     }
 
     /**
@@ -174,7 +190,7 @@ class Cli extends mix(Configurable, Emitter) {
         if (input.command) {
 
             // non-interactive mode
-
+            // 
             if (this._scope === 'global') {
                 vorpal.parse(process.argv);
                 return;

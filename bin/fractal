@@ -73,7 +73,7 @@ FractalCli.launch({
             console.log(`${chalk.red('Configuration error')}: The CLI configuration file is not exporting an instance of Fractal.`);
             return;
         }
-
+        
         // Alert to any version mismatches.
         if (semver.gt(cliPackage.version, env.modulePackage.version)) {
             app.cli.notify.versionMismatch({
@@ -101,7 +101,6 @@ FractalCli.launch({
      * Kick things off...
      */
 
-    app.cli.setConfigPath(configPath);
-    app.cli.setScope(scope);
+    app.cli.init(scope, configPath, env, cliPackage);
     app.cli.exec();
 });

@@ -24,13 +24,6 @@ module.exports = mixin((superclass) => class Entity extends superclass {
             }
         });
 
-        // Object.defineProperty(this, 'status', {
-        //     enumerable: true,
-        //     get() {
-        //         return this.source.statusInfo(this.getProp('status'));
-        //     }
-        // });
-
     }
 
     initEntity(name, config, parent) {
@@ -43,6 +36,7 @@ module.exports = mixin((superclass) => class Entity extends superclass {
         this.title    = config.title || this._title();
         this.order    = parseInt(config.order, 10) || 10000;
         this.isHidden = config.isHidden || config.hidden || false;
+        this.id       = this._id();
     }
 
     get source() {
@@ -53,6 +47,10 @@ module.exports = mixin((superclass) => class Entity extends superclass {
         return this._parent;
     }
 
+    _id() {
+        return utils.md5(this.path);
+    }
+    
     _handle() {
         return this.name;
     }
@@ -67,9 +65,14 @@ module.exports = mixin((superclass) => class Entity extends superclass {
 
     toJSON() {
         return {
-
+            id:       this.id,
+            name:     this.name,
+            handle:   this.handle,
+            label:    this.label,
+            title:    this.title,
+            order:    this.order,
+            isHidden: this.isHidden,
         }
     }
-
 
 });

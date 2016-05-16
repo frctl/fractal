@@ -1,8 +1,7 @@
 'use strict';
 
-const _         = require('lodash');
-const yaml      = require('js-yaml');
-const highlight = require('../../../core/utils');
+const _            = require('lodash');
+const yaml         = require('js-yaml');
 
 module.exports = function(app, env) {
 

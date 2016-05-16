@@ -10,8 +10,11 @@ module.exports = {
     },
 
     action: function (args, done) {
-        return this.fractal.components.load().then(() => {
-            
+        return this.fractal.components.load().then(source => {
+            this.console.dump(source.toJSON())
+            // for (let item of source.flatten()) {
+            //     // console.log(item.status);
+            // }
         });
     }
 

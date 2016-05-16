@@ -8,6 +8,8 @@ const ComponentCollection = require('./collection');
 const Asset               = require('../assets/asset');
 const AssetCollection     = require('../assets/collection');
 const Data                = require('../../core/data');
+const Log                 = require('../../core/log');
+const resolver            = require('../../core/resolver');
 const EntitySource        = require('../../core/entities/source');
 
 module.exports = class ComponentSource extends EntitySource {
@@ -15,9 +17,207 @@ module.exports = class ComponentSource extends EntitySource {
     constructor(app){
         super('components', app);
     }
-
+    
     get source(){
         return this;
+    }
+
+    assets() {
+        let assets = [];
+        for (let comp of this.flatten()) {
+            assets = assets.concat(comp.assets().toArray());
+        }
+        return new AssetCollection({}, assets);
+    }
+
+    components() {
+        return super.entities();
+    }
+
+    variants() {
+        let items = [];
+        for (let component of this.components()) {
+            items = _.concat(items, component.variants().toArray());
+        }
+        return this.newSelf(items);
+    }
+
+    find() {
+        if (this.size === 0 || arguments.length === 0) {
+            return;
+        }
+        const args = Array.from(arguments);
+        if (args.length == 1 && _.isString(args[0]) && !args[0].startsWith('@') && args[0].indexOf('.') !== -1) {
+            return this.findFile(args[0]);
+        }
+        const isHandleFind = args.length == 1 && _.isString(args[0]) && args[0].startsWith('@');
+        for (let item of this) {
+            if (item.isCollection) {
+                const search = item.find.apply(item, args);
+                if (search) return search;
+            } else if (item.isComponent) {
+                const matcher = isHandleFind ? this._makePredicate.apply(null, ['handle', args[0].replace('@', '')]) : this._makePredicate.apply(null, args);
+                if (matcher(item)) return item;
+            }
+        }
+        if (isHandleFind) {
+            for (let item of this.entities()) {
+                let variant = item.variants().find(args[0]);
+                if (variant) return variant;
+            }
+        }
+    }
+
+    resolve(context) {
+        return resolver.context(context, this);
+    }
+
+    renderString(str, context) {
+        return this.engine().render(null, str, context);
+    }
+
+    renderPreview(entity, preview) {
+        preview = preview !== false ? true : false;
+        let context;
+        if (entity.isComponent) {
+            context = entity.variants().default().context;
+        } else {
+            context = entity.context;
+        }
+        return this.render(entity, context, { preview: preview });
+    }
+
+    /**
+     * Main render method. Accepts a component or variant
+     * and renders them appropriately.
+     *
+     * Rendering a component results in the rendering of the components' default variant,
+     * unless the collated option is 'true' - in this case it will return a collated rendering
+     * of all it's variants.
+     *
+     * @param {Component/Variant} entity
+     * @param {Object} context
+     * @param {Object} opts
+     * @return {Promise}
+     * @api public
+     */
+
+    render(entity, context, opts) {
+
+        opts           = opts || {};
+        opts.preview   = opts.preview || opts.useLayout || false;
+        opts.collate   = opts.collate  || false;
+
+        const self = this;
+
+        if (!entity) {
+            return Promise.reject(null);
+        }
+        if (_.isString(entity)) {
+            let str = entity;
+            if (entity.indexOf('@') === 0) {
+                entity = this.find(entity);
+                if (!entity) {
+                    throw new Error(`Cannot find component ${str}`);
+                }
+            } else {
+                return fs.readFileAsync(entity, 'utf8').then(content => {
+                    return this.engine().render(entity, content, context);
+                });
+            }
+        }
+
+        return co(function* () {
+            const source = yield self.load();
+            let rendered;
+            if (_.includes(['component', 'variant'], entity.type)) {
+                if (entity.isComponent) {
+                    if (entity.isCollated && opts.collate) {
+                        rendered = yield self._renderCollatedComponent(entity, context);
+                    } else {
+                        entity = entity.variants().default();
+                        rendered = yield self._renderVariant(entity, context);
+                    }
+                } else {
+                    rendered = yield self._renderVariant(entity, context);
+                }
+                if (opts.preview && entity.preview) {
+                    let target = entity.toJSON();
+                    target.component = variant.parent.toJSON();
+                    return yield self._wrapInLayout(rendered, entity.preview, {
+                        _target: target
+                    });
+                }
+                return rendered;
+            } else {
+                throw new Error(`Cannot render entity of type ${entity.type}`);
+            }
+        }).catch(err => {
+            Log.error(err);
+        });
+    }
+
+    *_renderVariant(variant, context) {
+        context = context || variant.context;
+        const content = yield variant.getContent();
+        const ctx     = yield this.resolve(context);
+        ctx._self     = variant.toJSON();
+        ctx._self.component = variant.parent.toJSON();
+        return this.engine().render(variant.viewPath, content, ctx);
+    }
+
+    *_renderCollatedComponent(component, context) {
+        context = context || {};
+        return (yield component.variants().filter('isHidden', false).toArray().map(variant => {
+            let ctx = context[`@${variant.handle}`] || variant.context;
+            ctx._self = variant.toJSON();
+            ctx._self.component = variant.parent.toJSON();
+            return this.render(variant, ctx).then(markup => {
+                const collator = component.collator;
+                return _.isFunction(collator) ? collator(markup, variant) : markup;
+            });
+        })).join('\n');
+    }
+
+    *_wrapInLayout(content, identifier, context) {
+        let layout = this.find(identifier);
+        let layoutContext, layoutContent, viewpath;
+        if (!layout) {
+            Log.error(`Preview layout ${identifier} not found.`);
+            return content;
+        }
+        if (layout.isFile) {
+            layoutContext = {};
+            layoutContent = yield layout.read();
+            viewpath = layout.path;
+        } else {
+            if (layout.isComponent) {
+                layout = layout.variants().default();
+            }
+            layoutContext = yield this.resolve(layout.context);
+            layoutContent = yield layout.getContent();
+            viewpath = layout.viewPath;
+        }
+        layoutContext = _.defaults(layoutContext, context || {});
+        layoutContext[this.get('yield')] = content;
+        const renderMethod = (_.isFunction(this.engine().renderLayout)) ? 'renderLayout' : 'render';
+        return this.engine()[renderMethod](viewpath, layoutContent, layoutContext);
+    }
+
+    statusInfo(handle) {
+        const statuses = this.get('statuses');
+        const defaultStatus = this.get('default.status')
+        if (_.isNull(handle)) {
+            return null;
+        }
+        if (_.isUndefined(handle)) {
+            return statuses[defaultStatus];
+        }
+        if (!statuses[handle]) {
+            Log.error(`Status ${handle} is not a known option.`);
+            return statuses[defaultStatus];
+        }
+        return statuses[handle];
     }
 
     fileType(file) {
@@ -94,12 +294,12 @@ module.exports = class ComponentSource extends EntitySource {
                     readme:   matched.readmes[0],
                     varViews: _.filter(matched.varViews, f => f.name.startsWith(nameMatch))
                 };
-                return Component.create(dirConfig, files, assets, parent);
+                return Component.create(dirConfig, files, assets, parent || source);
             }
 
             // not a component, so go through the items and group into components and collections
 
-            if (parent.isSource) {
+            if (!parent) {
                 collection = source;
                 source.setProps(dirConfig);
             } else {
@@ -127,7 +327,7 @@ module.exports = class ComponentSource extends EntitySource {
                         varViews: matched.varViews.filter(f => f.name.startsWith(nameMatch)),
                     };
                     const assets = new AssetCollection({}, []);
-                    return Component.create(c, files, assets, parent);
+                    return Component.create(c, files, assets, parent || source);
                 });
             });
 
@@ -136,7 +336,7 @@ module.exports = class ComponentSource extends EntitySource {
             return collection;
         });
 
-        return build(fileTree, this);
+        return build(fileTree);
     }
 
 }

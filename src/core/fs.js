@@ -18,10 +18,10 @@ module.exports = {
 
         return dirscribe(dir, {
             filter: filePath => !(/(^|\/)\.[^\/\.]/g).test(filePath),
-            after:  files => _.orderBy(files, ['type', 'order', 'path'], ['desc', 'asc', 'asc']),
+            after:  files => _.orderBy(files, ['isDirectory', 'order', 'path'], ['desc', 'asc', 'asc']),
             build:  build
         });
-        
+
         function build(filePath, stat) {
             return co(function* () {
                 const p        = Path.parse(filePath);
@@ -34,12 +34,9 @@ module.exports = {
                 p.ext          = p.ext.toLowerCase();
                 p.isFile       = stat.isFile();
                 p.isDirectory  = stat.isDirectory();
-                if (p.isDirectory) {
-                    p.type     = 'directory';
-                } else {
+                if (p.isFile) {
                     p._cachedContents = null;
                     p.isCacheable  = !!noCache;
-                    p.type     = 'file';
                     p.lang     = utils.lang(filePath);
                     p.isBinary = yield isBinary(filePath, null);
                     p.readSync = function () {

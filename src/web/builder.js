@@ -22,8 +22,10 @@ module.exports = class Builder extends mix(Emitter) {
     }
 
     build() {
-        if (!this._validate()) {
-            return Promise.reject(false);
+        try {
+            this._validate();
+        } catch (e) {
+            return Promise.reject(e);
         }
 
         this.emit('start');
@@ -129,19 +131,14 @@ module.exports = class Builder extends mix(Emitter) {
     }
 
     _validate() {
-        let ok = true;
         if (!this._config.dest) {
-            Log.error('You need to specify a build destination in your configuration.');
-            ok = false;
+            throw new Error('You need to specify a build destination in your configuration.');
         }
         for (let stat of this._theme.static()) {
             if (stat.path == this._theme.dest) {
-                Log.error(`Your build destination directory (${Path.resolve(stat.path)}) cannot be the same as any of your static assets directories.`);
-                ok = false;
-                break;
+                throw new Error(`Your build destination directory (${Path.resolve(stat.path)}) cannot be the same as any of your static assets directories.`);
             }
         }
-        return ok;
     }
 
     _fakeRequest(target) {

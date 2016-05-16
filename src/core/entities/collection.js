@@ -13,6 +13,14 @@ module.exports = class EntityCollection extends mix(Heritable, Collection, Entit
         this.initEntity(name, config, parent);
         this.setHeritable(parent);
         this.setItems(items);
+
+        Object.defineProperty(this, 'status', {
+            enumerable: true,
+            get() {
+                return this.source.statusInfo(this.getProp('status'));
+            }
+        });
+
     }
 
     /**
@@ -22,6 +30,13 @@ module.exports = class EntityCollection extends mix(Heritable, Collection, Entit
      */
     entities() {
         return this.newSelf(this.toArray().filter(i => ! i.isCollection));
+    }
+
+    toJSON(){
+        const self        = super.toJSON();
+        self.isCollection = true;
+        self.items        = this.toArray().map(i => (i.toJSON ? i.toJSON() : i));
+        return self;
     }
 
 }

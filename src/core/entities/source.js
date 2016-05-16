@@ -19,6 +19,7 @@ module.exports = class EntitySource extends mix(Configurable, Heritable, Emitter
     constructor(name, app){
         super();
         this.isSource       = true;
+        this.isCollection   = true;
         this.name           = name;
         this.isLoaded       = false;
         this._app           = app;
@@ -144,16 +145,21 @@ module.exports = class EntitySource extends mix(Configurable, Heritable, Emitter
     }
 
     statusInfo(handle) {
-        return null;
+        return {
+            label: handle
+        };
     }
 
     toJSON() {
-        const self    = super.toJSON();
-        self.name     = this.name;
-        self.label    = this.label;
-        self.title    = this.title;
-        self.viewExt  = this.setting('ext');
-        self.isLoaded = this.isLoaded;
+        const self        = super.toJSON();
+        self.name         = this.name;
+        self.label        = this.label;
+        self.title        = this.title;
+        self.viewExt      = this.get('ext');
+        self.isLoaded     = this.isLoaded;
+        self.isCollection = true;
+        self.isSource     = true;
+        self.items = this.toArray().map(i => (i.toJSON ? i.toJSON() : i));
         return self;
     }
 
@@ -188,6 +194,9 @@ module.exports = class EntitySource extends mix(Configurable, Heritable, Emitter
             return this._parse(fileTree);
         }).catch(e => {
             Log.error(e);
+            if (this._app.debug) {
+                Log.write(e.stack);
+            }
         });
         return this._loading;
     }

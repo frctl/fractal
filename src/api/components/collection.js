@@ -9,4 +9,20 @@ module.exports = class ComponentCollection extends EntityCollection {
         super(config.name, config, items, parent);
     }
 
+    find() {
+        return this.source.find.apply(this, arguments);
+    }
+    
+    components() {
+        return super.entities();
+    }
+
+    assets() {
+        return super.assets();
+    }
+
+    variants() {
+        return this.source.variants.apply(this, arguments);
+    }
+
 }
