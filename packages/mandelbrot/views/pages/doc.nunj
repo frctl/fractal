@@ -1,3 +1,3 @@
-asd
+<h1>Documentation</h1>
 
 {{ frctl.theme.urlFromRoute('/docs') }}
