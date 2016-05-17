@@ -10,6 +10,7 @@ module.exports = mixin((superclass) => {
         constructor(){
             super(...arguments);
             super.addMixedIn('Emitter');
+            this.on('error', e => {});
         }
     };
 

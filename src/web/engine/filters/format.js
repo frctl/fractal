@@ -3,7 +3,7 @@
 const _            = require('lodash');
 const yaml         = require('js-yaml');
 
-module.exports = function(app, env) {
+module.exports = function(app, engine) {
 
     return {
         name: 'format',

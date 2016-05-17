@@ -97,6 +97,7 @@ module.exports = class Server extends mix(Emitter) {
             this._urls        = null;
             this._connections = {};
         }
+        this.emit('stopped');
     }
 
     _startSync() {
@@ -155,30 +156,36 @@ module.exports = class Server extends mix(Emitter) {
 
     _onRequest(req, res, next) {
 
-        this._theme.engine.setGlobal('web', {
-            server: {
-                address: this._urls.server,
-                port: this._ports.server,
-                syncPort: this._ports.sync,
-                host: 'localhost',
-                sync: this.isSynced
-            },
-            builder: null,
-            request: res.locals.__request
+        this._theme.engine.setGlobal('env', {
+            server: true,
+            address: this._urls.server,
+            port: this._ports.server,
+            syncPort: this._ports.sync,
+            host: 'localhost',
+            sync: this.isSynced
         });
+
+        Log.debug(`Request for '${req.url}'`);
+
+        this._theme.engine.setGlobal('request', res.locals.__request);
 
         const match = this._theme.matchRoute(req.path);
 
         if (!match) {
+            let err = new Error(`No matching route found for ${req.path}`)
             res.locals.__request.params = {};
             res.locals.__request.errorStatus = '404';
-            return next(new Error(`No matching route found for ${req.path}`));
+            res.locals.__request.error = err;
+            this.emit('request', res.locals.__request);
+            return next(err);
         }
         if (match.route.redirect) {
             return res.redirect(match.route.redirect);
         }
         res.locals.__request.params = match.params;
         res.locals.__request.route = match.route;
+
+        this.emit('request', res.locals.__request);
 
         this._theme.render(match.route.view, match.route.context)
               .then(v => res.send(v).end())
@@ -187,7 +194,7 @@ module.exports = class Server extends mix(Emitter) {
 
     _onError(err, req, res, next) {
 
-        if (res.headersSent || !this._theme.error) {
+        if (res.headersSent || !this._theme.errorView()) {
             return next(err);
         }
 
@@ -195,15 +202,12 @@ module.exports = class Server extends mix(Emitter) {
         if (res.locals.__request.errorStatus) {
             res.status(res.locals.__request.errorStatus);
         }
-        if (res.locals.__request.errorStatus === '404') {
-            Log.write(`404: ${err.message}`);
-        } else {
-            Log.error(err.message);
-        }
 
-        this._theme.render(this._theme.error().view, this._theme.error().context)
+        this._theme.render(this._theme.errorView().view, this._theme.errorView().context)
               .then(v => res.send(v).end())
               .catch(err => next(err));
+
+        this.emit('error', err, res.locals.__request);
     }
 
     _init() {
@@ -229,9 +233,7 @@ module.exports = class Server extends mix(Emitter) {
 
         this._server.get(':path(*)', this._onRequest.bind(this));
 
-        if (!this._app.debug) {
-            this._server.use(this._onError.bind(this));
-        }
+        this._server.use(this._onError.bind(this));
     }
 
 }

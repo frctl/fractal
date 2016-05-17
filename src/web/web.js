@@ -7,7 +7,7 @@ const Emitter      = require('../core/mixins/emitter');
 const Server       = require('./server');
 const Builder      = require('./builder');
 const Theme        = require('./theme');
-const Env          = require('./env');
+const Engine       = require('./engine');
 
 module.exports = class Web extends mix(Configurable, Emitter) {
 
@@ -23,13 +23,13 @@ module.exports = class Web extends mix(Configurable, Emitter) {
 
     server(config) {
         let opts = _.defaultsDeep(config, this.get('server'));
-        const theme  = this._loadTheme(opts.theme);
+        const theme  = this._loadTheme(opts.theme, 'server');
         return new Server(theme, opts, this._app);
     }
 
     builder(config) {
         let opts = _.defaultsDeep(config, this.get('builder'));
-        const theme = this._loadTheme(opts.theme);
+        const theme = this._loadTheme(opts.theme, 'builder');
         return new Builder(theme, opts, this._app);
     }
 
@@ -45,7 +45,7 @@ module.exports = class Web extends mix(Configurable, Emitter) {
         const theme = this._loadTheme(opts.theme);
     }
 
-    _loadTheme(theme){
+    _loadTheme(theme, env){
         if (!theme) {
             theme = this._defaultTheme;
         }
@@ -65,7 +65,7 @@ module.exports = class Web extends mix(Configurable, Emitter) {
                 theme.static(s.path, s.mount || '/');
             }
         }
-        theme.init(new Env(theme.views(), this._app));
+        theme.init(new Engine(theme.loadPaths(), env, this._app));
         return theme;
     }
 }

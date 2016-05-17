@@ -28,6 +28,10 @@ module.exports = class Builder extends mix(Emitter) {
             return Promise.reject(e);
         }
 
+        this._theme.engine.setGlobal('env', {
+            builder: true
+        });
+
         this.emit('start');
 
         let setup = fs.removeAsync(this._config.dest).then(() => fs.ensureDirAsync(this._config.dest));
@@ -39,7 +43,9 @@ module.exports = class Builder extends mix(Emitter) {
             this._theme.emit('build', this, this._app);
 
             let copyStatic = this._theme.static().map(p => this._copyStatic(p.path, p.mount));
+
             return Promise.all(copyStatic.concat(this._buildTargets()));
+
         }).then(() => {
             let stats = {
                 errorCount: this._errorCount
@@ -82,6 +88,7 @@ module.exports = class Builder extends mix(Emitter) {
         this._theme.routes().forEach(route => {
             if (route.params && route.params.length) {
                 for (let params of route.params) {
+                    params = _.isFunction(params) ? build() : [].concat(params);
                     this.addRoute(route.handle, params);
                 }
             } else {
@@ -92,12 +99,7 @@ module.exports = class Builder extends mix(Emitter) {
 
     _buildTargets() {
         const jobs = [];
-        const web = {
-            server: null,
-            builder: {},
-            request: {}
-        };
-
+        
         for (let target of this._targets) {
             const savePath = Path.join(this._config.dest, target.url) + (target.url == '/' ? 'index.html' : '.html');
             const pathInfo = Path.parse(savePath);
@@ -105,8 +107,8 @@ module.exports = class Builder extends mix(Emitter) {
 
                 return fs.ensureDirAsync(pathInfo.dir).then(() => {
 
-                    web.request = this._fakeRequest(target);
-                    this._theme.engine.setGlobal('web', web);
+                    let request = this._fakeRequest(target);
+                    this._theme.engine.setGlobal('request', request);
 
                     function write(html) {
                         return fs.writeFileAsync(savePath, html).then(() => Log.debug(`Exported '${target.url}' ==> '${savePath}'`));
@@ -114,10 +116,10 @@ module.exports = class Builder extends mix(Emitter) {
 
                     return this._theme.render(target.route.view, target.route.context).then(html => write(html)).catch(e => {
 
-                        Log.error(`Failed to export url ${target.url} - ${e.message}`);
+                        this.emit('error', new Error(`Failed to export url ${target.url} - ${e.message}`));
 
                         this._errorCount++;
-                        web.request.error = e;
+                        request.error = e;
 
                         return this._theme.render(this._theme.error().view, this._theme.error().context).then(html => write(html));
                     });

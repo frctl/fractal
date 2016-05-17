@@ -23,22 +23,26 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
         this._staticPaths = new Set();
         this._routes      = new Map();
         this._builder     = null;
-        this._views       = viewPaths ? [].concat(viewPaths) : [];
+        this._views       = [];
 
         this._filters     = [];
         this._extensions  = [];
         this._globals     = {};
-        this._env         = null;
+        this._engine      = null;
 
-        this._errorView   = {
+        this._errorView = {};
+
+        this.addLoadPath(viewPaths);
+        this.setErrorView({
             view: '__system/error.nunj',
             context: {}
-        };
+        });
     }
 
-    init(env) {
-        this._env = env;
-        this.emit('init', env, this._app);
+    init(engine) {
+        this._engine = engine;
+        this._engine.setGlobal('theme', this);
+        this.emit('init', engine, this._app);
     }
 
     render(){
@@ -50,24 +54,22 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
     }
 
     get engine(){
-        if (!this._env) {
+        if (!this._engine) {
             throw new Error('Theme engine instance cannot be accessed before initialisation.');
         }
-        return this._env;
+        return this._engine;
     }
 
-    views(path) {
-        if (!arguments.length) {
-            return this._views;
-        }
-        this._views = [].concat(path);
+    addLoadPath(path) {
+        this._views = _.uniq(this._views.concat([].concat(path)));
         return this;
     }
 
-    error(err) {
-        if (!arguments.length) {
-            return this._errorView;
-        }
+    loadPaths() {
+        return this._views;
+    }
+
+    setErrorView(err) {
         if (_.isString(err)) {
             err = {
                 view: err
@@ -80,10 +82,11 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
         return this;
     }
 
-    static(path, mount) {
-        if (arguments.length === 0) {
-            return Array.from(this._staticPaths.values());
-        }
+    errorView() {
+        return this._errorView;
+    }
+
+    addStatic(path, mount) {
         this._staticPaths.add({
             path: path,
             mount: mount
@@ -91,16 +94,16 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
         return this;
     }
 
-    route(path, opts) {
+    static() {
+        return Array.from(this._staticPaths.values());
+    }
+
+    addRoute(path, opts, build) {
         let keys = [];
         opts.path = path;
         opts.handle = opts.handle || path;
         opts.matcher = pr(path, keys);
-        if (opts.build) {
-            opts.params = _.isFunction(opts.build) ? opts.build() : [].concat(opts.build);
-        } else {
-            opts.params = [];
-        }
+        opts.params = build || [];
         this._routes.set(opts.handle, _.clone(opts));
         return this;
     }
@@ -145,27 +148,6 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
         }
         return null;
     }
-
-    urlPath(path) {
-        path = path.replace(/^\//, '');
-        if (this.rootPath) {
-            const base = this.rootPath.replace(/^\//, '').replace(/\/$/, '');
-            return `/${base}/${path}`;
-        }
-        return `/${path}`;
-    }
-
-    staticUrlPath(path) {
-        return path;
-    }
-
-    // onBuild(buildCallback) {
-    //     this._builder = buildCallback;
-    // }
-    //
-    // hasBuilder(){
-    //     return !! this._builder;
-    // }
 
 }
 

@@ -2,7 +2,7 @@
 
 const markdown = require('../../../core/markdown');
 
-module.exports = function(app, env) {
+module.exports = function(app, engine) {
 
     return {
         name: 'markdown',

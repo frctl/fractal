@@ -3,7 +3,7 @@
 const _            = require('lodash');
 const beautifyHTML = require('js-beautify').html;
 
-module.exports = function(app, env) {
+module.exports = function(app, engine) {
 
     return {
         name: 'beautify',

@@ -2,29 +2,14 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <link rel="stylesheet" href="{{ '/styles.css' | url }}" media="screen" title="no title" charset="utf-8">
+        {# <link rel="stylesheet" href="{{ path('/styles.css') }}" media="screen" title="no title" charset="utf-8"> #}
         <title></title>
     </head>
     <body>
 
-        <h1>{{ frctl.web.request.path }} - {{ foobar | wow }}</h1>
+        <h1>{{ frctl.theme.loadPaths() }}</h1>
 
-        {# {{ frctl.components }} #}
-
-        {{ frctl.components.find('@button').getResolvedContext() | async | format }}
-
-        <p>
-            this is a theme <a href="{{ '/' | url }}">Home</a>
-            <ul>
-                <li><a href="{{ '/foo' | url }}">Foo page</a></li>
-                <li><a href="{{ '/foo/one' | url }}">One page</a></li>
-                <li><a href="{{ '/bar/baz/one' | url }}">Baz page</a></li>
-            </ul>
-
-            {# {{ dump(frctl.web) }} #}
-        </p>
-
-        <code><pre>{{ context | context(frctl.components) | format('yml') }}</pre></code>
+        {{ path('bar')}}
 
     </body>
 </html>

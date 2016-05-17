@@ -9,12 +9,26 @@ const requireAll  = require('require-all');
 const Log         = require('../../core/log');
 const extensions  = requireAll(`${__dirname}/extensions`);
 const filters     = requireAll(`${__dirname}/filters`);
+const globals     = requireAll(`${__dirname}/globals`);
 
-module.exports = class Env {
+module.exports = class Engine {
 
-    constructor(viewsPath, app){
+    constructor(viewsPath, env, app){
 
         this._app = app;
+        this._env = env;
+
+        this._globals = {
+            components: app.components,
+            docs: app.docs,
+            env: {},
+            request: {},
+            theme: null,
+            get: function(path, fallback){
+                return app.get(path, fallback);
+            }
+        };
+
         viewsPath = [].concat(viewsPath);
 
         const views = viewsPath.concat([
@@ -31,32 +45,32 @@ module.exports = class Env {
         }));
 
         _.forEach(extensions, factory => {
-            const e = factory(app, this._engine);
+            const e = factory(app, this);
             this._engine.addExtension(e.name, new e.extension());
         });
 
         _.forEach(filters, factory => {
-            const f = factory(app, this._engine);
+            const f = factory(app, this);
             this._engine.addFilter(f.name, f.filter, f.async);
         });
-        
-        this._globals = {
-            components: app.components,
-            docs: app.docs,
-            config: app.config(),
-            web: {},
-            log: Log
-        };
 
-        this._engine.addGlobal('dump', function(obj, preformat) {
-            preformat = preformat === false ? false : true;
-            let output = JSON.stringify(obj, null, 4);
-            return preformat ? '<pre>' + output + '</pre>' : output;
+        _.forEach(globals, factory => {
+            const g = factory(app, this);
+            this._engine.addGlobal(g.name, g.value);
         });
+
     }
 
-    get engine(){
+    get engine() {
         return this._engine;
+    }
+
+    get globals() {
+        return this._globals;
+    }
+
+    get env() {
+        return this._env;
     }
 
     setGlobal(path, value) {

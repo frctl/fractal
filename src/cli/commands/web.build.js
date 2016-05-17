@@ -18,9 +18,13 @@ module.exports = {
             this.console.success('Build started...');
         });
 
+        builder.on('error', (err, req) => {
+            this.console.error(err.message, err);
+        });
+
         return builder.build().then(data => {
             let e = data.errorCount;
-            this.console[e ? 'warn' : 'success'](`Build finished. There ${e == 1 ? 'was' : 'were'} ${e} error${e == 1 ? '' : 's'}.`);
+            this.console[e ? 'warn' : 'success'](`Build finished with ${e === 0 ? 'no' : e} error${e == 1 ? '' : 's'}.`);
         }).catch(e => {
             this.console.error(e);
         });

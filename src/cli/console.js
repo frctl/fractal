@@ -61,14 +61,15 @@ class Console {
         return this;
     }
 
-    error(text, data) {
+    error(err, data) {
         if (this.isSlogging()) {
             this.unslog().br();
         }
-        this.write(text, 'error');
-        if (data && this._debugging) {
+        this.write(err, 'error');
+        if ((data || err instanceof Error) && this._debugging) {
+            data = data || err;
             if (data.stack) {
-                this.dump(data.stack.split('\n').slice(1).join('\n'))
+                this.log('  ' + _.trim(data.stack.toString().replace(/Error:[^\n]*/g, '')))
             } else {
                 this.dump(data);
             }

@@ -36,13 +36,20 @@ module.exports = {
             }
 
             return this.console.box(header, body, footer).unslog();
+        });
 
+        server.on('error', (err, req) => {
+            if (req.errorStatus === '404') {
+                this.console.warn(`404: ${err.message}`);
+            } else {
+                this.console.error(err.message, err);
+            }
         });
 
         if (args.options.watch) {
             this.fractal.watch();
         }
-        
+
         return server.start(args.options.sync).catch(e => {
             this.console.error(e);
         });

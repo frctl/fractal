@@ -2,19 +2,19 @@
 
 {% set page = {
     type: 'error',
-    title: frctl.web.request.error.name
+    title: frctl.request.error.name
 } %}
 
 {% block body %}
 <div class="Error">
-    
+
     <div class="Error-message">
-    {{ frctl.web.request.error.message | markdown }}
+    {{ frctl.request.error.message | markdown }}
     </div>
 
-    {% if frctl.web.request.error.stack %}
+    {% if frctl.request.error.stack %}
     <code class="Error-stack">
-        <pre>{{ frctl.web.request.error.stack }}</pre>
+        <pre>{{ frctl.request.error.stack }}</pre>
     </code>
     {% endif %}
 </div>
