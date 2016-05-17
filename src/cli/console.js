@@ -69,7 +69,7 @@ class Console {
         if ((data || err instanceof Error) && this._debugging) {
             data = data || err;
             if (data.stack) {
-                this.log('  ' + _.trim(data.stack.toString().replace(/Error:[^\n]*/g, '')))
+                this.log('    ' + _.trim(data.stack.toString().replace(err.toString(), '')))
             } else {
                 this.dump(data);
             }

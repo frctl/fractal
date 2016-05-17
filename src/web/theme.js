@@ -61,7 +61,8 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
     }
 
     addLoadPath(path) {
-        this._views = _.uniq(this._views.concat([].concat(path)));
+        path = [].concat(path);
+        this._views = _.uniq(path.concat(this._views));
         return this;
     }
 
@@ -139,12 +140,14 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
         return false;
     }
 
-    urlFromRoute(handle, params, raw) {
+    urlFromRoute(handle, params) {
         let route = this._routes.get(handle);
         if (route) {
+            if (route.redirect) {
+                return route.redirect;
+            }
             let compiler = pr.compile(route.path);
-            let url = cleanUrlPath(compiler(params));
-            return raw ? url : this.urlPath(url);
+            return cleanUrlPath(compiler(params));
         }
         return null;
     }

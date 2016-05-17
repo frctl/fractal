@@ -86,24 +86,29 @@ module.exports = class Builder extends mix(Emitter) {
 
     _addTargets() {
         this._theme.routes().forEach(route => {
-            if (route.params && route.params.length) {
-                for (let params of route.params) {
-                    params = _.isFunction(params) ? build() : [].concat(params);
-                    this.addRoute(route.handle, params);
+            if (!route.view) {
+                return;
+            }
+            try {
+                if (route.params) {
+                    let params = _.isFunction(route.params) ? route.params() : [].concat(route.params);
+                    for (let p of params) {
+                        this.addRoute(route.handle, p);
+                    }
+                } else {
+                    this.addRoute(route.handle);
                 }
-            } else {
-                this.addRoute(route.handle);
+            } catch(e) {
+                throw new Error(`Could not add route '${route.path}' to builder: ${e.message}`);
             }
         });
     }
 
     _buildTargets() {
-        const jobs = [];
-        
-        for (let target of this._targets) {
+        return this._targets.map(target => {
             const savePath = Path.join(this._config.dest, target.url) + (target.url == '/' ? 'index.html' : '.html');
             const pathInfo = Path.parse(savePath);
-            const job = this._throttle(() => {
+            return this._throttle(() => {
 
                 return fs.ensureDirAsync(pathInfo.dir).then(() => {
 
@@ -121,15 +126,13 @@ module.exports = class Builder extends mix(Emitter) {
                         this._errorCount++;
                         request.error = e;
 
-                        return this._theme.render(this._theme.error().view, this._theme.error().context).then(html => write(html));
+                        return this._theme.render(this._theme.errorView().view, this._theme.errorView().context).then(html => write(html));
                     });
 
                 });
 
             });
-            jobs.push(job);
-        }
-        return jobs;
+        });
     }
 
     _validate() {
