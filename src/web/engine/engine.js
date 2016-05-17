@@ -46,7 +46,7 @@ module.exports = class Engine {
 
         _.forEach(extensions, factory => {
             const e = factory(app, this);
-            this._engine.addExtension(e.name, new e.extension());
+            this._engine.addExtension(e.name, new e.extension);
         });
 
         _.forEach(filters, factory => {
