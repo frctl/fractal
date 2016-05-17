@@ -1,6 +1,6 @@
 {% extends "layouts/pjax.nunj" if frctl.web.request.isPjax else "layouts/frame.nunj" %}
-{% import "helpers/document.nunj" as doc %}
-{% import "helpers/status.nunj" as status %}
+{% import "macros/document.nunj" as doc %}
+{% import "macros/status.nunj" as status %}
 
 {% set path = frctl.web.request.params.path if frctl.web.request.params.path else '' %}
 {% set page = frctl.docs.find('path', path) %}

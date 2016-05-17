@@ -1,5 +1,5 @@
-{% import "helpers/status.nunj" as status %}
-{% import "helpers/utils.nunj" as utils %}
+{% import "macros/status.nunj" as status %}
+{% import "macros/utils.nunj" as utils %}
 
 {% macro tree(root, current) %}
 <div class="Tree" data-behaviour="tree" id="tree-{{ root.name }}">

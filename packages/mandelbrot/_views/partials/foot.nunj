@@ -1,0 +1,1 @@
+<script src="{{ url('/theme/js/mandelbrot.js') }}"></script>

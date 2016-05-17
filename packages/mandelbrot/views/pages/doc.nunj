@@ -1,0 +1,3 @@
+asd
+
+{{ frctl.theme.urlFromRoute('/docs') }}

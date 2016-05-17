@@ -1,5 +1,5 @@
 {% extends "layouts/skeleton.nunj" %}
-{% import "helpers/navigation.nunj" as nav %}
+{% import "macros/navigation.nunj" as nav %}
 
 {% block page %}
 
@@ -26,7 +26,7 @@
             {% block content %}{% endblock %}
             </div>
         </div>
-
+        
         <div class="Frame-handle" data-role="frame-resize-handle"></div>
 
         <div class="Frame-panel Frame-panel--sidebar" data-role="sidebar">
@@ -47,6 +47,5 @@
         </div>
     </div>
 </div>
-
 
 {% endblock %}

@@ -1,6 +1,6 @@
 {% extends "layouts/pjax.nunj" if frctl.web.request.isPjax else "layouts/frame.nunj" %}
-{% import "helpers/image.nunj" as img %}
-{% import "helpers/status.nunj" as status %}
+{% import "macros/image.nunj" as img %}
+{% import "macros/status.nunj" as status %}
 
 {% set entity = frctl.components.find('@' + frctl.web.request.params.handle) %}
 {% if not entity or entity.isHidden %}{% throw404 'Item not found' %}{% endif %}
