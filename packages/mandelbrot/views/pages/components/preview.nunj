@@ -1,1 +1,6 @@
-preview
+{# {% set component = frctl.components.find('@' + frctl.request.params.handle) %}
+{% if component %}
+{{ component.render() | async }}
+{% else %} #}
+{{ throw('message asd asdasd') }}
+{# {% endif %} #}

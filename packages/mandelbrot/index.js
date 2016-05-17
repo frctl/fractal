@@ -17,7 +17,7 @@ module.exports = function(options){
 
     const theme = new Theme(Path.join(__dirname, 'views'), config);
 
-    theme.setErrorView('pages/error.nunj');
+    // theme.setErrorView('pages/error.nunj');
 
     // theme.addStatic(Path.join(__dirname, 'dist'), '/theme');
 
@@ -37,9 +37,10 @@ module.exports = function(options){
     theme.addRoute('/components/preview/:handle', {
         handle: 'preview',
         view: 'pages/components/preview.nunj'
-    }, {handle:'button'});
-    
-    //
+    }, [{ handle:'button'}] );
+
+
+
     // theme.addRoute('/components/detail/:handle', {
     //     handle: 'component',
     //     view: 'pages/components/detail.nunj'
