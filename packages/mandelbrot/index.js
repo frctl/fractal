@@ -7,76 +7,78 @@ const packageJSON = require('./package.json');
 
 module.exports = function(options){
 
-    options = _.clone(options || {});
-
-    const theme = new Theme(Path.join(__dirname, 'views'), _.defaultsDeep(options, {
+    const config = _.defaultsDeep(_.clone(options || {}), {
         skin: 'default',
         rtl: false,
         lang: 'en',
         stylesheet: null,
-        head: null,
-        foot: null,
-        contextFormat: 'json'
-    }));
+        contextFormat: 'json',
+    });
 
-    theme.error('pages/error.nunj');
+    const theme = new Theme(Path.join(__dirname, 'views'), config);
 
-    theme.static(Path.join(__dirname, 'dist'), '/theme');
+    theme.setErrorView('pages/error.nunj');
 
-    theme.route('/', {
+    // theme.addStatic(Path.join(__dirname, 'dist'), '/theme');
+
+    theme.addRoute('/', {
         handle: 'overview',
-        view: 'pages/page.nunj',
+        view: 'pages/doc.nunj',
     });
 
-    theme.route('/docs', {
+    theme.addRoute('/docs', {
         redirect: '/'
     });
 
-    theme.route('/components', {
+    theme.addRoute('/components', {
         redirect: '/'
     });
 
-    theme.route('/components/preview/:handle', {
+    theme.addRoute('/components/preview/:handle', {
         handle: 'preview',
         view: 'pages/components/preview.nunj'
-    });
+    }, {handle:'button'});
+    
+    //
+    // theme.addRoute('/components/detail/:handle', {
+    //     handle: 'component',
+    //     view: 'pages/components/detail.nunj'
+    // }, [{handle:'button'}, {handle:'alert'}]);
+    //
+    // theme.addRoute('/docs/:path([^\?]+?)', {
+    //     handle: 'page',
+    //     view: 'pages/page.nunj'
+    // }, function(){
+    //     return [{path:'/'}];
+    // });
 
-    theme.route('/components/detail/:handle', {
-        handle: 'component',
-        view: 'pages/components/detail.nunj'
-    });
 
-    theme.route('/docs/:path([^\?]+?)', {
-        handle: 'page',
-        view: 'pages/page.nunj'
-    });
-
-    theme.onBuild(function(builder, app){
-
-        const components = app.components;
-        const docs       = app.docs;
-
-        for (let comp of components.flatten()) {
-            if (!comp.isHidden){
-                builder.addRoute('preview', {'handle':comp.handle});
-                builder.addRoute('component', {'handle':comp.handle});
-            }
-            for (let variant of comp.variants()) {
-                builder.addRoute('preview', {'handle':variant.handle});
-                if (!comp.isCollated){
-                    builder.addRoute('component', {'handle':variant.handle});
-                }
-            }
-        }
-
-        builder.addRoute('overview');
-        for (let page of docs.flatten()) {
-            if (!page.isHidden && page.path !== '') {
-                builder.addRoute('page', {'path':page.path});
-            }
-        }
-
-    });
+    // theme.onBuild(function(builder, app){
+    //
+    //     const components = app.components;
+    //     const docs       = app.docs;
+    //
+    //     for (let comp of components.flatten()) {
+    //         if (!comp.isHidden){
+    //             builder.addRoute('preview', {'handle':comp.handle});
+    //             builder.addRoute('component', {'handle':comp.handle});
+    //         }
+    //         for (let variant of comp.variants()) {
+    //             builder.addRoute('preview', {'handle':variant.handle});
+    //             if (!comp.isCollated){
+    //                 builder.addRoute('component', {'handle':variant.handle});
+    //             }
+    //         }
+    //     }
+    //
+    //     builder.addRoute('overview');
+    //     for (let page of docs.flatten()) {
+    //         if (!page.isHidden && page.path !== '') {
+    //             builder.addRoute('page', {'path':page.path});
+    //         }
+    //     }
+    //
+    // });
 
     return theme;
 };

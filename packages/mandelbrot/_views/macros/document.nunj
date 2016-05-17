@@ -1,4 +1,4 @@
-{% import "helpers/status.nunj" as status %}
+{% import "macros/status.nunj" as status %}
 
 {% macro header(title) %}
 <div class="Document-header">

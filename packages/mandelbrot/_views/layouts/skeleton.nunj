@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="{{ frctl.theme.get('lang') | default('en') }}" dir="{{ 'rtl' if frctl.theme.get('rtl') else 'ltr' }}" class="no-js">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script>var cl = document.querySelector('html').classList; cl.remove('no-js'); cl.add('has-js');</script>
+    {% include 'partials/head.nunj' %}
+</head>
+<body>
+
+{% block page %}{% endblock %}
+
+{% include 'partials/foot.nunj' %}
+</body>
+</html>
