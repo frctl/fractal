@@ -1,0 +1,12 @@
+<nav class="Navigation">
+    {% if frctl.components.size %}
+    <div class="Navigation-group">
+    {{ nav.tree(frctl.components, entity) }}
+    </div>
+    {% endif %}
+    {% if frctl.docs.size %}
+    <div class="Navigation-group">
+    {{ nav.tree(frctl.docs, page) }}
+    </div>
+    {% endif %}
+</nav>

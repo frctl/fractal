@@ -1,3 +1,0 @@
-{% set entity = frctl.components.find('@' + frctl.web.request.params.handle) -%}
-{% if not entity %}{% throw404 'Item not found' %}{% endif -%}
-{{ entity | preview }}

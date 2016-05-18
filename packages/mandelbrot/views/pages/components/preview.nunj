@@ -1,6 +1,3 @@
-{# {% set component = frctl.components.find('@' + frctl.request.params.handle) %}
-{% if component %}
-{{ component.render() | async }}
-{% else %} #}
-{{ throw('message asd asdasd') }}
-{# {% endif %} #}
+{% set entity = frctl.components.find('@' + frctl.request.params.handle) -%}
+{% if not entity %}{{ throw(404, "Component '" + frctl.request.params.handle + "' not found.") }}{% endif -%}
+{{ entity.render(null, true) | async }}
