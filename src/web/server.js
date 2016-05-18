@@ -7,6 +7,7 @@ const chokidar     = require('chokidar');
 const Path         = require('path');
 const util         = require('util');
 const portscanner  = Promise.promisifyAll(require('portscanner'));
+const WebError     = require('./error');
 const Log          = require('../core/log');
 const mix          = require('../core/mixins/mix');
 const Emitter      = require('../core/mixins/emitter');
@@ -172,12 +173,9 @@ module.exports = class Server extends mix(Emitter) {
         const match = this._theme.matchRoute(req.path);
 
         if (!match) {
-            let err = new Error(`No matching route found for ${req.path}`)
             res.locals.__request.params = {};
-            res.locals.__request.errorStatus = '404';
-            res.locals.__request.error = err;
             this.emit('request', res.locals.__request);
-            return next(err);
+            return next(new WebError(404, `No matching route found for ${req.path}`));
         }
         if (match.route.redirect) {
             return res.redirect(match.route.redirect);
@@ -198,12 +196,11 @@ module.exports = class Server extends mix(Emitter) {
             return next(err);
         }
 
-        res.locals.__request.error = err;
-        if (res.locals.__request.errorStatus) {
-            res.status(res.locals.__request.errorStatus);
+        if (err.status) {
+            res.status(err.status);
         }
 
-        this._theme.render(this._theme.errorView().view, this._theme.errorView().context)
+        this._theme.renderError(err)
               .then(v => res.send(v).end())
               .catch(err => next(err));
 
@@ -220,8 +217,6 @@ module.exports = class Server extends mix(Emitter) {
                 path:        req.path,
                 query:       req.query,
                 url:         req.url,
-                error:       null,
-                errorStatus: null,
                 route:       null,
             };
             next();

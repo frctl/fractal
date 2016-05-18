@@ -1,5 +1,7 @@
 'use strict';
 
+const utils = require('util');
+
 module.exports = {
 
     command: 'start',
@@ -39,7 +41,7 @@ module.exports = {
         });
 
         server.on('error', (err, req) => {
-            if (req.errorStatus === '404') {
+            if (err.status === '404') {
                 this.console.warn(`404: ${err.message}`);
             } else {
                 this.console.error(err.message, err);

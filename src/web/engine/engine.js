@@ -7,9 +7,22 @@ const yaml        = require('js-yaml');
 const _           = require('lodash');
 const requireAll  = require('require-all');
 const Log         = require('../../core/log');
+const WebError    = require('../error');
 const extensions  = requireAll(`${__dirname}/extensions`);
 const filters     = requireAll(`${__dirname}/filters`);
 const globals     = requireAll(`${__dirname}/globals`);
+
+let templateError = nunjucks.lib.TemplateError;
+
+ nunjucks.lib.TemplateError = function(message, lineno, colno) {
+
+    if (message instanceof WebError) {
+        throw message;
+    }
+
+    return new templateError(message, lineno, colno);
+
+};
 
 module.exports = class Engine {
 

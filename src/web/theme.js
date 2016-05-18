@@ -6,6 +6,7 @@ const Promise      = require('bluebird');
 const fs           = Promise.promisifyAll(require('fs-extra'));
 const pr           = require('path-to-regexp');
 const mix          = require('../core/mixins/mix');
+const WebError     = require('./error');
 const Configurable = require('../core/mixins/configurable');
 const Emitter      = require('../core/mixins/emitter');
 
@@ -33,15 +34,12 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
         this._errorView = {};
 
         this.addLoadPath(viewPaths);
-        this.setErrorView({
-            view: '__system/error.nunj',
-            context: {}
-        });
+        this.setErrorView('__system/error.nunj');
     }
 
     init(engine) {
+        engine.setGlobal('theme', this);
         this._engine = engine;
-        this._engine.setGlobal('theme', this);
         this.emit('init', engine, this._app);
     }
 
@@ -51,6 +49,11 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
 
     renderString(){
         return this.engine.renderString(...arguments);
+    }
+
+    renderError(err) {
+        this.engine.setGlobal('error', err);
+        return this.render(this.errorView(), {});
     }
 
     get engine(){
@@ -70,16 +73,8 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
         return this._views;
     }
 
-    setErrorView(err) {
-        if (_.isString(err)) {
-            err = {
-                view: err
-            };
-        } else if (!err.view) {
-            err = null;
-        }
-        err.context = err.context || {};
-        this._errorView = err;
+    setErrorView(view) {
+        this._errorView = view;
         return this;
     }
 

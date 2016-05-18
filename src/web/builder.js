@@ -111,22 +111,19 @@ module.exports = class Builder extends mix(Emitter) {
             return this._throttle(() => {
 
                 return fs.ensureDirAsync(pathInfo.dir).then(() => {
-
-                    let request = this._fakeRequest(target);
-                    this._theme.engine.setGlobal('request', request);
+                    
+                    this._theme.engine.setGlobal('request', this._fakeRequest(target));
 
                     function write(html) {
                         return fs.writeFileAsync(savePath, html).then(() => Log.debug(`Exported '${target.url}' ==> '${savePath}'`));
                     }
 
-                    return this._theme.render(target.route.view, target.route.context).then(html => write(html)).catch(e => {
-
-                        this.emit('error', new Error(`Failed to export url ${target.url} - ${e.message}`));
+                    return this._theme.render(target.route.view, target.route.context).then(html => write(html)).catch(err => {
 
                         this._errorCount++;
-                        request.error = e;
+                        this.emit('error', new Error(`Failed to export url ${target.url} - ${e.message}`));
 
-                        return this._theme.render(this._theme.errorView().view, this._theme.errorView().context).then(html => write(html));
+                        return this._theme.renderError(err).then(html => write(html));
                     });
 
                 });
