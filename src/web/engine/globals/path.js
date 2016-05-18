@@ -8,7 +8,7 @@ module.exports = function(app, engine) {
     return {
         name: 'path',
         value: function(str) {
-            if (engine.env === 'server') {
+            if (engine.env === 'server' || str.startsWith('http') || str.startsWith('.')) {
                 return str;
             }
             const currentPath = getStaticPagePath(_.get(engine.globals, 'request.path', '/'));

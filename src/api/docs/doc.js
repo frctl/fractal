@@ -14,13 +14,17 @@ module.exports = class Doc extends Entity {
         this.lang     = config.lang;
         this.filePath = config.filePath;
         this.viewPath = this.filePath;
-        this.isIndex  = this.name === 'index';
+        this.isIndex  = config.name === 'index';
         this.content  = content;
         this.file     = config.file;
     }
 
     _label(config) {
-        return config.isIndex ? this.source.get('indexLabel') : (config.label || utils.titlize(config.name));
+        return config.label || (config.isIndex ? this.source.get('indexLabel') : utils.titlize(config.name));
+    }
+
+    _title(config) {
+        return config.title || this.label;
     }
 
     getContent() {

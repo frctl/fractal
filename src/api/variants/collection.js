@@ -1,5 +1,6 @@
 'use strict';
 
+const Promise          = require('bluebird');
 const _                = require('lodash');
 const Path             = require('path');
 const co               = require('co');
@@ -18,19 +19,23 @@ module.exports = class VariantCollection extends EntityCollection {
         return this.find('name', this.parent.defaultName);
     }
 
+    getCollatedContent() {
+        if (this._hasSharedView()) {
+            return this.default().getContent();
+        }
+        return Promise.all(this.toArray().map(variant => {
+            return variant.getContent().then(content => {
+                const collator = this.parent.collator;
+                return _.isFunction(collator) ? collator(content, variant) : content;
+            });
+        })).then(contents => contents.join('\n'));
+    }
+
     getCollatedContentSync() {
-        let view = this.default().view;
-        let sharedView = true;
-        let variantsArray = this.toArray();
-        variantsArray.map(variant => {
-            if (view !== variant.view) {
-                sharedView = false;
-            }
-        });
-        if (sharedView) {
+        if (this._hasSharedView()) {
             return this.default().getContentSync();
         }
-        return (variantsArray.map(variant => {
+        return (this.toArray().map(variant => {
             const content = variant.getContentSync();
             const collator = this.parent.collator;
             return _.isFunction(collator) ? collator(content, variant) : content;
@@ -40,9 +45,19 @@ module.exports = class VariantCollection extends EntityCollection {
     getCollatedContext() {
         let collated = {};
         this.toArray().forEach(variant => {
-            collated[`@${variant.handle}`] = variant.context;
+            collated[`@${variant.handle}`] = variant.getResolvedContext();
         });
-        return collated;
+        return Promise.props(collated);
+    }
+
+    _hasSharedView() {
+        let view = this.default().view;
+        for (let v of this.toArray()) {
+            if (view !== v.view) {
+                return false;
+            }
+        }
+        return true;
     }
 
     static *create(component, defaultView, configured, views, opts) {

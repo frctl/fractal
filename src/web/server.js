@@ -158,12 +158,12 @@ module.exports = class Server extends mix(Emitter) {
     _onRequest(req, res, next) {
 
         this._theme.engine.setGlobal('env', {
-            server: true,
-            address: this._urls.server,
-            port: this._ports.server,
+            server:   true,
+            address:  this._urls.server,
+            port:     this._ports.server,
             syncPort: this._ports.sync,
-            host: 'localhost',
-            sync: this.isSynced
+            host:     'localhost',
+            sync:     this.isSynced
         });
 
         Log.debug(`Request for '${req.url}'`);

@@ -8,15 +8,15 @@
 {% block body %}
 <div class="Error">
 
-        <div class="Error-message">
-        {{ frctl.error.message | markdown }}
-        </div>
+    <div class="Error-message">
+    {{ frctl.error.message | markdown }}
+    </div>
 
-        {% if frctl.error.stack and not frctl.error.status == '404' %}
-        <code class="Error-stack">
-            <pre>{{ frctl.error.stack }}</pre>
-        </code>
-        {% endif %}
+    {% if frctl.error.stack and frctl.error.status != '404' %}
+    <code class="Error-stack">
+        <pre>{{ frctl.error.stack }}</pre>
+    </code>
+    {% endif %}
 
 </div>
 {% endblock %}

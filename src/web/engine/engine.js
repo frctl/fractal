@@ -13,14 +13,22 @@ const filters     = requireAll(`${__dirname}/filters`);
 const globals     = requireAll(`${__dirname}/globals`);
 
 let templateError = nunjucks.lib.TemplateError;
+let lastError = null;
 
  nunjucks.lib.TemplateError = function(message, lineno, colno) {
 
     if (message instanceof WebError) {
+        message.lineno = lineno;
+        message.colno = colno;
+        lastError = message;
         throw message;
     }
 
-    return new templateError(message, lineno, colno);
+    let err = new templateError(message, lineno, colno);
+
+    lastError = err;
+
+    return err;
 
 };
 
@@ -30,13 +38,13 @@ module.exports = class Engine {
 
         this._app = app;
         this._env = env;
+        this.theme = null;
 
         this._globals = {
             components: app.components,
             docs: app.docs,
             env: {},
             request: {},
-            theme: null,
             get: function(path, fallback){
                 return app.get(path, fallback);
             }
@@ -74,6 +82,10 @@ module.exports = class Engine {
 
     }
 
+    get lastError() {
+        return lastError;
+    }
+
     get engine() {
         return this._engine;
     }
@@ -92,11 +104,13 @@ module.exports = class Engine {
     }
 
     render(path, context) {
+        lastError = null;
         this._engine.addGlobal('frctl', this._globals);
         return this._engine.renderAsync(path, context || {});
     }
 
     renderString(str, context) {
+        lastError = null;
         this._engine.addGlobal('frctl', this._globals);
         return this._engine.renderStringAsync(str, context || {});
     }

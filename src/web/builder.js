@@ -85,10 +85,7 @@ module.exports = class Builder extends mix(Emitter) {
     }
 
     _addTargets() {
-        this._theme.routes().forEach(route => {
-            if (!route.view) {
-                return;
-            }
+        this._theme.routes().filter(route => route.view).forEach(route => {
             try {
                 if (route.params) {
                     let params = _.isFunction(route.params) ? route.params() : [].concat(route.params);
@@ -111,7 +108,7 @@ module.exports = class Builder extends mix(Emitter) {
             return this._throttle(() => {
 
                 return fs.ensureDirAsync(pathInfo.dir).then(() => {
-                    
+
                     this._theme.engine.setGlobal('request', this._fakeRequest(target));
 
                     function write(html) {
@@ -124,6 +121,8 @@ module.exports = class Builder extends mix(Emitter) {
                         this.emit('error', new Error(`Failed to export url ${target.url} - ${e.message}`));
 
                         return this._theme.renderError(err).then(html => write(html));
+                    }).catch(err => {
+                        this.emit('error', err);
                     });
 
                 });

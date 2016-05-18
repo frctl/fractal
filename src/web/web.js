@@ -20,7 +20,7 @@ module.exports = class Web extends mix(Configurable, Emitter) {
         this._defaultTheme = '@frctl/mandelbrot';
         // this._defaultTheme = require('./themes/test')();
     }
-    
+
     server(config) {
         let opts = _.defaultsDeep(config, this.get('server'));
         const theme  = this._loadTheme(opts.theme, 'server');

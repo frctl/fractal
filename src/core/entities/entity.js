@@ -29,6 +29,10 @@ module.exports = class Entity extends mix(Heritable, EntityMixin) {
         return this.source.resolve(this.context);
     }
 
+    hasContext() {
+        return this.getResolvedContext().then(context => Object.keys(context).length);
+    }
+
     toJSON(){
         const self    = super.toJSON();
         self.isEntity = true;

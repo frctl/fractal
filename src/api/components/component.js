@@ -39,6 +39,14 @@ module.exports = class Component extends Entity {
         });
     }
 
+    getPreviewContext(){
+        return this.isCollated ? this.variants().getCollatedContext() : this.variants().default().getResolvedContext();
+    }
+
+    getPreviewContent(){
+        return this.isCollated ? this.variants().getCollatedContent() : this.variants().default().getContent();
+    }
+
     setVariants(variantCollection) {
         this._variants = variantCollection;
     }

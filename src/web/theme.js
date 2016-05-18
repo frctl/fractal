@@ -39,6 +39,7 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
 
     init(engine) {
         engine.setGlobal('theme', this);
+        engine.theme = this;
         this._engine = engine;
         this.emit('init', engine, this._app);
     }
@@ -99,7 +100,7 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
         opts.path = path;
         opts.handle = opts.handle || path;
         opts.matcher = pr(path, keys);
-        opts.params = build || [];
+        opts.params = build || null;
         this._routes.set(opts.handle, _.clone(opts));
         return this;
     }

@@ -41,7 +41,7 @@ module.exports = class EntitySource extends mix(Configurable, Heritable, Emitter
     get title() {
         return this.get('title') || this.label;
     }
-    
+
     /**
      * Return a new collection that only includes
      * non-collection-type items
@@ -154,9 +154,12 @@ module.exports = class EntitySource extends mix(Configurable, Heritable, Emitter
     }
 
     statusInfo(handle) {
-        return {
-            label: handle
-        };
+        if (handle) {
+            return {
+                label: handle
+            };
+        }
+        return null;
     }
 
     toJSON() {

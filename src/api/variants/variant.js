@@ -23,6 +23,10 @@ module.exports = class Variant extends Entity {
         return config.title || `${this.parent.title}: ${this.label}`;
     }
 
+    _handle(config) {
+        return config.handle.toLowerCase();
+    }
+
     get alias() {
         if (this.isDefault) {
             return this.parent.handle;
@@ -42,6 +46,14 @@ module.exports = class Variant extends Entity {
         return this.source.render(this, context, {
             preview: preview
         });
+    }
+
+    getPreviewContext(){
+        return this.getResolvedContext();
+    }
+
+    getPreviewContent(){
+        return this.getContent();
     }
 
     variant() {

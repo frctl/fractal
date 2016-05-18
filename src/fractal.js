@@ -26,13 +26,16 @@ class Fractal extends mix(Configurable, Emitter) {
         this._components = null;
         this._docs       = null;
 
-        if (this.get('env') !== 'debug') {
+        if (!this.debug) {
             process.on('uncaughtException', function (err) {
                 Log.error(err.toString(), err);
                 process.exit(1);
             });
+        } else {
+            Promise.config({
+                longStackTraces: true,
+            });
         }
-
     }
 
     get components(){

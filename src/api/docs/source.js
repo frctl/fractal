@@ -3,6 +3,7 @@
 const Promise       = require('bluebird');
 const _             = require('lodash');
 const co            = require('co');
+const fs            = Promise.promisifyAll(require('fs'));
 const anymatch      = require('anymatch');
 const DocCollection = require('./collection');
 const Doc           = require('./doc');

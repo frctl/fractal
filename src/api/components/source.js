@@ -143,7 +143,7 @@ module.exports = class ComponentSource extends EntitySource {
                 }
                 if (opts.preview && entity.preview) {
                     let target = entity.toJSON();
-                    target.component = variant.parent.toJSON();
+                    target.component = entity.parent.toJSON();
                     let layout = _.isString(opts.preview) ? opts.preview : entity.preview;
                     return yield self._wrapInLayout(rendered, layout, {
                         _target: target
@@ -182,7 +182,7 @@ module.exports = class ComponentSource extends EntitySource {
         let layout = this.find(identifier);
         let layoutContext, layoutContent, viewpath;
         if (!layout) {
-            Log.error(`Preview layout ${identifier} not found.`);
+            Log.warn(`Preview layout ${identifier} not found. Rendering component without layout.`);
             return content;
         }
         if (layout.isFile) {
@@ -213,7 +213,7 @@ module.exports = class ComponentSource extends EntitySource {
             return statuses[defaultStatus];
         }
         if (!statuses[handle]) {
-            Log.error(`Status ${handle} is not a known option.`);
+            Log.warn(`Status ${handle} is not a known option.`);
             return statuses[defaultStatus];
         }
         return statuses[handle];

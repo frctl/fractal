@@ -15,6 +15,8 @@ const resolver = module.exports = {
 
     context(context, source) {
 
+        let self = this;
+
         const resolve = co.wrap(function* (obj) {
 
             const mapper = co.wrap(function* (item, key) {
@@ -31,7 +33,7 @@ const resolver = module.exports = {
                     const handle = parts.shift();
                     let entity   = source.find(handle);
                     if (entity) {
-                        entity = this.entity(entity);
+                        entity = self.entity(entity);
                         const entityContext = yield resolve(entity.context);
                         if (parts.length) {
                             return _.get(entityContext, parts.join('.'), null);

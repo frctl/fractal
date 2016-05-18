@@ -53,12 +53,11 @@ module.exports = {
         indexLabel: 'Overview',
         engine: 'handlebars',
         default: {
-            context: {}
+            context: {},
+            status: null
         }
     },
-    cli: {
-
-    },
+    cli: {},
     web: {
         server: {
             port: null,

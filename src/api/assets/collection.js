@@ -12,7 +12,7 @@ module.exports = class EntityCollection extends mix(Collection) {
     }
 
     files() {
-        return super.entities();
+        return this.newSelf(this.toArray().filter(i => i.isAsset));
     }
 
     match(test) {
