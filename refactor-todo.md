@@ -1,0 +1,11 @@
+- component stats api
+- linkHandles helper
+- better component rendering error handling
+- layouts for pages
+- binary asset rendering
+- middleware for themes
+- tabs instead of select menu for nav
+- update nunjcuks + consolidate + mustache adapters, helpers
+- clean up dependencies, add peer dependencies
+- doc updates
+- upgrade guide
