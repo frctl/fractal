@@ -1,0 +1,18 @@
+{% import "macros/status.nunj" as status %}
+
+<p>You can browse the component library using the navigation on the left.</p>
+
+<h3>Component statuses</h3>
+<p>Components and their variants have been given statuses reflecting their state of completion. The available statuses are listed below.</p>
+<table>
+<tr>
+    <th>Label</th>
+    <th>Description</th>
+</tr>
+{% for handle, st in frctl.get('components.statuses') %}
+<tr>
+    <td>{{ status.tag(st) }}</td>
+    <td>{{ st.description }}</td>
+</tr>
+{% endfor %}
+</table>

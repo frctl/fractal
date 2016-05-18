@@ -1,26 +1,16 @@
-{% extends "layouts/pjax.nunj" if frctl.web.request.isPjax else "layouts/frame.nunj" %}
+{% extends "layouts/pjax.nunj" if frctl.request.isPjax else "layouts/frame.nunj" %}
 {% import "macros/image.nunj" as img %}
 {% import "macros/status.nunj" as status %}
 
-{% set entity = frctl.components.find('@' + frctl.web.request.params.handle) %}
-{% if not entity or entity.isHidden %}{% throw404 'Item not found' %}{% endif %}
+{% set entity = frctl.components.find('@' + frctl.request.params.handle) %}
+{% if not entity or entity.isHidden %}{{ throw(404, "Component '" + frctl.request.params.handle + "' not found.") }}{% endif %}
 
-{% set pageTitle     = entity.title %}
-{% set previewUrl    = frctl.theme.urlFromRoute('preview', {handle: entity.handle}) %}
-{% set contextFormat = frctl.theme.config.contextFormat | lower %}
+{% set page = {
+    title: entity.title
+} %}
 
-{% if entity.type == 'component' and entity.isCollated %}
-    {% set viewContent   = entity.variants().getCollatedContentSync() %}
-    {% set ctx = entity.variants().getCollatedContext() %}
-{% elif entity.type == 'component' %}
-    {% set viewContent   = entity.variants().default().getContentSync() %}
-    {% set ctx = entity.variants().default().defaultVariant().context %}
-{% else %}
-    {% set viewContent   = entity.getContentSync() %}
-    {% set ctx = entity.context %}
-{% endif %}
+{% set previewUrl = frctl.theme.urlFromRoute('preview', {handle: entity.handle}) %}
 
-{% set contextString = ctx | resolve | stringify(contextFormat) %}
 
 {% block content %}
 
@@ -43,7 +33,7 @@
                     data-role="window"
                     src="{{ previewUrl }}"
                     sandbox="allow-same-origin allow-scripts"
-                    {% if not frctl.web.server.sync %}srcdoc="{{ entity | preview | escape }}"{% endif %}
+                    {% if not frctl.env.server.sync %}srcdoc="{{ entity.render(null, true, true) | async | escape }}"{% endif %}
                     {% if entity.display %} style="{% for property, value in entity.display %}{{ property }}: {{ value }} !important; {% endfor %}"{% endif %}
                     marginwidth="0" marginheight="0" frameborder="0" vspace="0" hspace="0" scrolling="yes">
                 </iframe>
@@ -66,13 +56,7 @@
                     <li class="Browser-tab Browser-tab--notes{% if not entity.notes %} is-disabled{% endif %}" data-role="tab">
                         <a href="#browser-{{ entity.id }}-panel-notes">{{ img.svg('icon-notes', '#666', '19px', '19px' ) }} Notes</a>
                     </li>
-                    {# <li class="Browser-tab Browser-tab--meta" data-role="tab">
-                        <a href="#browser-{{ entity.id }}-panel-meta">{{ img.svg('icon-notes', '#666', '19px', '19px' ) }} Meta</a>
-                    </li> #}
                 </ul>
-                {# <ul class="Browser-actions">
-                    <li class="Browser-action"><a href="#">collapse</a></li>
-                </ul> #}
             </div>
 
             <div class="Browser-panel Browser-code is-active" data-role="tab-panel" id="browser-{{ entity.id }}-panel-code">
@@ -85,7 +69,7 @@
                         </optgroup>
                         {% if entity.assets().size %}
                         <optgroup label="Assets">
-                            {% for asset in entity.assets().filter('isBinary', false).files().toArray() %}
+                            {% for asset in entity.assets().filter('isBinary', false).toArray() %}
                             <option value="code-{{ asset.handle }}">{{ asset.base }}</option>
                             {% endfor %}
                         </optgroup>
@@ -96,27 +80,27 @@
                 <div class="Browser-files">
                     <div class="Browser-fileContent is-active" data-role="code" id="code-html">
                         <code class="Code Code--lang-html">
-                            <pre>{{ entity | render({ useLayout: false, collate: true }) | highlight('html') }}</pre>
+                            <pre>{{ entity.render(null, false, true) | async | highlight('html') }}</pre>
                         </code>
                     </div>
                     <div class="Browser-fileContent" data-role="code" id="code-view">
                         <code class="Code Code--lang-{{ variant.lang.editorMode }}">
-                            <pre>{{ viewContent | highlight(entity.editorMode) | linkHandles('component', 'handle') }}</pre>
+                            <pre>{{ entity.getPreviewContent() | async | highlight(entity.editorMode) }}</pre>
                         </code>
                     </div>
                     <div class="Browser-fileContent" data-role="code" id="code-context">
-
-                        {% if ctx | dump == '{}' %}
+                        {% set hasContext = entity.hasContext() | async %}
+                        {% if not hasContext %}
                         <code class="Code Code--lang-js">
                             <pre>{{ '/* No context defined for this component. */' | highlight('js') }}</pre>
                         </code>
                         {% else %}
                         <code class="Code Code--lang-{{ contextFormat }}">
-                            <pre>{{ contextString | highlight(contextFormat) }}</pre>
+                            <pre>{{ entity.getPreviewContext() | async | format('json') | highlight('json') }}</pre>
                         </code>
                         {% endif %}
                     </div>
-                    {% for asset in entity.assets().filter('isBinary', false).files().toArray() %}
+                    {% for asset in entity.assets().filter('isBinary', false).toArray() %}
                     <div class="Browser-fileContent" data-role="code" id="code-{{ asset.handle }}">
                         <code class="Code Code--lang-{{ asset.editorMode }}">
                             <pre>{{ asset.getContentSync() | highlight(asset.editorMode) }}</pre>
@@ -129,22 +113,30 @@
             <div class="Browser-panel Browser-notes" data-role="tab-panel" id="browser-{{ entity.id }}-panel-notes">
                 <div class="Prose">
                     {% if entity.notes %}
-                    {{ entity.notes | render }}
+                    {{ frctl.docs.renderString(entity.notes) | async }}
                     {% else %}
                     <p class="Browser-isEmptyNote">There are no notes for this item.</p>
                     {% endif %}
                 </div>
             </div>
 
-            {# <div class="Browser-panel Browser-meta" data-role="tab-panel" id="browser-{{ entity.id }}-panel-meta">
-                <ul>
-                    <li>Handle: <code>@{{ entity.handle }}</code></li>
-                </ul>
-            </div> #}
-
         </div>
     </div>
 
 </div>
+
+
+{# <li class="Browser-tab Browser-tab--meta" data-role="tab">
+    <a href="#browser-{{ entity.id }}-panel-meta">{{ img.svg('icon-notes', '#666', '19px', '19px' ) }} Meta</a>
+</li> #}
+{# <ul class="Browser-actions">
+    <li class="Browser-action"><a href="#">collapse</a></li>
+</ul> #}
+
+{# <div class="Browser-panel Browser-meta" data-role="tab-panel" id="browser-{{ entity.id }}-panel-meta">
+    <ul>
+        <li>Handle: <code>@{{ entity.handle }}</code></li>
+    </ul>
+</div> #}
 
 {% endblock %}

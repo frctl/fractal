@@ -1,3 +1,34 @@
-<h1>Documentation</h1>
+{% extends "layouts/pjax.nunj" if frctl.request.isPjax else "layouts/frame.nunj" %}
 
-{{ frctl.theme.urlFromRoute('/docs') }}
+{% set pathParam = frctl.request.params.path %}
+{% set doc = frctl.docs.find('path', pathParam | default('')) %}
+
+{% if pathParam and not doc %}{{ throw(404, 'Page not found') }}{% endif %}
+
+{% set page = {
+    title: doc.title | default(frctl.get('project.title')) | default('Welcome to your component library')
+} %}
+
+{% block content %}
+
+<div class="Document">
+
+    <div class="Document-header">
+        <h1 class="Document-title">{{ page.title }}</h1>
+    </div>
+
+    <div class="Entity-text Prose">
+
+    {% block pageContent %}
+    {% if doc %}
+    {{ doc.render() | async }}
+    {% else %}
+    {% include 'partials/overview.nunj' %}
+    {% endif %}
+    {% endblock %}
+
+    </div>
+
+</div>
+
+{% endblock %}
