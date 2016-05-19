@@ -64,7 +64,7 @@
 
     code,
     code pre {
-        background-color: $color-code-bg;
+        background-color: rgba($color-text, 0.075);
     }
 
     p code,
@@ -90,7 +90,7 @@
         padding: 0 0.5rem;
         font-style: italic;
         text-align: start;
-        color: $color-prose-caption;
+        color: rgba($color-text, 0.75);
         opacity: 0.8;
     }
 
@@ -105,11 +105,11 @@
     }
 
     tr:nth-child(even) {
-        background-color: $color-prose-tr;
+        background-color: rgba($color-text, 0.05);
     }
 
     th {
-        background-color: $color-prose-tr;
-        border-bottom: 1px solid $color-frame-border;
+        background-color: rgba($color-text, 0.075);
+        border-bottom: 1px solid rgba($color-text, 0.1);
     }
 }

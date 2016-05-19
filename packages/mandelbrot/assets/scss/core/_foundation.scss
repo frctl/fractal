@@ -12,7 +12,7 @@ html {
     position: relative;
     height: 100%;
     width: 100%;
-    background: $color-body-bg;
+    background: $color-background;
     box-sizing: border-box;
     font: 16px/#{(24/16)} $font-family-sans-serif;
     color: $color-text;
@@ -109,17 +109,17 @@ svg {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: $color-scrollbar-thumb;
+    background: rgba($color-text, 0.1);
     border: 0 none transparent;
     border-radius: 0;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: $color-scrollbar-thumb-hover;
+    background: rgba($color-text, 0.2);
 }
 
 ::-webkit-scrollbar-thumb:active {
-    background: $color-scrollbar-thumb-hover;
+    background: rgba($color-text, 0.3);
 }
 
 ::-webkit-scrollbar-track {

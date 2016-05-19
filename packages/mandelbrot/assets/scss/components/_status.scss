@@ -4,10 +4,6 @@
     align-items: center;
 }
 
-.Status-dot + .Status-dot {
-    @include margin-inline(start, 3px);
-}
-
 .Status-dot {
     width: 0.5rem;
     height: 0.5rem;
@@ -16,24 +12,25 @@
     border-radius: 100%;
 }
 
-.Status--tag {
-    .Status-label {
-        @include font(caption);
-        display: inline-block;
-        border-radius: 2rem;
-        padding: 0.125rem 0.75rem;
-        color: white;
-    }
+.Status-dot + .Status-dot {
+    @include margin-inline(start, 3px);
+}
 
-    .Status-label + .Status-label {
-        @include margin-inline(start, 0.25rem);
-    }
+.Status-label {
+    @include font(caption);
+    display: inline-block;
+    border-radius: 2rem;
+    padding: 0.125rem 0.75rem;
+    color: white;
+    white-space: nowrap;
+}
+
+.Status-label + .Status-label {
+    @include margin-inline(start, 0.25rem);
 }
 
 .Status--labelled {
     .Status-label {
-        @include font(caption);
         @include margin-inline(end, 0.75rem);
-        display: inline-block;
     }
 }
