@@ -502,10 +502,10 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
   box-sizing: inherit; }
 
 ::-moz-selection {
-  background-color: rgba(34, 136, 255, 0.075); }
+  background-color: rgba(136, 34, 34, 0.075); }
 
 ::selection {
-  background-color: rgba(34, 136, 255, 0.075); }
+  background-color: rgba(136, 34, 34, 0.075); }
 
 html {
   position: relative;
@@ -513,7 +513,7 @@ html {
   width: 100%;
   background: #fff;
   box-sizing: border-box;
-  font: 16px/1.5 "Open Sans", Helvetica, Arial, sans-serif;
+  font: 16px / 1.5 "Open Sans", Helvetica, Arial, sans-serif;
   color: #535363;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased; }
@@ -560,12 +560,13 @@ ul {
   list-style: none; }
 
 a {
-  color: #28f;
+  color: #822;
+  -webkit-transition: all 0.15s ease-out;
   transition: all 0.15s ease-out; }
   a:active {
-    color: #28f; }
+    color: #822; }
   a:hover {
-    color: #0062d5; }
+    color: #4b1313; }
 
 [tabindex="-1"]:focus {
   outline: none !important; }
@@ -624,25 +625,25 @@ h6 {
   font-weight: bold; }
 
 h1 {
-  font: bold 1.75rem/1.14286 "Open Sans", Helvetica, Arial, sans-serif;
+  font: bold 1.75rem / 1.14286 "Open Sans", Helvetica, Arial, sans-serif;
   -webkit-font-feature-settings: "dlig" 1;
           font-feature-settings: "dlig" 1;
   letter-spacing: -0.025em; }
 
 h2 {
-  font: bold 1.3125rem/1.14286 "Open Sans", Helvetica, Arial, sans-serif;
+  font: bold 1.3125rem / 1.14286 "Open Sans", Helvetica, Arial, sans-serif;
   -webkit-font-feature-settings: "dlig" 1;
           font-feature-settings: "dlig" 1; }
 
 h3 {
-  font: bold 1.125rem/1.33333 "Open Sans", Helvetica, Arial, sans-serif;
+  font: bold 1.125rem / 1.33333 "Open Sans", Helvetica, Arial, sans-serif;
   -webkit-font-feature-settings: "dlig" 1;
           font-feature-settings: "dlig" 1; }
 
 h4,
 h5,
 h6 {
-  font: normal 1rem/1.5 "Open Sans", Helvetica, Arial, sans-serif;
+  font: normal 1rem / 1.5 "Open Sans", Helvetica, Arial, sans-serif;
   font-weight: bold; }
 
 .Browser {
@@ -653,20 +654,26 @@ h6 {
   position: absolute;
   width: 100%;
   height: 100%;
+  display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
   -webkit-flex-direction: column;
       -ms-flex-direction: column;
           flex-direction: column; }
 
 .Browser-controls {
+  display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+  -webkit-box-flex: 0;
   -webkit-flex: 0 0 auto;
       -ms-flex: 0 0 auto;
           flex: 0 0 auto;
+  -webkit-box-align: center;
   -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center;
@@ -675,12 +682,16 @@ h6 {
 
 .Browser-tabs {
   width: 100%;
+  display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+  -webkit-box-flex: 1;
   -webkit-flex: 1 1 auto;
       -ms-flex: 1 1 auto;
           flex: 1 1 auto;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
   -webkit-flex-direction: row;
       -ms-flex-direction: row;
           flex-direction: row; }
@@ -701,7 +712,7 @@ h6 {
   [dir="rtl"] .Browser-tab {
     border-left: 1px solid rgba(83, 83, 99, 0.25); }
   .Browser-tab a {
-    font: normal 0.8125rem/1.53846 "Open Sans", Helvetica, Arial, sans-serif;
+    font: normal 0.8125rem / 1.53846 "Open Sans", Helvetica, Arial, sans-serif;
     display: block;
     padding: 0.625rem 0.75rem; }
     .Browser-tab a:link, .Browser-tab a:visited, .Browser-tab a:hover, .Browser-tab a:active {
@@ -719,13 +730,13 @@ h6 {
     [dir="rtl"] .Browser-tab svg {
       margin-left: 0.125rem; }
   .Browser-tab.is-active {
-    border-inline-start-color: #28f;
+    border-inline-start-color: #822;
     border-inline-end-color: rgba(83, 83, 99, 0.25);
     background-color: #f6f6f6; }
     [dir="ltr"] .Browser-tab.is-active {
-      border-left-color: #28f; }
+      border-left-color: #822; }
     [dir="rtl"] .Browser-tab.is-active {
-      border-right-color: #28f; }
+      border-right-color: #822; }
     [dir="ltr"] .Browser-tab.is-active {
       border-right-color: rgba(83, 83, 99, 0.25); }
     [dir="rtl"] .Browser-tab.is-active {
@@ -738,6 +749,7 @@ h6 {
     opacity: 0.5; }
 
 .Browser-panel {
+  -webkit-box-flex: 1;
   -webkit-flex: 1 1 auto;
       -ms-flex: 1 1 auto;
           flex: 1 1 auto;
@@ -751,15 +763,19 @@ h6 {
 
 .Browser-code {
   overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
   -webkit-flex-direction: column;
       -ms-flex-direction: column;
           flex-direction: column; }
   .Browser-code.is-active {
+    display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex; }
 
 .Browser-codeHeader {
+  -webkit-box-flex: 0;
   -webkit-flex: 0 0 auto;
       -ms-flex: 0 0 auto;
           flex: 0 0 auto;
@@ -767,9 +783,11 @@ h6 {
   padding: 0.5rem; }
 
 .Browser-files {
+  -webkit-box-flex: 1;
   -webkit-flex: 1 1 auto;
       -ms-flex: 1 1 auto;
           flex: 1 1 auto;
+  display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
@@ -778,16 +796,18 @@ h6 {
   -webkit-overflow-scrolling: touch; }
 
 .Browser-fileSelector {
-  font: normal 0.8125rem/1.53846 "Open Sans", Helvetica, Arial, sans-serif;
+  font: normal 0.8125rem / 1.53846 "Open Sans", Helvetica, Arial, sans-serif;
   border: 1px solid rgba(83, 83, 99, 0.25); }
 
 .Browser-fileContent {
+  -webkit-box-flex: 1;
   -webkit-flex: 1 1 auto;
       -ms-flex: 1 1 auto;
           flex: 1 1 auto;
   display: none;
   -webkit-overflow-scrolling: touch; }
   .Browser-fileContent.is-active {
+    display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex; }
@@ -819,6 +839,7 @@ h6 {
       padding: 1.25rem 1rem; } }
 
 .Document-header {
+  display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
@@ -828,18 +849,22 @@ h6 {
   padding-bottom: 0.5rem; }
 
 .Document-title {
-  font: bold 1.75rem/1.14286 "Open Sans", Helvetica, Arial, sans-serif;
+  font: bold 1.75rem / 1.14286 "Open Sans", Helvetica, Arial, sans-serif;
   -webkit-font-feature-settings: "dlig" 1;
           font-feature-settings: "dlig" 1;
   letter-spacing: -0.025em; }
 
 .Frame {
+  display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
   -webkit-flex-direction: column;
       -ms-flex-direction: column;
           flex-direction: column;
+  -webkit-box-flex: 1;
   -webkit-flex-grow: 1;
       -ms-flex-positive: 1;
           flex-grow: 1;
@@ -865,15 +890,20 @@ h6 {
           flex-shrink: 0; }
 
 .Frame-body {
+  display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: reverse;
   -webkit-flex-direction: row-reverse;
       -ms-flex-direction: row-reverse;
           flex-direction: row-reverse;
+  -webkit-box-flex: 1;
   -webkit-flex-grow: 1;
       -ms-flex-positive: 1;
           flex-grow: 1;
+  height: -webkit-calc(100% - 3rem);
   height: calc(100% - 3rem); }
   @media (max-width: 31.24em) {
     .Frame-body {
@@ -882,6 +912,7 @@ h6 {
               margin-inline-end: 240px;
       -webkit-transform: translate3d(-240px, 0, 0);
               transform: translate3d(-240px, 0, 0);
+      -webkit-transition: none;
       transition: none; }
       [dir="ltr"] .Frame-body {
         margin-right: 240px; }
@@ -907,6 +938,7 @@ h6 {
   -webkit-border-end: 1px solid rgba(83, 83, 99, 0.25);
      -moz-border-end: 1px solid rgba(83, 83, 99, 0.25);
           border-inline-end: 1px solid rgba(83, 83, 99, 0.25);
+  -webkit-box-flex: 0;
   -webkit-flex: 0 0 auto;
       -ms-flex: 0 0 auto;
           flex: 0 0 auto;
@@ -924,6 +956,7 @@ h6 {
       max-width: 240px; } }
 
 .Frame-panel--main {
+  -webkit-box-flex: 1;
   -webkit-flex: 1 1 auto;
       -ms-flex: 1 1 auto;
           flex: 1 1 auto;
@@ -938,10 +971,12 @@ h6 {
       display: none; }
 
 .Frame-handle {
+  -webkit-transition: all 0.15s ease-out;
   transition: all 0.15s ease-out;
   -webkit-margin-end: -0.625rem;
      -moz-margin-end: -0.625rem;
           margin-inline-end: -0.625rem;
+  -webkit-box-flex: 0;
   -webkit-flex: 0 0 auto;
       -ms-flex: 0 0 auto;
           flex: 0 0 auto;
@@ -969,9 +1004,11 @@ h6 {
     margin-left: -0.625rem; }
 
 .Header {
+  display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+  -webkit-box-align: center;
   -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center;
@@ -1019,6 +1056,7 @@ h6 {
   margin: 0 auto; }
 
 .Header-menuIcon path {
+  -webkit-transition: all 0.1s ease-out;
   transition: all 0.1s ease-out; }
 
 .Header-menuIcon path:nth-of-type(1) {
@@ -1068,12 +1106,16 @@ h6 {
   margin-top: 1.5rem; }
 
 .Pen {
+  display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
   -webkit-flex-direction: column;
       -ms-flex-direction: column;
           flex-direction: column;
+  -webkit-box-align: stretch;
   -webkit-align-items: stretch;
       -ms-flex-align: stretch;
           align-items: stretch;
@@ -1088,14 +1130,17 @@ h6 {
       cursor: grabbing; }
 
 .Pen-header {
+  display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+  -webkit-box-flex: 0;
   -webkit-flex: 0 0 auto;
       -ms-flex: 0 0 auto;
           flex: 0 0 auto;
   max-height: 3rem;
   padding: 0.75rem;
+  -webkit-box-align: center;
   -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center; }
@@ -1132,7 +1177,7 @@ h6 {
         color: transparent !important; } }
 
 .Pen-title {
-  font: bold 1.125rem/1.33333 "Open Sans", Helvetica, Arial, sans-serif;
+  font: bold 1.125rem / 1.33333 "Open Sans", Helvetica, Arial, sans-serif;
   -webkit-font-feature-settings: "dlig" 1;
           font-feature-settings: "dlig" 1;
   overflow: hidden;
@@ -1144,20 +1189,23 @@ h6 {
   text-decoration: none; }
 
 .Pen-previewLink svg {
-  fill: #28f; }
+  fill: #822; }
 
 .Pen-previewLink:hover svg {
-  fill: #0062d5; }
+  fill: #4b1313; }
 
 .Pen-preview {
+  -webkit-box-flex: 0;
   -webkit-flex: 0 0 auto;
       -ms-flex: 0 0 auto;
           flex: 0 0 auto;
   height: 50%;
+  max-height: -webkit-calc(100% - 3.75rem);
   max-height: calc(100% - 3.75rem);
   margin: 0 0.625rem; }
   @media (max-width: 31.24em) {
     .Pen-preview {
+      -webkit-box-flex: 1;
       -webkit-flex: 1 1 auto;
           -ms-flex: 1 1 auto;
               flex: 1 1 auto;
@@ -1166,7 +1214,9 @@ h6 {
       margin: 0; } }
 
 .Pen-handle {
+  -webkit-transition: all 0.15s ease-out;
   transition: all 0.15s ease-out;
+  -webkit-box-flex: 0;
   -webkit-flex: 0 0 auto;
       -ms-flex: 0 0 auto;
           flex: 0 0 auto;
@@ -1191,6 +1241,7 @@ h6 {
       display: none; } }
 
 .Pen-info {
+  -webkit-box-flex: 1;
   -webkit-flex: 1 1 auto;
       -ms-flex: 1 1 auto;
           flex: 1 1 auto;
@@ -1225,8 +1276,10 @@ h6 {
   bottom: 0;
   height: 100%;
   width: 100%;
+  width: -webkit-calc(100% + 0.625rem);
   width: calc(100% + 0.625rem);
   min-width: 200px;
+  max-width: -webkit-calc(100% + 0.625rem);
   max-width: calc(100% + 0.625rem);
   background-color: transparent; }
   [dir="ltr"] .Preview-wrapper {
@@ -1245,6 +1298,7 @@ h6 {
   width: 100%;
   height: 100%;
   overflow: auto;
+  max-width: -webkit-calc(100% - 0.625rem + 1px);
   max-width: calc(100% - 0.625rem + 1px);
   min-width: 180px;
   background-color: white;
@@ -1284,12 +1338,14 @@ h6 {
   -webkit-border-start: 1px solid rgba(83, 83, 99, 0.25);
      -moz-border-start: 1px solid rgba(83, 83, 99, 0.25);
           border-inline-start: 1px solid rgba(83, 83, 99, 0.25);
+  -webkit-transition: all 0.15s ease-out;
   transition: all 0.15s ease-out;
   offset-inline-end: 0;
   position: absolute;
   top: -1px;
   bottom: -1px;
   z-index: 100;
+  height: -webkit-calc(100% + 2px);
   height: calc(100% + 2px);
   width: 0.625rem;
   background: transparent url("../img/icon-drag--vertical.svg") no-repeat 50%;
@@ -1319,7 +1375,7 @@ h6 {
       display: none; } }
 
 .Prose {
-  font: normal 1rem/1.5 "Open Sans", Helvetica, Arial, sans-serif;
+  font: normal 1rem / 1.5 "Open Sans", Helvetica, Arial, sans-serif;
   max-width: 44em;
   -webkit-font-feature-settings: "liga", "dlig", "kern", "onum";
           font-feature-settings: "liga", "dlig", "kern", "onum";
@@ -1346,12 +1402,12 @@ h6 {
   .Prose ol > li {
     list-style-type: decimal; }
   .Prose h1 {
-    font: bold 1.75rem/1.14286 "Open Sans", Helvetica, Arial, sans-serif;
+    font: bold 1.75rem / 1.14286 "Open Sans", Helvetica, Arial, sans-serif;
     -webkit-font-feature-settings: "dlig" 1;
             font-feature-settings: "dlig" 1;
     letter-spacing: -0.025em; }
   .Prose h2 {
-    font: bold 1.3125rem/1.14286 "Open Sans", Helvetica, Arial, sans-serif;
+    font: bold 1.3125rem / 1.14286 "Open Sans", Helvetica, Arial, sans-serif;
     -webkit-font-feature-settings: "dlig" 1;
             font-feature-settings: "dlig" 1;
     margin-bottom: 1em;
@@ -1359,7 +1415,7 @@ h6 {
   .Prose *:not(hr) + h2 {
     margin-top: 2em; }
   .Prose h3 {
-    font: bold 1.125rem/1.33333 "Open Sans", Helvetica, Arial, sans-serif;
+    font: bold 1.125rem / 1.33333 "Open Sans", Helvetica, Arial, sans-serif;
     -webkit-font-feature-settings: "dlig" 1;
             font-feature-settings: "dlig" 1;
     margin-bottom: 0.75em;
@@ -1391,7 +1447,7 @@ h6 {
     -webkit-font-feature-settings: "lnum" 1, "tnum" 1;
             font-feature-settings: "lnum" 1, "tnum" 1; }
   .Prose caption {
-    font: normal 0.8125rem/1.53846 "Open Sans", Helvetica, Arial, sans-serif;
+    font: normal 0.8125rem / 1.53846 "Open Sans", Helvetica, Arial, sans-serif;
     padding: 0 0.5rem;
     font-style: italic;
     text-align: start;
@@ -1415,9 +1471,11 @@ h6 {
 
 .Status,
 .Status-dots {
+  display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+  -webkit-box-align: center;
   -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center; }
@@ -1439,7 +1497,7 @@ h6 {
     margin-right: 3px; }
 
 .Status-label {
-  font: bold 0.6875rem/1.81818 "Open Sans", Helvetica, Arial, sans-serif;
+  font: bold 0.6875rem / 1.81818 "Open Sans", Helvetica, Arial, sans-serif;
   letter-spacing: 0.075em;
   text-transform: uppercase;
   display: inline-block;
@@ -1470,7 +1528,7 @@ h6 {
   white-space: nowrap; }
 
 .Tree-title {
-  font: bold 0.6875rem/1.81818 "Open Sans", Helvetica, Arial, sans-serif;
+  font: bold 0.6875rem / 1.81818 "Open Sans", Helvetica, Arial, sans-serif;
   letter-spacing: 0.075em;
   text-transform: uppercase;
   -webkit-padding-start: 1rem;
@@ -1493,7 +1551,7 @@ h6 {
     background-image: url("../img/icon-navigation-closed-rtl.svg"); }
 
 .Tree-collectionLabel {
-  font: normal 0.8125rem/1.53846 "Open Sans", Helvetica, Arial, sans-serif;
+  font: normal 0.8125rem / 1.53846 "Open Sans", Helvetica, Arial, sans-serif;
   padding-top: 0.375rem;
   padding-bottom: 0.375rem;
   cursor: pointer;
@@ -1542,12 +1600,14 @@ h6 {
       right: 0; }
 
 .Tree-item {
-  font: normal 0.8125rem/1.53846 "Open Sans", Helvetica, Arial, sans-serif; }
+  font: normal 0.8125rem / 1.53846 "Open Sans", Helvetica, Arial, sans-serif; }
 
 .Tree-entityLink {
+  display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+  -webkit-box-align: center;
   -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center;

@@ -1,19 +1,19 @@
-$font-family-monospace: Hack, Consolas, Monaco, "Andale Mono", monospace;
-$font-family-sans-serif: "Open Sans", Helvetica, Arial, sans-serif;
+$font-family-monospace: Hack, Consolas, Monaco, "Andale Mono", monospace !default;
+$font-family-sans-serif: "Open Sans", Helvetica, Arial, sans-serif !default;
 
-$color-link: #28f;
-$color-text: #535363;
-$color-heading: #444;
+$color-link: #28f !default;
+$color-text: #535363 !default;
+$color-heading: #444 !default;
 
-$color-background: #fff;
-$color-background-offset: #f6f6f6;
+$color-background: #fff !default;
+$color-background-offset: #f6f6f6 !default;
 
-$color-ui-hover: rgba($color-text, 0.05);
-$color-ui-active: rgba($color-text, 0.075);
+$color-ui-hover: rgba($color-text, 0.05) !default;
+$color-ui-active: rgba($color-text, 0.075) !default;
 
 $color-header-background: #14f !default;
 $color-header-content: #fff !default;
 
-$color-frame-border: rgba($color-text, 0.25);
+$color-frame-border: rgba($color-text, 0.25) !default;
 
-$color-sidebar-heading: rgba($color-text, 0.75);
+$color-sidebar-heading: rgba($color-text, 0.75) !default;
