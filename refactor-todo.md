@@ -9,3 +9,6 @@
 - clean up dependencies, add peer dependencies
 - doc updates
 - upgrade guide
+- data don't load JS file on each read?
+- change current 'assets' to 'files'
+- add support for asset sources
