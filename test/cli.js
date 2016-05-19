@@ -64,7 +64,7 @@ describe('Cli', function(){
         it('executes a command');
     });
 
-    for (let method of ['log', 'error', 'alert', 'debug']) {
+    for (let method of ['log', 'error', 'warn', 'success', 'debug']) {
         describe(`.${method}()`, function(){
             it(`calls the console ${method} method`, function(){
                 const spy = sinon.spy(cli.console, method);

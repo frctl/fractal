@@ -17,8 +17,7 @@ module.exports = class Web extends mix(Configurable, Emitter) {
         this._app          = app;
         this._servers      = new Map();
         this._themes       = new Map();
-        this._defaultTheme = '@frctl/mandelbrot';
-        // this._defaultTheme = require('./themes/test')();
+        this.defaultTheme('@frctl/mandelbrot');
     }
 
     server(config) {
@@ -34,10 +33,20 @@ module.exports = class Web extends mix(Configurable, Emitter) {
     }
 
     theme(name, instance) {
-        instance = instance || require(name)();
+        instance = instance || name;
+        if (_.isString(instance)) {
+            instance = require(instance)();
+        }
         this._themes.set(name, instance);
         this._defaultTheme = name;
         return this;
+    }
+
+    defaultTheme(instance) {
+        if (instance) {
+            return this.theme('default', instance);
+        }
+        return this._themes.get('default');
     }
 
     _init(defaults) {
@@ -47,7 +56,7 @@ module.exports = class Web extends mix(Configurable, Emitter) {
 
     _loadTheme(theme, env){
         if (!theme) {
-            theme = this._defaultTheme;
+            theme = this.defaultTheme();
         }
         if (_.isString(theme)) {
             if (this._themes.has(theme)) {

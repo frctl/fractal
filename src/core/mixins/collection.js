@@ -11,7 +11,7 @@ module.exports = mixin((superclass) => class Collection extends superclass {
         this._items = new Set([]);
         this.isCollection = true;
     }
-    
+
     /**
      * Return the length of the items set
      * @return {Number}
@@ -68,6 +68,16 @@ module.exports = mixin((superclass) => class Collection extends superclass {
             isCollection: true,
             items: this.toArray().map(i => (i.toJSON ? i.toJSON() : i))
         };
+    }
+
+    each(fn) {
+        _.forEach(this.items(), fn);
+        return this;
+    }
+
+    map(fn) {
+        let items = _.map(this.items(), fn);
+        return this.newSelf(items);
     }
 
     /**

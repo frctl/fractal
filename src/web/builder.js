@@ -88,7 +88,7 @@ module.exports = class Builder extends mix(Emitter) {
         this._theme.routes().filter(route => route.view).forEach(route => {
             try {
                 if (route.params) {
-                    let params = _.isFunction(route.params) ? route.params() : [].concat(route.params);
+                    let params = _.isFunction(route.params) ? route.params(this._app) : [].concat(route.params);
                     for (let p of params) {
                         this.addRoute(route.handle, p);
                     }
