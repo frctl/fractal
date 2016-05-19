@@ -14,7 +14,7 @@ module.exports = function(options){
         stylesheet: null,
         format: 'json',
     });
-    config.stylesheet = `/theme/css/${config.skin || 'default'}.css`;
+    config.stylesheet = config.stylesheet || `/theme/css/${config.skin || 'default'}.css`;
 
     const theme = new Theme(Path.join(__dirname, 'views'), config);
 
@@ -42,7 +42,9 @@ module.exports = function(options){
         const handles = [];
         app.components.filter('isHidden', false).flatten().each(comp => {
             handles.push(comp.handle);
-            comp.variants().each(variant => handles.push(variant.handle));
+            if (comp.variants().size > 1) {
+                comp.variants().each(variant => handles.push(variant.handle));
+            }
         });
         return handles.map(h => ({handle: h}));
     });
@@ -65,7 +67,7 @@ module.exports = function(options){
         handle: 'page',
         view: 'pages/doc.nunj'
     }, function(app){
-        return app.docs.filter(d => (!d.isHidden && d.path !== '')).flatten().map(page => {path: page.path});
+        return app.docs.filter(d => (!d.isHidden && d.path !== '')).flatten().map(page => ({path: page.path}));
     });
 
     theme.on('init', function(env, app){

@@ -854,6 +854,27 @@ h6 {
           font-feature-settings: "dlig" 1;
   letter-spacing: -0.025em; }
 
+.Error-stack {
+  margin-top: 1.5rem; }
+  .Error-stack pre {
+    font-size: 13px;
+    line-height: 1.8;
+    color: rgba(83, 83, 99, 0.8); }
+
+.Error--render {
+  margin: 20px;
+  padding: 18px 20px 20px 20px;
+  border: 1px solid rgba(193, 0, 0, 0.3);
+  background-color: rgba(193, 0, 0, 0.05); }
+  .Error--render .Error-title {
+    color: #C10000;
+    font-size: 1.0rem;
+    margin-bottom: 0.4rem; }
+  .Error--render .Error-message {
+    color: #444; }
+    .Error--render .Error-message p:last-child {
+      margin-bottom: 0; }
+
 .Frame {
   display: -webkit-box;
   display: -webkit-flex;

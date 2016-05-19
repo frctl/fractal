@@ -1,6 +1,6 @@
-{% extends "layouts/pjax.nunj" if frctl.request.isPjax else "layouts/frame.nunj" %}
+{% extends "layouts/pjax.nunj" if request.isPjax else "layouts/frame.nunj" %}
 
-{% set pathParam = frctl.request.params.path %}
+{% set pathParam = request.params.path %}
 {% set doc = frctl.docs.find('path', pathParam | default('')) %}
 
 {% if pathParam and not doc %}{{ throw(404, 'Page not found') }}{% endif %}
@@ -17,13 +17,13 @@
         <h1 class="Document-title">{{ page.title }}</h1>
     </div>
 
-    <div class="Entity-text Prose">
+    <div class="Document-content Prose">
 
     {% block pageContent %}
     {% if doc %}
     {{ doc.render() | async }}
     {% else %}
-    {% include 'partials/overview.nunj' %}
+    {% include 'partials/content/overview.nunj' %}
     {% endif %}
     {% endblock %}
 

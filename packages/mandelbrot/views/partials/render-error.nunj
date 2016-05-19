@@ -1,6 +1,6 @@
 <div class="Error Error--render">
     <h4 class="Error-title">Error rendering component</h4>
-    <div class="Error-description">
+    <div class="Error-message Prose">
         {{ error.message | markdown }}
     </div>
 </div>

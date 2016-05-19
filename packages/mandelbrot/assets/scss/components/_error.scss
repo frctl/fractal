@@ -1,0 +1,34 @@
+.Error {
+
+}
+
+.Error-stack {
+    margin-top: 1.5rem;
+    pre {
+        font-size: 13px;
+        line-height: 1.8;
+        color: rgba($color-text, 0.8);
+    }
+}
+
+.Error--render {
+
+    margin: 20px;
+    padding: 18px 20px 20px 20px;
+    border: 1px solid rgba(#C10000, 0.3);
+    background-color: rgba(#C10000, 0.05);
+
+    .Error-title {
+        color: #C10000;
+        font-size: 1.0rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .Error-message {
+        color: $color-heading;
+        p:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+}
