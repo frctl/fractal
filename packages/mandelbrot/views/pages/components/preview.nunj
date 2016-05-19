@@ -1,12 +1,13 @@
-{% set entity = frctl.components.find('@' + frctl.request.params.handle) -%}
-{% if not entity %}{{ throw(404, "Component '" + frctl.request.params.handle + "' not found.") }}{% endif -%}
-{% set rendered = entity.render(null, false, true) | async('error') %}
-{% if rendered -%}
-{{ rendered }}
-{%- else -%}
-{% extends 'layouts/skeleton.nunj' %}
+{% set entity = frctl.components.find('@' + request.params.handle) -%}
+{% if not entity %}{{ throw(404, "Component '" + request.params.handle + "' not found.") }}{% endif -%}
+{% set rendered = entity.render(null, true, true) | async(true) %}
+{% if rendered | isError -%}
+{% set error = rendered %}
+{% extends 'layouts/full.nunj' %}
 {% set page = {
-    title: 'Error rendering component ' + frctl.request.params.handle
+    title: 'Error rendering component ' + request.params.handle
 } %}
-{% block page %}{% include 'partials/render-error.nunj' %}{% endblock %}
+{% block content %}{% include 'partials/render-error.nunj' %}{% endblock %}
+{%- else -%}
+{{ rendered }}
 {%- endif %}

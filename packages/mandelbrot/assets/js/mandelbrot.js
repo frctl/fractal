@@ -21,19 +21,21 @@ let pens        = [];
 
 loadPen();
 
-doc.pjax('a[data-pjax], code a[href]', '#pjax-container', {
-    fragment: '#pjax-container',
-    timeout: 10000
-}).on('pjax:start', function(e, xhr, options){
-    if (utils.isSmallScreen()) {
-        frame.closeSidebar();
-    }
-    frame.startLoad();
-    events.trigger('main-content-preload', options.url);
-}).on('pjax:end', function(){
-    events.trigger('main-content-loaded');
-    frame.endLoad();
-});
+if (window.location.protocol.indexOf('file') !== 0) {
+    doc.pjax('a[data-pjax], code a[href]', '#pjax-container', {
+        fragment: '#pjax-container',
+        timeout: 10000
+    }).on('pjax:start', function(e, xhr, options){
+        if (utils.isSmallScreen()) {
+            frame.closeSidebar();
+        }
+        frame.startLoad();
+        events.trigger('main-content-preload', options.url);
+    }).on('pjax:end', function(){
+        events.trigger('main-content-loaded');
+        frame.endLoad();
+    });
+}
 
 events.on('main-content-loaded', loadPen);
 

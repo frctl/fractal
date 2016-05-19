@@ -1,0 +1,56 @@
+<div class="Browser-panel Browser-code is-active" data-role="tab-panel" id="browser-{{ entity.id }}-panel-code">
+    <div class="Browser-codeHeader">
+        <select class="Browser-fileSelector" data-role="switcher">
+            <optgroup label="View">
+                <option value="code-html">Rendered HTML</option>
+                <option value="code-view">View Template</option>
+                <option value="code-context">Context Data</option>
+            </optgroup>
+            {% if entity.assets().size %}
+            <optgroup label="Assets">
+                {% for asset in entity.assets().filter('isBinary', false).toArray() %}
+                <option value="code-{{ asset.handle }}">{{ asset.base }}</option>
+                {% endfor %}
+            </optgroup>
+            {% endif %}
+        </select>
+    </div>
+
+    <div class="Browser-files">
+        {% set rendered = entity.render(null, false, true) | async('error') %}
+        <div class="Browser-fileContent is-active" data-role="code" id="code-html">
+            <code class="Code Code--lang-html">
+                {% if rendered %}
+                <pre>{{ rendered | highlight('html') }}</pre>
+                {% else %}
+                {% set renderError %}<!-- Error rendering component: {{ error.message }} -->{% endset %}
+                <pre>{{ renderError | highlight('html') }}</pre>
+                {% endif %}
+            </code>
+        </div>
+        <div class="Browser-fileContent" data-role="code" id="code-view">
+            <code class="Code Code--lang-{{ variant.lang.editorMode }}">
+                <pre>{{ entity.getPreviewContent() | async | highlight(entity.editorMode) }}</pre>
+            </code>
+        </div>
+        <div class="Browser-fileContent" data-role="code" id="code-context">
+            {% set hasContext = entity.hasContext() | async %}
+            {% if hasContext %}
+            <code class="Code Code--lang-{{ frctl.theme.get('format') }}">
+                <pre>{{ entity.getPreviewContext() | async | format(frctl.theme.get('format')) | highlight(frctl.theme.get('format')) }}</pre>
+            </code>
+            {% else %}
+            <code class="Code Code--lang-js">
+                <pre>{{ '/* No context defined for this component. */' | highlight('js') }}</pre>
+            </code>
+            {% endif %}
+        </div>
+        {% for asset in entity.assets().filter('isBinary', false).toArray() %}
+        <div class="Browser-fileContent" data-role="code" id="code-{{ asset.handle }}">
+            <code class="Code Code--lang-{{ asset.editorMode }}">
+                <pre>{{ asset.getContentSync() | highlight(asset.editorMode) }}</pre>
+            </code>
+        </div>
+        {% endfor %}
+    </div>
+</div>

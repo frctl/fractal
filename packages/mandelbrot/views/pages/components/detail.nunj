@@ -1,9 +1,9 @@
-{% extends "layouts/pjax.nunj" if frctl.request.isPjax else "layouts/frame.nunj" %}
+{% extends "layouts/pjax.nunj" if request.isPjax else "layouts/frame.nunj" %}
 {% import "macros/image.nunj" as img %}
 {% import "macros/status.nunj" as status %}
 
-{% set entity = frctl.components.find('@' + frctl.request.params.handle) %}
-{% if not entity or entity.isHidden %}{{ throw(404, "Component '" + frctl.request.params.handle + "' not found.") }}{% endif %}
+{% set entity = frctl.components.find('@' + request.params.handle) %}
+{% if not entity or entity.isHidden %}{{ throw(404, "Component '" + request.params.handle + "' not found.") }}{% endif %}
 
 {% set page = {
     title: entity.title
@@ -24,27 +24,31 @@
         {{ status.tag(entity.status) }}
     </div>
 
-    {% if not frctl.env.server.sync %}
-    {% set renderedWithLayout = entity.render(null, true, true) | async('error') %}
-    {% set renderError %}{% include 'partials/render-error.nunj' %}{% endset %}
+    {% if frctl.env.server and frctl.env.sync %}
+        {% set renderedWithLayout = false %}
     {% else %}
-    {% set renderedWithLayout = true %}
+        {% set renderedWithLayout = entity.render(null, true, true) | async(true) %}
+        {% if renderedWithLayout | isError %}
+            {% set error = renderedWithLayout %}
+            {% set renderError %}{% include 'partials/render-error.nunj' %}{% endset %}
+            {% set renderedWithLayout = false %}
+        {% endif %}
     {%- endif %}
     <div class="Pen-panel Pen-preview Preview" data-behaviour="preview" id="preview-{{ entity.id }}">
         <div class="Preview-wrapper" data-role="resizer">
             <div class="Preview-resizer">
-                {% if renderedWithLayout -%}
+                {% if renderError -%}
+                    {{ renderError }}
+                {% else %}
                  <iframe
                     class="Preview-iframe"
                     data-role="window"
                     src="{{ previewUrl }}"
                     sandbox="allow-same-origin allow-scripts"
-                    {% if not frctl.env.server.sync %}srcdoc="{{ renderedWithLayout | escape }}"{% endif %}
+                    {% if renderedWithLayout %}srcdoc="{{ renderedWithLayout | escape }}"{% endif %}
                     {% if entity.display %} style="{% for property, value in entity.display %}{{ property }}: {{ value }} !important; {% endfor %}"{% endif %}
                     marginwidth="0" marginheight="0" frameborder="0" vspace="0" hspace="0" scrolling="yes">
                 </iframe>
-                {% else %}
-                {{ renderError }}
                 {%- endif %}
             </div>
             <div class="Preview-handle" data-role="resize-handle"></div>
@@ -55,91 +59,10 @@
     <div class="Pen-handle" data-role="resize-handle"></div>
 
     <div class="Pen-panel Pen-info" data-role="info">
-        <div class="Browser" data-behaviour="browser" id="browser-{{ entity.id }}">
-
-            <div class="Browser-controls">
-                <ul class="Browser-tabs">
-                    <li class="Browser-tab Browser-tab--code is-active" data-role="tab">
-                        <a href="#browser-{{ entity.id }}-panel-code">{{ img.svg('icon-markup', '#666', '19px', '19px', '0 0 18 14' ) }} Code</a>
-                    </li>
-                    <li class="Browser-tab Browser-tab--notes{% if not entity.notes %} is-disabled{% endif %}" data-role="tab">
-                        <a href="#browser-{{ entity.id }}-panel-notes">{{ img.svg('icon-notes', '#666', '19px', '19px' ) }} Notes</a>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="Browser-panel Browser-code is-active" data-role="tab-panel" id="browser-{{ entity.id }}-panel-code">
-                <div class="Browser-codeHeader">
-                    <select class="Browser-fileSelector" data-role="switcher">
-                        <optgroup label="View">
-                            <option value="code-html">Rendered HTML</option>
-                            <option value="code-view">View Template</option>
-                            <option value="code-context">Context Data</option>
-                        </optgroup>
-                        {% if entity.assets().size %}
-                        <optgroup label="Assets">
-                            {% for asset in entity.assets().filter('isBinary', false).toArray() %}
-                            <option value="code-{{ asset.handle }}">{{ asset.base }}</option>
-                            {% endfor %}
-                        </optgroup>
-                        {% endif %}
-                    </select>
-                </div>
-
-                <div class="Browser-files">
-                    {% set rendered = entity.render(null, false, true) | async('error') %}
-                    <div class="Browser-fileContent is-active" data-role="code" id="code-html">
-                        <code class="Code Code--lang-html">
-                            {% if rendered %}
-                            <pre>{{ rendered | highlight('html') }}</pre>
-                            {% else %}
-                            {% set renderError %}<!-- Error rendering component: {{ error.message }} -->{% endset %}
-                            <pre>{{ renderError | highlight('html') }}</pre>
-                            {% endif %}
-                        </code>
-                    </div>
-                    <div class="Browser-fileContent" data-role="code" id="code-view">
-                        <code class="Code Code--lang-{{ variant.lang.editorMode }}">
-                            <pre>{{ entity.getPreviewContent() | async | highlight(entity.editorMode) }}</pre>
-                        </code>
-                    </div>
-                    <div class="Browser-fileContent" data-role="code" id="code-context">
-                        {% set hasContext = entity.hasContext() | async %}
-                        {% if hasContext %}
-                        <code class="Code Code--lang-{{ frctl.theme.get('format') }}">
-                            <pre>{{ entity.getPreviewContext() | async | format(frctl.theme.get('format')) | highlight(frctl.theme.get('format')) }}</pre>
-                        </code>
-                        {% else %}
-                        <code class="Code Code--lang-js">
-                            <pre>{{ '/* No context defined for this component. */' | highlight('js') }}</pre>
-                        </code>
-                        {% endif %}
-                    </div>
-                    {% for asset in entity.assets().filter('isBinary', false).toArray() %}
-                    <div class="Browser-fileContent" data-role="code" id="code-{{ asset.handle }}">
-                        <code class="Code Code--lang-{{ asset.editorMode }}">
-                            <pre>{{ asset.getContentSync() | highlight(asset.editorMode) }}</pre>
-                        </code>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-
-            <div class="Browser-panel Browser-notes" data-role="tab-panel" id="browser-{{ entity.id }}-panel-notes">
-                <div class="Prose">
-                    {% if entity.notes %}
-                    {{ frctl.docs.renderString(entity.notes) | async }}
-                    {% else %}
-                    <p class="Browser-isEmptyNote">There are no notes for this item.</p>
-                    {% endif %}
-                </div>
-            </div>
-
-        </div>
+        {% include 'partials/browser/browser.nunj' %}
     </div>
 
 </div>
-
 
 {# <li class="Browser-tab Browser-tab--meta" data-role="tab">
     <a href="#browser-{{ entity.id }}-panel-meta">{{ img.svg('icon-notes', '#666', '19px', '19px' ) }} Meta</a>

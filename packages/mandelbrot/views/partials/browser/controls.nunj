@@ -1,0 +1,10 @@
+<div class="Browser-controls">
+    <ul class="Browser-tabs">
+        <li class="Browser-tab Browser-tab--code is-active" data-role="tab">
+            <a href="#browser-{{ entity.id }}-panel-code">{{ img.svg('icon-markup', '#666', '19px', '19px', '0 0 18 14' ) }} Code</a>
+        </li>
+        <li class="Browser-tab Browser-tab--notes{% if not entity.notes %} is-disabled{% endif %}" data-role="tab">
+            <a href="#browser-{{ entity.id }}-panel-notes">{{ img.svg('icon-notes', '#666', '19px', '19px' ) }} Notes</a>
+        </li>
+    </ul>
+</div>

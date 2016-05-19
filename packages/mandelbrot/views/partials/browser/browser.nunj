@@ -1,0 +1,9 @@
+<div class="Browser" data-behaviour="browser" id="browser-{{ entity.id }}">
+
+    {% include 'partials/browser/controls.nunj' %}
+
+    {% include 'partials/browser/panel-code.nunj' %}
+
+    {% include 'partials/browser/panel-notes.nunj' %}
+
+</div>

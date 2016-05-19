@@ -1,15 +1,15 @@
 {% import "macros/status.nunj" as status %}
 
-{% macro tree(root, current) %}
+{% macro tree(root, current, request) %}
 <div class="Tree" data-behaviour="tree" id="tree-{{ root.name }}">
     <h3 class="Tree-title">{{ root.title }}</h3>
     <ul class="Tree-items Tree-depth-1">
-        {{ leaves(root.filter('isHidden', false).items(), root, current, 2) }}
+        {{ leaves(root.filter('isHidden', false).items(), root, current, 2, request) }}
     </ul>
 </div>
 {% endmacro %}
 
-{% macro leaves(items, root, current, depth) %}
+{% macro leaves(items, root, current, depth, request) %}
     {% for item in items %}
         {% if item.isCollection or (item.isComponent and not item.isCollated and item.variants().filter('isHidden', false).size > 1) %}
         <li class="Tree-item Tree-collection Tree-depth-{{ depth }}" data-behaviour="collection" id="tree-{{ root.name }}-collection-{{ item.handle }}">
@@ -22,13 +22,13 @@
             {% else %}
             {% set items = item.filter('isHidden', false).items() %}
             {% endif %}
-            {{ leaves(items, root, current, (depth + 1)) }}
+            {{ leaves(items, root, current, (depth + 1), request) }}
             </ul>
         </li>
         {% else %}
         {% set isCurrent = true if (current and (current.id == item.id)) else false %}
         <li class="Tree-item Tree-entity{% if isCurrent %} is-current{% endif %}"{% if isCurrent %} data-state="current"{% endif %} data-role="item">
-            <a class="Tree-entityLink" href="{{ path( item | url ) }}" data-pjax>
+            <a class="Tree-entityLink" href="{{ path( (item | url), request) }}" data-pjax>
                 <span>{{ item.label }}</span>
                 {% if item.status %}{{ status.unlabelled(item.status) }}{% endif %}
             </a>
