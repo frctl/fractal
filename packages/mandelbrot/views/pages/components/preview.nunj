@@ -1,3 +1,12 @@
 {% set entity = frctl.components.find('@' + frctl.request.params.handle) -%}
 {% if not entity %}{{ throw(404, "Component '" + frctl.request.params.handle + "' not found.") }}{% endif -%}
-{{ entity.render(null, true) | async }}
+{% set rendered = entity.render(null, false, true) | async('error') %}
+{% if rendered -%}
+{{ rendered }}
+{%- else -%}
+{% extends 'layouts/skeleton.nunj' %}
+{% set page = {
+    title: 'Error rendering component ' + frctl.request.params.handle
+} %}
+{% block page %}{% include 'partials/render-error.nunj' %}{% endblock %}
+{%- endif %}

@@ -9,8 +9,7 @@
     title: entity.title
 } %}
 
-{% set previewUrl = frctl.theme.urlFromRoute('preview', {handle: entity.handle}) %}
-
+{% set previewUrl = path(frctl.theme.urlFromRoute('preview', {handle: entity.handle})) %}
 
 {% block content %}
 
@@ -25,18 +24,28 @@
         {{ status.tag(entity.status) }}
     </div>
 
+    {% if not frctl.env.server.sync %}
+    {% set renderedWithLayout = entity.render(null, true, true) | async('error') %}
+    {% set renderError %}{% include 'partials/render-error.nunj' %}{% endset %}
+    {% else %}
+    {% set renderedWithLayout = true %}
+    {%- endif %}
     <div class="Pen-panel Pen-preview Preview" data-behaviour="preview" id="preview-{{ entity.id }}">
         <div class="Preview-wrapper" data-role="resizer">
             <div class="Preview-resizer">
-                <iframe
+                {% if renderedWithLayout -%}
+                 <iframe
                     class="Preview-iframe"
                     data-role="window"
                     src="{{ previewUrl }}"
                     sandbox="allow-same-origin allow-scripts"
-                    {% if not frctl.env.server.sync %}srcdoc="{{ entity.render(null, true, true) | async | escape }}"{% endif %}
+                    {% if not frctl.env.server.sync %}srcdoc="{{ renderedWithLayout | escape }}"{% endif %}
                     {% if entity.display %} style="{% for property, value in entity.display %}{{ property }}: {{ value }} !important; {% endfor %}"{% endif %}
                     marginwidth="0" marginheight="0" frameborder="0" vspace="0" hspace="0" scrolling="yes">
                 </iframe>
+                {% else %}
+                {{ renderError }}
+                {%- endif %}
             </div>
             <div class="Preview-handle" data-role="resize-handle"></div>
             <div class="Preview-overlay"></div>
@@ -78,9 +87,15 @@
                 </div>
 
                 <div class="Browser-files">
+                    {% set rendered = entity.render(null, false, true) | async('error') %}
                     <div class="Browser-fileContent is-active" data-role="code" id="code-html">
                         <code class="Code Code--lang-html">
-                            <pre>{{ entity.render(null, false, true) | async | highlight('html') }}</pre>
+                            {% if rendered %}
+                            <pre>{{ rendered | highlight('html') }}</pre>
+                            {% else %}
+                            {% set renderError %}<!-- Error rendering component: {{ error.message }} -->{% endset %}
+                            <pre>{{ renderError | highlight('html') }}</pre>
+                            {% endif %}
                         </code>
                     </div>
                     <div class="Browser-fileContent" data-role="code" id="code-view">
@@ -90,13 +105,13 @@
                     </div>
                     <div class="Browser-fileContent" data-role="code" id="code-context">
                         {% set hasContext = entity.hasContext() | async %}
-                        {% if not hasContext %}
-                        <code class="Code Code--lang-js">
-                            <pre>{{ '/* No context defined for this component. */' | highlight('js') }}</pre>
+                        {% if hasContext %}
+                        <code class="Code Code--lang-{{ frctl.theme.get('format') }}">
+                            <pre>{{ entity.getPreviewContext() | async | format(frctl.theme.get('format')) | highlight(frctl.theme.get('format')) }}</pre>
                         </code>
                         {% else %}
-                        <code class="Code Code--lang-{{ contextFormat }}">
-                            <pre>{{ entity.getPreviewContext() | async | format('json') | highlight('json') }}</pre>
+                        <code class="Code Code--lang-js">
+                            <pre>{{ '/* No context defined for this component. */' | highlight('js') }}</pre>
                         </code>
                         {% endif %}
                     </div>

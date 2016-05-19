@@ -12,7 +12,7 @@ module.exports = function(options){
         rtl: false,
         lang: 'en',
         stylesheet: null,
-        contextFormat: 'json',
+        format: 'json',
     });
     config.stylesheet = `/theme/css/${config.skin || 'default'}.css`;
 
@@ -38,16 +38,34 @@ module.exports = function(options){
     theme.addRoute('/components/preview/:handle', {
         handle: 'preview',
         view: 'pages/components/preview.nunj'
+    }, function(app){
+        const handles = [];
+        app.components.filter('isHidden', false).flatten().each(comp => {
+            handles.push(comp.handle);
+            comp.variants().each(variant => handles.push(variant.handle));
+        });
+        return handles.map(h => ({handle: h}));
     });
 
     theme.addRoute('/components/detail/:handle', {
         handle: 'component',
         view: 'pages/components/detail.nunj'
+    }, function(app){
+        const handles = [];
+        app.components.filter('isHidden', false).flatten().each(comp => {
+            handles.push(comp.handle);
+            if (!comp.isCollated) {
+                comp.variants().each(variant => handles.push(variant.handle));
+            }
+        });
+        return handles.map(h => ({handle: h}));
     });
 
     theme.addRoute('/docs/:path([^\?]+?)', {
         handle: 'page',
         view: 'pages/doc.nunj'
+    }, function(app){
+        return app.docs.filter(d => (!d.isHidden && d.path !== '')).flatten().map(page => {path: page.path});
     });
 
     theme.on('init', function(env, app){
@@ -65,50 +83,6 @@ module.exports = function(options){
         });
 
     });
-
-    //
-    // % set contextFormat = frctl.theme.get('contextFormat') | lower %}
-    //
-    //  {% if entity.isComponent and entity.isCollated %}
-    //     {% set viewContent = entity.variants().getCollatedContentSync() %}
-    //     {% set ctx = entity.variants().getCollatedContext() | async %}
-    // {% elif entity.isComponent %}
-    //     {% set viewContent = entity.variants().default().getContentSync() %}
-    //     {% set ctx = entity.variants().default().getResolvedContext() | async %}
-    // {% else %}
-    //     {% set viewContent = entity.getContentSync() %}
-    //     {% set ctx = entity.getResolvedContext() | async %}
-    // {% endif %}
-    //
-    // {% set contextString = ctx | format(contextFormat) %}
-
-
-    // theme.onBuild(function(builder, app){
-    //
-    //     const components = app.components;
-    //     const docs       = app.docs;
-    //
-    //     for (let comp of components.flatten()) {
-    //         if (!comp.isHidden){
-    //             builder.addRoute('preview', {'handle':comp.handle});
-    //             builder.addRoute('component', {'handle':comp.handle});
-    //         }
-    //         for (let variant of comp.variants()) {
-    //             builder.addRoute('preview', {'handle':variant.handle});
-    //             if (!comp.isCollated){
-    //                 builder.addRoute('component', {'handle':variant.handle});
-    //             }
-    //         }
-    //     }
-    //
-    //     builder.addRoute('overview');
-    //     for (let page of docs.flatten()) {
-    //         if (!page.isHidden && page.path !== '') {
-    //             builder.addRoute('page', {'path':page.path});
-    //         }
-    //     }
-    //
-    // });
 
     return theme;
 };
