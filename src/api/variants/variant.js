@@ -1,7 +1,8 @@
 'use strict';
 
-const _                 = require('lodash');
-const Entity            = require('../../core/entities/entity');
+const _      = require('lodash');
+const utils  = require('../../core/utils');
+const Entity = require('../../core/entities/entity');
 
 module.exports = class Variant extends Entity {
 
@@ -24,7 +25,7 @@ module.exports = class Variant extends Entity {
     }
 
     _handle(config) {
-        return config.handle.toLowerCase();
+        return utils.slugify(config.handle).toLowerCase();
     }
 
     get alias() {

@@ -44,7 +44,6 @@ module.exports = class Engine {
             components: app.components,
             docs: app.docs,
             env: {},
-            request: {},
             get: function(path, fallback){
                 return app.get(path, fallback);
             }

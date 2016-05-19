@@ -29,7 +29,7 @@ module.exports = class Builder extends mix(Emitter) {
         }
 
         this._theme.engine.setGlobal('env', {
-            builder: true
+            builder: {}
         });
 
         this.emit('start');
@@ -40,6 +40,7 @@ module.exports = class Builder extends mix(Emitter) {
 
             this._addTargets();
 
+            this.emit('ready', this);
             this._theme.emit('build', this, this._app);
 
             let copyStatic = this._theme.static().map(p => this._copyStatic(p.path, p.mount));
@@ -58,6 +59,10 @@ module.exports = class Builder extends mix(Emitter) {
         }).finally(() => {
             this._errorCount = 0;
         });
+    }
+
+    targets(){
+        return this._targets;
     }
 
     _copyStatic(source, dest) {
@@ -102,6 +107,7 @@ module.exports = class Builder extends mix(Emitter) {
     }
 
     _buildTargets() {
+        let self = this;
         return this._targets.map(target => {
             const savePath = Path.join(this._config.dest, target.url) + (target.url == '/' ? 'index.html' : '.html');
             const pathInfo = Path.parse(savePath);
@@ -109,16 +115,20 @@ module.exports = class Builder extends mix(Emitter) {
 
                 return fs.ensureDirAsync(pathInfo.dir).then(() => {
 
-                    this._theme.engine.setGlobal('request', this._fakeRequest(target));
-
                     function write(html) {
-                        return fs.writeFileAsync(savePath, html).then(() => Log.debug(`Exported '${target.url}' ==> '${savePath}'`));
+                        return fs.writeFileAsync(savePath, html).then(() => {
+                            self.emit('exported', target);
+                            Log.debug(`Exported '${target.url}' ==> '${savePath}'`)
+                        });
                     }
 
-                    return this._theme.render(target.route.view, target.route.context).then(html => write(html)).catch(err => {
+                    let context = target.route.context || {};
+                    context.request = this._fakeRequest(target);
+
+                    return this._theme.render(target.route.view, context).then(html => write(html)).catch(err => {
 
                         this._errorCount++;
-                        this.emit('error', new Error(`Failed to export url ${target.url} - ${e.message}`));
+                        this.emit('error', new Error(`Failed to export url ${target.url} - ${err.message}`));
 
                         return this._theme.renderError(err).then(html => write(html));
                     }).catch(err => {

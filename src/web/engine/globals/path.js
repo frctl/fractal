@@ -7,11 +7,12 @@ module.exports = function(app, engine) {
 
     return {
         name: 'path',
-        value: function(str) {
+        value: function(str, req) {
             if (engine.env === 'server' || str.startsWith('http') || str.startsWith('.')) {
                 return str;
             }
-            const currentPath = getStaticPagePath(_.get(engine.globals, 'request.path', '/'));
+            let request = req || this.lookup('request');
+            const currentPath = getStaticPagePath(_.get(request, 'path', '/'));
             let url = '/' + _.trim(Path.extname(str) ? str : getStaticPagePath(str), '/');
             return Path.relative(currentPath, url).replace(/^\.\.\//,'');
         }

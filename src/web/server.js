@@ -168,8 +168,6 @@ module.exports = class Server extends mix(Emitter) {
 
         Log.debug(`Request for '${req.url}'`);
 
-        this._theme.engine.setGlobal('request', res.locals.__request);
-
         const match = this._theme.matchRoute(req.path);
 
         if (!match) {
@@ -185,7 +183,10 @@ module.exports = class Server extends mix(Emitter) {
 
         this.emit('request', res.locals.__request);
 
-        this._theme.render(match.route.view, match.route.context)
+        let context = match.route.context || {};
+        context.request = _.clone(res.locals.__request);
+
+        this._theme.render(match.route.view, context)
               .then(v => res.send(v).end())
               .catch(err => next(err));
     }

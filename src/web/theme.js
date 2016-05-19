@@ -53,8 +53,9 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
     }
 
     renderError(err) {
-        this.engine.setGlobal('error', err);
-        return this.render(this.errorView(), {});
+        return this.render(this.errorView(), {
+            error: err
+        });
     }
 
     get engine(){

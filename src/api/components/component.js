@@ -1,6 +1,7 @@
 'use strict';
 
 const _                 = require('lodash');
+const utils             = require('../../core/utils');
 const Entity            = require('../../core/entities/entity');
 const VariantCollection = require('../variants/collection');
 
@@ -21,7 +22,7 @@ module.exports = class Component extends Entity {
     }
 
     _handle(config) {
-        return this.parent.getProp('prefix') ? `${this.parent.getProp('prefix')}-${config.name}` : config.name;
+        return utils.slugify(this.parent.getProp('prefix') ? `${this.parent.getProp('prefix')}-${config.name}` : config.name).toLowerCase();
     }
 
     get isCollated() {
