@@ -66,7 +66,7 @@ module.exports = class VariantCollection extends EntityCollection {
         views        = views || [];
         let variants = [];
         const source = component.source;
-        const assets = component.assets();
+        const resources = component.resources();
 
         // first figure out if we need a 'default' variant.
         const hasDefaultConfigured = _.find(configured, ['name', component.defaultName]);
@@ -90,7 +90,7 @@ module.exports = class VariantCollection extends EntityCollection {
                 isDefault: true,
                 isHidden: false,
                 order:     1
-            }, defaultView, assets, component));
+            }, defaultView, resources, component));
         }
 
         let configuredVars = yield configured.map(co.wrap(function* (conf, i) {
@@ -120,7 +120,7 @@ module.exports = class VariantCollection extends EntityCollection {
             p.handle    = `${component.handle}${source.get('splitter')}${p.name}`.toLowerCase();
             p.isHidden  = _.isUndefined(conf.hidden) ? viewFile.isHidden : conf.hidden;
 
-            return new Variant(p, viewFile, assets.filter(isRelated(p.handle)), component);
+            return new Variant(p, viewFile, resources.filter(isRelated(p.handle)), component);
 
         }));
 
@@ -140,7 +140,7 @@ module.exports = class VariantCollection extends EntityCollection {
                 isHidden: viewFile.isHidden
             };
             variants.push(
-                new Variant(p, viewFile, assets.filter(isRelated(p.handle)), component)
+                new Variant(p, viewFile, resources.filter(isRelated(p.handle)), component)
             );
         });
 

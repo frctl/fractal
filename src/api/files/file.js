@@ -6,7 +6,7 @@ const utils = require('../../core/utils');
 module.exports = class Asset {
 
     constructor(file) {
-        this.isAsset     = true;
+        this.isFile      = true;
         this.id          = utils.md5(file.path);
         this._file       = file;
         this.path        = file.path;
@@ -42,7 +42,7 @@ module.exports = class Asset {
             editorScope: this.editorScope,
             githubColor: this.githubColor,
             isBinary:    this.isBinary,
-            isAsset:     true,
+            isFile:      true,
         };
     }
 

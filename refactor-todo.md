@@ -1,7 +1,6 @@
 v1.0
 
 - linkHandles helper
-- disable pjax if theme is loaded from file:// url
 - middleware for themes
 - update nunjcuks + consolidate + mustache adapters, helpers
 - clean up dependencies, add peer dependencies

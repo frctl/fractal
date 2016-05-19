@@ -12,13 +12,9 @@ module.exports = class ComponentCollection extends EntityCollection {
     find() {
         return this.source.find.apply(this, arguments);
     }
-    
+
     components() {
         return super.entities();
-    }
-
-    assets() {
-        return super.assets();
     }
 
     variants() {

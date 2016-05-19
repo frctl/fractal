@@ -6,7 +6,7 @@ const Entity = require('../../core/entities/entity');
 
 module.exports = class Variant extends Entity {
 
-    constructor(config, view, assets, parent){
+    constructor(config, view, resources, parent){
         super(config.name, config, parent);
         this.isVariant = true;
         this.view        = config.view;
@@ -17,7 +17,7 @@ module.exports = class Variant extends Entity {
         this.editorMode  = view.lang.mode;
         this.editorScope = view.lang.scope;
         this._view       = view;
-        this._assets     = assets;
+        this._resources  = resources;
     }
 
     _title(config) {
@@ -65,8 +65,8 @@ module.exports = class Variant extends Entity {
         return this;
     }
 
-    assets() {
-        return this._assets;
+    resources() {
+        return this._resources;
     }
 
     getContent() {
@@ -89,7 +89,7 @@ module.exports = class Variant extends Entity {
         self.preview   = this.preview;
         self.context   = this.context;
         self.content   = this.getContentSync();
-        self.assets    = this.assets().toJSON();
+        self.resources    = this.resources().toJSON();
         return self;
     }
 

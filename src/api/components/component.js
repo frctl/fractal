@@ -7,7 +7,7 @@ const VariantCollection = require('../variants/collection');
 
 module.exports = class Component extends Entity {
 
-    constructor(config, files, assets, parent){
+    constructor(config, files, resources, parent){
         super(config.name, config, parent);
         this.isComponent   = true;
         this.defaultName   = config.default ? utils.slugify(config.default.toLowerCase()) : 'default';
@@ -17,7 +17,7 @@ module.exports = class Component extends Entity {
         this.editorMode    = files.view.lang.mode;
         this.editorScope   = files.view.lang.scope;
         this.viewPath      = files.view.path;
-        this._assets       = assets;
+        this._resources    = resources;
         this._variants     = new VariantCollection({ name: `${this.name}-variants` }, [], parent);
     }
 
@@ -56,8 +56,8 @@ module.exports = class Component extends Entity {
         return _.includes(this.tags, tag);
     }
 
-    assets() {
-        return this._assets;
+    resources() {
+        return this._resources;
     }
 
     flatten() {
@@ -81,13 +81,13 @@ module.exports = class Component extends Entity {
         return self;
     }
 
-    static *create(config, files, assets, parent) {
+    static *create(config, files, resources, parent) {
         config.notes = config.notes || config.readme;
         if (!config.notes && files.readme || config.notesFromFile && files.readme) {
             config.notesFromFile = true;
             config.notes = yield files.readme.read();
         }
-        const comp = new Component(config, files, assets, parent);
+        const comp = new Component(config, files, resources, parent);
         const variants = yield VariantCollection.create(comp, files.view, config.variants, files.varViews, config);
         comp.setVariants(variants);
         return comp;

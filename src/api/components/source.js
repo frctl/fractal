@@ -5,8 +5,8 @@ const co                  = require('co');
 const anymatch            = require('anymatch');
 const Component           = require('./component');
 const ComponentCollection = require('./collection');
-const Asset               = require('../assets/asset');
-const AssetCollection     = require('../assets/collection');
+const File                = require('../files/file');
+const FileCollection      = require('../files/collection');
 const Data                = require('../../core/data');
 const Log                 = require('../../core/log');
 const resolver            = require('../../core/resolver');
@@ -22,12 +22,12 @@ module.exports = class ComponentSource extends EntitySource {
         return this;
     }
 
-    assets() {
-        let assets = [];
+    resources() {
+        let resources = [];
         for (let comp of this.flatten()) {
-            assets = assets.concat(comp.assets().toArray());
+            resources = resources.concat(comp.resources().toArray());
         }
-        return new AssetCollection({}, assets);
+        return new FileCollection({}, resources);
     }
 
     components() {
@@ -224,8 +224,8 @@ module.exports = class ComponentSource extends EntitySource {
         if (type) {
             return type;
         }
-        if (this.isAsset(file)) {
-            return 'asset';
+        if (this.isResource(file)) {
+            return 'resource';
         }
         if (this.isView(file) || this.isVarView(file)) {
             return 'view';
@@ -247,7 +247,7 @@ module.exports = class ComponentSource extends EntitySource {
         return anymatch(`**/readme.md`, this._getPath(file));
     }
 
-    isAsset(file) {
+    isResource(file) {
         return anymatch(['**/*.*', `!**/*${this.get('ext')}`, `!**/*.config.{js,json,yaml,yml}`, `!**/readme.md`], this._getPath(file));
     }
 
@@ -269,7 +269,7 @@ module.exports = class ComponentSource extends EntitySource {
                 varViews:    files.filter(f => source.isVarView(f)),
                 configs:     files.filter(f => source.isConfig(f)),
                 readmes:     files.filter(f => source.isReadme(f)),
-                assets:      files.filter(f => source.isAsset(f)),
+                resources:   files.filter(f => source.isResource(f)),
             };
 
             const dirConfig = yield EntitySource.getConfig(_.find(matched.configs, f => f.name.startsWith(dir.name)), {
@@ -288,13 +288,13 @@ module.exports = class ComponentSource extends EntitySource {
                 dirConfig.view     = view.base;
                 dirConfig.viewName = dir.name;
                 dirConfig.viewPath = view.path;
-                const assets       = new AssetCollection({}, matched.assets.map(f => new Asset(f)));
+                const resources    = new FileCollection({}, matched.resources.map(f => new File(f)));
                 const files        = {
                     view:     view,
                     readme:   matched.readmes[0],
                     varViews: _.filter(matched.varViews, f => f.name.startsWith(nameMatch))
                 };
-                return Component.create(dirConfig, files, assets, parent || source);
+                return Component.create(dirConfig, files, resources, parent || source);
             }
 
             // not a component, so go through the items and group into components and collections
@@ -326,8 +326,8 @@ module.exports = class ComponentSource extends EntitySource {
                         readme: null,
                         varViews: matched.varViews.filter(f => f.name.startsWith(nameMatch)),
                     };
-                    const assets = new AssetCollection({}, []);
-                    return Component.create(c, files, assets, parent || source);
+                    const resources = new FileCollection({}, []);
+                    return Component.create(c, files, resources, parent || source);
                 });
             });
 
