@@ -6,9 +6,9 @@
                 <option value="code-view">View Template</option>
                 <option value="code-context">Context Data</option>
             </optgroup>
-            {% if entity.assets().size %}
-            <optgroup label="Assets">
-                {% for asset in entity.assets().filter('isBinary', false).toArray() %}
+            {% if entity.resources().size %}
+            <optgroup label="Other">
+                {% for asset in entity.resources().filter('isBinary', false).toArray() %}
                 <option value="code-{{ asset.handle }}">{{ asset.base }}</option>
                 {% endfor %}
             </optgroup>
@@ -45,7 +45,7 @@
             </code>
             {% endif %}
         </div>
-        {% for asset in entity.assets().filter('isBinary', false).toArray() %}
+        {% for asset in entity.resources().filter('isBinary', false).toArray() %}
         <div class="Browser-fileContent" data-role="code" id="code-{{ asset.handle }}">
             <code class="Code Code--lang-{{ asset.editorMode }}">
                 <pre>{{ asset.getContentSync() | highlight(asset.editorMode) }}</pre>
