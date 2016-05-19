@@ -28,11 +28,11 @@ module.exports = function(config){
         });
         instance = config.instance;
     }
-    //
+
     instance = promisedHbs(instance);
 
     function loadViews(eventData) {
-        if (!eventData.type == 'asset') {
+        if (!eventData || (eventData.type != 'asset')) {
             for (let item of this.flattenDeep()) {
                 instance.registerPartial('@' + item.handle, item.content);
                 if (item.alias) {
@@ -66,8 +66,8 @@ module.exports = function(config){
                 instance.registerPartial(name, partial);
             });
 
-            source.on('loaded', data => loadViews.bind(this)(data));
-            source.on('changed', data => loadViews.bind(this)(data));
+            source.on('loaded', data => loadViews.bind(source)(data));
+            source.on('changed', data => loadViews.bind(source)(data));
         },
 
         render(path, str, context, meta) {
