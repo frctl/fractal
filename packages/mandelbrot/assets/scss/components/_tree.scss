@@ -37,10 +37,10 @@
     cursor: pointer;
     touch-action: manipulation;
     user-select: none;
-    color: $color-navigation-group-name;
+    color: $color-text;
 
     &:hover {
-        background-color: $color-navigation-item-hover;
+        background-color: $color-ui-hover;
     }
 
     span {
@@ -78,11 +78,11 @@
     text-decoration: none;
 
     &:hover {
-        background-color: $color-navigation-item-hover;
+        background-color: $color-ui-hover;
     }
 
     .is-current & {
-        background-color: $color-navigation-item-current;
+        background-color: $color-ui-active;
     }
 
     .Status {

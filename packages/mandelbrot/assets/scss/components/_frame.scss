@@ -56,7 +56,7 @@
     width: $width-sidebar;
     min-width: $width-sidebar;
     max-width: ($width-sidebar * 2);
-    background-color: $color-sidebar-bg;
+    background-color: $color-background-offset;
     padding: 1rem 0;
 
     @include mq($until: navCollapse) {

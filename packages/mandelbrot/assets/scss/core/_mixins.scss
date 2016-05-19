@@ -37,9 +37,12 @@
 @mixin dragHandle {
     transition: all 0.15s ease-out;
 
-    &:hover,
+    &:hover {
+        background-color: $color-ui-hover;
+    }
+
     &:active {
-        background-color: $color-draghandle-hover;
+        background-color: $color-ui-active;
     }
 
     &.is-disabled {

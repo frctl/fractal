@@ -31,8 +31,9 @@
         @include link-default($color-text, none);
         display: block;
         padding: 0.625rem 0.75rem;
+
         &:hover {
-            
+            background-color: $color-ui-hover;
         }
     }
 
@@ -41,14 +42,10 @@
         pointer-events: none;
     }
 
-    &:hover {
-        // background-color: $color-browser-panel-bg;
-    }
-
     &.is-active {
         @include border-inline-color(start, $color-link);
         @include border-inline-color(end, $color-frame-border);
-        background-color: $color-browser-panel-bg;
+        background-color: $color-background-offset;
 
         a {
             font-weight: bold;
@@ -72,7 +69,7 @@
     overflow: auto;
     position: relative;
     width: 100%;
-    background-color: $color-browser-panel-bg;
+    background-color: $color-background-offset;
 
     &.is-active {
         display: block;
@@ -98,7 +95,7 @@
     flex: 1 1 auto;
     display: flex;
     overflow: auto;
-    background-color: $color-browser-code-bg;
+    background-color: $color-background-offset;
     -webkit-overflow-scrolling: touch;
 }
 
