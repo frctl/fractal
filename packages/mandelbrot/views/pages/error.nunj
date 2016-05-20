@@ -6,6 +6,8 @@
 
 {% block content %}
 
+{{ dump(frctl.error) }}
+
 <div class="Document">
 
     <div class="Document-header">
@@ -16,7 +18,7 @@
 
         <div class="Error">
 
-            <div class="Error-message Prose">                
+            <div class="Error-message Prose">
             {{ frctl.error.message | markdown }}
             </div>
 
