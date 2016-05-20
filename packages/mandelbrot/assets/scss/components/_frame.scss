@@ -20,7 +20,9 @@
 }
 
 .Frame--full {
-    
+    > .Error {
+        margin: 20px;
+    }
 }
 
 .Frame-header {

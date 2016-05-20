@@ -862,7 +862,6 @@ h6 {
     color: rgba(83, 83, 99, 0.8); }
 
 .Error--render {
-  margin: 20px;
   padding: 18px 20px 20px 20px;
   border: 1px solid rgba(193, 0, 0, 0.3);
   background-color: rgba(193, 0, 0, 0.05); }
@@ -904,6 +903,9 @@ h6 {
           -ms-user-select: none;
               user-select: none;
       pointer-events: none; }
+
+.Frame--full > .Error {
+  margin: 20px; }
 
 .Frame-header {
   -webkit-flex-shrink: 0;
@@ -1333,6 +1335,8 @@ h6 {
       width: 100% !important;
       min-width: 100%;
       border: 0; } }
+  .Preview-resizer .Error {
+    margin: 20px; }
 
 .Preview-iframe {
   top: 0;

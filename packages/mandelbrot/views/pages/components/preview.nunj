@@ -2,12 +2,13 @@
 {% if not entity %}{{ throw(404, "Component '" + request.params.handle + "' not found.") }}{% endif -%}
 {% set rendered = entity.render(null, true, true) | async(true) %}
 {% if rendered | isError -%}
+{% import "macros/errors.nunj" as errors %}
 {% set error = rendered %}
 {% extends 'layouts/full.nunj' %}
 {% set page = {
     title: 'Error rendering component ' + request.params.handle
 } %}
-{% block content %}{% include 'partials/render-error.nunj' %}{% endblock %}
+{% block content %}{{ errors.renderError('component', error.message) }}{% endblock %}
 {%- else -%}
 {{ rendered }}
 {%- endif %}
