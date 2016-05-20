@@ -2,11 +2,81 @@
 
 Use Handlebars templates with Fractal.
 
-This is the default template engine adapter for Fractal and does not need to be installed separately. See the Fractal [template engine documentation](https://github.com/frctl/fractal/blob/master/docs/engines/overview.md) for details on use and customisation.
+## Installation and Usage
 
-## Helpers
+This is the default template engine adapter for Fractal and does not need to be installed separately **unless** you wish to add your own helpers or partials etc. In that case you should `require` and configure it as follows:
 
-The following Handlebars helpers come pre-installed into the handlebars instance. These are often useful when building or documenting Fractal-based component libraries.
+```js
+const config = {
+    /* configuration properties here */
+};
+const hbs = require('@frctl/handlebars')(config);
+
+fractal.engine(hbs); /* set as the default template engine */
+
+```
+
+### Configuration
+
+#### helpers
+
+A set of [Handlebars helpers](http://handlebarsjs.com/#helpers) to make available to your templates.
+
+```js
+const config = {
+    helpers: {
+        uppercase: function(str) {
+            return new Handlebars.SafeString(str.toUpperCase());
+        },
+        lowercase: function(str) {
+            return new Handlebars.SafeString(str.toLowerCase());
+        }
+    }
+};
+```
+
+#### partials
+
+A set of [Handlebars partials](http://handlebarsjs.com/#partials) to make available to your templates. The contents of these can then be included using the standard Handlebars `{{> myPartialName }}` syntax.
+
+```js
+const config = {
+    partials: {
+        foobar: 'This is a partial!',
+    }
+};
+```
+
+#### pristine
+
+Defaults to `false`. Set to `true` if you **do not wish** to automatically load any of the bundled helpers ([as documented below](#helpers)) into your Handlebars instance.
+
+```js
+const config = {
+    pristine: true
+};
+```
+
+### Accessing the underlying Handlebars instance
+
+If you need to access the underlying Handlebars instance to customise it further, you can do so by using the `engine` property of a configured adapter instance:
+
+```js
+const hbs = require('@frctl/handlebars')({
+    /* config */
+});
+
+const engine = hbs.engine; /* The Handlebars instance */
+
+engine.registerHelper('foo', function(str){
+    /* handlebars helper code */
+});
+
+```
+
+## Bundled Helpers
+
+The following Handlebars helpers come automatically pre-installed into the handlebars instance. These are often useful when building or documenting Fractal-based component libraries.
 
 ### {{ render }}
 
