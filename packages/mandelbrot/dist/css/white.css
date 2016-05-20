@@ -513,7 +513,7 @@ html {
   width: 100%;
   background: #fff;
   box-sizing: border-box;
-  font: 16px / 1.5 "Open Sans", Helvetica, Arial, sans-serif;
+  font: 16px/1.5 "Open Sans", Helvetica, Arial, sans-serif;
   color: #535363;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased; }
@@ -625,25 +625,25 @@ h6 {
   font-weight: bold; }
 
 h1 {
-  font: bold 1.75rem / 1.14286 "Open Sans", Helvetica, Arial, sans-serif;
+  font: bold 1.75rem/1.14286 "Open Sans", Helvetica, Arial, sans-serif;
   -webkit-font-feature-settings: "dlig" 1;
           font-feature-settings: "dlig" 1;
   letter-spacing: -0.025em; }
 
 h2 {
-  font: bold 1.3125rem / 1.14286 "Open Sans", Helvetica, Arial, sans-serif;
+  font: bold 1.3125rem/1.14286 "Open Sans", Helvetica, Arial, sans-serif;
   -webkit-font-feature-settings: "dlig" 1;
           font-feature-settings: "dlig" 1; }
 
 h3 {
-  font: bold 1.125rem / 1.33333 "Open Sans", Helvetica, Arial, sans-serif;
+  font: bold 1.125rem/1.33333 "Open Sans", Helvetica, Arial, sans-serif;
   -webkit-font-feature-settings: "dlig" 1;
           font-feature-settings: "dlig" 1; }
 
 h4,
 h5,
 h6 {
-  font: normal 1rem / 1.5 "Open Sans", Helvetica, Arial, sans-serif;
+  font: normal 1rem/1.5 "Open Sans", Helvetica, Arial, sans-serif;
   font-weight: bold; }
 
 .Browser {
@@ -712,7 +712,7 @@ h6 {
   [dir="rtl"] .Browser-tab {
     border-left: 1px solid rgba(83, 83, 99, 0.25); }
   .Browser-tab a {
-    font: normal 0.8125rem / 1.53846 "Open Sans", Helvetica, Arial, sans-serif;
+    font: normal 0.8125rem/1.53846 "Open Sans", Helvetica, Arial, sans-serif;
     display: block;
     padding: 0.625rem 0.75rem; }
     .Browser-tab a:link, .Browser-tab a:visited, .Browser-tab a:hover, .Browser-tab a:active {
@@ -796,7 +796,7 @@ h6 {
   -webkit-overflow-scrolling: touch; }
 
 .Browser-fileSelector {
-  font: normal 0.8125rem / 1.53846 "Open Sans", Helvetica, Arial, sans-serif;
+  font: normal 0.8125rem/1.53846 "Open Sans", Helvetica, Arial, sans-serif;
   border: 1px solid rgba(83, 83, 99, 0.25); }
 
 .Browser-fileContent {
@@ -849,7 +849,7 @@ h6 {
   padding-bottom: 0.5rem; }
 
 .Document-title {
-  font: bold 1.75rem / 1.14286 "Open Sans", Helvetica, Arial, sans-serif;
+  font: bold 1.75rem/1.14286 "Open Sans", Helvetica, Arial, sans-serif;
   -webkit-font-feature-settings: "dlig" 1;
           font-feature-settings: "dlig" 1;
   letter-spacing: -0.025em; }
@@ -1200,7 +1200,7 @@ h6 {
         color: transparent !important; } }
 
 .Pen-title {
-  font: bold 1.125rem / 1.33333 "Open Sans", Helvetica, Arial, sans-serif;
+  font: bold 1.125rem/1.33333 "Open Sans", Helvetica, Arial, sans-serif;
   -webkit-font-feature-settings: "dlig" 1;
           font-feature-settings: "dlig" 1;
   overflow: hidden;
@@ -1400,7 +1400,7 @@ h6 {
       display: none; } }
 
 .Prose {
-  font: normal 1rem / 1.5 "Open Sans", Helvetica, Arial, sans-serif;
+  font: normal 1rem/1.5 "Open Sans", Helvetica, Arial, sans-serif;
   max-width: 44em;
   -webkit-font-feature-settings: "liga", "dlig", "kern", "onum";
           font-feature-settings: "liga", "dlig", "kern", "onum";
@@ -1427,12 +1427,12 @@ h6 {
   .Prose ol > li {
     list-style-type: decimal; }
   .Prose h1 {
-    font: bold 1.75rem / 1.14286 "Open Sans", Helvetica, Arial, sans-serif;
+    font: bold 1.75rem/1.14286 "Open Sans", Helvetica, Arial, sans-serif;
     -webkit-font-feature-settings: "dlig" 1;
             font-feature-settings: "dlig" 1;
     letter-spacing: -0.025em; }
   .Prose h2 {
-    font: bold 1.3125rem / 1.14286 "Open Sans", Helvetica, Arial, sans-serif;
+    font: bold 1.3125rem/1.14286 "Open Sans", Helvetica, Arial, sans-serif;
     -webkit-font-feature-settings: "dlig" 1;
             font-feature-settings: "dlig" 1;
     margin-bottom: 1em;
@@ -1440,7 +1440,7 @@ h6 {
   .Prose *:not(hr) + h2 {
     margin-top: 2em; }
   .Prose h3 {
-    font: bold 1.125rem / 1.33333 "Open Sans", Helvetica, Arial, sans-serif;
+    font: bold 1.125rem/1.33333 "Open Sans", Helvetica, Arial, sans-serif;
     -webkit-font-feature-settings: "dlig" 1;
             font-feature-settings: "dlig" 1;
     margin-bottom: 0.75em;
@@ -1472,7 +1472,7 @@ h6 {
     -webkit-font-feature-settings: "lnum" 1, "tnum" 1;
             font-feature-settings: "lnum" 1, "tnum" 1; }
   .Prose caption {
-    font: normal 0.8125rem / 1.53846 "Open Sans", Helvetica, Arial, sans-serif;
+    font: normal 0.8125rem/1.53846 "Open Sans", Helvetica, Arial, sans-serif;
     padding: 0 0.5rem;
     font-style: italic;
     text-align: start;
@@ -1522,7 +1522,7 @@ h6 {
     margin-right: 3px; }
 
 .Status-label {
-  font: bold 0.6875rem / 1.81818 "Open Sans", Helvetica, Arial, sans-serif;
+  font: bold 0.6875rem/1.81818 "Open Sans", Helvetica, Arial, sans-serif;
   letter-spacing: 0.075em;
   text-transform: uppercase;
   display: inline-block;
@@ -1553,7 +1553,7 @@ h6 {
   white-space: nowrap; }
 
 .Tree-title {
-  font: bold 0.6875rem / 1.81818 "Open Sans", Helvetica, Arial, sans-serif;
+  font: bold 0.6875rem/1.81818 "Open Sans", Helvetica, Arial, sans-serif;
   letter-spacing: 0.075em;
   text-transform: uppercase;
   -webkit-padding-start: 1rem;
@@ -1576,7 +1576,7 @@ h6 {
     background-image: url("../img/icon-navigation-closed-rtl.svg"); }
 
 .Tree-collectionLabel {
-  font: normal 0.8125rem / 1.53846 "Open Sans", Helvetica, Arial, sans-serif;
+  font: normal 0.8125rem/1.53846 "Open Sans", Helvetica, Arial, sans-serif;
   padding-top: 0.375rem;
   padding-bottom: 0.375rem;
   cursor: pointer;
@@ -1625,7 +1625,7 @@ h6 {
       right: 0; }
 
 .Tree-item {
-  font: normal 0.8125rem / 1.53846 "Open Sans", Helvetica, Arial, sans-serif; }
+  font: normal 0.8125rem/1.53846 "Open Sans", Helvetica, Arial, sans-serif; }
 
 .Tree-entityLink {
   display: -webkit-box;
