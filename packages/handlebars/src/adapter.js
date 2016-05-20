@@ -9,9 +9,6 @@ const Handlebars  = require('handlebars');
 module.exports = function(config){
 
     config               = config || {};
-    if (_.isUndefined(config.loadHelpers)) {
-        config.loadHelpers = true;
-    }
     let hbs              = promisedHbs(Handlebars);
     let partials         = [];
 
@@ -68,7 +65,7 @@ module.exports = function(config){
                 }
             }
 
-            if (config.loadHelpers) {
+            if (!config.pristine) {
                 _.each(require('./helpers')(app) || {}, function(helper, name){
                     hbs.registerHelper(name, helper);
                 });
