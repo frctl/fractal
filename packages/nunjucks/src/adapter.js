@@ -1,11 +1,10 @@
 'use strict';
 
+const _        = require('lodash');
 const Promise = require('bluebird');
 const nunjucks = require('nunjucks');
-const helpers  = require('@frctl/nunjucks-helpers');
-const _        = require('lodash');
 
-module.exports = function(source, config){
+module.exports = function(config){
 
     config = config || {};
 
@@ -60,16 +59,6 @@ module.exports = function(source, config){
 
     nj = Promise.promisifyAll(nj);
 
-    if (config.loadHelpers) {
-        helpers.use(source._app);
-        _.each(helpers.require('filters') || {}, function(filter, name){
-            addFilter(name, filter);
-        });
-        _.each(helpers.require('extensions') || {}, function(ext, name){
-            nj.addExtension(name, ext);
-        });
-    }
-
     _.each(config.filters || {}, function(filter, name){
         addFilter(name, filter);
     });
@@ -80,10 +69,6 @@ module.exports = function(source, config){
         nj.addGlobal(name, value);
     });
 
-    function loadViews() {
-        viewCache = source.flattenDeep().items();
-    }
-
     function addFilter(name, filter){
         if (typeof filter === 'function') {
             nj.addFilter(name, filter);
@@ -92,15 +77,38 @@ module.exports = function(source, config){
         }
     }
 
-    source.on('loaded', loadViews);
-    source.on('changed', loadViews);
-
     return {
-        engine: nj,
-        render: function(path, str, context, callback){
-            if (!viewCache) loadViews(source);
+
+        get engine(){
+            return nj;
+        },
+
+        register(source, app) {
+
+            if (!config.pristine) {
+                _.each(require('./filters')(app) || {}, function(filter, name){
+                    addFilter(name, filter);
+                });
+                _.each(require('./extensions')(app) || {}, function(ext, name){
+                    nj.addExtension(name, ext);
+                });
+            }
+
+            function loadViews() {
+                viewCache = source.flattenDeep().items();
+            }
+
+            source.on('loaded', () => loadViews());
+            source.on('changed', data => loadViews());
+
+            loadViews();
+        },
+
+        render(path, str, context, meta) {
             return nj.renderStringAsync(str, context);
         }
-    };
+
+    }
+
 
 };
