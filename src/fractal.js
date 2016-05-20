@@ -2,7 +2,7 @@
 
 const _               = require('lodash');
 const Promise         = require('bluebird');
-const settings        = require('../settings');
+const defaults        = require('../config');
 const Log             = require('./core/log');
 const utils           = require('./core/utils');
 const mix             = require('./core/mixins/mix');
@@ -19,7 +19,7 @@ class Fractal extends mix(Configurable, Emitter) {
      */
     constructor(config) {
         super();
-        this.config(_.defaultsDeep(config || {}, settings));
+        this.config(_.defaultsDeep(config || {}, defaults));
 
         this._cli        = null;
         this._web        = null;
