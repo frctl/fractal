@@ -26,10 +26,10 @@ A set of [Handlebars helpers](http://handlebarsjs.com/#helpers) to make availabl
 const config = {
     helpers: {
         uppercase: function(str) {
-            return new Handlebars.SafeString(str.toUpperCase());
+            return str.toUpperCase();
         },
         lowercase: function(str) {
-            return new Handlebars.SafeString(str.toLowerCase());
+            return str.toLowerCase();
         }
     }
 };
