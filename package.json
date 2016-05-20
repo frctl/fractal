@@ -33,7 +33,6 @@
     "highlight.js": "^9.2.0",
     "inquirer": "^1.0.2",
     "istextorbinary": "^1.0.2",
-    "js-beautify": "^1.6.2",
     "js-yaml": "^3.5.3",
     "liftoff": "^2.2.0",
     "lodash": "^4.6.1",
