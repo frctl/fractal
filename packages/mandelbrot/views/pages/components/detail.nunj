@@ -1,6 +1,7 @@
 {% extends "layouts/pjax.nunj" if request.isPjax else "layouts/frame.nunj" %}
 {% import "macros/image.nunj" as img %}
 {% import "macros/status.nunj" as status %}
+{% import "macros/errors.nunj" as errors %}
 
 {% set entity = frctl.components.find('@' + request.params.handle) %}
 {% if not entity or entity.isHidden %}{{ throw(404, "Component '" + request.params.handle + "' not found.") }}{% endif %}
@@ -30,7 +31,7 @@
         {% set renderedWithLayout = entity.render(null, true, true) | async(true) %}
         {% if renderedWithLayout | isError %}
             {% set error = renderedWithLayout %}
-            {% set renderError %}{% include 'partials/render-error.nunj' %}{% endset %}
+            {% set renderError %}{{ errors.renderError('component', error.message) }}{% endset %}
             {% set renderedWithLayout = false %}
         {% endif %}
     {%- endif %}

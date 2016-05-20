@@ -1,12 +1,10 @@
 {% extends "layouts/pjax.nunj" if request.isPjax else "layouts/frame.nunj" %}
 
 {% set page = {
-    title: 'Not found' if frctl.error.status == '404' else frctl.error.name
+    title: ('Not found' if error.status == '404' else error.name) | default('An error has occurred')
 } %}
 
 {% block content %}
-
-{{ dump(frctl.error) }}
 
 <div class="Document">
 
@@ -19,12 +17,12 @@
         <div class="Error">
 
             <div class="Error-message Prose">
-            {{ frctl.error.message | markdown }}
+            {{ error.message | default('No more information is available.') | markdown }}
             </div>
 
-            {% if frctl.error.stack and frctl.error.status != '404' %}
+            {% if error.stack and error.status != '404' %}
             <code class="Code Error-stack">
-                <pre>{{ frctl.error.stack }}</pre>
+                <pre>{{ error.stack }}</pre>
             </code>
             {% endif %}
 

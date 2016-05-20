@@ -1,4 +1,5 @@
 {% extends "layouts/pjax.nunj" if request.isPjax else "layouts/frame.nunj" %}
+{% import "macros/errors.nunj" as errors %}
 
 {% set pathParam = request.params.path %}
 {% set doc = frctl.docs.find('path', pathParam | default('')) %}
@@ -21,7 +22,12 @@
 
     {% block pageContent %}
     {% if doc %}
-    {{ doc.render() | async }}
+        {% set contents = doc.render() | async(true) %}
+        {% if contents | isError %}
+        {{ errors.renderError('page', contents.message) }}
+        {% else %}
+        {{ contents }}
+        {% endif %}
     {% else %}
     {% include 'partials/content/overview.nunj' %}
     {% endif %}
