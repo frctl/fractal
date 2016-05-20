@@ -47,8 +47,13 @@ FractalCli.launch({
 
     if (configPath) {
         // Config file found - it's running in project context.
-        app = require(configPath);
-        scope = 'project';
+        try {
+            app = require(configPath);
+            scope = 'project';
+        } catch(e) {
+            console.log(e.stack);
+            return;
+        }
     }
 
     /*
@@ -73,7 +78,7 @@ FractalCli.launch({
             console.log(`${chalk.red('Configuration error')}: The CLI configuration file is not exporting an instance of Fractal.`);
             return;
         }
-        
+
         // Alert to any version mismatches.
         if (semver.gt(cliPackage.version, env.modulePackage.version)) {
             app.cli.notify.versionMismatch({
