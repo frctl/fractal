@@ -219,20 +219,18 @@ module.exports = class ComponentSource extends EntitySource {
         return statuses[handle];
     }
 
-    fileType(file) {
-        let type = super.fileType(file);
-        if (type) {
-            return type;
+    _appendEventFileInfo(file, eventData) {
+        eventData = super._appendEventFileInfo(file, eventData);
+        for (let test of ['isResource', 'isTemplate', 'isReadme', 'isView', 'isVarView']) {
+            if (this[test](file)) {
+                eventData[test] = true;
+            }
         }
-        if (this.isResource(file)) {
-            return 'resource';
-        }
-        if (this.isView(file) || this.isVarView(file)) {
-            return 'view';
-        }
-        if (this.isReadme(file)) {
-            return 'readme';
-        }
+        return eventData;
+    }
+
+    isTemplate(file) {
+        return this.isView(file) || this.isVarView(file);
     }
 
     isView(file) {

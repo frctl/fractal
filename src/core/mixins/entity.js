@@ -52,7 +52,7 @@ module.exports = mixin((superclass) => class Entity extends superclass {
     }
 
     _id(config) {
-        return utils.md5(this.source.name + this.path);
+        return utils.md5([this.source.name, this.path, this.handle].join('-'));
     }
 
     _handle(config) {

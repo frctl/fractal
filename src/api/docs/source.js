@@ -73,14 +73,18 @@ module.exports = class DocSource extends EntitySource {
         return anymatch(`**/*${this.get('ext')}`, this._getPath(file));
     }
 
-    fileType(file) {
-        let type = super.fileType(file);
-        if (type) {
-            return type;
+    isTemplate(file) {
+        return this.isPage(file);
+    }
+
+    _appendEventFileInfo(file, eventData) {
+        eventData = super._appendEventFileInfo(file, eventData);
+        for (let test of ['isPage', 'isTemplate']) {
+            if (this[test](file)) {
+                eventData[test] = true;
+            }
         }
-        if (this.isPage(file)) {
-            return 'page';
-        }
+        return eventData;
     }
 
     _render(path, content, context) {
@@ -124,7 +128,7 @@ module.exports = class DocSource extends EntitySource {
                         filePath: item.path,
                         file:     item
                     });
-                    return Promise.join(config, contents, (config, contents) => Doc.create(config, contents, parent || source));
+                    return Promise.join(config, contents, (config, contents) => Doc.create(config, contents, collection));
                 } else if (item.isDirectory) {
                     return build(item, collection);
                 }

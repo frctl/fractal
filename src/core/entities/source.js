@@ -122,11 +122,10 @@ module.exports = class EntitySource extends mix(Configurable, Heritable, Emitter
                 this._monitor.on('all', (event, path) => {
                     Log.debug(`Change in ${this.name} directory`);
 
-                    const data = {
+                    const data = this._appendEventFileInfo(path, {
                         event: event,
                         path: path,
-                        type: this.fileType(path)
-                    };
+                    });
 
                     this.emit('changed', data);
                     this._app.emit('source:changed', this, data);
@@ -175,10 +174,11 @@ module.exports = class EntitySource extends mix(Configurable, Heritable, Emitter
         return self;
     }
 
-    fileType(file) {
+    _appendEventFileInfo(file, eventData) {
         if (this.isConfig(file)) {
-            return 'config';
+            eventData.isConfig = true;
         }
+        return eventData;
     }
 
     isConfig(file) {

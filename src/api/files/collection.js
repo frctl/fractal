@@ -12,7 +12,7 @@ module.exports = class FileCollection extends mix(Collection) {
     }
 
     files() {
-        return this.newSelf(this.toArray().filter(i => i.isAsset));
+        return this.newSelf(this.toArray().filter(i => i.isFile));
     }
 
     match(test) {
