@@ -666,7 +666,7 @@ var pens = [];
 loadPen();
 
 if (window.location.protocol.indexOf('file') !== 0) {
-    doc.pjax('a[data-pjax], code a[href]', '#pjax-container', {
+    doc.pjax('a[data-pjax], code a[href], .Prose a[href]', '#pjax-container', {
         fragment: '#pjax-container',
         timeout: 10000
     }).on('pjax:start', function (e, xhr, options) {
