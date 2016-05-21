@@ -1,15 +1,17 @@
 'use strict';
 
 const _     = require('lodash');
+const Path  = require('path');
 const utils = require('../../core/utils');
 
 module.exports = class File {
 
-    constructor(file) {
+    constructor(file, relativeTo) {
         this.isFile      = true;
         this.id          = utils.md5(file.path);
         this._file       = file;
         this.path        = file.path;
+        this.relPath     = relativeTo ? Path.relative(Path.resolve(relativeTo), file.path) : file.path;
         this.base        = file.base;
         this.handle      = utils.slugify(file.base.replace('.', '-'));
         this.name        = file.name;
@@ -33,6 +35,7 @@ module.exports = class File {
         return {
             id:          this.id,
             path:        this.path,
+            relPath:     this.relPath,
             base:        this.base,
             handle:      this.handle,
             name:        this.name,

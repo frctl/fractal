@@ -35,7 +35,7 @@ module.exports = class AssetSourceCollection extends mix(Configurable, Collectio
         config = _.defaults(config, {
             filter: '*'
         });
-        this.pushItem(new Source(name, config, this._app));
+        this._items.add(new Source(name, config, this._app));
         return this;
     }
 
@@ -50,6 +50,20 @@ module.exports = class AssetSourceCollection extends mix(Configurable, Collectio
 
     sources() {
         return this.toArray();
+    }
+
+    watch() {
+        this.sources().forEach(s => s.watch());
+        return this;
+    }
+
+    unwatch() {
+        this.sources().forEach(s => s.unwatch());
+        return this;
+    }
+
+    load() {
+        return Promise.all(this.sources().map(s => s.load()));
     }
 
     toJSON() {

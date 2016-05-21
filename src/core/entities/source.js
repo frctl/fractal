@@ -16,7 +16,7 @@ module.exports = class EntitySource extends mix(Source, Heritable) {
         super();
 
         this._engine        = null;
-        this._defaultEngine = '@frctl/handlebars-adapter';
+        this._defaultEngine = app.get('engine');
 
         this.initSource(name, app.get(this.name), app);
         this.config(app.get(this.name));
@@ -73,6 +73,7 @@ module.exports = class EntitySource extends mix(Source, Heritable) {
         self.title        = this.title;
         self.viewExt      = this.get('ext');
         self.isLoaded     = this.isLoaded;
+        self.path         = this.get('path');
         self.isCollection = true;
         self.isSource     = true;
         self.items = this.toArray().map(i => (i.toJSON ? i.toJSON() : i));

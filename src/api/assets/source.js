@@ -1,14 +1,15 @@
 'use strict';
 
-const _        = require('lodash')
-const anymatch = require('anymatch');
-const Path     = require('path');
+const _               = require('lodash')
+const anymatch        = require('anymatch');
+const Path            = require('path');
 
-const File     = require('../files/file');
-const utils    = require('../../core/utils');
-const Log      = require('../../core/log');
-const mix      = require('../../core/mixins/mix');
-const Source   = require('../../core/mixins/source');
+const Asset           = require('./asset');
+const AssetCollection = require('./collection');
+const utils           = require('../../core/utils');
+const Log             = require('../../core/log');
+const mix             = require('../../core/mixins/mix');
+const Source          = require('../../core/mixins/source');
 
 module.exports = class AssetSource extends mix(Source) {
 
@@ -16,12 +17,15 @@ module.exports = class AssetSource extends mix(Source) {
         super();
         this.initSource(name, config, app);
         this.config(config);
-        this.filter = config.filter ? [].concat(config.filter) : [];
+        this.match = config.match ? [].concat(config.match) : ['*','**/*'];
         this._fileFilter = filePath => {
             if (!Path.parse(filePath).ext) {
                 return true;
             }
-            return anymatch(this.filter, filePath);
+            if ((/(^|\/)\.[^\/\.]/g).test(filePath)) {
+                return false;
+            }
+            return anymatch(this.match, filePath);
         };
     }
 
@@ -34,6 +38,7 @@ module.exports = class AssetSource extends mix(Source) {
         self.name         = this.name;
         self.label        = this.label;
         self.title        = this.title;
+        self.path         = this.get('path');
         self.isLoaded     = this.isLoaded;
         self.isCollection = true;
         self.isSource     = true;
@@ -48,14 +53,19 @@ module.exports = class AssetSource extends mix(Source) {
     }
 
     _parse (fileTree) {
-        let items = [];
-        function flatten(dir) {
-            for (let item of dir.children) {
-                item.isFile ? items.push(new File(item)) : flatten(item);
+        let source = this;
+        function convert(items) {
+            let converted = [];
+            for (let item of items) {
+                if (item.isFile) {
+                    converted.push(new Asset(item, source.get('path')))
+                } else if (item.children.length) {
+                    converted.push(new AssetCollection({}, convert(item.children)));
+                }
             }
+            return converted;
         }
-        flatten(fileTree);
-        this.setItems(items);
+        this.setItems(convert(fileTree.children));
     }
 
 };

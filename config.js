@@ -9,6 +9,7 @@ module.exports = {
         title: 'My Component Library',
         version: null,
     },
+    engine: '@frctl/handlebars',
     components: {
         path: null,
         label: 'components',
@@ -51,7 +52,6 @@ module.exports = {
         markdown: true,
         ext: '.md',
         indexLabel: 'Overview',
-        engine: 'handlebars',
         default: {
             context: {},
             status: null
