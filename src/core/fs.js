@@ -12,12 +12,13 @@ const utils     = require('./utils');
 
 module.exports = {
 
-    describe(dir, noCache) {
+    describe(dir, filter, noCache) {
 
         dir = Path.resolve(dir);
+        filter = filter || (filePath => !(/(^|\/)\.[^\/\.]/g).test(filePath));
 
         return dirscribe(dir, {
-            filter: filePath => !(/(^|\/)\.[^\/\.]/g).test(filePath),
+            filter: filter,
             after:  files => _.orderBy(files, ['isDirectory', 'order', 'path'], ['desc', 'asc', 'asc']),
             build:  build
         });

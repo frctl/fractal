@@ -18,10 +18,6 @@ module.exports = class ComponentSource extends EntitySource {
         super('components', app);
     }
 
-    get source(){
-        return this;
-    }
-
     resources() {
         let resources = [];
         for (let comp of this.flatten()) {

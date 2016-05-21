@@ -9,8 +9,6 @@ const mix             = require('./core/mixins/mix');
 const Configurable    = require('./core/mixins/configurable');
 const Emitter         = require('./core/mixins/emitter');
 
-const sources = ['components', 'docs'];
-
 class Fractal extends mix(Configurable, Emitter) {
 
     /**
@@ -25,6 +23,7 @@ class Fractal extends mix(Configurable, Emitter) {
         this._web        = null;
         this._components = null;
         this._docs       = null;
+        this._assets     = null;
 
         if (!this.debug) {
             process.on('uncaughtException', function (err) {
@@ -54,6 +53,14 @@ class Fractal extends mix(Configurable, Emitter) {
         return this._docs;
     }
 
+    get assets(){
+        if (!this._assets) {
+            const AssetSourceCollection = require('./api/assets');
+            this._assets = new AssetSourceCollection(this);
+        }
+        return this._assets;
+    }
+
     get cli(){
         if (!this._cli) {
             const Cli = require('./cli');
@@ -79,33 +86,41 @@ class Fractal extends mix(Configurable, Emitter) {
     }
 
     watch() {
-        sources.forEach(s => this[s].watch());
+        this._sources().forEach(s => s.watch());
+        return this;
     }
 
     unwatch() {
-        sources.forEach(s => this[s].unwatch());
-    }
-
-    engine() {
-        if (!arguments.length) {
-            const ret = {};
-            sources.forEach(s => (ret[s] = this[s].engine()));
-            return ret;
-        } else {
-            sources.forEach(s => this[s].engine(...arguments));
-        }
+        this._sources().forEach(s => s.unwatch());
+        return this;
     }
 
     load() {
-        return Promise.all(sources.map(s => this[s].load()));
+        return Promise.all(this._sources().map(s => s.load()));
     }
 
-    source(type) {
-        if (_.includes(sources, type)) {
-            return this[type];
+    engine() {
+        const entitySources = ['components', 'docs'];
+        if (!arguments.length) {
+            const ret = {};
+            entitySources.forEach(s => (ret[s] = this[s].engine()));
+            return ret;
+        } else {
+            entitySources.forEach(s => this[s].engine(...arguments));
         }
-        throw new Error(`Source type ${type} not recognised`);
+        return this;
     }
+
+    _sources() {
+        return [this.components, this.docs].concat(this.assets.sources());
+    }
+
+    // source(type) {
+    //     if (_.includes(sources, type)) {
+    //         return this[type];
+    //     }
+    //     throw new Error(`Source type ${type} not recognised`);
+    // }
 
 }
 

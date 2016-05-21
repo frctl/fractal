@@ -57,8 +57,13 @@ module.exports = {
             status: null
         }
     },
+    assets: {
+        label: 'assets',
+        title: 'Assets',
+    },
     cli: {},
     web: {
+        theme: '@frctl/mandelbrot',
         server: {
             port: null,
             sync: false,

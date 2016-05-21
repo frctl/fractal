@@ -119,6 +119,8 @@ module.exports = class Server extends mix(Emitter) {
             }
         }, this._config.syncOptions || {});
 
+        this._app.watch();
+
         // listen out for source changes
         this._app.on('source:updated', (source, data) => syncServer.reload());
 

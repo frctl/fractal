@@ -1,45 +1,26 @@
 'use strict';
 
 const _            = require('lodash')
-const chokidar     = require('chokidar');
 const anymatch     = require('anymatch');
 
-const fs           = require('../fs');
 const utils        = require('../utils');
 const Log          = require('../log');
 const Data         = require('../data');
 const mix          = require('../mixins/mix');
-const Configurable = require('../mixins/configurable');
-const Collection   = require('../mixins/collection');
-const Emitter      = require('../mixins/emitter');
+const Source       = require('../mixins/source');
 const Heritable    = require('../mixins/heritable');
 
-module.exports = class EntitySource extends mix(Configurable, Heritable, Emitter, Collection) {
+module.exports = class EntitySource extends mix(Source, Heritable) {
 
     constructor(name, app){
         super();
-        this.isSource       = true;
-        this.isCollection   = true;
-        this.name           = name;
-        this.isLoaded       = false;
-        this._app           = app;
-        this._loading       = false;
-        this._monitor       = null;
-        this._transform     = null;
-        this._fileTree      = null;
+
         this._engine        = null;
         this._defaultEngine = '@frctl/handlebars-adapter';
 
+        this.initSource(name, app.get(this.name), app);
         this.config(app.get(this.name));
         this.setHeritable(_.keys(this.get('default')));
-    }
-
-    get label() {
-        return this.get('label') || utils.titlize(this.name);
-    }
-
-    get title() {
-        return this.get('title') || this.label;
     }
 
     /**
@@ -49,10 +30,6 @@ module.exports = class EntitySource extends mix(Configurable, Heritable, Emitter
      */
     entities() {
         return this.newSelf(this.toArray().filter(i => ! i.isCollection));
-    }
-
-    exists() {
-        return this.get('path') && utils.fileExistsSync(this.get('path'));
     }
 
     engine(engine, config) {
@@ -72,78 +49,6 @@ module.exports = class EntitySource extends mix(Configurable, Heritable, Emitter
             engine.register(this, this._app);
         }
         this._engine = engine;
-    }
-
-    load(force) {
-        if (!this.get('path')) {
-            return Promise.resolve(this);
-        }
-        if (!utils.fileExistsSync(this.get('path'))) {
-            Log.error(`The ${this.name} directory (${this.get('path')}) does not exist.`);
-            return Promise.resolve(this);
-        }
-        if (this._loading) {
-            return this._loading;
-        }
-        if (force || !this.isLoaded) {
-            return this._build().then(source => {
-                Log.debug(`Finished parsing ${this.name} directory`);
-                this.isLoaded = true;
-                this.emit('loaded');
-                this._app.emit('source:loaded', this);
-                return source;
-            });
-        }
-        return Promise.resolve(this);
-    }
-
-    refresh() {
-        if (!this.isLoaded) {
-            return this.load();
-        }
-        if (this._loading) {
-            return this._loading;
-        }
-        return this._build().then(source => {
-            Log.debug(`Finished parsing ${this.name} directory`);
-            this.isLoaded = true;
-            return source;
-        });
-    }
-
-    watch() {
-        const sourcePath = this.get('path');
-        if (!this._monitor && sourcePath) {
-            Log.debug(`Watching ${this.name} directory - ${sourcePath}`);
-            this._monitor = chokidar.watch(sourcePath, {
-                ignored: /[\/\\]\./
-            });
-            this._monitor.on('ready', () => {
-                this._monitor.on('all', (event, path) => {
-                    Log.debug(`Change in ${this.name} directory`);
-
-                    const data = this._appendEventFileInfo(path, {
-                        event: event,
-                        path: path,
-                    });
-
-                    this.emit('changed', data);
-                    this._app.emit('source:changed', this, data);
-
-                    this.refresh().then(source => {
-                        this.emit('updated', data);
-                        this._app.emit('source:updated', this, data);
-                        return source;
-                    });
-
-                });
-            });
-        }
-    }
-
-    unwatch() {
-        this._monitor.close();
-        this._monitor = null;
     }
 
     getProp(key) {
@@ -174,17 +79,6 @@ module.exports = class EntitySource extends mix(Configurable, Heritable, Emitter
         return self;
     }
 
-    _appendEventFileInfo(file, eventData) {
-        if (this.isConfig(file)) {
-            eventData.isConfig = true;
-        }
-        return eventData;
-    }
-
-    isConfig(file) {
-        return anymatch(`**/*.config.{js,json,yaml,yml}`, this._getPath(file));
-    }
-
     static getConfig(file, defaults) {
         defaults = defaults || {};
         if (!file) {
@@ -196,30 +90,5 @@ module.exports = class EntitySource extends mix(Configurable, Heritable, Emitter
         });
     }
 
-    _build() {
-        if (!this.get('path')) {
-            return Promise.resolve(this);
-        }
-        this._loading = fs.describe(this.get('path')).then(fileTree => {
-            this._fileTree = fileTree;
-            this._loading  = false;
-            return this._parse(fileTree);
-        }).catch(e => {
-            Log.error(e);
-            if (this._app.debug) {
-                Log.write(e.stack);
-            }
-        });
-        return this._loading;
-    }
-
-    _parse() {
-        return [];
-    }
-
-    _getPath(file) {
-        const filePath = _.isString(file) ? file : file.path;
-        return filePath.toLowerCase();
-    }
 
 };

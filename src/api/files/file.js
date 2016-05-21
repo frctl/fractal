@@ -3,7 +3,7 @@
 const _     = require('lodash');
 const utils = require('../../core/utils');
 
-module.exports = class Asset {
+module.exports = class File {
 
     constructor(file) {
         this.isFile      = true;

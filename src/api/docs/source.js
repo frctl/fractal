@@ -18,10 +18,6 @@ module.exports = class DocSource extends EntitySource {
         super('docs', app);
     }
 
-    get source(){
-        return this;
-    }
-
     pages() {
         return super.entities();
     }

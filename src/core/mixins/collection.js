@@ -58,6 +58,11 @@ module.exports = mixin((superclass) => class Collection extends superclass {
         return this;
     }
 
+    removeItem(item) {
+        this._items.delete(item);
+        return this;
+    }
+
     /**
      * Recursively converts the collection and it's contents to a
      * JSON-serializable plain object.
