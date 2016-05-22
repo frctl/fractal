@@ -28,15 +28,24 @@ module.exports = class AssetSourceCollection extends mix(Configurable, Collectio
         return this.get('title') || this.label;
     }
 
-    add(name, config) {
+    src(name, config) {
+        if (arguments.length === 1) {
+            for (let item of this.items()) {
+                if (item.name === name) {
+                    return item;
+                }
+            }
+            throw new Error(`Asset source '${name}' not found`);
+        }
         if (_.isString(config)) {
             config = { path: config };
         }
         config = _.defaults(config, {
             filter: '*'
         });
-        this._items.add(new Source(name, config, this._app));
-        return this;
+        let source = new Source(name, config, this._app);
+        this._items.add(source);
+        return source;
     }
 
     remove(name) {
@@ -52,12 +61,8 @@ module.exports = class AssetSourceCollection extends mix(Configurable, Collectio
         return this.toArray();
     }
 
-    src(name) {
-        for (let item of this.items()) {
-            if (item.name === name) {
-                return item;
-            }
-        }
+    list() {
+        return this.items().toArray().map(i => i.name);
     }
 
     watch() {

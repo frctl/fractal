@@ -44,6 +44,17 @@ module.exports = mixin((superclass) => class Source extends mix(superclass).with
         return this;
     }
 
+    toStream() {
+        const stream = super.toStream();
+        if (! this.isLoaded ) {
+            this.load().then(function(){
+                this.each(item => stream.push(item));
+            });
+            return stream;
+        }
+        return stream;
+    }
+
     exists() {
         return this.get('path') && utils.fileExistsSync(this.get('path'));
     }
@@ -126,7 +137,7 @@ module.exports = mixin((superclass) => class Source extends mix(superclass).with
         this._monitor.close();
         this._monitor = null;
     }
-    
+
     isConfig(file) {
         return anymatch(`**/*.config.{js,json,yaml,yml}`, this._getPath(file));
     }

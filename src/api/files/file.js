@@ -27,6 +27,10 @@ module.exports = class File {
         this.isBinary    = file.isBinary;
     }
 
+    get contents() {
+        this._file.readBuffer();
+    }
+
     getContent() {
         return this._file.read().then(c => c.toString());
     }
@@ -36,7 +40,6 @@ module.exports = class File {
     }
 
     toVinyl() {
-        this.contents = this._file.readBuffer();
         return new VinylFile(this);
     }
 

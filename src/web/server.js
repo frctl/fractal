@@ -32,6 +32,10 @@ module.exports = class Server extends mix(Emitter) {
         return this._sync;
     }
 
+    get port() {
+        return this._sync ? this._ports.sync : this._ports.server;
+    }
+
     get ports() {
         return this._ports;
     }
@@ -46,46 +50,55 @@ module.exports = class Server extends mix(Emitter) {
 
     start(sync) {
 
-        return Promise.props(findPorts(this._config.port, sync)).then(ports => {
+        sync = _.isUndefined(sync) ? (this._config.sync || false) : sync;
+        
+        return this._app.load().then(() => {
 
-            this._ports = ports;
-            this._sync  = sync;
+            if (this._config.watch) {
+                this._app.watch();
+            }
 
-            return new Promise((resolve, reject) => {
+            return Promise.props(findPorts(this._config.port, sync)).then(ports => {
 
-                this._instance = this._server.listen(ports.server, (err) => {
+                this._ports = ports;
+                this._sync  = sync;
 
-                    if (err) {
-                        return reject(err);
-                    }
+                return new Promise((resolve, reject) => {
 
-                    this._urls.server = `http://localhost:${ports.server}`;
+                    this._instance = this._server.listen(ports.server, (err) => {
 
-                    if (this._sync) {
-                        return this._startSync();
-                    }
+                        if (err) {
+                            return reject(err);
+                        }
 
-                    this.emit('ready');
+                        this._urls.server = `http://localhost:${ports.server}`;
 
-                    resolve(this._instance);
-                });
+                        if (this._sync) {
+                            return this._startSync(resolve, reject);
+                        }
 
-                this._instance.destroy = cb => {
-                    this._instance.close(cb);
-                    for (var key in this._connections) {
-                        this._connections[key].destroy();
-                    }
-                    this._instance.emit('destroy');
-                };
+                        this.emit('ready');
 
-                this._instance.on('connection', conn => {
-                    const key = `${conn.remoteAddress}:${conn.remotePort}`;
-                    this._connections[key] = conn;
-                    conn.on('close', () => delete this._connections[key]);
+                        resolve(this._instance);
+                    });
+
+                    this._instance.destroy = cb => {
+                        this._instance.close(cb);
+                        for (var key in this._connections) {
+                            this._connections[key].destroy();
+                        }
+                        this._instance.emit('destroy');
+                    };
+
+                    this._instance.on('connection', conn => {
+                        const key = `${conn.remoteAddress}:${conn.remotePort}`;
+                        this._connections[key] = conn;
+                        conn.on('close', () => delete this._connections[key]);
+                    });
+
                 });
 
             });
-
         });
     }
 
@@ -101,8 +114,7 @@ module.exports = class Server extends mix(Emitter) {
         this.emit('stopped');
     }
 
-    _startSync() {
-
+    _startSync(resolve, reject) {
         const syncServer = require('browser-sync').create();
         const watchers   = {};
         const bsConfig   = _.defaultsDeep({
@@ -153,6 +165,7 @@ module.exports = class Server extends mix(Emitter) {
                 'ui':       urls.get('ui')
             };
             this.emit('ready');
+            resolve(this._instance);
         });
 
     }
@@ -251,7 +264,7 @@ function findPorts(serverPort, useSync) {
     if (useSync && serverPort) {
         return {
             sync: Promise.resolve(serverPort),
-            server: findPort(serverPort, parseInt(serverPort, 10) + range, ip)
+            server: findPort(serverPort + 1, parseInt(serverPort, 10) + range, ip)
         }
     } else if (!useSync && !serverPort) {
         return {
@@ -263,7 +276,7 @@ function findPorts(serverPort, useSync) {
         return {
             sync: syncPort,
             server: syncPort.then(port => {
-                return findPort(port++, port + range, ip);
+                return findPort(port+1, port + range, ip);
             })
         }
     }

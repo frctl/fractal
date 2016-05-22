@@ -3,7 +3,7 @@
 const _               = require('lodash')
 const anymatch        = require('anymatch');
 const Path            = require('path');
-const streamify = require('stream-array');
+const streamify       = require('stream-array');
 
 const Asset           = require('./asset');
 const AssetCollection = require('./collection');
@@ -35,7 +35,19 @@ module.exports = class AssetSource extends mix(Source) {
     }
 
     toVinylStream() {
-        return streamify(this.filter('isAsset').flatten().map(asset => asset.toVinyl()).toArray());
+        if (! this.isLoaded ) {
+            const stream = streamify();
+            this.load().then(function(){
+                this.filter('isAsset').flatten().map(asset => asset.toVinyl()).each(f => stream.push(f));
+            });
+            return stream;
+        } else {
+            return streamify(this.filter('isAsset').flatten().map(asset => asset.toVinyl()).toArray());
+        }
+    }
+
+    gulpify() {
+        return this.toVinylStream();
     }
 
     toJSON() {

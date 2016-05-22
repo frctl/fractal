@@ -65,8 +65,9 @@ module.exports = {
     web: {
         theme: '@frctl/mandelbrot',
         server: {
+            watch: false,
             port: null,
-            sync: false,
+            syncOptions: {},
         },
         builder: {
             dest: null,

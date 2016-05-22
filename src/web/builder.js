@@ -22,42 +22,46 @@ module.exports = class Builder extends mix(Emitter) {
     }
 
     build() {
-        try {
-            this._validate();
-        } catch (e) {
-            return Promise.reject(e);
-        }
 
-        this._theme.engine.setGlobal('env', {
-            builder: {}
-        });
+        return this._app.load().then(() => {
+            
+            try {
+                this._validate();
+            } catch (e) {
+                return Promise.reject(e);
+            }
 
-        this.emit('start');
+            this._theme.engine.setGlobal('env', {
+                builder: {}
+            });
 
-        let setup = fs.removeAsync(this._config.dest).then(() => fs.ensureDirAsync(this._config.dest));
+            this.emit('start');
 
-        return setup.then(() => {
+            let setup = fs.removeAsync(this._config.dest).then(() => fs.ensureDirAsync(this._config.dest));
 
-            this._addTargets();
+            return setup.then(() => {
 
-            this.emit('ready', this);
-            this._theme.emit('build', this, this._app);
+                this._addTargets();
 
-            let copyStatic = this._theme.static().map(p => this._copyStatic(p.path, p.mount));
+                this.emit('ready', this);
+                this._theme.emit('build', this, this._app);
 
-            return Promise.all(copyStatic.concat(this._buildTargets()));
+                let copyStatic = this._theme.static().map(p => this._copyStatic(p.path, p.mount));
 
-        }).then(() => {
-            let stats = {
-                errorCount: this._errorCount
-            };
-            this.emit('end', stats);
-            return stats;
-        }).catch(e => {
-            this.emit('error', e);
-            throw e;
-        }).finally(() => {
-            this._errorCount = 0;
+                return Promise.all(copyStatic.concat(this._buildTargets()));
+
+            }).then(() => {
+                let stats = {
+                    errorCount: this._errorCount
+                };
+                this.emit('end', stats);
+                return stats;
+            }).catch(e => {
+                this.emit('error', e);
+                throw e;
+            }).finally(() => {
+                this._errorCount = 0;
+            });
         });
     }
 

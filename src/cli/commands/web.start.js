@@ -48,10 +48,6 @@ module.exports = {
             }
         });
 
-        if (args.options.watch) {
-            this.fractal.watch();
-        }
-
         return server.start(args.options.sync).catch(e => {
             this.console.error(e);
         });
