@@ -35,11 +35,15 @@ module.exports = {
                 p.ext          = p.ext.toLowerCase();
                 p.isFile       = stat.isFile();
                 p.isDirectory  = stat.isDirectory();
+                p.stat         = stat;
                 if (p.isFile) {
                     p._cachedContents = null;
                     p.isCacheable  = !!noCache;
                     p.lang     = utils.lang(filePath);
                     p.isBinary = yield isBinary(filePath, null);
+                    p.readBuffer = function(){
+                        return fs.readFileSync(filePath);
+                    };
                     p.readSync = function () {
                         if (!p.isCacheable || (p.isCacheable && !p._cachedContents)) {
                             p._cachedContents = p.isBinary ? fs.readFileSync(filePath) : fs.readFileSync(filePath, 'utf8');

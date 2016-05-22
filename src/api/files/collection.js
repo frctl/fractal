@@ -37,4 +37,8 @@ module.exports = class FileCollection extends mix(Collection) {
         return ret;
     }
 
+    toVinylStream() {
+        return streamify(this.filter('isAsset').flatten().map(asset => asset.toVinyl()).toArray());
+    }
+
 }

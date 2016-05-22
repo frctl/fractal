@@ -7,6 +7,7 @@ const crypto   = require('crypto');
 const minimist = require('minimist');
 const fang     = require('@allmarkedup/fang');
 const _        = require('lodash');
+const Stream    = require('stream')
 
 module.exports = {
 

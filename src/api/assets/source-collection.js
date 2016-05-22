@@ -52,6 +52,14 @@ module.exports = class AssetSourceCollection extends mix(Configurable, Collectio
         return this.toArray();
     }
 
+    src(name) {
+        for (let item of this.items()) {
+            if (item.name === name) {
+                return item;
+            }
+        }
+    }
+
     watch() {
         this.sources().forEach(s => s.watch());
         return this;

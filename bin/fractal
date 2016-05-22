@@ -19,6 +19,9 @@ const FractalCli = new Liftoff({
     processTitle: 'fractal',
     moduleName: '@frctl/fractal',
     configName: 'fractal',
+    extensions: {
+        '.js': null
+    },
     v8flags: ['--harmony']
 });
 
@@ -29,17 +32,15 @@ const FractalCli = new Liftoff({
  * - Otherwise look for the default fractal.js
  */
 
-let configPath = './fractal.js';
+let config = {};
 try {
     const projectPackage = require(Path.join(process.cwd(), 'package.json'));
     if (projectPackage.fractal && projectPackage.fractal.main) {
-        configPath = Path.join(process.cwd(), projectPackage.fractal.main);
+        config.configPath = Path.join(process.cwd(), projectPackage.fractal.main);
     }
 } catch(e){}
 
-FractalCli.launch({
-    configPath: configPath
-}, function(env){
+FractalCli.launch(config, function(env){
 
     let app;
     let scope = 'global';

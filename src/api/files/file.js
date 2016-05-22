@@ -1,8 +1,10 @@
 'use strict';
 
-const _     = require('lodash');
-const Path  = require('path');
-const utils = require('../../core/utils');
+const _         = require('lodash');
+const Path      = require('path');
+const VinylFile = require('vinyl');
+const utils     = require('../../core/utils');
+
 
 module.exports = class File {
 
@@ -11,11 +13,13 @@ module.exports = class File {
         this.id          = utils.md5(file.path);
         this._file       = file;
         this.path        = file.path;
+        this.cwd         = relativeTo ? relativeTo : process.cwd();
         this.relPath     = relativeTo ? Path.relative(Path.resolve(relativeTo), file.path) : file.path;
         this.base        = file.base;
         this.handle      = utils.slugify(file.base.replace('.', '-'));
         this.name        = file.name;
         this.ext         = file.ext;
+        this.stat        = file.stat || null;
         this.lang        = file.lang.name;
         this.editorMode  = file.lang.mode;
         this.editorScope = file.lang.scope;
@@ -29,6 +33,11 @@ module.exports = class File {
 
     getContentSync() {
         return this._file.readSync().toString();
+    }
+
+    toVinyl() {
+        this.contents = this._file.readBuffer();
+        return new VinylFile(this);
     }
 
     toJSON() {

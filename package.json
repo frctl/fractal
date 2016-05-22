@@ -46,8 +46,10 @@
     "semver": "^5.1.0",
     "shelljs": "^0.6.0",
     "single-line-log": "^1.1.1",
+    "stream-array": "^1.1.2",
     "throat": "^2.0.2",
     "update-notifier": "^0.6.3",
+    "vinyl": "^1.1.1",
     "vorpal": "^1.10.8"
   },
   "bin": {
