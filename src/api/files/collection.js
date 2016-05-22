@@ -3,6 +3,7 @@
 const _          = require('lodash');
 const mix        = require('../../core/mixins/mix');
 const Collection = require('../../core/mixins/collection');
+const Stream     = require('../../core/promise-stream');
 
 module.exports = class FileCollection extends mix(Collection) {
 
@@ -37,8 +38,18 @@ module.exports = class FileCollection extends mix(Collection) {
         return ret;
     }
 
+    toVinylArray() {
+        return this.filter('isAsset').flatten().map(asset => asset.toVinyl()).toArray();
+    }
+
     toVinylStream() {
-        return streamify(this.filter('isAsset').flatten().map(asset => asset.toVinyl()).toArray());
+        let items = [];
+        if (this.isLoaded) {
+            items = Promise.resolve(this.toVinylArray());
+        } else {
+            items = this.load().then(() => this.toVinylArray());
+        }
+        return new Stream(items);
     }
 
     gulpify() {

@@ -2,6 +2,7 @@
 
 const _            = require('lodash')
 const anymatch     = require('anymatch');
+const Promise      = require('bluebird');
 
 const utils        = require('../../core/utils');
 const Log          = require('../../core/log');

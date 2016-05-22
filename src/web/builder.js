@@ -46,7 +46,7 @@ module.exports = class Builder extends mix(Emitter) {
                 this.emit('ready', this);
                 this._theme.emit('build', this, this._app);
 
-                let copyStatic = this._theme.static().map(p => this._copyStatic(p.path, p.mount));
+                let copyStatic = this._theme.static().map(p => this._copyStatic(p.path, Path.join('/', this._app.get('web.static'), p.mount)));
 
                 return Promise.all(copyStatic.concat(this._buildTargets()));
 

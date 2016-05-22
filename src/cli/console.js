@@ -1,5 +1,6 @@
 'use strict';
 
+const Promise      = require('bluebird');
 const _            = require('lodash');
 const chalk        = require('chalk');
 const Table        = require('cli-table2');

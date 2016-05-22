@@ -1,16 +1,16 @@
 'use strict';
 
-const Promise      = require('bluebird');
-const _            = require('lodash');
-const express      = require('express');
-const chokidar     = require('chokidar');
-const Path         = require('path');
-const util         = require('util');
-const portscanner  = Promise.promisifyAll(require('portscanner'));
-const WebError     = require('./error');
-const Log          = require('../core/log');
-const mix          = require('../core/mixins/mix');
-const Emitter      = require('../core/mixins/emitter');
+const Promise     = require('bluebird');
+const _           = require('lodash');
+const express     = require('express');
+const chokidar    = require('chokidar');
+const Path        = require('path');
+const util        = require('util');
+const portscanner = Promise.promisifyAll(require('portscanner'));
+const WebError    = require('./error');
+const Log         = require('../core/log');
+const mix         = require('../core/mixins/mix');
+const Emitter     = require('../core/mixins/emitter');
 
 module.exports = class Server extends mix(Emitter) {
 
@@ -51,7 +51,7 @@ module.exports = class Server extends mix(Emitter) {
     start(sync) {
 
         sync = _.isUndefined(sync) ? (this._config.sync || false) : sync;
-        
+
         return this._app.load().then(() => {
 
             if (this._config.watch) {
@@ -172,6 +172,18 @@ module.exports = class Server extends mix(Emitter) {
 
     _onRequest(req, res, next) {
 
+        let pathParts = res.locals.__request.segments;
+        if (pathParts.length && pathParts[0] === this._app.get('web.static')) {
+            if (pathParts[1]) {
+                try {
+                    let assetPath = pathParts.slice(2).join('/');
+                    let asset = this._app.assets.src(pathParts[1]).find('relPath', assetPath);
+                    return res.sendFile(asset.path);
+                } catch(e){}
+            }
+            return next(new WebError(404, `No matching route found for ${req.path}`));
+        }
+
         this._theme.engine.setGlobal('env', {
             server:   true,
             address:  this._urls.server,
@@ -239,7 +251,7 @@ module.exports = class Server extends mix(Emitter) {
         });
 
         this._theme.static().forEach(s => {
-            this._server.use(s.mount, express.static(s.path));
+            this._server.use(Path.join('/', this._app.get('web.static'), s.mount), express.static(s.path));
         });
 
         this._server.get(':path(*)', this._onRequest.bind(this));

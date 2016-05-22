@@ -1,5 +1,6 @@
 'use strict';
 
+const Promise             = require('bluebird');
 const _                   = require('lodash');
 const co                  = require('co');
 const anymatch            = require('anymatch');

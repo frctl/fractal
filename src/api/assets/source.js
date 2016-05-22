@@ -1,6 +1,7 @@
 'use strict';
 
-const _               = require('lodash')
+const Promise         = require('bluebird');
+const _               = require('lodash');
 const anymatch        = require('anymatch');
 const Path            = require('path');
 const streamify       = require('stream-array');
@@ -11,6 +12,7 @@ const utils           = require('../../core/utils');
 const Log             = require('../../core/log');
 const mix             = require('../../core/mixins/mix');
 const Source          = require('../../core/mixins/source');
+const Stream          = require('../../core/promise-stream');
 
 module.exports = class AssetSource extends mix(Source) {
 
@@ -34,16 +36,18 @@ module.exports = class AssetSource extends mix(Source) {
         return this.newSelf(this.toArray().filter(i => i.isAsset));
     }
 
+    toVinylArray() {
+        return this.filter('isAsset').flatten().map(asset => asset.toVinyl()).toArray();
+    }
+
     toVinylStream() {
-        if (! this.isLoaded ) {
-            const stream = streamify();
-            this.load().then(function(){
-                this.filter('isAsset').flatten().map(asset => asset.toVinyl()).each(f => stream.push(f));
-            });
-            return stream;
+        let items = [];
+        if (this.isLoaded) {
+            items = Promise.resolve(this.toVinylArray());
         } else {
-            return streamify(this.filter('isAsset').flatten().map(asset => asset.toVinyl()).toArray());
+            items = this.load().then(() => this.toVinylArray());
         }
+        return new Stream(items);
     }
 
     gulpify() {
@@ -75,7 +79,7 @@ module.exports = class AssetSource extends mix(Source) {
             let converted = [];
             for (let item of items) {
                 if (item.isFile) {
-                    converted.push(new Asset(item, source.get('path')))
+                    converted.push(new Asset(item, source.get('path'), source))
                 } else if (item.children.length) {
                     converted.push(new AssetCollection({}, convert(item.children)));
                 }

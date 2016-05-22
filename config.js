@@ -74,9 +74,6 @@ module.exports = {
             concurrency: 100,
             root: null
         },
-        static: {
-            path: null,
-            mount: '/'
-        }
+        static: '_assets'
     }
 };

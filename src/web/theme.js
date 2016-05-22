@@ -25,6 +25,7 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
         this._routes      = new Map();
         this._builder     = null;
         this._views       = [];
+        this._app         = null;
 
         this._filters     = [];
         this._extensions  = [];
@@ -37,11 +38,12 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
         this.setErrorView('__system/error.nunj');
     }
 
-    init(engine) {
+    init(engine, app) {
         engine.setGlobal('theme', this);
         engine.theme = this;
+        this._app    = app;
         this._engine = engine;
-        this.emit('init', engine, this._app);
+        this.emit('init', engine, app);
     }
 
     render(){

@@ -68,13 +68,13 @@ module.exports = class Web extends mix(Configurable, Emitter) {
         if (!theme instanceof Theme) {
             throw new Error('Fractal themes must inherit from the base Theme class.');
         }
-        const stat = [].concat(this.get('static'));
-        for (let s of stat) {
-            if (s.path) {
-                theme.static(s.path, s.mount || '/');
-            }
-        }
-        theme.init(new Engine(theme.loadPaths(), env, this._app));
+        // const stat = [].concat(this.get('static'));
+        // for (let s of stat) {
+        //     if (s.path) {
+        //         theme.static(s.path, s.mount || '/');
+        //     }
+        // }
+        theme.init(new Engine(theme.loadPaths(), env, this._app), this._app);
         return theme;
     }
 }

@@ -1,5 +1,6 @@
 'use strict';
 
+const Promise      = require('bluebird');
 const _            = require('lodash');
 const chokidar     = require('chokidar');
 const anymatch     = require('anymatch');
@@ -44,16 +45,16 @@ module.exports = mixin((superclass) => class Source extends mix(superclass).with
         return this;
     }
 
-    toStream() {
-        const stream = super.toStream();
-        if (! this.isLoaded ) {
-            this.load().then(function(){
-                this.each(item => stream.push(item));
-            });
-            return stream;
-        }
-        return stream;
-    }
+    // toStream() {
+    //     const stream = super.toStream();
+    //     if (! this.isLoaded ) {
+    //         this.load().then(() => {
+    //             this.each(item => stream.push(item));
+    //         });
+    //         return stream;
+    //     }
+    //     return stream;
+    // }
 
     exists() {
         return this.get('path') && utils.fileExistsSync(this.get('path'));

@@ -1,7 +1,7 @@
 'use strict';
 
 const _         = require('lodash');
-const streamify = require('stream-array');
+const Stream    = require('../array-stream');
 const mixin     = require('mixwith').Mixin;
 
 module.exports = mixin((superclass) => class Collection extends superclass {
@@ -77,12 +77,16 @@ module.exports = mixin((superclass) => class Collection extends superclass {
     }
 
     toStream() {
-        return streamify(this.toArray());
+        return new Stream(this.toArray());
     }
 
     each(fn) {
         _.forEach(this.items(), fn);
         return this;
+    }
+
+    forEach(fn) {
+        return this.each(fn);
     }
 
     map(fn) {
