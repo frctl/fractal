@@ -16,6 +16,7 @@ module.exports = class Asset extends File {
     toVinyl() {
         const file = super.toVinyl();
         file.sourcePath = this.sourcePath;
+        file.contents   = this.contents;
         return file;
     }
 

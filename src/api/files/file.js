@@ -25,11 +25,16 @@ module.exports = class File {
         this.editorScope = file.lang.scope;
         this.githubColor = file.lang.color;
         this.isBinary    = file.isBinary;
+        // this.contents    = null;
     }
 
     get contents() {
-        this._file.readBuffer();
+        return this._file.readBuffer();
     }
+
+    // set contents(contents) {
+    //     this.contents = contents;
+    // }
 
     getContent() {
         return this._file.read().then(c => c.toString());
@@ -40,7 +45,9 @@ module.exports = class File {
     }
 
     toVinyl() {
-        return new VinylFile(this);
+        const self = new VinylFile(this);
+        self.contents = this.contents;
+        return self;
     }
 
     toJSON() {
