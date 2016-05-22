@@ -1,4 +1,4 @@
 <link rel="shortcut icon" href="{{ path('/favicon.ico') }}" type="image/ico">
-<link rel="stylesheet" href="{{ path(frctl.theme.get('stylesheet')) }}?cachebust={{ frctl.theme.get('version') }}" type="text/css">
+<link rel="stylesheet" href="{{ path(static(frctl.theme.get('stylesheet'))) }}?cachebust={{ frctl.theme.get('version') }}" type="text/css">
 
 <title>{% if page.title %}{{ page.title }} | {% endif %}{{ frctl.get('project.title') }}</title>
