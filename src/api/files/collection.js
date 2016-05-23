@@ -38,13 +38,13 @@ module.exports = class FileCollection extends mix(Collection) {
         return ret;
     }
 
-    // toVinylArray() {
-    //     return this.filter('isAsset').flatten().map(asset => asset.toVinyl()).toArray();
-    // }
-    //
-    // toVinylStream() {
-    //     return new Stream(this.load().then(() => this.toVinylArray()));
-    // }
+    toVinylArray() {
+        return this.filter('isFile').flatten().map(file => file.toVinyl()).toArray();
+    }
+
+    toVinylStream() {
+        return new Stream(this.load().then(() => this.toVinylArray()));
+    }
 
     gulpify() {
         return this.toVinylStream();
