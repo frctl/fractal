@@ -1,10 +1,12 @@
 <div class="Header">
     <button class="Header-button Header-navToggle" data-action="toggle-sidebar">
-        <svg class="Header-menuIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 320 320" role="img" aria-labelledby="title">
-            <title>Toggle sidebar</title>
-            <path d="M48,48 L272,48 L272,64 L48,64 L48,48 Z"/>
-            <path d="M48,168 L48,152 L272,152 L272,168 L48,168 L48,168 Z"/>
-            <path d="M48,272 L48,256 L272,256 L272,272 L48,272 Z"/>
+        <svg class="Header-navToggleIcon Header-navToggleIcon--open" fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+            <path d="M0 0h24v24H0z" fill="none"/>
+        </svg>
+        <svg class="Header-navToggleIcon Header-navToggleIcon--closed" fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 0h24v24H0z" fill="none"/>
+            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
         </svg>
     </button>
     <a href="{{ path('/') }}" class="Header-title" data-pjax>{{ frctl.get('project.title') | default('Component Library') }}</a>

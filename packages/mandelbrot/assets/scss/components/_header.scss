@@ -43,43 +43,23 @@
 
 .Header-navToggle {
     svg {
-        display: block;
+        display: none;
         margin: 0 auto;
+        fill: $color-header-content;
     }
 }
 
-.Header-menuIcon {
-    path {
-        transition: all 0.1s ease-out;
-    }
-
-    path:nth-of-type(1) {
-        transform: rotate(45deg) scaleX(1.3333);
-        transform-origin: top left;
-    }
-
-    path:nth-of-type(2) {
-        width: 0%;
-        opacity: 0;
-    }
-
-    path:nth-of-type(3) {
-        transform: rotate(-45deg) scaleX(1.3333);
-        transform-origin: bottom left;
+.Frame {
+    .Header-navToggleIcon--open {
+        display: block;
     }
 }
 
-.is-closed .Header-menuIcon {
-    path:nth-of-type(1) {
-        transform: rotate(0) scaleX(1);
+.Frame.is-closed {
+    .Header-navToggleIcon--open {
+        display: none;
     }
-
-    path:nth-of-type(2) {
-        width: 100%;
-        opacity: 1;
-    }
-
-    path:nth-of-type(3) {
-        transform: rotate(0) scaleX(1);
+    .Header-navToggleIcon--closed {
+        display: block;
     }
 }

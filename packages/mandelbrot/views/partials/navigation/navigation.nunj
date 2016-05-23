@@ -1,4 +1,5 @@
 <nav class="Navigation">
     {% include 'partials/navigation/components.nunj' %}
     {% include 'partials/navigation/docs.nunj' %}
+    {% include 'partials/navigation/assets.nunj' %}
 </nav>
