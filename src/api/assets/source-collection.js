@@ -33,7 +33,7 @@ module.exports = class AssetSourceCollection extends mix(Configurable, Collectio
         config = config || {};
         config = _.defaults(config, {
             match: '*',
-            name: utils.slugify(path),
+            name: utils.slugify(path).replace('/','-'),
             path: path
         });
         let source = new Source(config.name, config, this._app);

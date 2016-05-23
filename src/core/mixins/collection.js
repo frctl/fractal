@@ -77,7 +77,7 @@ module.exports = mixin((superclass) => class Collection extends superclass {
     }
 
     toStream() {
-        return new Stream(this.toArray());
+        return new Stream(this.flatten().toArray());
     }
 
     each(fn) {

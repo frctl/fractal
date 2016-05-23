@@ -177,7 +177,7 @@ module.exports = class Server extends mix(Emitter) {
             if (pathParts[1]) {
                 try {
                     let assetPath = pathParts.slice(2).join('/');
-                    let asset = this._app.assets.src(pathParts[1]).find('relPath', assetPath);
+                    let asset = this._app.assets.getSrc(pathParts[1]).find('relPath', assetPath);
                     return res.sendFile(asset.path);
                 } catch(e){}
             }

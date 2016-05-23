@@ -46,7 +46,7 @@ module.exports = mixin((superclass) => class Source extends mix(superclass).with
     }
 
     toStream() {
-        return new Stream(this.load().then(() => this.toArray()));
+        return new Stream(this.load().then(() => this.flatten().toArray()));
     }
 
     exists() {

@@ -7,8 +7,8 @@ module.exports = class PromiseStream extends Readable {
 
     constructor(p){
         super({ objectMode: true });
-        this._data = p;
-        this._fulfilledOnInit = p.isFulfilled();
+        this._data = Promise.resolve(p);
+        this._fulfilledOnInit = this._data.isFulfilled();
         if (!this._fulfilledOnInit) {
             this._data.then((items) => {
                 items.forEach(i => this.push(i));
