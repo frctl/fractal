@@ -1,7 +1,7 @@
 'use strict';
 
-const Handlebars   = require('handlebars');
-const defaultsDeep = require('lodash.defaultsdeep');
+const Handlebars = require('handlebars');
+const _          = require('lodash');
 
 module.exports = function(fractal){
 
@@ -25,7 +25,7 @@ module.exports = function(fractal){
         if (!context) {
             context = defaultContext;
         } else if (merge) {
-            context = defaultsDeep(context, defaultContext);
+            context = _.defaultsDeep(context, defaultContext);
         }
         return entity.render(context).then(html => new Handlebars.SafeString(html));
     };
