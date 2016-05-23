@@ -114,14 +114,6 @@ class Fractal extends mix(Configurable, Emitter) {
     _sources() {
         return [this.components, this.docs].concat(this.assets.sources());
     }
-
-    // source(type) {
-    //     if (_.includes(sources, type)) {
-    //         return this[type];
-    //     }
-    //     throw new Error(`Source type ${type} not recognised`);
-    // }
-
 }
 
 function create(config){

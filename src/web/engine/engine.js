@@ -43,6 +43,7 @@ module.exports = class Engine {
         this._globals = {
             components: app.components,
             docs: app.docs,
+            assets: app.assets,
             env: {},
             get: function(path, fallback){
                 return app.get(path, fallback);

@@ -177,8 +177,13 @@ module.exports = class Server extends mix(Emitter) {
             if (pathParts[1]) {
                 try {
                     let assetPath = pathParts.slice(2).join('/');
-                    let asset = this._app.assets.getSrc(pathParts[1]).find('relPath', assetPath);
-                    return res.sendFile(asset.path);
+                    let assetSource = this._app.assets.find(pathParts[1]);
+                    if (assetSource) {
+                        let asset = assetSource.find('relPath', assetPath);
+                        if (asset) {
+                            return res.sendFile(asset.path);
+                        }
+                    }
                 } catch(e){}
             }
             return next(new WebError(404, `No matching route found for ${req.path}`));
