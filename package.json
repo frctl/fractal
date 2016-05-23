@@ -14,7 +14,6 @@
   },
   "homepage": "https://github.com/frctl/fractal",
   "dependencies": {
-    "@allmarkedup/dirscribe": "^1.0.0",
     "@allmarkedup/fang": "^1.0.0",
     "@frctl/handlebars": "^1.0.0-beta.0",
     "@frctl/mandelbrot": "^1.0.0-beta.0",
@@ -28,6 +27,7 @@
     "columnify": "^1.5.4",
     "express": "^4.13.4",
     "fs-extra": "^0.28.0",
+    "globby": "^4.1.0",
     "gray-matter": "^2.0.2",
     "handlebars": "^4.0.5",
     "highlight.js": "^9.2.0",

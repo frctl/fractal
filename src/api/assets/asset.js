@@ -10,20 +10,19 @@ module.exports = class Asset extends File {
         super(file, relativeTo);
         this.isAsset = true;
         this._source = source;
-        this.sourcePath = Path.join(`${source.name}`, this.relPath);
+        this.srcPath = Path.join(`${source.name}`, this.relPath);
     }
 
     toVinyl() {
         const file = super.toVinyl();
-        file.sourcePath = this.sourcePath;
-        file.contents   = this.contents;
+        file.srcPath = this.srcPath;
         return file;
     }
 
     toJSON() {
         const self = super.toJSON();
         self.isAsset = true;
-        self.sourcePath = sourcePath;
+        self.srcPath = this.srcPath;
         return self;
     }
 

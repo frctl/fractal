@@ -29,22 +29,14 @@ module.exports = class AssetSourceCollection extends mix(Configurable, Collectio
         return this.get('title') || this.label;
     }
 
-    src(name, config) {
-        if (arguments.length === 1) {
-            for (let item of this.items()) {
-                if (item.name === name) {
-                    return item;
-                }
-            }
-            throw new Error(`Asset source '${name}' not found`);
-        }
-        if (_.isString(config)) {
-            config = { path: config };
-        }
+    src(path, config) {
+        config = config || {};
         config = _.defaults(config, {
-            filter: '*'
+            match: '*',
+            name: utils.slugify(path),
+            path: path
         });
-        let source = new Source(name, config, this._app);
+        let source = new Source(config.name, config, this._app);
         this._items.add(source);
         return source;
     }
@@ -56,6 +48,17 @@ module.exports = class AssetSourceCollection extends mix(Configurable, Collectio
             }
         }
         return this;
+    }
+
+    getSrc(name) {
+        if (arguments.length === 1) {
+            for (let item of this.items()) {
+                if (item.name === name) {
+                    return item;
+                }
+            }
+            throw new Error(`Asset source '${name}' not found`);
+        }
     }
 
     sources() {

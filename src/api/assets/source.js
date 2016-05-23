@@ -4,10 +4,10 @@ const Promise         = require('bluebird');
 const _               = require('lodash');
 const anymatch        = require('anymatch');
 const Path            = require('path');
-const streamify       = require('stream-array');
 
 const Asset           = require('./asset');
 const AssetCollection = require('./collection');
+const fs              = require('../../core/fs');
 const utils           = require('../../core/utils');
 const Log             = require('../../core/log');
 const mix             = require('../../core/mixins/mix');
@@ -21,15 +21,6 @@ module.exports = class AssetSource extends mix(Source) {
         this.initSource(name, config, app);
         this.config(config);
         this.match = config.match ? [].concat(config.match) : ['*','**/*'];
-        this._fileFilter = filePath => {
-            if (!Path.parse(filePath).ext) {
-                return true;
-            }
-            if ((/(^|\/)\.[^\/\.]/g).test(filePath)) {
-                return false;
-            }
-            return anymatch(this.match, filePath);
-        };
     }
 
     assets() {
@@ -41,13 +32,7 @@ module.exports = class AssetSource extends mix(Source) {
     }
 
     toVinylStream() {
-        let items = [];
-        if (this.isLoaded) {
-            items = Promise.resolve(this.toVinylArray());
-        } else {
-            items = this.load().then(() => this.toVinylArray());
-        }
-        return new Stream(items);
+        return new Stream(this.load().then(() => this.toVinylArray()));
     }
 
     gulpify() {
@@ -65,6 +50,10 @@ module.exports = class AssetSource extends mix(Source) {
         self.isSource     = true;
         self.items = this.toArray().map(i => (i.toJSON ? i.toJSON() : i));
         return self;
+    }
+
+    _getTree() {
+        return fs.globDescribe(this.get('path'), this.match);
     }
 
     _appendEventFileInfo(file, eventData) {

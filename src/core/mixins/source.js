@@ -25,7 +25,6 @@ module.exports = mixin((superclass) => class Source extends mix(superclass).with
         this._loading     = false;
         this._monitor     = null;
         this._fileTree    = null;
-        this._fileFilter  = null;
     }
 
     initSource(name, config, app) {
@@ -45,16 +44,9 @@ module.exports = mixin((superclass) => class Source extends mix(superclass).with
         return this;
     }
 
-    // toStream() {
-    //     const stream = super.toStream();
-    //     if (! this.isLoaded ) {
-    //         this.load().then(() => {
-    //             this.each(item => stream.push(item));
-    //         });
-    //         return stream;
-    //     }
-    //     return stream;
-    // }
+    toStream() {
+        return new Stream(this.load().then(() => this.toArray()));
+    }
 
     exists() {
         return this.get('path') && utils.fileExistsSync(this.get('path'));
@@ -147,7 +139,7 @@ module.exports = mixin((superclass) => class Source extends mix(superclass).with
         if (!this.get('path')) {
             return Promise.resolve(this);
         }
-        this._loading = fs.describe(this.get('path'), this._fileFilter).then(fileTree => {
+        this._loading = this._getTree().then(fileTree => {
             this._fileTree = fileTree;
             this._loading  = false;
             return this._parse(fileTree);
@@ -158,6 +150,10 @@ module.exports = mixin((superclass) => class Source extends mix(superclass).with
             }
         });
         return this._loading;
+    }
+
+    _getTree() {
+        return fs.describe(this.get('path'));
     }
 
     _parse() {

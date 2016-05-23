@@ -2,7 +2,6 @@
 
 const _                = require('lodash');
 const FileCollection   = require('../files/collection');
-const streamify        = require('stream-array');
 
 module.exports = class AssetCollection extends FileCollection {
 

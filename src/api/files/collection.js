@@ -38,19 +38,13 @@ module.exports = class FileCollection extends mix(Collection) {
         return ret;
     }
 
-    toVinylArray() {
-        return this.filter('isAsset').flatten().map(asset => asset.toVinyl()).toArray();
-    }
-
-    toVinylStream() {
-        let items = [];
-        if (this.isLoaded) {
-            items = Promise.resolve(this.toVinylArray());
-        } else {
-            items = this.load().then(() => this.toVinylArray());
-        }
-        return new Stream(items);
-    }
+    // toVinylArray() {
+    //     return this.filter('isAsset').flatten().map(asset => asset.toVinyl()).toArray();
+    // }
+    //
+    // toVinylStream() {
+    //     return new Stream(this.load().then(() => this.toVinylArray()));
+    // }
 
     gulpify() {
         return this.toVinylStream();

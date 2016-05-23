@@ -16,6 +16,7 @@ module.exports = class File {
         this.cwd         = relativeTo ? relativeTo : process.cwd();
         this.relPath     = relativeTo ? Path.relative(Path.resolve(relativeTo), file.path) : file.path;
         this.base        = file.base;
+        this.dir        = file.dir;
         this.handle      = utils.slugify(file.base.replace('.', '-'));
         this.name        = file.name;
         this.ext         = file.ext;
@@ -25,16 +26,11 @@ module.exports = class File {
         this.editorScope = file.lang.scope;
         this.githubColor = file.lang.color;
         this.isBinary    = file.isBinary;
-        // this.contents    = null;
     }
 
     get contents() {
         return this._file.readBuffer();
     }
-
-    // set contents(contents) {
-    //     this.contents = contents;
-    // }
 
     getContent() {
         return this._file.read().then(c => c.toString());
@@ -45,9 +41,11 @@ module.exports = class File {
     }
 
     toVinyl() {
-        const self = new VinylFile(this);
-        self.contents = this.contents;
-        return self;
+        return new VinylFile({
+            path: this.path,
+            contents: this.contents,
+            base: this.cwd
+        });
     }
 
     toJSON() {
