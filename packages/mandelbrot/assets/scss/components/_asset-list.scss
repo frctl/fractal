@@ -1,0 +1,43 @@
+.AssetList {
+    list-style: none;
+    max-width: 900px;
+    margin-top: 40px;
+}
+
+.AssetList-asset {
+    list-style: none;
+    width: 100%;
+}
+
+.AssetList-name {
+    color: rgba($color-text, 0.5);
+    strong {
+        color: $color-link;
+        font-weight: normal;
+    }
+}
+
+.AssetList-link {
+    text-decoration: none;
+    width: 100%;
+    display: flex;
+    padding: 7px 0;
+    align-items: center;
+    &:hover {
+        .AssetList-path {
+            color: rgba($color-text, 0.8);
+        }
+        .AssetList-icon {
+            svg {
+                fill: #999;
+            }
+        }
+    }
+}
+
+.AssetList-icon {
+    @include margin-inline(end, 8px);
+    svg {
+        fill: #ccc;
+    }
+}

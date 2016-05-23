@@ -56,8 +56,9 @@
 
 .Pen-previewLink {
     @include link-default($color-heading, none);
-
+    
     svg {
+        @include margin-inline(start, 5px);
         fill: $color-link;
     }
 

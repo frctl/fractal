@@ -1,0 +1,16 @@
+{% if frctl.assets.visible().length %}
+<div class="Navigation-group">
+    <div class="Tree" data-behaviour="tree" id="tree-{{ root.name }}">
+        <h3 class="Tree-title">{{ frctl.get('assets.label') }}</h3>
+        <ul class="Tree-items Tree-depth-1">
+            {% for item in frctl.assets.visible() %}
+            <li class="Tree-item Tree-entity{% if isCurrent %} is-current{% endif %}"{% if isCurrent %} data-state="current"{% endif %} data-role="item">
+                <a class="Tree-entityLink" href="{{ path( (item | url), request) }}" data-pjax>
+                    <span>{{ item.label }}</span>
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endif %}

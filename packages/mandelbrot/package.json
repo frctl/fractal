@@ -35,12 +35,13 @@
     "jquery": "^2.2.1",
     "jquery-pjax": "git+https://github.com/defunkt/jquery-pjax.git",
     "jquery-resizable-dom": "^0.16.0",
+    "material-design-icons": "^2.2.3",
     "normalize.css": "^4.1.1",
     "sass-mq": "^3.2.6",
     "stylelint-config-standard": "^7.0.0",
-    "watchify": "^3.7.0",
     "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0"
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.7.0"
   },
   "dependencies": {
     "lodash": "^4.12.0",

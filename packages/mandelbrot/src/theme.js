@@ -36,6 +36,17 @@ module.exports = function(options){
         redirect: '/'
     });
 
+    theme.addRoute('/assets', {
+        redirect: '/'
+    });
+
+    theme.addRoute('/assets/:name', {
+        handle: 'asset-source',
+        view: 'pages/assets.nunj'
+    }, function(app){
+        return app.assets.visible().map(asset => ({name: asset.name}));
+    });
+
     theme.addRoute('/components/preview/:handle', {
         handle: 'preview',
         view: 'pages/components/preview.nunj'
