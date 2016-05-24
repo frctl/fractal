@@ -13,13 +13,15 @@ module.exports = class Builder extends mix(Emitter) {
 
     constructor(theme, engine, config, app) {
         super(app);
-        this._app      = app;
-        this._engine      = engine;
-        this._config   = config;
-        this._theme    = theme;
-        this._targets  = [];
-        this._throttle = require('throat')(Promise)(config.concurrency || 100);
-        this._errorCount = 0;
+        this._app           = app;
+        this._engine        = engine;
+        this._config        = config;
+        this._theme         = theme;
+        this._targets       = [];
+        this._throttle      = require('throat')(Promise)(config.concurrency || 100);
+        this._errorCount    = 0;
+        this._jobsCount     = 0;
+        this._progressCount = 0;
     }
 
     build() {
@@ -49,7 +51,11 @@ module.exports = class Builder extends mix(Emitter) {
 
                 let copyStatic = this._theme.static().map(p => this._copyStatic(p.path, Path.join('/', this._app.get('web.static'), p.mount)));
 
-                return Promise.all(copyStatic.concat(this._buildTargets()));
+                let copyAssets = this._copyAssets();
+
+                let buildTargets = this._buildTargets();
+
+                return Promise.all(copyStatic.concat(copyAssets, buildTargets));
 
             }).then(() => {
                 let stats = {
@@ -62,6 +68,8 @@ module.exports = class Builder extends mix(Emitter) {
                 throw e;
             }).finally(() => {
                 this._errorCount = 0;
+                this._jobsCount = 0;
+                this._progressCount = 0;
             });
         });
     }
@@ -70,16 +78,48 @@ module.exports = class Builder extends mix(Emitter) {
         return this._targets;
     }
 
+    _copyAssets() {
+        let jobs = [];
+        this._app.assets.sources().forEach(source => {
+            if (!source.build) {
+                return;
+            }
+            source.flatten().assets().forEach(asset => {
+                this._jobsCount++;
+                let dest = Path.join('/', this._app.get('web.static'), asset.srcPath);
+                dest = _.trimEnd(Path.join(this._config.dest, dest), '/');
+                let job = fs.copyAsync(asset.path, dest, {
+                    clobber: true
+                }).then(() => {
+                    this._updateProgress();
+                }).catch(e => {
+                    Log.debug(`Error copying static asset '${source}' ==> '${dest}'`);
+                    this._errorCount++;
+                });
+                jobs.push(job);
+            });
+        });
+        return jobs;
+    }
+
     _copyStatic(source, dest) {
         dest = _.trimEnd(Path.join(this._config.dest, dest), '/');
         source = Path.resolve(source);
+        this._jobsCount++;
         return fs.copyAsync(source, dest, {
             clobber: true
         }).then(() => {
+            this._updateProgress();
             Log.debug(`Copied static asset directory '${source}' ==> '${dest}'`);
         }).catch(e => {
+            Log.debug(`Error copying static asset directory '${source}' ==> '${dest}'`);
             this._errorCount++;
         });
+    }
+
+    _updateProgress() {
+        this._progressCount++;
+        this.emit('progress', this._progressCount, this._jobsCount);
     }
 
     addRoute(name, params) {
@@ -116,6 +156,7 @@ module.exports = class Builder extends mix(Emitter) {
         return this._targets.map(target => {
             const savePath = Path.join(this._config.dest, target.url) + (target.url == '/' ? 'index.html' : '.html');
             const pathInfo = Path.parse(savePath);
+            this._jobsCount++;
             return this._throttle(() => {
 
                 return fs.ensureDirAsync(pathInfo.dir).then(() => {
@@ -140,6 +181,8 @@ module.exports = class Builder extends mix(Emitter) {
                         this.emit('error', err);
                     });
 
+                }).then(() => {
+                    this._updateProgress();
                 });
 
             });

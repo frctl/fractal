@@ -24,7 +24,7 @@ module.exports = class Web extends mix(Configurable, Emitter) {
         let opts = _.defaultsDeep(config, this.get('server'));
         const theme  = this._loadTheme(opts.theme);
         const engine = new Engine(theme.loadPaths(), 'server', this._app);
-        theme.emit('init', engine,  this._app);
+        theme.emit('init', engine, this._app);
         engine.setGlobal('theme', theme);
         return new Server(theme, engine, opts, this._app);
     }
@@ -33,7 +33,7 @@ module.exports = class Web extends mix(Configurable, Emitter) {
         let opts = _.defaultsDeep(config, this.get('builder'));
         const theme = this._loadTheme(opts.theme);
         const engine = new Engine(theme.loadPaths(), 'builder', this._app);
-        theme.emit('init', engine,  this._app);
+        theme.emit('init', engine, this._app);
         engine.setGlobal('theme', theme);
         return new Builder(theme, engine, opts, this._app);
     }

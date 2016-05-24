@@ -18,8 +18,9 @@ module.exports = class AssetSource extends mix(Source) {
 
     constructor(name, config, app){
         super();
-        this.isHidden = config.hidden || false;
+        this.isHidden      = config.hidden || false;
         this.isAssetSource = true;
+        this.build         = true;
         this.initSource(name, config, app);
         this.config(config);
         this.match = config.match ? [].concat(config.match) : ['**/*'];
@@ -49,6 +50,7 @@ module.exports = class AssetSource extends mix(Source) {
         self.path         = this.get('path');
         self.isLoaded     = this.isLoaded;
         self.isHidden     = this.isHidden;
+        self.build         = this.build;
         self.isCollection = true;
         self.isSource     = true;
         self.isAssetSource = true;
