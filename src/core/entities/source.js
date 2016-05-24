@@ -16,9 +16,7 @@ module.exports = class EntitySource extends mix(Source, Heritable) {
 
     constructor(name, app){
         super();
-
-        this._engine        = null;
-
+        this._engine = null;
         this.initSource(name, app.get(this.name), app);
         this.config(app.get(this.name));
         this.setHeritable(_.keys(this.get('default')));

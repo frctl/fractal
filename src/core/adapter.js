@@ -15,7 +15,7 @@ module.exports = class Adapter extends mix(Emitter) {
         this._views  = [];
         this._hasLoaded = false;
         source.on('loaded', () => this._onSourceChange());
-        source.on('changed', eventData => this._onSourceChange(eventData));
+        source.on('updated', eventData => this._onSourceChange(eventData));
     }
 
     get engine() {
@@ -30,6 +30,11 @@ module.exports = class Adapter extends mix(Emitter) {
         if (!this._hasLoaded) {
             this._loadViews();
         }
+    }
+
+    getView(handle) {
+        handle = handle.replace(/^@/, '');
+        return _.find(this._views, view => (view.handle.replace(/^@/, '')  === handle));
     }
 
     _loadViews() {
