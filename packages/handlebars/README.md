@@ -12,7 +12,7 @@ const config = {
 };
 const hbs = require('@frctl/handlebars')(config);
 
-fractal.engine(hbs); /* set as the default template engine */
+fractal.components.engine(hbs); /* set as the default template engine for components */
 
 ```
 
