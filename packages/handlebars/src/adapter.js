@@ -2,68 +2,35 @@
 
 const _           = require('lodash');
 const promisedHbs = require('promised-handlebars');
-const Path        = require('path');
 const Handlebars  = require('handlebars');
+const Adapter     = require('@frctl/fractal').Adapter;
 
+class HandlebarsAdapter extends Adapter {
 
-module.exports = function(config){
-
-    config               = config || {};
-    let hbs              = promisedHbs(Handlebars);
-    let partials         = [];
-
-    function registerPartial(path, handle, content) {
-        handle = `@${handle}`;
-        partials.push({
-            path: path,
-            handle: handle,
-            content: content
-        });
-        hbs.registerPartial(handle, content);
+    constructor() {
+        super(...arguments);
+        this.on('view:added',   view => this.engine.registerPartial(view.handle, view.content));
+        this.on('view:removed', view => this.engine.unregisterPartial(view.handle));
+        this.on('view:updated', view => this.engine.registerPartial(view.handle, view.content));
     }
+
+    render(path, str, context, meta) {
+        const template = this.engine.compile(str);
+        return this._resolve(template(context));
+    }
+
+}
+
+module.exports = function(config) {
+
+    config = config || {};
 
     return {
 
-        get engine(){
-            return hbs;
-        },
-
         register(source, app) {
 
-            function loadViews(changeData) {
-                if (changeData && changeData.isTemplate) {
-                    let touched = _.filter(partials, ['path', Path.resolve(changeData.path)]);
-                    if (changeData.event === 'change') {
-                        touched.forEach(p => {
-                            let entity = source.find(p.handle);
-                            if (entity) {
-                                registerPartial(entity.viewPath, entity.alias, entity.content);
-                            }
-                        });
-                        return;
-                    } else if (changeData.event === 'unlink') {
-                        touched.forEach(p => {
-                            let entity = source.find(p.handle);
-                            if (entity) {
-                                registerPartial(entity.viewPath, entity.alias, entity.content);
-                            }
-                        });
-                        partials = _.differenceBy(partials, touched, 'path');
-                        return;
-                    }
-                    // add - just run though the full rebuild process.
-                    changeData = null;
-                }
-
-                if (!changeData) {
-                    for (let item of source.flattenDeep()) {
-                        registerPartial(item.viewPath, item.handle, item.content);
-                        if (item.alias) {
-                            registerPartial(item.viewPath, item.alias, item.content);
-                        }
-                    }
-                }
-            }
+            const hbs = promisedHbs(Handlebars);
+            const adapter = new HandlebarsAdapter(hbs, source);
 
             if (!config.pristine) {
                 _.each(require('./helpers')(app) || {}, function(helper, name){
@@ -81,16 +48,8 @@ module.exports = function(config){
                 hbs.registerPartial(name, partial);
             });
 
-            source.on('loaded', data => loadViews());
-            source.on('changed', data => loadViews(data));
-
-            loadViews();
-        },
-
-        render(path, str, context, meta) {
-            const template = hbs.compile(str);
-            return template(context);
+            return adapter;
         }
-
     }
+
 };
