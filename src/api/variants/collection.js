@@ -50,6 +50,13 @@ module.exports = class VariantCollection extends EntityCollection {
         return Promise.props(collated);
     }
 
+    get references() {
+        if (this._hasSharedView()) {
+            return this.default().references;
+        }
+        return _.uniq(_.flatten(this.toArray().map(variant => variant.references)));
+    }
+
     _hasSharedView() {
         let view = this.default().view;
         for (let v of this.toArray()) {

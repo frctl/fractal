@@ -43,6 +43,13 @@ module.exports = class Variant extends Entity {
         return this.getContentSync();
     }
 
+    get references() {
+        let matcher = /\@[0-9a-zA-Z\-\_]*/g;
+        let content = this.content;
+        let referenced = content.match(matcher) || [];
+        return _.uniq(_.compact(referenced.map(handle => this.source.find(handle))));
+    }
+
     render(context, preview) {
         return this.source.render(this, context, {
             preview: preview

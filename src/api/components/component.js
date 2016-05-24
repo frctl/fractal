@@ -33,6 +33,10 @@ module.exports = class Component extends Entity {
         return this.variants().default().getContentSync();
     }
 
+    get references() {
+        return this.variants().default().references;
+    }
+
     render(context, preview, collate) {
         return this.source.render(this, context, {
             preview: preview,
