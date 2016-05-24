@@ -24,6 +24,7 @@ class Fractal extends mix(Configurable, Emitter) {
         this._components = null;
         this._docs       = null;
         this._assets     = null;
+        this._engine     = null;
 
         if (!this.debug) {
             process.on('uncaughtException', function (err) {
@@ -99,18 +100,6 @@ class Fractal extends mix(Configurable, Emitter) {
         return Promise.all(this._sources().map(s => s.load()));
     }
 
-    engine() {
-        const entitySources = ['components', 'docs'];
-        if (!arguments.length) {
-            const ret = {};
-            entitySources.forEach(s => (ret[s] = this[s].engine()));
-            return ret;
-        } else {
-            entitySources.forEach(s => this[s].engine(...arguments));
-        }
-        return this;
-    }
-
     _sources() {
         return [this.components, this.docs].concat(this.assets.sources());
     }
@@ -126,4 +115,5 @@ module.exports.create   = create;
 module.exports.Fractal  = Fractal;
 module.exports.WebTheme = require('./web/theme');
 module.exports.CliTheme = require('./cli/theme');
+module.exports.Adapter  = require('./core/adapter');
 module.exports.utils    = require('./core/utils');

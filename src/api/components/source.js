@@ -140,7 +140,7 @@ module.exports = class ComponentSource extends EntitySource {
                 }
                 if (opts.preview && entity.preview) {
                     let target = entity.toJSON();
-                    target.component = entity.parent.toJSON();
+                    target.component = target.isVariant ? entity.parent.toJSON() : target;
                     let layout = _.isString(opts.preview) ? opts.preview : entity.preview;
                     return yield self._wrapInLayout(rendered, layout, {
                         _target: target
@@ -158,7 +158,6 @@ module.exports = class ComponentSource extends EntitySource {
         const content = yield variant.getContent();
         const ctx     = yield this.resolve(context);
         ctx._self     = variant.toJSON();
-        ctx._self.component = variant.parent.toJSON();
         return this.engine().render(variant.viewPath, content, ctx);
     }
 
@@ -166,8 +165,6 @@ module.exports = class ComponentSource extends EntitySource {
         context = context || {};
         return (yield component.variants().filter('isHidden', false).toArray().map(variant => {
             let ctx = context[`@${variant.handle}`] || variant.context;
-            ctx._self = variant.toJSON();
-            ctx._self.component = variant.parent.toJSON();
             return this.render(variant, ctx).then(markup => {
                 const collator = component.collator;
                 return _.isFunction(collator) ? collator(markup, variant) : markup;

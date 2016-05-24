@@ -9,8 +9,8 @@ module.exports = {
         title: 'My Component Library',
         version: null,
     },
-    engine: '@frctl/handlebars',
     components: {
+        engine: '@frctl/handlebars',
         path: null,
         label: 'components',
         title: 'Components',
@@ -46,6 +46,7 @@ module.exports = {
         }
     },
     docs: {
+        engine: '@frctl/handlebars',
         path: null,
         label: 'documentation',
         title: 'Documentation',

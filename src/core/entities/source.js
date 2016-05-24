@@ -7,6 +7,7 @@ const anymatch     = require('anymatch');
 const utils        = require('../utils');
 const Log          = require('../log');
 const Data         = require('../data');
+const Adapter      = require('../adapter');
 const mix          = require('../mixins/mix');
 const Source       = require('../mixins/source');
 const Heritable    = require('../mixins/heritable');
@@ -17,7 +18,6 @@ module.exports = class EntitySource extends mix(Source, Heritable) {
         super();
 
         this._engine        = null;
-        this._defaultEngine = app.get('engine');
 
         this.initSource(name, app.get(this.name), app);
         this.config(app.get(this.name));
@@ -33,23 +33,29 @@ module.exports = class EntitySource extends mix(Source, Heritable) {
         return this.newSelf(this.toArray().filter(i => ! i.isCollection));
     }
 
-    engine(engine, config) {
+    engine(adapter) {
         if (!arguments.length) {
             if (this._engine === null) {
-                this.engine(this._defaultEngine); // load the default template engine
+                return this.engine(this.get('engine')); // load the default template engine
             }
             return this._engine;
         }
-        if (_.isString(engine)) {
-            engine = require(engine);
+        if (_.isString(adapter)) {
+            adapter = require(adapter);
         }
-        if (_.isFunction(engine)) {
-            engine = engine(config || {});
+        if (_.isFunction(adapter)) {
+            adapter = adapter({});
         }
-        if (_.isFunction(engine.register)) {
-            engine.register(this, this._app);
+        if (!_.isFunction(adapter.register)) {
+            throw new Error(`Template engine adaptor factory functions must return an object with a 'register' method.`);
+        }
+        let engine = adapter.register(this, this._app);
+        if (!(engine instanceof Adapter)) {
+            throw new Error(`Template engine adapters must extend the base Adapter class.`);
         }
         this._engine = engine;
+        engine.load();
+        return engine;
     }
 
     getProp(key) {

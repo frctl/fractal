@@ -77,7 +77,7 @@ module.exports = {
         const format = utils.lang(filePath, true).mode;
         return fs.writeFileAsync(filePath, this.stringify(data, format));
     },
-    
+
 };
 
 //     return module.exports;
