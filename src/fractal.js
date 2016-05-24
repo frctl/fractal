@@ -103,6 +103,10 @@ class Fractal extends mix(Configurable, Emitter) {
     _sources() {
         return [this.components, this.docs].concat(this.assets.sources());
     }
+
+    get __fractal() {
+        return this.version;
+    }
 }
 
 function create(config){
