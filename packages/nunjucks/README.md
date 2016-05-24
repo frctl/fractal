@@ -11,8 +11,8 @@ npm i @frctl/nunjucks --save
 ## Usage
 
 ```javascript
-fractal.engine('@frctl/nunjucks'); // register the Nunjucks adapter
-fractal.set('components.ext', '.nunj'); // look for files with a .nunj file extension
+fractal.components.engine('@frctl/nunjucks'); // register the Nunjucks adapter for your components
+fractal.components.set('ext', '.nunj'); // look for files with a .nunj file extension
 ```
 
 ## Customisation
@@ -33,7 +33,7 @@ const nunj = require('@frctl/nunjucks')({
     }
 });
 
-fractal.engine(nunj); /* set as the default template engine */
+fractal.components.engine(nunj); /* set as the default template engine for components */
 ```
 
 For example, to register the 'shorten' filter example from the [Nujucks docs](https://mozilla.github.io/nunjucks/api.html#custom-filters):
