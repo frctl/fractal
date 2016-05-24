@@ -14,9 +14,10 @@ const Emitter     = require('../core/mixins/emitter');
 
 module.exports = class Server extends mix(Emitter) {
 
-    constructor(theme, config, app){
+    constructor(theme, engine, config, app){
         super(app);
         this._app         = app;
+        this._engine      = engine;
         this._config      = config;
         this._theme       = theme;
         this._server      = express();
@@ -189,7 +190,7 @@ module.exports = class Server extends mix(Emitter) {
             return next(new WebError(404, `No matching route found for ${req.path}`));
         }
 
-        this._theme.engine.setGlobal('env', {
+        this._engine.setGlobal('env', {
             server:   true,
             address:  this._urls.server,
             port:     this._ports.server,
@@ -218,7 +219,7 @@ module.exports = class Server extends mix(Emitter) {
         let context = match.route.context || {};
         context.request = _.clone(res.locals.__request);
 
-        this._theme.render(match.route.view, context)
+        this._engine.render(match.route.view, context)
               .then(v => res.send(v).end())
               .catch(err => next(err));
     }
@@ -233,9 +234,9 @@ module.exports = class Server extends mix(Emitter) {
             res.status(err.status);
         }
 
-        this._theme.renderError(err)
-              .then(v => res.send(v).end())
-              .catch(err => next(err));
+        this._engine.render(this._theme.errorView(), { error: err })
+            .then(v => res.send(v).end())
+            .catch(err => next(err));
 
         this.emit('error', err, res.locals.__request);
     }

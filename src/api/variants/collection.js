@@ -23,13 +23,12 @@ module.exports = class VariantCollection extends EntityCollection {
         if (this._hasSharedView()) {
             return this.default().getContent();
         }
-        return Promise.resolve('');
-        // return Promise.all(this.toArray().map(variant => {
-        //     return variant.getContent().then(content => {
-        //         const collator = this.parent.collator;
-        //         return _.isFunction(collator) ? collator(content, variant) : content;
-        //     });
-        // })).then(contents => contents.join('\n'));
+        return Promise.all(this.toArray().map(variant => {
+            return variant.getContent().then(content => {
+                const collator = this.parent.collator;
+                return _.isFunction(collator) ? collator(content, variant) : content;
+            });
+        })).then(contents => contents.join('\n'));
     }
 
     getCollatedContentSync() {
@@ -45,11 +44,10 @@ module.exports = class VariantCollection extends EntityCollection {
 
     getCollatedContext() {
         let collated = {};
-        return Promise.resolve({});
-        // this.toArray().forEach(variant => {
-        //     collated[`@${variant.handle}`] = variant.getResolvedContext();
-        // });
-        // return Promise.props(collated);
+        this.toArray().forEach(variant => {
+            collated[`@${variant.handle}`] = variant.getResolvedContext();
+        });
+        return Promise.props(collated);
     }
 
     _hasSharedView() {

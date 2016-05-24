@@ -25,46 +25,15 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
         this._routes      = new Map();
         this._builder     = null;
         this._views       = [];
-        this._app         = null;
 
         this._filters     = [];
         this._extensions  = [];
         this._globals     = {};
-        this._engine      = null;
 
         this._errorView = {};
 
         this.addLoadPath(viewPaths);
         this.setErrorView('__system/error.nunj');
-    }
-
-    init(engine, app) {
-        engine.setGlobal('theme', this);
-        engine.theme = this;
-        this._app    = app;
-        this._engine = engine;
-        this.emit('init', engine, app);
-    }
-
-    render(){
-        return this.engine.render(...arguments);
-    }
-
-    renderString(){
-        return this.engine.renderString(...arguments);
-    }
-
-    renderError(err) {
-        return this.render(this.errorView(), {
-            error: err
-        });
-    }
-
-    get engine(){
-        if (!this._engine) {
-            throw new Error('Theme engine instance cannot be accessed before initialisation.');
-        }
-        return this._engine;
     }
 
     addLoadPath(path) {

@@ -22,14 +22,20 @@ module.exports = class Web extends mix(Configurable, Emitter) {
 
     server(config) {
         let opts = _.defaultsDeep(config, this.get('server'));
-        const theme  = this._loadTheme(opts.theme, 'server');
-        return new Server(theme, opts, this._app);
+        const theme  = this._loadTheme(opts.theme);
+        const engine = new Engine(theme.loadPaths(), 'server', this._app);
+        theme.emit('init', engine,  this._app);
+        engine.setGlobal('theme', theme);
+        return new Server(theme, engine, opts, this._app);
     }
 
     builder(config) {
         let opts = _.defaultsDeep(config, this.get('builder'));
-        const theme = this._loadTheme(opts.theme, 'builder');
-        return new Builder(theme, opts, this._app);
+        const theme = this._loadTheme(opts.theme);
+        const engine = new Engine(theme.loadPaths(), 'builder', this._app);
+        theme.emit('init', engine,  this._app);
+        engine.setGlobal('theme', theme);
+        return new Builder(theme, engine, opts, this._app);
     }
 
     theme(name, instance) {
@@ -54,7 +60,7 @@ module.exports = class Web extends mix(Configurable, Emitter) {
         const theme = this._loadTheme(opts.theme);
     }
 
-    _loadTheme(theme, env){
+    _loadTheme(theme){
         if (!theme) {
             theme = this.defaultTheme();
         }
@@ -74,7 +80,7 @@ module.exports = class Web extends mix(Configurable, Emitter) {
         //         theme.static(s.path, s.mount || '/');
         //     }
         // }
-        theme.init(new Engine(theme.loadPaths(), env, this._app), this._app);
+        // theme.init(new Engine(theme.loadPaths(), env, this._app), this._app);
         return theme;
     }
 }

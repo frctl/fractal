@@ -22,6 +22,10 @@ module.exports = class Adapter extends mix(Emitter) {
         return this._engine;
     }
 
+    get views() {
+        return this._views;
+    }
+
     load() {
         if (!this._hasLoaded) {
             this._loadViews();

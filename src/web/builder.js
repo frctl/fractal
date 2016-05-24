@@ -11,9 +11,10 @@ const Emitter = require('../core/mixins/emitter');
 
 module.exports = class Builder extends mix(Emitter) {
 
-    constructor(theme, config, app) {
+    constructor(theme, engine, config, app) {
         super(app);
         this._app      = app;
+        this._engine      = engine;
         this._config   = config;
         this._theme    = theme;
         this._targets  = [];
@@ -24,14 +25,14 @@ module.exports = class Builder extends mix(Emitter) {
     build() {
 
         return this._app.load().then(() => {
-            
+
             try {
                 this._validate();
             } catch (e) {
                 return Promise.reject(e);
             }
 
-            this._theme.engine.setGlobal('env', {
+            this._engine.setGlobal('env', {
                 builder: {}
             });
 
@@ -129,12 +130,12 @@ module.exports = class Builder extends mix(Emitter) {
                     let context = target.route.context || {};
                     context.request = this._fakeRequest(target);
 
-                    return this._theme.render(target.route.view, context).then(html => write(html)).catch(err => {
+                    return this._engine.render(target.route.view, context).then(html => write(html)).catch(err => {
 
                         this._errorCount++;
                         this.emit('error', new Error(`Failed to export url ${target.url} - ${err.message}`));
 
-                        return this._theme.renderError(err).then(html => write(html));
+                        return this._engine.render(this._theme.errorView(), { error: err }).then(html => write(html));
                     }).catch(err => {
                         this.emit('error', err);
                     });
@@ -150,7 +151,7 @@ module.exports = class Builder extends mix(Emitter) {
             throw new Error('You need to specify a build destination in your configuration.');
         }
         for (let stat of this._theme.static()) {
-            if (stat.path == this._theme.dest) {
+            if (stat.path == this._config.dest) {
                 throw new Error(`Your build destination directory (${Path.resolve(stat.path)}) cannot be the same as any of your static assets directories.`);
             }
         }
