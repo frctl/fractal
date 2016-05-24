@@ -34,7 +34,7 @@ module.exports = mixin((superclass) => class Entity extends superclass {
         this.handle   = this._handle(config);
         this.label    = config.label || this._label(config);
         this.title    = config.title || this._title(config);
-        this.order    = parseInt(config.order, 10) || 10000;
+        this.order    = _.isNaN(parseInt(config.order, 10)) ? 10000 : parseInt(config.order, 10);
         this.isHidden = config.isHidden || config.hidden || false;
         this.id       = this._id(config);
     }
