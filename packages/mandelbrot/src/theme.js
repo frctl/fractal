@@ -73,7 +73,7 @@ module.exports = function(options){
         require('./filters')(theme, env, app);
     });
 
-    function getHandles() {
+    function getHandles(app) {
         const handles = [];
          app.components.filter('isHidden', false).flatten().each(comp => {
             handles.push(comp.handle);
