@@ -50,30 +50,17 @@ module.exports = function(options){
     theme.addRoute('/components/preview/:handle', {
         handle: 'preview',
         view: 'pages/components/preview.nunj'
-    }, function(app){
-        const handles = [];
-        app.components.filter('isHidden', false).flatten().each(comp => {
-            handles.push(comp.handle);
-            if (comp.variants().size > 1) {
-                comp.variants().each(variant => handles.push(variant.handle));
-            }
-        });
-        return handles.map(h => ({handle: h}));
-    });
+    }, getHandles);
+
+    theme.addRoute('/components/render/:handle', {
+        handle: 'render',
+        view: 'pages/components/render.nunj'
+    }, getHandles);
 
     theme.addRoute('/components/detail/:handle', {
         handle: 'component',
         view: 'pages/components/detail.nunj'
-    }, function(app){
-        const handles = [];
-        app.components.filter('isHidden', false).flatten().each(comp => {
-            handles.push(comp.handle);
-            if (!comp.isCollated) {
-                comp.variants().each(variant => handles.push(variant.handle));
-            }
-        });
-        return handles.map(h => ({handle: h}));
-    });
+    }, getHandles);
 
     theme.addRoute('/docs/:path([^\?]+?)', {
         handle: 'page',
@@ -85,6 +72,17 @@ module.exports = function(options){
     theme.on('init', function(env, app){
         require('./filters')(theme, env, app);
     });
+
+    function getHandles() {
+        const handles = [];
+         app.components.filter('isHidden', false).flatten().each(comp => {
+            handles.push(comp.handle);
+            if (comp.variants().size > 1) {
+                comp.variants().each(variant => handles.push(variant.handle));
+            }
+        });
+        return handles.map(h => ({handle: h}));
+    }
 
     return theme;
 };
