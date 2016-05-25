@@ -79,7 +79,7 @@ module.exports = {
             mount: '/',
         },
         assets: {
-            mount: '_assets'
+            mount: 'assets'
         }
     }
 };

@@ -173,23 +173,6 @@ module.exports = class Server extends mix(Emitter) {
 
     _onRequest(req, res, next) {
 
-        let pathParts = res.locals.__request.segments;
-        if (pathParts.length && pathParts[0] === this._app.get('web.assets.mount')) {
-            if (pathParts[1]) {
-                try {
-                    let assetPath = pathParts.slice(2).join('/');
-                    let assetSource = this._app.assets.find(pathParts[1]);
-                    if (assetSource) {
-                        let asset = assetSource.find('relPath', assetPath);
-                        if (asset) {
-                            return res.sendFile(asset.path);
-                        }
-                    }
-                } catch(e){}
-            }
-            return next(new WebError(404, `No matching route found for ${req.path}`));
-        }
-
         this._engine.setGlobal('env', {
             server:   true,
             address:  this._urls.server,
@@ -206,6 +189,23 @@ module.exports = class Server extends mix(Emitter) {
         if (!match) {
             res.locals.__request.params = {};
             this.emit('request', res.locals.__request);
+
+            let pathParts = res.locals.__request.segments;
+            if (pathParts.length && pathParts[0] === this._app.get('web.assets.mount')) {
+                if (pathParts[1]) {
+                    try {
+                        let assetPath = pathParts.slice(2).join('/');
+                        let assetSource = this._app.assets.find(pathParts[1]);
+                        if (assetSource) {
+                            let asset = assetSource.find('relPath', assetPath);
+                            if (asset) {
+                                return res.sendFile(asset.path);
+                            }
+                        }
+                    } catch(e){}
+                }
+            }
+
             return next(new WebError(404, `No matching route found for ${req.path}`));
         }
         if (match.route.redirect) {
