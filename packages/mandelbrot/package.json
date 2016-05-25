@@ -1,6 +1,6 @@
 {
   "name": "@frctl/mandelbrot",
-  "version": "1.0.0-beta.2",
+  "version": "1.0.0-beta.3",
   "description": "The default theme for Fractal.",
   "main": "index.js",
   "repository": {
