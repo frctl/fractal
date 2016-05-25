@@ -43,7 +43,7 @@ class NunjucksAdapter extends Adapter {
          */
 
         if (loadPaths) {
-            nj.loaders.push(new nunjucks.FileSystemLoader(loadPaths, {
+            loaders.push(new nunjucks.FileSystemLoader(loadPaths, {
                 watch: true
             }));
         }
