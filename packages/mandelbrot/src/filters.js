@@ -18,7 +18,7 @@ module.exports = function(theme, env, app){
         } else if (item.isAssetSource) {
             return theme.urlFromRoute('asset-source', {name: item.name});
         } else if (item.isAsset) {
-            return Path.join('/', app.get('web.static'), item.srcPath);
+            return Path.join('/', app.get('web.assets.mount'), item.srcPath);
         }
         throw new Error(`Cannot generate URL for ${item}`);
     });
