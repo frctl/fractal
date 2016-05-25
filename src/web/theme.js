@@ -56,6 +56,11 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
     }
 
     addStatic(path, mount) {
+        for (let s of this._staticPaths) {
+            if (path === s.path) {
+                return;
+            }
+        }
         this._staticPaths.add({
             path: path,
             mount: mount
@@ -80,7 +85,7 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
     routes() {
         return Array.from(this._routes.values());
     }
-    
+
     matchRoute(urlPath) {
         for (let route of this._routes.values()) {
             let match = route.matcher.exec(urlPath);

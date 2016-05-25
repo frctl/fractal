@@ -49,7 +49,7 @@ module.exports = class Builder extends mix(Emitter) {
                 this.emit('ready', this);
                 this._theme.emit('build', this, this._app);
 
-                let copyStatic = this._theme.static().map(p => this._copyStatic(p.path, Path.join('/', this._app.get('web.static'), p.mount)));
+                let copyStatic = this._theme.static().map(p => this._copyStatic(p.path, Path.join('/', p.mount)));
 
                 let copyAssets = this._copyAssets();
 
@@ -86,7 +86,7 @@ module.exports = class Builder extends mix(Emitter) {
             }
             source.flatten().assets().forEach(asset => {
                 this._jobsCount++;
-                let dest = Path.join('/', this._app.get('web.static'), asset.srcPath);
+                let dest = Path.join('/', this._app.get('web.assets.mount'), asset.srcPath);
                 dest = _.trimEnd(Path.join(this._config.dest, dest), '/');
                 let job = fs.copyAsync(asset.path, dest, {
                     clobber: true

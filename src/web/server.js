@@ -174,7 +174,7 @@ module.exports = class Server extends mix(Emitter) {
     _onRequest(req, res, next) {
 
         let pathParts = res.locals.__request.segments;
-        if (pathParts.length && pathParts[0] === this._app.get('web.static')) {
+        if (pathParts.length && pathParts[0] === this._app.get('web.assets.mount')) {
             if (pathParts[1]) {
                 try {
                     let assetPath = pathParts.slice(2).join('/');
@@ -265,7 +265,7 @@ module.exports = class Server extends mix(Emitter) {
         });
 
         this._theme.static().forEach(s => {
-            this._server.use(Path.join('/', this._app.get('web.static'), s.mount), express.static(s.path));
+            this._server.use(Path.join('/', s.mount), express.static(s.path));
         });
 
         this._server.get(':path(*)', this._onRequest.bind(this));

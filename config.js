@@ -73,8 +73,13 @@ module.exports = {
         builder: {
             dest: null,
             concurrency: 100,
-            root: null
         },
-        static: '_assets'
+        static: {
+            path: null,
+            mount: '/',
+        },
+        assets: {
+            mount: '_assets'
+        }
     }
 };
