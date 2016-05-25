@@ -30,7 +30,7 @@
         </div>
         <div class="Browser-fileContent" data-role="code" id="code-view">
             <code class="Code Code--lang-{{ variant.lang.editorMode }}">
-                <pre>{{ entity.getPreviewContent() | async | highlight(entity.editorMode) }}</pre>
+                <pre>{{ entity.getPreviewContent() | async | highlight(entity.editorMode) | linkRefs(entity) }}</pre>
             </code>
         </div>
         <div class="Browser-fileContent" data-role="code" id="code-context">
