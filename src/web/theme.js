@@ -80,7 +80,7 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
     routes() {
         return Array.from(this._routes.values());
     }
-
+    
     matchRoute(urlPath) {
         for (let route of this._routes.values()) {
             let match = route.matcher.exec(urlPath);

@@ -44,7 +44,7 @@ module.exports = class Web extends mix(Configurable, Emitter) {
             instance = require(instance)();
         }
         this._themes.set(name, instance);
-        this._defaultTheme = name;
+        this._themes.set('default', instance);
         return this;
     }
 

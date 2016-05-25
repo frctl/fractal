@@ -49,7 +49,7 @@ module.exports = class EntitySource extends mix(Source, Heritable) {
         }
         let engine = adapter.register(this, this._app);
         if (!(engine instanceof Adapter)) {
-            throw new Error(`Template engine adapters must extend the base Adapter class.`);
+            // throw new Error(`Template engine adapters must extend the base Adapter class.`);
         }
         this._engine = engine;
         engine.load();

@@ -219,9 +219,9 @@ module.exports = class Server extends mix(Emitter) {
         let context = match.route.context || {};
         context.request = _.clone(res.locals.__request);
 
-        this._engine.render(match.route.view, context)
-              .then(v => res.send(v).end())
-              .catch(err => next(err));
+        this._render(match.route.view, context)
+            .then(v => res.send(v).end())
+            .catch(err => next(err));
     }
 
     _onError(err, req, res, next) {
@@ -234,11 +234,19 @@ module.exports = class Server extends mix(Emitter) {
             res.status(err.status);
         }
 
-        this._engine.render(this._theme.errorView(), { error: err })
+        this._render(this._theme.errorView(), { error: err })
             .then(v => res.send(v).end())
             .catch(err => next(err));
 
         this.emit('error', err, res.locals.__request);
+    }
+
+    _render(view, context) {
+        if (_.isFunction(view)) {
+            return this._engine.renderString(view(), context);
+        } else {
+            return this._engine.render(view, context);
+        }
     }
 
     _init() {
