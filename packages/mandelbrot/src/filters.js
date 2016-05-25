@@ -32,4 +32,21 @@ module.exports = function(theme, env, app){
         });
     });
 
+    env.engine.addFilter('linkRefs', function(str, item) {
+        if (! (item.isComponent || item.isVariant)) {
+            return str;
+        }
+        const refs = item.references;
+        return str.replace(new RegExp(`(${refs.map(r => `\@${r.handle}`).join('|')})`, 'g'), function(handle){
+            try {
+                const url = theme.urlFromRoute('component', {
+                    handle: handle.replace('@', '')
+                });
+                return `<a href="${url}">${handle}</a>`;
+            } catch(e) {
+                return handle;
+            }
+        });
+    });
+
  };
