@@ -23,8 +23,8 @@
 }
 
 .Browser-tab {
-    @include border-inline(start, 0.125rem solid transparent);
-    @include border-inline(end, 1px solid $color-frame-border);
+    // @include border-inline(start, 0.125rem solid transparent);
+    // @include border-inline(end, 1px solid $color-frame-border);
 
     a {
         @include font(navigation);
@@ -33,22 +33,24 @@
         padding: 0.625rem 0.75rem;
 
         &:hover {
-            background-color: $color-ui-hover;
+            // background-color: $color-ui-hover;
+            background-color: transparent;
         }
     }
 
     svg {
         @include margin-inline(end, 0.125rem);
         pointer-events: none;
+        opacity: 0.7;
     }
 
     &.is-active {
-        @include border-inline-color(start, $color-link);
-        @include border-inline-color(end, $color-frame-border);
-        background-color: $color-background-offset;
+        // @include border-inline-color(start, $color-link);
+        // @include border-inline-color(end, $color-frame-border);
+        // background-color: $color-background-offset;
 
         a {
-            font-weight: bold;
+            // font-weight: bold;
         }
 
         a:hover {
@@ -61,6 +63,10 @@
             opacity: 0.5;
         }
     }
+}
+
+.Browser-tab--notes {
+    margin-left: auto;
 }
 
 .Browser-panel {

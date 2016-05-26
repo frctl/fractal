@@ -739,57 +739,35 @@ h6 {
       -ms-flex-direction: row;
           flex-direction: row; }
 
-.Browser-tab {
-  -webkit-border-start: 0.125rem solid transparent;
-     -moz-border-start: 0.125rem solid transparent;
-          border-inline-start: 0.125rem solid transparent;
-  -webkit-border-end: 1px solid rgba(83, 83, 99, 0.25);
-     -moz-border-end: 1px solid rgba(83, 83, 99, 0.25);
-          border-inline-end: 1px solid rgba(83, 83, 99, 0.25); }
-  [dir="ltr"] .Browser-tab {
-    border-left: 0.125rem solid transparent; }
-  [dir="rtl"] .Browser-tab {
-    border-right: 0.125rem solid transparent; }
-  [dir="ltr"] .Browser-tab {
-    border-right: 1px solid rgba(83, 83, 99, 0.25); }
-  [dir="rtl"] .Browser-tab {
-    border-left: 1px solid rgba(83, 83, 99, 0.25); }
-  .Browser-tab a {
-    font: normal 0.8125rem/1.53846 "Open Sans", Helvetica, Arial, sans-serif;
-    display: block;
-    padding: 0.625rem 0.75rem; }
-    .Browser-tab a:link, .Browser-tab a:visited, .Browser-tab a:hover, .Browser-tab a:active {
-      color: #535363;
-      text-decoration: none; }
-    .Browser-tab a:hover {
-      background-color: rgba(83, 83, 99, 0.05); }
-  .Browser-tab svg {
-    -webkit-margin-end: 0.125rem;
-       -moz-margin-end: 0.125rem;
-            margin-inline-end: 0.125rem;
-    pointer-events: none; }
-    [dir="ltr"] .Browser-tab svg {
-      margin-right: 0.125rem; }
-    [dir="rtl"] .Browser-tab svg {
-      margin-left: 0.125rem; }
-  .Browser-tab.is-active {
-    border-inline-start-color: #840;
-    border-inline-end-color: rgba(83, 83, 99, 0.25);
-    background-color: #f6f6f6; }
-    [dir="ltr"] .Browser-tab.is-active {
-      border-left-color: #840; }
-    [dir="rtl"] .Browser-tab.is-active {
-      border-right-color: #840; }
-    [dir="ltr"] .Browser-tab.is-active {
-      border-right-color: rgba(83, 83, 99, 0.25); }
-    [dir="rtl"] .Browser-tab.is-active {
-      border-left-color: rgba(83, 83, 99, 0.25); }
-    .Browser-tab.is-active a {
-      font-weight: bold; }
-    .Browser-tab.is-active a:hover {
-      background-color: transparent; }
-  .Browser-tab.is-disabled a {
-    opacity: 0.5; }
+.Browser-tab a {
+  font: normal 0.8125rem/1.53846 "Open Sans", Helvetica, Arial, sans-serif;
+  display: block;
+  padding: 0.625rem 0.75rem; }
+  .Browser-tab a:link, .Browser-tab a:visited, .Browser-tab a:hover, .Browser-tab a:active {
+    color: #535363;
+    text-decoration: none; }
+  .Browser-tab a:hover {
+    background-color: transparent; }
+
+.Browser-tab svg {
+  -webkit-margin-end: 0.125rem;
+     -moz-margin-end: 0.125rem;
+          margin-inline-end: 0.125rem;
+  pointer-events: none;
+  opacity: 0.7; }
+  [dir="ltr"] .Browser-tab svg {
+    margin-right: 0.125rem; }
+  [dir="rtl"] .Browser-tab svg {
+    margin-left: 0.125rem; }
+
+.Browser-tab.is-active a:hover {
+  background-color: transparent; }
+
+.Browser-tab.is-disabled a {
+  opacity: 0.5; }
+
+.Browser-tab--notes {
+  margin-left: auto; }
 
 .Browser-panel {
   -webkit-box-flex: 1;
@@ -871,6 +849,7 @@ h6 {
     padding: 0.75rem;
     -webkit-overflow-scrolling: touch; }
     .Code pre a {
+      color: #28f;
       text-decoration: none; }
       .Code pre a:hover {
         text-decoration: underline; }

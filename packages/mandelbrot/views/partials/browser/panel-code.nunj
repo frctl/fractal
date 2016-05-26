@@ -1,4 +1,5 @@
-<div class="Browser-panel Browser-code is-active" data-role="tab-panel" id="browser-{{ entity.id }}-panel-code">
+{# <div class="Browser-panel Browser-code is-active" data-role="tab-panel" id="browser-{{ entity.id }}-panel-code">
+
     <div class="Browser-codeHeader">
         <select class="Browser-fileSelector" data-role="switcher">
             <optgroup label="View">
@@ -34,16 +35,7 @@
             </code>
         </div>
         <div class="Browser-fileContent" data-role="code" id="code-context">
-            {% set hasContext = entity.hasContext() | async %}
-            {% if hasContext %}
-            <code class="Code Code--lang-{{ frctl.theme.get('format') }}">
-                <pre>{{ entity.getPreviewContext() | async | format(frctl.theme.get('format')) | highlight(frctl.theme.get('format')) }}</pre>
-            </code>
-            {% else %}
-            <code class="Code Code--lang-js">
-                <pre>{{ '/* No context defined for this component. */' | highlight('js') }}</pre>
-            </code>
-            {% endif %}
+
         </div>
         {% for asset in entity.resources().filter('isBinary', false).toArray() %}
         <div class="Browser-fileContent" data-role="code" id="code-{{ asset.handle }}">
@@ -53,4 +45,44 @@
         </div>
         {% endfor %}
     </div>
+</div> #}
+
+<div class="Browser-panel Browser-code is-active" data-role="tab-panel" id="browser-{{ entity.id }}-panel-html">
+    <code class="Code Code--lang-html">
+        {% set rendered = entity.render(null, false, true) | async(true) %}
+        {% if rendered | isError %}
+        {% set renderError %}<!-- Error rendering component: {{ error.message }} -->{% endset %}
+        <pre>{{ renderError | highlight('html') }}</pre>
+        {% else %}
+        <pre>{{ rendered | beautify | highlight('html') }}</pre>
+        {% endif %}
+    </code>
+</div>
+
+<div class="Browser-panel Browser-code" data-role="tab-panel" id="browser-{{ entity.id }}-panel-view">
+    <code class="Code Code--lang-{{ variant.lang.editorMode }}">
+        <pre>{{ entity.getPreviewContent() | async | highlight(entity.editorMode) | linkRefs(entity) }}</pre>
+    </code>
+</div>
+
+<div class="Browser-panel Browser-code" data-role="tab-panel" id="browser-{{ entity.id }}-panel-context">
+    {% set hasContext = entity.hasContext() | async %}
+    {% if hasContext %}
+    <code class="Code Code--lang-{{ frctl.theme.get('format') }}">
+        <pre>{{ entity.getPreviewContext() | async | format(frctl.theme.get('format')) | highlight(frctl.theme.get('format')) }}</pre>
+    </code>
+    {% else %}
+    <code class="Code Code--lang-js">
+        <pre>{{ '/* No context defined for this component. */' | highlight('js') }}</pre>
+    </code>
+    {% endif %}
+</div>
+
+<div class="Browser-panel Browser-code" data-role="tab-panel" id="browser-{{ entity.id }}-panel-meta">
+    <ul>
+        <li>Handle: @{{ entity.handle }}</li>
+        {% if entity.references.length %}
+        <li>References: {% for ref in entity.references %}@{{ entity.handle }}{% if not loop.last %}, {% endif %}{% endfor %}</li>
+        {% endif %}
+    </ul>
 </div>
