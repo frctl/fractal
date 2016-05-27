@@ -1,7 +1,5 @@
 v1.0
 
-- linkHandles helper
-- update nunjcuks + consolidate + mustache adapters, helpers
 - clean up dependencies, add peer dependencies
 - doc updates
 - upgrade guide
