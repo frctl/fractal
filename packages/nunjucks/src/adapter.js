@@ -1,9 +1,11 @@
 'use strict';
 
 const _        = require('lodash');
-const Promise = require('bluebird');
+const Promise  = require('bluebird');
 const nunjucks = require('nunjucks');
-const Adapter     = require('@frctl/fractal').Adapter;
+const path     = require('path');
+const fs       = require('fs');
+const Adapter  = require('@frctl/fractal').Adapter;
 
 class NunjucksAdapter extends Adapter {
 
@@ -21,7 +23,7 @@ class NunjucksAdapter extends Adapter {
          */
 
         const StringLoader = nunjucks.Loader.extend({
-            getSource: function(handle) {
+            getSource(handle) {
                 if (handle.indexOf('@') !== 0) {
                     return;
                 }
@@ -43,9 +45,40 @@ class NunjucksAdapter extends Adapter {
          */
 
         if (loadPaths) {
-            loaders.push(new nunjucks.FileSystemLoader(loadPaths, {
-                watch: true
-            }));
+
+            const FileSystemLoader = nunjucks.Loader.extend({
+
+                init(searchPaths, opts) {
+                    opts = opts || {};
+                    this.searchPaths = [].concat(searchPaths);
+                },
+
+                getSource(name) {
+                    let fullpath = null;
+                    const paths = this.searchPaths;
+
+                    for(let i = 0; i < paths.length; i++) {
+                        const basePath = path.resolve(paths[i]);
+                        const p = path.resolve(paths[i], name);
+
+                        if (p.indexOf(basePath) === 0 && fs.existsSync(p)) {
+                            fullpath = p;
+                            break;
+                        }
+                    }
+
+                    if(!fullpath) {
+                        return null;
+                    };
+
+                    return {
+                        src: fs.readFileSync(fullpath, 'utf-8'),
+                        path: fullpath,
+                        noCache: true
+                    };
+                 }
+            });
+            loaders.push(new FileSystemLoader(loadPaths));
         }
 
         /**
