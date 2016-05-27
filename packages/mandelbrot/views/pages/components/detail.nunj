@@ -6,6 +6,8 @@
 {% set entity = frctl.components.find('@' + request.params.handle) %}
 {% if not entity or entity.isHidden %}{{ throw(404, "Component '" + request.params.handle + "' not found.") }}{% endif %}
 
+{# {% if entity.isVariant && entity.parent.isCollated %}{% endif %} #}
+
 {% set page = {
     title: entity.title
 } %}
@@ -68,18 +70,5 @@
     </div>
 
 </div>
-
-{# <li class="Browser-tab Browser-tab--meta" data-role="tab">
-    <a href="#browser-{{ entity.id }}-panel-meta">{{ img.svg('icon-notes', '#666', '19px', '19px' ) }} Meta</a>
-</li> #}
-{# <ul class="Browser-actions">
-    <li class="Browser-action"><a href="#">collapse</a></li>
-</ul> #}
-
-{# <div class="Browser-panel Browser-meta" data-role="tab-panel" id="browser-{{ entity.id }}-panel-meta">
-    <ul>
-        <li>Handle: <code>@{{ entity.handle }}</code></li>
-    </ul>
-</div> #}
 
 {% endblock %}

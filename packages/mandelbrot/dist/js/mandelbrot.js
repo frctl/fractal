@@ -21,7 +21,7 @@ var Browser = function () {
         this._codeViews = this._el.find('[data-role="code"]');
         this._activeClass = 'is-active';
         this._initTabs();
-        this._initFileSwitcher();
+        // this._initFileSwitcher();
     }
 
     _createClass(Browser, [{
@@ -33,7 +33,7 @@ var Browser = function () {
             var tabs = this._tabs;
             var selectedIndex = Math.min(tabs.length - 1, storage.get('browser.selectedTabIndex', 0));
             tabs.on('click', function (e) {
-                var link = $(e.target);
+                var link = $(e.target).closest('a');
                 var tab = link.parent();
                 tabs.removeClass(ac);
                 storage.set('browser.selectedTabIndex', tabs.index(tab));
@@ -45,25 +45,23 @@ var Browser = function () {
             tabs.removeClass('is-active');
             tabs.eq(selectedIndex).find('a').trigger('click');
         }
-    }, {
-        key: '_initFileSwitcher',
-        value: function _initFileSwitcher() {
-            var _this2 = this;
 
-            var ac = this._activeClass;
-            var switcher = this._fileSwitcher;
-            var defaultSelected = storage.get('browser.selectedCodeView', 'code-html');
-            switcher.on('change', function (e) {
-                var selected = $(e.target).val();
-                storage.set('browser.selectedCodeView', selected);
-                _this2._codeViews.removeClass(ac);
-                _this2._codeViews.filter('#' + selected).addClass(ac);
-            });
-            if (switcher.find('option[value="' + defaultSelected + '"]').length) {
-                switcher.val(defaultSelected);
-            }
-            switcher.trigger('change');
-        }
+        // _initFileSwitcher() {
+        //     const ac = this._activeClass;
+        //     const switcher = this._fileSwitcher;
+        //     const defaultSelected = storage.get(`browser.selectedCodeView`, 'code-html');
+        //     switcher.on('change', e => {
+        //         const selected = $(e.target).val();
+        //         storage.set(`browser.selectedCodeView`, selected);
+        //         this._codeViews.removeClass(ac);
+        //         this._codeViews.filter(`#${selected}`).addClass(ac);
+        //     });
+        //     if (switcher.find(`option[value="${defaultSelected}"]`).length) {
+        //         switcher.val(defaultSelected);
+        //     }
+        //     switcher.trigger('change');
+        // }
+
     }]);
 
     return Browser;

@@ -20,41 +20,53 @@
     display: flex;
     flex: 1 1 auto;
     flex-direction: row;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    &::-webkit-scrollbar {
+        display: none;
+    }
 }
 
 .Browser-tab {
-    // @include border-inline(start, 0.125rem solid transparent);
-    // @include border-inline(end, 1px solid $color-frame-border);
-
+    display: flex;
+    flex: auto;
+    white-space: nowrap;
+    max-width: 8rem;
     a {
+        flex: auto;
         @include font(navigation);
         @include link-default($color-text, none);
         display: block;
+        width: 100%;
+        text-align: center;
         padding: 0.625rem 0.75rem;
-
+        border-bottom: 2px solid transparent;
+        border-top: 1px solid transparent;
         &:hover {
-            // background-color: $color-ui-hover;
-            background-color: transparent;
+            border-bottom: 2px solid #ccc;
+            svg {
+                opacity: 0.9;
+            }
         }
     }
 
     svg {
         @include margin-inline(end, 0.125rem);
         pointer-events: none;
-        opacity: 0.7;
+        opacity: 0.6;
+        position: relative;
+        top: 2px;
     }
 
     &.is-active {
-        // @include border-inline-color(start, $color-link);
-        // @include border-inline-color(end, $color-frame-border);
-        // background-color: $color-background-offset;
 
         a {
-            // font-weight: bold;
+            border-bottom: 2px solid $color-link;
+            // color: darken($color-text, 50);
         }
 
-        a:hover {
-            background-color: transparent;
+        svg {
+            opacity: 0.9;
         }
     }
 
@@ -65,8 +77,37 @@
     }
 }
 
+.Browser-tab--html {
+
+}
+
+.Browser-tab--view {
+    svg {
+        top: 1px;
+    }
+}
+
+.Browser-tab--context {
+    svg {
+        top: 0px;
+    }
+}
+
+.Browser-tab--assets {
+    svg {
+        top: 1px;
+    }
+}
+
 .Browser-tab--notes {
     margin-left: auto;
+    svg {
+        top: 1px;
+    }
+}
+
+.Browser-tab--meta {
+
 }
 
 .Browser-panel {
@@ -75,53 +116,23 @@
     overflow: auto;
     position: relative;
     width: 100%;
-    background-color: $color-background-offset;
-
+    background-color: lighten($color-background-offset, 2%);
+    padding: 0.75rem;
     &.is-active {
         display: block;
     }
-}
 
-.Browser-code {
-    overflow: hidden;
-    flex-direction: column;
-
-    &.is-active {
-        display: flex;
-    }
-}
-
-.Browser-codeHeader {
-    flex: 0 0 auto;
-    border-bottom: 1px solid $color-frame-border;
-    padding: 0.5rem;
-}
-
-.Browser-files {
-    flex: 1 1 auto;
-    display: flex;
-    overflow: auto;
-    background-color: $color-background-offset;
-    -webkit-overflow-scrolling: touch;
-}
-
-.Browser-fileSelector {
-    @include font(navigation);
-    border: 1px solid $color-frame-border;
-}
-
-.Browser-fileContent {
-    flex: 1 1 auto;
-    display: none;
-    -webkit-overflow-scrolling: touch;
-
-    &.is-active {
-        display: flex;
+    .Code {
+        background-color: lighten($color-background-offset, 2%);
+        pre {
+            background-color: lighten($color-background-offset, 2%);
+            padding: 0;
+        }
     }
 }
 
 .Browser-notes {
-    padding: 0.75rem;
+    padding-top: 20px;
 }
 
 .Browser-isEmptyNote {
