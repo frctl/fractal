@@ -1,0 +1,12 @@
+<div class="Browser-panel Browser-code" data-role="tab-panel" id="browser-{{ entity.id }}-panel-context">
+    {% set hasContext = entity.hasContext() | async %}
+    {% if hasContext %}
+    <code class="Code Code--lang-{{ frctl.theme.get('format') }}">
+        <pre>{{ entity.getPreviewContext() | async | format(frctl.theme.get('format')) | highlight(frctl.theme.get('format')) }}</pre>
+    </code>
+    {% else %}
+    <code class="Code Code--lang-js">
+        <pre>{{ '/* No context defined for this component. */' | highlight('js') }}</pre>
+    </code>
+    {% endif %}
+</div>

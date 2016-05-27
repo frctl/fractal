@@ -113,3 +113,35 @@
         border-bottom: 1px solid rgba($color-text, 0.1);
     }
 }
+
+.Prose--condensed {
+
+    > * {
+        margin-bottom: 0.50em;
+    }
+
+    li,
+    li > ul,
+    li > ol {
+        margin-bottom: 0.15em;
+    }
+
+    *:not(hr) + h2 {
+        margin-top: 1em;
+    }
+
+    h3 {
+
+        margin-bottom: 0.55em;
+        opacity: 0.8;
+    }
+
+    * + h3 {
+        margin-top: 1.25em;
+    }
+
+    hr {
+        margin: 1em 0;
+    }
+
+}

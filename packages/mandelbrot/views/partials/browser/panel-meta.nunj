@@ -1,0 +1,24 @@
+<div class="Browser-panel" data-role="tab-panel" id="browser-{{ entity.id }}-panel-meta">
+    <ul class="Meta">
+        <li class="Meta-item">
+            <strong class="Meta-key">Handle:</strong>
+            <span class="Meta-value">@{{ entity.handle }}</span>
+        </li>
+        <li class="Meta-item">
+            <strong class="Meta-key">Component Path:</strong>
+            <span class="Meta-value">{{ entity.relViewPath }}</span>
+        </li>
+        {% if entity.references.length %}
+        <li class="Meta-item">
+            <strong class="Meta-key">Includes:</strong>
+            <span class="Meta-value Meta-value--linkList">{% for ref in entity.references %}<a href="{{ frctl.theme.urlFromRoute('component', { handle: ref.handle }) }}">@{{ ref.handle }}</a>{% if not loop.last %}, {% endif %}{% endfor %}</span>
+        </li class="Meta-item">
+        {% endif %}
+        {% if entity.referencedBy.length %}
+        <li class="Meta-item">
+            <strong class="Meta-key">Included in:</strong>
+            <span class="Meta-value Meta-value--linkList">{% for ref in entity.referencedBy %}<a href="{{ frctl.theme.urlFromRoute('component', { handle: ref.handle }) }}">@{{ ref.handle }}</a>{% if not loop.last %}, {% endif %}{% endfor %}</span>
+        </li>
+        {% endif %}
+    </ul>
+</div>

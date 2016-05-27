@@ -2,8 +2,8 @@
 
     {% include 'partials/browser/controls.nunj' %}
 
-    {% include 'partials/browser/panel-code.nunj' %}
-
-    {% include 'partials/browser/panel-notes.nunj' %}
+    {% asyncAll panel in ['html', 'view', 'context', 'meta', 'notes'] %}
+    {% include 'partials/browser/panel-' + panel + '.nunj' %}
+    {% endall %}
 
 </div>
