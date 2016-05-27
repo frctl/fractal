@@ -57,6 +57,10 @@ module.exports = class VariantCollection extends EntityCollection {
         return _.uniq(_.flatten(this.toArray().map(variant => variant.references)));
     }
 
+    get referencedBy() {
+        return _.uniqBy(_.flatten(this.toArray().map(variant => variant.referencedBy)), 'id');
+    }
+
     _hasSharedView() {
         let view = this.default().view;
         for (let v of this.toArray()) {

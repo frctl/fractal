@@ -31,6 +31,26 @@ module.exports = class ComponentSource extends EntitySource {
         return super.entities();
     }
 
+    getReferencesOf(target) {
+        let refs = [];
+        let handles = [];
+        this.source.flatten().forEach(component => {
+            if (component.id !== target.id) {
+                for (let variant of component.variants()) {
+                    if (variant.id !== target.id) {
+                        for (let ref of variant.references) {
+                            if (target.handle == ref.handle || target.alias == ref.handle) {
+                                refs.push(variant.isDefault ? component : variant);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        return refs;
+    }
+
     variants() {
         let items = [];
         for (let component of this.components()) {

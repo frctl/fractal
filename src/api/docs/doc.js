@@ -1,5 +1,6 @@
 'use strict';
 
+const Path    = require('path');
 const Promise = require('bluebird');
 const matter  = require('gray-matter');
 const _       = require('lodash');
@@ -10,12 +11,13 @@ module.exports = class Doc extends Entity {
 
     constructor(config, content, parent){
         super(config.name, config, parent);
-        this.isDoc    = true;
-        this.lang     = config.lang;
-        this.filePath = config.filePath;
-        this.viewPath = this.filePath;
-        this.content  = content;
-        this.file     = config.file;
+        this.isDoc       = true;
+        this.lang        = config.lang;
+        this.filePath    = config.filePath;
+        this.viewPath    = this.filePath;
+        this.relViewPath = Path.relative(this.source.fullPath, Path.resolve(this.filePath));
+        this.content     = content;
+        this.file        = config.file;
     }
 
     _label(config) {

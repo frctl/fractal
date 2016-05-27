@@ -1,6 +1,7 @@
 'use strict';
 
 const _                 = require('lodash');
+const Path              = require('path');
 const utils             = require('../../core/utils');
 const Entity            = require('../../core/entities/entity');
 const VariantCollection = require('../variants/collection');
@@ -17,8 +18,11 @@ module.exports = class Component extends Entity {
         this.editorMode    = files.view.lang.mode;
         this.editorScope   = files.view.lang.scope;
         this.viewPath      = files.view.path;
+        this.relViewPath   = Path.relative(this.source.fullPath, Path.resolve(files.view.path));
         this._resources    = resources;
         this._variants     = new VariantCollection({ name: `${this.name}-variants` }, [], parent);
+        this._referencedBy = null;
+        this._references   = null;
     }
 
     _handle(config) {
@@ -34,7 +38,17 @@ module.exports = class Component extends Entity {
     }
 
     get references() {
-        return this.variants().default().references;
+        if (!this._references) {
+            this._references = this.variants().default().references;
+        }
+        return this._references;
+    }
+
+    get referencedBy() {
+        if (!this._referencedBy) {
+            this._referencedBy = this.variants().referencedBy;
+        }
+        return this._referencedBy;
     }
 
     render(context, preview, collate) {

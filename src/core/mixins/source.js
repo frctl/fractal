@@ -4,6 +4,7 @@ const Promise      = require('bluebird');
 const _            = require('lodash');
 const chokidar     = require('chokidar');
 const anymatch     = require('anymatch');
+const Path         = require('path');
 const mixin        = require('mixwith').Mixin;
 const mix          = require('mixwith').mix;
 
@@ -47,6 +48,10 @@ module.exports = mixin((superclass) => class Source extends mix(superclass).with
 
     get isWatching(){
         return !! this._monitor;
+    }
+
+    get fullPath(){
+        return Path.resolve(this.get('path'));
     }
 
     toStream() {

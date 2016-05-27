@@ -32,7 +32,7 @@ class Fractal extends mix(Configurable, Emitter) {
             });
         }
     }
-    
+
     get components(){
         if (!this._components) {
             const ComponentSource = require('./api/components');
