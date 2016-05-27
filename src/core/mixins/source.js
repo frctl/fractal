@@ -45,6 +45,10 @@ module.exports = mixin((superclass) => class Source extends mix(superclass).with
         return this;
     }
 
+    get isWatching(){
+        return !! this._monitor;
+    }
+
     toStream() {
         return new Stream(this.load().then(() => this.flatten().toArray()));
     }
@@ -91,6 +95,9 @@ module.exports = mixin((superclass) => class Source extends mix(superclass).with
     }
 
     watch() {
+        if (this.isWatching) {
+            return;
+        }
         const sourcePath = this.get('path');
         if (!this._monitor && sourcePath) {
             Log.debug(`Watching ${this.name} directory - ${sourcePath}`);
@@ -128,6 +135,9 @@ module.exports = mixin((superclass) => class Source extends mix(superclass).with
     }
 
     unwatch() {
+        if (!this.isWatching) {
+            return;
+        }
         this._monitor.close();
         this._monitor = null;
     }

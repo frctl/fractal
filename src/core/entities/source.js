@@ -78,6 +78,7 @@ module.exports = class EntitySource extends mix(Source, Heritable) {
         self.title        = this.title;
         self.viewExt      = this.get('ext');
         self.isLoaded     = this.isLoaded;
+        self.isWatching   = this.isWatching;
         self.path         = this.get('path');
         self.isCollection = true;
         self.isSource     = true;
