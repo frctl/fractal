@@ -116,16 +116,16 @@
     overflow: auto;
     position: relative;
     width: 100%;
-    background-color: lighten($color-background-offset, 2%);
+    background-color: $color-background-offset;
     padding: 0.75rem;
     &.is-active {
         display: block;
     }
 
     .Code {
-        background-color: lighten($color-background-offset, 2%);
+        background-color: $color-background-offset;
         pre {
-            background-color: lighten($color-background-offset, 2%);
+            background-color: $color-background-offset;
             padding: 0;
         }
     }
@@ -133,6 +133,10 @@
 
 .Browser-notes {
     padding-top: 20px;
+}
+
+.Browser-resources {
+    padding: 0;
 }
 
 .Browser-isEmptyNote {

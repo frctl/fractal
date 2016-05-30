@@ -1,3 +1,0 @@
-<div class="Browser-panel Browser-assets" data-role="tab-panel" id="browser-{{ entity.id }}-panel-assets">
-    
-</div>
