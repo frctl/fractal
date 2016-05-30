@@ -2,7 +2,7 @@
 
     {% include 'partials/browser/controls.nunj' %}
 
-    {% asyncAll panel in ['html', 'view', 'context', 'meta', 'notes'] %}
+    {% asyncAll panel in ['html', 'view', 'context', 'resources', 'meta', 'notes'] %}
     {% include 'partials/browser/panel-' + panel + '.nunj' %}
     {% endall %}
 

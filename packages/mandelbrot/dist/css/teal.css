@@ -815,18 +815,21 @@ h6 {
   overflow: auto;
   position: relative;
   width: 100%;
-  background-color: #fbfbfb;
+  background-color: #f6f6f6;
   padding: 0.75rem; }
   .Browser-panel.is-active {
     display: block; }
   .Browser-panel .Code {
-    background-color: #fbfbfb; }
+    background-color: #f6f6f6; }
     .Browser-panel .Code pre {
-      background-color: #fbfbfb;
+      background-color: #f6f6f6;
       padding: 0; }
 
 .Browser-notes {
   padding-top: 20px; }
+
+.Browser-resources {
+  padding: 0; }
 
 .Browser-isEmptyNote {
   font-style: italic;
@@ -887,6 +890,59 @@ h6 {
     color: #444; }
     .Error--render .Error-message p:last-child {
       margin-bottom: 0; }
+
+.FileBrowser {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+      -ms-flex-direction: row;
+          flex-direction: row; }
+
+.FileBrowser-items {
+  -webkit-box-flex: 1;
+  -webkit-flex: auto;
+      -ms-flex: auto;
+          flex: auto;
+  -webkit-flex-basis: 1;
+      -ms-flex-preferred-size: 1;
+          flex-basis: 1;
+  background-color: #fff;
+  max-width: 180px; }
+
+.FileBrowser-item {
+  border-bottom: 0; }
+  .FileBrowser-item a {
+    color: #535363;
+    display: block;
+    background-color: #f6f6f6;
+    padding: 7px 10px;
+    font-size: 14px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-decoration: none;
+    position: relative;
+    z-index: 2;
+    margin-right: -1px;
+    border-bottom: 1px solid rgba(83, 83, 99, 0.25);
+    border-right: 1px solid rgba(83, 83, 99, 0.25); }
+
+.FileBrowser-viewer {
+  border-left: 1px solid rgba(83, 83, 99, 0.25);
+  -webkit-box-flex: 1;
+  -webkit-flex: auto;
+      -ms-flex: auto;
+          flex: auto;
+  -webkit-flex-basis: 4;
+      -ms-flex-preferred-size: 4;
+          flex-basis: 4; }
+
+.FileBrowser-code {
+  padding: 0.75rem; }
 
 .Frame {
   display: -webkit-box;
@@ -1101,6 +1157,31 @@ h6 {
 
 .Frame.is-closed .Header-navToggleIcon--closed {
   display: block; }
+
+.Meta {
+  width: 100%; }
+  .Meta a {
+    text-decoration: none; }
+
+.Meta-item {
+  padding: 14px 0;
+  overflow: hidden;
+  padding-left: 200px; }
+  .Meta-item + .Meta-item {
+    border-top: 1px solid rgba(106, 106, 127, 0.25); }
+
+.Meta-key {
+  width: 180px;
+  float: left;
+  margin-left: -200px; }
+
+.Meta-value {
+  width: 100%; }
+
+.Meta-count {
+  font-style: normal;
+  opacity: 0.5;
+  font-size: 0.9em; }
 
 .Navigation {
   display: inline-block;
@@ -1761,23 +1842,3 @@ h6 {
   [dir="rtl"] .Tree-depth-8 .Tree-collectionLabel, [dir="rtl"]
   .Tree-depth-8 .Tree-entityLink {
     padding-right: 8rem; }
-
-.Meta {
-  width: 100%; }
-  .Meta a {
-    text-decoration: none; }
-
-.Meta-item {
-  padding: 14px 0;
-  overflow: hidden;
-  padding-left: 200px; }
-  .Meta-item + .Meta-item {
-    border-top: 1px solid rgba(106, 106, 127, 0.25); }
-
-.Meta-key {
-  width: 180px;
-  float: left;
-  margin-left: -200px; }
-
-.Meta-value {
-  width: 100%; }

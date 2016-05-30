@@ -1,0 +1,26 @@
+<div class="Browser-panel Browser-resources" data-role="tab-panel" id="browser-{{ entity.id }}-panel-resources">
+    <div class="FileBrowser">
+        <ul class="FileBrowser-items">
+        {% for resource in entity.resources().items() %}
+            <li class="FileBrowser-item">
+                <a href="#">{{ resource.base }}</a>
+            </li>
+        {% endfor %}
+        </ul>
+        <div class="FileBrowser-viewer">
+            {% for resource in entity.resources().items() %}
+            <div class="FileBrowser-file">
+                {% if resource.isBinary and resource.isImage %}
+                    <img src="{{ resource.toDataUri() }}">
+                {% elif not resource.isBinary %}
+                <code class="Code Code--lang-{{ resource.lang }} FileBrowser-code">
+                    <pre>{{ resource.contents | highlight(resource.lang) }}</pre>
+                </code>
+                {% else %}
+                <p>No preview available</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
