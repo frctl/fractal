@@ -19,7 +19,7 @@ module.exports = function(app, engine) {
                 return yaml.dump(obj);
             }
             if (format === 'json') {
-                return JSON.stringify(obj, null, 4);
+                return JSON.stringify(obj, null, 2);
             }
             throw new Error(`Unknown format: ${format}`)
         }

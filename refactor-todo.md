@@ -1,6 +1,6 @@
 v1.0
 
-- clean up dependencies, add peer dependencies
+- URL generator helpers
 - doc updates
 - upgrade guide
 
@@ -11,4 +11,3 @@ v1.1
 - layouts for pages
 - binary asset rendering
 - tabs instead of select menu for nav
-- add support for asset sources

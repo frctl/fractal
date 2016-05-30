@@ -3,6 +3,8 @@
 const _         = require('lodash');
 const Path      = require('path');
 const VinylFile = require('vinyl');
+const mime      = require('mime');
+const Datauri   = require('datauri');
 const utils     = require('../../core/utils');
 
 
@@ -16,7 +18,7 @@ module.exports = class File {
         this.cwd         = relativeTo ? relativeTo : process.cwd();
         this.relPath     = relativeTo ? Path.relative(Path.resolve(relativeTo), file.path) : file.path;
         this.base        = file.base;
-        this.dir        = file.dir;
+        this.dir         = file.dir;
         this.handle      = utils.slugify(file.base.replace('.', '-'));
         this.name        = file.name;
         this.ext         = file.ext;
@@ -26,10 +28,20 @@ module.exports = class File {
         this.editorScope = file.lang.scope;
         this.githubColor = file.lang.color;
         this.isBinary    = file.isBinary;
+        this.mime        = mime.lookup(this.ext);
     }
 
     get contents() {
         return this._file.readBuffer();
+    }
+
+    get isImage() {
+        return _.includes(['jpeg', 'jpg', 'png', 'svg', 'gif', 'webp'], this.ext.replace('.','').toLowerCase());
+    }
+
+    toDataUri() {
+        const datauri = new Datauri();
+        return datauri.format(this.ext, this.contents).content;
     }
 
     getContent() {
@@ -58,11 +70,13 @@ module.exports = class File {
             name:        this.name,
             ext:         this.ext,
             lang:        this.lang,
+            mime:        this.mime,
             editorMode:  this.editorMode,
             editorScope: this.editorScope,
             githubColor: this.githubColor,
             isBinary:    this.isBinary,
             isFile:      true,
+            isImage:     this.isImage,
         };
     }
 

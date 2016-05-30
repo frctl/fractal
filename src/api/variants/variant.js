@@ -9,17 +9,17 @@ module.exports = class Variant extends Entity {
 
     constructor(config, view, resources, parent){
         super(config.name, config, parent);
-        this.isVariant = true;
-        this.view        = config.view;
-        this.viewPath    = config.viewPath;
-        this.relViewPath = Path.relative(this.source.fullPath, Path.resolve(this.viewPath));
-        this.notes       = config.notes || this.parent.notes;
-        this.isDefault   = config.isDefault || false;
-        this.lang        = view.lang.name;
-        this.editorMode  = view.lang.mode;
-        this.editorScope = view.lang.scope;
-        this._view       = view;
-        this._resources  = resources;
+        this.isVariant     = true;
+        this.view          = config.view;
+        this.viewPath      = config.viewPath;
+        this.relViewPath   = Path.relative(this.source.fullPath, Path.resolve(this.viewPath));
+        this.notes         = config.notes || this.parent.notes;
+        this.isDefault     = config.isDefault || false;
+        this.lang          = view.lang.name;
+        this.editorMode    = view.lang.mode;
+        this.editorScope   = view.lang.scope;
+        this._view         = view;
+        this._resources    = resources;
         this._referencedBy = null;
         this._references   = null;
     }

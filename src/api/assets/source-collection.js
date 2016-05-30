@@ -15,8 +15,8 @@ module.exports = class AssetSourceCollection extends mix(Configurable, Emitter) 
 
     constructor(app){
         super('assets', app);
-        this.name = 'assets';
-        this._app = app;
+        this.name     = 'assets';
+        this._app     = app;
         this._sources = new Map();
         this.config(app.get(this.name));
     }
@@ -54,7 +54,7 @@ module.exports = class AssetSourceCollection extends mix(Configurable, Emitter) 
     find(name) {
         return this._sources.get(name);
     }
-    
+
     sources() {
         let sources = [];
         this._sources.forEach(source => sources.push(source));
