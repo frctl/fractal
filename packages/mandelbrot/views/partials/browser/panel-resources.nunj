@@ -1,4 +1,37 @@
-<div class="Browser-panel Browser-resources" data-role="tab-panel" id="browser-{{ entity.id }}-panel-resources">
+{% for collection in entity.resources().items() %}
+{% if collection.size %}
+<div class="Browser-panel Browser-resources" data-role="tab-panel" id="browser-{{ entity.id }}-panel-{{ collection.name }}">
+    <div class="FileBrowser">
+        
+        {% if collection.size > 1 %}
+        <ul class="FileBrowser-tabs">
+            {% for resource in collection.items() %}
+            <li class="FileBrowser-tab"><a href="#">{{ resource.base }}</a></li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        {% for resource in collection.items() %}
+        <div class="FileBrowser-item">
+            <div class="FileBrowser-itemPreview">
+                {% if resource.isBinary and resource.isImage %}
+                    <img src="{{ resource.toDataUri() }}">
+                {% elif not resource.isBinary %}
+                <code class="Code Code--lang-{{ resource.lang }} FileBrowser-code">
+                    <pre>{{ resource.contents | highlight(resource.lang) }}</pre>
+                </code>
+                {% else %}
+                <p>No preview available</p>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+{% endfor %}
+
+{# <div class="Browser-panel Browser-resources" data-role="tab-panel" id="browser-{{ entity.id }}-panel-resources">
     <div class="FileBrowser">
         <ul class="FileBrowser-items">
         {% for resource in entity.resources().items() %}
@@ -23,4 +56,4 @@
             {% endfor %}
         </div>
     </div>
-</div>
+</div> #}
