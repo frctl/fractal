@@ -17,6 +17,20 @@ module.exports = {
         yield: 'yield',
         splitter: '--',
         ext: '.hbs',
+        resources: {
+            js: {
+                label: 'JavaScript',
+                match: ['**/*.js', '!**/*.config.js']
+            },
+            styles: {
+                label: 'Styles',
+                match: ['**/*.scss', '**/*.css', '**/*.less']
+            },
+            images: {
+                label: 'Images',
+                match: ['**/*.svg', '**/*.png', '**/*.jpeg', '**/*.jpg']
+            }
+        },
         default: {
             collator: function(markup, item) { return `<!-- Start: @${item.handle} -->\n${markup}\n<!-- End: @${item.handle} -->\n` },
             preview: null,
@@ -25,7 +39,7 @@ module.exports = {
             tags: [],
             status: 'ready',
             collated: false,
-            prefix: null
+            prefix: null,
         },
         statuses: {
             prototype: {

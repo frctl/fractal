@@ -110,7 +110,7 @@ module.exports = class Variant extends Entity {
         self.preview   = this.preview;
         self.context   = this.context;
         self.content   = this.getContentSync();
-        self.resources    = this.resources().toJSON();
+        // self.resources    = this.resources().toJSON();
         return self;
     }
 

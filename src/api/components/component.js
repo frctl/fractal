@@ -5,24 +5,26 @@ const Path              = require('path');
 const utils             = require('../../core/utils');
 const Entity            = require('../../core/entities/entity');
 const VariantCollection = require('../variants/collection');
+const FileCollection    = require('../files/collection');
 
 module.exports = class Component extends Entity {
 
     constructor(config, files, resources, parent){
         super(config.name, config, parent);
-        this.isComponent   = true;
-        this.defaultName   = config.default ? utils.slugify(config.default.toLowerCase()) : 'default';
-        this.notes         = config.notes || null;
-        this.notesFromFile = config.notesFromFile || false;
-        this.lang          = files.view.lang.name;
-        this.editorMode    = files.view.lang.mode;
-        this.editorScope   = files.view.lang.scope;
-        this.viewPath      = files.view.path;
-        this.relViewPath   = Path.relative(this.source.fullPath, Path.resolve(files.view.path));
-        this._resources    = resources;
-        this._variants     = new VariantCollection({ name: `${this.name}-variants` }, [], parent);
-        this._referencedBy = null;
-        this._references   = null;
+        this.isComponent          = true;
+        this.defaultName          = config.default ? utils.slugify(config.default.toLowerCase()) : 'default';
+        this.notes                = config.notes || null;
+        this.notesFromFile        = config.notesFromFile || false;
+        this.lang                 = files.view.lang.name;
+        this.editorMode           = files.view.lang.mode;
+        this.editorScope          = files.view.lang.scope;
+        this.viewPath             = files.view.path;
+        this.relViewPath          = Path.relative(this.source.fullPath, Path.resolve(files.view.path));
+        this._resources           = resources;
+        this._resourceCollections = null;
+        this._variants            = new VariantCollection({ name: `${this.name}-variants` }, [], parent);
+        this._referencedBy        = null;
+        this._references          = null;
     }
 
     _handle(config) {
@@ -75,7 +77,21 @@ module.exports = class Component extends Entity {
     }
 
     resources() {
-        return this._resources;
+        if (!this._resourceCollections) {
+            let collections = [];
+            const groups = this.source.get('resources');
+            if (groups) {
+                for (let key in groups) {
+                    let group = groups[key];
+                    let files = this._resources.match(group.match);
+                    files.name = key;
+                    files.label = files.title = group.label;
+                    collections.push(files);
+                }
+            }
+            this._resourceCollections = new FileCollection({}, collections);
+        }
+        return this._resourceCollections;
     }
 
     flatten() {

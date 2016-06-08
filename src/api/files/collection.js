@@ -1,6 +1,7 @@
 'use strict';
 
 const _          = require('lodash');
+const anymatch   = require('anymatch');
 const mix        = require('../../core/mixins/mix');
 const Collection = require('../../core/mixins/collection');
 const Stream     = require('../../core/promise-stream');
