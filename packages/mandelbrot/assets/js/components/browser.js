@@ -1,20 +1,33 @@
 'use strict';
 
 const $          = global.jQuery;
+const select     = require('select2');
 const storage    = require('../storage');
 const events     = require('../events');
 
 class Browser {
 
     constructor(el){
+
+        const self = this;
+
         this._el   = $(el);
-        this._tabs         = this._el.find('[data-role="tab"]');
-        this._tabPanels    = this._el.find('[data-role="tab-panel"]');
-        this._fileSwitcher = this._el.find('[data-role="switcher"]');
-        this._codeViews    = this._el.find('[data-role="code"]');
-        this._activeClass  = 'is-active';
+        this._tabs            = this._el.find('[data-role="tab"]');
+        this._tabPanels       = this._el.find('[data-role="tab-panel"]');
+        this._fileSwitcher    = this._el.find('[data-role="switcher"]');
+        this._codeViews       = this._el.find('[data-role="code"]');
+        this._resourcePreview = this._el.find('[data-role="resource-preview"]');
+        this._activeClass     = 'is-active';
         this._initTabs();
-        // this._initFileSwitcher();
+
+        $(".FileBrowser-select").select2({
+            minimumResultsForSearch: Infinity
+        }).on('change', function(){
+            $(this).closest('.FileBrowser').find('[data-role="resource-preview"]').removeClass(self._activeClass);
+            $(`#${this.value}`).addClass(self._activeClass);
+        });
+
+        this._initFileSwitcher();
     }
 
     _initTabs() {
@@ -33,6 +46,12 @@ class Browser {
         });
         tabs.removeClass('is-active');
         tabs.eq(selectedIndex).find('a').trigger('click');
+    }
+
+    _initFileSwitcher() {
+
+
+
     }
 
     // _initFileSwitcher() {

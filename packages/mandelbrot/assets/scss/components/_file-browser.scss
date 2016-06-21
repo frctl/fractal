@@ -1,28 +1,47 @@
 .FileBrowser {
-
+    position: relative;
 }
 
-.FileBrowser-tabs {
-    border-bottom: 1px solid $color-frame-border;
-    display: flex;
-}
-
-.FileBrowser-tab {
-    a {
-        color: rgba($color-text, 0.9);
-        text-decoration: none;
-        display: inline-block;
-        padding: 10px;
+.FileBrowser-selectWrapper {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    .select2-container {
+        min-width: 200px;
+        font-size: 14px;
     }
 }
 
 .FileBrowser-item {
+    display: none;
     padding: 0.75rem;
+    &.is-active {
+        display: block;
+    }
 }
 
-.FileBrowser-itemTitle {
-    margin-bottom: 1rem;
-}
+
+// .FileBrowser-tabs {
+//     border-bottom: 1px solid $color-frame-border;
+//     display: flex;
+// }
+//
+// .FileBrowser-tab {
+//     a {
+//         color: rgba($color-text, 0.9);
+//         text-decoration: none;
+//         display: inline-block;
+//         padding: 10px;
+//     }
+// }
+//
+// .FileBrowser-item {
+//     padding: 0.75rem;
+// }
+//
+// .FileBrowser-itemTitle {
+//     margin-bottom: 1rem;
+// }
 
 
 //
