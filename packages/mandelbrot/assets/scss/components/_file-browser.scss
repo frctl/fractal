@@ -1,11 +1,11 @@
 .FileBrowser {
-    position: relative;
+    position: static;
 }
 
 .FileBrowser-selectWrapper {
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: 65px;
+    right: 15px;
     .select2-container {
         min-width: 200px;
         font-size: 14px;
