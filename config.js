@@ -18,17 +18,9 @@ module.exports = {
         splitter: '--',
         ext: '.hbs',
         resources: {
-            js: {
-                label: 'JavaScript',
-                match: ['**/*.js', '!**/*.config.js']
-            },
-            styles: {
-                label: 'Styles',
-                match: ['**/*.scss', '**/*.css', '**/*.less']
-            },
-            images: {
-                label: 'Images',
-                match: ['**/*.svg', '**/*.png', '**/*.jpeg', '**/*.jpg']
+            assets: {
+                label: 'Assets',
+                match: ['**/*']
             }
         },
         default: {
