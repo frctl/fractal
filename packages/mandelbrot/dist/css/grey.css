@@ -1346,7 +1346,6 @@ h6 {
           flex: 1 1 auto;
   display: none;
   overflow: auto;
-  position: relative;
   width: 100%;
   background-color: #f6f6f6;
   padding: 0.75rem; }
@@ -1425,12 +1424,12 @@ h6 {
       margin-bottom: 0; }
 
 .FileBrowser {
-  position: relative; }
+  position: static; }
 
 .FileBrowser-selectWrapper {
   position: absolute;
-  top: 20px;
-  right: 20px; }
+  top: 65px;
+  right: 15px; }
   .FileBrowser-selectWrapper .select2-container {
     min-width: 200px;
     font-size: 14px; }
