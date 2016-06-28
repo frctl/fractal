@@ -1,6 +1,7 @@
 'use strict';
 
 const Promise             = require('bluebird');
+const Path                = require('path');
 const _                   = require('lodash');
 const co                  = require('co');
 const anymatch            = require('anymatch');
@@ -82,6 +83,26 @@ module.exports = class ComponentSource extends EntitySource {
                 let variant = item.variants().find(args[0]);
                 if (variant) return variant;
             }
+        }
+    }
+
+    findFile(filePath) {
+        filePath = Path.resolve(filePath);
+        if (this._fileTree) {
+            function findFile(items) {
+                for (let item of items) {
+                    if (item.isFile && item.path === filePath) {
+                        return item;
+                    } else if (item.isDirectory) {
+                        let result = findFile(item.children);
+                        if (result) {
+                            return result;
+                        }
+                    }
+                }
+            }
+
+            return findFile(this._fileTree.children);
         }
     }
 
@@ -263,7 +284,7 @@ module.exports = class ComponentSource extends EntitySource {
         return anymatch(['**/*.*', `!**/*${this.get('ext')}`, `!**/*.config.{js,json,yaml,yml}`, `!**/readme.md`], this._getPath(file));
     }
 
-    _parse (fileTree) {
+    _parse(fileTree) {
 
         const source = this;
 
