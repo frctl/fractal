@@ -47,17 +47,6 @@ describe('Fractal', function(){
         });
     });
 
-    describe('.source(type)', function(){
-        it('returns a ComponentSource singleton when type is \'components\'', function(){
-            expect(app.source('components')).to.be.an.instanceof(ComponentSource);
-            expect(app.source('components')).to.equal(app.source('components'));
-        });
-        it('returns a DocSource singleton when type is \'docs\'', function(){
-            expect(app.source('docs')).to.be.an.instanceof(DocSource);
-            expect(app.source('docs')).to.equal(app.source('docs'));
-        });
-    });
-
     // describe('.load()', function(){
     //     it('returns a promise that resolves to an object of loaded sources', function(){
     //         const prom = fractal.load();
