@@ -3,7 +3,7 @@
 module.exports = function(fractal){
 
     return {
-        // none defined yet!
+        path: require('./path.js')(fractal),
     }
 
 };
