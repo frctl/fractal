@@ -6,6 +6,7 @@ module.exports = function(fractal){
         render: require('./render.js')(fractal),
         context: require('./context.js')(fractal),
         view: require('./view.js')(fractal),
+        path: require('./path.js')(fractal),
     }
 
 };
