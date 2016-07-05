@@ -145,6 +145,7 @@ module.exports = class ComponentSource extends EntitySource {
         opts           = opts || {};
         opts.preview   = opts.preview || opts.useLayout || false;
         opts.collate   = opts.collate  || false;
+        opts.globals   = opts.globals || {};
 
         const self = this;
 
@@ -160,7 +161,10 @@ module.exports = class ComponentSource extends EntitySource {
                 }
             } else {
                 return fs.readFileAsync(entity, 'utf8').then(content => {
-                    return this.engine().render(entity, content, context);
+                    return this.resolve(context).then((ctx) => {
+                        ctx = _.defaults(ctx, opts.globals);
+                        return this.engine().render(entity, content, ctx);
+                    });
                 });
             }
         }
@@ -171,21 +175,22 @@ module.exports = class ComponentSource extends EntitySource {
             if (entity.isComponent || entity.isVariant) {
                 if (entity.isComponent) {
                     if (entity.isCollated && opts.collate) {
-                        rendered = yield self._renderCollatedComponent(entity, context);
+                        rendered = yield self._renderCollatedComponent(entity, context, opts.globals);
                     } else {
                         entity = entity.variants().default();
-                        rendered = yield self._renderVariant(entity, context);
+                        rendered = yield self._renderVariant(entity, context, opts.globals);
                     }
                 } else {
-                    rendered = yield self._renderVariant(entity, context);
+                    rendered = yield self._renderVariant(entity, context, opts.globals);
                 }
                 if (opts.preview && entity.preview) {
                     let target = entity.toJSON();
                     target.component = target.isVariant ? entity.parent.toJSON() : target;
                     let layout = _.isString(opts.preview) ? opts.preview : entity.preview;
-                    return yield self._wrapInLayout(rendered, layout, {
-                        _target: target
-                    });
+                    return yield self._wrapInLayout(rendered, layout, _.defaults(opts.globals, {
+                        _target: target,
+                        _config: self._app.config()
+                    }));
                 }
                 return rendered;
             } else {
@@ -194,18 +199,22 @@ module.exports = class ComponentSource extends EntitySource {
         });
     }
 
-    *_renderVariant(variant, context) {
+    *_renderVariant(variant, context, globals) {
         context = context || variant.context;
         const content = yield variant.getContent();
-        const ctx     = yield this.resolve(context);
+        let ctx       = yield this.resolve(context);
+        ctx           = _.defaults(ctx, globals);
         ctx._self     = variant.toJSON();
+        ctx._config   = this._app.config();
         return this.engine().render(variant.viewPath, content, ctx);
     }
 
-    *_renderCollatedComponent(component, context) {
+    *_renderCollatedComponent(component, context, globals) {
         context = context || {};
         return (yield component.variants().filter('isHidden', false).toArray().map(variant => {
-            let ctx = context[`@${variant.handle}`] || variant.context;
+            let ctx     = context[`@${variant.handle}`] || variant.context;
+            ctx         = _.defaults(ctx, globals);
+            ctx._config = this._app.config();
             return this.render(variant, ctx).then(markup => {
                 const collator = component.collator;
                 return _.isFunction(collator) ? collator(markup, variant) : markup;

@@ -60,6 +60,16 @@ module.exports = class Component extends Entity {
         });
     }
 
+    renderWithGlobals(context, globals, preview, collate) {
+        return this.getPreviewContext().then((context) => {
+            return this.source.render(this, context, {
+                preview: preview,
+                collate: collate,
+                globals: globals
+            });
+        });
+    }
+
     getPreviewContext(){
         return this.isCollated ? this.variants().getCollatedContext() : this.variants().default().getResolvedContext();
     }
@@ -67,7 +77,7 @@ module.exports = class Component extends Entity {
     getPreviewContent(){
         return this.isCollated ? this.variants().getCollatedContent() : this.variants().default().getContent();
     }
-
+    
     setVariants(variantCollection) {
         this._variants = variantCollection;
     }

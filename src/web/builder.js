@@ -35,7 +35,7 @@ module.exports = class Builder extends mix(Emitter) {
             }
 
             this._engine.setGlobal('env', {
-                builder: {}
+                builder: true,
             });
 
             this.emit('start');
