@@ -1,6 +1,6 @@
 {% set entity = frctl.components.find('@' + request.params.handle) -%}
 {% if not entity %}{{ throw(404, "Component '" + request.params.handle + "' not found.") }}{% endif -%}
-{% set rendered = entity.render(null, true, true) | async(true) %}
+{% set rendered = entity.renderWithGlobals(null, { _request: request, _env: frctl.env }, true, true) | async(true) %}
 {% if rendered | isError -%}
 {% import "macros/errors.nunj" as errors %}
 {% set error = rendered %}

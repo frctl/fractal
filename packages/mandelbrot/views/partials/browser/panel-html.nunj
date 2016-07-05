@@ -1,6 +1,6 @@
 <div class="Browser-panel Browser-code is-active" data-role="tab-panel" id="browser-{{ entity.id }}-panel-html">
     <code class="Code Code--lang-html">
-        {% set rendered = entity.render(null, false, true) | async(true) %}
+        {% set rendered = entity.renderWithGlobals(null, { _request: request, _env: frctl.env }, false, true) | async(true) %}
         {% if rendered | isError %}
         {% set renderError %}<!-- Error rendering component: {{ error.message }} -->{% endset %}
         <pre>{{ renderError | highlight('html') }}</pre>
