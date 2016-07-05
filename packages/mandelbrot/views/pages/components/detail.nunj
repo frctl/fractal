@@ -34,7 +34,7 @@
     {% if frctl.env.server and frctl.env.sync %}
         {% set renderedWithLayout = false %}
     {% else %}
-        {% set renderedWithLayout = entity.render(null, true, true) | async(true) %}
+        {% set renderedWithLayout = entity.renderWithGlobals(null, { _request: request, _env: frctl.env }, true, true) | async(true) %}
         {% if renderedWithLayout | isError %}
             {% set error = renderedWithLayout %}
             {% set renderError %}{{ errors.renderError('component', error.message) }}{% endset %}
