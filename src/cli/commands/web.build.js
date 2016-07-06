@@ -14,20 +14,13 @@ module.exports = {
     action: function (args, done) {
         const builder = this.fractal.web.builder(args.options);
         let total = 0;
-        let complete = 0;
 
         builder.on('start', () => {
             this.console.success('Build started...');
         });
 
-        builder.on('ready', (builder) => {
-            total = builder.targets().length;
-            this.console.update(`Exported 0 of ${total} items`, 'info');
-        });
-
-        builder.on('exported', (builder) => {
-            complete++;
-            this.console.update(`Exported ${complete} of ${total} items`, 'info');
+        builder.on('progress', (completed, total) => {
+            this.console.update(`Exported ${completed} of ${total} items`, 'info');
         });
 
         builder.on('error', (err, req) => {
