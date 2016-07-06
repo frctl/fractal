@@ -70,6 +70,13 @@ module.exports = class Variant extends Entity {
         });
     }
 
+    renderWithGlobals(context, globals, preview) {
+        return this.source.render(this, context, {
+            preview: preview,
+            globals: globals
+        });
+    }
+
     getPreviewContext(){
         return this.getResolvedContext();
     }
