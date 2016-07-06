@@ -22,6 +22,17 @@
 
 .Meta-value {
     width: 100%;
+    a {
+        &:hover span {
+            text-decoration: underline;
+        }
+    }
+    li {
+        margin-bottom: 5px;
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
 }
 
 .Meta-count {

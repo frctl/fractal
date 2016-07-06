@@ -1677,6 +1677,12 @@ h6 {
 
 .Meta-value {
   width: 100%; }
+  .Meta-value a:hover span {
+    text-decoration: underline; }
+  .Meta-value li {
+    margin-bottom: 5px; }
+    .Meta-value li:last-child {
+      margin-bottom: 0; }
 
 .Meta-count {
   font-style: normal;
