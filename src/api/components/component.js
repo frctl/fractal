@@ -61,12 +61,10 @@ module.exports = class Component extends Entity {
     }
 
     renderWithGlobals(context, globals, preview, collate) {
-        return this.getPreviewContext().then((context) => {
-            return this.source.render(this, context, {
-                preview: preview,
-                collate: collate,
-                globals: globals
-            });
+        return this.source.render(this, context, {
+            preview: preview,
+            collate: collate,
+            globals: globals
         });
     }
 
@@ -77,7 +75,7 @@ module.exports = class Component extends Entity {
     getPreviewContent(){
         return this.isCollated ? this.variants().getCollatedContent() : this.variants().default().getContent();
     }
-    
+
     setVariants(variantCollection) {
         this._variants = variantCollection;
     }

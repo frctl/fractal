@@ -44,6 +44,12 @@ module.exports = class Doc extends Entity {
         return this.source.render(this, context);
     }
 
+    renderWithGlobals(context, globals) {
+        return this.source.render(this, context, {
+            globals: globals
+        });
+    }
+
     static create(config, content, parent) {
         var parsed = matter(content);
         config     = _.defaults(parsed.data || {}, config);

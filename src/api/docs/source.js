@@ -30,8 +30,11 @@ module.exports = class DocSource extends EntitySource {
         return resolver.context(context, this);
     }
 
-    render(page, context) {
+    render(page, context, opts) {
         const self = this;
+
+        opts         = opts || {};
+        opts.globals = opts.globals || {};
 
         if (!page) {
             return Promise.reject(null);
@@ -45,7 +48,10 @@ module.exports = class DocSource extends EntitySource {
                 }
             } else {
                 return fs.readFileAsync(page, 'utf8').then(content => {
-                    return this.engine().render(page, content, context);
+                    return this.resolve(context).then((ctx) => {
+                        ctx = _.defaults(ctx, opts.globals);
+                        return this.engine().render(page, content, ctx);
+                    });
                 });
             }
         }
@@ -53,10 +59,12 @@ module.exports = class DocSource extends EntitySource {
         const renderContext = context || page.context;
         const target = page.toJSON();
         return co(function* () {
-            const source  = yield (self.isLoaded ? Promise.resolve(self) : self.load());
-            const context = yield self.resolve(renderContext);
-            context._self = target;
-            const content = yield page.getContent();
+            const source    = yield (self.isLoaded ? Promise.resolve(self) : self.load());
+            let context     = yield self.resolve(renderContext);
+            context._self   = target;
+            context._config = self._app.config();
+            context         = _.defaults(context, opts.globals);
+            const content   = yield page.getContent();
             return self._render(page.filePath, content, context);
         });
     }
