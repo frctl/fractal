@@ -20,6 +20,9 @@ module.exports = class Theme {
                 prefix: '⚑',
                 format: chalk.dim,
             },
+            info: {
+                prefix: '⚑'
+            },
             warn: {
                 prefix: '‼︎',
                 format: chalk.yellow,

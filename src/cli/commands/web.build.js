@@ -22,21 +22,22 @@ module.exports = {
 
         builder.on('ready', (builder) => {
             total = builder.targets().length;
-            this.console.slog().log(`Exported 0 of ${total} items`);
+            this.console.update(`Exported 0 of ${total} items`, 'info');
         });
 
         builder.on('exported', (builder) => {
             complete++;
-            this.console.slog().log(`Exported ${complete} of ${total} items`);
+            this.console.update(`Exported ${complete} of ${total} items`, 'info');
         });
 
         builder.on('error', (err, req) => {
-            this.console.error(err.message, err).slog();
+            this.console.error(err.message, err).persist();
         });
 
         return builder.build().then(data => {
+            this.console.persist();
             let e = data.errorCount;
-            this.console[e ? 'warn' : 'success'](`Build finished with ${e === 0 ? 'no' : e} error${e == 1 ? '' : 's'}.`).unslog().br();
+            this.console[e ? 'warn' : 'success'](`Build finished with ${e === 0 ? 'no' : e} error${e == 1 ? '' : 's'}.`).unslog();
         }).catch(e => {
             this.console.error(e).unslog().br();
         });

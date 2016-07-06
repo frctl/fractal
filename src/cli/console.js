@@ -4,7 +4,7 @@ const Promise      = require('bluebird');
 const _            = require('lodash');
 const chalk        = require('chalk');
 const Table        = require('cli-table2');
-const slog         = require('single-line-log').stdout;
+const slog         = require('log-update');
 const Theme        = require('./theme');
 const defaultTheme = require('./themes/default');
 const utils        = require('../core/utils');
@@ -52,13 +52,28 @@ class Console {
         return this;
     }
 
-    success(text, data) {
+    success(text) {
         this.write(text, 'success');
         return this;
     }
 
-    warn(text, data) {
+    warn(text) {
         this.write(text, 'warn');
+        return this;
+    }
+
+    update(text, type) {
+        slog(type ? this._format(text, type) : text);
+        return this;
+    }
+
+    clear() {
+        slog.clear();
+        return this;
+    }
+
+    persist() {
+        slog.done();
         return this;
     }
 
@@ -103,7 +118,7 @@ class Console {
         if (footer) {
             table.push([chalk.dim(footer)]);
         }
-        this.write(table.toString(), null);
+        this.unslog().write(table.toString(), null);
         return this;
     }
 
