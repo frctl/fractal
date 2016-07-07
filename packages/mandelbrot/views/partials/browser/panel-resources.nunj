@@ -4,27 +4,46 @@
     <div class="FileBrowser">
 
         <div class="FileBrowser-selectWrapper">
-            <select class="FileBrowser-select">
+            <label class="FileBrowser-select-label" for="filebrowser-select">File:</label>
+            <select class="FileBrowser-select" id="filebrowser-select">
                 {% for resource in collection.items() %}
                 <option value="file-{{ resource.id }}">{{ resource.base }}</option>
                 {% endfor %}
             </select>
         </div>
 
-
         {% for resource in collection.items() %}
         <div class="FileBrowser-item{% if loop.index == 1 %} is-active{% endif %}" id="file-{{ resource.id }}" data-role="resource-preview">
-            <div class="FileBrowser-itemPreview">
-                {% if resource.isBinary and resource.isImage %}
-                    <img src="{{ resource.toDataUri() }}">
-                {% elif not resource.isBinary %}
-                <code class="Code Code--lang-{{ resource.lang }} FileBrowser-code">
-                    <pre>{{ resource.contents | highlight(resource.lang) }}</pre>
-                </code>
-                {% else %}
-                <p>No preview available</p>
-                {% endif %}
-            </div>
+            <ul class="Meta">
+                <li class="Meta-item">
+                    <strong class="Meta-key">Content:</strong>
+                    <span class="Meta-value">
+                        <div class="FileBrowser-itemPreview">
+                            {% if resource.isBinary and resource.isImage %}
+                                <img src="{{ path(resource.path | resourceUrl) }}">
+                            {% elif not resource.isBinary %}
+                            <code class="Code Code--lang-{{ resource.lang }} FileBrowser-code">
+                                <pre>{{ resource.contents | highlight(resource.lang) }}</pre>
+                            </code>
+                            {% else %}
+                            <p><em>Previews are currently not available for this file type.</em></p>
+                            {% endif %}
+                        </div>
+                    </span>
+                </li>
+                <li class="Meta-item">
+                    <strong class="Meta-key">URL:</strong>
+                    <span class="Meta-value"><a data-no-pjax href="{{ path(resource.path | resourceUrl) }}"><span>{{ path(resource.path | resourceUrl) }}</span></a></span>
+                </li>
+                <li class="Meta-item">
+                    <strong class="Meta-key">Filesystem Path:</strong>
+                    <span class="Meta-value">{{ resource.path | componentPath }}</span>
+                </li>
+                <li class="Meta-item">
+                    <strong class="Meta-key">Size:</strong>
+                    <span class="Meta-value">{{ resource.stat.size | fileSize(0) }}</span>
+                </li>
+            </ul>
         </div>
         {% endfor %}
     </div>

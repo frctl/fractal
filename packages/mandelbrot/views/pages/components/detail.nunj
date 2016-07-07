@@ -58,7 +58,7 @@
         </div>
     </div>
 
-    <div class="Pen-handle" data-role="resize-handle"></div>
+    <div class="Pen-handle Pen-handle--browser" data-role="resize-handle"></div>
 
     <div class="Pen-panel Pen-info" data-role="info">
         {% include 'partials/browser/browser.nunj' %}

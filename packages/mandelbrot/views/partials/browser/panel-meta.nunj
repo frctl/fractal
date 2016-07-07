@@ -29,8 +29,8 @@
             </span>
         </li>
         <li class="Meta-item">
-            <strong class="Meta-key">View Path:</strong>
-            <span class="Meta-value">{{ entity.relViewPath }}</span>
+            <strong class="Meta-key">Filesystem Path:</strong>
+            <span class="Meta-value">{{ entity.viewPath | componentPath }}</span>
         </li>
         {% if entity.references.length %}
         <li class="Meta-item">

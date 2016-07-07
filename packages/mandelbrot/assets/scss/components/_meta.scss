@@ -1,5 +1,5 @@
 .Meta {
-    width: 100%;
+    min-width: 100%;
     a {
         text-decoration: none;
     }
@@ -8,20 +8,20 @@
 .Meta-item {
     padding: 14px 0;
     overflow: hidden;
-    padding-left: 200px;
     & + & {
         border-top: 1px solid lighten($color-frame-border, 10%);
     }
 }
 
 .Meta-key {
-    width: 180px;
-    float: left;
-    margin-left: -200px;
+    margin-bottom: 10px;
+    display: block;
 }
 
 .Meta-value {
-    width: 100%;
+    display: block;
+    min-width: 200px;
+    white-space: nowrap;
     a {
         &:hover span {
             text-decoration: underline;
@@ -48,4 +48,30 @@
     //     width: 50%;
     //     flex: auto;
     // }
+}
+
+@include mq($from: medium) {
+    .Frame.is-closed {
+        .Meta-item {
+            padding-left: 200px;
+        }
+        .Meta-key {
+            width: 180px;
+            float: left;
+            margin-left: -200px;
+        }
+    }
+}
+
+@include mq($from: large) {
+    .Frame:not(.is-closed) {
+        .Meta-item {
+            padding-left: 200px;
+        }
+        .Meta-key {
+            width: 180px;
+            float: left;
+            margin-left: -200px;
+        }
+    }
 }

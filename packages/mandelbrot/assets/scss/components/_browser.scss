@@ -121,7 +121,7 @@
     background-color: $color-background-offset;
     padding: 0.75rem;
     &.is-active {
-        display: block;
+        display: flex;
     }
 
     .Code {
@@ -130,6 +130,9 @@
             background-color: $color-background-offset;
             padding: 0;
         }
+    }
+    > .Meta {
+        flex-basis: 100%;
     }
 }
 

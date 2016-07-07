@@ -56,7 +56,7 @@
 
 .Pen-previewLink {
     @include link-default($color-heading, none);
-    
+
     svg {
         @include margin-inline(start, 5px);
         fill: $color-link;
@@ -93,6 +93,12 @@
     @include mq($until: navCollapse) {
         display: none;
     }
+}
+
+.Pen-handle--browser {
+    display: block;
+    pointer-events: all;
+    visibility: visible;
 }
 
 .Pen-info {
