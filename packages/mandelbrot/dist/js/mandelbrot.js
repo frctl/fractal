@@ -168,7 +168,7 @@ module.exports = function (element) {
 
     win.on('resize', function () {
         if (sidebarState == 'open' && doc.outerWidth() < sidebarWidth + 50) {
-            setSidebarWidth(doc.outerWidth() - 50);
+            // setSidebarWidth(doc.outerWidth() - 50);
         }
     });
 

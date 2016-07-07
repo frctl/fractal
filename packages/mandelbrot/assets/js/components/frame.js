@@ -77,8 +77,8 @@ module.exports = function(element){
     toggle.on('click', toggleSidebar);
 
     win.on('resize', () => {
-        if (sidebarState == 'open' && doc.outerWidth() < sidebarWidth + 50) {
-            setSidebarWidth(doc.outerWidth() - 50);
+        if (sidebarState == 'open' && doc.outerWidth() < (sidebarWidth + 50)) {
+            // setSidebarWidth(doc.outerWidth() - 50);
         }
     });
 

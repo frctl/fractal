@@ -13,15 +13,18 @@ module.exports = function(options){
         lang: 'en',
         stylesheet: null,
         format: 'json',
+        theme: {
+            mount: '_theme',
+        }
     });
 
-    config.stylesheet = config.stylesheet || `/theme/css/${config.skin || 'default'}.css`;
+    config.stylesheet = config.stylesheet || `/${config.theme.mount}/css/${config.skin}.css`;
 
     const theme = new Theme(Path.join(__dirname, '../views'), config);
 
     theme.setErrorView('pages/error.nunj');
 
-    theme.addStatic(Path.join(__dirname, '../dist'), '/theme');
+    theme.addStatic(Path.join(__dirname, '../dist'), `/${config.theme.mount}`);
 
     theme.addRoute('/', {
         handle: 'overview',
@@ -71,8 +74,15 @@ module.exports = function(options){
 
     theme.on('init', function(env, app){
         require('./filters')(theme, env, app);
+        if (app.components.get('path') && ! app.assets.find('components')) {
+            app.assets.add('components', {
+                path: app.components.get('path'),
+                match: ['**/*'],
+                hidden: true
+            });
+        }
     });
-
+    
     function getHandles(app) {
         const handles = [];
          app.components.filter('isHidden', false).flatten().each(comp => {

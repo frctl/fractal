@@ -33,9 +33,9 @@
     max-width: calc(100% + #{$handle-size});
     background-color: transparent;
 
-    @include mq($until: navCollapse) {
+    // @include mq($until: navCollapse) {
         max-width: 100%;
-    }
+    // }
 }
 
 .Preview-resizer {

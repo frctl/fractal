@@ -1,1 +1,1 @@
-<script src="{{ path('/theme/js/mandelbrot.js') }}"></script>
+<script src="{{ path('/' + frctl.theme.get('theme.mount') + '/js/mandelbrot.js') }}"></script>
