@@ -1,13 +1,12 @@
 v1.0
 
-- URL generator helpers
+- URL generator helpers for assets
 - doc updates
 - upgrade guide
+
 
 v1.1
 
 - data don't load JS file on each read?
-- component stats api
 - layouts for pages
 - binary asset rendering
-- tabs instead of select menu for nav
