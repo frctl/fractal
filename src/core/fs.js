@@ -10,6 +10,8 @@ const isBinary  = Promise.promisify(require('istextorbinary').isBinary);
 const utils     = require('./utils');
 const glob      = require('globby');
 
+const notBinary = ['.nunj', '.nunjucks', '.hbs', '.handlebars', '.jsx', '.twig']; // TODO: handle this in a scalable, extendable way
+
 module.exports = {
 
     describe(dir, filter, noCache) {
@@ -40,7 +42,7 @@ module.exports = {
                     p._cachedContents = null;
                     p.isCacheable  = !!noCache;
                     p.lang     = utils.lang(filePath);
-                    p.isBinary = yield isBinary(filePath, null);
+                    p.isBinary = yield checkIsBinary(p);
                     p.readBuffer = function(){
                         return fs.readFileSync(filePath);
                     };
@@ -141,3 +143,10 @@ function dirscribe(root, opts) {
 
     return objectify(root);
 };
+
+function checkIsBinary(file) {
+    if (_.includes(notBinary, file.ext)) {
+        return Promise.resolve(false);
+    }
+    return isBinary(file.path, null);
+}
