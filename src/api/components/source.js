@@ -187,7 +187,7 @@ module.exports = class ComponentSource extends EntitySource {
                     let target = entity.toJSON();
                     target.component = target.isVariant ? entity.parent.toJSON() : target;
                     let layout = _.isString(opts.preview) ? opts.preview : entity.preview;
-                    return yield self._wrapInLayout(rendered, layout, _.defaults(opts.globals, {
+                    return yield self._wrapInLayout(rendered, layout, {}, _.defaults(opts.globals, {
                         _target: target,
                         _config: self._app.config()
                     }));
@@ -213,16 +213,16 @@ module.exports = class ComponentSource extends EntitySource {
         context = context || {};
         return (yield component.variants().filter('isHidden', false).toArray().map(variant => {
             let ctx     = context[`@${variant.handle}`] || variant.context;
-            ctx         = _.defaults(ctx, globals);
-            ctx._config = this._app.config();
-            return this.render(variant, ctx).then(markup => {
+            return this.render(variant, ctx, {
+                globals: globals
+            }).then(markup => {
                 const collator = component.collator;
                 return _.isFunction(collator) ? collator(markup, variant) : markup;
             });
         })).join('\n');
     }
 
-    *_wrapInLayout(content, identifier, context) {
+    *_wrapInLayout(content, identifier, context, globals) {
         let layout = this.find(identifier);
         let layoutContext, layoutContent, viewpath;
         if (!layout) {
@@ -241,7 +241,7 @@ module.exports = class ComponentSource extends EntitySource {
             layoutContent = yield layout.getContent();
             viewpath = layout.viewPath;
         }
-        layoutContext = _.defaults(layoutContext, context || {});
+        layoutContext = _.defaults(layoutContext, context || {}, globals);
         layoutContext[this.get('yield')] = content;
         const renderMethod = (_.isFunction(this.engine().renderLayout)) ? 'renderLayout' : 'render';
         return this.engine()[renderMethod](viewpath, layoutContent, layoutContext);
