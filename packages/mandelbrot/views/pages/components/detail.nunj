@@ -4,7 +4,7 @@
 {% import "macros/errors.nunj" as errors %}
 
 {% set entity = frctl.components.find('@' + request.params.handle) %}
-{% if not entity or entity.isHidden %}{{ throw(404, "Component '" + request.params.handle + "' not found.") }}{% endif %}
+{% if not entity %}{{ throw(404, "Component '" + request.params.handle + "' not found.") }}{% endif %}
 
 {% set page = {
     title: entity.title

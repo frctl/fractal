@@ -82,10 +82,10 @@ module.exports = function(options){
             });
         }
     });
-    
+
     function getHandles(app) {
         const handles = [];
-         app.components.filter('isHidden', false).flatten().each(comp => {
+         app.components.flatten().each(comp => {
             handles.push(comp.handle);
             if (comp.variants().size > 1) {
                 comp.variants().each(variant => handles.push(variant.handle));
