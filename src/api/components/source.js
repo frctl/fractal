@@ -346,6 +346,7 @@ module.exports = class ComponentSource extends EntitySource {
                 source.setProps(dirConfig);
             } else {
                 collection = new ComponentCollection(dirConfig, [], parent);
+                collection.setProps(dirConfig);
             }
 
             const collections = yield matched.directories.map(item => build(item, collection));
@@ -369,7 +370,7 @@ module.exports = class ComponentSource extends EntitySource {
                         varViews: matched.varViews.filter(f => f.name.startsWith(nameMatch)),
                     };
                     const resources = new FileCollection({}, []);
-                    return Component.create(c, files, resources, parent || source);
+                    return Component.create(c, files, resources, collection);
                 });
             });
 
