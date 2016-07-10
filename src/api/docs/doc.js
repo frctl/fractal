@@ -20,12 +20,16 @@ module.exports = class Doc extends Entity {
         this.file        = config.file;
     }
 
+    get isIndex() {
+        return this.name === 'index';
+    }
+
     _label(config) {
         return config.label || (this.isIndex ? this.source.get('indexLabel') : utils.titlize(config.name));
     }
 
-    get isIndex() {
-        return this.name === 'index';
+    _handle(config) {
+        return utils.slugify(this.parent.getProp('prefix') ? `${this.parent.getProp('prefix')}-${config.name}` : config.name).toLowerCase();
     }
 
     _title(config) {

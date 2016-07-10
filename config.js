@@ -61,7 +61,8 @@ module.exports = {
         indexLabel: 'Overview',
         default: {
             context: {},
-            status: null
+            status: null,
+            prefix: null,
         }
     },
     assets: {
@@ -72,6 +73,7 @@ module.exports = {
     web: {
         theme: '@frctl/mandelbrot',
         server: {
+            sync: false,
             watch: false,
             port: null,
             syncOptions: {},

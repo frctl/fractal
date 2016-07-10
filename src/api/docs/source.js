@@ -117,6 +117,7 @@ module.exports = class DocSource extends EntitySource {
                 source.setProps(dirConfig);
             } else {
                 collection = new DocCollection(dirConfig, [], parent);
+                collection.setProps(dirConfig);
             }
 
             const items = yield children.map(item => {
