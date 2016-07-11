@@ -69,7 +69,7 @@ module.exports = {
         indexLabel: 'Overview',
         default: {
             context: {},
-            status: 'ready',
+            status: null,
             prefix: null,
         },
         statuses: {
