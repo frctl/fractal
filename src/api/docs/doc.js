@@ -39,7 +39,7 @@ module.exports = class Doc extends Entity {
     _title(config) {
         return config.title || this.label;
     }
-    
+
     getContent() {
         return Promise.resolve(this.content);
     }
@@ -68,6 +68,7 @@ module.exports = class Doc extends Entity {
         const self   = super.toJSON();
         self.isDoc   = true;
         self.isIndex = this.isIndex;
+        self.path    = this.path;
         self.tags    = this.tags;
         self.content = this.getContentSync();
         self.lang    = this.lang;

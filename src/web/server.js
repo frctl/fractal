@@ -184,30 +184,33 @@ module.exports = class Server extends mix(Emitter) {
 
         Log.debug(`Request for '${req.url}'`);
 
-        const match = this._theme.matchRoute(req.path);
+        let pathParts = res.locals.__request.segments;
+        if (pathParts.length && pathParts[0] === this._app.get('web.assets.mount')) {
 
-        if (!match) {
+            // looks like an asset request
             res.locals.__request.params = {};
             this.emit('request', res.locals.__request);
 
-            let pathParts = res.locals.__request.segments;
-            if (pathParts.length && pathParts[0] === this._app.get('web.assets.mount')) {
-                if (pathParts[1]) {
-                    try {
-                        let assetPath = pathParts.slice(2).join('/');
-                        let assetSource = this._app.assets.find(pathParts[1]);
-                        if (assetSource) {
-                            let asset = assetSource.find('relPath', assetPath);
-                            if (asset) {
-                                return res.sendFile(asset.path);
-                            }
+            if (pathParts[1]) {
+                try {
+                    let assetPath = pathParts.slice(2).join('/');
+                    let assetSource = this._app.assets.find(pathParts[1]);
+                    if (assetSource) {
+                        let asset = assetSource.find('relPath', assetPath);
+                        if (asset) {
+                            return res.sendFile(asset.path);
                         }
-                    } catch(e){}
-                }
+                    }
+                } catch(e){}
             }
+        }
+        
+        const match = this._theme.matchRoute(req.path);
 
+        if (!match) {
             return next(new WebError(404, `No matching route found for ${req.path}`));
         }
+
         if (match.route.redirect) {
             return res.redirect(match.route.redirect);
         }

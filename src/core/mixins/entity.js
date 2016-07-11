@@ -16,11 +16,13 @@ module.exports = mixin((superclass) => class Entity extends superclass {
                 let p = this.parent;
                 let pathParts = [];
                 while (p) {
-                    if (p && !p.isSource ) pathParts.unshift(p.name);
+                    if (p && ! p.isSource) pathParts.unshift(p.name);
                     p = p.parent;
                 }
-                pathParts.push(this.name);
-                return _.trim(_.compact(pathParts).join('/').replace(/\/index$/i, ''), '/');
+                if (!this.isIndex) {
+                    pathParts.push(this.name);
+                }
+                return _.trim(_.compact(pathParts).join('/'), '/');
             }
         });
 
