@@ -30,8 +30,10 @@ renderer.code = function (code, lang, escaped) {
  * Export the markdown parser.
  */
 
-module.exports = function markdown(content) {
+module.exports = function markdown(content, mdConfig) {
 
-    return marked(_.toString(content), { renderer: renderer });
+    mdConfig = (mdConfig && _.isObject(mdConfig)) ? mdConfig : {};
+    mdConfig.renderer = renderer;
+    return marked(_.toString(content), mdConfig);
 
 };

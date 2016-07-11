@@ -50,7 +50,7 @@ module.exports = class DocSource extends EntitySource {
                 return fs.readFileAsync(page, 'utf8').then(content => {
                     return this.resolve(context).then((ctx) => {
                         ctx = _.defaults(ctx, opts.globals);
-                        return this.engine().render(page, content, ctx);
+                        return self._render(page, content, ctx);
                     });
                 });
             }
@@ -92,7 +92,7 @@ module.exports = class DocSource extends EntitySource {
     }
 
     _render(path, content, context) {
-        return this.engine().render(path, content, context).then(rendered => (this.get('markdown') ? md(rendered) : rendered));
+        return this.engine().render(path, content, context).then(rendered => (this.get('markdown') ? md(rendered, this.get('markdown')) : rendered));
     }
 
     _parse(fileTree) {
