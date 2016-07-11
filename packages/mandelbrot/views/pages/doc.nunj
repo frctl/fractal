@@ -1,5 +1,6 @@
 {% extends "layouts/pjax.nunj" if request.isPjax else "layouts/frame.nunj" %}
 {% import "macros/errors.nunj" as errors %}
+{% import "macros/status.nunj" as status %}
 
 {% set pathParam = request.params.path %}
 {% set doc = frctl.docs.find('path', pathParam | default('')) %}
@@ -16,6 +17,7 @@
 
     <div class="Document-header">
         <h1 class="Document-title">{{ page.title }}</h1>
+        {{ status.tag(doc.status) }}
     </div>
 
     <div class="Document-content Prose">
