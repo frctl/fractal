@@ -29,6 +29,9 @@ module.exports = class Doc extends Entity {
     }
 
     _handle(config) {
+        if (config.handle) {
+            return utils.slugify(config.handle).toLowerCase();
+        }
         return utils.slugify(this.parent.getProp('prefix') ? `${this.parent.getProp('prefix')}-${config.name}` : config.name).toLowerCase();
     }
 

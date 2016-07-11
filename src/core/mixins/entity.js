@@ -20,7 +20,7 @@ module.exports = mixin((superclass) => class Entity extends superclass {
                     p = p.parent;
                 }
                 pathParts.push(this.name);
-                return _.trim(_.compact(pathParts).join('/').replace(/index$/i, ''), '/');
+                return _.trim(_.compact(pathParts).join('/').replace(/\/index$/i, ''), '/');
             }
         });
 
@@ -56,6 +56,9 @@ module.exports = mixin((superclass) => class Entity extends superclass {
     }
 
     _handle(config) {
+        if (config.handle) {
+            return utils.slugify(config.handle).toLowerCase();
+        }
         return this.name;
     }
 
