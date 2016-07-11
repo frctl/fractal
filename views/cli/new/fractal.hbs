@@ -16,19 +16,19 @@ fractal.set('project.title', '{{ projectTitle }}');
 /*
  * Tell Fractal where to look for components.
  */
-fractal.set('components.path', '{{ componentsDir }}');
+fractal.components.set('path', '{{ componentsDir }}');
 {{/if}}
 
 {{#if docsDir}}
 /*
  * Tell Fractal where to look for documentation pages.
  */
-fractal.set('docs.path', '{{ docsDir }}');
+fractal.docs.set('path', '{{ docsDir }}');
 {{/if}}
 
 {{#if publicDir}}
 /*
  * Tell the Fractal web preview plugin where to look for static assets.
  */
-fractal.set('web.static.path', '{{ publicDir }}');
+fractal.web.set('static.path', '{{ publicDir }}');
 {{/if}}

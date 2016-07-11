@@ -20,6 +20,7 @@ module.exports = {
 
     action: function (args, done) {
 
+        const fractal          = this.fractal;
         const console          = this.console;
         const baseDir          = args.path;
         const basePath         = baseDir.startsWith('/') ? baseDir : Path.join(process.cwd(), baseDir);
@@ -86,7 +87,7 @@ module.exports = {
                 name: helpers.slugify(answers.projectTitle),
                 version: '0.1.0',
                 dependencies: {
-                    '@frctl/fractal': shell.exec('npm show @frctl/fractal version', { silent:true }).output.replace(/^\s+|\s+$/g, '')
+                    '@frctl/fractal': `^${fractal.get('version')}`
                 }
             };
 
@@ -117,17 +118,12 @@ module.exports = {
                 console.log('Installing NPM dependencies - this may take some time!');
                 shell.cd(basePath);
                 const install = shell.exec('npm i', {
-                    silent: true,
+                    silent: false,
                 }, function () {
                     console.success(`Your new Fractal project has been set up.`);
                     done();
                 });
-                install.stdout.on('data', function (data) {
-                    console.log(data);
-                });
-                install.stderr.on('data', function (data) {
-                    console.log(data);
-                });
+                install.stdout.on('data', (data) => console.log);
             }).catch(e => {
                 fs.remove(basePath);
                 console.error(e);
