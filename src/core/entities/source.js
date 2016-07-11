@@ -63,12 +63,19 @@ module.exports = class EntitySource extends mix(Source, Heritable) {
     }
 
     statusInfo(handle) {
-        if (handle) {
-            return {
-                label: handle
-            };
+        const statuses = this.get('statuses');
+        const defaultStatus = this.get('default.status')
+        if (_.isNull(handle)) {
+            return null;
         }
-        return null;
+        if (_.isUndefined(handle)) {
+            return statuses[defaultStatus];
+        }
+        if (!statuses[handle]) {
+            Log.warn(`Status ${handle} is not a known option.`);
+            return statuses[defaultStatus];
+        }
+        return statuses[handle];
     }
 
     toJSON() {

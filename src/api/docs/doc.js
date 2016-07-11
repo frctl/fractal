@@ -69,6 +69,7 @@ module.exports = class Doc extends Entity {
         self.isDoc   = true;
         self.isIndex = this.isIndex;
         self.path    = this.path;
+        self.status    = this.status;
         self.tags    = this.tags;
         self.content = this.getContentSync();
         self.lang    = this.lang;

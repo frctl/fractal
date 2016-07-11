@@ -69,8 +69,20 @@ module.exports = {
         indexLabel: 'Overview',
         default: {
             context: {},
-            status: null,
+            status: 'ready',
             prefix: null,
+        },
+        statuses: {
+            draft: {
+                label: 'Draft',
+                description: 'Work in progress.',
+                color: '#FF3333'
+            },
+            ready: {
+                label: 'Ready',
+                description: 'Ready for referencing.',
+                color: '#29CC29'
+            }
         }
     },
     assets: {

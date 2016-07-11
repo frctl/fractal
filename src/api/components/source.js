@@ -247,22 +247,6 @@ module.exports = class ComponentSource extends EntitySource {
         return this.engine()[renderMethod](viewpath, layoutContent, layoutContext);
     }
 
-    statusInfo(handle) {
-        const statuses = this.get('statuses');
-        const defaultStatus = this.get('default.status')
-        if (_.isNull(handle)) {
-            return null;
-        }
-        if (_.isUndefined(handle)) {
-            return statuses[defaultStatus];
-        }
-        if (!statuses[handle]) {
-            Log.warn(`Status ${handle} is not a known option.`);
-            return statuses[defaultStatus];
-        }
-        return statuses[handle];
-    }
-
     _appendEventFileInfo(file, eventData) {
         eventData = super._appendEventFileInfo(file, eventData);
         for (let test of ['isResource', 'isTemplate', 'isReadme', 'isView', 'isVarView']) {
