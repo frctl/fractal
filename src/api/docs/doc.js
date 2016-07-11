@@ -32,13 +32,14 @@ module.exports = class Doc extends Entity {
         if (config.handle) {
             return utils.slugify(config.handle).toLowerCase();
         }
-        return utils.slugify(this.parent.getProp('prefix') ? `${this.parent.getProp('prefix')}-${config.name}` : config.name).toLowerCase();
+        let ref = this.isIndex ? (this.parent.isSource ? 'index' : this.parent.name) : config.name;
+        return utils.slugify(this.parent.getProp('prefix') ? `${this.parent.getProp('prefix')}-${ref}` : ref).toLowerCase();
     }
 
     _title(config) {
         return config.title || this.label;
     }
-
+    
     getContent() {
         return Promise.resolve(this.content);
     }
