@@ -45,6 +45,10 @@ module.exports = class Server extends mix(Emitter) {
         return this._urls;
     }
 
+    get url() {
+        return this._sync ? this._urls.sync.local : this._urls.server;
+    }
+
     get isListening() {
         return !! this._instance;
     }
@@ -204,7 +208,7 @@ module.exports = class Server extends mix(Emitter) {
                 } catch(e){}
             }
         }
-        
+
         const match = this._theme.matchRoute(req.path);
 
         if (!match) {

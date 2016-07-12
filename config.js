@@ -6,7 +6,7 @@ module.exports = {
     version: packageJSON.version,
     env: process.env.NODE_ENV || 'production',
     project: {
-        title: 'My Component Library',
+        title: 'Component Library',
         version: null,
     },
     components: {
