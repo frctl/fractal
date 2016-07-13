@@ -21,6 +21,6 @@
   },
   "devDependencies": {},
   "peerDependencies": {
-      "@frctl/fractal": "^1.0.0-beta.0"
+      "@frctl/fractal": "^1.0.0-beta.14"
   }
 }
