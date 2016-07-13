@@ -2,28 +2,18 @@
 
 const Handlebars = require('handlebars');
 const _          = require('lodash');
-const Path       = require('path');
+const utils      = require('@frctl/fractal').utils;
 
 module.exports = function(fractal){
 
-    return function staticPath(str, root){
+    return function staticPath(path, root){
         root = this._config ? this : root;
 
-        if (! root || ! root._env || root._env.server || str.startsWith('http') || str.startsWith('.')) {
-            return str;
+        if (! root || ! root._env || root._env.server) {
+            return path;
         }
 
-        const currentPath = getStaticPagePath(_.get(root._request, 'path', '/'));
-        let url = '/' + _.trim(Path.extname(str) ? str : getStaticPagePath(str), '/');
-        return Path.relative(currentPath, url).replace(/^\.\.\//,'');
+        return utils.relUrlPath(path, _.get(root._request, 'path', '/'), fractal.web.get('builder.urls'));
     };
 
 };
-
-function getStaticPagePath(url) {
-    if (url == '/') {
-        return '/index.html'
-    }
-    const parts = Path.parse(url);
-    return Path.join(parts.dir, parts.name + '.html');
-}
