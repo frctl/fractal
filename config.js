@@ -100,7 +100,7 @@ module.exports = {
         },
         builder: {
             dest: null,
-            concurrency: 100,
+            concurrency: 10,
             ext: '.html',
             urls: {
                 ext: '.html'

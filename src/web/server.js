@@ -122,7 +122,7 @@ module.exports = class Server extends mix(Emitter) {
     _startSync(resolve, reject) {
         const syncServer = require('browser-sync').create();
         const watchers   = {};
-        const bsConfig   = _.defaultsDeep({
+        const bsConfig   = _.defaultsDeep(this._config.syncOptions || {}, {
             logLevel:  this._config.debug ? 'debug' : 'silent',
             browser:   [],
             logPrefix: 'Fractal',
@@ -134,7 +134,7 @@ module.exports = class Server extends mix(Emitter) {
             socket: {
                 port: this._ports.sync
             }
-        }, this._config.syncOptions || {});
+        });
 
         this._app.watch();
 
