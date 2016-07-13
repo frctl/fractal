@@ -1,29 +1,16 @@
 'use strict';
 
-const _    = require('lodash');
-const Path = require('path');
+const _     = require('lodash');
+const utils = require('@frctl/fractal').utils;
 
 module.exports = function(fractal) {
 
-    return function(str) {
+    return function(path) {
 
         let env = this.lookup('_env');
         let request = this.lookup('_request');
-        if (! env || env.server || str.startsWith('http') || str.startsWith('.')) {
-            return str;
-        }
 
-        const currentPath = getStaticPagePath(_.get(request, 'path', '/'));
-        let url = '/' + _.trim(Path.extname(str) ? str : getStaticPagePath(str), '/');
-        return Path.relative(currentPath, url).replace(/^\.\.\//,'');
+        return (! env || env.server) ? path : utils.relUrlPath(path, _.get(request, 'path', '/'), fractal.web.get('builder.urls'));
     }
 
 };
-
-function getStaticPagePath(url) {
-    if (url == '/') {
-        return '/index.html'
-    }
-    const parts = Path.parse(url);
-    return Path.join(parts.dir, parts.name + '.html');
-}
