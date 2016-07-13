@@ -58,6 +58,10 @@ module.exports = class Doc extends Entity {
         });
     }
 
+    toc(maxDepth) {
+        return this.source.toc(this, maxDepth);
+    }
+
     static create(config, content, parent) {
         var parsed = matter(content);
         config     = _.defaults(parsed.data || {}, config);

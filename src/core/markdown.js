@@ -34,6 +34,23 @@ module.exports = function markdown(content, mdConfig) {
 
     mdConfig = (mdConfig && _.isObject(mdConfig)) ? mdConfig : {};
     mdConfig.renderer = renderer;
+
     return marked(_.toString(content), mdConfig);
 
+};
+
+module.exports.toc = function(content, maxDepth, mdConfig){
+
+    maxDepth = maxDepth || 6;
+    mdConfig = (mdConfig && _.isObject(mdConfig)) ? mdConfig : {};
+    mdConfig.renderer = renderer;
+
+    const tokens = marked.lexer(_.toString(content));
+
+    return tokens.filter(token => {
+        return token.type === 'heading' && token.depth <= maxDepth;
+    }).map(token => {
+        token.id = token.text.toLowerCase().replace(/[^\w]+/g, '-');
+        return token;
+    });
 };

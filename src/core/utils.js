@@ -108,6 +108,28 @@ module.exports = {
             return upstream;
         }
         return prop;
+   },
+
+   relUrlPath(toPath, fromPath, opts) {
+
+       if (toPath.startsWith('http') || toPath.startsWith('.')) {
+           return toPath;
+       }
+
+       let ext = opts.ext || '';
+
+       fromPath = getStaticPagePath(fromPath);
+       toPath = '/' + _.trim(Path.extname(toPath) ? toPath : getStaticPagePath(toPath), '/');
+
+       return Path.relative(fromPath, toPath).replace(/^\.\.\//,'').replace('.PLACEHOLDER', ext);
+
+       function getStaticPagePath(url) {
+           if (url == '/') {
+               return ext == '' ? '/' : `/index.PLACEHOLDER`
+           }
+           const parts = Path.parse(url);
+           return Path.join(parts.dir, `${parts.name}.PLACEHOLDER`);
+       }
    }
 
 };

@@ -101,6 +101,10 @@ module.exports = {
         builder: {
             dest: null,
             concurrency: 100,
+            ext: '.html',
+            urls: {
+                ext: '.html'
+            }
         },
         static: {
             path: null,

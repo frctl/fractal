@@ -153,8 +153,9 @@ module.exports = class Builder extends mix(Emitter) {
 
     _buildTargets() {
         let self = this;
+        let ext = this._app.web.get('builder.ext');
         return this._targets.map(target => {
-            const savePath = Path.join(this._config.dest, target.url) + (target.url == '/' ? 'index.html' : '.html');
+            const savePath = Path.join(this._config.dest, target.url) + (target.url == '/' ? `index${ext}` : ext);
             const pathInfo = Path.parse(savePath);
             this._jobsCount++;
             return this._throttle(() => {

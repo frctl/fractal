@@ -30,6 +30,12 @@ module.exports = class DocSource extends EntitySource {
         return resolver.context(context, this);
     }
 
+    toc(page, maxDepth) {
+        return page.getContent().then(content => {
+            return this.engine().render(page.filePath, content).then(rendered => md.toc(rendered, maxDepth, this.get('markdown')));
+        });
+    }
+
     render(page, context, opts) {
         const self = this;
 
