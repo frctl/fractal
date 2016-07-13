@@ -1,6 +1,6 @@
 {
   "name": "@frctl/nunjucks",
-  "version": "1.0.0-beta.3",
+  "version": "1.0.0-beta.4",
   "description": "Nunjucks template adapter for Fractal.",
   "main": "index.js",
   "repository": {
