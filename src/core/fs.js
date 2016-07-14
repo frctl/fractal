@@ -28,11 +28,12 @@ module.exports = {
         function build(filePath, stat) {
             return co(function* () {
                 const p        = Path.parse(filePath);
+                p.relPath      = Path.relative(process.cwd(), filePath);
                 p.fsName       = p.name;
                 p.name         = _.get(p.fsName.match(/^_?(\d+\-)?(.*)/), 2, p.fsName);
                 p.path         = filePath;
                 p.dirs         = _.compact(p.dir.split('/'));
-                p.isHidden     = !!(_.find(p.dirs, s => s.startsWith('_')) || p.fsName.startsWith('_'));
+                p.isHidden     = !!(_.find(p.relPath.split('/'), s => s.startsWith('_')) || p.fsName.startsWith('_'));
                 p.order        = parseInt(_.get(p.fsName.match(/^_?(\d+)\-.*/), 1, 1000000), 10);
                 p.ext          = p.ext.toLowerCase();
                 p.isFile       = stat.isFile();
