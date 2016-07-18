@@ -15,7 +15,8 @@ module.exports = function(options){
         format: 'json',
         theme: {
             mount: '_theme',
-        }
+        },
+        nav: ['components','docs','assets']
     });
 
     config.stylesheet = config.stylesheet || `/${config.theme.mount}/css/${config.skin}.css`;
