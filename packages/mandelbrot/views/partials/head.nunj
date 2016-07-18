@@ -1,5 +1,5 @@
 <link rel="shortcut icon" href="{{ path('/favicon.ico') }}" type="image/ico">
-{% for stylesheet in frctl.theme.get('stylesheet') %}
+{% for stylesheet in frctl.theme.get('styles') %}
 <link rel="stylesheet" href="{{ path(stylesheet) }}?cachebust={{ frctl.theme.get('version') }}" type="text/css">
 {% endfor %}
 
