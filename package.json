@@ -1,7 +1,7 @@
 {
   "name": "@frctl/fractal",
   "version": "1.0.0-beta.14",
-  "description": "A toolkit to help you build, document and integrate component libraries into your web projects.",
+  "description": "A tool to help you build and document web component libraries and then integrate them into your projects.",
   "main": "src/fractal.js",
   "repository": {
     "type": "git",
@@ -64,8 +64,7 @@
   "scripts": {
     "test": "NODE_ENV=test mocha --reporter spec --harmony",
     "lint": "jscs src",
-    "lint:fix": "jscs src --fix",
-    "docs": "grep 'DOCTOC SKIP' docs/*/*.md docs/*.md  -L | xargs doctoc --github --notitle --maxlevel 4"
+    "lint:fix": "jscs src --fix"
   },
   "devDependencies": {
     "chai": "^3.5.0",
