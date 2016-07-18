@@ -89,6 +89,7 @@ gulp.task('fonts:watch', function () {
 //
 gulp.task('img', ['img:clean'], function() {
    gulp.src('./assets/img/**/*').pipe(gulp.dest('./dist/img'));
+   gulp.src('./assets/favicon.ico').pipe(gulp.dest('./dist'));
 });
 
 gulp.task('img:clean', function() {
