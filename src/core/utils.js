@@ -121,11 +121,15 @@ module.exports = {
        fromPath = getStaticPagePath(fromPath);
        toPath = '/' + _.trim(Path.extname(toPath) ? toPath : getStaticPagePath(toPath), '/');
 
+       if (toPath == '/') {
+           return Path.relative(fromPath, toPath);
+       }
+
        return Path.relative(fromPath, toPath).replace(/^\.\.\//,'').replace('.PLACEHOLDER', ext);
 
        function getStaticPagePath(url) {
            if (url == '/') {
-               return ext == '' ? '/' : `/index.PLACEHOLDER`
+               return ext == '' ? '/' : `/index.PLACEHOLDER`;
            }
            const parts = Path.parse(url);
            return Path.join(parts.dir, `${parts.name}.PLACEHOLDER`);
