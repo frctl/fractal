@@ -12,15 +12,18 @@ module.exports = function(options){
         rtl: false,
         lang: 'en',
         stylesheet: null,
+        script: null,
         format: 'json',
         theme: {
             mount: '_theme',
         },
         nav: ['components','docs','assets'],
-        panels: ['html', 'view', 'context', 'resources', 'info', 'notes']
+        panels: ['html', 'view', 'context', 'resources', 'info', 'notes'],
+        version: packageJSON.version
     });
 
-    config.stylesheet = config.stylesheet || `/${config.theme.mount}/css/${config.skin}.css`;
+    config.stylesheet = [].concat(config.stylesheet || `/${config.theme.mount}/css/${config.skin}.css`);
+    config.script = [].concat(config.script || `/${config.theme.mount}/js/mandelbrot.js`);
 
     const theme = new Theme(Path.join(__dirname, '../views'), config);
 
