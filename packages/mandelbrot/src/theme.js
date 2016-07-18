@@ -16,7 +16,8 @@ module.exports = function(options){
         theme: {
             mount: '_theme',
         },
-        nav: ['components','docs','assets']
+        nav: ['components','docs','assets'],
+        panels: ['html', 'view', 'context', 'resources', 'info', 'notes']
     });
 
     config.stylesheet = config.stylesheet || `/${config.theme.mount}/css/${config.skin}.css`;
