@@ -19,11 +19,13 @@ module.exports = function(options){
         },
         nav: ['components','docs','assets'],
         panels: ['html', 'view', 'context', 'resources', 'info', 'notes'],
-        version: packageJSON.version
+        version: packageJSON.version,
+        favicon: null
     });
 
-    config.styles = [].concat(config.styles).concat(config.stylesheet).map(url => (url === 'default' ? `/${config.theme.mount}/css/${config.skin}.css` : url));
-    config.script = [].concat(config.script).map(url => (url === 'default' ? `/${config.theme.mount}/js/mandelbrot.js` : url));
+    config.styles = [].concat(config.styles).concat(config.stylesheet).filter(url => url).map(url => (url === 'default' ? `/${config.theme.mount}/css/${config.skin}.css` : url));
+    config.scripts = [].concat(config.scripts).filter(url => url).map(url => (url === 'default' ? `/${config.theme.mount}/js/mandelbrot.js` : url));
+    config.favicon = config.favicon || `/${config.theme.mount}/favicon.ico`
 
     const theme = new Theme(Path.join(__dirname, '../views'), config);
 
