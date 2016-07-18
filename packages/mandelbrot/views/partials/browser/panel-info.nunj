@@ -1,4 +1,4 @@
-<div class="Browser-panel" data-role="tab-panel" id="browser-{{ entity.id }}-panel-meta">
+<div class="Browser-panel" data-role="tab-panel" id="browser-{{ entity.id }}-panel-info">
     <ul class="Meta">
         <li class="Meta-item">
             <strong class="Meta-key">Handle:</strong>
