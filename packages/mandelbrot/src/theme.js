@@ -14,7 +14,7 @@ module.exports = function(options){
         styles: 'default',
         scripts: 'default',
         format: 'json',
-        theme: {
+        static: {
             mount: '_theme',
         },
         nav: ['components','docs','assets'],
@@ -23,15 +23,15 @@ module.exports = function(options){
         favicon: null
     });
 
-    config.styles = [].concat(config.styles).concat(config.stylesheet).filter(url => url).map(url => (url === 'default' ? `/${config.theme.mount}/css/${config.skin}.css` : url));
-    config.scripts = [].concat(config.scripts).filter(url => url).map(url => (url === 'default' ? `/${config.theme.mount}/js/mandelbrot.js` : url));
-    config.favicon = config.favicon || `/${config.theme.mount}/favicon.ico`
+    config.styles = [].concat(config.styles).concat(config.stylesheet).filter(url => url).map(url => (url === 'default' ? `/${config.static.mount}/css/${config.skin}.css` : url));
+    config.scripts = [].concat(config.scripts).filter(url => url).map(url => (url === 'default' ? `/${config.static.mount}/js/mandelbrot.js` : url));
+    config.favicon = config.favicon || `/${config.static.mount}/favicon.ico`
 
     const theme = new Theme(Path.join(__dirname, '../views'), config);
 
     theme.setErrorView('pages/error.nunj');
 
-    theme.addStatic(Path.join(__dirname, '../dist'), `/${config.theme.mount}`);
+    theme.addStatic(Path.join(__dirname, '../dist'), `/${config.static.mount}`);
 
     theme.addRoute('/', {
         handle: 'overview',
