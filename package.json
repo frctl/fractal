@@ -15,8 +15,8 @@
   "homepage": "https://github.com/frctl/fractal",
   "dependencies": {
     "@allmarkedup/fang": "^1.0.0",
-    "@frctl/handlebars": "^1.0.0-beta.4",
-    "@frctl/mandelbrot": "^1.0.0-beta.15",
+    "@frctl/handlebars": "^1.0.0",
+    "@frctl/mandelbrot": "^1.0.0",
     "anymatch": "^1.3.0",
     "base64-url": "^1.2.2",
     "bluebird": "^3.4.1",
