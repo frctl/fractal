@@ -1,14 +1,5 @@
+{% extends 'layouts/render.nunj' %}
+
 {% set entity = frctl.components.find('@' + request.params.handle) -%}
-{% if not entity %}{{ throw(404, "Component '" + request.params.handle + "' not found.") }}{% endif -%}
-{% set rendered = entity.render() | async(true) %}
-{% if rendered | isError -%}
-{% import "macros/errors.nunj" as errors %}
-{% set error = rendered %}
-{% extends 'layouts/full.nunj' %}
-{% set page = {
-    title: 'Error rendering component ' + request.params.handle
-} %}
-{% block content %}{{ errors.renderError('component', error.message) }}{% endblock %}
-{%- else -%}
-{{ rendered }}
-{%- endif %}
+{% set withLayout = false -%}
+{% set withCollation = true -%}

@@ -1,5 +1,5 @@
 <nav class="Navigation">
-    {% for navPartial in frctl.theme.get('nav') %}
+{% for navPartial in frctl.theme.get('nav') %}
     {% include 'partials/navigation/' + navPartial + '.nunj' %}
-    {% endfor %}
+{% endfor %}
 </nav>

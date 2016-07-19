@@ -1,5 +1,4 @@
-{% extends "layouts/pjax.nunj" if request.isPjax else "layouts/frame.nunj" %}
-{% import "macros/errors.nunj" as errors %}
+{% extends "layouts/doc.nunj"%}
 {% import "macros/status.nunj" as status %}
 
 {% set pathParam = request.params.path %}
@@ -11,32 +10,23 @@
     title: doc.title | default(frctl.get('project.title')) | default('Welcome to your component library')
 } %}
 
-{% block content %}
+{% set status = status.tag(doc.status) %}
 
-<div class="Document">
+{% block docContent %}
 
-    <div class="Document-header">
-        <h1 class="Document-title">{{ page.title }}</h1>
-        {{ status.tag(doc.status) }}
-    </div>
-
-    <div class="Document-content Prose">
-
-    {% block pageContent %}
-    {% if doc %}
-        {% set contents = doc.renderWithGlobals(null, { _request: request, _env: frctl.env }) | async(true) %}
-        {% if contents | isError %}
-        {{ errors.renderError('page', contents.message) }}
-        {% else %}
-        {{ contents }}
-        {% endif %}
+<div class="Prose">
+{% block pageContent %}
+{% if doc %}
+    {% set contents = doc.renderWithGlobals(null, { _request: request, _env: frctl.env }) | async(true) %}
+    {% if contents | isError %}
+    {{ errors.renderError('page', contents.message) }}
     {% else %}
-    {% include 'partials/content/overview.nunj' %}
+    {{ contents }}
     {% endif %}
-    {% endblock %}
-
-    </div>
-
+{% else %}
+{% include 'partials/content/overview.nunj' %}
+{% endif %}
+{% endblock %}
 </div>
 
 {% endblock %}

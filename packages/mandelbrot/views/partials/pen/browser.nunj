@@ -1,0 +1,3 @@
+<div class="Pen-panel Pen-info" data-role="info">
+    {% include 'partials/browser/browser.nunj' %}
+</div>

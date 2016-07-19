@@ -1,34 +1,22 @@
-{% extends "layouts/pjax.nunj" if request.isPjax else "layouts/frame.nunj" %}
+{% extends "layouts/doc.nunj" %}
 
 {% set page = {
     title: ('Not found' if error.status == '404' else error.name) | default('An error has occurred')
 } %}
 
-{% block content %}
+{% block docContent %}
 
-<div class="Document">
+<div class="Error">
 
-    <div class="Document-header">
-        <h1 class="Document-title">{{ page.title }}</h1>
+    <div class="Error-message Prose">
+    {{ error.message | default('No more information is available.') | markdown }}
     </div>
 
-    <div class="Document-content">
-
-        <div class="Error">
-
-            <div class="Error-message Prose">
-            {{ error.message | default('No more information is available.') | markdown }}
-            </div>
-
-            {% if error.stack and error.status != '404' %}
-            <code class="Code Error-stack">
-                <pre>{{ error.stack }}</pre>
-            </code>
-            {% endif %}
-
-        </div>
-
-    </div>
+    {% if error.stack and error.status != '404' %}
+    <code class="Code Error-stack">
+        <pre>{{ error.stack }}</pre>
+    </code>
+    {% endif %}
 
 </div>
 

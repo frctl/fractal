@@ -1,0 +1,41 @@
+{% extends "layouts/pjax.nunj" if request.isPjax else "layouts/frame.nunj" %}
+{% import "macros/image.nunj" as img %}
+{% import "macros/status.nunj" as status %}
+{% import "macros/errors.nunj" as errors %}
+
+{% set page = {
+    title: entity.title
+} %}
+
+{% set previewUrl = path(frctl.theme.urlFromRoute('preview', {handle: entity.handle})) %}
+
+{% if frctl.env.server and frctl.env.sync %}
+    {% set rendered = false %}
+{% else %}
+    {% set rendered = entity.renderWithGlobals(null, { _request: request, _env: frctl.env }, true, true) | async(true) %}
+    {% if rendered | isError %}
+        {% set error = rendered %}
+        {% set renderError %}{{ errors.renderError('component', error.message) }}{% endset %}
+        {% set rendered = false %}
+    {% endif %}
+{%- endif %}
+
+{% block content %}
+
+<div class="Pen" data-behaviour="pen" id="pen-{{ entity.id }}">
+
+    {% block penContent %}
+
+    {% include "partials/pen/header.nunj" %}
+
+    {% include "partials/pen/preview.nunj" %}
+
+    <div class="Pen-handle Pen-handle--browser" data-role="resize-handle"></div>
+
+    {% include "partials/pen/browser.nunj" %}
+
+    {% endblock %}
+
+</div>
+
+{% endblock %}
