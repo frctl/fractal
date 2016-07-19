@@ -8,7 +8,7 @@ module.exports = mixin((superclass) => {
 
     let Emitter = class extends superclass {
         constructor(){
-            super(...arguments);
+            super();
             super.addMixedIn('Emitter');
             this.on('error', e => {});
         }

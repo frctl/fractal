@@ -7,7 +7,7 @@ const utils = require('../utils');
 module.exports = mixin((superclass) => class Heritable extends superclass {
 
     constructor(){
-        super(...arguments);
+        super();
         super.addMixedIn('Heritable');
         this._props     = new Map();
         this._parent    = null;

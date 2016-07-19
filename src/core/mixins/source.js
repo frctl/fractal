@@ -19,7 +19,8 @@ const Stream       = require('../promise-stream');
 module.exports = mixin((superclass) => class Source extends mix(superclass).with(Configurable, Collection, Emitter) {
 
     constructor(){
-        super(...arguments);
+        super();
+        // super.apply(null, Array.from(arguments));
         super.addMixedIn('Source');
         this.isSource     = true;
         this.isLoaded     = false;

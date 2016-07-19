@@ -26,7 +26,7 @@ class Base {
 }
 
 module.exports = function(){
-
-    return mix(Base).with(...arguments);
+    let mixer = mix(Base);
+    return mixer.with.apply(mixer, Array.from(arguments));
 
 };

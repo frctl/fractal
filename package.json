@@ -59,7 +59,7 @@
     "fractal": "./bin/fractal"
   },
   "engines": {
-    "node": ">= 4.0.0"
+    "node": ">= 4.4.7"
   },
   "scripts": {
     "test": "NODE_ENV=test mocha --reporter spec --harmony",

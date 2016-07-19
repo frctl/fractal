@@ -39,7 +39,7 @@ class Cli extends mix(Configurable, Emitter) {
 
         for (let method of ['log', 'error', 'warn', 'debug', 'success']) {
             this[method] = function(){
-                this.console[method](...arguments);
+                this.console.method.apply(this.console, Array.from(arguments));
             };
             Log.on(method, (msg, data) => this[method](msg, data));
         }
@@ -110,7 +110,7 @@ class Cli extends mix(Configurable, Emitter) {
 
     exec(){
         _.forEach(requireAll(this._commandsDir), c => this.command(c.command, c.action, c.config || {}));
-        return arguments.length ? this._execFromString(...arguments) : this._execFromArgv();
+        return arguments.length ? this._execFromString.apply(Array.from(arguments)) : this._execFromArgv();
     }
 
     theme(theme) {
@@ -190,7 +190,7 @@ class Cli extends mix(Configurable, Emitter) {
         if (input.command) {
 
             // non-interactive mode
-            // 
+            //
             if (this._scope === 'global') {
                 vorpal.parse(process.argv);
                 return;

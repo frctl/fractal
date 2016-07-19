@@ -1,4 +1,4 @@
-#! /usr/bin/env node --harmony
+#! /usr/bin/env node
 
 'use strict';
 
@@ -21,8 +21,9 @@ const FractalCli = new Liftoff({
     configName: 'fractal',
     extensions: {
         '.js': null
-    },
-    v8flags: ['--harmony']
+    }
+    // ,
+    // v8flags: ['--harmony']
 });
 
 /*

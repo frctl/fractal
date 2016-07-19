@@ -7,7 +7,7 @@ const mixin = require('mixwith').Mixin;
 module.exports = mixin((superclass) => class Entity extends superclass {
 
     constructor(){
-        super(...arguments);
+        super();
         super.addMixedIn('Entity');
 
         Object.defineProperty(this, 'path', {

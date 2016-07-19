@@ -6,7 +6,7 @@ const mixin = require('mixwith').Mixin;
 module.exports = mixin((superclass) => class Configurable extends superclass {
 
     constructor(){
-        super(...arguments);
+        super();
         super.addMixedIn('Configurable');
         this._config = {};
     }
