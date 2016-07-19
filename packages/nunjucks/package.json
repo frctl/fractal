@@ -14,13 +14,9 @@
   },
   "homepage": "https://github.com/frctl/nunjucks",
   "dependencies": {
-    "@frctl/fractal": "^1.0.0-beta.0",
+    "@frctl/fractal": "^1.0.0-rc.1",
     "bluebird": "^3.3.4",
     "lodash": "^4.0.0",
     "nunjucks": "^2.3.0"
-  },
-  "devDependencies": {},
-  "peerDependencies": {
-    "@frctl/fractal": "^1.0.0-beta.0"
   }
 }
