@@ -1,3 +1,5 @@
 # Mandelbrot
 
-The default web UI theme Fractal. See the Fractal [web theme documentation](https://github.com/frctl/fractal/blob/master/docs/web/themes.md) for configuration options.
+The default web UI theme for Fractal.
+
+See the Fractal [documentation](http://fractal.build/guide) for details on configuration and usage.
