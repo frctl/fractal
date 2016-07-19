@@ -7,8 +7,8 @@ const Adapter     = require('@frctl/fractal').Adapter;
 
 class HandlebarsAdapter extends Adapter {
 
-    constructor() {
-        super(...arguments);
+    constructor(hbs, source) {
+        super(hbs, source);
         this.on('view:added',   view => this.engine.registerPartial(view.handle, view.content));
         this.on('view:removed', view => this.engine.unregisterPartial(view.handle));
         this.on('view:updated', view => this.engine.registerPartial(view.handle, view.content));
