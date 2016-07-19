@@ -5,6 +5,8 @@ Fractal is a tool to help you **build** and **document** web component libraries
 [![Build Status](https://img.shields.io/travis/frctl/fractal/master.svg?style=flat-square)](https://travis-ci.org/frctl/fractal)
 [![NPM Version](https://img.shields.io/npm/v/@frctl/fractal.svg?style=flat-square)](https://www.npmjs.com/package/@frctl/fractal)
 
+**Read the Fractal documentation at http://fractal.build/guide.**
+
 ## Introduction
 
 Component (or pattern) libraries are a way of designing and building websites in a modular fashion, breaking up the UI into small, reusable chunks that can then later be assembled in a variety of ways to build anything from larger components right up to whole pages.
@@ -13,7 +15,7 @@ Fractal helps you assemble, preview and document website component libraries, an
 
 Fractal can be run from the command line or integrated into your project via it's API.
 
-**Read the Fractal documentation at [fractal.build/guide](http://fractal.build/guide).**
+Check out the the [Fractal documentation](http://fractal.build/guide) for more information.
 
 ## Requirements
 
