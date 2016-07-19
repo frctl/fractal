@@ -110,7 +110,7 @@ class Cli extends mix(Configurable, Emitter) {
 
     exec(){
         _.forEach(requireAll(this._commandsDir), c => this.command(c.command, c.action, c.config || {}));
-        return arguments.length ? this._execFromString.apply(Array.from(arguments)) : this._execFromArgv();
+        return arguments.length ? this._execFromString.apply(this, Array.from(arguments)) : this._execFromArgv();
     }
 
     theme(theme) {
