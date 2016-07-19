@@ -9,6 +9,8 @@
 
 {% set previewUrl = path(frctl.theme.urlFromRoute('preview', {handle: entity.handle})) %}
 
+{% block content %}
+
 {% if frctl.env.server and frctl.env.sync %}
     {% set rendered = false %}
 {% else %}
@@ -19,8 +21,6 @@
         {% set rendered = false %}
     {% endif %}
 {%- endif %}
-
-{% block content %}
 
 <div class="Pen" data-behaviour="pen" id="pen-{{ entity.id }}">
 
