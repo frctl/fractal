@@ -28,5 +28,4 @@ class Base {
 module.exports = function(){
     let mixer = mix(Base);
     return mixer.with.apply(mixer, Array.from(arguments));
-
 };

@@ -39,7 +39,7 @@ class Cli extends mix(Configurable, Emitter) {
 
         for (let method of ['log', 'error', 'warn', 'debug', 'success']) {
             this[method] = function(){
-                this.console.method.apply(this.console, Array.from(arguments));
+                this.console[method].apply(this.console, Array.from(arguments));
             };
             Log.on(method, (msg, data) => this[method](msg, data));
         }
