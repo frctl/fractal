@@ -4,7 +4,13 @@ Use Handlebars templates with Fractal.
 
 ## Installation and Usage
 
-This is the default template engine adapter for Fractal and does not need to be installed separately **unless** you wish to add your own helpers or partials etc. In that case you should `require` and configure it as follows:
+This is the default template engine adapter for Fractal and does not need to be installed separately **unless** you wish to add your own helpers or partials etc. In that case you will need to install it in your project:
+
+```shell
+npm i @frctl/handlebars --save
+```
+
+And then `require` and configure it as follows:
 
 ```js
 const config = {
