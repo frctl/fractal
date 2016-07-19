@@ -1,0 +1,3 @@
+{% for stylesheet in frctl.theme.get('styles') %}
+<link rel="stylesheet" href="{{ path(stylesheet) }}?cachebust={{ frctl.theme.get('version') }}" type="text/css">
+{% endfor %}

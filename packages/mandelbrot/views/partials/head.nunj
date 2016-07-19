@@ -1,5 +1,3 @@
 <link rel="shortcut icon" href="{{ path(frctl.theme.get('favicon')) }}" type="image/ico">
-{% for stylesheet in frctl.theme.get('styles') %}
-<link rel="stylesheet" href="{{ path(stylesheet) }}?cachebust={{ frctl.theme.get('version') }}" type="text/css">
-{% endfor %}
+{% include 'partials/stylesheets.nunj' %}
 <title>{% if page.title %}{{ page.title }} | {% endif %}{{ frctl.get('project.title') }}</title>
