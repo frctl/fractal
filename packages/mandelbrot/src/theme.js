@@ -17,15 +17,15 @@ module.exports = function(options){
         static: {
             mount: '_theme',
         },
-        nav: ['components','docs','assets'],
-        panels: ['html', 'view', 'context', 'resources', 'info', 'notes'],
         version: packageJSON.version,
         favicon: null
     });
 
-    config.styles = [].concat(config.styles).concat(config.stylesheet).filter(url => url).map(url => (url === 'default' ? `/${config.static.mount}/css/${config.skin}.css` : url));
+    config.panels  = config.panels || ['html', 'view', 'context', 'resources', 'info', 'notes'];
+    config.nav     = config.nav || ['components','docs','assets'];
+    config.styles  = [].concat(config.styles).concat(config.stylesheet).filter(url => url).map(url => (url === 'default' ? `/${config.static.mount}/css/${config.skin}.css` : url));
     config.scripts = [].concat(config.scripts).filter(url => url).map(url => (url === 'default' ? `/${config.static.mount}/js/mandelbrot.js` : url));
-    config.favicon = config.favicon || `/${config.static.mount}/favicon.ico`
+    config.favicon = config.favicon || `/${config.static.mount}/favicon.ico`;
 
     const theme = new Theme(Path.join(__dirname, '../views'), config);
 
