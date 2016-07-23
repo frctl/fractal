@@ -23,6 +23,7 @@ module.exports = class Asset extends File {
         const self = super.toJSON();
         self.isAsset = true;
         self.srcPath = this.srcPath;
+        self[`is${this.ext.replace(/^\./, '').toUpperCase()}`] = true;
         return self;
     }
 

@@ -16,5 +16,5 @@ module.exports = class AssetCollection extends FileCollection {
     toVinylArray() {
         return this.filter('isAsset').flatten().map(asset => asset.toVinyl()).toArray();
     }
-    
+
 }

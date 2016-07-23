@@ -6,6 +6,8 @@ const utils             = require('../../core/utils');
 const Entity            = require('../../core/entities/entity');
 const VariantCollection = require('../variants/collection');
 const FileCollection    = require('../files/collection');
+const AssetCollection   = require('../assets/collection');
+const Asset             = require('../assets/asset');
 
 module.exports = class Component extends Entity {
 
@@ -94,15 +96,29 @@ module.exports = class Component extends Entity {
             if (groups) {
                 for (let key in groups) {
                     let group = groups[key];
-                    let files = this._resources.match(group.match);
-                    files.name = key;
-                    files.label = files.title = group.label;
+                    let items = this._resources.match(group.match).items().map(file => new Asset(file._file, this.source.relPath, this.source));
+                    let files = new AssetCollection({
+                        name: key,
+                        label: group.label,
+                        title: group.label
+                    }, items);
                     collections.push(files);
                 }
             }
-            this._resourceCollections = new FileCollection({}, collections);
+            this._resourceCollections = new AssetCollection({
+                name: 'resources',
+                label: 'Resources'
+            }, collections);
         }
         return this._resourceCollections;
+    }
+
+    resourcesJSON() {
+        const items = {};
+        for (let item of this.resources()) {
+            items[item.name] = item.toJSON().items;
+        };
+        return items;
     }
 
     flatten() {
@@ -122,7 +138,8 @@ module.exports = class Component extends Entity {
         self.preview     = this.preview;
         self.display     = this.display;
         self.viewPath    = this.viewPath;
-        self.variants = this.variants().toJSON();
+        self.resources   = this.resourcesJSON();
+        self.variants    = this.variants().toJSON();
         return self;
     }
 

@@ -11,6 +11,8 @@ module.exports = class FileCollection extends mix(Collection) {
     constructor(config, items){
         super();
         this.setItems(items);
+        this.name = config.name || null;
+        this.label = config.label || null;
     }
 
     files() {
@@ -49,6 +51,13 @@ module.exports = class FileCollection extends mix(Collection) {
 
     gulpify() {
         return this.toVinylStream();
+    }
+
+    toJSON(){
+        const self = super.toJSON();
+        self.label = this.label || null;
+        self.name  = this.name || null;
+        return self;
     }
 
 }

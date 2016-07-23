@@ -97,6 +97,14 @@ module.exports = class Variant extends Entity {
         return this._resources;
     }
 
+    resourcesJSON() {
+        const items = {};
+        for (let item of this.resources()) {
+            items[item.name] = item.toJSON().items;
+        };
+        return items;
+    }
+
     getContent() {
         return this._view.read().then(c => c.toString());
     }
@@ -116,8 +124,8 @@ module.exports = class Variant extends Entity {
         self.viewPath  = this.viewPath;
         self.preview   = this.preview;
         self.context   = this.context;
+        self.resources = this.resourcesJSON();
         self.content   = this.getContentSync();
-        // self.resources    = this.resources().toJSON();
         return self;
     }
 
