@@ -10,6 +10,7 @@ const portscanner = Promise.promisifyAll(require('portscanner'));
 const WebError    = require('./error');
 const Log         = require('../core/log');
 const mix         = require('../core/mixins/mix');
+const mime        = require('mime');
 const Emitter     = require('../core/mixins/emitter');
 
 module.exports = class Server extends mix(Emitter) {
@@ -218,6 +219,12 @@ module.exports = class Server extends mix(Emitter) {
         if (match.route.redirect) {
             return res.redirect(match.route.redirect);
         }
+
+        if (match.route.static) {
+            const staticPath = _.isFunction(match.route.static) ? match.route.static(match.params, this._app) : match.route.static;
+            return res.sendFile(staticPath);
+        }
+
         res.locals.__request.params = match.params;
         res.locals.__request.route = match.route;
 

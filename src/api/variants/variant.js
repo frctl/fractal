@@ -12,6 +12,7 @@ module.exports = class Variant extends Entity {
         this.isVariant     = true;
         this.view          = config.view;
         this.viewPath      = config.viewPath;
+        this.viewDir       = config.dir;
         this.relViewPath   = Path.relative(this.source.fullPath, Path.resolve(this.viewPath));
         this.notes         = config.notes || this.parent.notes;
         this.isDefault     = config.isDefault || false;
@@ -83,6 +84,10 @@ module.exports = class Variant extends Entity {
 
     getPreviewContent(){
         return this.getContent();
+    }
+
+    component() {
+        return this.parent;
     }
 
     variant() {

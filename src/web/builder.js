@@ -135,7 +135,7 @@ module.exports = class Builder extends mix(Emitter) {
     }
 
     _addTargets() {
-        this._theme.routes().filter(route => route.view).forEach(route => {
+        this._theme.routes().filter(route => route.view || route.static).forEach(route => {
             try {
                 if (route.params) {
                     let params = _.isFunction(route.params) ? route.params(this._app) : [].concat(route.params);
@@ -155,10 +155,26 @@ module.exports = class Builder extends mix(Emitter) {
         let self = this;
         let ext = this._app.web.get('builder.ext');
         return this._targets.map(target => {
+
             const savePath = Path.join(this._config.dest, target.url) + (target.url == '/' ? `index${ext}` : ext);
             const pathInfo = Path.parse(savePath);
             this._jobsCount++;
             return this._throttle(() => {
+
+                if (target.route.static) {
+                    const staticPath = _.isFunction(target.route.static) ? target.route.static(target.params, this._app) : target.route.static;
+                    const dest = Path.join(this._config.dest, target.url);
+                    this._jobsCount++;
+
+                    return fs.copyAsync(staticPath, dest, {
+                        clobber: true
+                    }).then(() => {
+                        this._updateProgress();
+                    }).catch(e => {
+                        Log.debug(`Error copying static asset '${staticPath}' ==> '${dest}'`);
+                        this._errorCount++;
+                    });
+                }
 
                 return fs.ensureDirAsync(pathInfo.dir).then(() => {
 

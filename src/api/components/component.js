@@ -21,6 +21,7 @@ module.exports = class Component extends Entity {
         this.editorMode           = files.view.lang.mode;
         this.editorScope          = files.view.lang.scope;
         this.viewPath             = files.view.path;
+        this.viewDir              = files.view.dir;
         this.relViewPath          = Path.relative(this.source.fullPath, Path.resolve(files.view.path));
         this._resources           = resources;
         this._resourceCollections = null;
@@ -123,6 +124,10 @@ module.exports = class Component extends Entity {
 
     flatten() {
         return this.variants();
+    }
+
+    component() {
+        return this;
     }
 
     variants() {
