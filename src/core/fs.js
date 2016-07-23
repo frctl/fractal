@@ -14,9 +14,8 @@ const notBinary = ['.nunj', '.nunjucks', '.hbs', '.handlebars', '.jsx', '.twig']
 
 module.exports = {
 
-    describe(dir, filter, noCache) {
+    describe(dir, relDir, filter) {
 
-        dir = Path.resolve(dir);
         filter = filter || (filePath => !(/(^|\/)\.[^\/\.]/g).test(filePath));
 
         return dirscribe(dir, {
@@ -28,7 +27,7 @@ module.exports = {
         function build(filePath, stat) {
             return co(function* () {
                 const p        = Path.parse(filePath);
-                p.relPath      = Path.relative(process.cwd(), filePath);
+                p.relPath      = Path.relative(dir, filePath);
                 p.fsName       = p.name;
                 p.name         = _.get(p.fsName.match(/^_?(\d+\-)?(.*)/), 2, p.fsName);
                 p.path         = filePath;
@@ -40,29 +39,20 @@ module.exports = {
                 p.isDirectory  = stat.isDirectory();
                 p.stat         = stat;
                 if (p.isFile) {
-                    p._cachedContents = null;
-                    p.isCacheable  = !!noCache;
                     p.lang     = utils.lang(filePath);
                     p.isBinary = yield checkIsBinary(p);
                     p.readBuffer = function(){
                         return fs.readFileSync(filePath);
                     };
                     p.readSync = function () {
-                        if (!p.isCacheable || (p.isCacheable && !p._cachedContents)) {
-                            p._cachedContents = p.isBinary ? fs.readFileSync(filePath) : fs.readFileSync(filePath, 'utf8');
-                            p._cachedContents = p._cachedContents.toString();
-                        }
-                        return p._cachedContents;
+                        const contents = p.isBinary ? fs.readFileSync(filePath) : fs.readFileSync(filePath, 'utf8');
+                        return contents.toString();
                     };
                     p.read = function () {
-                        if (!p.isCacheable || (p.isCacheable && !p._cachedContents)) {
-                            var read = p.isBinary ? readFile(filePath) : readFile(filePath, 'utf8');
-                            return read.then(function (contents) {
-                                p._cachedContents = contents.toString();
-                                return p._cachedContents;
-                            });
-                        }
-                        return Promise.resolve(p._cachedContents);
+                        var read = p.isBinary ? readFile(filePath) : readFile(filePath, 'utf8');
+                        return read.then(function (contents) {
+                            return contents.toString();
+                        });
                     };
                 }
                 p.toString = function () {
@@ -70,7 +60,6 @@ module.exports = {
                 };
                 p.toJSON = function () {
                     const self = _.clone(this);
-                    delete self._cachedContents;
                     return self;
                 };
                 return p;
@@ -79,8 +68,7 @@ module.exports = {
 
     },
 
-    globDescribe(dir, match) {
-        dir = Path.resolve(dir);
+    globDescribe(dir, relDir, match) {
         return glob(match, {
             cwd: dir
         }).then(matches => {
@@ -94,7 +82,7 @@ module.exports = {
                 });
             });
             let included = _.uniq(directories.concat(matches)).map(p => Path.join(dir, p));
-            return this.describe(dir, filePath => {
+            return this.describe(dir, relDir, filePath => {
                 return _.includes(included, filePath);
             });
         });

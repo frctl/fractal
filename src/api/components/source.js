@@ -314,7 +314,7 @@ module.exports = class ComponentSource extends EntitySource {
                 dirConfig.view     = view.base;
                 dirConfig.viewName = dir.name;
                 dirConfig.viewPath = view.path;
-                const resources    = new FileCollection({}, matched.resources.map(f => new File(f, source.get('path'))));
+                const resources    = new FileCollection({}, matched.resources.map(f => new File(f, source.relPath)));
                 const files        = {
                     view:     view,
                     readme:   matched.readmes[0],

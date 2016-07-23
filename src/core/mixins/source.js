@@ -55,6 +55,10 @@ module.exports = mixin((superclass) => class Source extends mix(superclass).with
         return Path.resolve(this.get('path'));
     }
 
+    get relPath() {
+        return Path.relative(process.cwd(), this.get('path'));
+    }
+
     toStream() {
         return new Stream(this.load().then(() => this.flatten().toArray()));
     }
@@ -104,7 +108,7 @@ module.exports = mixin((superclass) => class Source extends mix(superclass).with
         if (this.isWatching) {
             return;
         }
-        const sourcePath = this.get('path');
+        const sourcePath = this.fullPath;
         if (!this._monitor && sourcePath) {
             Log.debug(`Watching ${this.name} directory - ${sourcePath}`);
             this._monitor = chokidar.watch(sourcePath, {
@@ -170,7 +174,7 @@ module.exports = mixin((superclass) => class Source extends mix(superclass).with
     }
 
     _getTree() {
-        return fs.describe(this.get('path'));
+        return fs.describe(this.fullPath, this.relPath);
     }
 
     _parse() {

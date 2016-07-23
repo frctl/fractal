@@ -43,23 +43,23 @@ module.exports = class AssetSource extends mix(Source) {
     }
 
     toJSON() {
-        const self        = super.toJSON();
-        self.name         = this.name;
-        self.label        = this.label;
-        self.title        = this.title;
-        self.path         = this.get('path');
-        self.isLoaded     = this.isLoaded;
-        self.isHidden     = this.isHidden;
+        const self         = super.toJSON();
+        self.name          = this.name;
+        self.label         = this.label;
+        self.title         = this.title;
+        self.path          = this.get('path');
+        self.isLoaded      = this.isLoaded;
+        self.isHidden      = this.isHidden;
         self.build         = this.build;
-        self.isCollection = true;
-        self.isSource     = true;
+        self.isCollection  = true;
+        self.isSource      = true;
         self.isAssetSource = true;
-        self.items = this.toArray().map(i => (i.toJSON ? i.toJSON() : i));
+        self.items         = this.toArray().map(i => (i.toJSON ? i.toJSON() : i));
         return self;
     }
 
     _getTree() {
-        return fs.globDescribe(this.get('path'), this.match);
+        return fs.globDescribe(this.fullPath, this.relPath, this.match);
     }
 
     _appendEventFileInfo(file, eventData) {
@@ -74,7 +74,7 @@ module.exports = class AssetSource extends mix(Source) {
             let converted = [];
             for (let item of items) {
                 if (item.isFile) {
-                    converted.push(new Asset(item, source.get('path'), source))
+                    converted.push(new Asset(item, source.relPath, source))
                 } else if (item.children.length) {
                     converted.push(new AssetCollection({}, convert(item.children)));
                 }

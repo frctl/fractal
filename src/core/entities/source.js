@@ -87,6 +87,8 @@ module.exports = class EntitySource extends mix(Source, Heritable) {
         self.isLoaded     = this.isLoaded;
         self.isWatching   = this.isWatching;
         self.path         = this.get('path');
+        self.relPath      = this.relPath;
+        self.fullPath     = this.fullPath;
         self.isCollection = true;
         self.isSource     = true;
         self.items = this.toArray().map(i => (i.toJSON ? i.toJSON() : i));
