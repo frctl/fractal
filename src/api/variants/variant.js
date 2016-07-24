@@ -48,6 +48,10 @@ module.exports = class Variant extends Entity {
         return this.getContentSync();
     }
 
+    get rootHandle() {
+        return this.parent.handle;
+    }
+
     get references() {
         if (!this._references) {
             let matcher = /\@[0-9a-zA-Z\-\_]*/g;
@@ -119,18 +123,19 @@ module.exports = class Variant extends Entity {
     }
 
     toJSON(){
-        const self = super.toJSON();
-        self.isVariant = true;
-        self.alias     = this.alias;
-        self.notes     = this.notes;
-        self.status    = this.status;
-        self.display   = this.display;
-        self.isDefault = this.isDefault;
-        self.viewPath  = this.viewPath;
-        self.preview   = this.preview;
-        self.context   = this.context;
-        self.resources = this.resourcesJSON();
-        self.content   = this.getContentSync();
+        const self      = super.toJSON();
+        self.isVariant  = true;
+        self.rootHandle = this.rootHandle;
+        self.alias      = this.alias;
+        self.notes      = this.notes;
+        self.status     = this.status;
+        self.display    = this.display;
+        self.isDefault  = this.isDefault;
+        self.viewPath   = this.viewPath;
+        self.preview    = this.preview;
+        self.context    = this.context;
+        self.resources  = this.resourcesJSON();
+        self.content    = this.getContentSync();
         return self;
     }
 

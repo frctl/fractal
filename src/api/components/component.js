@@ -59,6 +59,10 @@ module.exports = class Component extends Entity {
         return this._referencedBy;
     }
 
+    get rootHandle() {
+        return this.handle;
+    }
+
     render(context, preview, collate) {
         return this.source.render(this, context, {
             preview: preview,
@@ -137,6 +141,7 @@ module.exports = class Component extends Entity {
     toJSON(){
         const self       = super.toJSON();
         self.isComponent = true;
+        self.rootHandle  = this.rootHandle;
         self.notes       = this.notes;
         self.tags        = this.tags;
         self.isCollated  = this.isCollated;
