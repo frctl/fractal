@@ -30,6 +30,14 @@ module.exports = function(config) {
         register(source, app) {
 
             const hbs = promisedHbs(Handlebars);
+
+            hbs.VM.invokePartialOrigin = hbs.VM.invokePartial;
+            hbs.VM.invokePartial = function() {
+                var args = [].slice.call(arguments, 0);
+                args[2].data.root._self = app.components.find(args[2].name).toJSON();
+                return hbs.VM.invokePartialOrigin.apply(hbs.VM, args);
+            };
+
             const adapter = new HandlebarsAdapter(hbs, source);
 
             if (!config.pristine) {
