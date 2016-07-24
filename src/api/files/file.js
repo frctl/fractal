@@ -4,7 +4,6 @@ const _         = require('lodash');
 const Path      = require('path');
 const VinylFile = require('vinyl');
 const mime      = require('mime');
-const Datauri   = require('datauri');
 const utils     = require('../../core/utils');
 
 
@@ -37,11 +36,6 @@ module.exports = class File {
 
     get isImage() {
         return _.includes(['jpeg', 'jpg', 'png', 'svg', 'gif', 'webp'], this.ext.replace('.','').toLowerCase());
-    }
-
-    toDataUri() {
-        const datauri = new Datauri();
-        return datauri.format(this.ext, this.contents).content;
     }
 
     getContent() {

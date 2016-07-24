@@ -21,6 +21,8 @@ Check out the the [Fractal documentation](http://fractal.build/guide) for more i
 
 Fractal requires [Node.js](https://nodejs.org) v4.4.7+
 
+It is the intention that Fractal’s Node.js version support will track the latest Node LTS release version.
+
 ## Testing
 
 Fractal is a project that has recently evolved rapidly and organically from a proof-of-concept prototype into a more stable, mature tool. Because of this it's currently pretty far behind where it should be in terms of test coverage. Any contributions on this front would be most welcome!
