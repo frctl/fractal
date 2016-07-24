@@ -27,6 +27,8 @@ module.exports = function(options){
     config.scripts = [].concat(config.scripts).filter(url => url).map(url => (url === 'default' ? `/${config.static.mount}/js/mandelbrot.js` : url));
     config.favicon = config.favicon || `/${config.static.mount}/favicon.ico`;
 
+    const assetSourceName = 'components';
+
     const theme = new Theme(Path.join(__dirname, '../views'), config);
 
     theme.setErrorView('pages/error.nunj');
@@ -72,6 +74,17 @@ module.exports = function(options){
         view: 'pages/components/detail.nunj'
     }, getHandles);
 
+    theme.addRoute('/components/raw/:handle/:asset', {
+        handle: 'component-resource',
+        static: function(params, app){
+            const component = app.components.find(`@${params.handle}`);
+            if (component) {
+                return Path.join(component.viewDir, params.asset);
+            }
+            throw new Error('Component not found');
+        }
+    }, getResources);
+
     theme.addRoute('/docs/:path([^\?]+?)', {
         handle: 'page',
         view: 'pages/doc.nunj'
@@ -81,24 +94,37 @@ module.exports = function(options){
 
     theme.on('init', function(env, app){
         require('./filters')(theme, env, app);
-        if (app.components.get('path') && ! app.assets.find('components')) {
-            app.assets.add('components', {
-                path: app.components.get('path'),
-                match: ['**/*'],
-                hidden: true
-            });
-        }
     });
 
+    let handles = null;
+
     function getHandles(app) {
-        const handles = [];
-         app.components.flatten().each(comp => {
+        app.components.on('updated', () => (handles = null));
+        if (handles) {
+            return handles;
+        }
+        handles = [];
+        app.components.flatten().each(comp => {
             handles.push(comp.handle);
             if (comp.variants().size > 1) {
                 comp.variants().each(variant => handles.push(variant.handle));
             }
         });
-        return handles.map(h => ({handle: h}));
+        handles = handles.map(h => ({handle: h}));
+        return handles;
+    }
+
+    function getResources(app) {
+        let params = [];
+        app.components.flatten().each(comp => {
+            params = params.concat(comp.resources().flatten().toArray().map(res => {
+                return {
+                    handle: comp.handle,
+                    asset: res.base
+                }
+            }));
+        });
+        return params;
     }
 
     return theme;
