@@ -65,7 +65,7 @@ module.exports = mixin((superclass) => class Collection extends superclass {
     }
 
     /**
-     * Recursively converts the collection and it's contents to a
+     * Recursively converts the collection and its contents to a
      * JSON-serializable plain object.
      * @return {Object}
      */

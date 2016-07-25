@@ -13,7 +13,7 @@ Component (or pattern) libraries are a way of designing and building websites in
 
 Fractal helps you assemble, preview and document website component libraries, and then integrate them into your web sites, apps and build processes to create joined up, 'living' projects.
 
-Fractal can be run from the command line or integrated into your project via it's API.
+Fractal can be run from the command line or integrated into your project via its API.
 
 Check out the the [Fractal documentation](http://fractal.build/guide) for more information.
 
