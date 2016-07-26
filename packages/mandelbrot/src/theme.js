@@ -29,11 +29,11 @@ module.exports = function(options){
 
     const assetSourceName = 'components';
 
-    const theme = new Theme(Path.join(__dirname, '../views'), config);
+    const theme = new Theme(Path.join(__dirname, '..', 'views'), config);
 
     theme.setErrorView('pages/error.nunj');
 
-    theme.addStatic(Path.join(__dirname, '../dist'), `/${config.static.mount}`);
+    theme.addStatic(Path.join(__dirname, '..' , 'dist'), `/${config.static.mount}`);
 
     theme.addRoute('/', {
         handle: 'overview',
