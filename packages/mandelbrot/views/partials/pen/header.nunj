@@ -1,6 +1,6 @@
 <div class="Pen-panel Pen-header">
     <h1 class="Pen-title">
-        <a class="Pen-previewLink" href="{{ previewUrl }}" title="Open preview in new window">
+        <a class="Pen-previewLink" href="{{ previewUrl }}" title="Component preview">
             {{ entity.title }}
             {% include "icons/open-in-browser.svg" %}
         </a>
