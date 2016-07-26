@@ -258,9 +258,9 @@ module.exports = class Server extends mix(Emitter) {
         });
 
         this._theme.static().forEach(s => {
-            this._server.use(s.mount, express.static(s.path));
+            this._server.use(`/${_.trimStart(s.mount, '/')}`, express.static(s.path));
         });
-
+        
         this._server.get(':path(*)', this._onRequest.bind(this));
 
         this._server.use(this._onError.bind(this));
