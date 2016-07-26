@@ -19,8 +19,7 @@ class Pen {
     }
 
     _init() {
-
-        const initialHeight = storage.get(`pen.previewHeight`, this._previewPanel.outerHeight());
+        const initialHeight = storage.get(`pen.previewHeight`, (this._el.outerHeight() / 2));
         const preview       = new Preview(this._previewPanel);
         const browser       = new Browser(this._browser);
         let state           = storage.get(`pen.previewState`, 'open');
@@ -29,6 +28,7 @@ class Pen {
 
         if (state === 'open') {
             this._previewPanel.outerHeight(initialHeight);
+            storage.set(`pen.previewHeight`, initialHeight);
         } else {
             this._previewPanel.css('height', '100%');
         }
