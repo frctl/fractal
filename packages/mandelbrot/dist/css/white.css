@@ -1,18 +1,15 @@
 /*! normalize.css v4.1.1 | MIT License | github.com/necolas/normalize.css */
 /**
  * 1. Change the default font family in all browsers (opinionated).
- * 2. Correct the line height in all browsers.
- * 3. Prevent adjustments of font size after orientation changes in IE and iOS.
+ * 2. Prevent adjustments of font size after orientation changes in IE and iOS.
  */
 html {
   font-family: sans-serif;
   /* 1 */
-  line-height: 1.15;
-  /* 2 */
   -ms-text-size-adjust: 100%;
-  /* 3 */
+  /* 2 */
   -webkit-text-size-adjust: 100%;
-  /* 3 */ }
+  /* 2 */ }
 
 /**
  * Remove the margin in all browsers (opinionated).
@@ -219,7 +216,6 @@ hr {
  */
 button,
 input,
-optgroup,
 select,
 textarea {
   font: inherit;
@@ -665,28 +661,28 @@ h6 {
     font-weight: normal; }
 
 .AssetList-link {
-  text-decoration: none;
-  width: 100%;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  padding: 7px 0;
   -webkit-align-items: center;
       -ms-flex-align: center;
-          align-items: center; }
+          align-items: center;
+  width: 100%;
+  padding: 0.5rem 0;
+  text-decoration: none; }
   .AssetList-link:hover .AssetList-path {
-    color: rgba(83, 83, 99, 0.8); }
+    color: rgba(83, 83, 99, 0.75); }
   .AssetList-link:hover .AssetList-icon svg {
     fill: #999; }
 
 .AssetList-icon {
-  -webkit-margin-end: 8px;
-     -moz-margin-end: 8px;
-          margin-inline-end: 8px; }
+  -webkit-margin-end: 0.5rem;
+     -moz-margin-end: 0.5rem;
+          margin-inline-end: 0.5rem; }
   [dir="ltr"] .AssetList-icon {
-    margin-right: 8px; }
+    margin-right: 0.5rem; }
   [dir="rtl"] .AssetList-icon {
-    margin-left: 8px; }
+    margin-left: 0.5rem; }
   .AssetList-icon svg {
     fill: #ccc; }
 
@@ -1225,14 +1221,14 @@ h6 {
   bottom: 0;
   left: 0;
   position: absolute;
-  width: 100%;
-  height: 100%;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   -webkit-flex-direction: column;
       -ms-flex-direction: column;
-          flex-direction: column; }
+          flex-direction: column;
+  width: 100%;
+  height: 100%; }
 
 .Browser-controls {
   display: -webkit-flex;
@@ -1270,56 +1266,23 @@ h6 {
   -webkit-flex: auto;
       -ms-flex: auto;
           flex: auto;
-  white-space: nowrap;
-  max-width: 8rem; }
+  white-space: nowrap; }
   .Browser-tab a {
-    -webkit-flex: auto;
-        -ms-flex: auto;
-            flex: auto;
-    font: normal 0.8125rem/1.53846 "Open Sans", Helvetica, Arial, sans-serif;
-    display: block;
+    font: normal 0.8125rem/1.53923 "Open Sans", Helvetica, Arial, sans-serif;
     width: 100%;
-    text-align: center;
-    padding: 0.625rem 0.75rem;
-    border-bottom: 2px solid transparent;
-    border-top: 1px solid transparent; }
+    padding: 0.75rem 0.75rem 0.875rem;
+    border-bottom: 0.125rem solid transparent;
+    text-align: center; }
     .Browser-tab a:link, .Browser-tab a:visited, .Browser-tab a:hover, .Browser-tab a:active {
       color: #535363;
       text-decoration: none; }
     .Browser-tab a:hover {
-      border-bottom: 2px solid #ccc; }
-      .Browser-tab a:hover svg {
-        opacity: 0.9; }
-  .Browser-tab svg {
-    -webkit-margin-end: 0.125rem;
-       -moz-margin-end: 0.125rem;
-            margin-inline-end: 0.125rem;
-    pointer-events: none;
-    opacity: 0.6;
-    position: relative;
-    top: 2px; }
-    [dir="ltr"] .Browser-tab svg {
-      margin-right: 0.125rem; }
-    [dir="rtl"] .Browser-tab svg {
-      margin-left: 0.125rem; }
+      border-bottom-color: #ccc; }
   .Browser-tab.is-active a {
-    border-bottom: 2px solid #28f; }
-  .Browser-tab.is-active svg {
-    opacity: 0.9; }
+    border-bottom-color: #28f;
+    font-weight: bolder; }
   .Browser-tab.is-disabled a {
     opacity: 0.5; }
-
-.Browser-tab--view svg {
-  top: 1px; }
-
-.Browser-tab--context svg {
-  top: 0px; }
-
-.Browser-tab--assets svg {
-  top: 1px; }
-
-.Browser-tab--info svg {
-  top: 1px; }
 
 .Browser-panel {
   -webkit-flex: 1 1 auto;
@@ -1343,12 +1306,6 @@ h6 {
     -webkit-flex-basis: 100%;
         -ms-flex-preferred-size: 100%;
             flex-basis: 100%; }
-
-.Browser-notes {
-  padding-top: 20px; }
-
-.Browser-resources {
-  padding: 0; }
 
 .Browser-isEmptyNote {
   font-style: italic;
@@ -1394,22 +1351,20 @@ h6 {
 .Error-stack {
   margin-top: 1.5rem; }
   .Error-stack pre {
-    font-size: 13px;
-    line-height: 1.8;
-    color: rgba(83, 83, 99, 0.8); }
+    font: normal 0.875rem/1.71429 Hack, Consolas, Monaco, "Andale Mono", monospace;
+    color: rgba(83, 83, 99, 0.75); }
 
 .Error--render {
-  padding: 18px 20px 20px 20px;
-  border: 1px solid rgba(193, 0, 0, 0.3);
-  background-color: rgba(193, 0, 0, 0.05); }
+  background-color: rgba(187, 0, 0, 0.05);
+  border: 1px solid rgba(187, 0, 0, 0.25);
+  padding: 0.75rem; }
   .Error--render .Error-title {
-    color: #C10000;
-    font-size: 1.0rem;
-    margin-bottom: 0.4rem; }
+    font: bold 0.6875rem/1.81909 "Open Sans", Helvetica, Arial, sans-serif;
+    letter-spacing: 0.075em;
+    text-transform: uppercase;
+    color: #b00; }
   .Error--render .Error-message {
-    color: #444; }
-    .Error--render .Error-message p:last-child {
-      margin-bottom: 0; }
+    font: normal 0.8125rem/1.53923 "Open Sans", Helvetica, Arial, sans-serif; }
 
 .FileBrowser {
   position: static;
@@ -1417,60 +1372,58 @@ h6 {
       -ms-flex-preferred-size: 100%;
           flex-basis: 100%; }
 
-.FileBrowser-select-label {
-  display: block;
-  width: auto;
-  font-weight: bold;
-  margin-bottom: 5px; }
-
 .FileBrowser-selectWrapper {
-  padding: 15px;
-  border-bottom: 1px solid rgba(106, 106, 127, 0.25);
-  background-color: #f1f1f1; }
+  margin: -0.75rem -0.75rem 0.75rem -0.75rem;
+  padding: 0.625rem 0.75rem;
+  background-color: rgba(83, 83, 99, 0.05); }
   .FileBrowser-selectWrapper .select2-container {
-    min-width: 200px;
-    font-size: 14px; }
+    font: normal 0.8125rem/1.53923 "Open Sans", Helvetica, Arial, sans-serif;
+    margin-left: -0.25rem;
+    margin-bottom: -1px;
+    min-width: 15em; }
   .FileBrowser-selectWrapper select:focus,
   .FileBrowser-selectWrapper select:active {
     outline: none; }
 
-span.select2-selection.select2-selection--single {
-  outline: none; }
+.FileBrowser-select-label {
+  font: normal 0.8125rem/1.53923 "Open Sans", Helvetica, Arial, sans-serif;
+  display: block;
+  width: auto;
+  padding: 0.25rem 0;
+  font-weight: bold; }
 
-.select2-container--focus {
-  outline: none; }
+.select2-selection.select2-selection--single {
+  border-color: rgba(83, 83, 99, 0.25); }
+  .select2-container--focus .select2-selection.select2-selection--single {
+    outline: none;
+    border-color: #28f; }
 
 .select2-results__option {
-  min-width: 200px;
-  font-size: 14px; }
+  font: normal 0.8125rem/1.53923 "Open Sans", Helvetica, Arial, sans-serif;
+  min-width: 15em; }
+  .select2-results__option[aria-selected=true] {
+    background-color: rgba(83, 83, 99, 0.1) !important; }
 
-.select2-results__option--highlighted {
+.select2-results__option--highlighted[aria-selected] {
   background-color: #eee !important;
   color: #111 !important; }
 
 .FileBrowser-item {
-  display: none;
-  padding: 0 0.75rem 0.75rem 0.75rem; }
+  display: none; }
   .FileBrowser-item.is-active {
     display: block; }
 
 @media (min-width: 37.5em) {
   .Frame.is-closed .FileBrowser-select-label {
-    font-size: 15px;
     position: relative;
-    top: 2px;
-    width: 194px;
-    display: inline-block;
-    margin-bottom: 0; } }
+    width: 10em;
+    display: inline-block; } }
 
 @media (min-width: 50em) {
   .Frame:not(.is-closed) .FileBrowser-select-label {
-    font-size: 15px;
     position: relative;
-    top: 2px;
-    width: 194px;
-    display: inline-block;
-    margin-bottom: 0; } }
+    width: 10em;
+    display: inline-block; } }
 
 .Frame {
   display: -webkit-flex;
@@ -1670,50 +1623,53 @@ span.select2-selection.select2-selection--single {
 .Frame.is-closed .Header-navToggleIcon--closed {
   display: block; }
 
-.Meta a {
-  text-decoration: none; }
+.Meta {
+  font: normal 0.8125rem/1.53923 "Open Sans", Helvetica, Arial, sans-serif; }
+  .Meta a {
+    text-decoration: none; }
 
 .Meta-item {
-  padding: 14px 0;
-  overflow: hidden; }
-  .Meta-item + .Meta-item {
-    border-top: 1px solid rgba(106, 106, 127, 0.25); }
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+  padding-bottom: 1rem; }
+  .Meta-item:not(:last-child) {
+    border-bottom: 1px solid rgba(83, 83, 99, 0.15); }
 
 .Meta-key {
-  margin-bottom: 10px;
-  display: block; }
+  display: block;
+  padding-right: 0.5rem;
+  padding-bottom: 0.25rem; }
 
 .Meta-value {
   display: block;
-  min-width: 200px;
-  white-space: nowrap; }
+  min-width: 10em;
+  white-space: nowrap;
+  padding-bottom: 0.25rem; }
   .Meta-value a:hover span {
     text-decoration: underline; }
-  .Meta-value li {
-    margin-bottom: 5px; }
-    .Meta-value li:last-child {
-      margin-bottom: 0; }
+  .Meta-value li:not(:last-child) {
+    margin-bottom: 0.25em; }
 
 .Meta-count {
   font-style: normal;
-  opacity: 0.5;
-  font-size: 0.9em; }
+  font-weight: normal;
+  opacity: 0.5; }
 
 @media (min-width: 37.5em) {
   .Frame.is-closed .Meta-item {
-    padding-left: 200px; }
+    padding-left: 10em; }
   .Frame.is-closed .Meta-key {
-    width: 180px;
+    width: 10em;
     float: left;
-    margin-left: -200px; } }
+    margin-left: -10em; } }
 
 @media (min-width: 50em) {
   .Frame:not(.is-closed) .Meta-item {
-    padding-left: 200px; }
+    padding-left: 10em; }
   .Frame:not(.is-closed) .Meta-key {
-    width: 180px;
+    width: 10em;
     float: left;
-    margin-left: -200px; } }
+    margin-left: -10em; } }
 
 .Navigation {
   display: inline-block;
@@ -1900,8 +1856,7 @@ span.select2-selection.select2-selection--single {
   width: calc(100% + 0.625rem);
   min-width: 200px;
   max-width: calc(100% + 0.625rem);
-  background-color: transparent;
-  max-width: 100%; }
+  background-color: transparent; }
   [dir="ltr"] .Preview-wrapper {
     left: 0; }
   [dir="rtl"] .Preview-wrapper {
@@ -1929,7 +1884,7 @@ span.select2-selection.select2-selection--single {
       min-width: 100%;
       border: 0; } }
   .Preview-resizer .Error {
-    margin: 20px; }
+    margin: 0.75rem; }
 
 .Preview-iframe {
   top: 0;
@@ -1996,7 +1951,7 @@ span.select2-selection.select2-selection--single {
   -webkit-font-feature-settings: "liga", "dlig", "kern", "onum";
           font-feature-settings: "liga", "dlig", "kern", "onum";
   hanging-punctuation: first; }
-  .Prose > * {
+  .Prose > *:not(:last-child) {
     margin-bottom: 0.75em; }
   .Prose ul,
   .Prose ol {
@@ -2063,7 +2018,7 @@ span.select2-selection.select2-selection--single {
     -webkit-font-feature-settings: "lnum" 1, "tnum" 1;
             font-feature-settings: "lnum" 1, "tnum" 1; }
   .Prose caption {
-    font: normal 0.8125rem/1.53846 "Open Sans", Helvetica, Arial, sans-serif;
+    font: normal 0.8125rem/1.53923 "Open Sans", Helvetica, Arial, sans-serif;
     padding: 0 0.5rem;
     font-style: italic;
     text-align: start;
@@ -2132,7 +2087,7 @@ span.select2-selection.select2-selection--single {
     margin-right: 3px; }
 
 .Status-label {
-  font: bold 0.6875rem/1.81818 "Open Sans", Helvetica, Arial, sans-serif;
+  font: bold 0.6875rem/1.81909 "Open Sans", Helvetica, Arial, sans-serif;
   letter-spacing: 0.075em;
   text-transform: uppercase;
   display: inline-block;
@@ -2163,7 +2118,7 @@ span.select2-selection.select2-selection--single {
   white-space: nowrap; }
 
 .Tree-title {
-  font: bold 0.6875rem/1.81818 "Open Sans", Helvetica, Arial, sans-serif;
+  font: bold 0.6875rem/1.81909 "Open Sans", Helvetica, Arial, sans-serif;
   letter-spacing: 0.075em;
   text-transform: uppercase;
   -webkit-padding-start: 1rem;
@@ -2186,7 +2141,7 @@ span.select2-selection.select2-selection--single {
     background-image: url("../img/icon-navigation-closed-rtl.svg"); }
 
 .Tree-collectionLabel {
-  font: normal 0.8125rem/1.53846 "Open Sans", Helvetica, Arial, sans-serif;
+  font: normal 0.8125rem/1.53923 "Open Sans", Helvetica, Arial, sans-serif;
   padding-top: 0.375rem;
   padding-bottom: 0.375rem;
   cursor: pointer;
@@ -2221,12 +2176,12 @@ span.select2-selection.select2-selection--single {
     display: inline-block;
     position: absolute;
     top: 0.25rem;
+    width: 0.75rem;
+    height: 0.75rem;
     background-image: url("../img/icon-navigation-opened.svg");
     background-size: 0.5rem;
     background-repeat: no-repeat;
     background-position: 50%;
-    width: 0.75rem;
-    height: 0.75rem;
     opacity: 0.5;
     content: ""; }
     [dir="ltr"] .Tree-collectionLabel span::before {
@@ -2235,7 +2190,7 @@ span.select2-selection.select2-selection--single {
       right: 0; }
 
 .Tree-item {
-  font: normal 0.8125rem/1.53846 "Open Sans", Helvetica, Arial, sans-serif; }
+  font: normal 0.8125rem/1.53923 "Open Sans", Helvetica, Arial, sans-serif; }
 
 .Tree-entityLink {
   display: -webkit-flex;
