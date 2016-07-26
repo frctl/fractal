@@ -53,7 +53,7 @@ module.exports = class Builder extends mix(Emitter) {
 
                 let buildTargets = this._buildTargets();
 
-                return Promise.all(copyStatic.concat(copyAssets, buildTargets));
+                return Promise.all(copyStatic.concat(buildTargets));
 
             }).then(() => {
                 let stats = {
