@@ -33,7 +33,7 @@ module.exports = function(theme, env, app){
     });
 
     env.engine.addFilter('resourceUrl', function(str) {
-        return Path.join('/', app.web.get('assets.mount'), 'components', Path.relative(Path.resolve(app.components.get('path')), Path.resolve(str)));
+        return `/${app.web.get('assets.mount')}/components/${Path.relative(Path.resolve(app.components.get('path')), Path.resolve(str))}`;
     });
 
     env.engine.addFilter('componentPath', function(str) {
