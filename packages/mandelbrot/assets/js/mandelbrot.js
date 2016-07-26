@@ -40,5 +40,7 @@ if (window.location.protocol.indexOf('file') !== 0) {
 events.on('main-content-loaded', loadPen);
 
 function loadPen(){
-    pens = $.map($('[data-behaviour="pen"]'), p => new Pen(p));
+    setTimeout(function(){
+        pens = $.map($('[data-behaviour="pen"]'), p => new Pen(p));
+    }, 1);
 }
