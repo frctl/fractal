@@ -3,10 +3,10 @@
 .Browser {
     @include trbl(0);
     position: absolute;
-    width: 100%;
-    height: 100%;
     display: flex;
     flex-direction: column;
+    width: 100%;
+    height: 100%;
 }
 
 .Browser-controls {
@@ -24,6 +24,7 @@
     flex-direction: row;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+
     &::-webkit-scrollbar {
         display: none;
     }
@@ -33,42 +34,24 @@
     display: flex;
     flex: auto;
     white-space: nowrap;
-    max-width: 8rem;
-    a {
-        flex: auto;
-        @include font(navigation);
-        @include link-default($color-text, none);
-        display: block;
-        width: 100%;
-        text-align: center;
-        padding: 0.625rem 0.75rem;
-        border-bottom: 2px solid transparent;
-        border-top: 1px solid transparent;
-        &:hover {
-            border-bottom: 2px solid #ccc;
-            svg {
-                opacity: 0.9;
-            }
-        }
-    }
 
-    svg {
-        @include margin-inline(end, 0.125rem);
-        pointer-events: none;
-        opacity: 0.6;
-        position: relative;
-        top: 2px;
+    a {
+        @include font(caption);
+        @include link-default($color-text, none);
+        width: 100%;
+        padding: 0.75rem 0.75rem 0.875rem;
+        border-bottom: 0.125rem solid transparent;
+        text-align: center;
+
+        &:hover {
+            border-bottom-color: #ccc;
+        }
     }
 
     &.is-active {
-
         a {
-            border-bottom: 2px solid $color-link;
-            // color: darken($color-text, 50);
-        }
-
-        svg {
-            opacity: 0.9;
+            border-bottom-color: $color-link;
+            font-weight: bolder;
         }
     }
 
@@ -79,69 +62,30 @@
     }
 }
 
-.Browser-tab--html {
-
-}
-
-.Browser-tab--view {
-    svg {
-        top: 1px;
-    }
-}
-
-.Browser-tab--context {
-    svg {
-        top: 0px;
-    }
-}
-
-.Browser-tab--assets {
-    svg {
-        top: 1px;
-    }
-}
-
-.Browser-tab--info {
-    // margin-left: auto;
-    svg {
-        top: 1px;
-    }
-}
-
-.Browser-tab--meta {
-
-}
-
 .Browser-panel {
     flex: 1 1 auto;
     display: none;
     overflow: auto;
-    // position: relative;
     width: 100%;
     background-color: $color-background-offset;
     padding: 0.75rem;
+
     &.is-active {
         display: flex;
     }
 
     .Code {
         background-color: $color-background-offset;
+
         pre {
             background-color: $color-background-offset;
             padding: 0;
         }
     }
+
     > .Meta {
         flex-basis: 100%;
     }
-}
-
-.Browser-notes {
-    padding-top: 20px;
-}
-
-.Browser-resources {
-    padding: 0;
 }
 
 .Browser-isEmptyNote {

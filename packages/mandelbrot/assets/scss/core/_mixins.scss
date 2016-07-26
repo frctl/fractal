@@ -78,16 +78,16 @@
         font: normal 1rem/#{(24 / 16)} $font-family-sans-serif;
     }
 
+    @if $preset == caption {
+        font: normal 0.8125rem/#{(20.01 / 13)} $font-family-sans-serif;
+    }
+
     @if $preset == code {
         font: normal 0.875rem/#{(24 / 14)} $font-family-monospace;
     }
 
-    @if $preset == navigation {
-        font: normal 0.8125rem/#{(20 / 13)} $font-family-sans-serif;
-    }
-
-    @if $preset == caption {
-        font: bold 0.6875rem/#{(20 / 11)} $font-family-sans-serif;
+    @if $preset == label {
+        font: bold 0.6875rem/#{(20.01 / 11)} $font-family-sans-serif;
         letter-spacing: 0.075em;
         text-transform: uppercase;
     }

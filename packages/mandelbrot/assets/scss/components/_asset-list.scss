@@ -11,6 +11,7 @@
 
 .AssetList-name {
     color: rgba($color-text, 0.5);
+
     strong {
         color: $color-link;
         font-weight: normal;
@@ -18,15 +19,17 @@
 }
 
 .AssetList-link {
-    text-decoration: none;
-    width: 100%;
     display: flex;
-    padding: 7px 0;
     align-items: center;
+    width: 100%;
+    padding: 0.5rem 0;
+    text-decoration: none;
+
     &:hover {
         .AssetList-path {
-            color: rgba($color-text, 0.8);
+            color: rgba($color-text, 0.75);
         }
+
         .AssetList-icon {
             svg {
                 fill: #999;
@@ -36,7 +39,8 @@
 }
 
 .AssetList-icon {
-    @include margin-inline(end, 8px);
+    @include margin-inline(end, 0.5rem);
+
     svg {
         fill: #ccc;
     }

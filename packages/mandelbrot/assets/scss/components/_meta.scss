@@ -1,63 +1,57 @@
 .Meta {
+    @include font(caption);
+
     a {
         text-decoration: none;
     }
 }
 
 .Meta-item {
-    padding: 14px 0;
     overflow: hidden;
-    & + & {
-        border-top: 1px solid lighten($color-frame-border, 10%);
+    margin-bottom: 0.5rem;
+    padding-bottom: 1rem;
+
+    &:not(:last-child) {
+        border-bottom: 1px solid rgba($color-frame-border, 0.15);
     }
 }
 
 .Meta-key {
-    margin-bottom: 10px;
     display: block;
+    padding-right: 0.5rem;
+    padding-bottom: 0.25rem;
 }
 
 .Meta-value {
     display: block;
-    min-width: 200px;
+    min-width: 10em;
     white-space: nowrap;
-    a {
-        &:hover span {
-            text-decoration: underline;
-        }
+    padding-bottom: 0.25rem;
+
+    a:hover span {
+        text-decoration: underline;
     }
-    li {
-        margin-bottom: 5px;
-        &:last-child {
-            margin-bottom: 0;
-        }
+
+    li:not(:last-child) {
+        margin-bottom: 0.25em;
     }
 }
 
 .Meta-count {
     font-style: normal;
+    font-weight: normal;
     opacity: 0.5;
-    font-size: 0.9em;
-}
-
-.Meta-value--linkList {
-    // display: flex;
-    // flex-wrap: wrap;
-    // a {
-    //     width: 50%;
-    //     flex: auto;
-    // }
 }
 
 @include mq($from: medium) {
     .Frame.is-closed {
         .Meta-item {
-            padding-left: 200px;
+            padding-left: 10em;
         }
         .Meta-key {
-            width: 180px;
+            width: 10em;
             float: left;
-            margin-left: -200px;
+            margin-left: -10em;
         }
     }
 }
@@ -65,12 +59,12 @@
 @include mq($from: large) {
     .Frame:not(.is-closed) {
         .Meta-item {
-            padding-left: 200px;
+            padding-left: 10em;
         }
         .Meta-key {
-            width: 180px;
+            width: 10em;
             float: left;
-            margin-left: -200px;
+            margin-left: -10em;
         }
     }
 }

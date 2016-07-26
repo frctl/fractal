@@ -3,61 +3,69 @@
     flex-basis: 100%;
 }
 
-.FileBrowser-select-label {
-    display: block;
-    width: auto;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
 .FileBrowser-selectWrapper {
-    padding: 15px;
-    border-bottom: 1px solid lighten($color-frame-border, 10%);
-    background-color: darken($color-background-offset, 2%);
+    margin: -0.75rem -0.75rem 0.75rem -0.75rem;
+    padding: 0.625rem 0.75rem;
+    background-color: rgba($color-frame-border, 0.05);
+
     .select2-container {
-        min-width: 200px;
-        font-size: 14px;
+        @include font(caption);
+        margin-left: -0.25rem;
+        margin-bottom: -1px;
+        min-width: 15em;
     }
+
     select:focus,
     select:active {
         outline: none;
     }
 }
-span.select2-selection.select2-selection--single {
+
+.FileBrowser-select-label {
+    @include font(caption);
+    display: block;
+    width: auto;
+    padding: 0.25rem 0;
+    font-weight: bold;
+}
+
+.select2-selection.select2-selection--single {
+    border-color: $color-frame-border;
+
+    .select2-container--focus & {
         outline: none;
+        border-color: $color-link;
     }
-.select2-container--focus {
-    outline: none;
 }
 
 .select2-results__option {
-    min-width: 200px;
-    font-size: 14px;
+    @include font(caption);
+    min-width: 15em;
+
+    &[aria-selected=true] {
+        background-color: rgba($color-frame-border, 0.1) !important;
+    }
 }
 
-.select2-results__option--highlighted {
+.select2-results__option--highlighted[aria-selected] {
     background-color: $color-header-background !important;
     color: $color-header-content !important;
 }
 
 .FileBrowser-item {
     display: none;
-    padding: 0 0.75rem 0.75rem 0.75rem;
+
     &.is-active {
         display: block;
     }
 }
 
-
 @include mq($from: medium) {
     .Frame.is-closed {
         .FileBrowser-select-label {
-            font-size: 15px;
             position: relative;
-            top: 2px;
-            width: 194px;
+            width: 10em;
             display: inline-block;
-            margin-bottom: 0;
         }
     }
 }
@@ -65,12 +73,9 @@ span.select2-selection.select2-selection--single {
 @include mq($from: large) {
     .Frame:not(.is-closed) {
         .FileBrowser-select-label {
-            font-size: 15px;
             position: relative;
-            top: 2px;
-            width: 194px;
+            width: 10em;
             display: inline-block;
-            margin-bottom: 0;
         }
     }
 }

@@ -4,7 +4,7 @@
     font-feature-settings: "liga", "dlig", "kern", "onum";
     hanging-punctuation: first;
 
-    > * {
+    > *:not(:last-child) {
         margin-bottom: 0.75em;
     }
 
@@ -86,7 +86,7 @@
     }
 
     caption {
-        @include font(navigation);
+        @include font(caption);
         padding: 0 0.5rem;
         font-style: italic;
         text-align: start;
