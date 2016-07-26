@@ -1,5 +1,11 @@
 # History
 
+## 1.0.4
+
+* Fix copyAssets error introduced in last release
+* Prevent markdown code blocks without a lang attribute being escaped
+* Bump Mandelbrot dependency version
+
 ## 1.0.3
 
 * Windows path fixes [@webprofijt]
