@@ -60,7 +60,7 @@
     "node": ">= 4.4.7"
   },
   "scripts": {
-    "test": "NODE_ENV=test mocha --reporter spec",
+    "test": "mocha --require test/support/env --reporter spec",
     "lint": "jscs src",
     "lint:fix": "jscs src --fix"
   },
