@@ -131,7 +131,7 @@ module.exports = class ComponentSource extends EntitySource {
      *
      * Rendering a component results in the rendering of the components' default variant,
      * unless the collated option is 'true' - in this case it will return a collated rendering
-     * of all it's variants.
+     * of all its variants.
      *
      * @param {Component/Variant} entity
      * @param {Object} context

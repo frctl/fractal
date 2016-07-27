@@ -189,27 +189,6 @@ module.exports = class Server extends mix(Emitter) {
 
         Log.debug(`Request for '${req.url}'`);
 
-        let pathParts = res.locals.__request.segments;
-        if (pathParts.length && pathParts[0] === this._app.get('web.assets.mount')) {
-
-            // looks like an asset request
-            res.locals.__request.params = {};
-            this.emit('request', res.locals.__request);
-
-            if (pathParts[1]) {
-                try {
-                    let assetPath = pathParts.slice(2).join('/');
-                    let assetSource = this._app.assets.find(pathParts[1]);
-                    if (assetSource) {
-                        let asset = assetSource.find('relPath', assetPath);
-                        if (asset) {
-                            return res.sendFile(asset.path);
-                        }
-                    }
-                } catch(e){}
-            }
-        }
-
         const match = this._theme.matchRoute(req.path);
 
         if (!match) {
@@ -279,9 +258,9 @@ module.exports = class Server extends mix(Emitter) {
         });
 
         this._theme.static().forEach(s => {
-            this._server.use(Path.join('/', s.mount), express.static(s.path));
+            this._server.use(`/${_.trimStart(s.mount, '/')}`, express.static(s.path));
         });
-
+        
         this._server.get(':path(*)', this._onRequest.bind(this));
 
         this._server.use(this._onError.bind(this));

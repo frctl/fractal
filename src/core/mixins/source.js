@@ -52,7 +52,7 @@ module.exports = mixin((superclass) => class Source extends mix(superclass).with
     }
 
     get fullPath(){
-        return Path.resolve(this.get('path'));
+        return this.get('path') ? Path.resolve(this.get('path')) : null;
     }
 
     get relPath() {

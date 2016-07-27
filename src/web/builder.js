@@ -51,11 +51,9 @@ module.exports = class Builder extends mix(Emitter) {
 
                 let copyStatic = this._theme.static().map(p => this._copyStatic(p.path, Path.join('/', p.mount)));
 
-                let copyAssets = this._copyAssets();
-
                 let buildTargets = this._buildTargets();
 
-                return Promise.all(copyStatic.concat(copyAssets, buildTargets));
+                return Promise.all(copyStatic.concat(buildTargets));
 
             }).then(() => {
                 let stats = {
@@ -76,30 +74,6 @@ module.exports = class Builder extends mix(Emitter) {
 
     targets(){
         return this._targets;
-    }
-
-    _copyAssets() {
-        let jobs = [];
-        this._app.assets.sources().forEach(source => {
-            if (!source.build) {
-                return;
-            }
-            source.flatten().assets().forEach(asset => {
-                this._jobsCount++;
-                let dest = Path.join('/', this._app.get('web.assets.mount'), asset.srcPath);
-                dest = _.trimEnd(Path.join(this._config.dest, dest), '/');
-                let job = fs.copyAsync(asset.path, dest, {
-                    clobber: true
-                }).then(() => {
-                    this._updateProgress();
-                }).catch(e => {
-                    Log.debug(`Error copying static asset '${source}' ==> '${dest}'`);
-                    this._errorCount++;
-                });
-                jobs.push(job);
-            });
-        });
-        return jobs;
     }
 
     _copyStatic(source, dest) {
