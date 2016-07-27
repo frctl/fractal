@@ -1,6 +1,4 @@
 .Meta {
-    @include font(caption);
-
     a {
         text-decoration: none;
     }
@@ -17,16 +15,29 @@
 }
 
 .Meta-key {
+    @include font(label);
     display: block;
     padding-right: 0.5rem;
     padding-bottom: 0.25rem;
+    color: $color-sidebar-heading;
 }
 
 .Meta-value {
+    @include font(caption);
     display: block;
-    min-width: 10em;
+    min-width: 10rem;
     white-space: nowrap;
     padding-bottom: 0.25rem;
+
+    a {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    a svg {
+        width: 1rem;
+        height: 1rem;
+    }
 
     a:hover span {
         text-decoration: underline;
@@ -40,18 +51,18 @@
 .Meta-count {
     font-style: normal;
     font-weight: normal;
-    opacity: 0.5;
+    opacity: 0.75;
 }
 
 @include mq($from: medium) {
     .Frame.is-closed {
         .Meta-item {
-            padding-left: 10em;
+            padding-left: 10rem;
         }
         .Meta-key {
-            width: 10em;
+            width: 10rem;
             float: left;
-            margin-left: -10em;
+            margin-left: -10rem;
         }
     }
 }
@@ -59,12 +70,12 @@
 @include mq($from: large) {
     .Frame:not(.is-closed) {
         .Meta-item {
-            padding-left: 10em;
+            padding-left: 10rem;
         }
         .Meta-key {
-            width: 10em;
+            width: 10rem;
             float: left;
-            margin-left: -10em;
+            margin-left: -10rem;
         }
     }
 }

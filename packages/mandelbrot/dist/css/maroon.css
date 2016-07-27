@@ -1374,7 +1374,7 @@ h6 {
 
 .FileBrowser-selectWrapper {
   margin: -0.75rem -0.75rem 0.75rem -0.75rem;
-  padding: 0.625rem 0.75rem;
+  padding: 0.5rem 0.75rem;
   background-color: rgba(83, 83, 99, 0.05); }
   .FileBrowser-selectWrapper .select2-container {
     font: normal 0.8125rem/1.53923 "Open Sans", Helvetica, Arial, sans-serif;
@@ -1386,7 +1386,9 @@ h6 {
     outline: none; }
 
 .FileBrowser-select-label {
-  font: normal 0.8125rem/1.53923 "Open Sans", Helvetica, Arial, sans-serif;
+  font: bold 0.6875rem/1.81909 "Open Sans", Helvetica, Arial, sans-serif;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
   display: block;
   width: auto;
   padding: 0.25rem 0;
@@ -1416,13 +1418,13 @@ h6 {
 @media (min-width: 37.5em) {
   .Frame.is-closed .FileBrowser-select-label {
     position: relative;
-    width: 10em;
+    width: 10rem;
     display: inline-block; } }
 
 @media (min-width: 50em) {
   .Frame:not(.is-closed) .FileBrowser-select-label {
     position: relative;
-    width: 10em;
+    width: 10rem;
     display: inline-block; } }
 
 .Frame {
@@ -1623,10 +1625,8 @@ h6 {
 .Frame.is-closed .Header-navToggleIcon--closed {
   display: block; }
 
-.Meta {
-  font: normal 0.8125rem/1.53923 "Open Sans", Helvetica, Arial, sans-serif; }
-  .Meta a {
-    text-decoration: none; }
+.Meta a {
+  text-decoration: none; }
 
 .Meta-item {
   overflow: hidden;
@@ -1636,15 +1636,30 @@ h6 {
     border-bottom: 1px solid rgba(83, 83, 99, 0.15); }
 
 .Meta-key {
+  font: bold 0.6875rem/1.81909 "Open Sans", Helvetica, Arial, sans-serif;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
   display: block;
   padding-right: 0.5rem;
-  padding-bottom: 0.25rem; }
+  padding-bottom: 0.25rem;
+  color: rgba(83, 83, 99, 0.75); }
 
 .Meta-value {
+  font: normal 0.8125rem/1.53923 "Open Sans", Helvetica, Arial, sans-serif;
   display: block;
-  min-width: 10em;
+  min-width: 10rem;
   white-space: nowrap;
   padding-bottom: 0.25rem; }
+  .Meta-value a {
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-align-items: center;
+        -ms-flex-align: center;
+            align-items: center; }
+  .Meta-value a svg {
+    width: 1rem;
+    height: 1rem; }
   .Meta-value a:hover span {
     text-decoration: underline; }
   .Meta-value li:not(:last-child) {
@@ -1653,23 +1668,23 @@ h6 {
 .Meta-count {
   font-style: normal;
   font-weight: normal;
-  opacity: 0.5; }
+  opacity: 0.75; }
 
 @media (min-width: 37.5em) {
   .Frame.is-closed .Meta-item {
-    padding-left: 10em; }
+    padding-left: 10rem; }
   .Frame.is-closed .Meta-key {
-    width: 10em;
+    width: 10rem;
     float: left;
-    margin-left: -10em; } }
+    margin-left: -10rem; } }
 
 @media (min-width: 50em) {
   .Frame:not(.is-closed) .Meta-item {
-    padding-left: 10em; }
+    padding-left: 10rem; }
   .Frame:not(.is-closed) .Meta-key {
-    width: 10em;
+    width: 10rem;
     float: left;
-    margin-left: -10em; } }
+    margin-left: -10rem; } }
 
 .Navigation {
   display: inline-block;
@@ -1760,17 +1775,11 @@ h6 {
   text-decoration: none; }
 
 .Pen-previewLink svg {
-  -webkit-margin-start: 5px;
-     -moz-margin-start: 5px;
-          margin-inline-start: 5px;
-  fill: #402; }
-  [dir="ltr"] .Pen-previewLink svg {
-    margin-left: 5px; }
-  [dir="rtl"] .Pen-previewLink svg {
-    margin-right: 5px; }
+  fill: #402;
+  opacity: 0.75; }
 
 .Pen-previewLink:hover svg {
-  fill: black; }
+  opacity: 1; }
 
 .Pen-preview {
   -webkit-flex: 0 0 auto;
