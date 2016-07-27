@@ -48,7 +48,7 @@ module.exports = class Variant extends Entity {
         return this.getContentSync();
     }
 
-    get rootHandle() {
+    get baseHandle() {
         return this.parent.handle;
     }
 
@@ -66,17 +66,8 @@ module.exports = class Variant extends Entity {
         return this._referencedBy;
     }
 
-    render(context, preview) {
-        return this.source.render(this, context, {
-            preview: preview
-        });
-    }
-
-    renderWithGlobals(context, globals, preview) {
-        return this.source.render(this, context, {
-            preview: preview,
-            globals: globals
-        });
+    render(context, env, opts) {
+        return this.source.render(this, context, env, opts);
     }
 
     getPreviewContext(){
@@ -122,7 +113,7 @@ module.exports = class Variant extends Entity {
     toJSON(){
         const self      = super.toJSON();
         self.isVariant  = true;
-        self.rootHandle = this.rootHandle;
+        self.baseHandle = this.baseHandle;
         self.alias      = this.alias;
         self.notes      = this.notes;
         self.status     = this.status;

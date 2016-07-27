@@ -161,6 +161,11 @@ module.exports = class Builder extends mix(Emitter) {
 
                     let context = target.route.context || {};
                     context.request = this._fakeRequest(target);
+                    context.renderEnv = {
+                        request: context.request,
+                        builder: true,
+                        server: false
+                    };
 
                     return this._engine.render(target.route.view, context).then(html => write(html)).catch(err => {
 

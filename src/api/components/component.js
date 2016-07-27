@@ -59,23 +59,12 @@ module.exports = class Component extends Entity {
         return this._referencedBy;
     }
 
-    get rootHandle() {
+    get baseHandle() {
         return this.handle;
     }
 
-    render(context, preview, collate) {
-        return this.source.render(this, context, {
-            preview: preview,
-            collate: collate
-        });
-    }
-
-    renderWithGlobals(context, globals, preview, collate) {
-        return this.source.render(this, context, {
-            preview: preview,
-            collate: collate,
-            globals: globals
-        });
+    render(context, env, opts) {
+        return this.source.render(this, context, env, opts);
     }
 
     getPreviewContext(){
@@ -141,7 +130,7 @@ module.exports = class Component extends Entity {
     toJSON(){
         const self       = super.toJSON();
         self.isComponent = true;
-        self.rootHandle  = this.rootHandle;
+        self.baseHandle  = this.baseHandle;
         self.notes       = this.notes;
         self.tags        = this.tags;
         self.isCollated  = this.isCollated;

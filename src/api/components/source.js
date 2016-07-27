@@ -110,11 +110,13 @@ module.exports = class ComponentSource extends EntitySource {
         return resolver.context(context, this);
     }
 
-    renderString(str, context) {
-        return this.engine().render(null, str, context);
+    renderString(str, context, env) {
+        return this.engine().render(null, str, context, {
+            env: env || {}
+        });
     }
 
-    renderPreview(entity, preview) {
+    renderPreview(entity, preview, env) {
         preview = preview !== false ? preview : false;
         let context;
         if (entity.isComponent) {
@@ -122,7 +124,7 @@ module.exports = class ComponentSource extends EntitySource {
         } else {
             context = entity.context;
         }
-        return this.render(entity, context, { preview: preview });
+        return this.render(entity, context, env || {}, { preview: preview });
     }
 
     /**
@@ -140,12 +142,12 @@ module.exports = class ComponentSource extends EntitySource {
      * @api public
      */
 
-    render(entity, context, opts) {
+    render(entity, context, env, opts) {
 
+        env            = env || {};
         opts           = opts || {};
         opts.preview   = opts.preview || opts.useLayout || false;
         opts.collate   = opts.collate  || false;
-        opts.globals   = opts.globals || {};
 
         const self = this;
 
@@ -161,9 +163,13 @@ module.exports = class ComponentSource extends EntitySource {
                 }
             } else {
                 return fs.readFileAsync(entity, 'utf8').then(content => {
-                    return this.resolve(context).then((ctx) => {
-                        ctx = _.defaults(ctx, opts.globals);
-                        return this.engine().render(entity, content, ctx);
+                    return this.resolve(context).then(ctx => {
+                        return this.engine().render(entity, content, ctx, {
+                            env: env,
+                            self: {
+                                path: entity
+                            }
+                        });
                     });
                 });
             }
@@ -175,19 +181,19 @@ module.exports = class ComponentSource extends EntitySource {
             if (entity.isComponent || entity.isVariant) {
                 if (entity.isComponent) {
                     if (entity.isCollated && opts.collate) {
-                        rendered = yield self._renderCollatedComponent(entity, context, opts.globals);
+                        rendered = yield self._renderCollatedComponent(entity, context, env);
                     } else {
                         entity = entity.variants().default();
-                        rendered = yield self._renderVariant(entity, context, opts.globals);
+                        rendered = yield self._renderVariant(entity, context, env);
                     }
                 } else {
-                    rendered = yield self._renderVariant(entity, context, opts.globals);
+                    rendered = yield self._renderVariant(entity, context, env);
                 }
                 if (opts.preview && entity.preview) {
                     let target = entity.toJSON();
                     target.component = target.isVariant ? entity.parent.toJSON() : target;
                     let layout = _.isString(opts.preview) ? opts.preview : entity.preview;
-                    return yield self._wrapInLayout(target, rendered, layout, {}, _.defaults(opts.globals, {}));
+                    return yield self._wrapInLayout(target, rendered, layout, {}, env);
                 }
                 return rendered;
             } else {
@@ -196,31 +202,28 @@ module.exports = class ComponentSource extends EntitySource {
         });
     }
 
-    *_renderVariant(variant, context, globals) {
+    *_renderVariant(variant, context, env) {
         context = context || variant.context;
         const content = yield variant.getContent();
         let ctx       = yield this.resolve(context);
-        ctx           = _.defaults(ctx, globals);
         return this.engine().render(variant.viewPath, content, ctx, {
-            self: variant,
-            target: variant,
+            self:   variant.toJSON(),
+            env:    env
         });
     }
 
-    *_renderCollatedComponent(component, context, globals) {
+    *_renderCollatedComponent(component, context, env) {
         context = context || {};
         return (yield component.variants().filter('isHidden', false).toArray().map(variant => {
             let ctx = context[`@${variant.handle}`] || variant.context;
-            return this.render(variant, ctx, {
-                globals: globals
-            }).then(markup => {
+            return this.render(variant, ctx, env).then(markup => {
                 const collator = component.collator;
                 return _.isFunction(collator) ? collator(markup, variant) : markup;
             });
         })).join('\n');
     }
 
-    *_wrapInLayout(target, content, identifier, context, globals) {
+    *_wrapInLayout(target, content, identifier, context, env) {
         let layout = this.find(identifier);
         let layoutContext, layoutContent, viewpath;
         if (!layout) {
@@ -239,12 +242,13 @@ module.exports = class ComponentSource extends EntitySource {
             layoutContent = yield layout.getContent();
             viewpath = layout.viewPath;
         }
-        layoutContext = _.defaults(layoutContext, context || {}, globals);
+        layoutContext = _.defaults(layoutContext, context || {});
         layoutContext[this.get('yield')] = content;
         const renderMethod = (_.isFunction(this.engine().renderLayout)) ? 'renderLayout' : 'render';
         return this.engine()[renderMethod](viewpath, layoutContent, layoutContext, {
-            self: layout,
-            target: target
+            self:   layout.toJSON(),
+            target: target,
+            env:    env
         });
     }
 

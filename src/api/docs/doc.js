@@ -48,14 +48,8 @@ module.exports = class Doc extends Entity {
         return this.content;
     }
 
-    render(context) {
-        return this.source.render(this, context);
-    }
-
-    renderWithGlobals(context, globals) {
-        return this.source.render(this, context, {
-            globals: globals
-        });
+    render(context, env, opts) {
+        return this.source.render(this, context, env, opts);
     }
 
     toc(maxDepth) {
