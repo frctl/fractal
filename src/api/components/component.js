@@ -67,6 +67,20 @@ module.exports = class Component extends Entity {
         return this.source.render(this, context, env, opts);
     }
 
+    /*
+     * Deprecated, do not use!
+     */
+    renderWithGlobals(context, globals, preview, collate) {
+        return this.source.render(this, context, {
+            request: globals._request || {},
+            server: globals._env.server,
+            builder: globals._env.builder,
+        }, {
+            preview: preview,
+            collate: collate
+        });
+    }
+
     getPreviewContext(){
         return this.isCollated ? this.variants().getCollatedContext() : this.variants().default().getResolvedContext();
     }

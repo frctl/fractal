@@ -64,14 +64,14 @@ module.exports = class DocSource extends EntitySource {
         }
 
         const renderContext = context || page.context;
+        const target = page.toJSON();
         return co(function* () {
             const source    = yield (self.isLoaded ? Promise.resolve(self) : self.load());
             let context     = yield self.resolve(renderContext);
-            context._config = self._app.config();
             const content   = yield page.getContent();
             return self._render(page.filePath, content, context, {
                 env: env,
-                self: page.toJSON()
+                self: target
             });
         });
     }
