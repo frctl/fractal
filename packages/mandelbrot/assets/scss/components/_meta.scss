@@ -57,12 +57,13 @@
 @include mq($from: medium) {
     .Frame.is-closed {
         .Meta-item {
-            padding-left: 10rem;
+            @include padding-inline(start, 10rem);
         }
+
         .Meta-key {
+            @include margin-inline(start, -10rem);
             width: 10rem;
             float: left;
-            margin-left: -10rem;
         }
     }
 }
@@ -70,12 +71,13 @@
 @include mq($from: large) {
     .Frame:not(.is-closed) {
         .Meta-item {
-            padding-left: 10rem;
+            @include padding-inline(start, 10rem);
         }
+
         .Meta-key {
+            @include margin-inline(start, -10rem);
             width: 10rem;
             float: left;
-            margin-left: -10rem;
         }
     }
 }
