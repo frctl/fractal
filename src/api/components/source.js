@@ -187,10 +187,7 @@ module.exports = class ComponentSource extends EntitySource {
                     let target = entity.toJSON();
                     target.component = target.isVariant ? entity.parent.toJSON() : target;
                     let layout = _.isString(opts.preview) ? opts.preview : entity.preview;
-                    return yield self._wrapInLayout(rendered, layout, {}, _.defaults(opts.globals, {
-                        _target: target,
-                        _config: self._app.config()
-                    }));
+                    return yield self._wrapInLayout(target, rendered, layout, {}, _.defaults(opts.globals, {}));
                 }
                 return rendered;
             } else {
@@ -204,15 +201,16 @@ module.exports = class ComponentSource extends EntitySource {
         const content = yield variant.getContent();
         let ctx       = yield this.resolve(context);
         ctx           = _.defaults(ctx, globals);
-        ctx._self     = variant.toJSON();
-        ctx._config   = this._app.config();
-        return this.engine().render(variant.viewPath, content, ctx);
+        return this.engine().render(variant.viewPath, content, ctx, {
+            self: variant,
+            target: variant,
+        });
     }
 
     *_renderCollatedComponent(component, context, globals) {
         context = context || {};
         return (yield component.variants().filter('isHidden', false).toArray().map(variant => {
-            let ctx     = context[`@${variant.handle}`] || variant.context;
+            let ctx = context[`@${variant.handle}`] || variant.context;
             return this.render(variant, ctx, {
                 globals: globals
             }).then(markup => {
@@ -222,7 +220,7 @@ module.exports = class ComponentSource extends EntitySource {
         })).join('\n');
     }
 
-    *_wrapInLayout(content, identifier, context, globals) {
+    *_wrapInLayout(target, content, identifier, context, globals) {
         let layout = this.find(identifier);
         let layoutContext, layoutContent, viewpath;
         if (!layout) {
@@ -244,7 +242,10 @@ module.exports = class ComponentSource extends EntitySource {
         layoutContext = _.defaults(layoutContext, context || {}, globals);
         layoutContext[this.get('yield')] = content;
         const renderMethod = (_.isFunction(this.engine().renderLayout)) ? 'renderLayout' : 'render';
-        return this.engine()[renderMethod](viewpath, layoutContent, layoutContext);
+        return this.engine()[renderMethod](viewpath, layoutContent, layoutContext, {
+            self: layout,
+            target: target
+        });
     }
 
     _appendEventFileInfo(file, eventData) {
