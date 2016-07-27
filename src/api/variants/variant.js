@@ -54,10 +54,7 @@ module.exports = class Variant extends Entity {
 
     get references() {
         if (!this._references) {
-            let matcher = /\@[0-9a-zA-Z\-\_]*/g;
-            let content = this.content;
-            let referenced = content.match(matcher) || [];
-            this._references = _.uniq(_.compact(referenced.map(handle => this.source.find(handle))));
+            this._references = this.source._engine.getReferencesForView(this.handle);
         }
         return this._references;
     }
