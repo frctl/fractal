@@ -14,7 +14,7 @@
     padding-bottom: 0.5rem;
 
     .Status {
-        margin-left: auto;
+        @include margin-inline(start, auto);
     }
 }
 
