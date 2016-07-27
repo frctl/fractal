@@ -5,7 +5,7 @@
 
 .FileBrowser-selectWrapper {
     margin: -0.75rem -0.75rem 0.75rem -0.75rem;
-    padding: 0.625rem 0.75rem;
+    padding: 0.5rem 0.75rem;
     background-color: rgba($color-frame-border, 0.05);
 
     .select2-container {
@@ -22,7 +22,7 @@
 }
 
 .FileBrowser-select-label {
-    @include font(caption);
+    @include font(label);
     display: block;
     width: auto;
     padding: 0.25rem 0;
@@ -64,7 +64,7 @@
     .Frame.is-closed {
         .FileBrowser-select-label {
             position: relative;
-            width: 10em;
+            width: 10rem;
             display: inline-block;
         }
     }
@@ -74,7 +74,7 @@
     .Frame:not(.is-closed) {
         .FileBrowser-select-label {
             position: relative;
-            width: 10em;
+            width: 10rem;
             display: inline-block;
         }
     }
