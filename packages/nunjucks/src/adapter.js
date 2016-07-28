@@ -9,12 +9,14 @@ const Adapter  = require('@frctl/fractal').Adapter;
 
 class NunjucksAdapter extends Adapter {
 
-    constructor(source, loadPaths) {
+    constructor(source, loadPaths, app) {
 
         super(null, source);
 
         const loaders = [];
         const self = this;
+
+        this._app = app;
 
         /**
          * Create a custom string loader and instantiate a new Nunjucks environment object with it.
@@ -93,9 +95,20 @@ class NunjucksAdapter extends Adapter {
     }
 
     render(path, str, context, meta) {
+        meta = meta || {};
+        setEnv('_self', meta.self, context);
+        setEnv('_target', meta.target, context);
+        setEnv('_env', meta.env, context);
+        setEnv('_config', this._app.config(), context);
         return this.engine.renderStringAsync(str, context);
     }
 
+}
+
+function setEnv(key, value, context) {
+    if (_.isUndefined(context[key]) && ! _.isUndefined(value)) {
+        context[key] = value;
+    }
 }
 
 module.exports = function(config) {
@@ -106,7 +119,7 @@ module.exports = function(config) {
 
         register(source, app) {
 
-            const adapter = new NunjucksAdapter(source, config.paths);
+            const adapter = new NunjucksAdapter(source, config.paths, app);
             const nj = adapter.engine;
 
             if (!config.pristine) {
