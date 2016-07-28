@@ -2,6 +2,8 @@
 
 An adapter to let you use [Nunjucks](http://mozilla.github.io/nunjucks/) templates with [Fractal](http://github.com/frctl/fractal).
 
+[![NPM Version](https://img.shields.io/npm/v/@frctl/nunjucks.svg?style=flat-square)](https://www.npmjs.com/package/@frctl/nunjucks)
+
 ## Installation
 
 ```shell
