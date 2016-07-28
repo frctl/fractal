@@ -177,7 +177,7 @@ Contains a simple data object representation of the top-level item (i.e. compone
 
 ### _target
 
-This variable is only set in {{ link('@preview-layouts', 'component preview layouts') }}, and contains a simple data object representation of the item (i.e. component or page) being rendered _within_ the preview layout.
+This variable is only set in component preview layouts, and contains a simple data object representation of the item (i.e. component or page) being rendered _within_ the preview layout.
 
 ```html
 {{ _target.title }} <!-- outputs 'Button' -->
