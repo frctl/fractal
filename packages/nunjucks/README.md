@@ -140,13 +140,11 @@ Outputs the raw view template contents for the specified component.
 
 The following Nunjucks filters come **automatically pre-installed**. As with the extensions, setting `pristine: true` in the Nunjucks adapter instance config will prevent them being added.
 
-### `path`
+### path
 
 Takes a root-relative path and re-writes it if required to make it work in static HTML exports.
 
 **It is strongly recommended to use this filter whenever you need to link to any static assets from your templates.**
-
-{% raw %}
 
 ```html
 {{ '/css/my-stylesheet.css' | path }}
@@ -160,7 +158,7 @@ The Nunjucks adapter also makes a few special variables available to your templa
 
 Note that using these may tie your templates a little more tightly into Fractal so you may choose not to use them for that reason.
 
-### `_config`
+### _config
 
 Contains the full Fractal configuration object. Useful for when you want to refer to a configuration item in your documentation (or components).
 
@@ -169,7 +167,7 @@ Contains the full Fractal configuration object. Useful for when you want to refe
 {{ _config.components.ext }} <!-- outputs the extension used for components -->
 ```
 
-### `_self`
+### _self
 
 Contains a simple data object representation of the top-level item (i.e. component or page) being rendered.
 
@@ -177,13 +175,9 @@ Contains a simple data object representation of the top-level item (i.e. compone
 {{ _self.title }} <!-- outputs 'Button' -->
 ```
 
-{% endraw %}
-
-### `_target`
+### _target
 
 This variable is only set in {{ link('@preview-layouts', 'component preview layouts') }}, and contains a simple data object representation of the item (i.e. component or page) being rendered _within_ the preview layout.
-
-{% raw %}
 
 ```html
 {{ _target.title }} <!-- outputs 'Button' -->
