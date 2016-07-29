@@ -118,8 +118,8 @@ module.exports = {
 
        let ext = opts.ext || '';
 
-       fromPath = getStaticPagePath(fromPath);
-       toPath = '/' + _.trim(Path.extname(toPath) ? toPath : getStaticPagePath(toPath), '/');
+       fromPath = getStaticPagePath(fromPath).replace(/\\/g, '/');
+       toPath = ('/' + _.trim(Path.extname(toPath) ? toPath : getStaticPagePath(toPath), '/')).replace(/\\/g, '/');
 
        if (toPath == '/') {
            return Path.relative(fromPath, toPath).replace(/\\/g, '/');
