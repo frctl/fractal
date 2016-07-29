@@ -122,17 +122,17 @@ module.exports = {
        toPath = '/' + _.trim(Path.extname(toPath) ? toPath : getStaticPagePath(toPath), '/');
 
        if (toPath == '/') {
-           return Path.relative(fromPath, toPath);
+           return Path.relative(fromPath, toPath).replace(/\\/g, '/');
        }
 
-       return Path.relative(fromPath, toPath).replace(/^\.\.\//,'').replace('.PLACEHOLDER', ext);
+       return Path.relative(fromPath, toPath).replace(/\\/g, '/').replace(/^\.\.\//,'').replace('.PLACEHOLDER', ext);
 
        function getStaticPagePath(url) {
            if (url == '/') {
                return ext == '' ? '/' : `/index.PLACEHOLDER`;
            }
            const parts = Path.parse(url);
-           return Path.join(parts.dir, `${parts.name}.PLACEHOLDER`);
+           return `${parts.dir}/${parts.name}.PLACEHOLDER`;
        }
    }
 
