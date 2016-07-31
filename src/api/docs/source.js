@@ -36,11 +36,11 @@ module.exports = class DocSource extends EntitySource {
         });
     }
 
-    render(page, context, opts) {
+    render(page, context, env, opts) {
         const self = this;
 
-        opts         = opts || {};
-        opts.globals = opts.globals || {};
+        opts = opts || {};
+        env  = env|| {};
 
         if (!page) {
             return Promise.reject(null);
@@ -55,8 +55,9 @@ module.exports = class DocSource extends EntitySource {
             } else {
                 return fs.readFileAsync(page, 'utf8').then(content => {
                     return this.resolve(context).then((ctx) => {
-                        ctx = _.defaults(ctx, opts.globals);
-                        return self._render(page, content, ctx);
+                        return self._render(page, content, ctx, {
+                            env: env
+                        });
                     });
                 });
             }
@@ -67,16 +68,18 @@ module.exports = class DocSource extends EntitySource {
         return co(function* () {
             const source    = yield (self.isLoaded ? Promise.resolve(self) : self.load());
             let context     = yield self.resolve(renderContext);
-            context._self   = target;
-            context._config = self._app.config();
-            context         = _.defaults(context, opts.globals);
             const content   = yield page.getContent();
-            return self._render(page.filePath, content, context);
+            return self._render(page.filePath, content, context, {
+                env: env,
+                self: target
+            });
         });
     }
 
-    renderString(str, context) {
-        return this._render(null, str, context || {});
+    renderString(str, context, env) {
+        return this._render(null, str, context || {}, {
+            env: env || {}
+        });
     }
 
     isPage(file) {
@@ -97,8 +100,8 @@ module.exports = class DocSource extends EntitySource {
         return eventData;
     }
 
-    _render(path, content, context) {
-        return this.engine().render(path, content, context).then(rendered => (this.get('markdown') ? md(rendered, this.get('markdown')) : rendered));
+    _render(path, content, context, meta) {
+        return this.engine().render(path, content, context, meta).then(rendered => (this.get('markdown') ? md(rendered, this.get('markdown')) : rendered));
     }
 
     _parse(fileTree) {

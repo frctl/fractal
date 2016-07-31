@@ -48,13 +48,18 @@ module.exports = class Doc extends Entity {
         return this.content;
     }
 
-    render(context) {
-        return this.source.render(this, context);
+    render(context, env, opts) {
+        return this.source.render(this, context, env, opts);
     }
 
+    /*
+     * Deprecated, do not use!
+     */
     renderWithGlobals(context, globals) {
         return this.source.render(this, context, {
-            globals: globals
+            request: globals._request || {},
+            server: globals._env.server,
+            builder: globals._env.builder,
         });
     }
 

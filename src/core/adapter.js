@@ -32,9 +32,21 @@ module.exports = class Adapter extends mix(Emitter) {
         }
     }
 
+    getReferencesForView(handle) {
+        const view = this.getView(handle);
+        return view ? this._parseReferences(view) : [];
+    }
+
     getView(handle) {
         handle = handle.replace(/^@/, '');
         return _.find(this._views, view => (view.handle.replace(/^@/, '')  === handle));
+    }
+
+    _parseReferences(view) {
+        const matcher = /\@[0-9a-zA-Z\-\_]*/g;
+        let content = view.content;
+        let referenced = content.match(matcher) || [];
+        return _.uniq(_.compact(referenced.map(handle => this._source.find(handle))));
     }
 
     _loadViews() {

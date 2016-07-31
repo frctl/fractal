@@ -48,16 +48,18 @@ module.exports = class Variant extends Entity {
         return this.getContentSync();
     }
 
-    get rootHandle() {
+    get baseHandle() {
         return this.parent.handle;
     }
 
     get references() {
         if (!this._references) {
-            let matcher = /\@[0-9a-zA-Z\-\_]*/g;
-            let content = this.content;
-            let referenced = content.match(matcher) || [];
-            this._references = _.uniq(_.compact(referenced.map(handle => this.source.find(handle))));
+            try {
+                this._references = this.source._engine.getReferencesForView(this.handle);
+            } catch(e) {
+                // older Adapters will throw an error because getReferencesForView is not defined
+                this._references = this._parseReferences();
+            }
         }
         return this._references;
     }
@@ -69,17 +71,32 @@ module.exports = class Variant extends Entity {
         return this._referencedBy;
     }
 
-    render(context, preview) {
+    render(context, env, opts) {
+        return this.source.render(this, context, env, opts);
+    }
+
+    /*
+     * Deprecated, do not use!
+     */
+    renderWithGlobals(context, globals, preview, collate) {
         return this.source.render(this, context, {
-            preview: preview
+            request: globals._request || {},
+            server: globals._env.server,
+            builder: globals._env.builder,
+        }, {
+            preview: preview,
+            collate: collate
         });
     }
 
-    renderWithGlobals(context, globals, preview) {
-        return this.source.render(this, context, {
-            preview: preview,
-            globals: globals
-        });
+    /*
+     * Deprecated, do not use!
+     */
+    _parseReferences() {
+        let matcher = /\@[0-9a-zA-Z\-\_]*/g;
+        let content = this.content;
+        let referenced = content.match(matcher) || [];
+        return _.uniq(_.compact(referenced.map(handle => this.source.find(this.handle))));
     }
 
     getPreviewContext(){
@@ -125,7 +142,7 @@ module.exports = class Variant extends Entity {
     toJSON(){
         const self      = super.toJSON();
         self.isVariant  = true;
-        self.rootHandle = this.rootHandle;
+        self.baseHandle = this.baseHandle;
         self.alias      = this.alias;
         self.notes      = this.notes;
         self.status     = this.status;

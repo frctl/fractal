@@ -211,6 +211,11 @@ module.exports = class Server extends mix(Emitter) {
 
         let context = match.route.context || {};
         context.request = _.clone(res.locals.__request);
+        context.renderEnv = {
+            request: context.request,
+            server: true,
+            builder: false
+        };
 
         this._render(match.route.view, context)
             .then(v => res.send(v).end())
@@ -260,7 +265,7 @@ module.exports = class Server extends mix(Emitter) {
         this._theme.static().forEach(s => {
             this._server.use(`/${_.trimStart(s.mount, '/')}`, express.static(s.path));
         });
-        
+
         this._server.get(':path(*)', this._onRequest.bind(this));
 
         this._server.use(this._onError.bind(this));
