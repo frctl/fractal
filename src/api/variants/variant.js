@@ -71,6 +71,24 @@ module.exports = class Variant extends Entity {
         return this._referencedBy;
     }
 
+    render(context, env, opts) {
+        return this.source.render(this, context, env, opts);
+    }
+
+    /*
+     * Deprecated, do not use!
+     */
+    renderWithGlobals(context, globals, preview, collate) {
+        return this.source.render(this, context, {
+            request: globals._request || {},
+            server: globals._env.server,
+            builder: globals._env.builder,
+        }, {
+            preview: preview,
+            collate: collate
+        });
+    }
+
     /*
      * Deprecated, do not use!
      */
@@ -79,10 +97,6 @@ module.exports = class Variant extends Entity {
         let content = this.content;
         let referenced = content.match(matcher) || [];
         return _.uniq(_.compact(referenced.map(handle => this.source.find(this.handle))));
-    }
-
-    render(context, env, opts) {
-        return this.source.render(this, context, env, opts);
     }
 
     getPreviewContext(){
