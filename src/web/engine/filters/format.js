@@ -1,10 +1,9 @@
 'use strict';
 
-const _            = require('lodash');
-const yaml         = require('js-yaml');
+const _ = require('lodash');
+const yaml = require('js-yaml');
 
-module.exports = function(app, engine) {
-
+module.exports = function (app, engine) {
     return {
         name: 'format',
         filter(obj, format) {
@@ -21,8 +20,7 @@ module.exports = function(app, engine) {
             if (format === 'json') {
                 return JSON.stringify(obj, null, 2);
             }
-            throw new Error(`Unknown format: ${format}`)
-        }
-    }
-
+            throw new Error(`Unknown format: ${format}`);
+        },
+    };
 };

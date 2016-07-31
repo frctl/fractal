@@ -1,34 +1,34 @@
 'use strict';
 
-const _            = require('lodash');
-const Path         = require('path');
-const Promise      = require('bluebird');
-const fs           = Promise.promisifyAll(require('fs-extra'));
-const pr           = require('path-to-regexp');
-const mix          = require('../core/mixins/mix');
-const WebError     = require('./error');
+const _ = require('lodash');
+const Path = require('path');
+const Promise = require('bluebird');
+const fs = Promise.promisifyAll(require('fs-extra'));
+const pr = require('path-to-regexp');
+const mix = require('../core/mixins/mix');
+const WebError = require('./error');
 const Configurable = require('../core/mixins/configurable');
-const Emitter      = require('../core/mixins/emitter');
+const Emitter = require('../core/mixins/emitter');
 
 module.exports = class Theme extends mix(Configurable, Emitter) {
 
-    constructor(viewPaths, options){
+    constructor(viewPaths, options) {
         super();
 
-        this.options      = this.config.bind(this);
-        this.setOption    = this.set.bind(this);
-        this.getOption    = this.get.bind(this);
+        this.options = this.config.bind(this);
+        this.setOption = this.set.bind(this);
+        this.getOption = this.get.bind(this);
 
         this.options(options || {});
 
         this._staticPaths = new Set();
-        this._routes      = new Map();
-        this._builder     = null;
-        this._views       = [];
+        this._routes = new Map();
+        this._builder = null;
+        this._views = [];
 
-        this._filters     = [];
-        this._extensions  = [];
-        this._globals     = {};
+        this._filters = [];
+        this._extensions = [];
+        this._globals = {};
 
         this._errorView = {};
 
@@ -56,14 +56,14 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
     }
 
     addStatic(path, mount) {
-        for (let s of this._staticPaths) {
+        for (const s of this._staticPaths) {
             if (path === s.path) {
                 return;
             }
         }
         this._staticPaths.add({
             path: path,
-            mount: mount
+            mount: mount,
         });
         return this;
     }
@@ -73,7 +73,7 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
     }
 
     addRoute(path, opts, build) {
-        let keys = [];
+        const keys = [];
         opts.path = path;
         opts.handle = opts.handle || path;
         opts.matcher = pr(path, keys);
@@ -87,17 +87,17 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
     }
 
     matchRoute(urlPath) {
-        for (let route of this._routes.values()) {
-            let match = route.matcher.exec(urlPath);
+        for (const route of this._routes.values()) {
+            const match = route.matcher.exec(urlPath);
             if (match) {
                 match.shift();
-                let params = {};
+                const params = {};
                 for (let i = 0; i < route.matcher.keys.length; i++) {
                     params[route.matcher.keys[i].name] = match[i];
                 }
                 return {
                     route: route,
-                    params: params
+                    params: params,
                 };
             }
         }
@@ -107,25 +107,25 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
                     handle: '__system-index',
                     view: '__system/index.nunj',
                 },
-                params: {}
+                params: {},
             };
         }
         return false;
     }
 
     urlFromRoute(handle, params) {
-        let route = this._routes.get(handle);
+        const route = this._routes.get(handle);
         if (route) {
             if (route.redirect) {
                 return route.redirect;
             }
-            let compiler = pr.compile(route.path);
+            const compiler = pr.compile(route.path);
             return cleanUrlPath(compiler(params));
         }
         return null;
     }
 
-}
+};
 
 function cleanUrlPath(urlPath) {
     return urlPath.replace(/\%2F/g, '/');

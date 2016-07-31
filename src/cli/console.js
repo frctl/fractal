@@ -1,20 +1,20 @@
 'use strict';
 
-const Promise      = require('bluebird');
-const _            = require('lodash');
-const chalk        = require('chalk');
-const Table        = require('cli-table2');
-const slog         = require('log-update');
-const Theme        = require('./theme');
+const Promise = require('bluebird');
+const _ = require('lodash');
+const chalk = require('chalk');
+const Table = require('cli-table2');
+const slog = require('log-update');
+const Theme = require('./theme');
 const defaultTheme = require('./themes/default');
-const utils        = require('../core/utils');
+const utils = require('../core/utils');
 
 class Console {
 
-    constructor(logger){
-        this._logger    = logger || console;
-        this._theme     = defaultTheme;
-        this._slogging  = false;
+    constructor(logger) {
+        this._logger = logger || console;
+        this._theme = defaultTheme;
+        this._slogging = false;
         this._debugging = false;
     }
 
@@ -85,7 +85,7 @@ class Console {
         if ((data || err instanceof Error) && this._debugging) {
             data = data || err;
             if (data.stack) {
-                this.log('    ' + _.trim(data.stack.toString().replace(err.toString(), '')))
+                this.log('    ' + _.trim(data.stack.toString().replace(err.toString(), '')));
             } else {
                 this.dump(data);
             }
@@ -106,13 +106,13 @@ class Console {
     box(header, body, footer) {
         const table = new Table({
             head: [],
-            chars: { mid: chalk.dim('─'), 'left-mid': '│', 'mid-mid': chalk.dim('─'), 'right-mid': '│' }
+            chars: { mid: chalk.dim('─'), 'left-mid': '│', 'mid-mid': chalk.dim('─'), 'right-mid': '│' },
         });
         if (header) {
             table.push([header]);
         }
         body = [].concat(body);
-        for (let line of body) {
+        for (const line of body) {
             table.push([line]);
         }
         if (footer) {

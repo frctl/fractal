@@ -1,16 +1,16 @@
 'use strict';
 
-const _     = require('lodash');
+const _ = require('lodash');
 const mixin = require('mixwith').Mixin;
 const utils = require('../utils');
 
 module.exports = mixin((superclass) => class Heritable extends superclass {
 
-    constructor(){
+    constructor() {
         super();
         super.addMixedIn('Heritable');
-        this._props     = new Map();
-        this._parent    = null;
+        this._props = new Map();
+        this._parent = null;
         this._heritable = null;
     }
 
@@ -21,7 +21,7 @@ module.exports = mixin((superclass) => class Heritable extends superclass {
         }
         this._heritable = new Set(arg || []);
 
-        for (let key of this._heritable) {
+        for (const key of this._heritable) {
             Object.defineProperty(this, key, {
                 get() {
                     return this.getProp(key);
@@ -37,7 +37,7 @@ module.exports = mixin((superclass) => class Heritable extends superclass {
         return this;
     }
 
-    getHeritable(){
+    getHeritable() {
         if (this._heritable) {
             return Array.from(this._heritable);
         }
@@ -79,15 +79,15 @@ module.exports = mixin((superclass) => class Heritable extends superclass {
     getProp(key) {
         if (this._parent && _.isFunction(this._parent.getProp)) {
             const upstream = this._parent.getProp(key);
-            const prop     = this._props.get(key);
+            const prop = this._props.get(key);
             return utils.mergeProp(prop, upstream);
         }
         return this._props.get(key);
     }
 
     getProps() {
-        let props = {};
-        for (let key of this.getHeritable()) {
+        const props = {};
+        for (const key of this.getHeritable()) {
             props[key] = this.getProp(key);
         }
         return props;

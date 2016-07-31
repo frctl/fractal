@@ -1,11 +1,11 @@
 'use strict';
 
 const HighlightJs = require('highlight.js');
-const _           = require('lodash');
+const _ = require('lodash');
 
 const langMap = new Map([
     ['nunjucks', 'django'],
-    ['nunj', 'django']
+    ['nunj', 'django'],
 ]);
 
 module.exports = function highlighter(content, lang) {
@@ -17,5 +17,4 @@ module.exports = function highlighter(content, lang) {
     } catch (e) {
         return HighlightJs.highlightAuto(content).value;
     }
-
 };

@@ -4,7 +4,7 @@ const Readable = require('readable-stream').Readable;
 
 module.exports = class ArrayStream extends Readable {
 
-    constructor(items){
+    constructor(items) {
         super({ objectMode: true });
         this._items = items;
         this._pointer = 0;
@@ -14,4 +14,4 @@ module.exports = class ArrayStream extends Readable {
         this.push(this._pointer < this._items.length ? this._items[this._pointer++] : null);
     }
 
-}
+};

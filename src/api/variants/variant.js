@@ -1,28 +1,28 @@
 'use strict';
 
-const Path   = require('path');
-const _      = require('lodash');
-const utils  = require('../../core/utils');
+const Path = require('path');
+const _ = require('lodash');
+const utils = require('../../core/utils');
 const Entity = require('../../core/entities/entity');
 
 module.exports = class Variant extends Entity {
 
-    constructor(config, view, resources, parent){
+    constructor(config, view, resources, parent) {
         super(config.name, config, parent);
-        this.isVariant     = true;
-        this.view          = config.view;
-        this.viewPath      = config.viewPath;
-        this.viewDir       = config.dir;
-        this.relViewPath   = Path.relative(this.source.fullPath, Path.resolve(this.viewPath));
-        this.notes         = config.notes || this.parent.notes;
-        this.isDefault     = config.isDefault || false;
-        this.lang          = view.lang.name;
-        this.editorMode    = view.lang.mode;
-        this.editorScope   = view.lang.scope;
-        this._view         = view;
-        this._resources    = resources;
+        this.isVariant = true;
+        this.view = config.view;
+        this.viewPath = config.viewPath;
+        this.viewDir = config.dir;
+        this.relViewPath = Path.relative(this.source.fullPath, Path.resolve(this.viewPath));
+        this.notes = config.notes || this.parent.notes;
+        this.isDefault = config.isDefault || false;
+        this.lang = view.lang.name;
+        this.editorMode = view.lang.mode;
+        this.editorScope = view.lang.scope;
+        this._view = view;
+        this._resources = resources;
         this._referencedBy = null;
-        this._references   = null;
+        this._references = null;
     }
 
     _title(config) {
@@ -56,7 +56,7 @@ module.exports = class Variant extends Entity {
         if (!this._references) {
             try {
                 this._references = this.source._engine.getReferencesForView(this.handle);
-            } catch(e) {
+            } catch (e) {
                 // older Adapters will throw an error because getReferencesForView is not defined
                 this._references = this._parseReferences();
             }
@@ -85,7 +85,7 @@ module.exports = class Variant extends Entity {
             builder: globals._env.builder,
         }, {
             preview: preview,
-            collate: collate
+            collate: collate,
         });
     }
 
@@ -93,17 +93,17 @@ module.exports = class Variant extends Entity {
      * Deprecated, do not use!
      */
     _parseReferences() {
-        let matcher = /\@[0-9a-zA-Z\-\_]*/g;
-        let content = this.content;
-        let referenced = content.match(matcher) || [];
+        const matcher = /\@[0-9a-zA-Z\-\_]*/g;
+        const content = this.content;
+        const referenced = content.match(matcher) || [];
         return _.uniq(_.compact(referenced.map(handle => this.source.find(this.handle))));
     }
 
-    getPreviewContext(){
+    getPreviewContext() {
         return this.getResolvedContext();
     }
 
-    getPreviewContent(){
+    getPreviewContent() {
         return this.getContent();
     }
 
@@ -125,9 +125,9 @@ module.exports = class Variant extends Entity {
 
     resourcesJSON() {
         const items = {};
-        for (let item of this.resources()) {
+        for (const item of this.resources()) {
             items[item.name] = item.toJSON().items;
-        };
+        }
         return items;
     }
 
@@ -139,21 +139,21 @@ module.exports = class Variant extends Entity {
         return this._view.readSync().toString();
     }
 
-    toJSON(){
-        const self      = super.toJSON();
-        self.isVariant  = true;
+    toJSON() {
+        const self = super.toJSON();
+        self.isVariant = true;
         self.baseHandle = this.baseHandle;
-        self.alias      = this.alias;
-        self.notes      = this.notes;
-        self.status     = this.status;
-        self.display    = this.display;
-        self.isDefault  = this.isDefault;
-        self.viewPath   = this.viewPath;
-        self.preview    = this.preview;
-        self.context    = this.context;
-        self.resources  = this.resourcesJSON();
-        self.content    = this.getContentSync();
+        self.alias = this.alias;
+        self.notes = this.notes;
+        self.status = this.status;
+        self.display = this.display;
+        self.isDefault = this.isDefault;
+        self.viewPath = this.viewPath;
+        self.preview = this.preview;
+        self.context = this.context;
+        self.resources = this.resourcesJSON();
+        self.content = this.getContentSync();
         return self;
     }
 
-}
+};

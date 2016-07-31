@@ -1,12 +1,12 @@
 'use strict';
 
-const marked      = require('marked');
-const _           = require('lodash');
+const marked = require('marked');
+const _ = require('lodash');
 const highlighter = require('./highlighter');
-const renderer    = new marked.Renderer();
+const renderer = new marked.Renderer();
 
 renderer.code = function (code, lang, escaped) {
-    var output = highlighter(code, lang);
+    const output = highlighter(code, lang);
     if (output != null) {
         code = output;
     }
@@ -21,16 +21,13 @@ renderer.code = function (code, lang, escaped) {
  */
 
 module.exports = function markdown(content, mdConfig) {
-
     mdConfig = (mdConfig && _.isObject(mdConfig)) ? mdConfig : {};
     mdConfig.renderer = renderer;
 
     return marked(_.toString(content), mdConfig);
-
 };
 
-module.exports.toc = function(content, maxDepth, mdConfig){
-
+module.exports.toc = function (content, maxDepth, mdConfig) {
     maxDepth = maxDepth || 6;
     mdConfig = (mdConfig && _.isObject(mdConfig)) ? mdConfig : {};
     mdConfig.renderer = renderer;

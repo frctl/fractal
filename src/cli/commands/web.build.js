@@ -8,12 +8,12 @@ module.exports = {
         description: 'Build a static version of the web UI',
         options: [
             ['-t, --theme <package-name>', 'The name of custom UI theme to use, if required'],
-        ]
+        ],
     },
 
-    action: function (args, done) {
+    action(args, done) {
         const builder = this.fractal.web.builder(args.options);
-        let total = 0;
+        const total = 0;
 
         builder.on('start', () => {
             this.console.success('Build started...');
@@ -29,11 +29,11 @@ module.exports = {
 
         return builder.build().then(data => {
             this.console.persist();
-            let e = data.errorCount;
+            const e = data.errorCount;
             this.console[e ? 'warn' : 'success'](`Build finished with ${e === 0 ? 'no' : e} error${e == 1 ? '' : 's'}.`).unslog();
         }).catch(e => {
             this.console.error(e).unslog().br();
         });
-    }
+    },
 
 };

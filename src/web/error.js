@@ -2,7 +2,7 @@
 
 module.exports = class WebError extends Error {
 
-    constructor(statusCode, message){
+    constructor(statusCode, message) {
         statusCode = (statusCode || '500').toString();
         message = message || `${statusCode} error`;
         super(message);
@@ -15,7 +15,6 @@ module.exports = class WebError extends Error {
         } else {
             this.stack = (new Error(message)).stack;
         }
-
     }
 
-}
+};

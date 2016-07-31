@@ -1,22 +1,21 @@
 'use strict';
 
-const Promise     = require('bluebird');
-const Path        = require('path');
-const nunjucks    = require('nunjucks');
-const yaml        = require('js-yaml');
-const _           = require('lodash');
-const requireAll  = require('require-all');
-const Log         = require('../../core/log');
-const WebError    = require('../error');
-const extensions  = requireAll(`${__dirname}/extensions`);
-const filters     = requireAll(`${__dirname}/filters`);
-const globals     = requireAll(`${__dirname}/globals`);
+const Promise = require('bluebird');
+const Path = require('path');
+const nunjucks = require('nunjucks');
+const yaml = require('js-yaml');
+const _ = require('lodash');
+const requireAll = require('require-all');
+const Log = require('../../core/log');
+const WebError = require('../error');
+const extensions = requireAll(`${__dirname}/extensions`);
+const filters = requireAll(`${__dirname}/filters`);
+const globals = requireAll(`${__dirname}/globals`);
 
-let templateError = nunjucks.lib.TemplateError;
+const templateError = nunjucks.lib.TemplateError;
 let lastError = null;
 
- nunjucks.lib.TemplateError = function(message, lineno, colno) {
-
+nunjucks.lib.TemplateError = function (message, lineno, colno) {
     if (message instanceof WebError) {
         message.lineno = lineno;
         message.colno = colno;
@@ -24,18 +23,16 @@ let lastError = null;
         throw message;
     }
 
-    let err = new templateError(message, lineno, colno);
+    const err = new templateError(message, lineno, colno);
 
     lastError = err;
 
     return err;
-
 };
 
 module.exports = class Engine {
 
-    constructor(viewsPath, env, app){
-
+    constructor(viewsPath, env, app) {
         this._app = app;
         this._env = env;
         this.theme = null;
@@ -45,9 +42,9 @@ module.exports = class Engine {
             docs: app.docs,
             assets: app.assets,
             env: {},
-            get: function(path, fallback){
+            get(path, fallback) {
                 return app.get(path, fallback);
-            }
+            },
         };
 
         viewsPath = [].concat(viewsPath);
@@ -58,11 +55,11 @@ module.exports = class Engine {
 
         const loader = new nunjucks.FileSystemLoader(views, {
             watch: false,
-            noCache: true
+            noCache: true,
         });
 
         this._engine = Promise.promisifyAll(new nunjucks.Environment(loader, {
-            autoescape: false
+            autoescape: false,
         }));
 
         _.forEach(extensions, factory => {
@@ -79,7 +76,6 @@ module.exports = class Engine {
             const g = factory(app, this);
             this._engine.addGlobal(g.name, g.value);
         });
-
     }
 
     get lastError() {
@@ -115,4 +111,4 @@ module.exports = class Engine {
         return this._engine.renderStringAsync(str, context || {});
     }
 
-}
+};

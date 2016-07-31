@@ -1,9 +1,9 @@
 'use strict';
 
 const Promise = require('bluebird');
-const _       = require('lodash');
-const Path    = require('path');
-const mix     = require('./mixins/mix');
+const _ = require('lodash');
+const Path = require('path');
+const mix = require('./mixins/mix');
 const Emitter = require('./mixins/emitter');
 
 module.exports = class Adapter extends mix(Emitter) {
@@ -12,7 +12,7 @@ module.exports = class Adapter extends mix(Emitter) {
         super();
         this._engine = engine;
         this._source = source;
-        this._views  = [];
+        this._views = [];
         this._hasLoaded = false;
         source.on('loaded', () => this._onSourceChange());
         source.on('updated', eventData => this._onSourceChange(eventData));
@@ -39,31 +39,31 @@ module.exports = class Adapter extends mix(Emitter) {
 
     getView(handle) {
         handle = handle.replace(/^@/, '');
-        return _.find(this._views, view => (view.handle.replace(/^@/, '')  === handle));
+        return _.find(this._views, view => (view.handle.replace(/^@/, '') === handle));
     }
 
     _parseReferences(view) {
         const matcher = /\@[0-9a-zA-Z\-\_]*/g;
-        let content = view.content;
-        let referenced = content.match(matcher) || [];
+        const content = view.content;
+        const referenced = content.match(matcher) || [];
         return _.uniq(_.compact(referenced.map(handle => this._source.find(handle))));
     }
 
     _loadViews() {
-        let views = [];
-        for (let item of this._source.flattenDeep()) {
-            let view = {
+        const views = [];
+        for (const item of this._source.flattenDeep()) {
+            const view = {
                 handle: `@${item.handle}`,
                 path: item.viewPath,
-                content: item.content
+                content: item.content,
             };
             views.push(view);
             this.emit('view:added', view);
             if (item.alias) {
-                let view = {
+                const view = {
                     handle: `@${item.alias}`,
                     path: item.viewPath,
-                    content: item.content
+                    content: item.content,
                 };
                 views.push(view);
                 this.emit('view:added', view);
@@ -75,7 +75,7 @@ module.exports = class Adapter extends mix(Emitter) {
     }
 
     _updateView(view) {
-        let entity = this._source.find(view.handle);
+        const entity = this._source.find(view.handle);
         if (entity) {
             view.content = entity.content;
             this.emit('view:updated', view);
@@ -84,12 +84,12 @@ module.exports = class Adapter extends mix(Emitter) {
 
     _onSourceChange(eventData) {
         if (eventData && eventData.isTemplate) {
-            let touched = _.filter(this._views, ['path', Path.resolve(eventData.path)]);
+            const touched = _.filter(this._views, ['path', Path.resolve(eventData.path)]);
             if (eventData.event === 'change') {
                 touched.forEach(view => this._updateView(view));
                 return this._views;
             } else if (eventData.event === 'unlink') {
-                let touchedPaths = _.map(touched, view => view.path);
+                const touchedPaths = _.map(touched, view => view.path);
                 this._views = _.reject(this._views, v => _.includes(touchedPaths, v.path));
                 touched.forEach(view => this.emit('view:removed', view));
                 return this._views;
@@ -103,8 +103,8 @@ module.exports = class Adapter extends mix(Emitter) {
     }
 
     render(path, str, context, meta) {
-        throw new Error(`Template engine adapter classes must provide a 'render' method.`);
+        throw new Error('Template engine adapter classes must provide a \'render\' method.');
     }
 
 
-}
+};

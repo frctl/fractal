@@ -2,14 +2,13 @@
 
 const Promise = require('bluebird');
 
-module.exports = function(app, engine) {
-
+module.exports = function (app, engine) {
     return {
         name: 'async',
         async: true,
         filter() {
-            let args = Array.from(arguments);
-            let cb = args.pop();
+            const args = Array.from(arguments);
+            const cb = args.pop();
             if (!args[1]) {
                 Promise.resolve(args[0]).then(result => cb(null, result)).catch(cb);
             } else {
@@ -18,7 +17,6 @@ module.exports = function(app, engine) {
                     return e;
                 });
             }
-        }
-    }
-
+        },
+    };
 };

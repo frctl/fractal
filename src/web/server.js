@@ -1,31 +1,31 @@
 'use strict';
 
-const Promise     = require('bluebird');
-const _           = require('lodash');
-const express     = require('express');
-const chokidar    = require('chokidar');
-const Path        = require('path');
-const util        = require('util');
+const Promise = require('bluebird');
+const _ = require('lodash');
+const express = require('express');
+const chokidar = require('chokidar');
+const Path = require('path');
+const util = require('util');
 const portscanner = Promise.promisifyAll(require('portscanner'));
-const WebError    = require('./error');
-const Log         = require('../core/log');
-const mix         = require('../core/mixins/mix');
-const mime        = require('mime');
-const Emitter     = require('../core/mixins/emitter');
+const WebError = require('./error');
+const Log = require('../core/log');
+const mix = require('../core/mixins/mix');
+const mime = require('mime');
+const Emitter = require('../core/mixins/emitter');
 
 module.exports = class Server extends mix(Emitter) {
 
-    constructor(theme, engine, config, app){
+    constructor(theme, engine, config, app) {
         super(app);
-        this._app         = app;
-        this._engine      = engine;
-        this._config      = config;
-        this._theme       = theme;
-        this._server      = express();
-        this._instance    = null;
-        this._sync        = false;
-        this._ports       = {};
-        this._urls        = {};
+        this._app = app;
+        this._engine = engine;
+        this._config = config;
+        this._theme = theme;
+        this._server = express();
+        this._instance = null;
+        this._sync = false;
+        this._ports = {};
+        this._urls = {};
         this._connections = {};
         this._init();
     }
@@ -55,24 +55,19 @@ module.exports = class Server extends mix(Emitter) {
     }
 
     start(sync) {
-
         sync = _.isUndefined(sync) ? (this._config.sync || false) : sync;
 
         return this._app.load().then(() => {
-
             if (this._config.watch) {
                 this._app.watch();
             }
 
             return Promise.props(findPorts(this._config.port, sync)).then(ports => {
-
                 this._ports = ports;
-                this._sync  = sync;
+                this._sync = sync;
 
                 return new Promise((resolve, reject) => {
-
                     this._instance = this._server.listen(ports.server, (err) => {
-
                         if (err) {
                             return reject(err);
                         }
@@ -90,7 +85,7 @@ module.exports = class Server extends mix(Emitter) {
 
                     this._instance.destroy = cb => {
                         this._instance.close(cb);
-                        for (var key in this._connections) {
+                        for (const key in this._connections) {
                             this._connections[key].destroy();
                         }
                         this._instance.emit('destroy');
@@ -101,9 +96,7 @@ module.exports = class Server extends mix(Emitter) {
                         this._connections[key] = conn;
                         conn.on('close', () => delete this._connections[key]);
                     });
-
                 });
-
             });
         });
     }
@@ -111,10 +104,10 @@ module.exports = class Server extends mix(Emitter) {
     stop() {
         if (this._instance) {
             this._instance.destroy();
-            this._instance    = null;
-            this._sync        = false;
-            this._ports       = null;
-            this._urls        = null;
+            this._instance = null;
+            this._sync = false;
+            this._ports = null;
+            this._urls = null;
             this._connections = {};
         }
         this.emit('stopped');
@@ -122,19 +115,19 @@ module.exports = class Server extends mix(Emitter) {
 
     _startSync(resolve, reject) {
         const syncServer = require('browser-sync').create();
-        const watchers   = {};
-        const bsConfig   = _.defaultsDeep(this._config.syncOptions || {}, {
-            logLevel:  this._config.debug ? 'debug' : 'silent',
-            browser:   [],
+        const watchers = {};
+        const bsConfig = _.defaultsDeep(this._config.syncOptions || {}, {
+            logLevel: this._config.debug ? 'debug' : 'silent',
+            browser: [],
             logPrefix: 'Fractal',
-            browser:   'default',
-            open:      false,
-            notify:    false,
-            port:      this._ports.sync,
-            proxy:     this._urls.server,
+            browser: 'default',
+            open: false,
+            notify: false,
+            port: this._ports.sync,
+            proxy: this._urls.server,
             socket: {
-                port: this._ports.sync
-            }
+                port: this._ports.sync,
+            },
         });
 
         this._app.watch();
@@ -147,7 +140,7 @@ module.exports = class Server extends mix(Emitter) {
             Log.debug(`Watching assets directory - ${s.path}`);
             const pathMatch = new RegExp(`^${s.path}`);
             const monitor = chokidar.watch(s.path, {
-                ignored: /[\/\\]\./
+                ignored: /[\/\\]\./,
             });
             monitor.on('change', filepath => syncServer.reload(Path.join(s.mount, filepath.replace(pathMatch, ''))));
             monitor.on('add', filepath => syncServer.reload());
@@ -164,27 +157,25 @@ module.exports = class Server extends mix(Emitter) {
         });
 
         syncServer.init(bsConfig, () => {
-            const urls   = syncServer.getOption('urls');
+            const urls = syncServer.getOption('urls');
             this._urls.sync = {
-                'local':    urls.get('local'),
+                'local': urls.get('local'),
                 'external': urls.get('external'),
-                'ui':       urls.get('ui')
+                'ui': urls.get('ui'),
             };
             this.emit('ready');
             resolve(this._instance);
         });
-
     }
 
     _onRequest(req, res, next) {
-
         this._engine.setGlobal('env', {
-            server:   true,
-            address:  this._urls.server,
-            port:     this._ports.server,
+            server: true,
+            address: this._urls.server,
+            port: this._ports.server,
             syncPort: this._ports.sync,
-            host:     'localhost',
-            sync:     this.isSynced
+            host: 'localhost',
+            sync: this.isSynced,
         });
 
         Log.debug(`Request for '${req.url}'`);
@@ -209,12 +200,12 @@ module.exports = class Server extends mix(Emitter) {
 
         this.emit('request', res.locals.__request);
 
-        let context = match.route.context || {};
+        const context = match.route.context || {};
         context.request = _.clone(res.locals.__request);
         context.renderEnv = {
             request: context.request,
             server: true,
-            builder: false
+            builder: false,
         };
 
         this._render(match.route.view, context)
@@ -223,7 +214,6 @@ module.exports = class Server extends mix(Emitter) {
     }
 
     _onError(err, req, res, next) {
-
         if (res.headersSent || !this._theme.errorView()) {
             return next(err);
         }
@@ -248,16 +238,15 @@ module.exports = class Server extends mix(Emitter) {
     }
 
     _init() {
-
         this._server.use((req, res, next) => {
             res.locals.__request = {
-                headers:      req.headers,
-                segments:    _.compact(req.path.split('/')),
-                params:      {},
-                path:        req.path,
-                query:       req.query,
-                url:         req.url,
-                route:       null,
+                headers: req.headers,
+                segments: _.compact(req.path.split('/')),
+                params: {},
+                path: req.path,
+                query: req.query,
+                url: req.url,
+                route: null,
             };
             next();
         });
@@ -271,37 +260,37 @@ module.exports = class Server extends mix(Emitter) {
         this._server.use(this._onError.bind(this));
     }
 
-}
+};
 
 function findPorts(serverPort, useSync) {
     const findPort = portscanner.findAPortNotInUseAsync;
-    const ip       = '127.0.0.1';
-    const from     = 3000;
-    const range    = 50;
-    const until    = from + range;
+    const ip = '127.0.0.1';
+    const from = 3000;
+    const range = 50;
+    const until = from + range;
     if (!useSync && serverPort) {
         return {
             sync: Promise.resolve(null),
-            server: Promise.resolve(serverPort)
-        }
+            server: Promise.resolve(serverPort),
+        };
     }
     if (useSync && serverPort) {
         return {
             sync: Promise.resolve(serverPort),
-            server: findPort(serverPort + 1, parseInt(serverPort, 10) + range, ip)
-        }
+            server: findPort(serverPort + 1, parseInt(serverPort, 10) + range, ip),
+        };
     } else if (!useSync && !serverPort) {
         return {
             sync: Promise.resolve(null),
-            server: findPort(from, until, ip)
-        }
+            server: findPort(from, until, ip),
+        };
     } else if (useSync && !serverPort) {
         const syncPort = findPort(from, until, ip);
         return {
             sync: syncPort,
             server: syncPort.then(port => {
-                return findPort(port+1, port + range, ip);
-            })
-        }
+                return findPort(port + 1, port + range, ip);
+            }),
+        };
     }
 }

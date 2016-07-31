@@ -1,23 +1,23 @@
 'use strict';
 
-const Path    = require('path');
+const Path = require('path');
 const Promise = require('bluebird');
-const matter  = require('gray-matter');
-const _       = require('lodash');
-const utils   = require('../../core/utils');
-const Entity  = require('../../core/entities/entity');
+const matter = require('gray-matter');
+const _ = require('lodash');
+const utils = require('../../core/utils');
+const Entity = require('../../core/entities/entity');
 
 module.exports = class Doc extends Entity {
 
-    constructor(config, content, parent){
+    constructor(config, content, parent) {
         super(config.name, config, parent);
-        this.isDoc       = true;
-        this.lang        = config.lang;
-        this.filePath    = config.filePath;
-        this.viewPath    = this.filePath;
+        this.isDoc = true;
+        this.lang = config.lang;
+        this.filePath = config.filePath;
+        this.viewPath = this.filePath;
         this.relViewPath = Path.relative(this.source.fullPath, Path.resolve(this.filePath));
-        this.content     = content;
-        this.file        = config.file;
+        this.content = content;
+        this.file = config.file;
     }
 
     get isIndex() {
@@ -32,7 +32,7 @@ module.exports = class Doc extends Entity {
         if (config.handle) {
             return utils.slugify(config.handle).toLowerCase();
         }
-        let ref = this.isIndex ? (this.parent.isSource ? 'index' : this.parent.name) : config.name;
+        const ref = this.isIndex ? (this.parent.isSource ? 'index' : this.parent.name) : config.name;
         return utils.slugify(this.parent.getProp('prefix') ? `${this.parent.getProp('prefix')}-${ref}` : ref).toLowerCase();
     }
 
@@ -68,23 +68,23 @@ module.exports = class Doc extends Entity {
     }
 
     static create(config, content, parent) {
-        var parsed = matter(content);
-        config     = _.defaults(parsed.data || {}, config);
+        const parsed = matter(content);
+        config = _.defaults(parsed.data || {}, config);
         return Promise.resolve(new Doc(config, parsed.content, parent));
     }
 
-    toJSON(){
-        const self   = super.toJSON();
-        self.isDoc   = true;
+    toJSON() {
+        const self = super.toJSON();
+        self.isDoc = true;
         self.isIndex = this.isIndex;
-        self.path    = this.path;
-        self.status    = this.status;
-        self.tags    = this.tags;
+        self.path = this.path;
+        self.status = this.status;
+        self.tags = this.tags;
         self.content = this.getContentSync();
-        self.lang    = this.lang;
-        self.file    = this.file.toJSON();
+        self.lang = this.lang;
+        self.file = this.file.toJSON();
         self.context = this.context;
         return self;
     }
 
-}
+};

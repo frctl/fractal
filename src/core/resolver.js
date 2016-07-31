@@ -1,9 +1,9 @@
 'use strict';
 
-const Promise   = require('bluebird');
-const co        = require('co');
-const _         = require('lodash');
-const Log       = require('./log');
+const Promise = require('bluebird');
+const co = require('co');
+const _ = require('lodash');
+const Log = require('./log');
 
 const resolver = module.exports = {
 
@@ -15,13 +15,10 @@ const resolver = module.exports = {
     },
 
     context(context, source) {
-
-        let self = this;
+        const self = this;
 
         const resolve = co.wrap(function* (obj) {
-
             const mapper = co.wrap(function* (item, key) {
-
                 item = yield Promise.resolve(item);
                 if (_.isFunction(item)) {
                     return resolve(item());
@@ -30,9 +27,9 @@ const resolver = module.exports = {
                     return resolve(item);
                 }
                 if (_.isString(item) && _.startsWith(item, '@')) {
-                    const parts  = item.split('.');
+                    const parts = item.split('.');
                     const handle = parts.shift();
-                    let entity   = source.find(handle);
+                    let entity = source.find(handle);
                     if (entity) {
                         entity = self.entity(entity);
                         const entityContext = yield resolve(entity.context);
@@ -56,6 +53,6 @@ const resolver = module.exports = {
         });
 
         return resolve(context);
-    }
+    },
 
 };

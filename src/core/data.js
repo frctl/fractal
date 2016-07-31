@@ -1,12 +1,12 @@
 'use strict';
 
 const Promise = require('bluebird');
-const yaml    = require('js-yaml');
-const _       = require('lodash');
-const Path    = require('path');
-const fs      = Promise.promisifyAll(require('fs'));
-const utils   = require('./utils');
-const Log     = require('./log');
+const yaml = require('js-yaml');
+const _ = require('lodash');
+const Path = require('path');
+const fs = Promise.promisifyAll(require('fs'));
+const utils = require('./utils');
+const Log = require('./log');
 
 // module.exports = function (app) {
 
@@ -73,7 +73,7 @@ module.exports = {
     },
 
     writeFile(filePath, data) {
-        const pathInfo = path.parse(path.resolve(filePath));
+        const pathInfo = Path.parse(Path.resolve(filePath));
         const format = utils.lang(filePath, true).mode;
         return fs.writeFileAsync(filePath, this.stringify(data, format));
     },

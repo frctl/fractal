@@ -1,12 +1,12 @@
 'use strict';
 
-const _         = require('lodash');
-const Stream    = require('../array-stream');
-const mixin     = require('mixwith').Mixin;
+const _ = require('lodash');
+const Stream = require('../array-stream');
+const mixin = require('mixwith').Mixin;
 
 module.exports = mixin((superclass) => class Collection extends superclass {
 
-    constructor(){
+    constructor() {
         super();
         this.addMixedIn('Collection');
         this._items = new Set([]);
@@ -72,7 +72,7 @@ module.exports = mixin((superclass) => class Collection extends superclass {
     toJSON() {
         return {
             isCollection: true,
-            items: this.toArray().map(i => (i.toJSON ? i.toJSON() : i))
+            items: this.toArray().map(i => (i.toJSON ? i.toJSON() : i)),
         };
     }
 
@@ -90,7 +90,7 @@ module.exports = mixin((superclass) => class Collection extends superclass {
     }
 
     map(fn) {
-        let items = _.map(this.items(), fn);
+        const items = _.map(this.items(), fn);
         return this.newSelf(items);
     }
 
@@ -146,7 +146,7 @@ module.exports = mixin((superclass) => class Collection extends superclass {
         if (this.size === 0 || arguments.length === 0) {
             return;
         }
-        for (let item of this) {
+        for (const item of this) {
             if (item.isCollection) {
                 const search = item.find.apply(item, arguments);
                 if (search) return search;
@@ -161,7 +161,7 @@ module.exports = mixin((superclass) => class Collection extends superclass {
         if (this.size === 0 || arguments.length === 0) {
             return;
         }
-        for (let item of this) {
+        for (const item of this) {
             if (item.isCollection) {
                 const matcher = this._makePredicate.apply(null, arguments);
                 if (matcher(item)) return item;
@@ -191,11 +191,11 @@ module.exports = mixin((superclass) => class Collection extends superclass {
 
     filterItems(items) {
         const predicate = Array.prototype.slice.call(arguments, 1);
-        let matcher = this._makePredicate.apply(null, predicate);
-        let ret = [];
-        for (let item of items) {
+        const matcher = this._makePredicate.apply(null, predicate);
+        const ret = [];
+        for (const item of items) {
             if (item.isCollection) {
-                let collection = item.filter.apply(item, predicate);
+                const collection = item.filter.apply(item, predicate);
                 if (collection.size) {
                     ret.push(collection);
                 }
@@ -210,7 +210,7 @@ module.exports = mixin((superclass) => class Collection extends superclass {
 
     flattenItems(items, deep) {
         let ret = [];
-        for (let item of items) {
+        for (const item of items) {
             if (item.isCollection) {
                 ret = _.concat(ret, this.flattenItems(item.toArray(), deep));
             } else {
@@ -227,7 +227,7 @@ module.exports = mixin((superclass) => class Collection extends superclass {
     squashItems(items) {
         const squashed = [];
         function squash(items) {
-            for (let item of items) {
+            for (const item of items) {
                 if (item.isCollection) {
                     const children = item.toArray();
                     const entities = children.filter(c => !c.isCollection);

@@ -1,6 +1,6 @@
 'use strict';
 
-const mix     = require('./mixins/mix');
+const mix = require('./mixins/mix');
 const Emitter = require('./mixins/emitter');
 
 class Log extends mix(Emitter) {

@@ -2,14 +2,12 @@
 
 const WebError = require('../../error');
 
-module.exports = function(app, engine) {
-
+module.exports = function (app, engine) {
     return {
         name: 'throw',
-        value: function(code, message) {
+        value(code, message) {
             code = code || 500;
             throw new WebError(code, message || `${code} error`);
-        }
-    }
-
+        },
+    };
 };

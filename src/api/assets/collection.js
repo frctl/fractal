@@ -1,11 +1,11 @@
 'use strict';
 
-const _                = require('lodash');
-const FileCollection   = require('../files/collection');
+const _ = require('lodash');
+const FileCollection = require('../files/collection');
 
 module.exports = class AssetCollection extends FileCollection {
 
-    constructor(config, items){
+    constructor(config, items) {
         super(config, items);
     }
 
@@ -17,4 +17,4 @@ module.exports = class AssetCollection extends FileCollection {
         return this.filter('isAsset').flatten().map(asset => asset.toVinyl()).toArray();
     }
 
-}
+};

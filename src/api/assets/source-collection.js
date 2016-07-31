@@ -1,22 +1,22 @@
 'use strict';
 
-const _            = require('lodash')
-const anymatch     = require('anymatch');
-const Promise      = require('bluebird');
+const _ = require('lodash');
+const anymatch = require('anymatch');
+const Promise = require('bluebird');
 
-const utils        = require('../../core/utils');
-const Log          = require('../../core/log');
-const mix          = require('../../core/mixins/mix');
+const utils = require('../../core/utils');
+const Log = require('../../core/log');
+const mix = require('../../core/mixins/mix');
 const Configurable = require('../../core/mixins/configurable');
-const Emitter      = require('../../core/mixins/emitter');
-const Source       = require('./source');
+const Emitter = require('../../core/mixins/emitter');
+const Source = require('./source');
 
 module.exports = class AssetSourceCollection extends mix(Configurable, Emitter) {
 
-    constructor(app){
+    constructor(app) {
         super('assets', app);
-        this.name     = 'assets';
-        this._app     = app;
+        this.name = 'assets';
+        this._app = app;
         this._sources = new Map();
         this.config(app.get(this.name));
     }
@@ -30,18 +30,18 @@ module.exports = class AssetSourceCollection extends mix(Configurable, Emitter) 
     }
 
     add(name, config) {
-        name = utils.slugify(name).replace('/','-');
+        name = utils.slugify(name).replace('/', '-');
         config = config || {};
         if (_.isString(config)) {
             config = {
-                path: config
+                path: config,
             };
         }
         config = _.defaults(config, {
             path: process.cwd(),
             match: '**/*',
         });
-        let source = new Source(name, config, this._app);
+        const source = new Source(name, config, this._app);
         this._sources.set(name, source);
         return source;
     }
@@ -56,7 +56,7 @@ module.exports = class AssetSourceCollection extends mix(Configurable, Emitter) 
     }
 
     sources() {
-        let sources = [];
+        const sources = [];
         this._sources.forEach(source => sources.push(source));
         return sources;
     }
@@ -66,7 +66,7 @@ module.exports = class AssetSourceCollection extends mix(Configurable, Emitter) 
     }
 
     visible() {
-        let sources = [];
+        const sources = [];
         this._sources.forEach(source => source.isHidden ? null : sources.push(source));
         return sources;
     }
@@ -86,12 +86,12 @@ module.exports = class AssetSourceCollection extends mix(Configurable, Emitter) 
     }
 
     toJSON() {
-        const self        = super.toJSON();
-        self.name         = this.name;
-        self.label        = this.label;
-        self.title        = this.title;
+        const self = super.toJSON();
+        self.name = this.name;
+        self.label = this.label;
+        self.title = this.title;
         self.isCollection = true;
-        self.items        = this.toArray().map(i => (i.toJSON ? i.toJSON() : i));
+        self.items = this.toArray().map(i => (i.toJSON ? i.toJSON() : i));
         return self;
     }
 

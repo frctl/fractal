@@ -1,17 +1,17 @@
 'use strict';
 
-const _     = require('lodash');
+const _ = require('lodash');
 const chalk = require('chalk');
 
 module.exports = class Theme {
 
-    constructor(config){
+    constructor(config) {
         config = config || {};
         this._delimiter = {
             text: 'fractal ➤',
-            format: chalk.magenta
+            format: chalk.magenta,
         };
-        this._styles =  {
+        this._styles = {
             log: {
                 prefix: null,
                 format: s => s,
@@ -21,7 +21,7 @@ module.exports = class Theme {
                 format: chalk.dim,
             },
             info: {
-                prefix: '⚑'
+                prefix: '⚑',
             },
             warn: {
                 prefix: '‼︎',
@@ -34,7 +34,7 @@ module.exports = class Theme {
             success: {
                 prefix: '✔',
                 format: chalk.green,
-            }
+            },
         };
 
         if (config.delimiter) {
@@ -62,9 +62,9 @@ module.exports = class Theme {
 
     format(str, style, strip) {
         style = style || 'log';
-        const prefix    = _.get(this._styles, `${style}.prefix`, '');
+        const prefix = _.get(this._styles, `${style}.prefix`, '');
         const formatter = _.get(this._styles, `${style}.format`, str => str);
-        const suffix    = _.get(this._styles, `${style}.suffix`, '');
+        const suffix = _.get(this._styles, `${style}.suffix`, '');
         return formatter(strip ? _.trim(str) : `${prefix ? prefix + ' ' : ''}${str}${suffix ? ' ' + suffix : ''}`);
     }
 
@@ -77,4 +77,4 @@ module.exports = class Theme {
         return formatter(this._delimiter.text);
     }
 
-}
+};

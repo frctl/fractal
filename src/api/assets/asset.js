@@ -1,6 +1,6 @@
 'use strict';
 
-const _    = require('lodash');
+const _ = require('lodash');
 const Path = require('path');
 const File = require('../files/file');
 

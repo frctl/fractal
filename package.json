@@ -61,13 +61,15 @@
   },
   "scripts": {
     "test": "mocha --require test/support/env --reporter spec",
-    "lint": "jscs src",
-    "lint:fix": "jscs src --fix"
+    "lint": "./node_modules/.bin/eslint src; exit 0",
+    "lint:fix": "./node_modules/.bin/eslint src --fix; exit 0"
   },
   "devDependencies": {
     "chai": "^3.5.0",
     "chai-as-promised": "^5.3.0",
-    "jscs": "^3.0.6",
+    "eslint": "^3.2.0",
+    "eslint-config-airbnb": "^9.0.1",
+    "eslint-plugin-import": "^1.12.0",
     "mocha": "^2.5.3",
     "proxyquire": "^1.7.10",
     "sinon": "^1.17.4"

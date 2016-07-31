@@ -1,15 +1,15 @@
 'use strict';
 
-const _            = require('lodash')
-const utils        = require('../utils');
-const Log          = require('../log');
-const mix          = require('../mixins/mix');
-const Heritable    = require('../mixins/heritable');
-const EntityMixin  = require('../mixins/entity');
+const _ = require('lodash');
+const utils = require('../utils');
+const Log = require('../log');
+const mix = require('../mixins/mix');
+const Heritable = require('../mixins/heritable');
+const EntityMixin = require('../mixins/entity');
 
 module.exports = class Entity extends mix(Heritable, EntityMixin) {
 
-    constructor(name, config, parent){
+    constructor(name, config, parent) {
         super();
         this.isEntity = true;
         this.initEntity(name, config, parent);
@@ -19,7 +19,7 @@ module.exports = class Entity extends mix(Heritable, EntityMixin) {
             enumerable: true,
             get() {
                 return this.source.statusInfo(this.getProp('status'));
-            }
+            },
         });
 
         this.setProps(config);
@@ -33,10 +33,10 @@ module.exports = class Entity extends mix(Heritable, EntityMixin) {
         return this.getResolvedContext().then(context => Object.keys(context).length);
     }
 
-    toJSON(){
-        const self    = super.toJSON();
+    toJSON() {
+        const self = super.toJSON();
         self.isEntity = true;
         return self;
     }
 
-}
+};

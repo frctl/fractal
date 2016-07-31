@@ -1,12 +1,12 @@
 'use strict';
 
-const _     = require('lodash');
+const _ = require('lodash');
 const chalk = require('chalk');
 
 class Notifier {
 
-    constructor(console, interactive){
-        this._console     = console;
+    constructor(console, interactive) {
+        this._console = console;
         this._interactive = interactive;
     }
 

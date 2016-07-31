@@ -5,7 +5,7 @@ const Readable = require('readable-stream').Readable;
 
 module.exports = class PromiseStream extends Readable {
 
-    constructor(p){
+    constructor(p) {
         super({ objectMode: true });
         this._data = Promise.resolve(p);
         this._fulfilledOnInit = this._data.isFulfilled();
@@ -32,4 +32,4 @@ module.exports = class PromiseStream extends Readable {
         }
     }
 
-}
+};

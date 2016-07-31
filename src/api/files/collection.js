@@ -1,14 +1,14 @@
 'use strict';
 
-const _          = require('lodash');
-const anymatch   = require('anymatch');
-const mix        = require('../../core/mixins/mix');
+const _ = require('lodash');
+const anymatch = require('anymatch');
+const mix = require('../../core/mixins/mix');
 const Collection = require('../../core/mixins/collection');
-const Stream     = require('../../core/promise-stream');
+const Stream = require('../../core/promise-stream');
 
 module.exports = class FileCollection extends mix(Collection) {
 
-    constructor(config, items){
+    constructor(config, items) {
         super();
         this.setItems(items);
         this.name = config.name || null;
@@ -25,10 +25,10 @@ module.exports = class FileCollection extends mix(Collection) {
 
     matchItems(items, test) {
         const matcher = anymatch(test);
-        let ret = [];
-        for (let item of items) {
+        const ret = [];
+        for (const item of items) {
             if (item.isCollection) {
-                let collection = item.match(test);
+                const collection = item.match(test);
                 if (collection.size) {
                     ret.push(collection);
                 }
@@ -53,11 +53,11 @@ module.exports = class FileCollection extends mix(Collection) {
         return this.toVinylStream();
     }
 
-    toJSON(){
+    toJSON() {
         const self = super.toJSON();
         self.label = this.label || null;
-        self.name  = this.name || null;
+        self.name = this.name || null;
         return self;
     }
 
-}
+};

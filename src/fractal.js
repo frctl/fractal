@@ -1,13 +1,13 @@
 'use strict';
 
-const _               = require('lodash');
-const Promise         = require('bluebird');
-const defaults        = require('../config');
-const Log             = require('./core/log');
-const utils           = require('./core/utils');
-const mix             = require('./core/mixins/mix');
-const Configurable    = require('./core/mixins/configurable');
-const Emitter         = require('./core/mixins/emitter');
+const _ = require('lodash');
+const Promise = require('bluebird');
+const defaults = require('../config');
+const Log = require('./core/log');
+const utils = require('./core/utils');
+const mix = require('./core/mixins/mix');
+const Configurable = require('./core/mixins/configurable');
+const Emitter = require('./core/mixins/emitter');
 
 class Fractal extends mix(Configurable, Emitter) {
 
@@ -19,12 +19,12 @@ class Fractal extends mix(Configurable, Emitter) {
         super();
         this.config(_.defaultsDeep(config || {}, defaults));
 
-        this._cli        = null;
-        this._web        = null;
+        this._cli = null;
+        this._web = null;
         this._components = null;
-        this._docs       = null;
-        this._assets     = null;
-        this._engine     = null;
+        this._docs = null;
+        this._assets = null;
+        this._engine = null;
 
         if (this.debug) {
             Promise.config({
@@ -33,7 +33,7 @@ class Fractal extends mix(Configurable, Emitter) {
         }
     }
 
-    get components(){
+    get components() {
         if (!this._components) {
             const ComponentSource = require('./api/components');
             this._components = new ComponentSource(this);
@@ -41,7 +41,7 @@ class Fractal extends mix(Configurable, Emitter) {
         return this._components;
     }
 
-    get docs(){
+    get docs() {
         if (!this._docs) {
             const DocSource = require('./api/docs');
             this._docs = new DocSource(this);
@@ -49,7 +49,7 @@ class Fractal extends mix(Configurable, Emitter) {
         return this._docs;
     }
 
-    get assets(){
+    get assets() {
         if (!this._assets) {
             const AssetSourceCollection = require('./api/assets');
             this._assets = new AssetSourceCollection(this);
@@ -57,7 +57,7 @@ class Fractal extends mix(Configurable, Emitter) {
         return this._assets;
     }
 
-    get cli(){
+    get cli() {
         if (!this._cli) {
             const Cli = require('./cli');
             this._cli = new Cli(this);
@@ -65,7 +65,7 @@ class Fractal extends mix(Configurable, Emitter) {
         return this._cli;
     }
 
-    get web(){
+    get web() {
         if (!this._web) {
             const Web = require('./web');
             this._web = new Web(this);
@@ -104,15 +104,15 @@ class Fractal extends mix(Configurable, Emitter) {
     }
 }
 
-function create(config){
+function create(config) {
     return new Fractal(config);
-};
+}
 
 module.exports = create;
 
-module.exports.create   = create;
-module.exports.Fractal  = Fractal;
+module.exports.create = create;
+module.exports.Fractal = Fractal;
 module.exports.WebTheme = require('./web/theme');
 module.exports.CliTheme = require('./cli/theme');
-module.exports.Adapter  = require('./core/adapter');
-module.exports.utils    = require('./core/utils');
+module.exports.Adapter = require('./core/adapter');
+module.exports.utils = require('./core/utils');

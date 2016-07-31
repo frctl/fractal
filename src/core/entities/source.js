@@ -1,20 +1,20 @@
 'use strict';
 
-const Promise      = require('bluebird');
-const _            = require('lodash')
-const anymatch     = require('anymatch');
+const Promise = require('bluebird');
+const _ = require('lodash');
+const anymatch = require('anymatch');
 
-const utils        = require('../utils');
-const Log          = require('../log');
-const Data         = require('../data');
-const Adapter      = require('../adapter');
-const mix          = require('../mixins/mix');
-const Source       = require('../mixins/source');
-const Heritable    = require('../mixins/heritable');
+const utils = require('../utils');
+const Log = require('../log');
+const Data = require('../data');
+const Adapter = require('../adapter');
+const mix = require('../mixins/mix');
+const Source = require('../mixins/source');
+const Heritable = require('../mixins/heritable');
 
 module.exports = class EntitySource extends mix(Source, Heritable) {
 
-    constructor(name, app){
+    constructor(name, app) {
         super();
         this._engine = null;
         this.initSource(name, app.get(this.name), app);
@@ -45,9 +45,9 @@ module.exports = class EntitySource extends mix(Source, Heritable) {
             adapter = adapter({});
         }
         if (!_.isFunction(adapter.register)) {
-            throw new Error(`Template engine adaptor factory functions must return an object with a 'register' method.`);
+            throw new Error('Template engine adaptor factory functions must return an object with a \'register\' method.');
         }
-        let engine = adapter.register(this, this._app);
+        const engine = adapter.register(this, this._app);
         if (!(engine instanceof Adapter)) {
             // throw new Error(`Template engine adapters must extend the base Adapter class.`);
         }
@@ -58,13 +58,13 @@ module.exports = class EntitySource extends mix(Source, Heritable) {
 
     getProp(key) {
         const upstream = this.get(`default.${key}`);
-        const prop     = this._props.get(key);
+        const prop = this._props.get(key);
         return utils.mergeProp(prop, upstream);
     }
 
     statusInfo(handle) {
         const statuses = this.get('statuses');
-        const defaultStatus = this.get('default.status')
+        const defaultStatus = this.get('default.status');
         if (_.isNull(handle)) {
             return null;
         }
@@ -79,18 +79,18 @@ module.exports = class EntitySource extends mix(Source, Heritable) {
     }
 
     toJSON() {
-        const self        = super.toJSON();
-        self.name         = this.name;
-        self.label        = this.label;
-        self.title        = this.title;
-        self.viewExt      = this.get('ext');
-        self.isLoaded     = this.isLoaded;
-        self.isWatching   = this.isWatching;
-        self.path         = this.get('path');
-        self.relPath      = this.relPath;
-        self.fullPath     = this.fullPath;
+        const self = super.toJSON();
+        self.name = this.name;
+        self.label = this.label;
+        self.title = this.title;
+        self.viewExt = this.get('ext');
+        self.isLoaded = this.isLoaded;
+        self.isWatching = this.isWatching;
+        self.path = this.get('path');
+        self.relPath = this.relPath;
+        self.fullPath = this.fullPath;
         self.isCollection = true;
-        self.isSource     = true;
+        self.isSource = true;
         self.items = this.toArray().map(i => (i.toJSON ? i.toJSON() : i));
         return self;
     }

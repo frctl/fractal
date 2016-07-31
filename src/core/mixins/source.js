@@ -1,33 +1,33 @@
 'use strict';
 
-const Promise      = require('bluebird');
-const _            = require('lodash');
-const chokidar     = require('chokidar');
-const anymatch     = require('anymatch');
-const Path         = require('path');
-const mixin        = require('mixwith').Mixin;
-const mix          = require('mixwith').mix;
+const Promise = require('bluebird');
+const _ = require('lodash');
+const chokidar = require('chokidar');
+const anymatch = require('anymatch');
+const Path = require('path');
+const mixin = require('mixwith').Mixin;
+const mix = require('mixwith').mix;
 
-const fs           = require('../fs');
-const utils        = require('../utils');
-const Log          = require('../log');
+const fs = require('../fs');
+const utils = require('../utils');
+const Log = require('../log');
 const Configurable = require('../mixins/configurable');
-const Collection   = require('../mixins/collection');
-const Emitter      = require('../mixins/emitter');
-const Stream       = require('../promise-stream');
+const Collection = require('../mixins/collection');
+const Emitter = require('../mixins/emitter');
+const Stream = require('../promise-stream');
 
 module.exports = mixin((superclass) => class Source extends mix(superclass).with(Configurable, Collection, Emitter) {
 
-    constructor(){
+    constructor() {
         super();
         // super.apply(null, Array.from(arguments));
         super.addMixedIn('Source');
-        this.isSource     = true;
-        this.isLoaded     = false;
-        this._app         = null;
-        this._loading     = false;
-        this._monitor     = null;
-        this._fileTree    = null;
+        this.isSource = true;
+        this.isLoaded = false;
+        this._app = null;
+        this._loading = false;
+        this._monitor = null;
+        this._fileTree = null;
     }
 
     initSource(name, config, app) {
@@ -43,15 +43,15 @@ module.exports = mixin((superclass) => class Source extends mix(superclass).with
         return this.get('title') || this.label;
     }
 
-    get source(){
+    get source() {
         return this;
     }
 
-    get isWatching(){
+    get isWatching() {
         return !! this._monitor;
     }
 
-    get fullPath(){
+    get fullPath() {
         return this.get('path') ? Path.resolve(this.get('path')) : null;
     }
 
@@ -112,11 +112,10 @@ module.exports = mixin((superclass) => class Source extends mix(superclass).with
         if (!this._monitor && sourcePath) {
             Log.debug(`Watching ${this.name} directory - ${sourcePath}`);
             this._monitor = chokidar.watch(sourcePath, {
-                ignored: /[\/\\]\./
+                ignored: /[\/\\]\./,
             });
             this._monitor.on('ready', () => {
                 this._monitor.on('all', (event, path) => {
-
                     if (this._fileFilter && !this._fileFilter(path)) {
                         // don't do anything if there is a file filter in place
                         // and the changed file doesn't match it.
@@ -138,7 +137,6 @@ module.exports = mixin((superclass) => class Source extends mix(superclass).with
                         this._app.emit('source:updated', this, data);
                         return source;
                     });
-
                 });
             });
         }
@@ -153,7 +151,7 @@ module.exports = mixin((superclass) => class Source extends mix(superclass).with
     }
 
     isConfig(file) {
-        return anymatch(`**/*.config.{js,json,yaml,yml}`, this._getPath(file));
+        return anymatch('**/*.config.{js,json,yaml,yml}', this._getPath(file));
     }
 
     _build() {
@@ -162,7 +160,7 @@ module.exports = mixin((superclass) => class Source extends mix(superclass).with
         }
         this._loading = this._getTree().then(fileTree => {
             this._fileTree = fileTree;
-            this._loading  = false;
+            this._loading = false;
             return this._parse(fileTree);
         }).catch(e => {
             Log.error(e);

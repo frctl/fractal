@@ -1,33 +1,31 @@
 'use strict';
 
 const Promise = require('bluebird');
-const Path    = require('path');
-const co      = require('co');
-const _       = require('lodash');
-const fs      = Promise.promisifyAll(require('fs-extra'));
-const Log     = require('../core/log');
-const mix     = require('../core/mixins/mix');
+const Path = require('path');
+const co = require('co');
+const _ = require('lodash');
+const fs = Promise.promisifyAll(require('fs-extra'));
+const Log = require('../core/log');
+const mix = require('../core/mixins/mix');
 const Emitter = require('../core/mixins/emitter');
 
 module.exports = class Builder extends mix(Emitter) {
 
     constructor(theme, engine, config, app) {
         super(app);
-        this._app           = app;
-        this._engine        = engine;
-        this._config        = config;
-        this._theme         = theme;
-        this._targets       = [];
-        this._throttle      = require('throat')(Promise)(config.concurrency || 100);
-        this._errorCount    = 0;
-        this._jobsCount     = 0;
+        this._app = app;
+        this._engine = engine;
+        this._config = config;
+        this._theme = theme;
+        this._targets = [];
+        this._throttle = require('throat')(Promise)(config.concurrency || 100);
+        this._errorCount = 0;
+        this._jobsCount = 0;
         this._progressCount = 0;
     }
 
     build() {
-
         return this._app.load().then(() => {
-
             try {
                 this._validate();
             } catch (e) {
@@ -40,24 +38,22 @@ module.exports = class Builder extends mix(Emitter) {
 
             this.emit('start');
 
-            let setup = fs.removeAsync(this._config.dest).then(() => fs.ensureDirAsync(this._config.dest));
+            const setup = fs.removeAsync(this._config.dest).then(() => fs.ensureDirAsync(this._config.dest));
 
             return setup.then(() => {
-
                 this._addTargets();
 
                 this.emit('ready', this);
                 this._theme.emit('build', this, this._app);
 
-                let copyStatic = this._theme.static().map(p => this._copyStatic(p.path, Path.join('/', p.mount)));
+                const copyStatic = this._theme.static().map(p => this._copyStatic(p.path, Path.join('/', p.mount)));
 
-                let buildTargets = this._buildTargets();
+                const buildTargets = this._buildTargets();
 
                 return Promise.all(copyStatic.concat(buildTargets));
-
             }).then(() => {
-                let stats = {
-                    errorCount: this._errorCount
+                const stats = {
+                    errorCount: this._errorCount,
                 };
                 this.emit('end', stats);
                 return stats;
@@ -72,7 +68,7 @@ module.exports = class Builder extends mix(Emitter) {
         });
     }
 
-    targets(){
+    targets() {
         return this._targets;
     }
 
@@ -81,7 +77,7 @@ module.exports = class Builder extends mix(Emitter) {
         source = Path.resolve(source);
         this._jobsCount++;
         return fs.copyAsync(source, dest, {
-            clobber: true
+            clobber: true,
         }).then(() => {
             this._updateProgress();
             Log.debug(`Copied static asset directory '${source}' ==> '${dest}'`);
@@ -112,35 +108,33 @@ module.exports = class Builder extends mix(Emitter) {
         this._theme.routes().filter(route => route.view || route.static).forEach(route => {
             try {
                 if (route.params) {
-                    let params = _.isFunction(route.params) ? route.params(this._app) : [].concat(route.params);
-                    for (let p of params) {
+                    const params = _.isFunction(route.params) ? route.params(this._app) : [].concat(route.params);
+                    for (const p of params) {
                         this.addRoute(route.handle, p);
                     }
                 } else {
                     this.addRoute(route.handle);
                 }
-            } catch(e) {
+            } catch (e) {
                 throw new Error(`Could not add route '${route.path}' to builder: ${e.message}`);
             }
         });
     }
 
     _buildTargets() {
-        let self = this;
-        let ext = this._app.web.get('builder.ext');
+        const self = this;
+        const ext = this._app.web.get('builder.ext');
         return this._targets.map(target => {
-
             const savePath = Path.join(this._config.dest, target.url) + (target.url == '/' ? `index${ext}` : ext);
             const pathInfo = Path.parse(savePath);
             this._jobsCount++;
             return this._throttle(() => {
-
                 if (target.route.static) {
                     const staticPath = _.isFunction(target.route.static) ? target.route.static(target.params, this._app) : target.route.static;
                     const dest = Path.join(this._config.dest, target.url);
 
                     return fs.copyAsync(staticPath, dest, {
-                        clobber: true
+                        clobber: true,
                     }).then(() => {
                         this._updateProgress();
                     }).catch(e => {
@@ -150,24 +144,22 @@ module.exports = class Builder extends mix(Emitter) {
                 }
 
                 return fs.ensureDirAsync(pathInfo.dir).then(() => {
-
                     function write(html) {
                         return fs.writeFileAsync(savePath, html).then(() => {
                             self.emit('exported', target);
-                            Log.debug(`Exported '${target.url}' ==> '${savePath}'`)
+                            Log.debug(`Exported '${target.url}' ==> '${savePath}'`);
                         });
                     }
 
-                    let context = target.route.context || {};
+                    const context = target.route.context || {};
                     context.request = this._fakeRequest(target);
                     context.renderEnv = {
                         request: context.request,
                         builder: true,
-                        server: false
+                        server: false,
                     };
 
                     return this._engine.render(target.route.view, context).then(html => write(html)).catch(err => {
-
                         this._errorCount++;
                         this.emit('error', new Error(`Failed to export url ${target.url} - ${err.message}`));
 
@@ -175,11 +167,9 @@ module.exports = class Builder extends mix(Emitter) {
                     }).catch(err => {
                         this.emit('error', err);
                     });
-
                 }).then(() => {
                     this._updateProgress();
                 });
-
             });
         });
     }
@@ -188,7 +178,7 @@ module.exports = class Builder extends mix(Emitter) {
         if (!this._config.dest) {
             throw new Error('You need to specify a build destination in your configuration.');
         }
-        for (let stat of this._theme.static()) {
+        for (const stat of this._theme.static()) {
             if (stat.path == this._config.dest) {
                 throw new Error(`Your build destination directory (${Path.resolve(stat.path)}) cannot be the same as any of your static assets directories.`);
             }
@@ -197,16 +187,16 @@ module.exports = class Builder extends mix(Emitter) {
 
     _fakeRequest(target) {
         return {
-            headers:     {},
-            query:       {},
-            url:         target.url,
-            segments:    _.compact(target.url.split('/')),
-            params:      target.params,
-            path:        target.url,
-            error:       null,
+            headers: {},
+            query: {},
+            url: target.url,
+            segments: _.compact(target.url.split('/')),
+            params: target.params,
+            path: target.url,
+            error: null,
             errorStatus: null,
-            route:       target.route,
-        }
+            route: target.route,
+        };
     }
 
-}
+};
