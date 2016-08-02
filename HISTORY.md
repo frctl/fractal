@@ -3,6 +3,7 @@
 ## 1.0.6
 
 * Fix toc() method for docs
+* Fix eslint peerDependencies issue
 
 ## 1.0.5
 
