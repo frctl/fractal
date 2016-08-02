@@ -1,11 +1,15 @@
 # History
 
+## 1.0.6
+
+* Fix toc() method for docs
+
 ## 1.0.5
 
 * Fix paths generated on Windows when running static builds
 * Improve rendering of components with 'special' env variables
 * Allow adapters to override the default reference parsing behaviour
-* Bump Marked version to fix security warnings 
+* Bump Marked version to fix security warnings
 
 ## 1.0.4
 
