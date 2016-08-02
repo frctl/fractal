@@ -10,6 +10,7 @@
 * Improve rendering of components with 'special' env variables
 * Allow adapters to override the default reference parsing behaviour
 * Bump Marked version to fix security warnings
+* Switch to eslint, first pass at code cleanup
 
 ## 1.0.4
 
