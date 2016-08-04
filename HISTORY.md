@@ -1,5 +1,9 @@
 # History
 
+## 1.0.7
+
+* Fix missing FS module in component source
+
 ## 1.0.6
 
 * Fix toc() method for docs
