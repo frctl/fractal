@@ -151,7 +151,7 @@ module.exports = mixin((superclass) => class Source extends mix(superclass).with
     }
 
     isConfig(file) {
-        return anymatch('**/*.config.{js,json,yaml,yml}', this._getPath(file));
+        return anymatch(['**/*.config.{js,json,yaml,yml}', '**/config.{js,json,yaml,yml}'], this._getPath(file));
     }
 
     _build() {

@@ -267,7 +267,7 @@ module.exports = class ComponentSource extends EntitySource {
     }
 
     isView(file) {
-        return anymatch([`**/*${this.get('ext')}`, `!**/*${this.get('splitter')}*${this.get('ext')}`, `!**/*.config.${this.get('ext')}`], this._getPath(file));
+        return anymatch([`**/*${this.get('ext')}`, `!**/*${this.get('splitter')}*${this.get('ext')}`, `!**/*.config.${this.get('ext')}`, '!**/config.{js,json,yaml,yml}'], this._getPath(file));
     }
 
     isVarView(file) {
@@ -279,7 +279,7 @@ module.exports = class ComponentSource extends EntitySource {
     }
 
     isResource(file) {
-        return anymatch(['**/*.*', `!**/*${this.get('ext')}`, '!**/*.config.{js,json,yaml,yml}', '!**/readme.md'], this._getPath(file));
+        return anymatch(['**/*.*', `!**/*${this.get('ext')}`, '!**/*.config.{js,json,yaml,yml}', '!**/config.{js,json,yaml,yml}', '!**/readme.md'], this._getPath(file));
     }
 
     _parse(fileTree) {
@@ -301,19 +301,24 @@ module.exports = class ComponentSource extends EntitySource {
                 resources: files.filter(f => source.isResource(f)),
             };
 
-            const dirConfig = yield EntitySource.getConfig(_.find(matched.configs, f => f.name.startsWith(dir.name)), {
+            const dirDefaults = {
                 name: dir.name,
                 isHidden: dir.isHidden,
                 order: dir.order,
                 dir: dir.path,
                 collated: dir.collated,
-            });
+            };
+
+            // config files for collections or compound components can either have the
+            // filename format component-name.config.ext or config.ext
+            const configFile = _.find(matched.configs, f => f.base.startsWith(`${dir.name}.`)) || _.find(matched.configs, f => f.base.startsWith('config.'));
+            const dirConfig = yield EntitySource.getConfig(configFile, dirDefaults);
 
             // first figure out if it's a component directory or not...
 
             const view = _.find(matched.views, { name: dir.name });
             if (view) { // it is a component
-                const nameMatch = `${dir.name}`;
+                const nameMatch = dir.name;
                 dirConfig.view = view.base;
                 dirConfig.viewName = dir.name;
                 dirConfig.viewPath = view.path;
@@ -338,8 +343,9 @@ module.exports = class ComponentSource extends EntitySource {
 
             const collections = yield matched.directories.map(item => build(item, collection));
             const components = yield matched.views.map(view => {
-                const nameMatch = `${view.name}`;
-                const configFile = _.find(matched.configs, f => f.name.startsWith(nameMatch));
+                const nameMatch = view.name;
+                // config files for 'simple' components must have the format component-name.config.ext
+                const configFile = _.find(matched.configs, f => f.base.startsWith(`${nameMatch}.`));
                 const conf = EntitySource.getConfig(configFile, {
                     name: view.name,
                     order: view.order,
