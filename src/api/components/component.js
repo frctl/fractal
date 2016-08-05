@@ -157,6 +157,7 @@ module.exports = class Component extends Entity {
     }
 
     static *create(config, files, resources, parent) {
+        parent.source.emit('component:beforeCreate', config, files, resources, parent);
         config.notes = config.notes || config.readme;
         if (!config.notes && files.readme || config.notesFromFile && files.readme) {
             config.notesFromFile = true;
@@ -165,6 +166,7 @@ module.exports = class Component extends Entity {
         const comp = new Component(config, files, resources, parent);
         const variants = yield VariantCollection.create(comp, files.view, config.variants, files.varViews, config);
         comp.setVariants(variants);
+        parent.source.emit('component:created', comp);
         return comp;
     }
 

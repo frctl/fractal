@@ -68,9 +68,12 @@ module.exports = class Doc extends Entity {
     }
 
     static create(config, content, parent) {
+        parent.source.emit('doc:beforeCreate', config, content, parent);
         const parsed = matter(content);
         config = _.defaults(parsed.data || {}, config);
-        return Promise.resolve(new Doc(config, parsed.content, parent));
+        const doc = new Doc(config, parsed.content, parent);
+        parent.source.emit('doc:created', doc);
+        return Promise.resolve(doc);
     }
 
     toJSON() {

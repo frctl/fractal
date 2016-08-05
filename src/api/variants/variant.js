@@ -155,5 +155,12 @@ module.exports = class Variant extends Entity {
         self.content = this.getContentSync();
         return self;
     }
+    
+    static create(config, view, resources, parent) {
+        parent.source.emit('variant:beforeCreate', config, view, resources, parent);
+        const variant = new Variant(config, view, resources, parent);
+        parent.source.emit('variant:created', variant);
+        return variant;
+    }
 
 };

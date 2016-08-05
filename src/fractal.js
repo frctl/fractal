@@ -81,6 +81,17 @@ class Fractal extends mix(Configurable, Emitter) {
         return this.get('env').toLowerCase() === 'debug';
     }
 
+    use(plugin) {
+        if (_.isString(plugin)) {
+            plugin = require(plugin);
+        }
+        if (!_.isFunction(plugin)) {
+            throw new Error('Plugins must be a function');
+        }
+        plugin(this, module.exports);
+        return this;
+    }
+
     watch() {
         this._sources().forEach(s => s.watch());
         return this;
@@ -116,3 +127,6 @@ module.exports.WebTheme = require('./web/theme');
 module.exports.CliTheme = require('./cli/theme');
 module.exports.Adapter = require('./core/adapter');
 module.exports.utils = require('./core/utils');
+module.exports.Component = require('./api/components/component.js');
+module.exports.Variant = require('./api/variants/variant.js');
+module.exports.Doc = require('./api/docs/doc.js');

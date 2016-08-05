@@ -38,6 +38,7 @@ module.exports = mixin((superclass) => class Entity extends superclass {
         this.order = _.isNaN(parseInt(config.order, 10)) ? 10000 : parseInt(config.order, 10);
         this.isHidden = config.isHidden || config.hidden || false;
         this.id = this._id(config);
+        this.config = config;
     }
 
     get alias() {
@@ -81,6 +82,7 @@ module.exports = mixin((superclass) => class Entity extends superclass {
             order: this.order,
             isHidden: this.isHidden,
             alias: this.alias,
+            config: this.config,
         };
     }
 

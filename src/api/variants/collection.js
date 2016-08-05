@@ -91,7 +91,7 @@ module.exports = class VariantCollection extends EntityCollection {
         }
 
         if (!hasDefaultConfigured) {
-            variants.push(new Variant({
+            variants.push(Variant.create({
                 name: component.defaultName,
                 handle:    `${component.handle}${source.get('splitter')}${component.defaultName}`.toLowerCase(),
                 view: opts.view,
@@ -130,7 +130,7 @@ module.exports = class VariantCollection extends EntityCollection {
             p.handle = `${component.handle}${source.get('splitter')}${p.name}`.toLowerCase();
             p.isHidden = _.isUndefined(conf.hidden) ? viewFile.isHidden : conf.hidden;
 
-            return new Variant(p, viewFile, resources.filter(isRelated(p.handle)), component);
+            return Variant.create(p, viewFile, resources.filter(isRelated(p.handle)), component);
         }));
 
         variants = variants.concat(configuredVars);
@@ -149,7 +149,7 @@ module.exports = class VariantCollection extends EntityCollection {
                 isHidden: viewFile.isHidden,
             };
             variants.push(
-                new Variant(p, viewFile, resources.filter(isRelated(p.handle)), component)
+                Variant.create(p, viewFile, resources.filter(isRelated(p.handle)), component)
             );
         });
 

@@ -39,4 +39,8 @@ module.exports = class Entity extends mix(Heritable, EntityMixin) {
         return self;
     }
 
+    static define(name, fn) {
+        this.prototype[name] = fn;
+    }
+
 };
