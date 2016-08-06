@@ -1,9 +1,0 @@
-{
-	"preset": "airbnb",
-	"validateIndentation": 4,
-	"requireTrailingComma": false,
-	"safeContextKeyword": ["self"],
-	"requirePaddingNewLinesAfterBlocks": false,
-	"maximumLineLength": 200,
-	"requireShorthandArrowFunctions": false
-}
