@@ -88,7 +88,7 @@ class Fractal extends mix(Configurable, Emitter) {
         if (!_.isFunction(plugin)) {
             throw new Error('Plugins must be a function');
         }
-        plugin(this, module.exports);
+        plugin(this, module.exports.core);
         return this;
     }
 
@@ -127,6 +127,9 @@ module.exports.WebTheme = require('./web/theme');
 module.exports.CliTheme = require('./cli/theme');
 module.exports.Adapter = require('./core/adapter');
 module.exports.utils = require('./core/utils');
-module.exports.Component = require('./api/components/component.js');
-module.exports.Variant = require('./api/variants/variant.js');
-module.exports.Doc = require('./api/docs/doc.js');
+
+module.exports.core = {
+    Component: require('./api/components/component.js'),
+    Variant: require('./api/variants/variant.js'),
+    Doc: require('./api/docs/doc.js'),
+};
