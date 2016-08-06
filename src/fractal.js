@@ -81,14 +81,15 @@ class Fractal extends mix(Configurable, Emitter) {
         return this.get('env').toLowerCase() === 'debug';
     }
 
-    use(plugin) {
+    extend(plugin) {
         if (_.isString(plugin)) {
             plugin = require(plugin);
         }
         if (!_.isFunction(plugin)) {
             throw new Error('Plugins must be a function');
         }
-        plugin(this, module.exports.core);
+        const boundPlugin = plugin.bind(this);
+        boundPlugin(module.exports.core);
         return this;
     }
 
