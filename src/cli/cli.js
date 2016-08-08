@@ -184,7 +184,9 @@ class Cli extends mix(Configurable, Emitter) {
 
         if (input.command) {
             // non-interactive mode
-            //
+
+            vorpal.ui.attach = () => {}; // fix for vorpal bug in 1.11.4
+            
             if (this._scope === 'global') {
                 vorpal.parse(process.argv);
                 return;
