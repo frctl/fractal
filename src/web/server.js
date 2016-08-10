@@ -101,6 +101,10 @@ module.exports = class Server extends mix(Emitter) {
         });
     }
 
+    use(mount, middleware) {
+        this._server.use.apply(this._server, Array.from(arguments));
+    }
+
     stop() {
         if (this._instance) {
             this._instance.destroy();

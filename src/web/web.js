@@ -26,7 +26,10 @@ module.exports = class Web extends mix(Configurable, Emitter) {
         const engine = new Engine(theme.loadPaths(), 'server', this._app);
         theme.emit('init', engine, this._app);
         engine.setGlobal('theme', theme);
-        return new Server(theme, engine, opts, this._app);
+        this.emit('server:beforeCreate', theme, engine, opts);
+        const server = new Server(theme, engine, opts, this._app);
+        this.emit('server:created', server);
+        return server;
     }
 
     builder(config) {
@@ -35,7 +38,10 @@ module.exports = class Web extends mix(Configurable, Emitter) {
         const engine = new Engine(theme.loadPaths(), 'builder', this._app);
         theme.emit('init', engine, this._app);
         engine.setGlobal('theme', theme);
-        return new Builder(theme, engine, opts, this._app);
+        this.emit('builder:beforeCreate', theme, engine, opts);
+        const builder = new Builder(theme, engine, opts, this._app);
+        this.emit('builder:created', builder);
+        return builder;
     }
 
     theme(name, instance) {

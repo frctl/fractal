@@ -23,6 +23,7 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
 
         this._staticPaths = new Set();
         this._routes = new Map();
+        this._resolvers = {};
         this._builder = null;
         this._views = [];
 
@@ -31,9 +32,11 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
         this._globals = {};
 
         this._errorView = {};
+        this._redirectView = {};
 
         this.addLoadPath(viewPaths);
         this.setErrorView('__system/error.nunj');
+        this.setRedirectView('__system/redirect.nunj');
     }
 
     addLoadPath(path) {
@@ -55,6 +58,15 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
         return this._errorView;
     }
 
+    setRedirectView(view) {
+        this._redirectView = view;
+        return this;
+    }
+
+    redirectView() {
+        return this._redirectView;
+    }
+
     addStatic(path, mount) {
         for (const s of this._staticPaths) {
             if (path === s.path) {
@@ -72,18 +84,28 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
         return Array.from(this._staticPaths.values());
     }
 
-    addRoute(path, opts, build) {
+    addRoute(path, opts, resolvers) {
         const keys = [];
         opts.path = path;
         opts.handle = opts.handle || path;
         opts.matcher = pr(path, keys);
-        opts.params = build || null;
+        this.addResolver(opts.handle, resolvers || null);
         this._routes.set(opts.handle, _.clone(opts));
+        return this;
+    }
+
+    addResolver(handle, resolver) {
+        const current = _.get(this._resolvers, handle, []);
+        _.set(this._resolvers, handle, [].concat(resolver));
         return this;
     }
 
     routes() {
         return Array.from(this._routes.values());
+    }
+
+    resolvers() {
+        return this._resolvers;
     }
 
     matchRoute(urlPath) {
