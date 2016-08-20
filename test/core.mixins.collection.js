@@ -1,6 +1,7 @@
 'use strict';
 
 const chai       = require('chai');
+const sinon      = require('sinon');
 const expect     = chai.expect;
 
 const mix        = require('../src/core/mixins/mix');
@@ -77,7 +78,20 @@ describe('Collection', function(){
             expect(collection.toJSON().items).to.be.an('array');
         });
 
-        it('calls toJSON() on items if they have a toJSON method');
+        it('calls toJSON() on items if they have a toJSON method', function() {
+          const collectionItem = {
+            type: "component",
+            id: 3,
+            toJSON: function() {}
+          }
+
+          sinon.spy(collectionItem, 'toJSON');
+
+          collection.pushItem(collectionItem);
+          collection.toJSON();
+          expect(collectionItem.toJSON.called).to.be.true;
+          collection.removeItem(collectionItem);
+        });
     });
 
     describe('.first()', function(){
