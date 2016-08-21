@@ -1,15 +1,14 @@
 {% if not entity %}{{ throw(404, "Component '" + request.params.handle + "' not found.") }}{% endif -%}
 
-{% set rendered = entity.renderWithGlobals(null, { _request: request, _env: frctl.env }, withLayout, withCollation) | async(true) %}
+{% set rendered = entity.render(null, renderEnv, { preview: withLayout, collate: withCollation }) | async(true) %}
 
 {% if rendered | isError -%}
-{% import "macros/errors.nunj" as errors %}
-{% set error = rendered %}
 {% extends 'layouts/full.nunj' %}
+{% set error = rendered %}
 {% set page = {
     title: 'Error rendering component ' + request.params.handle
 } %}
-{% block content %}{{ errors.renderError('component', error.message) }}{% endblock %}
+{% block content -%}{% import "macros/errors.nunj" as errors -%}{{ errors.renderError('component', error.message) }}{% endblock %}
 {%- else -%}
 {{ rendered }}
 {%- endif %}
