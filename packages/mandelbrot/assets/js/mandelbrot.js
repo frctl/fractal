@@ -4,6 +4,7 @@ global.jQuery    = require('jquery');
 const pjax       = require('jquery-pjax');
 const $          = global.jQuery;
 const doc        = $(document);
+const frctl      = window.frctl || {};
 
 const events     = require('./events');
 const utils      = require('./utils');
@@ -21,7 +22,7 @@ let pens        = [];
 
 loadPen();
 
-if (window.location.protocol.indexOf('file') !== 0) {
+if (frctl.env == 'server') {
     doc.pjax('a[data-pjax], code a[href], .Prose a[href]:not([data-no-pjax]), .Browser a[href]:not([data-no-pjax])', '#pjax-container', {
         fragment: '#pjax-container',
         timeout: 10000
