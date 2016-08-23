@@ -16,6 +16,7 @@ module.exports = class Component extends Entity {
         this.isComponent = true;
         this.defaultName = config.default ? utils.slugify(config.default.toLowerCase()) : 'default';
         this.notes = config.notes || null;
+        this.meta = config.meta || {};
         this.notesFromFile = config.notesFromFile || false;
         this.lang = files.view.lang.name;
         this.editorMode = files.view.lang.mode;

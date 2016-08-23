@@ -29,6 +29,7 @@ module.exports = {
             display: {},
             context: {},
             tags: [],
+            meta: {},
             status: 'ready',
             collated: false,
             prefix: null,

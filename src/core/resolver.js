@@ -20,9 +20,9 @@ const resolver = module.exports = {
         const resolve = co.wrap(function* (obj) {
             const mapper = co.wrap(function* (item, key) {
                 item = yield Promise.resolve(item);
-                if (_.isFunction(item)) {
-                    return resolve(item());
-                }
+                // if (_.isFunction(item)) {
+                //     return resolve(item());
+                // }
                 if (_.isArray(item) || _.isObject(item)) {
                     return resolve(item);
                 }

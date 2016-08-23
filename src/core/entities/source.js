@@ -100,7 +100,7 @@ module.exports = class EntitySource extends mix(Source, Heritable) {
         if (!file) {
             return Promise.resolve(defaults);
         }
-        return Data.readFile(file.path).then(c => _.defaultsDeep(c, defaults)).catch(err => {
+        return Data.readFile(file.path).then(c => utils.defaultsDeep(c, defaults)).catch(err => {
             Log.error(`Error parsing data file ${file.path}: ${err}`);
             return defaults;
         });
