@@ -316,11 +316,20 @@ module.exports = class ComponentSource extends EntitySource {
 
             // first figure out if it's a component directory or not...
 
-            const view = _.find(matched.views, { name: dir.name });
+            const defaultName = dirConfig.default || 'default';
+            const defaultVariant = _.find(dirConfig.variants || [], {name: defaultName});
+            let view;
+
+            if (defaultVariant && defaultVariant.view) {
+                view = _.find([].concat(matched.views, matched.varViews), { base: defaultVariant.view });
+            } else {
+                view = _.find(matched.views, { name: dir.name });
+            }
+
             if (view) { // it is a component
                 const nameMatch = dir.name;
                 dirConfig.view = view.base;
-                dirConfig.viewName = dir.name;
+                dirConfig.viewName = view.name;
                 dirConfig.viewPath = view.path;
                 const resources = new FileCollection({}, matched.resources.map(f => new File(f, source.relPath)));
                 const files = {
