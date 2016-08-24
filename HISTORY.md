@@ -6,7 +6,7 @@
 * [NEW] Provide `meta` component/docs config namespace for arbitrary user-defined metadata
 * [FIX] Prevent arrays being merged during context data inheritance (#123)
 * [FIX] Default variant view template issue (#67)
-
+* [FIX] Patch issue with commands not exiting in latest version of Vorpal
 
 ## 1.0.7
 
