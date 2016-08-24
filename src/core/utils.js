@@ -110,8 +110,14 @@ module.exports = {
         return prop;
     },
 
+    /*
+     * Non-array merging version of _.defaultsDeep
+     *
+     * utils.defaultsDeep(src, defaults);
+     */
+    
     defaultsDeep() {
-        return _.mergeWith.apply(_, [].concat({}, Array.from(arguments).reverse(), function(objValue, srcValue) {
+        return _.mergeWith.apply(_, [].concat({}, Array.from(arguments).reverse(), (objValue, srcValue) => {
             if (_.isArray(srcValue)) {
                 return srcValue;
             }
