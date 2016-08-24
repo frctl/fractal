@@ -282,6 +282,10 @@ module.exports = class ComponentSource extends EntitySource {
         return anymatch(`**/preview${this.get('ext')}`, this._getPath(file));
     }
 
+    isCollator(file) {
+        return anymatch(`**/collator${this.get('ext')}`, this._getPath(file));
+    }
+
     isResource(file) {
         return anymatch(['**/*.*', `!**/*${this.get('ext')}`, '!**/*.config.{js,json,yaml,yml}', '!**/config.{js,json,yaml,yml}', '!**/readme.md'], this._getPath(file));
     }
@@ -303,6 +307,7 @@ module.exports = class ComponentSource extends EntitySource {
                 configs: files.filter(f => source.isConfig(f)),
                 readmes: files.filter(f => source.isReadme(f)),
                 previews: files.filter(f => source.isPreview(f)),
+                collators: files.filter(f => source.isCollator(f)),
                 resources: files.filter(f => source.isResource(f)),
             };
 
@@ -341,6 +346,7 @@ module.exports = class ComponentSource extends EntitySource {
                     view: view,
                     readme: matched.readmes[0],
                     preview: matched.previews[0],
+                    collator: matched.collators[0],
                     varViews: _.filter(matched.varViews, f => f.name.startsWith(nameMatch)),
                 };
                 return Component.create(dirConfig, files, resources, parent || source);
@@ -376,6 +382,7 @@ module.exports = class ComponentSource extends EntitySource {
                         view: view,
                         readme: null,
                         preview: null,
+                        collator: null,
                         varViews: matched.varViews.filter(f => f.name.startsWith(nameMatch)),
                     };
                     const resources = new FileCollection({}, []);
