@@ -8,6 +8,7 @@ const Path = require('path');
 const util = require('util');
 const portscanner = Promise.promisifyAll(require('portscanner'));
 const WebError = require('./error');
+const utils = require('../core/utils');
 const Log = require('../core/log');
 const mix = require('../core/mixins/mix');
 const mime = require('mime');
@@ -116,7 +117,7 @@ module.exports = class Server extends mix(Emitter) {
     _startSync(resolve, reject) {
         const syncServer = require('browser-sync').create();
         const watchers = {};
-        const bsConfig = _.defaultsDeep(this._config.syncOptions || {}, {
+        const bsConfig = utils.defaultsDeep(this._config.syncOptions || {}, {
             logLevel: this._config.debug ? 'debug' : 'silent',
             browser: [],
             logPrefix: 'Fractal',
