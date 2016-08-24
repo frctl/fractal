@@ -17,7 +17,7 @@ class Fractal extends mix(Configurable, Emitter) {
      */
     constructor(config) {
         super();
-        this.config(_.defaultsDeep(config || {}, defaults));
+        this.config(utils.defaultsDeep(config || {}, defaults));
 
         this._cli = null;
         this._web = null;

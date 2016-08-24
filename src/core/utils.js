@@ -102,12 +102,20 @@ module.exports = {
         if (_.isArray(upstream)) {
             return _.uniq(_.concat(upstream, _.castArray(prop)));
         } else if (_.isObject(upstream)) {
-            return _.defaultsDeep(_.clone(prop || {}), _.clone(upstream));
+            return this.defaultsDeep(_.clone(prop || {}), _.clone(upstream));
         }
         if (_.isUndefined(prop)) {
             return upstream;
         }
         return prop;
+    },
+
+    defaultsDeep() {
+        return _.mergeWith.apply(_, [].concat({}, Array.from(arguments).reverse(), function(objValue, srcValue) {
+            if (_.isArray(srcValue)) {
+                return srcValue;
+            }
+        }));
     },
 
     relUrlPath(toPath, fromPath, opts) {

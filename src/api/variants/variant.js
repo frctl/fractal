@@ -145,6 +145,7 @@ module.exports = class Variant extends Entity {
         self.baseHandle = this.baseHandle;
         self.alias = this.alias;
         self.notes = this.notes;
+        self.meta = this.meta;
         self.status = this.status;
         self.display = this.display;
         self.isDefault = this.isDefault;
