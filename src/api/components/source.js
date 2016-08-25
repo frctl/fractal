@@ -11,6 +11,7 @@ const ComponentCollection = require('./collection');
 const File = require('../files/file');
 const FileCollection = require('../files/collection');
 const Data = require('../../core/data');
+const frfs = require('../../core/fs');
 const Log = require('../../core/log');
 const resolver = require('../../core/resolver');
 const EntitySource = require('../../core/entities/source');
@@ -182,7 +183,7 @@ module.exports = class ComponentSource extends EntitySource {
             if (entity.isComponent || entity.isVariant) {
                 if (entity.isComponent) {
                     if (entity.isCollated && opts.collate && entity.variants().size > 1) {
-                        rendered = yield self._renderCollatedComponent(entity, context, env);
+                        rendered = yield self._renderCollatedComponent(entity, env);
                     } else {
                         entity = entity.variants().default();
                         rendered = yield self._renderVariant(entity, context, env);
@@ -194,7 +195,7 @@ module.exports = class ComponentSource extends EntitySource {
                     const target = entity.toJSON();
                     target.component = target.isVariant ? entity.parent.toJSON() : target;
                     const layout = _.isString(opts.preview) ? opts.preview : entity.preview;
-                    return yield self._wrapInLayout(target, rendered, layout, {}, env);
+                    return yield self._wrapInLayout(target, rendered, layout, env);
                 }
                 return rendered;
             } else {
@@ -213,86 +214,64 @@ module.exports = class ComponentSource extends EntitySource {
         });
     }
 
-    *_renderCollatedComponent(component, context, env) {
-        context = context || {};
-        const collator = component.collator;
+    *_renderCollatedComponent(component, env) {
         const target = component.toJSON();
         const items = yield component.variants().filter('isHidden', false).toArray().map(variant => {
-            const ctx = context[`@${variant.handle}`] || variant.context;
-            return this.render(variant, ctx, env).then(markup => {
+            return this.render(variant, variant.context, env).then(markup => {
                 return {
                     markup: markup.trim(),
                     item: variant.toJSON()
                 }
             });
         });
-        if (_.isString(collator) && collator.startsWith('@')) {
-            // collator is a component
-            let collatorComp = this.find(collator);
-            if (!collatorComp) {
-                // component not found
-                Log.warn(`Collator ${collator} not found.`);
-                return items.map(i => i.markup).join('\n');
-            }
-            if (collatorComp.isComponent) {
-                collatorComp = collatorComp.variants().default();
-            }
-            let collatorContext = yield this.resolve(collatorComp.context);
-            let collatorContent = yield collatorComp.getContent();
-            let viewpath = collatorComp.viewPath;
-            collatorContext._variants = items;
-            return this.engine().render(viewpath, collatorContent, collatorContext, {
-                target: target
-            });
+
+        if (!component.collator) {
+            return items.map(i => i.markup).join('\n');
         }
-        if (_.get(collator, 'isFile')) {
-            // collator is a file
-            return (yield collator.getContent().then(content => this.engine().render(collator.path, content, {
-                _variants: items
-            },{
-                target: target,
-            })));
+
+        if (_.isFunction(component.collator)) {
+            return items.map(i => component.collator(i.markup, i.item)).join('\n');
         }
-        return items.map(i => (_.isFunction(collator) ? collator(i.markup, i.item) : markup)).join('\n');
+
+        const collator = yield this._getWrapper(component.collator);
+
+        if (!collator) {
+            Log.warn(`Collator ${component.collator} not found.`);
+            return items.map(i => i.markup).join('\n');
+        }
+
+        if (collator.viewPath === component.viewPath) {
+            return items.map(i => i.markup).join('\n');
+        }
+
+        let context = _.defaults(collator.context, {
+            _variants: items
+        });
+
+        return this.engine().render(collator.viewPath, collator.content, context, {
+            target: target,
+        });
     }
 
-    *_wrapInLayout(target, content, identifier, context, env) {
+    *_wrapInLayout(target, content, identifier, env) {
 
-        let layout = null;
+        const layout = yield this._getWrapper(identifier);
 
-        if (_.get(identifier, 'isFile')) {
-            layout = identifier;
-        } else {
-            layout = this.find(identifier);
-        }
-
-        let layoutContext, layoutContent, viewpath;
         if (!layout) {
             Log.warn(`Preview layout ${identifier} not found. Rendering component without layout.`);
             return content;
         }
 
-        if (layout.isFile) {
-            if (layout.path == target.viewPath) {
-                // the component has an inherited layout that is itself
-                return content;
-            }
-            layoutContext = {};
-            layoutContent = yield layout.getContent();
-            viewpath = layout.path;
-        } else {
-            if (layout.isComponent) {
-                layout = layout.variants().default();
-            }
-            layoutContext = yield this.resolve(layout.context);
-            layoutContent = yield layout.getContent();
-            viewpath = layout.viewPath;
+        if (layout.viewPath === target.viewPath) {
+            return content;
         }
-        layoutContext = _.defaults(layoutContext, context || {});
-        layoutContext[this.get('yield')] = content;
+
+        let context = _.defaults(layout.context, {
+            [this.get('yield')]: content
+        });
         const renderMethod = (_.isFunction(this.engine().renderLayout)) ? 'renderLayout' : 'render';
-        return this.engine()[renderMethod](viewpath, layoutContent, layoutContext, {
-            self: layout.toJSON(),
+        return this.engine()[renderMethod](layout.viewPath, layout.content, context, {
+            self: layout.self,
             target: target,
             env: env,
         });
@@ -306,6 +285,55 @@ module.exports = class ComponentSource extends EntitySource {
             }
         }
         return eventData;
+    }
+
+    *_getWrapper(indentifier) {
+
+        if (_.isString(indentifier) && indentifier.startsWith('@')) {
+            // looking for a component
+            let entity = this.find(indentifier);
+            if (!entity) {
+                return;
+            }
+            if (entity.isComponent) {
+                entity = entity.variants().default();
+            }
+            let context = yield this.resolve(entity.context);
+            let content = yield entity.getContent();
+            return {
+                context: context,
+                content: content,
+                viewPath: entity.viewPath,
+                self: entity.toJSON()
+            }
+        }
+
+        if (_.isString(indentifier) && ! indentifier.startsWith('@')) {
+            return frfs.find(indentifier).then(file => {
+                file = new File(file);
+                return file.getContent().then(content => ({
+                    context: {},
+                    content: content,
+                    viewPath: file.viewPath,
+                    self: file.toJSON()
+                }));
+            }).catch(err => {
+                Log.warn(err);
+                return undefined;
+            });
+        }
+
+        if (_.get(indentifier, 'isFile')) {
+            // using a file
+            let content = yield indentifier.getContent();
+            return {
+                context: {},
+                content: content,
+                viewPath: indentifier.path,
+                self: indentifier.toJSON()
+            }
+        }
+
     }
 
     isTemplate(file) {
