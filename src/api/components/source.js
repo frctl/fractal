@@ -181,7 +181,7 @@ module.exports = class ComponentSource extends EntitySource {
             let rendered;
             if (entity.isComponent || entity.isVariant) {
                 if (entity.isComponent) {
-                    if (entity.isCollated && opts.collate) {
+                    if (entity.isCollated && opts.collate && entity.variants().size > 1) {
                         rendered = yield self._renderCollatedComponent(entity, context, env);
                     } else {
                         entity = entity.variants().default();
@@ -215,13 +215,31 @@ module.exports = class ComponentSource extends EntitySource {
 
     *_renderCollatedComponent(component, context, env) {
         context = context || {};
-        return (yield component.variants().filter('isHidden', false).toArray().map(variant => {
+        const collator = component.collator;
+        const target = component.toJSON();
+        const items = yield component.variants().filter('isHidden', false).toArray().map(variant => {
             const ctx = context[`@${variant.handle}`] || variant.context;
             return this.render(variant, ctx, env).then(markup => {
-                const collator = component.collator;
-                return _.isFunction(collator) ? collator(markup, variant) : markup;
+                return {
+                    markup: markup.trim(),
+                    item: variant.toJSON()
+                }
             });
-        })).join('\n');
+        });
+        if (_.get(collator, 'isFile')) {
+            return (yield collator.getContent().then(content => this.engine().render(collator.path, content, {
+                _variants: items
+            }, {
+                target: target,
+            })));
+        }
+        return items.map(i => (_.isFunction(collator) ? collator(i.markup, i.item) : markup)).join('\n');
+        // return (yield variants.map(variant => {
+        //     const ctx = context[`@${variant.handle}`] || variant.context;
+        //     return this.render(variant, ctx, env).then(markup => {
+        //         return _.isFunction(collator) ? collator(markup, variant) : markup;
+        //     });
+        // })).join('\n');
     }
 
     *_wrapInLayout(target, content, identifier, context, env) {
