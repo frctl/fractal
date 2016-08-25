@@ -95,7 +95,6 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
     }
 
     addResolver(handle, resolver) {
-        const current = _.get(this._resolvers, handle, []);
         _.set(this._resolvers, handle, [].concat(resolver));
         return this;
     }
@@ -135,10 +134,10 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
         return false;
     }
 
-    urlFromRoute(handle, params) {
+    urlFromRoute(handle, params, noRedirect) {
         const route = this._routes.get(handle);
         if (route) {
-            if (route.redirect) {
+            if (!noRedirect && route.redirect) {
                 return route.redirect;
             }
             const compiler = pr.compile(route.path);

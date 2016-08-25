@@ -24,10 +24,6 @@ module.exports = class Builder extends mix(Emitter) {
 
         this._throttle = require('throat')(Promise)(config.concurrency || 100);
 
-        this._errorCount = 0;
-        this._jobsCount = 0;
-        this._progressCount = 0;
-
         this._init();
     }
 
@@ -40,11 +36,9 @@ module.exports = class Builder extends mix(Emitter) {
 
     start() {
 
-        this._errorCount = 0;
-        this._jobsCount = 0;
-        this._progressCount = 0;
-
         this._validate();
+
+        this._reset();
 
         // Make sure the sources have loaded
         return this._app.load().then(() => {
@@ -63,8 +57,12 @@ module.exports = class Builder extends mix(Emitter) {
 
                 // 2. Run the requests in parallel
                 this._requests.forEach(r => {
-                    this._jobsCount++;
-                    jobs.push(this._onRequest(r))
+                    let req = this._onRequest(r);
+                    if (req) {
+                        this._jobsCount++;
+                        jobs.push(req);
+                    }
+
                 });
 
                 return Promise.all(jobs);
@@ -90,6 +88,12 @@ module.exports = class Builder extends mix(Emitter) {
 
     }
 
+    _reset() {
+        this._errorCount = 0;
+        this._jobsCount = 0;
+        this._progressCount = 0;
+    }
+
     _init() {
         this._static = this._static.concat(this._theme.static());
         this._engine.setGlobal('env', {
@@ -99,13 +103,41 @@ module.exports = class Builder extends mix(Emitter) {
     }
 
     _buildRequests() {
-        // const routes = this._theme.routes();
-        // const requests = this._theme.resolvers();
+        const routes = this._theme.routes();
+        const resolvers = _.isFunction(this._theme.resolvers) ? this._theme.resolvers() : this._getLegacyResolvers(routes);
+        let requests = [];
+
+        _.forEach(resolvers, (routeResolvers, handle) => {
+            const route = _.find(routes, {handle: handle});
+
+            if (!route) {
+                Log.debug(`No route found for handle '${handle}'`);
+                return;
+            }
+
+            for (let resolver of routeResolvers) {
+                let resolverSet = _.isFunction(resolver) ? resolver(this._app) : [].concat(resolver);
+                for (const params of resolverSet) {
+                    const url = this._theme.urlFromRoute(route.handle, params, true);
+                    const req = Builder.Request(url, params, route);
+                    this._requests.push(req);
+                }
+            }
+
+        });
+    }
+
+    _getLegacyResolvers(routes) {
+        let resolvers = {};
+        for (let route of routes) {
+            _.set(resolvers, route.handle, [].concat(route.params || null));
+        }
+        return resolvers;
     }
 
     _onRequest(req) {
 
-        if (req.route.redirect) {
+        if (req.route.redirect && this._theme.redirectView) {
             req.route.context = {
                 redirectUrl: req.route.redirect
             };
@@ -130,21 +162,21 @@ module.exports = class Builder extends mix(Emitter) {
             };
 
             return this._render(req.route.view, context)
-                    .then(this._write)
+                    .then(contents => this._write(contents, dest) )
                     .then(() => {
-                        self.emit('exported', req);
+                        this.emit('exported', req);
                         Log.debug(`Exported '${req.url}' ==> '${dest}'`);
                         this._updateProgress();
                     })
-                    .catch(err => this._onError(err, req));
+                    .catch(err => this._onError(err, req, dest));
         }
 
     }
 
-    _onError(err, req) {
+    _onError(err, req, dest) {
         this._errorCount++;
         this.emit('error', new Error(`Failed to export url ${req.url} - ${err.message}`));
-        return this._render(this._theme.errorView(), { error: err }).then(this._write).catch(err => {
+        return this._render(this._theme.errorView(), { error: err }).then(contents => this._write(contents, dest)).catch(err => {
             this.emit('error', err);
         });
     }
@@ -174,8 +206,7 @@ module.exports = class Builder extends mix(Emitter) {
 
     _write(contents, dest) {
         dest = _.trimEnd(Path.join(this._config.dest, dest), Path.sep);
-        const pathInfo = Path.parse(savePath);
-        return fs.ensureDirAsync(pathInfo.dir).then(() => fs.writeFileAsync(dest, contents));
+        return fs.ensureDirAsync(Path.parse(dest).dir).then(() => fs.writeFileAsync(dest, contents));
     }
 
     _updateProgress() {
@@ -195,6 +226,7 @@ module.exports = class Builder extends mix(Emitter) {
     }
 
     static Request(url, params, route) {
+        route = _.clone(route);
         return {
             headers: {},
             query: {},
@@ -204,7 +236,7 @@ module.exports = class Builder extends mix(Emitter) {
             path: url,
             error: null,
             errorStatus: null,
-            route: null,
+            route: route,
         };
     }
 
