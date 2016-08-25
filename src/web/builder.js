@@ -20,6 +20,7 @@ module.exports = class Builder extends mix(Emitter) {
         this._theme = theme;
 
         this._static = [];
+        this._requests = [];
 
         this._throttle = require('throat')(Promise)(config.concurrency || 100);
 
@@ -39,6 +40,10 @@ module.exports = class Builder extends mix(Emitter) {
 
     start() {
 
+        this._errorCount = 0;
+        this._jobsCount = 0;
+        this._progressCount = 0;
+
         this._validate();
 
         // Make sure the sources have loaded
@@ -49,23 +54,31 @@ module.exports = class Builder extends mix(Emitter) {
             // remove and recreate build dir
             const setup = fs.removeAsync(this._config.dest).then(() => fs.ensureDirAsync(this._config.dest));
 
-            let jobs = [];
-
-            // 1. Start any static copy jobs
-            //
-            jobs.push(this._static.map(p => this._copy(p.path, Path.join(Path.sep, p.mount))));
-
-            // 2. Run the requests in parallel
-
-            jobs.concat(this._requests.map(r => this._onRequest(r)));
-
-
-
-
             return setup.then(() => {
 
+                let jobs = [];
+
+                // 1. Start any static copy jobs
+                jobs.push(this._static.map(p => this._copy(p.path, Path.join(Path.sep, p.mount))));
+
+                // 2. Run the requests in parallel
+                this._requests.forEach(r => {
+                    this._jobsCount++;
+                    jobs.push(this._onRequest(r))
+                });
+
+                return Promise.all(jobs);
             });
 
+        }).then(() => {
+            const stats = {
+                errorCount: this._errorCount,
+            };
+            this.emit('end', stats);
+            return stats;
+        }).catch(e => {
+            this.emit('error', e);
+            throw e;
         });
     }
 
@@ -82,6 +95,12 @@ module.exports = class Builder extends mix(Emitter) {
         this._engine.setGlobal('env', {
             builder: true,
         });
+        this._buildRequests();
+    }
+
+    _buildRequests() {
+        // const routes = this._theme.routes();
+        // const requests = this._theme.resolvers();
     }
 
     _onRequest(req) {
@@ -110,14 +129,14 @@ module.exports = class Builder extends mix(Emitter) {
                 server: false,
             };
 
-            this._render(req.route.view, context)
-                .then(this._write)
-                .then(() => {
-                    self.emit('exported', req);
-                    Log.debug(`Exported '${req.url}' ==> '${dest}'`);
-                    this._updateProgress();
-                })
-                .catch(err => this._onError(err, req));
+            return this._render(req.route.view, context)
+                    .then(this._write)
+                    .then(() => {
+                        self.emit('exported', req);
+                        Log.debug(`Exported '${req.url}' ==> '${dest}'`);
+                        this._updateProgress();
+                    })
+                    .catch(err => this._onError(err, req));
         }
 
     }
