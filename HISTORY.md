@@ -1,5 +1,13 @@
 # History
 
+## 1.1
+
+* [NEW] Add support for 'short' non-component-name-prefixed config files for collections and compound components
+* [NEW] Provide `meta` component/docs config namespace for arbitrary user-defined metadata
+* [FIX] Prevent arrays being merged during context data inheritance (#123)
+* [FIX] Default variant view template issue (#67)
+* [FIX] Patch issue with commands not exiting in latest version of Vorpal
+
 ## 1.0.7
 
 * Fix missing FS module in component source

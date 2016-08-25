@@ -83,6 +83,7 @@ module.exports = class Doc extends Entity {
         self.path = this.path;
         self.status = this.status;
         self.tags = this.tags;
+        self.meta = this.meta;
         self.content = this.getContentSync();
         self.lang = this.lang;
         self.file = this.file.toJSON();

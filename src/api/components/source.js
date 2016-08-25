@@ -11,6 +11,7 @@ const ComponentCollection = require('./collection');
 const File = require('../files/file');
 const FileCollection = require('../files/collection');
 const Data = require('../../core/data');
+const frfs = require('../../core/fs');
 const Log = require('../../core/log');
 const resolver = require('../../core/resolver');
 const EntitySource = require('../../core/entities/source');
@@ -88,16 +89,17 @@ module.exports = class ComponentSource extends EntitySource {
     }
 
     findFile(filePath) {
+        let source = this;
         filePath = Path.resolve(filePath);
         if (this._fileTree) {
             function findFile(items) {
                 for (const item of items) {
                     if (item.isFile && item.path === filePath) {
-                        return item;
+                        return new File(item, source.relPath);
                     } else if (item.isDirectory) {
                         const result = findFile(item.children);
                         if (result) {
-                            return result;
+                            return new File(result, source.relPath);
                         }
                     }
                 }
@@ -180,8 +182,8 @@ module.exports = class ComponentSource extends EntitySource {
             let rendered;
             if (entity.isComponent || entity.isVariant) {
                 if (entity.isComponent) {
-                    if (entity.isCollated && opts.collate) {
-                        rendered = yield self._renderCollatedComponent(entity, context, env);
+                    if (entity.isCollated && opts.collate && entity.variants().size > 1) {
+                        rendered = yield self._renderCollatedComponent(entity, env);
                     } else {
                         entity = entity.variants().default();
                         rendered = yield self._renderVariant(entity, context, env);
@@ -193,7 +195,7 @@ module.exports = class ComponentSource extends EntitySource {
                     const target = entity.toJSON();
                     target.component = target.isVariant ? entity.parent.toJSON() : target;
                     const layout = _.isString(opts.preview) ? opts.preview : entity.preview;
-                    return yield self._wrapInLayout(target, rendered, layout, {}, env);
+                    return yield self._wrapInLayout(target, rendered, layout, env);
                 }
                 return rendered;
             } else {
@@ -212,41 +214,64 @@ module.exports = class ComponentSource extends EntitySource {
         });
     }
 
-    *_renderCollatedComponent(component, context, env) {
-        context = context || {};
-        return (yield component.variants().filter('isHidden', false).toArray().map(variant => {
-            const ctx = context[`@${variant.handle}`] || variant.context;
-            return this.render(variant, ctx, env).then(markup => {
-                const collator = component.collator;
-                return _.isFunction(collator) ? collator(markup, variant) : markup;
+    *_renderCollatedComponent(component, env) {
+        const target = component.toJSON();
+        const items = yield component.variants().filter('isHidden', false).toArray().map(variant => {
+            return this.render(variant, variant.context, env).then(markup => {
+                return {
+                    markup: markup.trim(),
+                    item: variant.toJSON()
+                }
             });
-        })).join('\n');
+        });
+
+        if (!component.collator) {
+            return items.map(i => i.markup).join('\n');
+        }
+
+        if (_.isFunction(component.collator)) {
+            return items.map(i => component.collator(i.markup, i.item)).join('\n');
+        }
+
+        const collator = yield this._getWrapper(component.collator);
+
+        if (!collator) {
+            Log.warn(`Collator ${component.collator} not found.`);
+            return items.map(i => i.markup).join('\n');
+        }
+
+        if (collator.viewPath === component.viewPath) {
+            return items.map(i => i.markup).join('\n');
+        }
+
+        let context = _.defaults(collator.context, {
+            _variants: items
+        });
+
+        return this.engine().render(collator.viewPath, collator.content, context, {
+            target: target,
+        });
     }
 
-    *_wrapInLayout(target, content, identifier, context, env) {
-        let layout = this.find(identifier);
-        let layoutContext, layoutContent, viewpath;
+    *_wrapInLayout(target, content, identifier, env) {
+
+        const layout = yield this._getWrapper(identifier);
+
         if (!layout) {
             Log.warn(`Preview layout ${identifier} not found. Rendering component without layout.`);
             return content;
         }
-        if (layout.isFile) {
-            layoutContext = {};
-            layoutContent = yield layout.read();
-            viewpath = layout.path;
-        } else {
-            if (layout.isComponent) {
-                layout = layout.variants().default();
-            }
-            layoutContext = yield this.resolve(layout.context);
-            layoutContent = yield layout.getContent();
-            viewpath = layout.viewPath;
+
+        if (layout.viewPath === target.viewPath) {
+            return content;
         }
-        layoutContext = _.defaults(layoutContext, context || {});
-        layoutContext[this.get('yield')] = content;
+
+        let context = _.defaults(layout.context, {
+            [this.get('yield')]: content
+        });
         const renderMethod = (_.isFunction(this.engine().renderLayout)) ? 'renderLayout' : 'render';
-        return this.engine()[renderMethod](viewpath, layoutContent, layoutContext, {
-            self: layout.toJSON(),
+        return this.engine()[renderMethod](layout.viewPath, layout.content, context, {
+            self: layout.self,
             target: target,
             env: env,
         });
@@ -262,12 +287,61 @@ module.exports = class ComponentSource extends EntitySource {
         return eventData;
     }
 
+    *_getWrapper(indentifier) {
+
+        if (_.isString(indentifier) && indentifier.startsWith('@')) {
+            // looking for a component
+            let entity = this.find(indentifier);
+            if (!entity) {
+                return;
+            }
+            if (entity.isComponent) {
+                entity = entity.variants().default();
+            }
+            let context = yield this.resolve(entity.context);
+            let content = yield entity.getContent();
+            return {
+                context: context,
+                content: content,
+                viewPath: entity.viewPath,
+                self: entity.toJSON()
+            }
+        }
+
+        if (_.isString(indentifier) && ! indentifier.startsWith('@')) {
+            return frfs.find(indentifier).then(file => {
+                file = new File(file);
+                return file.getContent().then(content => ({
+                    context: {},
+                    content: content,
+                    viewPath: file.viewPath,
+                    self: file.toJSON()
+                }));
+            }).catch(err => {
+                Log.warn(err);
+                return undefined;
+            });
+        }
+
+        if (_.get(indentifier, 'isFile')) {
+            // using a file
+            let content = yield indentifier.getContent();
+            return {
+                context: {},
+                content: content,
+                viewPath: indentifier.path,
+                self: indentifier.toJSON()
+            }
+        }
+
+    }
+
     isTemplate(file) {
         return this.isView(file) || this.isVarView(file);
     }
 
     isView(file) {
-        return anymatch([`**/*${this.get('ext')}`, `!**/*${this.get('splitter')}*${this.get('ext')}`, `!**/*.config.${this.get('ext')}`, '!**/config.{js,json,yaml,yml}'], this._getPath(file));
+        return anymatch([`**/*${this.get('ext')}`, `!**/*${this.get('splitter')}*${this.get('ext')}`, `!**/*.${this.get('files.config')}.${this.get('ext')}`, `!**/${this.get('files.config')}.{js,json,yaml,yml}`], this._getPath(file));
     }
 
     isVarView(file) {
@@ -275,11 +349,25 @@ module.exports = class ComponentSource extends EntitySource {
     }
 
     isReadme(file) {
-        return anymatch('**/readme.md', this._getPath(file));
+        return anymatch(`**/${this.get('files.notes')}.md`, this._getPath(file));
+    }
+
+    isPreview(file) {
+        return anymatch([`**/${this.get('files.preview')}${this.get('ext')}`, `**/_${this.get('files.preview')}${this.get('ext')}`], this._getPath(file));
+    }
+
+    isCollator(file) {
+        return anymatch([`**/${this.get('files.collator')}${this.get('ext')}`, `**/_${this.get('files.collator')}${this.get('ext')}`], this._getPath(file));
     }
 
     isResource(file) {
-        return anymatch(['**/*.*', `!**/*${this.get('ext')}`, '!**/*.config.{js,json,yaml,yml}', '!**/config.{js,json,yaml,yml}', '!**/readme.md'], this._getPath(file));
+        return anymatch([
+            '**/*.*',
+            `!**/*${this.get('ext')}`,
+            `!**/*.${this.get('files.config')}.{js,json,yaml,yml}`,
+            `!**/${this.get('files.config')}.{js,json,yaml,yml}`,
+            `!**/${this.get('files.notes')}.md`],
+            this._getPath(file));
     }
 
     _parse(fileTree) {
@@ -297,16 +385,23 @@ module.exports = class ComponentSource extends EntitySource {
                 views: files.filter(f => source.isView(f)),
                 varViews: files.filter(f => source.isVarView(f)),
                 configs: files.filter(f => source.isConfig(f)),
-                readmes: files.filter(f => source.isReadme(f)),
                 resources: files.filter(f => source.isResource(f)),
             };
+
+            function matchFile(check) {
+                check = check.bind(source);
+                const matched = files.find(f => check(f));
+                return matched ? new File(matched, source.relPath) : undefined;
+            }
 
             const dirDefaults = {
                 name: dir.name,
                 isHidden: dir.isHidden,
                 order: dir.order,
                 dir: dir.path,
-                collated: dir.collated,
+                readme: matchFile(source.isReadme),
+                preview: matchFile(source.isPreview),
+                collator: matchFile(source.isCollator),
             };
 
             // config files for collections or compound components can either have the
@@ -331,10 +426,10 @@ module.exports = class ComponentSource extends EntitySource {
                 dirConfig.view = view.base;
                 dirConfig.viewName = view.name;
                 dirConfig.viewPath = view.path;
+
                 const resources = new FileCollection({}, matched.resources.map(f => new File(f, source.relPath)));
                 const files = {
                     view: view,
-                    readme: matched.readmes[0],
                     varViews: _.filter(matched.varViews, f => f.name.startsWith(nameMatch)),
                 };
                 return Component.create(dirConfig, files, resources, parent || source);
@@ -368,7 +463,6 @@ module.exports = class ComponentSource extends EntitySource {
                 return conf.then(c => {
                     const files = {
                         view: view,
-                        readme: null,
                         varViews: matched.varViews.filter(f => f.name.startsWith(nameMatch)),
                     };
                     const resources = new FileCollection({}, []);
