@@ -17,6 +17,12 @@ module.exports = {
         yield: 'yield',
         splitter: '--',
         ext: '.hbs',
+        files: {
+            preview: 'preview',
+            config: 'config',
+            collator: 'collator',
+            notes: 'readme'
+        },
         resources: {
             assets: {
                 label: 'Assets',

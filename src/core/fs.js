@@ -86,6 +86,12 @@ module.exports = {
         });
     },
 
+    find(filePath) {
+        return fs.statAsync(filePath).then(function(stat) {
+            return build(filePath, stat);
+        });
+    }
+
 };
 
 function dirscribe(root, opts) {

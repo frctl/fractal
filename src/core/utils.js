@@ -93,16 +93,13 @@ module.exports = {
     },
 
     mergeProp(prop, upstream) {
-        if (_.isFunction(prop)) {
-            return prop;
-        }
-        if (_.isFunction(upstream)) {
-            return upstream;
-        }
+        // if (_.isFunction(upstream)) {
+        //     return upstream;
+        // }
         if (_.isArray(upstream)) {
             return _.uniq(_.concat(upstream, _.castArray(prop)));
-        } else if (_.isObject(upstream)) {
-            return this.defaultsDeep(_.clone(prop || {}), _.clone(upstream));
+        } else if (_.isPlainObject(upstream)) {
+            return this.defaultsDeep(prop || {}, upstream);
         }
         if (_.isUndefined(prop)) {
             return upstream;
@@ -115,7 +112,7 @@ module.exports = {
      *
      * utils.defaultsDeep(src, defaults);
      */
-    
+
     defaultsDeep() {
         return _.mergeWith.apply(_, [].concat({}, Array.from(arguments).reverse(), (objValue, srcValue) => {
             if (_.isArray(srcValue)) {

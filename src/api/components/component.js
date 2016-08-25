@@ -15,14 +15,13 @@ module.exports = class Component extends Entity {
         super(config.name, config, parent);
         this.isComponent = true;
         this.defaultName = config.default ? utils.slugify(config.default.toLowerCase()) : 'default';
-        this.notes = config.notes || null;
-        this.notesFromFile = config.notesFromFile || false;
         this.lang = files.view.lang.name;
         this.editorMode = files.view.lang.mode;
         this.editorScope = files.view.lang.scope;
         this.viewPath = files.view.path;
         this.viewDir = files.view.dir;
         this.relViewPath = Path.relative(this.source.fullPath, Path.resolve(files.view.path));
+        this._notes = config.notes || config.readme || null;
         this._resources = resources;
         this._resourceCollections = null;
         this._variants = new VariantCollection({ name: `${this.name}-variants` }, [], parent);
@@ -61,6 +60,10 @@ module.exports = class Component extends Entity {
 
     get baseHandle() {
         return this.handle;
+    }
+
+    get notes() {
+        return _.get(this._notes, 'isFile') ? this._notes.getContentSync() : this._notes;
     }
 
     render(context, env, opts) {
@@ -158,11 +161,6 @@ module.exports = class Component extends Entity {
     }
 
     static *create(config, files, resources, parent) {
-        config.notes = config.notes || config.readme;
-        if (!config.notes && files.readme || config.notesFromFile && files.readme) {
-            config.notesFromFile = true;
-            config.notes = yield files.readme.read();
-        }
         const comp = new Component(config, files, resources, parent);
         const variants = yield VariantCollection.create(comp, files.view, config.variants, files.varViews, config);
         comp.setVariants(variants);

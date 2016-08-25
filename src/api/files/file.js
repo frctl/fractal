@@ -46,6 +46,14 @@ module.exports = class File {
         return this._file.readSync().toString();
     }
 
+    read() {
+        return this.getContent();
+    }
+
+    readSync() {
+        return this.getContentSync();
+    }
+
     toVinyl() {
         return new VinylFile({
             path: this.path,

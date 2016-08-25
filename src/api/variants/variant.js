@@ -14,11 +14,11 @@ module.exports = class Variant extends Entity {
         this.viewPath = config.viewPath;
         this.viewDir = config.dir;
         this.relViewPath = Path.relative(this.source.fullPath, Path.resolve(this.viewPath));
-        this.notes = config.notes || this.parent.notes;
         this.isDefault = config.isDefault || false;
         this.lang = view.lang.name;
         this.editorMode = view.lang.mode;
         this.editorScope = view.lang.scope;
+        this._notes = config.notes || config.readme || null;
         this._view = view;
         this._resources = resources;
         this._referencedBy = null;
@@ -31,6 +31,10 @@ module.exports = class Variant extends Entity {
 
     _handle(config) {
         return utils.slugify(config.handle).toLowerCase();
+    }
+
+    get notes() {
+        return this._notes || this.parent.notes;
     }
 
     get alias() {

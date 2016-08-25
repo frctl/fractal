@@ -93,7 +93,7 @@ module.exports = class VariantCollection extends EntityCollection {
         if (!hasDefaultConfigured) {
             variants.push(new Variant({
                 name: component.defaultName,
-                handle:    `${component.handle}${source.get('splitter')}${component.defaultName}`.toLowerCase(),
+                handle: `${component.handle}${source.get('splitter')}${component.defaultName}`.toLowerCase(),
                 view: opts.view,
                 viewPath: Path.join(opts.dir, opts.view),
                 dir: opts.dir,
