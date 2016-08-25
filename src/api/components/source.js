@@ -226,20 +226,34 @@ module.exports = class ComponentSource extends EntitySource {
                 }
             });
         });
+        if (_.isString(collator) && collator.startsWith('@')) {
+            // collator is a component
+            let collatorComp = this.find(collator);
+            if (!collatorComp) {
+                // component not found
+                Log.warn(`Collator ${collator} not found.`);
+                return items.map(i => i.markup).join('\n');
+            }
+            if (collatorComp.isComponent) {
+                collatorComp = collatorComp.variants().default();
+            }
+            let collatorContext = yield this.resolve(collatorComp.context);
+            let collatorContent = yield collatorComp.getContent();
+            let viewpath = collatorComp.viewPath;
+            collatorContext._variants = items;
+            return this.engine().render(viewpath, collatorContent, collatorContext, {
+                target: target
+            });
+        }
         if (_.get(collator, 'isFile')) {
+            // collator is a file
             return (yield collator.getContent().then(content => this.engine().render(collator.path, content, {
                 _variants: items
-            }, {
+            },{
                 target: target,
             })));
         }
         return items.map(i => (_.isFunction(collator) ? collator(i.markup, i.item) : markup)).join('\n');
-        // return (yield variants.map(variant => {
-        //     const ctx = context[`@${variant.handle}`] || variant.context;
-        //     return this.render(variant, ctx, env).then(markup => {
-        //         return _.isFunction(collator) ? collator(markup, variant) : markup;
-        //     });
-        // })).join('\n');
     }
 
     *_wrapInLayout(target, content, identifier, context, env) {
