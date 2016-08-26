@@ -1,6 +1,7 @@
 'use strict';
 
 const Promise = require('bluebird');
+const anymatch = require('anymatch');
 const Path = require('path');
 const co = require('co');
 const _ = require('lodash');
@@ -37,7 +38,6 @@ module.exports = class Builder extends mix(Emitter) {
     start() {
 
         this._validate();
-
         this._reset();
 
         // Make sure the sources have loaded
@@ -191,11 +191,15 @@ module.exports = class Builder extends mix(Emitter) {
     }
 
     _copy(source, dest) {
+        let ignored = this._config.static.ignored;
         dest = _.trimEnd(Path.join(this._config.dest, dest), Path.sep);
         source = Path.resolve(source);
         this._jobsCount++;
         return fs.copyAsync(source, dest, {
             clobber: true,
+            filter: function(path){
+                return ! anymatch(ignored, path);
+            }
         }).then(() => {
             this._updateProgress();
             Log.debug(`Copied '${source}' ==> '${dest}'`);

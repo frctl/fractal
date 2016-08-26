@@ -114,6 +114,9 @@ module.exports = {
             ext: '.html',
             urls: {
                 ext: '.html'
+            },
+            static: {
+                ignored: []
             }
         },
         static: {
