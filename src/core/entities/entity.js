@@ -39,8 +39,16 @@ module.exports = class Entity extends mix(Heritable, EntityMixin) {
         return self;
     }
 
-    static define(name, fn) {
-        this.prototype[name] = fn;
+    static defineProperty(key, opts) {
+        if (_.isPlainObject(opts)) {
+            Object.defineProperty(this.prototype, key, opts);
+        } else {
+            Object.defineProperty(this.prototype, key, {
+                enumerable: true,
+                writable: true,
+                value: opts
+            });
+        }
     }
 
 };
