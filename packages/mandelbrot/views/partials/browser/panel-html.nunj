@@ -1,11 +1,15 @@
+{% import "macros/render.nunj" as render %}
 <div class="Browser-panel Browser-code is-active" data-role="tab-panel" id="browser-{{ entity.id }}-panel-html">
     <code class="Code Code--lang-html">
-        {% set rendered = entity.render(null, renderEnv, {preview: false, collate: true}) | async(true) %}
-        {% if rendered | isError %}
-        {% set renderError %}<!-- Error rendering component: {{ error.message }} -->{% endset %}
-        <pre>{{ renderError | highlight('html') }}</pre>
+        {% if not entity.isCollated or entity.isVariant or entity.variants().size == 1 %}
+        <pre>{{ render.entity(entity.render(null, renderEnv, {preview: false, collate: false}) | async(true)) | trim }}</pre>
         {% else %}
-        <pre>{{ rendered | beautify | highlight('html') }}</pre>
+        {% for variant in entity.variants().items() %}
+            <pre>{{ '<span class="hljs-comment">&lt;!-- ' + variant.label + ' --&gt;</span>' }}
+{{ render.entity(variant.render(null, renderEnv, {preview: false, collate: false}) | async(true)) | trim }}
+
+</pre>
+        {% endfor %}
         {% endif %}
     </code>
 </div>
