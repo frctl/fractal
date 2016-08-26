@@ -79,7 +79,7 @@
     }
 
     @if $preset == caption {
-        font: normal 0.8125rem/#{(20.01 / 13)} $font-family-sans-serif;
+        font: normal 0.875rem/#{(24 / 14)} $font-family-sans-serif;
     }
 
     @if $preset == code {
@@ -87,7 +87,7 @@
     }
 
     @if $preset == label {
-        font: bold 0.6875rem/#{(20.01 / 11)} $font-family-sans-serif;
+        font: normal 0.75rem/#{(20 / 12)} $font-family-sans-serif;
         letter-spacing: 0.075em;
         text-transform: uppercase;
     }
