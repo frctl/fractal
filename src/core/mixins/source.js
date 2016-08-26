@@ -104,15 +104,18 @@ module.exports = mixin((superclass) => class Source extends mix(superclass).with
         });
     }
 
-    watch() {
+    watch(opts) {
+        opts = opts || {};
         if (this.isWatching) {
             return;
         }
         const sourcePath = this.fullPath;
         if (!this._monitor && sourcePath) {
             Log.debug(`Watching ${this.name} directory - ${sourcePath}`);
+            console.log(this.name);
+            console.log([].concat([/[\/\\]\./], opts.ignored || []));
             this._monitor = chokidar.watch(sourcePath, {
-                ignored: /[\/\\]\./,
+                ignored: [].concat(/[\/\\]\./, opts.ignored || []),
             });
             this._monitor.on('ready', () => {
                 this._monitor.on('all', (event, path) => {
@@ -151,7 +154,7 @@ module.exports = mixin((superclass) => class Source extends mix(superclass).with
     }
 
     isConfig(file) {
-        return anymatch(['**/*.config.{js,json,yaml,yml}', '**/config.{js,json,yaml,yml}'], this._getPath(file));
+        return anymatch([`**/*.${this.get('files.config')}.{js,json,yaml,yml}`, `**/${this.get('files.config')}.{js,json,yaml,yml}`], this._getPath(file));
     }
 
     _build() {

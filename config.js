@@ -90,7 +90,10 @@ module.exports = {
                 description: 'Ready for referencing.',
                 color: '#29CC29'
             }
-        }
+        },
+        files: {
+            config: 'config',
+        },
     },
     assets: {
         label: 'assets',
@@ -103,7 +106,7 @@ module.exports = {
             sync: false,
             watch: false,
             port: null,
-            syncOptions: {},
+            syncOptions: {}
         },
         builder: {
             dest: null,

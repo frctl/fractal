@@ -43,6 +43,8 @@ module.exports = class Builder extends mix(Emitter) {
         // Make sure the sources have loaded
         return this._app.load().then(() => {
 
+            this._buildRequests();
+
             this.emit('start');
 
             // remove and recreate build dir
@@ -99,7 +101,6 @@ module.exports = class Builder extends mix(Emitter) {
         this._engine.setGlobal('env', {
             builder: true,
         });
-        this._buildRequests();
     }
 
     _buildRequests() {

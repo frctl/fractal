@@ -59,7 +59,8 @@ module.exports = class Server extends mix(Emitter) {
         sync = _.isUndefined(sync) ? (this._config.sync || false) : sync;
 
         return this._app.load().then(() => {
-            if (this._config.watch) {
+
+            if (this._config.watch && !sync) {
                 this._app.watch();
             }
 
@@ -133,12 +134,18 @@ module.exports = class Server extends mix(Emitter) {
             socket: {
                 port: this._ports.sync,
             },
+            watchOptions: {}
         });
 
-        this._app.watch();
+        console.log(bsConfig.watchOptions);
+
+        this._app.watch(bsConfig.watchOptions || {});
 
         // listen out for source changes
-        this._app.on('source:updated', (source, data) => syncServer.reload());
+        this._app.on('source:updated', (source, data) => {
+
+            syncServer.reload()
+        });
 
         // listen out for changes in the static assets directories
         this._theme.static().forEach(s => {
@@ -197,7 +204,7 @@ module.exports = class Server extends mix(Emitter) {
 
         if (match.route.static) {
             const staticPath = _.isFunction(match.route.static) ? match.route.static(match.params, this._app) : match.route.static;
-            return res.sendFile(staticPath);
+            return res.sendFile(decodeURI(staticPath));
         }
 
         res.locals.__request.params = match.params;
