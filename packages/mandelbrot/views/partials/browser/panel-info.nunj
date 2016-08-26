@@ -14,7 +14,9 @@
             <strong class="Meta-key">Variants <em class="Meta-count">({{ variants.size }})</em>:</strong>
             <span class="Meta-value Meta-value--linkList">
             {% for variant in variants.items() %}
-                <a href="{{ path(frctl.theme.urlFromRoute('component', { handle: variant.handle })) }}"><span>{{ variant.name }}</span></a>{% if not loop.last %}, {% endif %}
+                <a href="{{ path(frctl.theme.urlFromRoute('component', { handle: variant.handle })) }}">
+                    <span>{{ variant.label }}</span>
+                </a>{% if not loop.last %}, {% endif %}
             {% endfor %}
             </span>
         </li>
