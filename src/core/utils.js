@@ -95,7 +95,7 @@ module.exports = {
     mergeProp(prop, upstream) {
         if (_.isArray(upstream)) {
             return _.uniq(_.concat(upstream, _.castArray(prop)));
-        } else if (_.isPlainObject(upstream)) {
+        } else if (_.isPlainObject(upstream) && _.isPlainObject(prop)) {
             return this.defaultsDeep(prop || {}, upstream);
         }
         if (_.isUndefined(prop)) {
@@ -112,9 +112,11 @@ module.exports = {
 
     defaultsDeep() {
         return _.mergeWith.apply(_, [].concat({}, Array.from(arguments).reverse(), (objValue, srcValue) => {
+
             if (_.isArray(srcValue)) {
                 return srcValue;
             }
+            return this.mergeProp(objValue, srcValue);
         }));
     },
 

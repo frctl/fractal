@@ -15,12 +15,12 @@ const Configurable = require('../mixins/configurable');
 const Collection = require('../mixins/collection');
 const Emitter = require('../mixins/emitter');
 const Stream = require('../promise-stream');
+const resolver = require('../../core/resolver');
 
 module.exports = mixin((superclass) => class Source extends mix(superclass).with(Configurable, Collection, Emitter) {
 
     constructor() {
         super();
-        // super.apply(null, Array.from(arguments));
         super.addMixedIn('Source');
         this.isSource = true;
         this.isLoaded = false;
@@ -112,10 +112,8 @@ module.exports = mixin((superclass) => class Source extends mix(superclass).with
         const sourcePath = this.fullPath;
         if (!this._monitor && sourcePath) {
             Log.debug(`Watching ${this.name} directory - ${sourcePath}`);
-            console.log(this.name);
-            console.log([].concat([/[\/\\]\./], opts.ignored || []));
             this._monitor = chokidar.watch(sourcePath, {
-                ignored: [].concat(/[\/\\]\./, opts.ignored || []),
+                ignored: [].concat([/[\/\\]\./], opts.ignored || []),
             });
             this._monitor.on('ready', () => {
                 this._monitor.on('all', (event, path) => {
@@ -157,6 +155,17 @@ module.exports = mixin((superclass) => class Source extends mix(superclass).with
         return anymatch([`**/*.${this.get('files.config')}.{js,json,yaml,yml}`, `**/${this.get('files.config')}.{js,json,yaml,yml}`], this._getPath(file));
     }
 
+    _resolveTreeContext(tree) {
+        let pending = [];
+        for (let item of tree.flattenDeep()) {
+            pending.push(resolver.context(item.context, this).then(ctx => {
+                item._contextData = ctx;
+                return ctx;
+            }));
+        }
+        return Promise.all(pending).then(() => tree);
+    }
+
     _build() {
         if (!this.get('path')) {
             return Promise.resolve(this);
@@ -164,7 +173,7 @@ module.exports = mixin((superclass) => class Source extends mix(superclass).with
         this._loading = this._getTree().then(fileTree => {
             this._fileTree = fileTree;
             this._loading = false;
-            return this._parse(fileTree);
+            return this._parse(fileTree).then(tree => this._resolveTreeContext(tree));
         }).catch(e => {
             Log.error(e);
             if (this._app.debug) {

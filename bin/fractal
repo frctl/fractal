@@ -66,7 +66,7 @@ FractalCli.launch(config, function(env){
      */
 
     if (scope === 'project') {
-        if (!semver.satisfies(env.modulePackage.version, `^1.0.0-beta`)) {
+        if (semver.lt(env.modulePackage.version, `1.0.0`)) {
             // Project is using a legacy version of Fractal, load it the old way...
             console.log(`Fractal version mismatch! Global: ${cliPackage.version} / Local: ${env.modulePackage.version}`);
             let frctl = require(env.modulePath);

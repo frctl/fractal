@@ -137,8 +137,6 @@ module.exports = class Server extends mix(Emitter) {
             watchOptions: {}
         });
 
-        console.log(bsConfig.watchOptions);
-
         this._app.watch(bsConfig.watchOptions || {});
 
         // listen out for source changes

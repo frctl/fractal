@@ -30,7 +30,7 @@ module.exports = {
             }
         },
         default: {
-            collator: function(markup, item) { return `<!-- Start: @${item.handle} -->\n${markup}\n<!-- End: @${item.handle} -->\n` },
+            collator: function collator(markup, item) { return `<!-- Start: @${item.handle} -->\n${markup}\n<!-- End: @${item.handle} -->\n` },
             preview: null,
             display: {},
             context: {},
