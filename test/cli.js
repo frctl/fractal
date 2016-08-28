@@ -50,14 +50,7 @@ describe('Cli', function(){
     });
 
     describe('.exec()', function(){
-        it('executes a command from a string', function(done){
-            const spy = sinon.spy();
-            cli.command('test-command', spy);
-            cli.exec('test-command').then(function(){
-                expect(spy.called).to.be.true;
-                done();
-            });
-        });
+        it('executes a command from a string');
     });
 
     describe('.exec()', function(){

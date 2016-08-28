@@ -242,7 +242,7 @@ module.exports = class ComponentSource extends EntitySource {
             return items.map(i => i.markup).join('\n');
         }
 
-        let context = _.defaults(collator.getContext(), {
+        let context = _.defaults(collator.context, {
             _variants: items
         });
 

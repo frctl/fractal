@@ -112,11 +112,10 @@ module.exports = {
 
     defaultsDeep() {
         return _.mergeWith.apply(_, [].concat({}, Array.from(arguments).reverse(), (objValue, srcValue) => {
-
             if (_.isArray(srcValue)) {
                 return srcValue;
             }
-            return this.mergeProp(objValue, srcValue);
+            return this.mergeProp(srcValue, objValue);
         }));
     },
 
