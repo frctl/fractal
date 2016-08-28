@@ -17,7 +17,9 @@ const resolver = module.exports = {
         const self = this;
 
         function resolve(obj) {
-
+            if (!obj) {
+                return Promise.resolve(null);
+            }
             const iterator = _.isArray(obj) ? 'map' : 'mapValues';
             const resolver = iterator == 'map' ? 'all': 'props';
 
@@ -25,6 +27,10 @@ const resolver = module.exports = {
         }
 
         function mapper(item, key) {
+
+            if (!item) {
+                return Promise.resolve(null);
+            }
 
             if (item.then) {
                 return item;

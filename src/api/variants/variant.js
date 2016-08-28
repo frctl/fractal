@@ -155,12 +155,12 @@ module.exports = class Variant extends Entity {
         self.isDefault = this.isDefault;
         self.viewPath = this.viewPath;
         self.preview = this.preview;
-        self.context = this.context;
+        self.context = this.getContext();
         self.resources = this.resourcesJSON();
         self.content = this.getContentSync();
         return self;
     }
-    
+
     static create(config, view, resources, parent) {
         parent.source.emit('variant:beforeCreate', config, view, resources, parent);
         const variant = new Variant(config, view, resources, parent);

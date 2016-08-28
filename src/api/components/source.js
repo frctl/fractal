@@ -123,9 +123,9 @@ module.exports = class ComponentSource extends EntitySource {
         preview = preview !== false ? preview : false;
         let context;
         if (entity.isComponent) {
-            context = entity.variants().default().context;
+            context = entity.variants().default().getContext();
         } else {
-            context = entity.context;
+            context = entity.getContext();
         }
         return this.render(entity, context, env || {}, { preview: preview });
     }
@@ -165,13 +165,11 @@ module.exports = class ComponentSource extends EntitySource {
                 }
             } else {
                 return fs.readFileAsync(entity, 'utf8').then(content => {
-                    return this.resolve(context).then(ctx => {
-                        return this.engine().render(entity, content, ctx, {
-                            env: env,
-                            self: {
-                                path: entity,
-                            },
-                        });
+                    return this.engine().render(entity, content, context, {
+                        env: env,
+                        self: {
+                            path: entity,
+                        },
                     });
                 });
             }
@@ -205,7 +203,7 @@ module.exports = class ComponentSource extends EntitySource {
     }
 
     *_renderVariant(variant, context, env) {
-        context = context || variant.context;
+        context = context || variant.getContext();
         const content = yield variant.getContent();
         const ctx = yield this.resolve(context);
         return this.engine().render(variant.viewPath, content, ctx, {
@@ -217,7 +215,7 @@ module.exports = class ComponentSource extends EntitySource {
     *_renderCollatedComponent(component, env) {
         const target = component.toJSON();
         const items = yield component.variants().filter('isHidden', false).toArray().map(variant => {
-            return this.render(variant, variant.context, env).then(markup => {
+            return this.render(variant, variant.getContext(), env).then(markup => {
                 return {
                     markup: markup.trim(),
                     item: variant.toJSON()
@@ -244,7 +242,7 @@ module.exports = class ComponentSource extends EntitySource {
             return items.map(i => i.markup).join('\n');
         }
 
-        let context = _.defaults(collator.context, {
+        let context = _.defaults(collator.getContext(), {
             _variants: items
         });
 
@@ -298,7 +296,7 @@ module.exports = class ComponentSource extends EntitySource {
             if (entity.isComponent) {
                 entity = entity.variants().default();
             }
-            let context = yield this.resolve(entity.context);
+            let context = entity.getContext();
             let content = yield entity.getContent();
             return {
                 context: context,
