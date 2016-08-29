@@ -60,7 +60,7 @@
     "node": ">= 4.4.7"
   },
   "scripts": {
-    "test": "mocha --require test/support/env --reporter spec",
+    "test": "./node_modules/.bin/istanbul cover node_modules/.bin/_mocha -- --require test/support/env --reporter spec",
     "lint": "./node_modules/.bin/eslint src; exit 0",
     "lint:fix": "./node_modules/.bin/eslint src --fix; exit 0"
   },
@@ -70,6 +70,7 @@
     "eslint": "^3.2.2",
     "eslint-config-airbnb": "^10.0.0",
     "eslint-plugin-import": "^1.12.0",
+    "istanbul": "^0.4.4",
     "mocha": "^3.0.0",
     "proxyquire": "^1.7.10",
     "sinon": "^1.17.5"
