@@ -14,6 +14,7 @@ module.exports = class Adapter extends mix(Emitter) {
         this._source = source;
         this._views = [];
         this._hasLoaded = false;
+        this._handlePrefix = '@';
         source.on('loaded', () => this._onSourceChange());
         source.on('updated', eventData => this._onSourceChange(eventData));
     }
@@ -24,6 +25,11 @@ module.exports = class Adapter extends mix(Emitter) {
 
     get views() {
         return this._views;
+    }
+
+    setHandlePrefix(prefix) {
+        this._handlePrefix = prefix;
+        return this;
     }
 
     load() {
@@ -38,12 +44,12 @@ module.exports = class Adapter extends mix(Emitter) {
     }
 
     getView(handle) {
-        handle = handle.replace(/^@/, '');
-        return _.find(this._views, view => (view.handle.replace(/^@/, '') === handle));
+        let prefixMatcher = new RegExp(`^\\${this._handlePrefix}`);
+        return _.find(this._views, view => (view.handle.replace(prefixMatcher, '') === handle.replace(prefixMatcher, '')));
     }
 
     _parseReferences(view) {
-        const matcher = /\@[0-9a-zA-Z\-\_]*/g;
+        const matcher = new RegExp(`\\${this._handlePrefix}[0-9a-zA-Z\-\_]*`, 'g');
         const content = view.content;
         const referenced = content.match(matcher) || [];
         return _.uniq(_.compact(referenced.map(handle => this._source.find(handle))));
@@ -53,7 +59,7 @@ module.exports = class Adapter extends mix(Emitter) {
         const views = [];
         for (const item of this._source.flattenDeep()) {
             const view = {
-                handle: `@${item.handle}`,
+                handle: `${this._handlePrefix}${item.handle}`,
                 path: item.viewPath,
                 content: item.content,
             };
@@ -61,7 +67,7 @@ module.exports = class Adapter extends mix(Emitter) {
             this.emit('view:added', view);
             if (item.alias) {
                 const view = {
-                    handle: `@${item.alias}`,
+                    handle: `${this._handlePrefix}${item.alias}`,
                     path: item.viewPath,
                     content: item.content,
                 };

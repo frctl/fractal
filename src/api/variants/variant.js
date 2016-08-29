@@ -158,6 +158,9 @@ module.exports = class Variant extends Entity {
         self.context = this.getContext();
         self.resources = this.resourcesJSON();
         self.content = this.getContentSync();
+        self.lang = this.lang;
+        self.editorMode = this.editorMode;
+        self.editorScope = this.editorScope;
         return self;
     }
 

@@ -157,6 +157,9 @@ module.exports = class Component extends Entity {
         self.viewPath = this.viewPath;
         self.resources = this.resourcesJSON();
         self.variants = this.variants().toJSON();
+        self.lang = this.lang;
+        self.editorMode = this.editorMode;
+        self.editorScope = this.editorScope;
         return self;
     }
 
