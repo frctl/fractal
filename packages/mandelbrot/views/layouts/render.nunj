@@ -8,7 +8,7 @@
 {% set page = {
     title: 'Error rendering component ' + request.params.handle
 } %}
-{% block content -%}{% import "macros/errors.nunj" as errors -%}{{ errors.renderError('component', error.message) }}{% endblock %}
+{% block content -%}{% import "macros/errors.nunj" as errors -%}{{ errors.renderError('component', error.message, error.stack) }}{% endblock %}
 {%- else -%}
 {{ rendered }}
 {%- endif %}

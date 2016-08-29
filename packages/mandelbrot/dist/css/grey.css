@@ -1371,6 +1371,9 @@ h6 {
     color: #b00; }
   .Error--render .Error-message {
     font: normal 0.875rem/1.71429 "Open Sans", Helvetica, Arial, sans-serif; }
+  .Error--render .Error-stack pre,
+  .Error--render .Error-stack code {
+    background-color: #fff !important; }
 
 .FileBrowser {
   position: static;
