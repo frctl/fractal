@@ -2,7 +2,7 @@
 
 const _ = require('lodash');
 const Path = require('path');
-const utils = require('@frctl/fractal').utils;
+const utils = require('./utils');
 const Adapter = require('@frctl/fractal').Adapter;
 
 class TwigAdapter extends Adapter {
@@ -23,12 +23,18 @@ class TwigAdapter extends Adapter {
 
             Twig.Templates.registerLoader('fractal', function(location, params, callback, errorCallback) {
 
-                let view = isHandle(location) ? self.getView(location) : _.find(self.views, {path: Path.join(source.fullPath, location)});
-                if (!view) {
-                    throw new Error(`Template ${location} not found`);
-                }
+                let parser = Twig.Templates.parsers['twig'];
 
-                params.data = view.content;
+                if (params.precompiled) {
+                    params.data = params.precompiled;
+                } else {
+                    let view = isHandle(location) ? self.getView(location) : _.find(self.views, {path: Path.join(source.fullPath, location)});
+                    if (!view) {
+
+                        throw new Error(`Template ${location} not found`);
+                    }
+                    params.data = view.content;
+                }
 
                 return new Twig.Template(params);
             });
@@ -42,7 +48,7 @@ class TwigAdapter extends Adapter {
             const render = Twig.Template.prototype.render;
             Twig.Template.prototype.render = function(context, params) {
 
-                if (!self._config.pristine) {
+                if (!self._config.pristine && this.id) {
 
                     let handle = null;
 
@@ -59,13 +65,31 @@ class TwigAdapter extends Adapter {
                         let prefixMatcher = new RegExp(`^\\${self._config.handlePrefix}`);
                         let entity = source.find(handle.replace(prefixMatcher, '@'));
                         if (entity) {
-                            entity = entity.isComponent ? entity.variants().default() : entity;
+                            entity = entity.isVariant ? entity : entity.variants().default();
                             if (config.importContext) {
-                                context = utils.defaultsDeep(context, entity.getContext());
+                                context = utils.defaultsDeep(_.clone(context), entity.getContext());
+                                context._self = entity.toJSON();
+                                setKeys(context);
                             }
-                            context._self = entity.isComponent ? entity.variants().default().toJSON() : entity.toJSON();
                         }
                     }
+                }
+
+                /*
+                 * Twig JS uses an internal _keys property on the context data
+                 * which we need to regenerate every time we patch the context.
+                 */
+
+                function setKeys(obj) {
+
+                    obj._keys = _.compact(_.map(obj, (val, key) => {
+                        return (_.isString(key) && ! key.startsWith('_')) ? key : undefined;
+                    }));
+                    _.each(obj, (val, key) => {
+                        if (_.isPlainObject(val) && (_.isString(key) && ! key.startsWith('_'))) {
+                            setKeys(val);
+                        }
+                    });
                 }
 
                 return render.call(this, context, params);
@@ -80,12 +104,12 @@ class TwigAdapter extends Adapter {
 
             self.on('view:updated', unCache);
             self.on('view:removed', unCache);
+            self.on('wrapper:updated', unCache);
+            self.on('wrapper:removed', unCache);
 
             function unCache(view) {
-
-                let path = Path.relative(source.fullPath, view.path);
-
-                if (Twig.Templates.registry[view.handle]) {
+                let path = Path.relative(source.fullPath, _.isString(view) ? view : view.path);
+                if (view.handle && Twig.Templates.registry[view.handle]) {
                     delete Twig.Templates.registry[view.handle];
                 }
                 if (Twig.Templates.registry[path]) {
@@ -119,12 +143,15 @@ class TwigAdapter extends Adapter {
 
         return new Promise(function(resolve, reject){
 
+            let tplPath = Path.relative(self._source.fullPath, path);
+
             try {
                 let template = self.engine.twig({
                     method: 'fractal',
                     async: false,
-                    name: `${self._config.handlePrefix}${meta.self.handle}`,
-                    rethrow: true
+                    rethrow: true,
+                    name: meta.self ? `${self._config.handlePrefix}${meta.self.handle}` : tplPath,
+                    precompiled: str
                 });
                 resolve(template.render(context));
             } catch (e) {
