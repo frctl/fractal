@@ -1,8 +1,8 @@
 'use strict';
 
 const _ = require('lodash');
-const utils = require('@frctl/fractal').utils;
 const Path = require('path');
+const utils = require('@frctl/fractal').utils;
 const Adapter = require('@frctl/fractal').Adapter;
 
 class TwigAdapter extends Adapter {
@@ -42,27 +42,28 @@ class TwigAdapter extends Adapter {
             const render = Twig.Template.prototype.render;
             Twig.Template.prototype.render = function(context, params) {
 
-                let handle = null;
-                console.log('--------');
-                console.log(this);
-                console.log('--------');
-                if (isHandle(this.id)) {
-                    handle = this.id;
-                } else {
-                    let view = _.find(self.views, {path: Path.join(source.fullPath, this.id)});
-                    if (view) {
-                        handle = view.handle;
-                    }
-                }
+                if (!self._config.pristine) {
 
-                if (handle) {
-                    let entity = source.find(handle);
-                    if (entity) {
-                        entity = entity.isComponent ? entity.variants().default() : entity;
-                        if (config.importContext) {
-                            context = utils.defaultsDeep(context, entity.getContext());
+                    let handle = null;
+
+                    if (isHandle(this.id)) {
+                        handle = this.id;
+                    } else {
+                        let view = _.find(self.views, {path: Path.join(source.fullPath, this.id)});
+                        if (view) {
+                            handle = view.handle;
                         }
-                        context._self = entity.isComponent ? entity.variants().default().toJSON() : entity.toJSON();
+                    }
+
+                    if (handle) {
+                        let entity = source.find(handle);
+                        if (entity) {
+                            entity = entity.isComponent ? entity.variants().default() : entity;
+                            if (config.importContext) {
+                                context = utils.defaultsDeep(context, entity.getContext());
+                            }
+                            context._self = entity.isComponent ? entity.variants().default().toJSON() : entity.toJSON();
+                        }
                     }
                 }
 
@@ -108,10 +109,12 @@ class TwigAdapter extends Adapter {
 
         meta = meta || {};
 
-        setEnv('_self', meta.self, context);
-        setEnv('_target', meta.target, context);
-        setEnv('_env', meta.env, context);
-        setEnv('_config', this._app.config(), context);
+        if (!this._config.pristine) {
+            setEnv('_self', meta.self, context);
+            setEnv('_target', meta.target, context);
+            setEnv('_env', meta.env, context);
+            setEnv('_config', this._app.config(), context);
+        }
 
         return new Promise(function(resolve, reject){
 
@@ -142,7 +145,7 @@ module.exports = function(config) {
 
     config = _.defaults(config || {}, {
         handlePrefix: '@',
-        importContext: true
+        importContext: false
     });
 
     return {
