@@ -13,12 +13,13 @@ describe('Utils', function(){
             expect(utils.mergeProp(undefined, 'foo')).to.equal('foo');
         });
 
+
         it('Returns the property value if the upstream is undefined', function(){
             expect(utils.mergeProp('foo', undefined)).to.equal('foo');
         });
 
-        it('Merges the contents of arrays', function(){
-            expect(utils.mergeProp(['one', 'two'], ['one', 'three', 'four'])).to.include.members(['one', 'two', 'three', 'four']);
+        it('Does not merge the contents of arrays', function(){
+            expect(utils.mergeProp(['one', 'two'], ['one', 'three', 'four'])).to.eql(['one', 'two']);
         });
 
         it('Applies default values from upstream objects', function(){
