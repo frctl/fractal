@@ -20,4 +20,12 @@
     .Error-message {
         @include font(caption);
     }
+
+    .Error-stack {
+        pre,
+        code {
+            background-color: #fff !important;
+        }
+    }
+
 }
