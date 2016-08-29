@@ -56,7 +56,8 @@ class TwigAdapter extends Adapter {
                     }
 
                     if (handle) {
-                        let entity = source.find(handle);
+                        let prefixMatcher = new RegExp(`^\\${self._config.handlePrefix}`);
+                        let entity = source.find(handle.replace(prefixMatcher, '@'));
                         if (entity) {
                             entity = entity.isComponent ? entity.variants().default() : entity;
                             if (config.importContext) {
@@ -144,6 +145,7 @@ class TwigAdapter extends Adapter {
 module.exports = function(config) {
 
     config = _.defaults(config || {}, {
+        pristine: false,
         handlePrefix: '@',
         importContext: false
     });
@@ -186,7 +188,11 @@ module.exports = function(config) {
                 });
             });
 
-            return new TwigAdapter(Twig, source, app, config);
+            const adapter = new TwigAdapter(Twig, source, app, config);
+
+            adapter.setHandlePrefix(config.handlePrefix);
+
+            return adapter;
         }
     }
 
