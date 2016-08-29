@@ -203,10 +203,8 @@ module.exports = class ComponentSource extends EntitySource {
     }
 
     *_renderVariant(variant, context, env) {
-        context = context || variant.getContext();
         const content = yield variant.getContent();
-        const ctx = yield this.resolve(context);
-        return this.engine().render(variant.viewPath, content, ctx, {
+        return this.engine().render(variant.viewPath, content, context || variant.getContext(), {
             self: variant.toJSON(),
             env: env,
         });
@@ -277,7 +275,7 @@ module.exports = class ComponentSource extends EntitySource {
 
     _appendEventFileInfo(file, eventData) {
         eventData = super._appendEventFileInfo(file, eventData);
-        for (const test of ['isResource', 'isTemplate', 'isReadme', 'isView', 'isVarView']) {
+        for (const test of ['isResource', 'isTemplate', 'isReadme', 'isView', 'isVarView', 'isWrapper']) {
             if (this[test](file)) {
                 eventData[test] = true;
             }
@@ -338,8 +336,17 @@ module.exports = class ComponentSource extends EntitySource {
         return this.isView(file) || this.isVarView(file);
     }
 
+    isWrapper(file) {
+        return this.isPreview(file) || this.isCollator(file);
+    }
+
     isView(file) {
-        return anymatch([`**/*${this.get('ext')}`, `!**/*${this.get('splitter')}*${this.get('ext')}`, `!**/*.${this.get('files.config')}.${this.get('ext')}`, `!**/${this.get('files.config')}.{js,json,yaml,yml}`], this._getPath(file));
+        return anymatch([
+            `**/*${this.get('ext')}`,
+            `!**/*${this.get('splitter')}*${this.get('ext')}`,
+            `!**/*.${this.get('files.config')}.${this.get('ext')}`,
+            `!**/${this.get('files.config')}.{js,json,yaml,yml}`
+        ], this._getPath(file));
     }
 
     isVarView(file) {
@@ -351,11 +358,17 @@ module.exports = class ComponentSource extends EntitySource {
     }
 
     isPreview(file) {
-        return anymatch([`**/${this.get('files.preview')}${this.get('ext')}`, `**/_${this.get('files.preview')}${this.get('ext')}`], this._getPath(file));
+        return anymatch([
+            `**/${this.get('files.preview')}${this.get('ext')}`,
+            `**/_${this.get('files.preview')}${this.get('ext')}`
+        ], this._getPath(file));
     }
 
     isCollator(file) {
-        return anymatch([`**/${this.get('files.collator')}${this.get('ext')}`, `**/_${this.get('files.collator')}${this.get('ext')}`], this._getPath(file));
+        return anymatch([
+            `**/${this.get('files.collator')}${this.get('ext')}`,
+            `**/_${this.get('files.collator')}${this.get('ext')}`
+        ], this._getPath(file));
     }
 
     isResource(file) {
@@ -364,8 +377,8 @@ module.exports = class ComponentSource extends EntitySource {
             `!**/*${this.get('ext')}`,
             `!**/*.${this.get('files.config')}.{js,json,yaml,yml}`,
             `!**/${this.get('files.config')}.{js,json,yaml,yml}`,
-            `!**/${this.get('files.notes')}.md`],
-            this._getPath(file));
+            `!**/${this.get('files.notes')}.md`
+        ], this._getPath(file));
     }
 
     _parse(fileTree) {

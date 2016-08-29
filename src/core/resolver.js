@@ -39,6 +39,9 @@ const resolver = module.exports = {
             if (_.isArray(item) || _.isObject(item)) {
                 return resolve(item);
             }
+            if (_.isString(item) && _.startsWith(item, '\\@')) {
+                return item.replace(/^\\@/, '@');
+            }
             if (_.isString(item) && _.startsWith(item, '@')) {
                 const parts = item.split('.');
                 const handle = parts.shift();
@@ -46,23 +49,21 @@ const resolver = module.exports = {
                 if (entity) {
                     entity = self.entity(entity);
                     return resolve(entity.context).then(entityContext => {
+                        let clonedContext = _.clone(entityContext);
                         if (parts.length) {
-                            return _.get(entityContext, parts.join('.'), null);
+                            return _.get(clonedContext, parts.join('.'), null);
                         }
-                        return entityContext;
+                        return clonedContext;
                     });
                 }
                 Log.warn(`Could not resolve context reference for ${item}`);
                 return null;
             }
-            if (_.isString(item) && _.startsWith(item, '\\@')) {
-                return item.replace(/^\\@/, '@');
-            }
 
             return item;
         }
 
-        return resolve(context);
+        return resolve(context).then(ctx => _.clone(context));
     }
 
 };

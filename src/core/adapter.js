@@ -90,6 +90,14 @@ module.exports = class Adapter extends mix(Emitter) {
 
     _onSourceChange(eventData) {
         if (eventData && eventData.isTemplate) {
+            if (eventData.isWrapper) {
+                if (eventData.event === 'change') {
+                    this.emit('wrapper:updated', eventData.path);
+                } else if (eventData.event === 'unlink') {
+                    this.emit('wrapper:removed', eventData.path);
+                }
+                return this._views;
+            }
             const touched = _.filter(this._views, ['path', Path.resolve(eventData.path)]);
             if (eventData.event === 'change') {
                 touched.forEach(view => this._updateView(view));

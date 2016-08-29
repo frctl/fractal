@@ -82,7 +82,7 @@ module.exports = mixin((superclass) => class Entity extends superclass {
             order: this.order,
             isHidden: this.isHidden,
             alias: this.alias,
-            config: this.config,
+            // config: this.config,
         };
     }
 

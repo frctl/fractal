@@ -71,6 +71,7 @@ module.exports = class VariantCollection extends EntityCollection {
     }
 
     static *create(component, defaultView, configured, views, opts) {
+        
         configured = configured || [];
         views = views || [];
         let variants = [];
