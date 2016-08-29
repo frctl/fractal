@@ -93,8 +93,8 @@ class Fractal extends mix(Configurable, Emitter) {
         return this;
     }
 
-    watch(opts) {
-        this._sources().forEach(s => s.watch(opts));
+    watch() {
+        this._sources().forEach(s => s.watch());
         return this;
     }
 

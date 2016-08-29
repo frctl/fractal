@@ -104,8 +104,7 @@ module.exports = mixin((superclass) => class Source extends mix(superclass).with
         });
     }
 
-    watch(opts) {
-        opts = opts || {};
+    watch() {
         if (this.isWatching) {
             return;
         }
@@ -113,7 +112,8 @@ module.exports = mixin((superclass) => class Source extends mix(superclass).with
         if (!this._monitor && sourcePath) {
             Log.debug(`Watching ${this.name} directory - ${sourcePath}`);
             this._monitor = chokidar.watch(sourcePath, {
-                ignored: [].concat([/[\/\\]\./], opts.ignored || []),
+                ignored: /[\/\\]\./,
+                ignoreInitial: true
             });
             this._monitor.on('ready', () => {
                 this._monitor.on('all', (event, path) => {

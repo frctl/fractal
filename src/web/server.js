@@ -2,6 +2,7 @@
 
 const Promise = require('bluebird');
 const _ = require('lodash');
+const anymatch = require('anymatch');
 const express = require('express');
 const chokidar = require('chokidar');
 const Path = require('path');
@@ -137,25 +138,36 @@ module.exports = class Server extends mix(Emitter) {
             watchOptions: {}
         });
 
-        this._app.watch(bsConfig.watchOptions || {});
+        const ignored = bsConfig.watchOptions.ignored ? anymatch(bsConfig.watchOptions.ignored) : () => false;
+        
+        this._app.watch();
 
         // listen out for source changes
         this._app.on('source:updated', (source, data) => {
-
-            syncServer.reload()
+            reload(data.path);
         });
 
         // listen out for changes in the static assets directories
         this._theme.static().forEach(s => {
-            Log.debug(`Watching assets directory - ${s.path}`);
-            const pathMatch = new RegExp(`^${s.path}`);
+            Log.debug(`Watching static directory - ${s.path}`);
             const monitor = chokidar.watch(s.path, {
                 ignored: /[\/\\]\./,
+                ignoreInitial: true
             });
-            monitor.on('change', filepath => syncServer.reload(Path.join(s.mount, filepath.replace(pathMatch, ''))));
-            monitor.on('add', filepath => syncServer.reload());
+            function getFilePaths(filepath){
+                const pathMatch = new RegExp(`^${s.path}`);
+                return Path.join(s.mount || '/', filepath.replace(s.path, ''));
+            }
+            monitor.on('change', filepath => reload(filepath, getFilePaths(filepath)));
+            monitor.on('add', filepath => reload(filepath, getFilePaths(filepath)));
             watchers[s.path] = monitor;
         });
+
+        function reload(path, files) {
+            if (!ignored(path)) {
+                files ? syncServer.reload(files) : syncServer.reload();
+            }
+        }
 
         // cleanup
         this._instance.on('destroy', () => {
