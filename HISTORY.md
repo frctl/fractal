@@ -3,9 +3,10 @@
 ## 1.1
 
 * [NEW] Add support for 'short' non-component-name-prefixed config files for collections and compound components
-* [NEW] Provide `meta` component/docs config namespace for arbitrary user-defined metadata
-* [NEW] BrowserSync config option `watchOptions.ignored` can now be used to prevent ignored files from causing a UI reload
-* [NEW] Web config option `builder.static.ignored` can now be used to prevent ignored files in the static directories from being copied when building.
+* [NEW] Provide `meta` component/docs config namespace for arbitrary user-defined metadata (#89)
+* [NEW] BrowserSync config option `watchOptions.ignored` can now be used to prevent ignored files from causing a UI reload (#134)
+* [NEW] Web config option `builder.static.ignored` can now be used to prevent ignored files in the static directories from being copied when building. (#120)
+* [NEW] Context data is now resolved when the data tree is rebuilt to allow synchronous retrieval via new `entity.getContext()` method.
 * [FIX] Prevent arrays being merged during context data inheritance (#123)
 * [FIX] Default variant view template issue (#67)
 * [FIX] Patch issue with commands not exiting in latest version of Vorpal
