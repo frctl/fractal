@@ -105,17 +105,17 @@ module.exports = {
     },
 
     /*
-     * Non-array merging version of _.defaultsDeep
-     *
-     * utils.defaultsDeep(src, defaults);
-     */
+    * Non-array merging version of _.defaultsDeep
+    *
+    * utils.defaultsDeep(src, defaults);
+    */
 
-     defaultsDeep() {
+    defaultsDeep() {
 
-         let output = {};
+        let output = {};
 
-         _.toArray(arguments).reverse().forEach(item => {
-             _.mergeWith(output, item, (objectValue, sourceValue) => {
+        _.toArray(arguments).reverse().forEach(item => {
+            _.mergeWith(output, item, (objectValue, sourceValue) => {
                 if (_.isArray(sourceValue)) {
                     return sourceValue;
                 }
@@ -125,20 +125,11 @@ module.exports = {
                 if (_.isUndefined(sourceValue)) {
                     return objectValue;
                 }
-             });
-         });
-
-         return output;
-     },
-
-    // defaultsDeep() {
-    //     return _.mergeWith.apply(_, [].concat({}, Array.from(arguments).reverse(), (objValue, srcValue) => {
-    //         if (_.isArray(srcValue)) {
-    //             return srcValue;
-    //         }
-    //         return this.mergeProp(srcValue, objValue);
-    //     }));
-    // },
+            });
+        });
+        
+        return output;
+    },
 
     relUrlPath(toPath, fromPath, opts) {
         if (toPath.startsWith('http') || toPath.startsWith('.')) {
