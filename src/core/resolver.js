@@ -36,12 +36,10 @@ const resolver = module.exports = {
                 return item;
             }
 
-            if (_.isArray(item) || _.isObject(item)) {
-                return resolve(item);
-            }
             if (_.isString(item) && _.startsWith(item, '\\@')) {
                 return item.replace(/^\\@/, '@');
             }
+
             if (_.isString(item) && _.startsWith(item, '@')) {
                 const parts = item.split('.');
                 const handle = parts.shift();
@@ -60,10 +58,14 @@ const resolver = module.exports = {
                 return null;
             }
 
+            if (_.isArray(item) || _.isObject(item)) {
+                return resolve(item);
+            }
+
             return item;
         }
 
-        return resolve(context).then(ctx => _.clone(context));
+        return resolve(context).then(ctx => _.clone(ctx));
     }
 
 };
