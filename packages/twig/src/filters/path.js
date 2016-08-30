@@ -7,12 +7,10 @@ module.exports = function(fractal) {
 
     return function(path) {
 
-        return path;
+        let env = this.context._env;
+        let request = env.request || this.context._request;
 
-        // let env = this.context._env;
-        // let request = env.request || this.context._request;
-        //
-        // return (! env || env.server) ? path : utils.relUrlPath(path, _.get(request, 'path', '/'), fractal.web.get('builder.urls'));
+        return (! env || env.server) ? path : utils.relUrlPath(path, _.get(request, 'path', '/'), fractal.web.get('builder.urls'));
     }
 
 };
