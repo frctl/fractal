@@ -67,7 +67,7 @@ class TwigAdapter extends Fractal.Adapter {
                         if (entity) {
                             entity = entity.isVariant ? entity : entity.variants().default();
                             if (config.importContext) {
-                                context = utils.defaultsDeep(_.clone(context), entity.getContext());
+                                context = utils.defaultsDeep(_.cloneDeep(context), _.cloneDeep(entity.getContext()));
                                 context._self = entity.toJSON();
                                 setKeys(context);
                             }
@@ -100,7 +100,7 @@ class TwigAdapter extends Fractal.Adapter {
              * manually update the cache when a template is updated or removed.
              */
 
-            Twig.cache = true;
+            Twig.cache = false;
 
             self.on('view:updated', unCache);
             self.on('view:removed', unCache);
