@@ -46,13 +46,21 @@ const resolver = module.exports = {
                 let entity = source.find(handle);
                 if (entity) {
                     entity = self.entity(entity);
-                    return resolve(entity.context).then(entityContext => {
-                        let clonedContext = _.clone(entityContext);
+                    if (entity._hasResolvedContext) {
+                        let context = entity.getContext();
                         if (parts.length) {
-                            return _.get(clonedContext, parts.join('.'), null);
+                            return _.get(context, parts.join('.'), null);
                         }
-                        return clonedContext;
-                    });
+                        return context;
+                    } else {
+                        return resolve(entity.context).then(entityContext => {
+                            let clonedContext = _.cloneDeep(entityContext);
+                            if (parts.length) {
+                                return _.get(clonedContext, parts.join('.'), null);
+                            }
+                            return clonedContext;
+                        });
+                    }
                 }
                 Log.warn(`Could not resolve context reference for ${item}`);
                 return null;
@@ -65,7 +73,7 @@ const resolver = module.exports = {
             return item;
         }
 
-        return resolve(context).then(ctx => _.clone(ctx));
+        return resolve(context).then(ctx => _.cloneDeep(ctx));
     }
 
 };

@@ -13,6 +13,7 @@ module.exports = class Entity extends mix(Heritable, EntityMixin) {
         super();
         this.isEntity = true;
         this._contextData = {};
+        this._hasResolvedContext = false;
         this.initEntity(name, config, parent);
         this.setHeritable(parent);
 
@@ -35,7 +36,7 @@ module.exports = class Entity extends mix(Heritable, EntityMixin) {
     }
 
     getContext() {
-        return _.clone(this._contextData);
+        return this._contextData;
     }
 
     toJSON() {
