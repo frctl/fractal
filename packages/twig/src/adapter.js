@@ -1,11 +1,11 @@
 'use strict';
 
+const Fractal = require('@frctl/fractal');
 const _ = require('lodash');
 const Path = require('path');
-const utils = require('./utils');
-const Adapter = require('@frctl/fractal').Adapter;
+const utils = Fractal.utils;
 
-class TwigAdapter extends Adapter {
+class TwigAdapter extends Fractal.Adapter {
 
     constructor(Twig, source, app, config) {
 
