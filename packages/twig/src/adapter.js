@@ -67,7 +67,7 @@ class TwigAdapter extends Fractal.Adapter {
                         if (entity) {
                             entity = entity.isVariant ? entity : entity.variants().default();
                             if (config.importContext) {
-                                context = utils.defaultsDeep(_.cloneDeep(context), _.cloneDeep(entity.getContext()));
+                                context = utils.defaultsDeep(_.cloneDeep(context), entity.getContext());
                                 context._self = entity.toJSON();
                                 setKeys(context);
                             }
