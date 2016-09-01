@@ -36,7 +36,7 @@ module.exports = class Entity extends mix(Heritable, EntityMixin) {
     }
 
     getContext() {
-        return this._contextData;
+        return _.cloneDeep(this._contextData);
     }
 
     toJSON() {
