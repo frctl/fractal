@@ -122,24 +122,26 @@ module.exports = class Server extends mix(Emitter) {
 
     _startSync(resolve, reject) {
         const syncServer = require('browser-sync').create();
-        const watchers = {};
         const bsConfig = utils.defaultsDeep(this._config.syncOptions || {}, {
             logLevel: this._config.debug ? 'debug' : 'silent',
-            browser: [],
             logPrefix: 'Fractal',
             browser: 'default',
             open: false,
             notify: false,
             port: this._ports.sync,
-            proxy: this._urls.server,
+            server: false,
+            proxy: {
+                target: this._urls.server
+            },
             socket: {
                 port: this._ports.sync,
             },
             watchOptions: {}
         });
+        let watchers = {};
 
         const ignored = bsConfig.watchOptions.ignored ? anymatch(bsConfig.watchOptions.ignored) : () => false;
-        
+
         this._app.watch();
 
         // listen out for source changes
@@ -178,8 +180,12 @@ module.exports = class Server extends mix(Emitter) {
             watchers = {};
         });
 
-        syncServer.init(bsConfig, () => {
-            const urls = syncServer.getOption('urls');
+        syncServer.init(bsConfig, (err, bs) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            const urls = bs.getOption('urls');
             this._urls.sync = {
                 'local': urls.get('local'),
                 'external': urls.get('external'),
