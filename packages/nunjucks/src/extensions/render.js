@@ -16,8 +16,10 @@ module.exports = function(fractal){
         };
 
         this.run = function () {
+
             const source = fractal.components;
             const args = Array.from(arguments);
+            const rootContext = args[0].ctx;
             const callback = args.pop();
             args.shift();
             const handle = args[0];
@@ -33,6 +35,11 @@ module.exports = function(fractal){
             } else if (merge) {
                 context = _.defaultsDeep(context, defaultContext);
             }
+
+            // fix env for rendered components
+            let env = JSON.parse(JSON.stringify(rootContext._env));
+            context._env = env;
+
             entity.render(context).then(html => {
                 callback(null, html);
             }).catch(err => {
