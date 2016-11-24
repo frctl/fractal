@@ -1,5 +1,10 @@
 # History
 
+## 1.0.9
+
+ * [FIX] Address issue with using beta version globally to start earlier-versioned projects
+ * [OTHER] Better BrowserSync support [@tlenex]
+
 ## 1.0.7
 
 * Fix missing FS module in component source
