@@ -301,7 +301,8 @@ module.exports = class ComponentSource extends EntitySource {
                 resources: files.filter(f => source.isResource(f)),
             };
 
-            const dirConfig = yield EntitySource.getConfig(_.find(matched.configs, f => f.name.startsWith(dir.name)), {
+            const dirConfigFile = _.find(matched.configs, f => f.name.startsWith(dir.name));
+            const dirConfig = yield EntitySource.getConfig(dirConfigFile, {
                 name: dir.name,
                 isHidden: dir.isHidden,
                 order: dir.order,
@@ -322,6 +323,7 @@ module.exports = class ComponentSource extends EntitySource {
                     view: view,
                     readme: matched.readmes[0],
                     varViews: _.filter(matched.varViews, f => f.name.startsWith(nameMatch)),
+                    config: dirConfigFile
                 };
                 return Component.create(dirConfig, files, resources, parent || source);
             }
@@ -355,6 +357,7 @@ module.exports = class ComponentSource extends EntitySource {
                         view: view,
                         readme: null,
                         varViews: matched.varViews.filter(f => f.name.startsWith(nameMatch)),
+                        config: configFile
                     };
                     const resources = new FileCollection({}, []);
                     return Component.create(c, files, resources, collection);
