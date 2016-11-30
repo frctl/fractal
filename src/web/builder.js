@@ -131,9 +131,9 @@ module.exports = class Builder extends mix(Emitter) {
             return this._throttle(() => {
                 if (target.route.static) {
                     const staticPath = _.isFunction(target.route.static) ? target.route.static(target.params, this._app) : target.route.static;
-                    const dest = Path.join(this._config.dest, target.url);
+                    const dest = Path.join(this._config.dest, unescape(target.url));
 
-                    return fs.copyAsync(staticPath, dest, {
+                    return fs.copyAsync(unescape(staticPath), dest, {
                         clobber: true,
                     }).then(() => {
                         this._updateProgress();
