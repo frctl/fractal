@@ -1,5 +1,11 @@
 # History
 
+## 1.0.11
+
+* [NEW] Add `.configData` property to components
+* [FIX] Fix issue with urlencoding of files causing issues in build (#178)
+* [FIX] Hidden properties now correctly cascade when set in config (#182)
+
 ## 1.0.9
 
  * [FIX] Address issue with using beta version globally to start earlier-versioned projects
