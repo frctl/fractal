@@ -159,6 +159,7 @@ module.exports = mixin((superclass) => class Source extends mix(superclass).with
         let pending = [];
         for (let item of tree.flattenDeep()) {
             pending.push(resolver.context(item.context, this).then(ctx => {
+                ctx = _.cloneDeep(ctx);
                 item._contextData = ctx;
                 item._hasResolvedContext = true; // TODO: use a setter on _contextData to set this instead of manually!!
                 return ctx;
