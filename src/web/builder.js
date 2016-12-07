@@ -9,6 +9,7 @@ const fs = Promise.promisifyAll(require('fs-extra'));
 const Log = require('../core/log');
 const mix = require('../core/mixins/mix');
 const Emitter = require('../core/mixins/emitter');
+const throat = require('throat');
 
 module.exports = class Builder extends mix(Emitter) {
 
@@ -23,7 +24,7 @@ module.exports = class Builder extends mix(Emitter) {
         this._static = [];
         this._requests = [];
 
-        this._throttle = require('throat')(Promise)(config.concurrency || 100);
+        this._throttle = throat(config.concurrency || 100);
 
         this._init();
     }
@@ -59,7 +60,9 @@ module.exports = class Builder extends mix(Emitter) {
 
                 // 2. Run the requests in parallel
                 this._requests.forEach(r => {
-                    let req = this._onRequest(r);
+                    let req = this._throttle(function(){
+                        return this._onRequest(r);
+                    });
                     if (req) {
                         this._jobsCount++;
                         jobs.push(req);
