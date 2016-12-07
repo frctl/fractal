@@ -56,13 +56,11 @@ module.exports = class Builder extends mix(Emitter) {
                 let jobs = [];
 
                 // 1. Start any static copy jobs
-                jobs.push(this._static.map(p => this._copy(p.path, Path.join(Path.sep, p.mount))));
+                jobs.push(this._static.map(p => this._throttle(() => this._copy(p.path, Path.join(Path.sep, p.mount)))));
 
                 // 2. Run the requests in parallel
                 this._requests.forEach(r => {
-                    let req = this._throttle(function(){
-                        return this._onRequest(r);
-                    });
+                    let req = this._throttle(() => this._onRequest(r));
                     if (req) {
                         this._jobsCount++;
                         jobs.push(req);
