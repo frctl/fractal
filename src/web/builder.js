@@ -64,10 +64,9 @@ module.exports = class Builder extends mix(Emitter) {
                         this._jobsCount++;
                         jobs.push(req);
                     }
-
                 });
 
-                return Promise.all(jobs);
+                return Promise.all(_.flatten(jobs));
             });
 
         }).then(() => {
@@ -176,6 +175,7 @@ module.exports = class Builder extends mix(Emitter) {
 
     _onError(err, req, dest) {
         this._errorCount++;
+        this._updateProgress();
         this.emit('error', new Error(`Failed to export url ${req.url} - ${err.message}`));
         return this._render(this._theme.errorView(), { error: err }).then(contents => this._write(contents, dest)).catch(err => {
             this.emit('error', err);
@@ -190,11 +190,13 @@ module.exports = class Builder extends mix(Emitter) {
         }
     }
 
-    _copy(source, dest) {
+    _copy(source, dest, addToJobCount = true) {
         let ignored = this._config.static.ignored;
         dest = _.trimEnd(Path.join(this._config.dest, dest), Path.sep);
         source = Path.resolve(source);
-        this._jobsCount++;
+        if (addToJobCount) {
+            this._jobsCount++;
+        }
         return fs.copyAsync(source, dest, {
             clobber: true,
             filter: function(path){
@@ -204,7 +206,8 @@ module.exports = class Builder extends mix(Emitter) {
             this._updateProgress();
             Log.debug(`Copied '${source}' ==> '${dest}'`);
         }).catch(e => {
-            Log.debug(`Error copying '${source}' ==> '${dest}'`);
+            this._updateProgress();
+            Log.error(`Error copying '${source}' ==> '${dest}'`);
             this._errorCount++;
         });
     }
