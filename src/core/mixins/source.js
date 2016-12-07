@@ -158,12 +158,11 @@ module.exports = mixin((superclass) => class Source extends mix(superclass).with
     _resolveTreeContext(tree) {
         let pending = [];
         for (let item of tree.flattenDeep()) {
-            pending.push(resolver.context(item.context, this).then(ctx => {
-                ctx = _.cloneDeep(ctx);
-                item._contextData = ctx;
-                item._hasResolvedContext = true; // TODO: use a setter on _contextData to set this instead of manually!!
+            let resolvedContext = resolver.context(item.context, this).then(ctx => {
+                item.setContext(ctx);
                 return ctx;
-            }));
+            });
+            pending.push(resolvedContext);
         }
         return Promise.all(pending).then(() => tree);
     }
@@ -173,9 +172,10 @@ module.exports = mixin((superclass) => class Source extends mix(superclass).with
             return Promise.resolve(this);
         }
         this._loading = this._getTree().then(fileTree => {
-            this._fileTree = fileTree;
-            this._loading = false;
-            return this._parse(fileTree).then(tree => this._resolveTreeContext(tree));
+            return this._parse(fileTree).then(tree => this._resolveTreeContext(tree)).then(tree => {
+                this._fileTree = tree;
+                return false;
+            });
         }).catch(e => {
             Log.error(e);
             if (this._app.debug) {
