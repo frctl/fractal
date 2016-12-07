@@ -146,7 +146,7 @@ module.exports = class Builder extends mix(Emitter) {
 
         if (req.route.static) {
             const staticPath = _.isFunction(req.route.static) ? req.route.static(req.params, this._app) : req.route.static;
-            return this._copy(unescape(staticPath), unescape(req.url));
+            return this._copy(unescape(staticPath), unescape(req.url), false);
         }
 
         if (req.route.view) {
@@ -190,11 +190,11 @@ module.exports = class Builder extends mix(Emitter) {
         }
     }
 
-    _copy(source, dest, addToJobCount = true) {
+    _copy(source, dest, addToJobCount) {
         let ignored = this._config.static.ignored;
         dest = _.trimEnd(Path.join(this._config.dest, dest), Path.sep);
         source = Path.resolve(source);
-        if (addToJobCount) {
+        if (addToJobCount !== false) {
             this._jobsCount++;
         }
         return fs.copyAsync(source, dest, {
