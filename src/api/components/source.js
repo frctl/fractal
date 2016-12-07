@@ -442,6 +442,7 @@ module.exports = class ComponentSource extends EntitySource {
                 const files = {
                     view: view,
                     varViews: _.filter(matched.varViews, f => f.name.startsWith(nameMatch)),
+                    config: configFile
                 };
                 return Component.create(dirConfig, files, resources, parent || source);
             }
@@ -475,6 +476,7 @@ module.exports = class ComponentSource extends EntitySource {
                     const files = {
                         view: view,
                         varViews: matched.varViews.filter(f => f.name.startsWith(nameMatch)),
+                        config: configFile
                     };
                     const resources = new FileCollection({}, []);
                     return Component.create(c, files, resources, collection);

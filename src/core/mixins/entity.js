@@ -36,7 +36,7 @@ module.exports = mixin((superclass) => class Entity extends superclass {
         this.label = config.label || this._label(config);
         this.title = config.title || this._title(config);
         this.order = _.isNaN(parseInt(config.order, 10)) ? 10000 : parseInt(config.order, 10);
-        this.isHidden = config.isHidden || config.hidden || false;
+        this._isHidden = config.isHidden || config.hidden || false;
         this.id = this._id(config);
         this.config = config;
     }
@@ -51,6 +51,22 @@ module.exports = mixin((superclass) => class Entity extends superclass {
 
     get parent() {
         return this._parent;
+    }
+
+    get isHidden() {
+        if (this._isHidden) {
+            return true;
+        }
+        let p = this.parent;
+        while (p) {
+            if (p && ! p.isSource) {
+                if (p._isHidden) {
+                    return true;
+                }
+            }
+            p = p.parent;
+        }
+        return false;
     }
 
     _id(config) {

@@ -3,6 +3,7 @@
 const _ = require('lodash');
 const Path = require('path');
 const utils = require('../../core/utils');
+const Data = require('../../core/data');
 const Entity = require('../../core/entities/entity');
 const VariantCollection = require('../variants/collection');
 const FileCollection = require('../files/collection');
@@ -20,6 +21,7 @@ module.exports = class Component extends Entity {
         this.editorScope = files.view.lang.scope;
         this.viewPath = files.view.path;
         this.viewDir = files.view.dir;
+        this.configData = config.raw;
         this.relViewPath = Path.relative(this.source.fullPath, Path.resolve(files.view.path));
         this._notes = config.notes || config.readme || null;
         this._resources = resources;
@@ -165,6 +167,7 @@ module.exports = class Component extends Entity {
 
     static *create(config, files, resources, parent) {
         parent.source.emit('component:beforeCreate', config, files, resources, parent);
+        config.raw = files.config ? yield Data.readFile(files.config.path) : null;
         const comp = new Component(config, files, resources, parent);
         const variants = yield VariantCollection.create(comp, files.view, config.variants, files.varViews, config);
         comp.setVariants(variants);

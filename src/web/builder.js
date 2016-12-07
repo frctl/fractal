@@ -147,7 +147,7 @@ module.exports = class Builder extends mix(Emitter) {
 
         if (req.route.static) {
             const staticPath = _.isFunction(req.route.static) ? req.route.static(req.params, this._app) : req.route.static;
-            return this._copy(staticPath, req.url);
+            return this._copy(unescape(staticPath), unescape(req.url));
         }
 
         if (req.route.view) {
