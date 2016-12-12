@@ -12,6 +12,7 @@ const Log = require('../core/log');
 const mix = require('../core/mixins/mix');
 const mime = require('mime');
 const Emitter = require('../core/mixins/emitter');
+const auth = require('http-auth');
 
 module.exports = class Server extends mix(Emitter) {
 
@@ -260,6 +261,15 @@ module.exports = class Server extends mix(Emitter) {
         this._theme.static().forEach(s => {
             this._server.use(`/${_.trimStart(s.mount, '/')}`, express.static(s.path));
         });
+
+        let username = process.env.FRACTAL_USERNAME;
+        let password = process.env.FRACTAL_PASSWORD;
+        if (username && password) {
+            var basic = auth.basic({ realm: "Fractal" }, (name, pass, callback) => {
+                callback(username === name && password === pass);
+            });
+            this._server.use(auth.connect(basic));
+        }
 
         this._server.get(':path(*)', this._onRequest.bind(this));
 

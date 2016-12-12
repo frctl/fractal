@@ -34,6 +34,15 @@ Fractal is a project that has recently evolved rapidly and organically from a pr
 
 Existing tests can be run using the `npm test` command.
 
+## Password protection
+
+to password protect the website, please set the following environment variables
+```
+FRACTAL_USERNAME=A_USERNAME
+FRACTAL_PASSWORD=A_PASSWORD
+
+```
+
 ## Credits
 
 Fractal is developed and maintained by [Mark Perkins](http://github.com/allmarkedup) and the team at [Clearleft](http://clearleft.com).
