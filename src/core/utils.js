@@ -93,9 +93,7 @@ module.exports = {
     },
 
     mergeProp(prop, upstream) {
-        if (_.isArray(upstream)) {
-            return _.uniq(_.concat(upstream, _.castArray(prop)));
-        } else if (_.isPlainObject(upstream) && _.isPlainObject(prop)) {
+        if (_.isPlainObject(upstream) && _.isPlainObject(prop)) {
             return this.defaultsDeep(prop || {}, upstream);
         }
         if (_.isUndefined(prop)) {
