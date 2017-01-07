@@ -174,7 +174,8 @@ module.exports = mixin((superclass) => class Source extends mix(superclass).with
         this._loading = this._getTree().then(fileTree => {
             return this._parse(fileTree).then(tree => this._resolveTreeContext(tree)).then(tree => {
                 this._fileTree = tree;
-                return false;
+                this._loading = false;
+                return tree;
             });
         }).catch(e => {
             Log.error(e);
