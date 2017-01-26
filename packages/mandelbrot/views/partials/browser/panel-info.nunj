@@ -4,6 +4,16 @@
             <strong class="Meta-key">Handle:</strong>
             <span class="Meta-value">@{{ entity.handle }}</span>
         </li>
+        {% if entity.tags.length > 1 %}
+        <li class="Meta-item">
+            <strong class="Meta-key">Tags:</strong>
+            <span class="Meta-value">
+                {% for tag in entity.tags %}
+                    <span>{% if tag %}{{ tag }}</span>{% if not loop.last %}, {% endif %}{% endif %}
+                {% endfor %}
+            </span>
+        </li>
+        {% endif %}
         {% if entity.isComponent %}
         {% set variants = entity.variants() %}
         {% else %}
