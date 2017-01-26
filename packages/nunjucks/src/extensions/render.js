@@ -36,14 +36,15 @@ module.exports = function(fractal){
                 context = _.defaultsDeep(context, defaultContext);
             }
 
-            // fix env for rendered components
-            let env = JSON.parse(JSON.stringify(rootContext._env));
-            context._env = env;
-
-            entity.render(context).then(html => {
-                callback(null, html);
-            }).catch(err => {
-                callback(err);
+            source.resolve(context).then(context => {
+                // fix env for rendered components
+                let env = JSON.parse(JSON.stringify(rootContext._env));
+                context._env = env;
+                entity.render(context).then(html => {
+                    callback(null, html);
+                }).catch(err => {
+                    callback(err);
+                });
             });
         };
 
