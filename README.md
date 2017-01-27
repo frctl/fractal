@@ -36,6 +36,8 @@ Existing tests can be run using the `npm test` command.
 
 ## Credits
 
-Fractal is developed and maintained by [Mark Perkins](http://github.com/allmarkedup) and the team at [Clearleft](http://clearleft.com).
+Fractal is developed and maintained by [Danielle Huntrods](http://github.com/dkhuntrods), [Mark Perkins](http://github.com/allmarkedup) and all our excellent contributors.
+
+Ongoing support by [Clearleft](http://clearleft.com) makes this project possible. Thank you!
 
 [![Clearleft](http://clearleft.com/assets/img/logo.png)](http://clearleft.com)
