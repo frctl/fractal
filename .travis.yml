@@ -14,3 +14,4 @@ node_js:
   - "4.0"
 sudo: false
 script: "npm test"
+yarn: false
