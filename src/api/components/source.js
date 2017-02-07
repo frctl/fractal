@@ -71,7 +71,7 @@ module.exports = class ComponentSource extends EntitySource {
             return this.findFile(args[0]);
         }
         const isHandleFind = args.length == 1 && _.isString(args[0]) && args[0].startsWith('@');
-        for (const item of this) {
+        for (const item of this.items()) {
             if (item.isCollection) {
                 const search = item.find.apply(item, args);
                 if (search) return search;
