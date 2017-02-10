@@ -1,5 +1,9 @@
 # History
 
+## 1.1.3
+
+[NEW] Add support for underscore prefixes for 'short' config filenames
+
 ## 1.1.2
 
 * [FIX] Fix issue with underscore-prefixed config files being ignored
