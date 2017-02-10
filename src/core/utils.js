@@ -96,7 +96,7 @@ module.exports = {
         if (_.isArray(upstream)) {
             return _.uniq(_.concat(upstream, _.castArray(prop)));
         } else if (_.isPlainObject(upstream) && _.isPlainObject(prop)) {
-            return this.defaultsDeep(prop || {}, upstream);
+            return this.defaultsDeep(_.cloneDeep(prop || {}), upstream);
         }
         if (_.isUndefined(prop)) {
             return upstream;
@@ -127,7 +127,7 @@ module.exports = {
                 }
             });
         });
-        
+
         return output;
     },
 
