@@ -152,7 +152,7 @@ module.exports = mixin((superclass) => class Source extends mix(superclass).with
     }
 
     isConfig(file) {
-        return anymatch([`**/*.${this.get('files.config')}.{js,json,yaml,yml}`, `**/${this.get('files.config')}.{js,json,yaml,yml}`], this._getPath(file));
+        return anymatch([`**/*.${this.get('files.config')}.{js,json,yaml,yml}`, `**/${this.get('files.config')}.{js,json,yaml,yml}`, `**/_${this.get('files.config')}.{js,json,yaml,yml}`], this._getPath(file));
     }
 
     _resolveTreeContext(tree) {
