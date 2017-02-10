@@ -1,5 +1,10 @@
 # History
 
+## 1.1.2
+
+* [FIX] Fix issue with underscore-prefixed config files being ignored
+* [FIX] Address issue with variants context bleeding into each other (#208)
+
 ## 1.1
 
 * [NEW] Add support for 'short' non-component-name-prefixed config files for collections and compound components
