@@ -1,7 +1,5 @@
 node_modules
-npm-debug.log
-/coverage
-/example/*
-/build/*
-/fractal.js
-.idea/
+.nyc_output
+coverage
+*.log
+.wip
