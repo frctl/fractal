@@ -11,14 +11,16 @@ module.exports = function(opts = {}){
   opts = utils.defaultsDeep(opts, defaults);
 
   const compSrc = utils.normalizePaths(opts.components.src);
-  const components = fractal(opts.components);
+  const components = fractal(opts.components.compiler);
+  const renderer = components.extend(renderExtension());
 
   const events = new EventEmitter({
     wildcard: true
   });
 
-  const renderer = components.extend(renderExtension(opts.render));
-  renderer.add('nunjucks'); // default template engine
+  for (const adapter of opts.components.adapters || []) {
+    renderer.add(adapter);
+  }
 
   function watch(paths, callback){
     fs.watch(paths, (event, path) => {
