@@ -70,7 +70,7 @@ module.exports = function(config = {}){
   };
 
   ['use','register','extend'].forEach(method => {
-    methods[method] = components[method].bind(method);
+    methods[method] = components[method].bind(components);
   });
 
   return methods;

@@ -23,8 +23,8 @@
     "release": "np"
   },
   "dependencies": {
-    "@frctl/core": "github.com:frctl/core.git",
     "@frctl/builder": "github.com:frctl/builder.git",
+    "@frctl/core": "github.com:frctl/core.git",
     "@frctl/extension-render": "git+ssh://git@github.com/frctl/adapters.git#render",
     "eventemitter2": "^3.0.0",
     "extract-opts": "^3.3.1",
