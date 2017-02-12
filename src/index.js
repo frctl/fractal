@@ -1,76 +1,60 @@
-const utils = require('@frctl/utils');
 const fractal = require('@frctl/core');
 const builder = require('@frctl/builder');
-const fs = require('@frctl/fs');
 const extractArgs = require('extract-opts');
 const EventEmitter = require('eventemitter2').EventEmitter2;
 const renderExtension = require('@frctl/extension-render');
-const defaults = require('./defaults');
+const configure = require('./configure');
+const watch = require('./watch');
 
-module.exports = function(opts = {}){
+module.exports = function(config = {}){
 
-  opts = utils.defaultsDeep(opts, defaults);
+  config = configure(config);
 
-  const compSrc = utils.normalizePaths(opts.components.src);
-  const docsSrc = utils.normalizePath(opts.docs.src);
-  const docsDest = utils.normalizePath(opts.docs.dest);
-
-  const components = fractal(opts.components.compiler);
-  const docs = builder(opts.docs);
+  const components = fractal(config.components.compiler);
+  const docs = config.docs ? builder(config.docs) : null;
 
   const events = new EventEmitter({
     wildcard: true
   });
 
   const renderer = components.extend(renderExtension());
-  for (const adapter of opts.components.adapters || []) {
+  for (const adapter of config.components.adapters || []) {
     renderer.add(adapter);
   }
 
-  function watch(paths, callback){
-    fs.watch(paths, (event, path) => {
-      events.emit('change', event, path);
-      callback();
-    });
-  }
-
-  function error(err) {
+  function handleError(err) {
     events.emit('error', err);
     return callback(err);
   }
 
-  return {
+  const methods = {
 
     on(...args) {
       return events.on(...args);
     },
 
-    use(...args) {
-      return components.use(...args);
-    },
-
-    extend(...args) {
-      return components.extend(...args);
-    },
-
     load(...args){
       events.emit('load.start');
+      const src = config.components.src;
       const [opts, callback] = extractArgs(...args);
       function load() {
-        components.load(compSrc, (err, api) => {
+        components.load(src, (err, api) => {
           if (err) return handleError(err);
           events.emit('load.complete', api);
           callback(null, api);
         });
       }
-      opts.watch ? watch(compSrc, load) : load();
+      opts.watch ? watch(src, events, load) : load();
     },
 
     build(...args) {
+      if (!config.docs) {
+        throw new Error(`No docs src defined`);
+      }
       events.emit('build.start');
       const [opts, callback] = extractArgs(...args);
       function build() {
-        components.load(compSrc, (err, api) => {
+        components.load(config.components.src, (err, api) => {
           if (err) return handleError(err);
           docs.build(api.$data, {fractal: api}, (err, pages) => {
             if (err) return handleError(err);
@@ -79,10 +63,16 @@ module.exports = function(opts = {}){
           });
         });
       }
-      opts.watch ? watch(compSrc.concat(docsSrc), build) : build();
+      const srcs = config.components.src.concat(config.docs.src);
+      opts.watch ? watch(srcs, events, build) : build();
     }
 
-  }
+  };
 
+  ['use','register','extend'].forEach(method => {
+    methods[method] = components[method].bind(method);
+  });
+
+  return methods;
 
 };

@@ -6,12 +6,6 @@ module.exports = {
     compiler: {
 
     }
-  },
-
-  docs: {
-    src: null,
-    dest: null
   }
-
 
 };
