@@ -31,7 +31,7 @@
 
 "@frctl/core@github.com:frctl/core.git":
   version "0.0.1"
-  resolved "github.com:frctl/core.git#f810f558029179f6b1c5e86b798646c8e3a35200"
+  resolved "github.com:frctl/core.git#902af9f86b29a3946b7a8e514b5757470cb4ff8b"
   dependencies:
     "@frctl/compiler" "git+ssh://git@github.com/frctl/compiler.git"
     "@frctl/fs" "git+ssh://git@github.com/frctl/fs"
