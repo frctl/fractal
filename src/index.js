@@ -5,7 +5,6 @@ const EventEmitter = require('eventemitter2').EventEmitter2;
 const renderExtension = require('@frctl/extension-render');
 const assert = require('check-types').assert;
 const configure = require('./configure');
-const watch = require('./watch');
 
 module.exports = function (config = {}) {
   assert.maybe.object(config, `opts argument must be an object [config-invalid]`);
@@ -27,6 +26,13 @@ module.exports = function (config = {}) {
   function handleError(err, callback) {
     events.emit('error', err);
     return callback(err);
+  }
+
+  function watch(paths, callback) {
+    fs.watch(paths, (event, path) => {
+      events.emit('change', event, path);
+      callback();
+    });
   }
 
   const methods = {
