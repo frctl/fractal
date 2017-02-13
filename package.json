@@ -23,9 +23,9 @@
     "release": "np"
   },
   "dependencies": {
-    "@frctl/builder": "github.com:frctl/builder.git",
+    "@frctl/blueprint": "github.com:frctl/blueprint.git",
     "@frctl/core": "github.com:frctl/core.git",
-    "@frctl/extension-render": "git+ssh://git@github.com/frctl/adapters.git#render",
+    "@frctl/fractal-extension-render": "git+ssh://git@github.com/frctl/adapters.git#render",
     "@frctl/fs": "github.com:frctl/fs.git",
     "check-types": "^7.1.5",
     "eventemitter2": "^3.0.0",

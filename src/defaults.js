@@ -1,11 +1,7 @@
 module.exports = {
 
-  components: {
-    src: null,
-    adapters: ['nunjucks'],
-    compiler: {
-
-    }
-  }
+  src: null,
+  adapters: ['nunjucks'],
+  parser: {}
 
 };

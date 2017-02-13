@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@frctl/builder@github.com:frctl/builder.git":
+"@frctl/blueprint@github.com:frctl/blueprint.git":
   version "0.0.1"
-  resolved "github.com:frctl/builder.git#208ab2a92b710059493f12ba7f4e1f6be6dd0a6e"
+  resolved "github.com:frctl/blueprint.git#c341b925cba1689a812a2b1b42fcd0b5759b4c1d"
   dependencies:
     "@frctl/compiler" "git+ssh://git@github.com/frctl/compiler.git"
     "@frctl/fs" "git+ssh://git@github.com/frctl/fs"
@@ -31,7 +31,7 @@
 
 "@frctl/core@github.com:frctl/core.git":
   version "0.0.1"
-  resolved "github.com:frctl/core.git#5956305f66d0584ed7572bccc8f8b937d1e5f284"
+  resolved "github.com:frctl/core.git#4c6d83732ce78520255f16a777749b3bdaa1539d"
   dependencies:
     "@frctl/compiler" "git+ssh://git@github.com/frctl/compiler.git"
     "@frctl/fs" "git+ssh://git@github.com/frctl/fs"
@@ -47,9 +47,9 @@
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/@frctl/eslint-config-frctl/-/eslint-config-frctl-0.1.0.tgz#bf1c46e25f371a21ea80b11aa02c9a3773ab19cc"
 
-"@frctl/extension-render@git+ssh://git@github.com/frctl/adapters.git#render":
+"@frctl/fractal-extension-render@git+ssh://git@github.com/frctl/adapters.git#render":
   version "0.0.1"
-  resolved "git+ssh://git@github.com/frctl/adapters.git#4be923ef8f6aca5a77975216e6af27206a1cfa40"
+  resolved "git+ssh://git@github.com/frctl/adapters.git#009bb5db6cc8a7165ae921fdfaa9af44c1146572"
   dependencies:
     "@frctl/utils" "^0.4.2"
     async-done "^1.2.2"
@@ -60,7 +60,7 @@
 
 "@frctl/fs@git+ssh://git@github.com/frctl/fs", "@frctl/fs@github.com:frctl/fs.git":
   version "0.0.1"
-  resolved "git+ssh://git@github.com/frctl/fs#3402e18c5ceed4ba4309810cc39daec34384d7f6"
+  resolved "git+ssh://git@github.com/frctl/fs#737366bc38529eea5f96fe626d4900d5b73ebb21"
   dependencies:
     "@frctl/readr" "^0.2.1"
     "@frctl/utils" "^0.4.0"
@@ -1431,7 +1431,7 @@ getpass@^0.1.1:
 
 "git@github.com:frctl/fs.git":
   version "0.0.1"
-  resolved "github.com:frctl/fs.git#3402e18c5ceed4ba4309810cc39daec34384d7f6"
+  resolved "github.com:frctl/fs.git#737366bc38529eea5f96fe626d4900d5b73ebb21"
   dependencies:
     "@frctl/readr" "^0.2.1"
     "@frctl/utils" "^0.4.0"
