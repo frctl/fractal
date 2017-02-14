@@ -1,7 +1,7 @@
 const path = require('path');
 const _ = require('lodash');
 const Bluebird = require('bluebird');
-const Compiler = require('@frctl/core').Compiler;
+const Compiler = require('@frctl/internals').Compiler;
 const utils = require('@frctl/utils');
 
 const plugins = {

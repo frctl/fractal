@@ -1,4 +1,4 @@
-const config = require('@frctl/plugin-files-parse-config');
+const config = require('@frctl/fractal-plugin-files-parse-config');
 const name = require('./name');
 const role = require('./role');
 

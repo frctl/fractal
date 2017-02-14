@@ -1,6 +1,6 @@
 const _ = require('lodash');
 const reqAll = require('req-all');
-const Api = require('@frctl/core').Api;
+const Api = require('@frctl/internals').Api;
 
 const bundledMethods = reqAll('./methods');
 

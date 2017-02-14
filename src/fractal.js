@@ -1,8 +1,8 @@
 const extractArgs = require('extract-opts');
 const EventEmitter = require('eventemitter2').EventEmitter2;
+const SourceSet = require('@frctl/internals').SourceSet;
 const utils = require('@frctl/utils');
 const fs = require('@frctl/fs');
-const SourceSet = require('@frctl/core').SourceSet;
 const renderExtension = require('@frctl/fractal-extension-render');
 const assert = require('check-types').assert
 const api = require('./api');
@@ -28,7 +28,7 @@ class Fractal extends EventEmitter {
 
     refs.sources.set(this, sources);
     refs.api.set(this, api());
-    refs.renderer.set(this, renderExtension(this));
+    refs.renderer.set(this, renderExtension()(this));
 
     if (config.src) {
       this.addSource(config.src);
@@ -61,7 +61,7 @@ class Fractal extends EventEmitter {
   }
 
   addAdapter(adapter){
-    refs.renderer.set(this).addAdapter(adapter);
+    refs.renderer.get(this).addAdapter(adapter);
     return this;
   }
 
