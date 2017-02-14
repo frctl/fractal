@@ -65,6 +65,7 @@ Add a template engine adapter.
 
 Add an extension. Fractal extensions can add plugins, methods and/or more to the base Fractal instance.
 
+
 ## Requirements
 
 Fractal requires [Node.js](https://nodejs.org) v6.0.0 or greater.
