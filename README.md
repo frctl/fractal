@@ -1,10 +1,10 @@
 # Fractal
 
-> This is a WIP v2 rewrite of Fractal and should not be considered stable. Use at your own risk!
-
 Fractal provides a programmatic API for working with filesystem-based component libraries.
 
-It features a plugin-based parsing engine to provide simple but powerful customisation and can be used to help you build component-library based projects from initial conception right through to use in production.
+It features a plugin-based parsing engine to provide simple but powerful customisation and can be used to help you build, document and maintain component-library based projects from initial conception right through to production.
+
+> _This is a WIP v2 rewrite of Fractal and should not be considered stable. Use at your own risk!_
 
 ## Installation
 
@@ -16,6 +16,7 @@ npm i @frctl/fractal --save
 
 ```js
 const fractal = require('@frctl/fractal');
+
 const components = fractal({
   src: './path/to/components'
 })
