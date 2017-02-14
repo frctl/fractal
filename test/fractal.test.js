@@ -14,9 +14,7 @@ const fractal = proxyquire('../src/index', {
 });
 
 const validConfig = {
-  components: {
-    src: './fixtures/components'
-  }
+  src: './fixtures/components'
 };
 
 describe('fractal', function () {

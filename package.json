@@ -27,10 +27,11 @@
     "@frctl/core": "github.com:frctl/core.git",
     "@frctl/fractal-extension-render": "git+ssh://git@github.com/frctl/adapters.git#render",
     "@frctl/fs": "github.com:frctl/fs.git",
+    "bluebird": "^3.4.7",
     "check-types": "^7.1.5",
     "eventemitter2": "^3.0.0",
     "extract-opts": "^3.3.1",
-    "git": "github.com:frctl/fs.git"
+    "lodash": "^4.17.4"
   },
   "devDependencies": {
     "@frctl/eslint-config-frctl": "0.1.0",
