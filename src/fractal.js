@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const extractArgs = require('extract-opts');
 const EventEmitter = require('eventemitter2').EventEmitter2;
 const SourceSet = require('@frctl/internals').SourceSet;
@@ -30,8 +31,8 @@ class Fractal extends EventEmitter {
     refs.api.set(this, api());
     refs.renderer.set(this, renderExtension()(this));
 
-    if (config.src) {
-      this.addSource(config.src);
+    if (config.src || config.assets) {
+      this.addSource(_.flatten(_.compact([config.src, config.assets])));
     }
 
     refs.state.set(this, {

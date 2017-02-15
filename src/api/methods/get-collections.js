@@ -3,7 +3,7 @@ module.exports = {
   name: 'getCollections',
 
   handler: function () {
-    return this.$data.components;
+    return this.$data.collections;
   }
 
 };
