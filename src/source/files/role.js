@@ -39,6 +39,11 @@ module.exports = function (opts = {}) {
         file.role = role.name;
       });
     }
+    files.forEach(file => {
+      if (file.isFile && !file.role) {
+        file.role = 'resource';
+      }
+    });
 
     done();
   };

@@ -6,6 +6,7 @@ const utils = require('@frctl/utils');
 const fs = require('@frctl/fs');
 const renderExtension = require('@frctl/fractal-extension-render');
 const assert = require('check-types').assert
+const defaults = require('../config');
 const api = require('./api');
 const compiler = require('./source/compiler');
 const merge = require('./source/merge-data');
@@ -24,6 +25,8 @@ class Fractal extends EventEmitter {
       wildcard: true
     });
 
+    config = utils.defaultsDeep(config || {}, defaults);
+
     const sources = new SourceSet();
     sources.setDefaultCompiler(compiler(config.compiler));
 
@@ -31,8 +34,8 @@ class Fractal extends EventEmitter {
     refs.api.set(this, api());
     refs.renderer.set(this, renderExtension()(this));
 
-    if (config.src || config.assets) {
-      this.addSource(_.flatten(_.compact([config.src, config.assets])));
+    if (config.src) {
+      this.addSource(config.src);
     }
 
     refs.state.set(this, {

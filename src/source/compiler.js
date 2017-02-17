@@ -8,56 +8,58 @@ const plugins = {
   files: require('./files'),
   components: require('./components'),
   collections: require('./collections'),
-  assets: require('./assets'),
+  resources: require('./resources'),
 };
 
 module.exports = function (opts = {}) {
   const compiler = new Compiler();
+  const state = {};
 
   for (const name of Object.keys(plugins)) {
-    compiler.addParser(name, plugins[name](opts[name]));
+    compiler.addParser(name, plugins[name](opts[name]), state);
   }
 
   /**
    * Run file transformations
    */
   compiler.addStep(function (files) {
-    return this.getParser('files').process(files);
+    return this.getParser('files').process(files).then(files => {
+      state.files = files;
+      return files;
+    });
   });
 
   /**
-   * Create components and collections
+   * Extract components, collections and assets
    */
   compiler.addStep(function (files, done) {
-    const entities = {
-      components: [],
-      collections: [],
-      assets: [],
-    };
+
     let unAssignedFiles = _.orderBy(files, [f => f.path.split(path.sep).length], ['desc']);
 
-    files.filter(file => file.role === 'component').forEach(file => {
-      entities.components.push(entity(file));
+    const components = files.filter(file => file.role === 'component').map(file => {
+      return entity(file);
     });
+    const componentDirs = _.uniq(components.map(c => path.dirname(c.path)));
 
-    const componentDirs = _.uniq(entities.components.map(c => path.dirname(c.path)));
-
-    files.filter(file => file.role === 'collection').forEach(file => {
+    const collections = files.filter(file => file.role === 'collection').map(file => {
       for (const dir of componentDirs) {
         if (dir.startsWith(file.path)) {
-          entities.collections.push(entity(file));
+          return entity(file);
         }
       }
-    });
+    }).filter(file => file);
 
     unAssignedFiles.filter(file => file.isFile).forEach(file => {
-      entities.assets.push(file);
+      file.scope = 'global';
     });
+
+    const resources = files.filter(file => file.role === 'resource');
 
     function entity(file){
       return {
         path: file.path,
         name: file.name,
+        role: file.role,
         label: utils.titlize(file.name),
         root: file,
         files: getFiles(file.role, file.path)
@@ -76,22 +78,25 @@ module.exports = function (opts = {}) {
         });
       }
       unAssignedFiles = _.difference(unAssignedFiles, files);
-      return files;
+      return files.map(file => {
+        file.scope = role;
+        return file;
+      });
     }
 
-    done(null, entities);
+    done(null, {resources, components, collections});
   });
 
   /**
-   * Run component and collection transformations
+   * Run component, collection and resource transformations
    */
   compiler.addStep(function (entities) {
-    return Bluebird.mapSeries(['collections', 'components', 'assets'], key => {
-      return this.getParser(key).process(entities[key]);
-    }).then(entities => {
-      const [collections, components, assets] = entities;
-      return {collections, components, assets};
-    });
+    return Bluebird.mapSeries(['resources', 'collections', 'components'], key => {
+      return this.getParser(key).process(entities[key]).then(result => {
+        state[key] = result;
+        return result;
+      });
+    }).then(entities => state);
   });
 
   return compiler;

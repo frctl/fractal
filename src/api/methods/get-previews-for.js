@@ -2,14 +2,14 @@ const _ = require('lodash');
 
 module.exports = {
 
-  name: 'getPreviews',
+  name: 'getPreviewsFor',
 
   handler: function (target) {
     if (typeof target === 'string') {
-      target = this.find(target);
+      target = this.components.findByName(target);
     }
     if (!target) {
-      throw new Error(`getPreviews: could not find target`);
+      throw new Error(`getPreviewsFor: could not find target`);
     }
     return target.files.filter(file => file.role === 'preview');
   }

@@ -5,11 +5,10 @@ module.exports = {
   name: 'find',
 
   handler: function (...args) {
-    const components = this.getComponents();
-    if (args.length === 1) {
-      return _.find(components, {name: args[0]});
+    if (args.length === 1 && typeof args[0] === 'string') {
+      return _.find(this.components, {name: args[0]});
     }
-    return _.find(components, ...args);
+    return _.find(this.getAll(), ...args);
   }
 
 };

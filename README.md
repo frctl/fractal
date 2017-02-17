@@ -44,10 +44,10 @@ Instantiate a new Fractal instance.
 
 Parse the components directory. Accepts a `callback` function that is called once the parsing process is complete.
 
-#### callback(err, api)
+#### callback(err, data)
 
 * `err`: An `Error` instance if an error has occurred during parsing, otherwise `null`
-* `api`: An API object that exposes a set of registered methods bound to the data returned from the parsing step.
+* `data`: An data object that exposes a set of registered methods bound to the data returned from the parsing step.
 
 ### .addPlugin(plugin)
 

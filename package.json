@@ -23,7 +23,6 @@
     "release": "np"
   },
   "dependencies": {
-    "@frctl/blueprint": "github.com:frctl/blueprint.git",
     "@frctl/fractal-extension-render": "git+ssh://git@github.com/frctl/adapters.git#render",
     "@frctl/fractal-plugin-files-parse-config": "github.com:frctl/fractal-plugin-files-parse-config.git",
     "@frctl/fs": "github.com:frctl/fs.git",
@@ -32,7 +31,8 @@
     "check-types": "^7.1.5",
     "eventemitter2": "^3.0.0",
     "extract-opts": "^3.3.1",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "multimatch": "^2.1.0"
   },
   "devDependencies": {
     "@frctl/eslint-config-frctl": "0.1.0",
