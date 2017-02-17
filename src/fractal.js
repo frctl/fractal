@@ -8,8 +8,8 @@ const renderExtension = require('@frctl/fractal-extension-render');
 const assert = require('check-types').assert
 const defaults = require('../config');
 const api = require('./api');
-const compiler = require('./source/compiler');
-const merge = require('./source/merge-data');
+const compiler = require('./compiler/compiler');
+const merge = require('./compiler/merge-data');
 
 const refs = {
   api: new WeakMap(),

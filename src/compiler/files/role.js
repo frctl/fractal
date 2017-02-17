@@ -1,6 +1,6 @@
 const path = require('path');
 const _ = require('lodash');
-const minimatch = require('minimatch');
+const multimatch = require('multimatch');
 
 module.exports = function (opts = {}) {
   const marker = opts.marker || '@';
@@ -9,17 +9,17 @@ module.exports = function (opts = {}) {
   const roles = [{
     name: 'view',
     match: opts.view || function (file) {
-      return file.isFile && minimatch(path.basename(file.path), '?(*.)view.*', matchOpts);
-    }
-  }, {
-    name: 'preview',
-    match: opts.preview || function (file) {
-      return file.isFile && minimatch(path.basename(file.path), '?(*.)preview.*', matchOpts);
+      return file.isFile && multimatch([file.path], ['**/?(*.)view.*'], matchOpts).length;
     }
   }, {
     name: 'config',
     match: opts.config || function (file) {
-      return file.isFile && minimatch(path.basename(file.path), '?(*.)config.*', matchOpts);
+      return file.isFile && multimatch([file.path], ['**/?(*.)config.*'], matchOpts).length;
+    }
+  },{
+    name: 'readme',
+    match: opts.readme || function (file) {
+      return file.isFile && multimatch([file.path], ['**/readme.*'], matchOpts).length;
     }
   }, {
     name: 'component',
@@ -39,10 +39,9 @@ module.exports = function (opts = {}) {
         file.role = role.name;
       });
     }
-    files.forEach(file => {
-      if (file.isFile && !file.role) {
-        file.role = 'resource';
-      }
+
+    files.filter(file => !file.role).forEach(file => {
+      file.role = 'resource';
     });
 
     done();

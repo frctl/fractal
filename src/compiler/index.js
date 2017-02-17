@@ -24,7 +24,7 @@ module.exports = function (opts = {}) {
    */
   compiler.addStep(function (files) {
     return this.getParser('files').process(files).then(files => {
-      state.files = files;
+      state.files = files.filter(file => file.isFile);
       return files;
     });
   });
@@ -52,8 +52,6 @@ module.exports = function (opts = {}) {
     unAssignedFiles.filter(file => file.isFile).forEach(file => {
       file.scope = 'global';
     });
-
-    const resources = files.filter(file => file.role === 'resource');
 
     function entity(file){
       return {
@@ -84,14 +82,14 @@ module.exports = function (opts = {}) {
       });
     }
 
-    done(null, {resources, components, collections});
+    done(null, {components, collections});
   });
 
   /**
    * Run component, collection and resource transformations
    */
   compiler.addStep(function (entities) {
-    return Bluebird.mapSeries(['resources', 'collections', 'components'], key => {
+    return Bluebird.mapSeries(['collections', 'components'], key => {
       return this.getParser(key).process(entities[key]).then(result => {
         state[key] = result;
         return result;
