@@ -8,11 +8,11 @@ const renderExtension = require('@frctl/fractal-extension-render');
 const assert = require('check-types').assert
 const defaults = require('../config');
 const api = require('./api');
-const compiler = require('./compiler/compiler');
+const compiler = require('./compiler');
 const merge = require('./compiler/merge-data');
 
 const refs = {
-  api: new WeakMap(),
+  data: new WeakMap(),
   sources: new WeakMap(),
   renderer: new WeakMap(),
   state: new WeakMap(),
@@ -31,7 +31,7 @@ class Fractal extends EventEmitter {
     sources.setDefaultCompiler(compiler(config.compiler));
 
     refs.sources.set(this, sources);
-    refs.api.set(this, api());
+    refs.data.set(this, api());
     refs.renderer.set(this, renderExtension()(this));
 
     if (config.src) {
@@ -44,8 +44,8 @@ class Fractal extends EventEmitter {
     });
   }
 
-  get api() {
-    return refs.api.get(this).from(refs.state.get(this));
+  get data() {
+    return refs.data.get(this).from(refs.state.get(this));
   }
 
   addPlugin(...args) {
@@ -55,7 +55,7 @@ class Fractal extends EventEmitter {
   }
 
   addMethod(name, handler) {
-    refs.api.get(this).addMethod(name, handler);
+    refs.data.get(this).addMethod(name, handler);
     return this;
   }
 
@@ -79,14 +79,14 @@ class Fractal extends EventEmitter {
     const [opts, callback] = extractArgs(...args);
     const sources = refs.sources.get(this);
     if (!sources.size) {
-      return utils.promiseOrCallback(this.api, callback);
+      return utils.promiseOrCallback(this.data, callback);
     }
     const result = sources.parse().then(dataSets => {
       return merge(dataSets);
     }).then(data => {
       refs.state.set(this, data);
-      this.emit('parse.complete', this.api);
-      return this.api;
+      this.emit('parse.complete', this.data);
+      return this.data;
     });
     return utils.promiseOrCallback(result, callback);
   }

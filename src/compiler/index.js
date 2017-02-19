@@ -7,8 +7,7 @@ const utils = require('@frctl/utils');
 const plugins = {
   files: require('./files'),
   components: require('./components'),
-  collections: require('./collections'),
-  resources: require('./resources'),
+  collections: require('./collections')
 };
 
 module.exports = function (opts = {}) {
