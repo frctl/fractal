@@ -23,7 +23,7 @@
     "release": "np"
   },
   "dependencies": {
-    "@frctl/fractal-extension-render": "git+ssh://git@github.com/frctl/adapters.git#render",
+    "@frctl/adapters": "git+ssh://git@github.com/frctl/fractal-adapter-render-bundle",
     "@frctl/fractal-plugin-files-parse-config": "github.com:frctl/fractal-plugin-files-parse-config.git",
     "@frctl/fs": "github.com:frctl/fs.git",
     "@frctl/internals": "github.com:frctl/internals.git",

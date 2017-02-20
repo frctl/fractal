@@ -7,9 +7,9 @@ const fs = require('@frctl/fs');
 const assert = require('check-types').assert
 const defaults = require('../config');
 const api = require('./api');
-const compiler = require('./compiler/compiler');
-const merge = require('./compiler/merge');
-const registerAdapter = require('./render/register');
+const parser = require('./parser');
+const merge = require('./parser/merge');
+const registerAdapter = require('./renderer/register');
 
 const refs = {
   data: new WeakMap(),
@@ -28,7 +28,7 @@ class Fractal extends EventEmitter {
     config = utils.defaultsDeep(config || {}, defaults);
 
     const sources = new SourceSet();
-    sources.setDefaultCompiler(compiler(config.compiler));
+    sources.setDefaultParser(parser(config.parser));
 
     refs.sources.set(this, sources);
     refs.adapters.set(this, new Map());
@@ -39,6 +39,7 @@ class Fractal extends EventEmitter {
     }
 
     refs.state.set(this, {
+      files: [],
       components: [],
       collections: [],
     });

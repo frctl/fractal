@@ -1,7 +1,7 @@
 const path = require('path');
 const _ = require('lodash');
 const Bluebird = require('bluebird');
-const Compiler = require('@frctl/internals').Compiler;
+const Parser = require('@frctl/internals').Parser;
 const utils = require('@frctl/utils');
 
 const plugins = {
@@ -11,18 +11,18 @@ const plugins = {
 };
 
 module.exports = function (opts = {}) {
-  const compiler = new Compiler();
+  const parser = new Parser();
   const state = {};
 
   for (const name of Object.keys(plugins)) {
-    compiler.addParser(name, plugins[name](opts[name]), state);
+    parser.addProcessor(name, plugins[name](opts[name]), state);
   }
 
   /**
    * Run file transformations
    */
-  compiler.addStep(function (files) {
-    return this.getParser('files').process(files).then(files => {
+  parser.addStep(function (files) {
+    return this.getProcessor('files').process(files).then(files => {
       state.files = files.filter(file => file.isFile);
       return files;
     });
@@ -31,7 +31,7 @@ module.exports = function (opts = {}) {
   /**
    * Extract components, collections and assets
    */
-  compiler.addStep(function (files, done) {
+  parser.addStep(function (files, done) {
 
     let unAssignedFiles = _.orderBy(files, [f => f.path.split(path.sep).length], ['desc']);
 
@@ -87,14 +87,14 @@ module.exports = function (opts = {}) {
   /**
    * Run component, collection and resource transformations
    */
-  compiler.addStep(function (entities) {
+  parser.addStep(function (entities) {
     return Bluebird.mapSeries(['collections', 'components'], key => {
-      return this.getParser(key).process(entities[key]).then(result => {
+      return this.getProcessor(key).process(entities[key]).then(result => {
         state[key] = result;
         return result;
       });
     }).then(entities => state);
   });
 
-  return compiler;
+  return parser;
 };
