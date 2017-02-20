@@ -1,5 +1,4 @@
-module.exports = function(){
-
+module.exports = function () {
   return {
 
     name: 'getCollections',
@@ -9,5 +8,4 @@ module.exports = function(){
     }
 
   };
-
 };

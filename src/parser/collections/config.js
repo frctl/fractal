@@ -2,7 +2,7 @@ const _ = require('lodash');
 const utils = require('@frctl/utils');
 
 module.exports = function () {
-  // TODO: use schema to validate config properties!
+  // TODO: use schema to validate config properties
 
   return function config(collections) {
     return Promise.all(collections.map(collection => {

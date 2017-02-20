@@ -32,7 +32,6 @@ module.exports = function (opts = {}) {
    * Extract components, collections and assets
    */
   parser.addStep(function (files, done) {
-
     let unAssignedFiles = _.orderBy(files, [f => f.path.split(path.sep).length], ['desc']);
 
     const components = files.filter(file => file.role === 'component').map(file => {
@@ -46,13 +45,14 @@ module.exports = function (opts = {}) {
           return entity(file);
         }
       }
+      return null;
     }).filter(file => file);
 
     unAssignedFiles.filter(file => file.isFile).forEach(file => {
       file.scope = 'global';
     });
 
-    function entity(file){
+    function entity(file) {
       return {
         path: file.path,
         name: file.name,
@@ -60,7 +60,7 @@ module.exports = function (opts = {}) {
         label: utils.titlize(file.name),
         root: file,
         files: getFiles(file.role, file.path)
-      }
+      };
     }
 
     function getFiles(role, entityPath) {
@@ -93,7 +93,7 @@ module.exports = function (opts = {}) {
         state[key] = result;
         return result;
       });
-    }).then(entities => state);
+    }).then(() => state);
   });
 
   return parser;

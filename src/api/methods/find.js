@@ -1,7 +1,6 @@
 const _ = require('lodash');
 
-module.exports = function(){
-
+module.exports = function () {
   return {
 
     name: 'find',
@@ -14,5 +13,4 @@ module.exports = function(){
     }
 
   };
-
 };

@@ -1,7 +1,6 @@
 const _ = require('lodash');
 
-module.exports = function(){
-
+module.exports = function () {
   return {
 
     name: 'getAll',
@@ -9,11 +8,10 @@ module.exports = function(){
     handler: function () {
       const all = [];
       for (const set of _.values(this.$data)) {
-        result.concat(set);
+        all.concat(set);
       }
       return all;
     }
 
   };
-
 };

@@ -29,4 +29,4 @@ function renderWrapper(name, renderFunc) {
     assert.function(done, `'${name}.render' requires a 'done' callback [done-invalid]`);
     return renderFunc(file, context, done);
   };
-};
+}

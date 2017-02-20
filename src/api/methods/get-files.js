@@ -1,10 +1,10 @@
 module.exports = function () {
   return {
 
-    name: 'getComponents',
+    name: 'getFiles',
 
     handler: function () {
-      return this.components;
+      return this.$data.files;
     }
 
   };

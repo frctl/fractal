@@ -1,4 +1,3 @@
-const path = require('path');
 const _ = require('lodash');
 const multimatch = require('multimatch');
 
@@ -16,7 +15,7 @@ module.exports = function (opts = {}) {
     match: opts.config || function (file) {
       return file.isFile && multimatch([file.relative], ['**/?(*.)config.*'], matchOpts).length;
     }
-  },{
+  }, {
     name: 'readme',
     match: opts.readme || function (file) {
       return file.isFile && multimatch([file.relative], ['**/readme.*'], matchOpts).length;

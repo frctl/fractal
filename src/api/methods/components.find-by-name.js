@@ -1,9 +1,6 @@
 const _ = require('lodash');
-const utils = require('@frctl/utils');
-const multimatch = require('multimatch');
 
-module.exports = function(){
-
+module.exports = function () {
   return {
 
     name: 'components.findByName',
@@ -13,5 +10,4 @@ module.exports = function(){
     }
 
   };
-
 };

@@ -1,6 +1,5 @@
 module.exports = {
 
-  src: null,
-  adapters: [],
+  src: null
 
 };
