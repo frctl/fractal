@@ -9,17 +9,17 @@ module.exports = function (opts = {}) {
   const roles = [{
     name: 'view',
     match: opts.view || function (file) {
-      return file.isFile && multimatch([file.path], ['**/?(*.)view.*'], matchOpts).length;
+      return file.isFile && multimatch([file.relative], ['**/?(*.)view.*'], matchOpts).length;
     }
   }, {
     name: 'config',
     match: opts.config || function (file) {
-      return file.isFile && multimatch([file.path], ['**/?(*.)config.*'], matchOpts).length;
+      return file.isFile && multimatch([file.relative], ['**/?(*.)config.*'], matchOpts).length;
     }
   },{
     name: 'readme',
     match: opts.readme || function (file) {
-      return file.isFile && multimatch([file.path], ['**/readme.*'], matchOpts).length;
+      return file.isFile && multimatch([file.relative], ['**/readme.*'], matchOpts).length;
     }
   }, {
     name: 'component',

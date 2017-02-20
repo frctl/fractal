@@ -1,15 +1,19 @@
 const _ = require('lodash');
 
-module.exports = {
+module.exports = function(){
 
-  name: 'getAll',
+  return {
 
-  handler: function () {
-    const all = [];
-    for (const set of _.values(this.$data)) {
-      result.concat(set);
+    name: 'getAll',
+
+    handler: function () {
+      const all = [];
+      for (const set of _.values(this.$data)) {
+        result.concat(set);
+      }
+      return all;
     }
-    return all;
-  }
+
+  };
 
 };

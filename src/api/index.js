@@ -4,7 +4,7 @@ const Api = require('@frctl/internals').Api;
 
 const bundledMethods = reqAll('./methods');
 
-module.exports = function(){
+module.exports = function(fractal){
 
   const api = new Api();
 
@@ -20,7 +20,8 @@ module.exports = function(){
     return this.$data.files;
   });
 
-  for (const method of _.values(bundledMethods)) {
+  for (const methodFactory of _.values(bundledMethods)) {
+    const method = methodFactory(fractal);
     api.addMethod(method.name, method.handler);
   }
 

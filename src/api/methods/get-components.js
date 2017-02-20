@@ -1,9 +1,13 @@
-module.exports = {
+module.exports = function(){
 
-  name: 'getComponents',
+  return {
 
-  handler: function () {
-    return this.components;
-  }
+    name: 'getComponents',
+
+    handler: function () {
+      return this.components;
+    }
+
+  };
 
 };

@@ -1,12 +1,17 @@
+const _ = require('lodash');
 const utils = require('@frctl/utils');
 const multimatch = require('multimatch');
 
-module.exports = {
+module.exports = function(){
 
-  name: 'components.findByName',
+  return {
 
-  handler: function (paths) {
-    return _.find(this.components, {name: args[0]});
-  }
+    name: 'components.findByName',
+
+    handler: function (name) {
+      return _.find(this.components, {name: name});
+    }
+
+  };
 
 };

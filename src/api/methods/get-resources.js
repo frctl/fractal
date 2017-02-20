@@ -1,9 +1,13 @@
-module.exports = {
+module.exports = function(){
 
-  name: 'getResources',
+  return {
 
-  handler: function () {
-    return this.$data.resources;
-  }
+    name: 'getResources',
+
+    handler: function () {
+      return this.$data.resources;
+    }
+
+  };
 
 };

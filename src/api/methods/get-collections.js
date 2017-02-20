@@ -1,9 +1,13 @@
-module.exports = {
+module.exports = function(){
 
-  name: 'getCollections',
+  return {
 
-  handler: function () {
-    return this.collections;
-  }
+    name: 'getCollections',
+
+    handler: function () {
+      return this.collections;
+    }
+
+  };
 
 };

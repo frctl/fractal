@@ -4,17 +4,17 @@ const EventEmitter = require('eventemitter2').EventEmitter2;
 const SourceSet = require('@frctl/internals').SourceSet;
 const utils = require('@frctl/utils');
 const fs = require('@frctl/fs');
-const renderExtension = require('@frctl/fractal-extension-render');
 const assert = require('check-types').assert
 const defaults = require('../config');
 const api = require('./api');
-const compiler = require('./compiler');
-const merge = require('./compiler/merge-data');
+const compiler = require('./compiler/compiler');
+const merge = require('./compiler/merge');
+const registerAdapter = require('./render/register');
 
 const refs = {
   data: new WeakMap(),
   sources: new WeakMap(),
-  renderer: new WeakMap(),
+  adapters: new WeakMap(),
   state: new WeakMap(),
 };
 
@@ -31,8 +31,8 @@ class Fractal extends EventEmitter {
     sources.setDefaultCompiler(compiler(config.compiler));
 
     refs.sources.set(this, sources);
-    refs.data.set(this, api());
-    refs.renderer.set(this, renderExtension()(this));
+    refs.adapters.set(this, new Map());
+    refs.data.set(this, api(this));
 
     if (config.src) {
       this.addSource(config.src);
@@ -46,6 +46,10 @@ class Fractal extends EventEmitter {
 
   get data() {
     return refs.data.get(this).from(refs.state.get(this));
+  }
+
+  get adapters() {
+    return Array.from(refs.adapters.get(this).keys());
   }
 
   addPlugin(...args) {
@@ -65,7 +69,17 @@ class Fractal extends EventEmitter {
   }
 
   addAdapter(adapter){
-    refs.renderer.get(this).addAdapter(adapter);
+
+    // if (typeof adapter === 'string') {
+    //   try {
+    //     adapter = require(`./src/adapters/${adapter}`)(opts);
+    //   } catch (err) {
+    //     adapter = require(adapter);
+    //   }
+    // }
+
+    registerAdapter(adapter, this);
+    refs.adapters.get(this).set(adapter.name, adapter);
     return this;
   }
 

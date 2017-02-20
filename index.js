@@ -11,4 +11,4 @@ module.exports = function(config = {}){
 
 module.exports.Fractal = Fractal;
 module.exports.api = require('./src/api');
-module.exports.compiler = require('./src/compiler');
+module.exports.compiler = require('./src/source/compiler');
