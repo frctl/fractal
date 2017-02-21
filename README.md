@@ -13,11 +13,11 @@ const parser = fractal({
   src: './path/to/src'
 })
 
-parser.parse(function(err, data) {
+parser.parse(function(err, library) {
   if (err) {
     return console.log(err);
   }
-  for (const component of data.getComponents()) {
+  for (const component of library.getComponents()) {
     console.log(component.name);
   }
 });
@@ -34,7 +34,7 @@ parser.parse(function(err, data) {
 
 * [Component library structure and file naming conventions](/docs/directory-structure.md)
 * [Parser API](/docs/parser.md)
-* [Data API](/docs/data.md)
+* [Library API](/docs/library.md)
 
 ## Installation
 

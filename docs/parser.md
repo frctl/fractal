@@ -16,20 +16,20 @@ const parser = fractal({
 
 ### .parse(callback)
 
-Parse the components directory. Accepts a `callback` function that is called once the parsing process is complete.
+Parse the components directory. Accepts a `callback` function that is called once the parsing process is complete. If not `callback` function is provided, this will instead return a `Promise` that will be resolved when the parsing step is complete.
 
-#### callback(err, data)
+#### callback(err, library)
 
 * `err`: An `Error` instance if an error has occurred during parsing, otherwise `null`
-* `data`: An data object that exposes a set of registered methods bound to the data returned from the parsing step.
+* `library`: An library API object. See the [Library API](/docs/library.md) documentation for more details.
 
 ```js
-parser.parse(function(err, data) {
+parser.parse(function(err, library) {
   if (err) {
     return console.log(err); // an error has occurred
   }
-  // `data` is an data API object - see below for more details
-  console.log(data.getComponents());
+  // `library` is an library API object - see below for more details
+  console.log(library.getComponents());
 });
 ```
 
