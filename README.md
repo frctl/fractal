@@ -1,70 +1,46 @@
 # Fractal
 
-Fractal provides a programmatic API for working with filesystem-based component libraries.
+Fractal provides a programmatic API for parsing and querying filesystem-based component libraries.
 
-It features a plugin-based parsing engine to provide simple but powerful customisation and can be used to help you build, document and maintain component-library based projects from initial conception right through to production.
+It features a plugin-based engine to provide simple but powerful customisation and can be used to help you build, document and maintain component-library based projects from initial conception right through to production.
 
 > _This is a WIP v2 rewrite of Fractal and should not be considered stable. Use at your own risk!_
-
-## Installation
-
-```bash
-npm i @frctl/fractal --save
-```
-
-## Usage
 
 ```js
 const fractal = require('@frctl/fractal');
 
-const components = fractal({
-  src: './path/to/components'
+const parser = fractal({
+  src: './path/to/src'
 })
 
-components.parse((err, api) => {
+parser.parse(function(err, data) {
   if (err) {
     return console.log(err);
   }
-  for (const component of api.getComponents()) {
+  for (const component of data.getComponents()) {
     console.log(component.name);
   }
 });
 
 ```
 
-## API
+<!-- ## v2 Key goals
 
-### fractal(config)
+* Simplify and clarify component library structure and naming conventions
+* Provide support for multiple concurrent template/view languages
+* Add a robust plugin/extension system to allow for deep customisation -->
 
-Instantiate a new Fractal instance.
+## Documentation
 
-* `config.src`: Path to the components directory, relative to the `cwd`.
+* [Component library structure and file naming conventions](/docs/directory-structure.md)
+* [Parser API](/docs/parser.md)
+* [Data API](/docs/data.md)
 
-### .parse(callback)
+## Installation
 
-Parse the components directory. Accepts a `callback` function that is called once the parsing process is complete.
-
-#### callback(err, data)
-
-* `err`: An `Error` instance if an error has occurred during parsing, otherwise `null`
-* `data`: An data object that exposes a set of registered methods bound to the data returned from the parsing step.
-
-### .addPlugin(plugin)
-
-Add a parser plugin to manipulate the component objects.
-
-### .addMethod(name, method)
-
-Register a method that will be made available to the `api` object argument to the `.parse()` method callback if successful.
-
-### .addAdapter(adapter)
-
-Add a template engine adapter.
-
-### .addExtension(extension)
-
-Add an extension. Fractal extensions can add plugins, methods and/or more to the base Fractal instance.
-
+```bash
+npm i @frctl/fractal@v2 --save
+```
 
 ## Requirements
 
