@@ -3,12 +3,9 @@ const adapterPlugin = require('./plugin');
 
 const assert = check.assert;
 
-const adapterDuck = {name: 'name', render: function () {}};
 const fileDuck = {adapter: 'adapter', role: 'role', contents: Buffer.from('')};
 
 module.exports = function register(adapter, fractal) {
-  assert.like(adapter, adapterDuck, `'adapter' must be an object with the following properties: [name, render] [adapter-invalid]`);
-
   fractal.addPlugin(adapterPlugin({
     name: adapter.name,
     match: adapter.match

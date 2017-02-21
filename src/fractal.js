@@ -1,7 +1,6 @@
 /* eslint "import/no-dynamic-require": "off" */
 
 const _ = require('lodash');
-const extractArgs = require('extract-opts');
 const EventEmitter = require('eventemitter2').EventEmitter2;
 const SourceSet = require('@frctl/internals').SourceSet;
 const utils = require('@frctl/utils');
@@ -17,7 +16,8 @@ const refs = {
   api: new WeakMap(),
   sources: new WeakMap(),
   adapters: new WeakMap(),
-  state: new WeakMap()
+  state: new WeakMap(),
+  config: new WeakMap()
 };
 
 class Fractal extends EventEmitter {
@@ -36,9 +36,10 @@ class Fractal extends EventEmitter {
     });
 
     config = utils.defaultsDeep(config || {}, defaults);
+    refs.config.set(this, config);
 
-    const sources = new SourceSet();
-    sources.setDefaultParser(parser(config.parser));
+    const sources = config.sources || new SourceSet();
+    sources.setDefaultParser(parser());
 
     refs.sources.set(this, sources);
     refs.adapters.set(this, new Map());
@@ -48,25 +49,7 @@ class Fractal extends EventEmitter {
       this.addSource(config.src);
     }
 
-    refs.state.set(this, {
-      files: [],
-      components: [],
-      collections: []
-    });
-  }
-
-  /**
-   * Get a source API object
-   */
-  get api() {
-    return refs.api.get(this).from(refs.state.get(this));
-  }
-
-  /**
-   * Get a list of registered render adapter names
-   */
-  get adapters() {
-    return Array.from(refs.adapters.get(this).keys());
+    refs.state.set(this, config.initialState || {});
   }
 
   /**
@@ -76,9 +59,10 @@ class Fractal extends EventEmitter {
    * @param  {string} [processor=components] The entity set to add the plugin to
    * @return {Fractal} Returns a reference to the Fractal instance
    */
-  addPlugin(...args) {
-    args.push('components');
-    refs.sources.get(this).addPlugin(...args);
+  addPlugin(plugin, target = 'components') {
+    assert.function(plugin, `'Fractal.addPlugin' plugin argument must be a function [plugin-invalid]`);
+    assert.maybe.string(target, `'Fractal.addPlugin' target argument must be a string or undefined [target-invalid]`);
+    refs.sources.get(this).addPlugin(plugin, target);
     return this;
   }
 
@@ -90,6 +74,8 @@ class Fractal extends EventEmitter {
    * @return {Fractal} Returns a reference to the Fractal instance
    */
   addMethod(name, handler) {
+    assert.string(name, `'Fractal.addMethod' name argument must be a string [name-invalid]`);
+    assert.function(handler, `'Fractal.addMethod' handler argument must be a function [handler-invalid]`);
     refs.api.get(this).addMethod(name, handler);
     return this;
   }
@@ -101,6 +87,7 @@ class Fractal extends EventEmitter {
    * @return {Fractal} Returns a reference to the Fractal instance
    */
   addExtension(extension) {
+    assert.function(extension, `'Fractal.addExtension' handler argument must be a function [extension-invalid]`);
     extension(this);
     return this;
   }
@@ -108,17 +95,15 @@ class Fractal extends EventEmitter {
   /**
    * Add a render adapter
    *
-   * @param  {object} adapter The adapter to register
+   * @param  {object|string} adapter The adapter object or name of the pre-defined adapter to register
+   * @param  {opts} adapter The adapter to register
    * @return {Fractal} Returns a reference to the Fractal instance
    */
-  addAdapter(adapter) {
-    if (typeof adapter === 'string') {
-      if (adapters[adapter]) {
-        adapter = adapters[adapter];
-      } else {
-        adapter = require(adapter);
-      }
+  addAdapter(adapter, opts = {}) {
+    if (typeof adapter === 'string' && adapters[adapter]) {
+      adapter = adapters[adapter](opts);
     }
+    assert.like(adapter, {name: 'name', render: function () {}}, `'adapter' must be an object with 'name' and 'render' properties [adapter-invalid]`);
     registerAdapter(adapter, this);
     refs.adapters.get(this).set(adapter.name, adapter);
     return this;
@@ -138,25 +123,45 @@ class Fractal extends EventEmitter {
   /**
    * Read and process all registered sources
    *
-   * @param  {object} [opts] An options object
    * @param  {function} [callback] A callback function
    * @return {Promise|undefined} Returns a Promise if no callback is provided
    */
-  parse(...args) {
+  parse(callback) {
     this.emit('parse.start');
-    const [, callback] = extractArgs(...args);
     const sources = refs.sources.get(this);
     if (!sources.size) {
-      return utils.promiseOrCallback(this.api, callback);
+      this.emit('parse.complete', this.state);
+      return utils.promiseOrCallback(this.state, callback);
     }
     const result = sources.parse().then(dataSets => {
       return merge(dataSets);
     }).then(data => {
       refs.state.set(this, data);
-      this.emit('parse.complete', this.api);
-      return this.api;
+      this.emit('parse.complete', this.state);
+      return this.state;
     });
     return utils.promiseOrCallback(result, callback);
+  }
+
+  /**
+   * Get a library state/API object
+   */
+  get state() {
+    return refs.api.get(this).from(refs.state.get(this));
+  }
+
+  /**
+   * Get a list of registered render adapter names
+   */
+  get adapters() {
+    return Array.from(refs.adapters.get(this).keys());
+  }
+
+  /**
+   * Return the configuration object
+   */
+  get config() {
+    return refs.config.get(this);
   }
 
 }

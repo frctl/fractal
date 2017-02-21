@@ -1,5 +1,11 @@
 module.exports = {
 
-  src: null
+  src: null,
+
+  initialState: {
+    files: [],
+    components: [],
+    collections: []
+  }
 
 };
