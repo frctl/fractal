@@ -3,7 +3,7 @@ const _ = require('lodash');
 module.exports = function (fractal) {
   return {
 
-    name: 'getViewFor',
+    name: 'findView',
 
     handler: function (target, adapter) {
       const views = this.getViewsFor(target);
