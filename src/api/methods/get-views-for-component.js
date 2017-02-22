@@ -3,7 +3,7 @@ const _ = require('lodash');
 module.exports = function () {
   return {
 
-    name: 'getViewsFor',
+    name: 'getViewsForComponent',
 
     handler: function (target) {
       if (typeof target === 'string') {

@@ -3,7 +3,7 @@ module.exports = function () {
 
     name: 'render',
 
-    handler(target, opts, done) {
+    handler() {
       done(new Error('The root render method has yet been implemented'));
     }
 

@@ -50,14 +50,14 @@ Returns an array of all view template files.
 const views = library.getViews();
 ```
 
-### .getViewsFor(component)
+### .getViewsForComponent(component)
 
 Returns an array of all view files for a component.
 
 * `component`: a component name or a component object [required]
 
 ```js
-const views = library.getViewsFor('button');
+const views = library.getViewsForComponent('button');
 ```
 
 ### .findView(component, adapterName)
@@ -68,7 +68,26 @@ Find the view template for a component that is used by the specified adapter. Re
 * `adapterName`: name of a registered template engine adapter [required]
 
 ```js
-const nunjucksView = library.findView('button', 'nunjucks');
+const nunjucksButton = library.findView('button', 'nunjucks');
+```
+
+### .renderView(view, context, callback)
+
+Render a view file to HTML.
+
+* `view`: a view template file [required]
+* `context`: object of data to use when rendering the view [required]
+* `callback`: callback function, called when rendering is complete or an error has occurred [required]
+
+```js
+const nunjucksButton = library.findView('button', 'nunjucks');
+
+library.renderView(nunjucksButton, {text: 'Click here!'}, function(err, html){
+  if (err) {
+    return console.log(err);
+  }
+  console.log(html); // log the HTML of the rendered button
+});
 ```
 
 ### .components.findByName(name)

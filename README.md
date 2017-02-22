@@ -1,6 +1,6 @@
 # Fractal
 
-Fractal provides a programmatic API for parsing and querying filesystem-based component libraries.
+Fractal is a tool for parsing and querying filesystem-based component libraries.
 
 It features a plugin-based engine to provide simple but powerful customisation and can be used to help you build, document and maintain component-library based projects from initial conception right through to production.
 
@@ -11,7 +11,7 @@ const fractal = require('@frctl/fractal');
 
 const parser = fractal({
   src: './path/to/src'
-})
+});
 
 parser.parse(function(err, library) {
   if (err) {
