@@ -35,6 +35,7 @@ parser.parse(function(err, library) {
 * [Component library structure and file naming conventions](/docs/directory-structure.md)
 * [Parser API](/docs/parser.md)
 * [Library API](/docs/library.md)
+* [Data schema](/docs/data.md)
 
 ## Installation
 
