@@ -61,6 +61,11 @@ An example of the default properties available for each type of object is presen
   dirname: "/path/to/project/files/units/@button", // [READ-ONLY]
   ext: ".njk", // [READ-ONLY]
   basename: "view.njk", // [READ-ONLY]
-  stem: "view", // [READ-ONLY]
+  stem: "view", // [READ-ONLY],
+  isFile: true,
+  isDirectory: false,
+  mtime: {
+    // Date object instance
+  }
 }
 ```
