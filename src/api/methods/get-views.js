@@ -5,7 +5,7 @@ module.exports = function () {
 
     name: 'getViews',
 
-    handler: function (target) {
+    handler: function () {
       return this.files.filter(file => file.role === 'view');
     }
 
