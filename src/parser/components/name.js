@@ -7,7 +7,6 @@ module.exports = function () {
         component.name = component.config.name;
       }
       component.name = _.kebabCase(component.name.replace(/^[^a-zA-Z]/, ''));
-      component.handle = `@${component.name}`;
     });
 
     done();

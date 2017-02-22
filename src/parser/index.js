@@ -58,7 +58,7 @@ module.exports = function (opts = {}) {
         name: file.name,
         role: file.role,
         label: utils.titlize(file.name),
-        root: file,
+        main: file,
         files: getFiles(file.role, file.path)
       };
     }
@@ -75,7 +75,7 @@ module.exports = function (opts = {}) {
         });
       }
       unAssignedFiles = _.difference(unAssignedFiles, files);
-      return files.map(file => {
+      return files.filter(file => file.isFile).map(file => {
         file.scope = role;
         return file;
       });

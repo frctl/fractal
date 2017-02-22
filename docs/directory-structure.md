@@ -2,7 +2,7 @@
 
 Fractal v2 introduces a new set of rules for the way that files and folders should be named within your component library in order to reduce ambiguity in the parsing process.
 
-> Note that these changes are _not_ backwards-compatible with the v1-style component library structure!
+> Note that these changes are _not_ backwards-compatible with the v1-style component library structure
 
 An example component library structure might look like this:
 
@@ -12,6 +12,7 @@ An example component library structure might look like this:
 │   │   └── @button
 │   │       ├── button.css
 │   │       ├── config.js
+│   │       ├── view.njk
 │   │       └── view.hbs
 │   └── 02-patterns
 │       ├── config.json
@@ -25,8 +26,18 @@ An example component library structure might look like this:
 
 ## Components
 
-A component is **a directory whose name begins with an `@` symbol**. In the example above there are therefore three components defined: `button`, `card` and `modal`.
+A component is a **directory whose name begins with an `@` symbol**. In the example above there are therefore three components defined: `button`, `card` and `modal`.
+
+By default, the following files within a component directory have 'special' meaning to Fractal:
+
+* `config.{js|json|yml}`: Configuration file.
+* `view.*`: View template file. A component can have multiple views in order to support different template engines.
+* `README.md`: Markdown document containing usage info/docs for the component.
+
+Any other files found within the component will be treated as resources of the component.
 
 ## Collections
 
-A collection is defined as a **directory that contains at least one other sub-collection or component**. Collections are used to group components together.
+A collection is a **directory that contains at least one other sub-collection or component**. Collections are used to group components together.
+
+A collection directory may contain a configuration file (`config.{js|json|yml}`) for customising its behaviour.
