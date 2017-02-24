@@ -25,7 +25,6 @@
   "dependencies": {
     "@frctl/adapters": "git+ssh://git@github.com/frctl/fractal-adapter-render-bundle",
     "@frctl/fractal-plugin-files-parse-config": "github.com:frctl/fractal-plugin-files-parse-config.git",
-    "@frctl/fs": "github.com:frctl/fs.git",
     "@frctl/internals": "github.com:frctl/internals.git",
     "bluebird": "^3.4.7",
     "check-types": "^7.1.5",
@@ -37,6 +36,7 @@
   },
   "devDependencies": {
     "@frctl/eslint-config-frctl": "0.1.0",
+    "@frctl/ffs": "^0.2.0",
     "@frctl/utils": "^0.4.0",
     "chai": "^3.5.0",
     "jsdoc": "^3.4.3",
