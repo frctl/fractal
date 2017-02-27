@@ -56,13 +56,13 @@ class Fractal extends EventEmitter {
    * Add a plugin to the parser
    *
    * @param  {function} plugin Parser plugin to add
-   * @param  {string} [processor=components] The entity set to add the plugin to
+   * @param  {string} [stack=components] The entity set to add the plugin to
    * @return {Fractal} Returns a reference to the Fractal instance
    */
-  addPlugin(plugin, target = 'components') {
+  addPlugin(plugin, stack = 'components') {
     assert.function(plugin, `'Fractal.addPlugin' plugin argument must be a function [plugin-invalid]`);
-    assert.maybe.string(target, `'Fractal.addPlugin' target argument must be a string or undefined [target-invalid]`);
-    refs.sources.get(this).addPlugin(plugin, target);
+    assert.maybe.string(stack, `'Fractal.addPlugin' stack argument must be a string or undefined [stack-invalid]`);
+    refs.sources.get(this).addPlugin(plugin, stack);
     return this;
   }
 

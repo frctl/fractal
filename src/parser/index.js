@@ -15,14 +15,14 @@ module.exports = function (opts = {}) {
   const state = {};
 
   for (const name of Object.keys(plugins)) {
-    parser.addProcessor(name, plugins[name](opts[name]), state);
+    parser.addStack(name, plugins[name](opts[name]), state);
   }
 
   /**
    * Run file transformations
    */
   parser.addStep(function (files) {
-    return this.getProcessor('files').process(files).then(files => {
+    return this.getStack('files').process(files).then(files => {
       state.files = files.filter(file => file.isFile);
       return files;
     });
@@ -89,7 +89,7 @@ module.exports = function (opts = {}) {
    */
   parser.addStep(function (entities) {
     return Bluebird.mapSeries(['collections', 'components'], key => {
-      return this.getProcessor(key).process(entities[key]).then(result => {
+      return this.getStack(key).process(entities[key]).then(result => {
         state[key] = result;
         return result;
       });

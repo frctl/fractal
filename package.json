@@ -25,7 +25,8 @@
   "dependencies": {
     "@frctl/adapters": "git+ssh://git@github.com/frctl/fractal-adapter-render-bundle",
     "@frctl/fractal-plugin-files-parse-config": "github.com:frctl/fractal-plugin-files-parse-config.git",
-    "@frctl/internals": "github.com:frctl/internals.git",
+    "@frctl/internals": "^0.2.0",
+    "@frctl/utils": "^0.4.0",
     "bluebird": "^3.4.7",
     "check-types": "^7.1.5",
     "eventemitter2": "^3.0.0",

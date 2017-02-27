@@ -1,7 +1,7 @@
 /* eslint no-unused-expressions : "off", handle-callback-err: "off", new-cap: "off" */
 
 const Parser = require('@frctl/internals').Parser;
-const Processor = require('@frctl/internals').Processor;
+const Stack = require('@frctl/internals').Stack;
 const fs = require('@frctl/ffs');
 const expect = require('@frctl/utils/test').expect;
 const parser = require('../src/parser');
@@ -30,10 +30,10 @@ describe('parser()', function () {
     expect(parser()).to.be.instanceof(Parser);
   });
 
-  it(`has processors for files, components and collections registered`, function () {
+  it(`has stacks for files, components and collections registered`, function () {
     const ps = parser();
-    for (const processor of ['files', 'components', 'collections']) {
-      expect(ps.getProcessor(processor)).to.be.instanceof(Processor);
+    for (const stack of ['files', 'components', 'collections']) {
+      expect(ps.getStack(stack)).to.be.instanceof(Stack);
     }
   });
 

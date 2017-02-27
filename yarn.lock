@@ -48,25 +48,11 @@
     pify "^2.3.0"
     req-all "^1.0.0"
 
-"@frctl/fs@git+ssh://git@github.com/frctl/fs":
+"@frctl/internals@^0.2.0":
   version "0.2.0"
-  resolved "git+ssh://git@github.com/frctl/fs#20abeafe1895bc7c15391b32bcded74e8f04db12"
+  resolved "https://registry.yarnpkg.com/@frctl/internals/-/internals-0.2.0.tgz#6f6364b3014e1a0a3b89ec8eae53781657cdc996"
   dependencies:
-    "@frctl/file" "^0.5.0"
-    "@frctl/readr" "^0.2.1"
-    "@frctl/utils" "^0.4.0"
-    bluebird "^3.4.7"
-    chokidar "^1.6.1"
-    clone-buffer "^1.0.0"
-    extract-opts "^3.3.1"
-    fs-extra "^2.0.0"
-    lodash "^4.17.4"
-
-"@frctl/internals@github.com:frctl/internals.git":
-  version "0.0.1"
-  resolved "github.com:frctl/internals.git#a6d11ef4afe60b1c5b646ba32d5068c6d8b65b7f"
-  dependencies:
-    "@frctl/fs" "git+ssh://git@github.com/frctl/fs"
+    "@frctl/ffs" "^0.2.0"
     "@frctl/utils" "^0.4.0"
     async-done "^1.2.2"
     bluebird "^3.4.7"
@@ -782,17 +768,11 @@ debug-log@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/debug-log/-/debug-log-1.0.1.tgz#2307632d4c04382b8df8a32f70b895046d52745f"
 
-debug@2.2.0, debug@~2.2.0:
+debug@2.2.0, debug@^2.1.1, debug@^2.2.0, debug@~2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.2.0.tgz#f87057e995b1a1f6ae6a4960664137bc56f039da"
   dependencies:
     ms "0.7.1"
-
-debug@^2.1.1, debug@^2.2.0:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.1.tgz#79855090ba2c4e3115cc7d8769491d58f0491351"
-  dependencies:
-    ms "0.7.2"
 
 decamelize@^1.0.0, decamelize@^1.1.1, decamelize@^1.1.2:
   version "1.2.0"
@@ -2403,10 +2383,6 @@ module-not-found-error@^1.0.0:
 ms@0.7.1:
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/ms/-/ms-0.7.1.tgz#9cd13c03adbff25b65effde7ce864ee952017098"
-
-ms@0.7.2:
-  version "0.7.2"
-  resolved "https://registry.yarnpkg.com/ms/-/ms-0.7.2.tgz#ae25cf2512b3885a1d95d7f037868d8431124765"
 
 multimatch@^2.1.0:
   version "2.1.0"

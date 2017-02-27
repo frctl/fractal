@@ -97,9 +97,9 @@ describe('Fractal', function () {
       const fractal = new Fractal(validConfig);
       expect(() => fractal.addPlugin()).to.throw(TypeError, `[plugin-invalid]`);
       expect(() => fractal.addPlugin(123)).to.throw(TypeError, `[plugin-invalid]`);
-      expect(() => fractal.addPlugin(() => {}, 123)).to.throw(TypeError, `[target-invalid]`);
+      expect(() => fractal.addPlugin(() => {}, 123)).to.throw(TypeError, `[stack-invalid]`);
       expect(() => fractal.addPlugin(() => {})).to.not.throw(TypeError, `[plugin-invalid]`);
-      expect(() => fractal.addPlugin(() => {}, 'files')).to.not.throw(TypeError, `[target-invalid]`);
+      expect(() => fractal.addPlugin(() => {}, 'files')).to.not.throw(TypeError, `[stack-invalid]`);
     });
 
     it(`adds a plugin to the source set`, function () {
@@ -115,7 +115,7 @@ describe('Fractal', function () {
       expect(stub.calledWith(plugin)).to.be.true;
     });
 
-    it(`defaults to applying the plugin to the components processor if another is not specified`, function () {
+    it(`defaults to applying the plugin to the components stack if another is not specified`, function () {
       const sourceSet = new SourceSet();
       const stub = sinon.stub(sourceSet, 'addPlugin');
       const fractal = new Fractal({

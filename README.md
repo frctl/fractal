@@ -6,6 +6,9 @@ It features a plugin-based engine to provide simple but powerful customisation a
 
 > _This is a WIP v2 rewrite of Fractal and should not be considered stable. Use at your own risk!_
 
+[![Build Status](https://img.shields.io/travis/frctl/fractal/v2.svg?style=flat-square)](https://travis-ci.org/frctl/fractal)
+[![NPM Version](https://img.shields.io/npm/v/@frctl/fractal.svg?style=flat-square)](https://www.npmjs.com/package/@frctl/fractal)
+
 ```js
 const fractal = require('@frctl/fractal');
 
