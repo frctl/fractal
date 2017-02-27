@@ -36,9 +36,9 @@
   dependencies:
     pify "^2.3.0"
 
-"@frctl/fractal-plugin-files-parse-config@github.com:frctl/fractal-plugin-files-parse-config.git":
-  version "0.0.1"
-  resolved "github.com:frctl/fractal-plugin-files-parse-config.git#d3a124176ba464dc7f0bef6748910242d1ba7609"
+"@frctl/fractal-plugin-files-parse-config@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@frctl/fractal-plugin-files-parse-config/-/fractal-plugin-files-parse-config-0.1.0.tgz#a4d7b0849d620d7bf7ef4bd8e35ff0fb502ff113"
   dependencies:
     "@frctl/utils" "^0.3.1"
     check-types "^7.1.2"
