@@ -2,7 +2,7 @@
 
 Fractal is a tool for parsing and querying filesystem-based component libraries.
 
-It features a plugin-based engine to provide simple but powerful customisation and can be used to help you build, document and maintain component-library based projects from initial conception right through to production.
+It features a plugin-based parsing engine and a dynamic API builder to allow you to customise it to the needs of your particular project.
 
 > _This is a WIP v2 rewrite of Fractal and should not be considered stable. Use at your own risk!_
 
