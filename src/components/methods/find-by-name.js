@@ -3,10 +3,10 @@ const _ = require('lodash');
 module.exports = function () {
   return {
 
-    name: 'components.findByName',
+    name: 'findByName',
 
     handler: function (name) {
-      return _.find(this.components, {name: name});
+      return _.find(this.all(), {name: name});
     }
 
   };

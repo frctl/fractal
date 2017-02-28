@@ -1,6 +1,6 @@
-# Data schema
+# Entity data schemas
 
-All components, collections and files in the component library are represented as plain JavaScript objects. These objects are what is returned when calling [library API](/docs/library.md) methods such as `.getComponents()`.
+All components, collections and files in the component library are represented as plain JavaScript objects. These objects are what is returned when calling [Entity API](/docs/entity-apis.md) methods such as `components.getAll()`.
 
 An example of the default properties available for each type of object is presented below.
 
@@ -20,7 +20,7 @@ An example of the default properties available for each type of object is presen
   files: [
     // array of files contained within this component
   ],
-  main: {
+  dir: {
     // directory that this component was created from
   }
 }
@@ -40,13 +40,15 @@ An example of the default properties available for each type of object is presen
   files: [
     // array of files contained within this collection
   ],
-  main: {
+  dir: {
     // directory that this collection was created from
   }
 }
 ```
 
 ## File
+
+Files are represented by [File objects](https://github.com/frctl/file). Some File properties are dynamically generated from the file's `path` and so are read-only.
 
 ```js
 {

@@ -4,10 +4,10 @@ const multimatch = require('multimatch');
 module.exports = function () {
   return {
 
-    name: 'files.filterByPath',
+    name: 'filterByPath',
 
     handler: function (paths) {
-      return this.files.filter(file => {
+      return this.$data.filter(file => {
         return multimatch([file.relative], utils.toArray(paths)).length;
       });
     }

@@ -33,6 +33,10 @@ module.exports = function (opts = {}) {
   }];
 
   return function identifyRole(files, done) {
+    files.forEach(file => {
+      file.scope = 'global';
+    });
+
     for (const role of roles) {
       files.filter(role.match).forEach(file => {
         file.role = role.name;

@@ -2,43 +2,39 @@
 
 Fractal is a tool for parsing and querying filesystem-based component libraries.
 
-It features a plugin-based parsing engine and a dynamic API builder to allow you to customise it to the needs of your particular project.
+> _This is a developer preview of the core Fractal v2 component library parser, and should not be considered stable or complete. You can get an overview of the architectural and conceptual changes coming in Fractal v2 in the '[Fractal Iterations](https://medium.com/@frctl/fractal-iterations-c9c42e19d3e0)'' article on Medium, or jump into the Fractal [Slack community](http://slack.fractal.build) for further discussion._
 
-> _This is a WIP v2 rewrite of Fractal and should not be considered stable. Use at your own risk!_
+Fractal features a **plugin-based parsing engine** and a dynamic **entity API builder** to make it easily customisable to your needs. It is intended to be used as a dependency in tools such as static site builders, build systems and even in production applications to help deeply integrate your components into all stages of the development process.
 
 [![Build Status](https://img.shields.io/travis/frctl/fractal/v2.svg?style=flat-square)](https://travis-ci.org/frctl/fractal)
-[![NPM Version](https://img.shields.io/npm/v/@frctl/fractal.svg?style=flat-square)](https://www.npmjs.com/package/@frctl/fractal)
+<!-- [![NPM Version](https://img.shields.io/npm/v/@frctl/fractal.svg?style=flat-square)](https://www.npmjs.com/package/@frctl/fractal) -->
 
 ```js
-const fractal = require('@frctl/fractal');
+const Fractal = require('@frctl/fractal');
 
-const parser = fractal({
+const fractal = Fractal({
   src: './path/to/src'
 });
 
-parser.parse(function(err, library) {
+fractal.parse(function(err, components, files) {
   if (err) {
     return console.log(err);
   }
-  for (const component of library.getComponents()) {
+  for (const component of components.getAll()) {
     console.log(component.name);
   }
 });
 
 ```
 
-<!-- ## v2 Key goals
-
-* Simplify and clarify component library structure and naming conventions
-* Provide support for multiple concurrent template/view languages
-* Add a robust plugin/extension system to allow for deep customisation -->
-
 ## Documentation
 
+Fractal v2 docs are currently a work in progress, but the following should be enough to get started if you are feeling adventurous:
+
 * [Component library structure and file naming conventions](/docs/directory-structure.md)
-* [Parser API](/docs/parser.md)
-* [Library API](/docs/library.md)
-* [Data schema](/docs/data.md)
+* [Fractal API](/docs/fractal.md)
+* [Entity APIs (components, files)](/docs/entity-apis.md)
+* [Entity data schemas (components, collections, files)](/docs/entity-schemas.md)
 
 ## Installation
 

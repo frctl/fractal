@@ -1,10 +1,11 @@
+
 module.exports = function () {
   return {
 
-    name: 'getFiles',
+    name: 'getAll',
 
     handler: function () {
-      return this.$data.files;
+      return this.$data;
     }
 
   };

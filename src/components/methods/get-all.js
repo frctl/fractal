@@ -1,10 +1,11 @@
+
 module.exports = function () {
   return {
 
-    name: 'getCollections',
+    name: 'getAll',
 
     handler: function () {
-      return this.collections;
+      return this.$data;
     }
 
   };
