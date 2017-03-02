@@ -1,8 +1,14 @@
 const utils = require('@frctl/utils');
+const check = require('check-types');
 
-module.exports = function (opts = {}) {
-  const adapterName = opts.name;
-  const match = opts.match;
+const assert  = check.assert;
+
+module.exports = function (adapter) {
+  if (check.null(adapter) || check.undefined(adapter)) assert(false, `'adapter' must be an object with 'name' and 'render' properties [adapter-invalid]`, TypeError);
+  assert.like(adapter, {name: 'name', render: function () {}}, `'adapter' must be an object with 'name' and 'render' properties [adapter-invalid]`);
+
+  const adapterName = adapter.name;
+  const match = adapter.match;
   let fileFilter = () => true;
 
   if (typeof match === 'string' || Array.isArray(match)) {

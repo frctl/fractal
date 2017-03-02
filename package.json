@@ -20,7 +20,8 @@
     "lint": "xo",
     "lint:fix": "xo --fix",
     "generate:docs": "jsdoc src/*",
-    "release": "np"
+    "release": "np",
+    "test:plugins": "xo --fix test/plugins/**/*.test.js && xo test/plugins/**/*.js && nyc mocha \"test/plugins/**/*.test.js\" --require test/support/env"
   },
   "dependencies": {
     "@frctl/adapters": "^0.1.0",
