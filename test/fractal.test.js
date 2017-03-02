@@ -3,13 +3,11 @@
 const EventEmitter = require('eventemitter2').EventEmitter2;
 const utils = require('@frctl/utils');
 const expect = require('@frctl/utils/test').expect;
-const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 const defaults = require('../config');
+const Fractal = require('../src/fractal');
 
 const entities = ['files', 'components'];
-const Fractal = proxyquire('../src/fractal', {});
-
 const validConfig = {
   src: './test/fixtures/components'
 };
@@ -40,33 +38,6 @@ describe('Fractal', function () {
 
     it(`inherits from EventEmitter`, function () {
       expect(new Fractal({})).to.be.instanceof(EventEmitter);
-    });
-  });
-
-  describe('.parsers', function () {
-    it(`provides access to the set of available parsers`, function () {
-      const fractal = new Fractal(validConfig);
-      expect(fractal.parsers).to.be.instanceof(Map);
-      expect(fractal.parsers.get('files')).to.be.a('function');
-      expect(fractal.parsers.get('components')).to.be.a('function');
-    });
-  });
-
-  describe('.interfaces', function () {
-    it(`provides access to the set of interface generators`, function () {
-      const fractal = new Fractal(validConfig);
-      expect(fractal.interfaces).to.be.instanceof(Map);
-      expect(fractal.interfaces.get('files')).to.be.a('function');
-      expect(fractal.interfaces.get('components')).to.be.a('function');
-    });
-  });
-
-  describe('.adapters', function () {
-    it(`provides an array of registered adapters`, function () {
-      const fractal = new Fractal(validConfig);
-      fractal.addAdapter('nunjucks');
-      expect(fractal.adapters).to.be.instanceof(Map);
-      expect(fractal.adapters.size).to.equal(1);
     });
   });
 
@@ -161,11 +132,12 @@ describe('Fractal', function () {
       expect(fractal.parse).to.throw(TypeError, '[callback-invalid]');
     });
 
-    it('calls the callback with success arguments when successful', function (done) {
+    it('calls the callback with component and file APIs when successful ', function (done) {
       const fractal = new Fractal(validConfig);
-      fractal.parse((err, library) => {
+      fractal.parse((err, components, files) => {
         expect(err).to.equal(null);
-        expect(library).to.have.property('$data');
+        expect(components).to.have.property('$data');
+        expect(files).to.have.property('$data');
         done();
       });
     });
@@ -205,22 +177,44 @@ describe('Fractal', function () {
       });
       fractal.parse(() => {
         expect(stub.callCount).equals(entities.length);
+        let i = 0;
         for (const entity of entities) {
           expect(stub.calledWith(entity)).to.be.true;
+          expect(stub.getCall(i).calledWith(entity)).to.be.true;
+          i++;
         }
-
         done();
       });
     });
+  });
 
-    //
-    // it('resolves (promise or callback) with a library API instance', function (done) {
-    //   const fractal = new Fractal();
-    //   fractal.parse((err, library) => {
-    //     expect(library).to.be.an('object');
-    //     expect(library).to.have.property('$data');
-    //     done();
-    //   });
-    // });
+  describe('.parsers', function () {
+    it(`provides access to the set of available parsers`, function () {
+      const fractal = new Fractal(validConfig);
+      expect(fractal.parsers).to.be.instanceof(Map);
+      for (const entity of entities) {
+        expect(fractal.parsers.get(entity)).to.be.a('function');
+      }
+    });
+  });
+
+  describe('.interfaces', function () {
+    it(`provides access to the set of interface generators`, function () {
+      const fractal = new Fractal(validConfig);
+      expect(fractal.interfaces).to.be.instanceof(Map);
+      for (const entity of entities) {
+        expect(fractal.interfaces.get(entity)).to.be.a('function');
+      }
+    });
+  });
+
+  describe('.adapters', function () {
+    it(`provides access to the set of registered adapters`, function () {
+      const fractal = new Fractal(validConfig);
+      fractal.addAdapter('nunjucks');
+      expect(fractal.adapters).to.be.instanceof(Map);
+      expect(fractal.adapters.size).to.equal(1);
+      expect(fractal.adapters.has('nunjucks')).to.be.true;
+    });
   });
 });
