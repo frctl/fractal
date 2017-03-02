@@ -1,12 +1,13 @@
 const _ = require('lodash');
 
-module.exports = function () {
+module.exports = function (fractal) {
+
   return {
 
     name: 'getViews',
 
-    handler: function () {
-      return this.files.filter(file => file.role === 'view');
+    handler: function (maxViews, minViews) {
+      return this.getFiles().filterByRole('view');
     }
 
   };

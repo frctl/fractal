@@ -7,7 +7,7 @@ module.exports = function () {
     name: 'filterByPath',
 
     handler: function (paths) {
-      return this.$data.filter(file => {
+      return this.getAll().filter(file => {
         return multimatch([file.relative], utils.toArray(paths)).length;
       });
     }

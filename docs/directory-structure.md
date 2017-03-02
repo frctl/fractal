@@ -24,8 +24,6 @@ An example component library structure might look like this:
 │           └── view.hbs
 ```
 
-## Components
-
 A component is a **directory whose name begins with an `@` symbol**. In the example above there are therefore three components defined: `button`, `card` and `modal`.
 
 By default, the following files within a component directory have 'special' meaning to Fractal:
@@ -35,9 +33,3 @@ By default, the following files within a component directory have 'special' mean
 * `README.md`: Markdown document containing usage info/docs for the component.
 
 Any other files found within the component will be treated as resources of the component.
-
-## Collections
-
-A collection is a **directory that contains at least one other sub-collection or component**. Collections are used to group components together.
-
-A collection directory may contain a configuration file (`config.{js|json|yml}`) for customising its behaviour.

@@ -4,10 +4,8 @@ const config = require('./plugins/config');
 const name = require('./plugins/name');
 const label = require('./plugins/label');
 
-module.exports = function(opts = {}){
-
-  const componentsParser = parser(function(files){
-
+module.exports = function () {
+  const componentsParser = parser(function (files) {
     const components = files.filter(file => file.role === 'component').map(file => {
       return {
         path: file.path,
@@ -29,7 +27,6 @@ module.exports = function(opts = {}){
     }
 
     return components;
-
   });
 
   componentsParser.addPlugin(config())
@@ -37,5 +34,4 @@ module.exports = function(opts = {}){
                   .addPlugin(label());
 
   return componentsParser;
-
 };

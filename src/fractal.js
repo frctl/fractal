@@ -1,6 +1,7 @@
 /* eslint "import/no-dynamic-require": "off" */
 
 const _ = require('lodash');
+const Bluebird = require('bluebird');
 const EventEmitter = require('eventemitter2').EventEmitter2;
 const utils = require('@frctl/utils');
 const adapters = require('@frctl/adapters');
@@ -9,7 +10,7 @@ const assert = require('check-types').assert;
 const defaults = require('../config');
 const adapterPlugin = require('./files/plugins/adapter');
 
-const entities = ['files', 'components', 'collections'];
+const entities = ['files', 'components'];
 
 const refs = {
   src: new WeakMap(),
@@ -44,8 +45,8 @@ class Fractal extends EventEmitter {
     const parsers = new Map();
     const interfaces = new Map();
     entities.forEach(name => {
-      parsers.set(name, require(`./${name}/parser`)(this));
-      interfaces.set(name, require(`./${name}/api`)(this));
+      parsers.set(name, _.get(config, `parsers.${name}`, require(`./${name}/parser`)(this)));
+      interfaces.set(name, _.get(config, `interfaces.${name}`, require(`./${name}/api`)(this)));
     });
     refs.parsers.set(this, parsers);
     refs.interfaces.set(this, interfaces);
@@ -153,25 +154,32 @@ class Fractal extends EventEmitter {
     fs.readDir(this.src).then(input => {
       return this.process('files', input).then(files => {
         return this.process('components', input).then(components => {
-          return this.process('collections', input).then(collections => {
-
-            this.emit('parse.complete', components, files, collections);
-            callback(null, components, files, collections);
-
-          });
+          components.getFiles = () => files;
+          this.emit('parse.complete', components, files);
+          callback(null, components, files);
         });
       });
     }).catch(callback);
   }
 
   process(target, input = []) {
-    if (!entities.includes(target)) {
-      throw new TypeError(`Fractal.process: 'target' must one of [${entities.join(', ')}] [target-invalid]`);
-    }
-
-    const parse = this.parsers.get(target);
-    const api = this.interfaces.get(target);
+    const parse = this.getParser(target);
+    const api = this.getInterface(target);
     return parse(input).then(data => api(data));
+  }
+
+  getParser(name) {
+    if (!entities.includes(name)) {
+      throw new TypeError(`Fractal.getParser: 'parser' must one of [${entities.join(', ')}] [parser-invalid]`);
+    }
+    return this.parsers.get(name);
+  }
+
+  getInterface(name) {
+    if (!entities.includes(name)) {
+      throw new TypeError(`Fractal.getInterface: 'interface' must one of [${entities.join(', ')}] [interface-invalid]`);
+    }
+    return this.interfaces.get(name);
   }
 
   /**
@@ -189,10 +197,10 @@ class Fractal extends EventEmitter {
   }
 
   /**
-   * Get a list of registered render adapter names
+   * Get a list of registered adapters
    */
   get adapters() {
-    return Array.from(refs.adapters.get(this).keys());
+    return refs.adapters.get(this);
   }
 
   /**

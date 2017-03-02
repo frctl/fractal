@@ -4,15 +4,13 @@ const reqAll = require('req-all');
 
 const methods = reqAll('./methods');
 
-module.exports = function(fractal){
+module.exports = function (fractal) {
+  const componentsApi = api();
 
-    const componentsApi = api();
+  for (let methodFactory of _.values(methods)) {
+    const method = methodFactory(fractal);
+    componentsApi.addMethod(method.name, method.handler);
+  }
 
-    for (let methodFactory of _.values(methods)) {
-      const method = methodFactory(fractal);
-      componentsApi.addMethod(method.name, method.handler);
-    }
-
-    return componentsApi;
-
+  return componentsApi;
 };

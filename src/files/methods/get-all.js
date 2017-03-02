@@ -5,7 +5,7 @@ module.exports = function () {
     name: 'getAll',
 
     handler: function () {
-      return this.$data;
+      return this.$data.files;
     }
 
   };
