@@ -1,7 +1,6 @@
 /* eslint "import/no-dynamic-require": "off" */
 
 const _ = require('lodash');
-const Bluebird = require('bluebird');
 const EventEmitter = require('eventemitter2').EventEmitter2;
 const utils = require('@frctl/utils');
 const adapters = require('@frctl/adapters');
@@ -154,7 +153,7 @@ class Fractal extends EventEmitter {
     fs.readDir(this.src).then(input => {
       return this.process('files', input).then(files => {
         return this.process('components', input).then(components => {
-          components.getFiles = () => files;
+          Object.defineProperty(components, 'files', {value: files});
           this.emit('parse.complete', components, files);
           callback(null, components, files);
         });

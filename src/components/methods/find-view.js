@@ -6,7 +6,7 @@ module.exports = function (fractal) {
     name: 'findView',
 
     handler: function (target, adapter) {
-      const views = this.getViewsForComponent(target);
+      const views = this.getViewsFor(target);
       if (!adapter) {
         adapter = fractal.adapters[0]; // get the first registered adapter
       }

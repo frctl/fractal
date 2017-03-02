@@ -7,7 +7,7 @@ const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 const defaults = require('../config');
 
-const entities = ['files', 'components', 'collections'];
+const entities = ['files', 'components'];
 const Fractal = proxyquire('../src/fractal', {});
 
 const validConfig = {
@@ -49,7 +49,6 @@ describe('Fractal', function () {
       expect(fractal.parsers).to.be.instanceof(Map);
       expect(fractal.parsers.get('files')).to.be.a('function');
       expect(fractal.parsers.get('components')).to.be.a('function');
-      expect(fractal.parsers.get('collections')).to.be.a('function');
     });
   });
 
@@ -59,16 +58,15 @@ describe('Fractal', function () {
       expect(fractal.interfaces).to.be.instanceof(Map);
       expect(fractal.interfaces.get('files')).to.be.a('function');
       expect(fractal.interfaces.get('components')).to.be.a('function');
-      expect(fractal.interfaces.get('collections')).to.be.a('function');
     });
   });
 
   describe('.adapters', function () {
-    it(`provides an array of registered adapter names`, function () {
+    it(`provides an array of registered adapters`, function () {
       const fractal = new Fractal(validConfig);
       fractal.addAdapter('nunjucks');
-      expect(fractal.adapters).to.be.an('array');
-      expect(fractal.adapters.length).to.equal(1);
+      expect(fractal.adapters).to.be.instanceof(Map);
+      expect(fractal.adapters.size).to.equal(1);
     });
   });
 

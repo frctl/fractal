@@ -6,7 +6,7 @@ module.exports = function () {
     name: 'findByName',
 
     handler: function (name) {
-      return _.find(this.all(), {name: name});
+      return _.find(this.getAll(), {name: name});
     }
 
   };
