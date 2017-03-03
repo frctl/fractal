@@ -1,5 +1,6 @@
 const utils = require('@frctl/utils');
 const multimatch = require('multimatch');
+const assert = require('check-types').assert;
 
 module.exports = function () {
   return {

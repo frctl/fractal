@@ -32,6 +32,11 @@ describe('files API object', function () {
   });
 
   describe('.filterByRole()', function () {
+    it(`throws an error if an invalid path is supplied`, function () {
+      for (const invalid of [123, [], () => {}]) {
+        expect(() => files.filterByRole(invalid)).to.throw(TypeError, '[role-invalid]');
+      }
+    });
     it(`returns an empty array if no files match the role`, function () {
       const result = files.filterByRole('foobar');
       expect(result).to.be.an('array');
@@ -50,6 +55,11 @@ describe('files API object', function () {
   });
 
   describe('.filterByPath()', function () {
+    it(`throws an error if an invalid path is supplied`, function () {
+      for (const invalid of [123, [234], () => {}]) {
+        expect(() => files.filterByPath(invalid)).to.throw(TypeError, '[paths-invalid]');
+      }
+    });
     it(`returns an empty array if no files match the path`, function () {
       const result = files.filterByPath('foobar/baz');
       expect(result).to.be.an('array');
