@@ -2,7 +2,7 @@
 
 const expect = require('@frctl/utils/test').expect;
 const File = require('@frctl/ffs').File;
-const Fractal = require('../../src/fractal');
+const Fractal = require('../src/fractal');
 
 describe('files API object', function () {
   let files;

@@ -37,7 +37,7 @@ Files are represented by [File objects](https://github.com/frctl/file). Some Fil
   base: "/path/to/project/files",
   path: "/path/to/project/files/units/@button/view.njk",
   role: "resource", // resource / config / readme / ...
-  scope: "component", // component / collection / global
+  scope: "component", // component / global
   contents: '<Buffer ....>', // String buffer containing file contents
   relative: "units/@button/view.njk", // relative to the `base` property [READ-ONLY]
   dirname: "/path/to/project/files/units/@button", // [READ-ONLY]

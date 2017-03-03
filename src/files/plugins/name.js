@@ -1,5 +1,5 @@
 module.exports = function () {
-  return function parsePath(files, done) {
+  return function setName(files, done) {
     files.forEach(file => {
       const stem = file.stem;
       const [, name] = stem.match(/^_?(?:\d+-)?(.*)$/);

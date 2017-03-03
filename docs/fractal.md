@@ -16,7 +16,7 @@ const fractal = Fractal({
 
 ### .parse(callback)
 
-Parse the component files. Accepts a `callback` function that is called once the parsing process is complete.
+Parse the source directory. Accepts a `callback` function that is called once the parsing process is complete.
 
 #### callback(err, components, files)
 

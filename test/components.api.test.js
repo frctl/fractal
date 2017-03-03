@@ -4,7 +4,7 @@ const _ = require('lodash');
 const expect = require('@frctl/utils/test').expect;
 const sinon = require('sinon');
 const File = require('@frctl/ffs').File;
-const Fractal = require('../../src/fractal');
+const Fractal = require('../src/fractal');
 
 describe('components API object', function () {
   let components;
