@@ -33,6 +33,13 @@ describe('components API object', function () {
     });
   });
 
+  describe('.count()', function () {
+    it(`returns the number of components`, function () {
+      const result = components.getAll();
+      expect(components.count()).to.equal(result.length);
+    });
+  });
+
   describe('.find()', function () {
     it(`defers to .findByName if a single string argument is supplied`, function () {
       const stub = sinon.stub(components, 'findByName');

@@ -31,6 +31,13 @@ describe('files API object', function () {
     });
   });
 
+  describe('.count()', function () {
+    it(`returns the number of files`, function () {
+      const result = files.getAll();
+      expect(files.count()).to.equal(result.length);
+    });
+  });
+
   describe('.filterByRole()', function () {
     it(`throws an error if an invalid path is supplied`, function () {
       for (const invalid of [123, [], () => {}]) {
