@@ -5,14 +5,14 @@ module.exports = function () {
 
     name: 'getViewsFor',
 
-    handler: function (target) {
-      if (typeof target === 'string') {
-        target = this.findByName(target);
+    handler: function (component) {
+      if (typeof component === 'string') {
+        component = this.findByName(component);
       }
-      if (!target) {
-        throw new Error(`getViewsFor: could not find target`);
+      if (!component) {
+        throw new Error(`components.getViewsFor: could not find component [component-not-found]`);
       }
-      return target.files.filter(file => file.role === 'view');
+      return component.files.filter(file => file.role === 'view');
     }
 
   };

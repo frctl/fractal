@@ -1,4 +1,4 @@
-/* eslint no-unused-expressions : "off", handle-callback-err: "off" */
+/* eslint no-unused-expressions : "off", handle-callback-err: "off", "no-loop-func": "off" */
 
 const expect = require('@frctl/utils/test').expect;
 const File = require('@frctl/ffs').File;

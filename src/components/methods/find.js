@@ -7,7 +7,7 @@ module.exports = function () {
 
     handler: function (...args) {
       if (args.length === 1 && typeof args[0] === 'string') {
-        return _.find(this.getAll(), {name: args[0]});
+        return this.findByName(args[0]);
       }
       return _.find(this.getAll(), ...args);
     }

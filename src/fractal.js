@@ -203,6 +203,17 @@ class Fractal extends EventEmitter {
   }
 
   /**
+   * Get the default (first registered) adapter
+   */
+  get defaultAdapter() {
+    const adapters = refs.adapters.get(this);
+    if (adapters.size) {
+      return adapters.values().next().value;
+    }
+    return undefined;
+  }
+
+  /**
    * Return the configuration object
    */
   get config() {
