@@ -44,7 +44,7 @@ class Fractal extends EventEmitter {
     const parsers = new Map();
     const interfaces = new Map();
     entities.forEach(name => {
-      parsers.set(name, _.get(config, `parsers.${name}`, require(`./${name}/parser`)(this)));
+      parsers.set(name, _.get(config, `parsers.${name}`, require(`./${name}/parser`)()));
       interfaces.set(name, _.get(config, `interfaces.${name}`, require(`./${name}/api`)(this)));
     });
     refs.parsers.set(this, parsers);
