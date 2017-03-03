@@ -38,4 +38,4 @@ Existing tests can be run using the `npm test` command.
 
 Fractal is developed and maintained by [Danielle Huntrods](http://github.com/dkhuntrods), [Mark Perkins](http://github.com/allmarkedup) and all our excellent contributors.
 
-Ongoing support by [Clearleft](http://clearleft.com) makes this project possible. Thank you!
+Ongoing support by &nbsp;<a href="https://clearleft.com"><img width="90" src="http://clearleft.s3.amazonaws.com/logo.png"></a>&nbsp; makes this project possible. Thank you!
