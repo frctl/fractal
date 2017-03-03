@@ -3,7 +3,7 @@
 const expect = require('@frctl/utils/test').expect;
 const parser = require('../src/files/parser');
 
-const defaultPlugins = ['setName','identifyRole','configParser'];
+const defaultPlugins = ['setName', 'identifyRole', 'configParser'];
 
 describe('files parser', function () {
   it(`is a function`, function () {
@@ -26,5 +26,4 @@ describe('files parser', function () {
       expect(filesParser.plugins.includes(plugin)).to.be.true;
     });
   });
-
 });
