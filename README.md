@@ -34,7 +34,7 @@ Fractal v2 docs are currently a work in progress, but the following should be en
 * [Component library structure and file naming conventions](/docs/directory-structure.md)
 * [Fractal API](/docs/fractal.md)
 * [Entity APIs (components, files)](/docs/entity-apis.md)
-* [Entity data schemas (components, collections, files)](/docs/entity-schemas.md)
+* [Entity data schemas (components, files)](/docs/entity-schemas.md)
 
 ## Installation
 
