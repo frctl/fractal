@@ -56,14 +56,22 @@ describe('files API object', function () {
       expect(result.length).to.equal(0);
     });
     it(`accepts a single path`, function () {
-      const result = files.filterByPath('assets/*');
+      const result = files.filterByPath('assets');
       expect(result).to.be.an('array');
       expect(result.length).to.equal(1);
     });
     it(`accepts an array of paths`, function () {
-      const result = files.filterByPath(['assets/*']);
+      const result = files.filterByPath(['assets']);
       expect(result).to.be.an('array');
       expect(result.length).to.equal(1);
+    });
+    it(`works with glob paths`, function () {
+      const result = files.filterByPath(['**/*.js']);
+      expect(result).to.be.an('array');
+      expect(result.length).to.not.equal(0);
+      for (const item of result) {
+        expect(item.ext).to.equal('.js');
+      }
     });
   });
 });
