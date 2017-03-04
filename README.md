@@ -1,6 +1,6 @@
 # Fractal
 
-Fractal is a tool for parsing and querying filesystem-based component libraries.
+Fractal is a toolkit for parsing and querying filesystem-based component libraries.
 
 > _This is a developer preview of the core Fractal v2 component library parser, and should not be considered stable or complete. You can get an overview of the architectural and conceptual changes coming in Fractal v2 in the '[Fractal Iterations](https://medium.com/@frctl/fractal-iterations-c9c42e19d3e0)'' article on Medium, or jump into the Fractal [Slack community](http://slack.fractal.build) for further discussion._
 
@@ -16,7 +16,7 @@ const fractal = Fractal({
   src: './path/to/src'
 });
 
-fractal.parse(function(err, components, files) {
+fractal.parse(function(err, components) {
   if (err) {
     return console.log(err);
   }

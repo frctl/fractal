@@ -140,10 +140,9 @@ class Fractal extends EventEmitter {
   }
 
   /**
-   * Read and process all registered sources
+   * Read and process all source directories
    *
    * @param  {function} [callback] A callback function
-   * @return {Promise|undefined} Returns a Promise if no callback is provided
    */
   parse(callback) {
     assert.function(callback, `Fractal.parse: callback must be a function [callback-invalid]`);
@@ -161,12 +160,25 @@ class Fractal extends EventEmitter {
     }).catch(callback);
   }
 
+  /**
+   * Run a set of input through the specified entity parser and return the
+   * appropriate entity API object.
+   *
+   * @param  {string} [target] Entity type - `files` or `components`
+   * @return {Promise} Returns a Promise that resolves to an entity API object
+   */
   process(target, input = []) {
     const parse = this.getParser(target);
     const api = this.getInterface(target);
     return parse(input).then(data => api(data));
   }
 
+  /**
+   * Retrieve an entity parser function
+   *
+   * @param  {string} [name] Entity type - `files` or `components`
+   * @return {function} A parser function.
+   */
   getParser(name) {
     if (!entities.includes(name)) {
       throw new TypeError(`Fractal.getParser: 'parser' must one of [${entities.join(', ')}] [parser-invalid]`);
@@ -174,6 +186,12 @@ class Fractal extends EventEmitter {
     return this.parsers.get(name);
   }
 
+  /**
+   * Retrieve an entity API builder function
+   *
+   * @param  {string} [name] Entity type - `files` or `components`
+   * @return {function} An API builder function.
+   */
   getInterface(name) {
     if (!entities.includes(name)) {
       throw new TypeError(`Fractal.getInterface: 'interface' must one of [${entities.join(', ')}] [interface-invalid]`);
