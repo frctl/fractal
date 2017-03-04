@@ -39,7 +39,7 @@ Fractal v2 docs are currently a work in progress, but the following should be en
 ## Installation
 
 ```bash
-npm i @frctl/fractal@v2 --save
+npm i @frctl/fractal@next --save
 ```
 
 ## Requirements
