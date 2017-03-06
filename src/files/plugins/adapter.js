@@ -1,10 +1,12 @@
 const utils = require('@frctl/utils');
 const check = require('check-types');
 
-const assert  = check.assert;
+const assert = check.assert;
 
 module.exports = function (adapter) {
-  if (check.null(adapter) || check.undefined(adapter)) assert(false, `'adapter' must be an object with 'name' and 'render' properties [adapter-invalid]`, TypeError);
+  if (check.null(adapter) || check.undefined(adapter)) {
+    assert(false, `'adapter' is undefined [adapter-undefined]`, TypeError);
+  }
   assert.like(adapter, {name: 'name', render: function () {}}, `'adapter' must be an object with 'name' and 'render' properties [adapter-invalid]`);
 
   const adapterName = adapter.name;

@@ -1,7 +1,9 @@
 const _ = require('lodash');
 const multimatch = require('multimatch');
+const assert = require('check-types').assert;
 
 module.exports = function (opts = {}) {
+  assert.maybe.object(opts, `Role Plugin's 'opts' argument should be an object`);
   const marker = opts.marker || '@';
   const matchOpts = {nocase: true};
 
