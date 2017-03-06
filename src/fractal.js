@@ -7,6 +7,7 @@ const adapters = require('@frctl/adapters');
 const fs = require('@frctl/ffs');
 const assert = require('check-types').assert;
 const defaults = require('../config');
+const transform = require('./transformer');
 const adapterPlugin = require('./files/plugins/adapter');
 
 const entities = ['files', 'components'];
@@ -76,7 +77,7 @@ class Fractal extends EventEmitter {
     assert.function(plugin, `Fractal.addPlugin: plugin argument must be a function [plugin-invalid]`);
     assert.maybe.string(target, `Fractal.addPlugin: target argument must be a string or undefined [target-invalid]`);
 
-    this.parsers.get(target).addPlugin(plugin);
+    this.parsers.get(target).use(plugin);
     return this;
   }
 
@@ -151,7 +152,8 @@ class Fractal extends EventEmitter {
 
     fs.readDir(this.src).then(input => {
       return this.process('files', input).then(files => {
-        return this.process('components', input).then(components => {
+        const components = transform(files.getAll());
+        return this.process('components', components).then(components => {
           Object.defineProperty(components, 'files', {value: files});
           this.emit('parse.complete', components, files);
           callback(null, components, files);
@@ -168,9 +170,11 @@ class Fractal extends EventEmitter {
    * @return {Promise} Returns a Promise that resolves to an entity API object
    */
   process(target, input = []) {
-    const parse = this.getParser(target);
+    const parser = this.getParser(target);
     const api = this.getInterface(target);
-    return parse(input).then(data => api(data));
+    return parser.process(input).then(data => api.generate({
+      $data: data
+    }));
   }
 
   /**

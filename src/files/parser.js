@@ -1,14 +1,14 @@
-const parser = require('@frctl/internals/parser');
+const Parser = require('@frctl/internals/parser');
 const config = require('@frctl/fractal-plugin-files-parse-config');
 const name = require('./plugins/name');
 const role = require('./plugins/role');
 
 module.exports = function (opts = {}) {
-  const filesParser = parser();
+  const files = new Parser();
 
-  filesParser.addPlugin(name(opts.name))
-             .addPlugin(role(opts.roles))
-             .addPlugin(config(opts.config));
+  files.use(name(opts.name))
+       .use(role(opts.roles))
+       .use(config(opts.config));
 
-  return filesParser;
+  return files;
 };

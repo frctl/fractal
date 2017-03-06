@@ -1,13 +1,14 @@
 /* eslint no-unused-expressions : "off", handle-callback-err: "off" */
 
+const Parser = require('@frctl/internals/parser');
 const expect = require('@frctl/utils/test').expect;
 const parser = require('../src/components/parser');
 
 const defaultPlugins = ['setConfig', 'setName', 'setLabel'];
 
 describe('components parser', function () {
-  it(`is a function`, function () {
-    expect(parser()).to.be.a('function');
+  it(`is an instance of Parser`, function () {
+    expect(parser()).to.be.an.instanceof(Parser);
   });
 
   it(`has the expected plugins auto-registered in the correct order`, function () {
@@ -16,14 +17,5 @@ describe('components parser', function () {
     for (var i = 0; i < defaultPlugins.length; i++) {
       expect(componentsParser.plugins[i].name).to.equal(defaultPlugins[i]);
     }
-  });
-
-  describe('.addPlugin', function () {
-    it(`adds a plugin to the stack`, function () {
-      const componentsParser = parser();
-      const plugin = () => {};
-      componentsParser.addPlugin(plugin);
-      expect(componentsParser.plugins.includes(plugin)).to.be.true;
-    });
   });
 });

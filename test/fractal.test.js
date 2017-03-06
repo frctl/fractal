@@ -3,6 +3,8 @@
 const EventEmitter = require('eventemitter2').EventEmitter2;
 const utils = require('@frctl/utils');
 const expect = require('@frctl/utils/test').expect;
+const ApiBuilder = require('@frctl/internals/api');
+const Parser = require('@frctl/internals/parser');
 const sinon = require('sinon');
 const defaults = require('../config');
 const Fractal = require('../src/fractal');
@@ -88,10 +90,10 @@ describe('Fractal', function () {
         const methodName = `${entity}Test`;
         const method = sinon.spy();
         const data = {};
-        expect(api(data)[methodName]).to.be.undefined;
+        expect(api.generate(data)[methodName]).to.be.undefined;
         fractal.addMethod(methodName, method, entity);
-        expect(api(data)[methodName]).to.be.a('function');
-        api(data)[methodName]();
+        expect(api.generate(data)[methodName]).to.be.a('function');
+        api.generate(data)[methodName]();
         expect(method.called).to.be.true;
       }
     });
@@ -102,10 +104,10 @@ describe('Fractal', function () {
       const methodName = `componentsTest`;
       const method = sinon.spy();
       const data = {};
-      expect(api(data)[methodName]).to.be.undefined;
+      expect(api.generate(data)[methodName]).to.be.undefined;
       fractal.addMethod(methodName, method);
-      expect(api(data)[methodName]).to.be.a('function');
-      api(data)[methodName]();
+      expect(api.generate(data)[methodName]).to.be.a('function');
+      api.generate(data)[methodName]();
       expect(method.called).to.be.true;
     });
   });
@@ -173,7 +175,11 @@ describe('Fractal', function () {
     it('processes all the entities in order', function (done) {
       const fractal = new Fractal();
       const stub = sinon.stub(fractal, 'process', function () {
-        return Promise.resolve([]);
+        return Promise.resolve({
+          getAll: function(){
+            return []
+          }
+        });
       });
       fractal.parse(() => {
         expect(stub.callCount).equals(entities.length);
@@ -193,7 +199,7 @@ describe('Fractal', function () {
       const fractal = new Fractal(validConfig);
       expect(fractal.parsers).to.be.instanceof(Map);
       for (const entity of entities) {
-        expect(fractal.parsers.get(entity)).to.be.a('function');
+        expect(fractal.parsers.get(entity)).to.be.instanceof(Parser);
       }
     });
   });
@@ -203,7 +209,7 @@ describe('Fractal', function () {
       const fractal = new Fractal(validConfig);
       expect(fractal.interfaces).to.be.instanceof(Map);
       for (const entity of entities) {
-        expect(fractal.interfaces.get(entity)).to.be.a('function');
+        expect(fractal.interfaces.get(entity)).to.be.an.instanceof(ApiBuilder);
       }
     });
   });
