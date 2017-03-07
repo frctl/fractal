@@ -3,7 +3,7 @@ const multimatch = require('multimatch');
 const assert = require('check-types').assert;
 
 module.exports = function (opts = {}) {
-  assert.maybe.object(opts, `Role Plugin's 'opts' argument should be an object`);
+  assert.maybe.object(opts, `'Role' plugin's 'opts' argument should be an object [opts-invalid]`);
   const marker = opts.marker || '@';
   const matchOpts = {nocase: true};
 

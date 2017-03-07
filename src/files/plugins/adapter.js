@@ -5,7 +5,7 @@ const assert = check.assert;
 
 module.exports = function (adapter) {
   if (check.null(adapter) || check.undefined(adapter)) {
-    assert(false, `'adapter' is undefined [adapter-undefined]`, TypeError);
+    assert(false, `'Adapter' plugin's 'adapter' argument is undefined [adapter-undefined]`, TypeError);
   }
   assert.like(adapter, {name: 'name', render: function () {}}, `'adapter' must be an object with 'name' and 'render' properties [adapter-invalid]`);
 
