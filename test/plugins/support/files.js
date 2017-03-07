@@ -1,19 +1,33 @@
 /* eslint-disable import/no-dynamic-require */
+const fs = require('fs');
 const path = require('path');
 
-const pluginList = ['adapter', 'name', 'role']
-  .map(name => ({
-    name: name,
-    plugin: require(path.join('../../../src/files/plugins', name))
-  }));
+function getList(folder) {
+  return fs.readdirSync(folder)
+    .filter(file => fs.statSync(path.join(folder, file)).isFile())
+    .map(file => ({
+      name: file.replace(path.extname(file), ''),
+      plugin: require(path.join(path.relative(__dirname, '.'), folder, file))
+    }));
+}
 
-const plugins = pluginList.reduce((memo, {
-  name,
-  plugin
-}) => Object.assign(memo, {
-  [name]: plugin
-}), {});
+function getObject(list) {
+  return list.reduce((memo, {
+    name,
+    plugin
+  }) => Object.assign(memo, {
+    [name]: plugin
+  }), {});
+}
 
-module.exports = {
-  pluginList, plugins
+module.exports = function (type) {
+  const folder = `./src/${type}/plugins/`;
+
+  const pluginList = getList(folder);
+  const plugins = getObject(pluginList);
+
+  return {
+    getPlugins: () => pluginList,
+    getPlugin: name => plugins[name]
+  };
 };

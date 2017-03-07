@@ -21,6 +21,7 @@ module.exports = function (adapter) {
   }
 
   return function enginePlugin(files, done) {
+    // Arguments here do not require checking as this function will always be wrapped in function with checks
     const canRender = files.filter(file => ['view'].includes(file.role));
     canRender.filter(fileFilter).forEach(file => {
       file.adapter = adapterName;

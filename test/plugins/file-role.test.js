@@ -1,9 +1,11 @@
 /* eslint-disable no-unused-expressions */
 const expect = require('@frctl/utils/test').expect;
 
-const rolePluginFactory = require('./support/files').plugins.role;
+const fileHelper = require('./support/files')('files');
 
-const testUtils = require('./support/utils');
+const rolePluginFactory = fileHelper.getPlugin('role');
+
+const testUtils = require('./support/utils')('files');
 
 const testSignature = testUtils.testSignature;
 const testPlugin = testUtils.testPlugin;
@@ -17,8 +19,8 @@ describe(`'File role' plugin`, function () {
   });
 
   describe('instance method', function () {
-    it(`has expected signature`, function () {
-      testSignature('role');
+    it(`has expected signature`, function (done) {
+      testSignature('role', done);
     });
 
     it(`only accepts valid options values`, function () {

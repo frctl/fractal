@@ -1,7 +1,9 @@
 /* eslint-disable no-unused-expressions */
-const namePluginFactory = require('./support/files').plugins.name;
+const fileHelper = require('./support/files')('files');
 
-const testUtils = require('./support/utils');
+const namePluginFactory = fileHelper.getPlugin('name');
+
+const testUtils = require('./support/utils')('files');
 
 const testSignature = testUtils.testSignature;
 const testPlugin = testUtils.testPlugin;
@@ -15,8 +17,8 @@ describe(`'File name' plugin`, function () {
   });
 
   describe('instance method', function () {
-    it(`has expected signature`, function () {
-      testSignature('name');
+    it(`has expected signature`, function (done) {
+      testSignature('name', done);
     });
 
     it(`adds expected 'file.name' values`, function (done) {

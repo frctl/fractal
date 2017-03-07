@@ -1,8 +1,11 @@
 /* eslint no-unused-expressions : "off", handle-callback-err: "off" */
 const expect = require('@frctl/utils/test').expect;
-const adapterPluginFactory = require('./support/files').plugins.adapter;
 
-const testUtils = require('./support/utils');
+const fileHelper = require('./support/files')('files');
+
+const adapterPluginFactory = fileHelper.getPlugin('adapter');
+
+const testUtils = require('./support/utils')('files');
 
 const testSignature = testUtils.testSignature;
 const testPlugin = testUtils.testPlugin;
@@ -30,8 +33,11 @@ describe(`'File adapter' plugin`, function () {
     });
   });
   describe('instance method', function () {
-    it(`has expected signature`, function () {
-      testSignature('adapter');
+    it(`has expected signature`, function (done) {
+      testSignature('adapter', done, {
+        name: 'adapter',
+        render: () => {}
+      });
     });
 
     it(`adds expected 'file.adapter' values with 'string' match value`, function (done) {

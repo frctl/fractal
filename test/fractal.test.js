@@ -176,8 +176,8 @@ describe('Fractal', function () {
       const fractal = new Fractal();
       const stub = sinon.stub(fractal, 'process', function () {
         return Promise.resolve({
-          getAll: function(){
-            return []
+          getAll: function () {
+            return [];
           }
         });
       });

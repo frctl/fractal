@@ -35,6 +35,7 @@ module.exports = function (opts = {}) {
   }];
 
   return function identifyRole(files, done) {
+    // Arguments here do not require checking as this function will always be wrapped in function with checks
     files.forEach(file => {
       file.scope = 'global';
     });
