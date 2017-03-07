@@ -121,7 +121,7 @@ class Fractal extends EventEmitter {
     if (typeof adapter === 'string' && adapters[adapter]) {
       adapter = adapters[adapter](opts);
     }
-    assert.like(adapter, {name: 'name', render: function () {}}, `'adapter' must be an object with 'name' and 'render' properties [adapter-invalid]`);
+    assert.like(adapter, {name: 'name', render: function () {}}, `'adapter' must be an object with 'name', 'match', and 'render' properties [adapter-invalid]`);
 
     this.addPlugin(adapterPlugin({
       name: adapter.name,

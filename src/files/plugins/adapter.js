@@ -7,7 +7,10 @@ module.exports = function (adapter) {
   if (check.null(adapter) || check.undefined(adapter)) {
     assert(false, `'Adapter' plugin's 'adapter' argument is undefined [adapter-undefined]`, TypeError);
   }
-  assert.like(adapter, {name: 'name', render: function () {}}, `'adapter' must be an object with 'name' and 'render' properties [adapter-invalid]`);
+  assert.string(adapter.name, `'adapter.name' is a required string [adapter-invalid]`);
+  if (check.not.string(adapter.match) && check.not.function(adapter.match)) {
+    assert(false, `'adapter.match' is required and should be a string or function [adapter-invalid]`, TypeError);
+  }
 
   const adapterName = adapter.name;
   const match = adapter.match;

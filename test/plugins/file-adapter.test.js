@@ -26,7 +26,7 @@ describe(`'File adapter' plugin`, function () {
         const fr = () => adapterPluginFactory(type);
         expect(fr).to.throw(TypeError, `[adapter-invalid]`);
       }
-      for (const type of [{name: 'name', render: function () {}}]) {
+      for (const type of [{name: 'name', match: function () {}}, {name: 'name', match: 'string'}]) {
         const fr = () => adapterPluginFactory(type);
         expect(fr).to.not.throw();
       }
@@ -36,12 +36,12 @@ describe(`'File adapter' plugin`, function () {
     it(`has expected signature`, function (done) {
       testSignature('adapter', done, {
         name: 'adapter',
-        render: () => {}
+        match: () => {}
       });
     });
 
     it(`adds expected 'file.adapter' values with 'string' match value`, function (done) {
-      const adapterPlugin = adapterPluginFactory({name: 'react', match: '.jsx', render: function () {}});
+      const adapterPlugin = adapterPluginFactory({name: 'react', match: '.jsx'});
 
       const fileMocks = [{
         ext: '.jsx',
@@ -74,7 +74,7 @@ describe(`'File adapter' plugin`, function () {
     });
 
     it(`adds expected 'file.adapter' values with 'function' match value`, function (done) {
-      const adapterPlugin = adapterPluginFactory({name: 'nunjucks', match: file => file.ext === '.njk', render: function () {}});
+      const adapterPlugin = adapterPluginFactory({name: 'nunjucks', match: file => file.ext === '.njk'});
 
       const fileMocks = [{
         ext: '.njk',
