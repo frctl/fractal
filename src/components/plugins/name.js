@@ -1,4 +1,5 @@
-const _ = require('lodash');
+// const _ = require('lodash');
+const utils = require('@frctl/utils');
 
 module.exports = function () {
   return function setName(components, done) {
@@ -7,7 +8,7 @@ module.exports = function () {
       if (component.config && component.config.name) {
         component.name = component.config.name;
       }
-      component.name = _.kebabCase(component.name.replace(/^[^a-zA-Z]/, ''));
+      component.name = utils.normaliseName(component.name);
     });
 
     done();

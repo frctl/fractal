@@ -1,15 +1,9 @@
 /* eslint no-unused-expressions : "off", handle-callback-err: "off" */
-const expect = require('@frctl/utils/test').expect;
-
 const fileHelper = require('./support/files')('files');
 
 const adapterPluginFactory = fileHelper.getPlugin('adapter');
 
-const testUtils = require('./support/utils')('files');
-
-const testSignature = testUtils.testSignature;
-const testPlugin = testUtils.testPlugin;
-const testFactory = testUtils.testFactory;
+const {testInvalidArgs, testValidArgs, testSignature, testPlugin, testFactory} = require('./support/utils')('files');
 
 describe(`'File adapter' plugin`, function () {
   describe('constructor', function () {
@@ -18,18 +12,10 @@ describe(`'File adapter' plugin`, function () {
     });
 
     it(`only accepts valid arguments`, function () {
-      for (const type of [null, undefined]) {
-        const fr = () => adapterPluginFactory(type);
-        expect(fr).to.throw(TypeError, `[adapter-undefined]`);
-      }
-      for (const type of ['string', [], 123, {}]) {
-        const fr = () => adapterPluginFactory(type);
-        expect(fr).to.throw(TypeError, `[adapter-invalid]`);
-      }
-      for (const type of [{name: 'name', match: function () {}}, {name: 'name', match: 'string'}]) {
-        const fr = () => adapterPluginFactory(type);
-        expect(fr).to.not.throw();
-      }
+      testInvalidArgs(adapterPluginFactory, [null, undefined], `[adapter-undefined]`);
+      testInvalidArgs(adapterPluginFactory, ['string', [], 123, {}], `[adapter-invalid]`);
+      testInvalidArgs(adapterPluginFactory, [{name: 'name', match: 234}, {name: 'name', match: {}}], `[adapter-invalid]`);
+      testValidArgs(adapterPluginFactory, [{name: 'name', match: function () {}}, {name: 'name', match: 'string'}]);
     });
   });
   describe('instance method', function () {

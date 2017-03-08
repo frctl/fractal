@@ -3,11 +3,7 @@ const fileHelper = require('./support/files')('components');
 
 const labelPluginFactory = fileHelper.getPlugin('label');
 
-const testUtils = require('./support/utils')('components');
-
-const testSignature = testUtils.testSignature;
-const testPlugin = testUtils.testPlugin;
-const testFactory = testUtils.testFactory;
+const {testSignature, testPlugin, testFactory} = require('./support/utils')('components');
 
 describe(`'Component label' plugin`, function () {
   describe('constructor', function () {

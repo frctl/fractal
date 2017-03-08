@@ -5,11 +5,7 @@ const fileHelper = require('./support/files')('files');
 
 const rolePluginFactory = fileHelper.getPlugin('role');
 
-const testUtils = require('./support/utils')('files');
-
-const testSignature = testUtils.testSignature;
-const testPlugin = testUtils.testPlugin;
-const testFactory = testUtils.testFactory;
+const {testInvalidArgs, testValidArgs, testSignature, testPlugin, testFactory} = require('./support/utils')('files');
 
 describe(`'File role' plugin`, function () {
   describe('constructor', function () {
@@ -24,14 +20,8 @@ describe(`'File role' plugin`, function () {
     });
 
     it(`only accepts valid options values`, function () {
-      for (const value of ['string', 78, []]) {
-        const fr = () => rolePluginFactory(value);
-        expect(fr).to.throw(TypeError, `[opts-invalid]`);
-      }
-      for (const value of [{}, undefined]) {
-        const fr = () => rolePluginFactory(value);
-        expect(fr).to.not.throw();
-      }
+      testInvalidArgs(rolePluginFactory, ['string', 78, []], `[opts-invalid]`);
+      testValidArgs(rolePluginFactory, [{}, undefined]);
       expect(() => rolePluginFactory()).to.not.throw();
     });
 

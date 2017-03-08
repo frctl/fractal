@@ -3,11 +3,7 @@ const fileHelper = require('./support/files')('components');
 
 const namePluginFactory = fileHelper.getPlugin('name');
 
-const testUtils = require('./support/utils')('components');
-
-const testSignature = testUtils.testSignature;
-const testPlugin = testUtils.testPlugin;
-const testFactory = testUtils.testFactory;
+const {testSignature, testPlugin, testFactory} = require('./support/utils')('components');
 
 describe(`'Component name' plugin`, function () {
   describe('constructor', function () {

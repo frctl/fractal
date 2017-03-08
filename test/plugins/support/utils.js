@@ -5,6 +5,24 @@ module.exports = function (type) {
   const plugins = require('./files')(type);
 
   return {
+    testFactory(pluginFactory) {
+      expect(pluginFactory).to.be.a('function');
+    },
+
+    testInvalidArgs(pluginFactory, args, errorType) {
+      for (const type of args) {
+        const fr = () => pluginFactory(type);
+        expect(fr).to.throw(TypeError, errorType);
+      }
+    },
+
+    testValidArgs(pluginFactory, args) {
+      for (const type of args) {
+        const fr = () => pluginFactory(type);
+        expect(fr).to.not.throw();
+      }
+    },
+
     testSignature(pluginName, done, options = {}) {
       const plugin = plugins.getPlugin(pluginName)(options);
       expect(plugin).to.be.a('function');
@@ -33,10 +51,7 @@ module.exports = function (type) {
           .catch(done);
       }
       complete();
-    },
-
-    testFactory(pluginFactory) {
-      expect(pluginFactory).to.be.a('function');
     }
+
   };
 };

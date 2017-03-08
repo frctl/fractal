@@ -1,4 +1,4 @@
-const _ = require('lodash');
+// const _ = require('lodash');
 const utils = require('@frctl/utils');
 
 module.exports = function () {
@@ -8,8 +8,7 @@ module.exports = function () {
       if (component.config && component.config.label) {
         component.label = component.config.label;
       } else {
-        const name = _.kebabCase(component.name.replace(/^[^a-zA-Z]/, ''));
-        component.label = utils.titlize(name);
+        component.label = utils.titlize(utils.normaliseName(component.name));
       }
     });
 
