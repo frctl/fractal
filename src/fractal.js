@@ -8,6 +8,7 @@ const fs = require('@frctl/ffs');
 const assert = require('check-types').assert;
 const defaults = require('../config');
 const transform = require('./transformer');
+const commander = require('./commander');
 const adapterPlugin = require('./files/plugins/adapter');
 
 const entities = ['files', 'components'];
@@ -17,7 +18,8 @@ const refs = {
   config: new WeakMap(),
   adapters: new WeakMap(),
   parsers: new WeakMap(),
-  interfaces: new WeakMap()
+  interfaces: new WeakMap(),
+  commander: new WeakMap(),
 };
 
 class Fractal extends EventEmitter {
@@ -29,6 +31,7 @@ class Fractal extends EventEmitter {
    * @return {Fractal} Returns a reference to the Fractal instance
    */
   constructor(config = {}) {
+
     assert.maybe.object(config, `Fractal.constructor: config must be an object [config-invalid]`);
 
     super({
@@ -50,6 +53,8 @@ class Fractal extends EventEmitter {
     });
     refs.parsers.set(this, parsers);
     refs.interfaces.set(this, interfaces);
+
+    refs.commander.set(this, commander(this));
 
     refs.adapters.set(this, new Map());
   }
@@ -95,6 +100,22 @@ class Fractal extends EventEmitter {
     assert.maybe.string(target, `Fractal.addMethod: target argument must be a string or undefined [target-invalid]`);
 
     this.interfaces.get(target).addMethod(name, handler);
+    return this;
+  }
+
+  addCommand(...args) {
+    this.commander.command(...args);
+
+    // assert.string(name, `Fractal.addCommand: name argument must be a string [name-invalid]`);
+    // assert.function(handler, `Fractal.addMethod: handler argument must be a function [handler-invalid]`);
+    // assert.maybe.string(target, `Fractal.addMethod: target argument must be a string or undefined [target-invalid]`);
+
+    // this.interfaces.get(target).addMethod(name, handler);
+    return this;
+  }
+
+  execCommand(...args) {
+    this.commander.parse(...args);
     return this;
   }
 
@@ -247,6 +268,13 @@ class Fractal extends EventEmitter {
    */
   get src() {
     return refs.src.get(this);
+  }
+
+  /**
+   * Return the yargs instance
+   */
+  get commander() {
+    return refs.commander.get(this);
   }
 
 }
