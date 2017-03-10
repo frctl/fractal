@@ -56,7 +56,7 @@ describe('Fractal', function () {
     it(`adds the plugin to the appropriate parser`, function () {
       const fractal = new Fractal(validConfig);
       for (const entity of entities) {
-        const parser = fractal.parsers.get(entity);
+        const parser = fractal[entity].parser;
         const plugin = sinon.spy();
         expect(parser.plugins.includes(plugin)).to.be.false;
         fractal.addPlugin(plugin, entity);
@@ -66,7 +66,7 @@ describe('Fractal', function () {
 
     it(`adds the plugin to the components parser if a target parser is not specified`, function () {
       const fractal = new Fractal(validConfig);
-      const parser = fractal.parsers.get('components');
+      const parser = fractal.components.parser;
       const plugin = sinon.spy();
       expect(parser.plugins.includes(plugin)).to.be.false;
       fractal.addPlugin(plugin);
@@ -86,7 +86,7 @@ describe('Fractal', function () {
     it(`adds the method to the target interface`, function () {
       const fractal = new Fractal(validConfig);
       for (const entity of entities) {
-        const api = fractal.interfaces.get(entity);
+        const api = fractal[entity].api;
         const methodName = `${entity}Test`;
         const method = sinon.spy();
         const data = {};
@@ -100,7 +100,7 @@ describe('Fractal', function () {
 
     it(`adds the method to the components interface if a target interface is not specified`, function () {
       const fractal = new Fractal(validConfig);
-      const api = fractal.interfaces.get('components');
+      const api = fractal.components.api;
       const methodName = `componentsTest`;
       const method = sinon.spy();
       const data = {};
@@ -194,23 +194,21 @@ describe('Fractal', function () {
     });
   });
 
-  describe('.parsers', function () {
-    it(`provides access to the set of available parsers`, function () {
+  describe('.files', function () {
+    it(`provides access to the files object`, function () {
       const fractal = new Fractal(validConfig);
-      expect(fractal.parsers).to.be.instanceof(Map);
-      for (const entity of entities) {
-        expect(fractal.parsers.get(entity)).to.be.instanceof(Parser);
-      }
+      expect(fractal.files).to.be.an('object');
+      expect(fractal.files.parser).to.be.an.instanceof(Parser);
+      expect(fractal.files.api).to.be.an.instanceof(ApiBuilder);
     });
   });
 
-  describe('.interfaces', function () {
-    it(`provides access to the set of interface generators`, function () {
+  describe('.components', function () {
+    it(`provides access to the components object`, function () {
       const fractal = new Fractal(validConfig);
-      expect(fractal.interfaces).to.be.instanceof(Map);
-      for (const entity of entities) {
-        expect(fractal.interfaces.get(entity)).to.be.an.instanceof(ApiBuilder);
-      }
+      expect(fractal.components).to.be.an('object');
+      expect(fractal.components.parser).to.be.an.instanceof(Parser);
+      expect(fractal.components.api).to.be.an.instanceof(ApiBuilder);
     });
   });
 

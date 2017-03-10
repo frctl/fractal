@@ -10,6 +10,8 @@ const defaults = require('../config');
 const transform = require('./transformer');
 const commander = require('./commander');
 const adapterPlugin = require('./files/plugins/adapter');
+const files = require('./files');
+const components = require('./components');
 
 const entities = ['files', 'components'];
 
@@ -17,9 +19,9 @@ const refs = {
   src: new WeakMap(),
   config: new WeakMap(),
   adapters: new WeakMap(),
-  parsers: new WeakMap(),
-  interfaces: new WeakMap(),
-  commander: new WeakMap(),
+  files: new WeakMap(),
+  components: new WeakMap(),
+  commander: new WeakMap()
 };
 
 class Fractal extends EventEmitter {
@@ -45,14 +47,8 @@ class Fractal extends EventEmitter {
       this.addSrc(config.src);
     }
 
-    const parsers = new Map();
-    const interfaces = new Map();
-    entities.forEach(name => {
-      parsers.set(name, _.get(config, `parsers.${name}`, require(`./${name}/parser`)()));
-      interfaces.set(name, _.get(config, `interfaces.${name}`, require(`./${name}/api`)(this)));
-    });
-    refs.parsers.set(this, parsers);
-    refs.interfaces.set(this, interfaces);
+    refs.files.set(this, files(this));
+    refs.components.set(this, components(this));
 
     refs.commander.set(this, commander(this));
 
@@ -80,9 +76,9 @@ class Fractal extends EventEmitter {
    */
   addPlugin(plugin, target = 'components') {
     assert.function(plugin, `Fractal.addPlugin: plugin argument must be a function [plugin-invalid]`);
-    assert.maybe.string(target, `Fractal.addPlugin: target argument must be a string or undefined [target-invalid]`);
+    assert.includes(entities, target, `Fractal.addMethod: target argument must be either 'components' or 'files' [target-invalid]`);
 
-    this.parsers.get(target).use(plugin);
+    this[target].parser.use(plugin);
     return this;
   }
 
@@ -97,9 +93,9 @@ class Fractal extends EventEmitter {
   addMethod(name, handler, target = 'components') {
     assert.string(name, `Fractal.addMethod: name argument must be a string [name-invalid]`);
     assert.function(handler, `Fractal.addMethod: handler argument must be a function [handler-invalid]`);
-    assert.maybe.string(target, `Fractal.addMethod: target argument must be a string or undefined [target-invalid]`);
+    assert.includes(entities, target, `Fractal.addMethod: target argument must be either 'components' or 'files' [target-invalid]`);
 
-    this.interfaces.get(target).addMethod(name, handler);
+    this[target].api.addMethod(name, handler);
     return this;
   }
 
@@ -191,51 +187,19 @@ class Fractal extends EventEmitter {
    * @return {Promise} Returns a Promise that resolves to an entity API object
    */
   process(target, input = []) {
-    const parser = this.getParser(target);
-    const api = this.getInterface(target);
-    return parser.process(input).then(data => api.generate({
+    assert.includes(entities, target, `Fractal.process: target argument must be either 'components' or 'files' [target-invalid]`);
+    const entity = this[target];
+    return entity.parser.process(input).then(data => entity.api.generate({
       $data: data
     }));
   }
 
-  /**
-   * Retrieve an entity parser function
-   *
-   * @param  {string} [name] Entity type - `files` or `components`
-   * @return {function} A parser function.
-   */
-  getParser(name) {
-    if (!entities.includes(name)) {
-      throw new TypeError(`Fractal.getParser: 'parser' must one of [${entities.join(', ')}] [parser-invalid]`);
-    }
-    return this.parsers.get(name);
+  get files() {
+    return refs.files.get(this);
   }
 
-  /**
-   * Retrieve an entity API builder function
-   *
-   * @param  {string} [name] Entity type - `files` or `components`
-   * @return {function} An API builder function.
-   */
-  getInterface(name) {
-    if (!entities.includes(name)) {
-      throw new TypeError(`Fractal.getInterface: 'interface' must one of [${entities.join(', ')}] [interface-invalid]`);
-    }
-    return this.interfaces.get(name);
-  }
-
-  /**
-   * Get a Map of entity interfaces
-   */
-  get interfaces() {
-    return refs.interfaces.get(this);
-  }
-
-  /**
-   * Get a Map of entity parsers
-   */
-  get parsers() {
-    return refs.parsers.get(this);
+  get components() {
+    return refs.components.get(this);
   }
 
   /**
