@@ -20,7 +20,7 @@ Check out the the [Fractal documentation](http://fractal.build/guide) for more i
 
 ## Demo
 
-There is no 'official' demo for Fractal up yet, but [bits.24ways.org](http://bits.24ways.org) (repository: https://github.com/24ways/frontend) is an excellent example of a component library built on Fractal. Kudos to @paulrobertlloyd for his great work!
+There is no 'official' demo for Fractal up yet, but [bits.24ways.org](http://bits.24ways.org) (repository: https://github.com/24ways/frontend) is an excellent example of a component library built on Fractal. Kudos to [@paulrobertlloyd](https://github.com/paulrobertlloyd) for his great work!
 
 ## Requirements
 
