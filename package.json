@@ -9,12 +9,15 @@
     "Mark Perkins <mark@allmarkedup.com> (http://allmarkedup.com)",
     "Danielle Huntrods <danielle.huntrods@clearleft.com> (http://clearleft.com)"
   ],
+  "bin": {
+    "frctl": "./bin/fractal"
+  },
   "license": "MIT",
   "engines": {
     "node": ">= 6.0.0"
   },
   "scripts": {
-    "test": "npm run lint:fix && xo && nyc npm run test:unit",
+    "test": "npm run lint:fix && nyc npm run test:unit",
     "test:unit": "mocha \"test/**/*.test.js\" --require test/support/env",
     "test:watch": "npm run test:unit -- --watch",
     "lint": "xo",
@@ -25,6 +28,7 @@
   },
   "dependencies": {
     "@frctl/adapters": "^0.1.0",
+    "@frctl/console": "^0.2.0",
     "@frctl/ffs": "^0.2.0",
     "@frctl/fractal-plugin-files-parse-config": "^0.1.0",
     "@frctl/internals": "^0.4.0",
@@ -33,9 +37,11 @@
     "check-types": "^7.1.5",
     "eventemitter2": "^3.0.0",
     "extract-opts": "^3.3.1",
+    "liftoff": "^2.3.0",
     "lodash": "^4.17.4",
     "multimatch": "^2.1.0",
     "req-all": "^1.0.0",
+    "yargonaut": "^1.1.2",
     "yargs": "^7.0.1"
   },
   "devDependencies": {

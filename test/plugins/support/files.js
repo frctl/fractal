@@ -21,7 +21,7 @@ function getObject(list) {
 }
 
 module.exports = function (type) {
-  const folder = `./src/${type}/plugins/`;
+  const folder = `./src/parser/${type}/plugins/`;
 
   const pluginList = getList(folder);
   const plugins = getObject(pluginList);

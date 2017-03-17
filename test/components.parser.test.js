@@ -2,7 +2,7 @@
 
 const Parser = require('@frctl/internals/parser');
 const expect = require('@frctl/utils/test').expect;
-const parser = require('../src/components/parser');
+const parser = require('../src/parser/components/parser');
 
 const defaultPlugins = ['setConfig', 'setName', 'setLabel'];
 

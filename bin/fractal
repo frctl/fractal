@@ -1,5 +1,58 @@
 #!/usr/bin/env node
 
-console.log(`
----> Not implemented yet. <---
-`);
+const local = require('../.');
+const Liftoff = require('liftoff');
+const logger = require('@frctl/console');
+const semver = require('semver');
+const yargs = require('yargs');
+
+const cli = new Liftoff({
+  name: 'fractal',
+  processTitle: 'fractal',
+  moduleName: '@frctl/fractal',
+  configName: 'fractal.config',
+  extensions: {
+    '.js': null,
+    '.json': null
+  }
+});
+
+cli.launch({}, function(env){
+
+  let app;;
+  const config = env.configPath ? require(env.configPath) : {
+    scope: 'global'
+  };
+
+  if (config instanceof local.Fractal || (config.constructor && config.constructor.name === 'Fractal')) {
+    app = config;
+  } else {
+    const frctl = env.modulePath ? require(env.modulePath) : local;
+    app = frctl(config);
+  }
+
+  if (semver.major(app.version) < 2) {
+    app.cli.exec();
+    return;
+  }
+
+  app.addCommand('*', 'Fractal info', {}, () => {
+
+      logger.draw.br();
+
+      let content = `${logger.format('Fractal CLI', 'green.bold')} ${logger.format(`v${app.version}`, 'dim')}
+
+Use ${logger.format(`${yargs.argv.$0} --help`, 'cyan.bold')} for usage info and available commands.`;
+
+      logger.draw.box(content, {
+        fullWidth: true,
+        align: 'left',
+        borderColor: 'dim'
+      });
+
+      logger.draw.br();
+  });
+
+  app.execCommand(process.argv.slice(2));
+
+});
