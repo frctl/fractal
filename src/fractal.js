@@ -121,16 +121,6 @@ class Fractal extends EventEmitter {
   }
 
   /**
-   * Retrieve all available CLI commands
-   *
-   * @return {array} An array of CLI command objects
-   */
-  getCommands() {
-    const commands = _.values(reqAll('./commands')).map(command => command(this));
-    return commands.concat(refs.commands.get(this));
-  }
-
-  /**
    * Add an extension
    *
    * @param  {function} extension The extension wrapper function
@@ -221,6 +211,11 @@ class Fractal extends EventEmitter {
     return refs.components.get(this);
   }
 
+  get commands() {
+    const commands = _.values(reqAll('./commands')).map(command => command(this));
+    return commands.concat(refs.commands.get(this));
+  }
+
   /**
    * Get a list of registered adapters
    */
@@ -251,13 +246,6 @@ class Fractal extends EventEmitter {
    */
   get src() {
     return refs.src.get(this) || [];
-  }
-
-  /**
-   * Return the yargs instance
-   */
-  get commander() {
-    return refs.commander.get(this);
   }
 
 }

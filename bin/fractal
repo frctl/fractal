@@ -64,7 +64,7 @@ cli.launch({}, function(env){
    * Load bundled commands
    */
 
-  for (const command of app.getCommands()) {
+  for (const command of app.commands) {
     yargs.command(command);
   }
 
