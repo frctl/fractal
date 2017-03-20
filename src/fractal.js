@@ -116,7 +116,7 @@ class Fractal extends EventEmitter {
       command.builder = args[2];
       command.handler = args[3];
     }
-    this.getCommands().push(command);
+    refs.commands.get(this).push(command);
     return this;
   }
 
