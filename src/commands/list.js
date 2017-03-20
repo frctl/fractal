@@ -44,7 +44,9 @@ module.exports = function (fractal) {
         });
 
         cli.draw
-          .header(`All components (${components.count()} found)`)
+          .header(`All components (${components.count()} found)`, {
+            borderStyle: 'dim'
+          })
           .br()
           .columns(data)
           .br();

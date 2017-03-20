@@ -5,10 +5,10 @@ const EventEmitter = require('eventemitter2').EventEmitter2;
 const utils = require('@frctl/utils');
 const adapters = require('@frctl/adapters');
 const fs = require('@frctl/ffs');
+const reqAll = require('req-all');
 const assert = require('check-types').assert;
 const defaults = require('../config');
 const pkg = require('../package.json');
-const commander = require('./cli');
 const adapterPlugin = require('./parser/files/plugins/adapter');
 const transform = require('./parser/transformer');
 const files = require('./parser/files');
@@ -23,7 +23,7 @@ const refs = {
   adapters: new WeakMap(),
   files: new WeakMap(),
   components: new WeakMap(),
-  commander: new WeakMap()
+  commands: new WeakMap()
 };
 
 class Fractal extends EventEmitter {
@@ -52,7 +52,7 @@ class Fractal extends EventEmitter {
 
     refs.files.set(this, files(this));
     refs.components.set(this, components(this));
-    refs.commander.set(this, commander(this));
+    refs.commands.set(this, []);
     refs.adapters.set(this, new Map());
   }
 
@@ -100,14 +100,34 @@ class Fractal extends EventEmitter {
     return this;
   }
 
+  /**
+   * Add an CLI command
+   *
+   * @return {Fractal} Returns a reference to the Fractal instance
+   */
   addCommand(...args) {
-    this.commander.addCommand(...args);
+    const command = args.length === 1 ? args[0] : {
+      command: args[0],
+      desc: args[1]
+    };
+    if (args.length === 3) {
+      command.handler = args[2];
+    } else if (args.length > 3) {
+      command.builder = args[2];
+      command.handler = args[3];
+    }
+    this.getCommands().push(command);
     return this;
   }
 
-  execCommand(...args) {
-    this.commander.exec(...args);
-    return this;
+  /**
+   * Retrieve all available CLI commands
+   *
+   * @return {array} An array of CLI command objects
+   */
+  getCommands() {
+    const commands = _.values(reqAll('./commands')).map(command => command(this));
+    return commands.concat(refs.commands.get(this));
   }
 
   /**

@@ -5,6 +5,7 @@ const Liftoff = require('liftoff');
 const logger = require('@frctl/console');
 const semver = require('semver');
 const yargs = require('yargs');
+const yargonaut = require('yargonaut').style('cyan').errorsStyle('red.bold');
 
 const cli = new Liftoff({
   name: 'fractal',
@@ -19,7 +20,11 @@ const cli = new Liftoff({
 
 cli.launch({}, function(env){
 
-  let app;;
+  /**
+   * Get or create Fractal instance
+   */
+
+  let app;
   const config = env.configPath ? require(env.configPath) : {
     scope: 'global'
   };
@@ -36,23 +41,37 @@ cli.launch({}, function(env){
     return;
   }
 
-  app.addCommand('*', 'Fractal info', {}, () => {
+  /**
+   * Configure args parser/handler
+   */
 
+  yargs.usage(logger.format(`\n$0 <command> [...]`, 'yellow.bold'))
+    .showHelpOnFail(true)
+    .help('h').alias('h', 'help')
+    .fail(function (msg, err, yargs) {
+      if (err) {
+        throw err;
+      }
+      logger.error(msg);
       logger.draw.br();
-
-      let content = `${logger.format('Fractal CLI', 'green.bold')} ${logger.format(`v${app.version}`, 'dim')}
-
-Use ${logger.format(`${yargs.argv.$0} --help`, 'cyan.bold')} for usage info and available commands.`;
-
-      logger.draw.box(content, {
-        fullWidth: true,
-        align: 'left',
-        borderColor: 'dim'
-      });
-
+      logger.log(yargs.help());
       logger.draw.br();
-  });
+      process.exit(1);
+    })
+    .version(app.VERSION);
 
-  app.execCommand(process.argv.slice(2));
+  /**
+   * Load bundled commands
+   */
+
+  for (const command of app.getCommands()) {
+    yargs.command(command);
+  }
+
+  /**
+   * Parse argv, run appropriate command
+   */
+
+  return yargs.argv;
 
 });
