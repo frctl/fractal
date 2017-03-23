@@ -59,6 +59,10 @@ class Fractal extends EventEmitter {
       this.addAdapter(adapter);
     }
 
+    for (let extension of this.config.extensions || []) {
+      this.addExtension(extension);
+    }
+
     const plugins = this.config.plugins || {};
     ['files', 'components'].forEach(set => {
       for (let plugin of plugins[set] || []) {
@@ -76,7 +80,7 @@ class Fractal extends EventEmitter {
   addSrc(src) {
     const toAdd = utils.normalizePaths(src);
     const sources = refs.src.get(this) || [];
-    debug(`Adding src: ${toAdd.join(', ')}`);
+    toAdd.forEach(src => debug(`Adding src: ${src}`));
     refs.src.set(this, sources.concat(toAdd));
     return this;
   }

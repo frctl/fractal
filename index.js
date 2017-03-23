@@ -9,6 +9,7 @@ module.exports = function (opts = {}) {
   const config = utils.defaultsDeep(opts || {}, {
     src: null,
     adapters: [],
+    extensions: [],
     plugins: {
       files: [],
       components: []
@@ -16,7 +17,7 @@ module.exports = function (opts = {}) {
   });
 
   config.adapters = normalizeCollection(config.adapters, isAdapter).map(adapter => {
-    if (adapter.target) {
+    if (adapter.target && typeof adapter.target !== 'string') {
       return adapter.target;
     } else if (adapters[adapter.name]) {
       return adapters[adapter.name](adapter.opts);
@@ -28,6 +29,10 @@ module.exports = function (opts = {}) {
     config.plugins[set] = normalizeCollection(config.plugins[set], isPlugin).map(plugin => {
       return (plugin.target && typeof plugin.target !== 'string') ? plugin.target : require(plugin.name)(plugin.opts);
     });
+  });
+
+  config.extensions = normalizeCollection(config.extensions, isExtension).map(ext => {
+    return (ext.target && typeof ext.target !== 'string') ? ext.target : require(ext.name)(ext.opts);
   });
 
   const fractal = new Fractal(config);
@@ -69,6 +74,10 @@ function isAdapter(item) {
 }
 
 function isPlugin(item) {
+  return item && typeof item === 'function';
+}
+
+function isExtension(item) {
   return item && typeof item === 'function';
 }
 
