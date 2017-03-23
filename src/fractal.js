@@ -17,7 +17,6 @@ const entities = ['files', 'components'];
 
 const refs = {
   src: new WeakMap(),
-  config: new WeakMap(),
   adapters: new WeakMap(),
   files: new WeakMap(),
   components: new WeakMap(),
@@ -32,7 +31,7 @@ class Fractal extends EventEmitter {
    * @param  {object} [config={}] A configuration object
    * @return {Fractal} Returns a reference to the Fractal instance
    */
-  constructor(config = {}) {
+  constructor(config) {
     assert.maybe.object(config, `Fractal.constructor: config must be an object [config-invalid]`);
 
     super({
@@ -41,34 +40,37 @@ class Fractal extends EventEmitter {
 
     debug('Initialising Fractal instance with config data:', config);
 
-    refs.config.set(this, config);
     refs.files.set(this, files(this));
     refs.components.set(this, components(this));
     refs.commands.set(this, []);
     refs.adapters.set(this, new Map());
 
-    this.init();
+    if (config) {
+      this.configure(config);
+    }
   }
 
-  init() {
-    if (this.config.src) {
-      this.addSrc(this.config.src);
+  configure(config = {}) {
+    if (config.src) {
+      this.addSrc(config.src);
     }
 
-    for (let adapter of this.config.adapters || []) {
+    for (let adapter of config.adapters || []) {
       this.addAdapter(adapter);
     }
 
-    for (let extension of this.config.extensions || []) {
+    for (let extension of config.extensions || []) {
       this.addExtension(extension);
     }
 
-    const plugins = this.config.plugins || {};
+    const plugins = config.plugins || {};
     ['files', 'components'].forEach(set => {
       for (let plugin of plugins[set] || []) {
         this.addPlugin(plugin, set);
       }
     });
+
+    return this;
   }
 
   /**
@@ -254,14 +256,6 @@ class Fractal extends EventEmitter {
       return adapters.values().next().value;
     }
     return undefined;
-  }
-
-  /**
-   * The configuration object
-   * @return {Object} config
-   */
-  get config() {
-    return refs.config.get(this);
   }
 
   /**

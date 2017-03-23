@@ -5,7 +5,7 @@ const utils = require('@frctl/utils');
 const adapters = require('@frctl/adapters');
 const Fractal = require('./src/fractal');
 
-module.exports = function (opts = {}) {
+module.exports = function (opts = {}, fractal) {
   const config = utils.defaultsDeep(opts || {}, {
     src: null,
     adapters: [],
@@ -35,7 +35,8 @@ module.exports = function (opts = {}) {
     return (ext.target && typeof ext.target !== 'string') ? ext.target : require(ext.name)(ext.opts);
   });
 
-  const fractal = new Fractal(config);
+  fractal = fractal || new Fractal();
+  fractal.configure(config);
 
   return fractal;
 };
