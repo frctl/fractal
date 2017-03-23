@@ -29,7 +29,7 @@ class Fractal extends EventEmitter {
    * Insantiate a new Fractal instance
    *
    * @param  {object} [config={}] A configuration object
-   * @return {Fractal} Returns a reference to the Fractal instance
+   * @return {Fractal} The Fractal instance
    */
   constructor(config) {
     assert.maybe.object(config, `Fractal.constructor: config must be an object [config-invalid]`);
@@ -50,6 +50,12 @@ class Fractal extends EventEmitter {
     }
   }
 
+  /**
+   * Configure the Fractal instance via a config object
+   *
+   * @param  {object|array} config A config object
+   * @return {Fractal} The Fractal instance
+   */
   configure(config = {}) {
     if (config.src) {
       this.addSrc(config.src);
@@ -77,7 +83,7 @@ class Fractal extends EventEmitter {
    * Add a filesystem src directory
    *
    * @param  {string|array} src A source path or array of source paths
-   * @return {Fractal} Returns a reference to the Fractal instance
+   * @return {Fractal} The Fractal instance
    */
   addSrc(src) {
     const toAdd = utils.normalizePaths(src);
@@ -92,7 +98,7 @@ class Fractal extends EventEmitter {
    *
    * @param  {function} plugin Parser plugin to add
    * @param  {string} [target=components] The parser stack to add the plugin to
-   * @return {Fractal} Returns a reference to the Fractal instance
+   * @return {Fractal} The Fractal instance
    */
   addPlugin(plugin, target = 'components') {
     assert.function(plugin, `Fractal.addPlugin: plugin argument must be a function [plugin-invalid]`);
@@ -108,7 +114,7 @@ class Fractal extends EventEmitter {
    * @param  {string} name The name of the method
    * @param  {function} handler The function to be used as the method
    * @param  {string} [target=components] The result set to apply the method to
-   * @return {Fractal} Returns a reference to the Fractal instance
+   * @return {Fractal} The Fractal instance
    */
   addMethod(name, handler, target = 'components') {
     assert.string(name, `Fractal.addMethod: name argument must be a string [name-invalid]`);
@@ -122,7 +128,7 @@ class Fractal extends EventEmitter {
   /**
    * Add an CLI command
    *
-   * @return {Fractal} Returns a reference to the Fractal instance
+   * @return {Fractal} The Fractal instance
    */
   addCommand(...args) {
     const command = args.length === 1 ? args[0] : {
@@ -143,7 +149,7 @@ class Fractal extends EventEmitter {
    * Add an extension
    *
    * @param  {function} extension The extension wrapper function
-   * @return {Fractal} Returns a reference to the Fractal instance
+   * @return {Fractal} The Fractal instance
    */
   addExtension(extension) {
     assert.function(extension, `Fractal.addExtension handler argument must be a function [extension-invalid]`);
@@ -155,7 +161,7 @@ class Fractal extends EventEmitter {
    * Add a render adapter
    *
    * @param  {object} adapter The adapter object to register
-   * @return {Fractal} Returns a reference to the Fractal instance
+   * @return {Fractal} The Fractal instance
    */
   addAdapter(adapter) {
     assert.like(adapter, {name: 'name', render: function () {}}, `'adapter' must be an object with 'name', 'match', and 'render' properties [adapter-invalid]`);
