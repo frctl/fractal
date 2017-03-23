@@ -16,7 +16,7 @@ module.exports = function (fractal) {
     handler() {
       cli.draw.br();
 
-      if (fractal.config.scope === 'global') {
+      if (this.scope === 'global') {
         cli.error('The `list` command must be run within a Fractal project - no configuration found.');
         cli.draw.br();
         return;

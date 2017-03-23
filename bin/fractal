@@ -25,9 +25,8 @@ cli.launch({}, function(env){
    */
 
   let app;
-  const config = env.configPath ? require(env.configPath) : {
-    scope: 'global'
-  };
+  const config = env.configPath ? require(env.configPath) : {};
+  const scope = env.configPath ? 'project' : 'global';
 
   if (config instanceof local.Fractal || (config.constructor && config.constructor.name === 'Fractal')) {
     app = config;
@@ -65,6 +64,7 @@ cli.launch({}, function(env){
    */
 
   for (const command of app.commands) {
+    command.scope = scope;
     yargs.command(command);
   }
 

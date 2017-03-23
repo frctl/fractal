@@ -38,8 +38,6 @@ class Fractal extends EventEmitter {
       wildcard: true
     });
 
-    debug('Initialising Fractal instance with config data:', config);
-
     refs.files.set(this, files(this));
     refs.components.set(this, components(this));
     refs.commands.set(this, []);
@@ -57,6 +55,8 @@ class Fractal extends EventEmitter {
    * @return {Fractal} The Fractal instance
    */
   configure(config = {}) {
+    debug('Applying config:', config);
+
     if (config.src) {
       this.addSrc(config.src);
     }
