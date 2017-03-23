@@ -3,11 +3,9 @@
 const _ = require('lodash');
 const EventEmitter = require('eventemitter2').EventEmitter2;
 const utils = require('@frctl/utils');
-const adapters = require('@frctl/adapters');
 const fs = require('@frctl/ffs');
 const reqAll = require('req-all');
 const assert = require('check-types').assert;
-const defaults = require('../config');
 const pkg = require('../package.json');
 const adapterPlugin = require('./parser/files/plugins/adapter');
 const transform = require('./parser/transformer');
@@ -41,19 +39,32 @@ class Fractal extends EventEmitter {
       wildcard: true
     });
 
-    config = utils.defaultsDeep(config || {}, defaults);
-    refs.config.set(this, config);
-
     debug('Initialising Fractal instance with config data:', config);
 
-    if (config.src) {
-      this.addSrc(config.src);
-    }
-
+    refs.config.set(this, config);
     refs.files.set(this, files(this));
     refs.components.set(this, components(this));
     refs.commands.set(this, []);
     refs.adapters.set(this, new Map());
+
+    this.init();
+  }
+
+  init() {
+    if (this.config.src) {
+      this.addSrc(this.config.src);
+    }
+
+    for (let adapter of this.config.adapters || []) {
+      this.addAdapter(adapter);
+    }
+
+    const plugins = this.config.plugins || {};
+    ['files', 'components'].forEach(set => {
+      for (let plugin of plugins[set] || []) {
+        this.addPlugin(plugin, set);
+      }
+    });
   }
 
   /**
@@ -63,8 +74,10 @@ class Fractal extends EventEmitter {
    * @return {Fractal} Returns a reference to the Fractal instance
    */
   addSrc(src) {
+    const toAdd = utils.normalizePaths(src);
     const sources = refs.src.get(this) || [];
-    refs.src.set(this, sources.concat(utils.normalizePaths(src)));
+    debug(`Adding src: ${toAdd.join(', ')}`);
+    refs.src.set(this, sources.concat(toAdd));
     return this;
   }
 
@@ -135,14 +148,10 @@ class Fractal extends EventEmitter {
   /**
    * Add a render adapter
    *
-   * @param  {object|string} adapter The adapter object or name of the pre-defined adapter to register
-   * @param  {opts} adapter The adapter to register
+   * @param  {object} adapter The adapter object to register
    * @return {Fractal} Returns a reference to the Fractal instance
    */
-  addAdapter(adapter, opts = {}) {
-    if (typeof adapter === 'string' && adapters[adapter]) {
-      adapter = adapters[adapter](opts);
-    }
+  addAdapter(adapter) {
     assert.like(adapter, {name: 'name', render: function () {}}, `'adapter' must be an object with 'name', 'match', and 'render' properties [adapter-invalid]`);
 
     this.addPlugin(adapterPlugin({
@@ -199,10 +208,6 @@ class Fractal extends EventEmitter {
     }));
   }
 
-  get version() {
-    return pkg.version;
-  }
-
   get files() {
     return refs.files.get(this);
   }
@@ -211,20 +216,33 @@ class Fractal extends EventEmitter {
     return refs.components.get(this);
   }
 
+  /**
+   * The Fractal version specified in the package.json file
+   */
+  get version() {
+    return pkg.version;
+  }
+
+  /**
+   * An array of all registered and bundled commands
+   * @return {Array} Array of commands
+   */
   get commands() {
     const commands = _.values(reqAll('./commands')).map(command => command(this));
     return commands.concat(refs.commands.get(this));
   }
 
   /**
-   * Get a list of registered adapters
+   * An array of registered adapter names => adapters
+   * @return {Array} Adapters
    */
   get adapters() {
-    return refs.adapters.get(this);
+    return Array.from(refs.adapters.get(this).values());
   }
 
   /**
-   * Get the default (first registered) adapter
+   * The default (first registered) adapter
+   * @return {Object} Adapter
    */
   get defaultAdapter() {
     const adapters = refs.adapters.get(this);
@@ -235,14 +253,16 @@ class Fractal extends EventEmitter {
   }
 
   /**
-   * Return the configuration object
+   * The configuration object
+   * @return {Object} config
    */
   get config() {
     return refs.config.get(this);
   }
 
   /**
-   * Return the array of target src directories
+   * The target src directories
+   * @return {Array} Paths array
    */
   get src() {
     return refs.src.get(this) || [];

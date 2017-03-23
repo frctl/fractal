@@ -19,6 +19,7 @@
   "scripts": {
     "test": "npm run lint:fix && nyc npm run test:unit",
     "test:unit": "mocha \"test/**/*.test.js\" --require test/support/env",
+    "test:entry": "mocha \"test/files.api.test.js\" --require test/support/env",
     "test:watch": "npm run test:unit -- --watch",
     "lint": "xo",
     "lint:fix": "xo --fix",

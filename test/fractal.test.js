@@ -1,12 +1,10 @@
 /* eslint no-unused-expressions : "off", handle-callback-err: "off" */
 
 const EventEmitter = require('eventemitter2').EventEmitter2;
-const utils = require('@frctl/utils');
 const expect = require('@frctl/utils/test').expect;
 const ApiBuilder = require('@frctl/internals/api');
 const Parser = require('@frctl/internals/parser');
 const sinon = require('sinon');
-const defaults = require('../config');
 const Fractal = require('../src/fractal');
 
 const entities = ['files', 'components'];
@@ -29,13 +27,6 @@ describe('Fractal', function () {
 
     it(`does not require a src property to be set`, function () {
       expect(() => new Fractal({})).to.not.throw(TypeError, `[config-invalid]`);
-    });
-
-    it('merges supplied config with the configuration defaults set', function () {
-      const config = {};
-      const fractal = new Fractal(config);
-      const merged = utils.defaultsDeep(config || {}, defaults);
-      expect(merged).to.eql(fractal.config);
     });
 
     it(`inherits from EventEmitter`, function () {
@@ -215,10 +206,15 @@ describe('Fractal', function () {
   describe('.adapters', function () {
     it(`provides access to the set of registered adapters`, function () {
       const fractal = new Fractal(validConfig);
-      fractal.addAdapter('nunjucks');
-      expect(fractal.adapters).to.be.instanceof(Map);
-      expect(fractal.adapters.size).to.equal(1);
-      expect(fractal.adapters.has('nunjucks')).to.be.true;
+      const adapterExample = {
+        name: 'adapter',
+        match: '.someext',
+        render() {}
+      };
+      fractal.addAdapter(adapterExample);
+      expect(fractal.adapters).to.be.an('array');
+      expect(fractal.adapters.length).to.equal(1);
+      expect(Boolean(fractal.adapters.find(adapter => adapter.name === 'adapter'))).to.be.true;
     });
   });
 });

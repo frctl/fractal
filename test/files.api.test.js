@@ -2,15 +2,17 @@
 
 const expect = require('@frctl/utils/test').expect;
 const File = require('@frctl/ffs').File;
-const Fractal = require('../src/fractal');
+// const Fractal = require('../src/fractal');
+const factory = require('../.');
 
 describe('files API object', function () {
   let files;
 
   before(function (done) {
-    const fractal = new Fractal({
+    const fractal = factory({
       src: './test/fixtures/components'
     });
+
     fractal.parse((...args) => {
       [,, files] = args;
       done();

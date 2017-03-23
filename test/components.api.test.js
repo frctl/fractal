@@ -4,13 +4,14 @@ const _ = require('lodash');
 const expect = require('@frctl/utils/test').expect;
 const sinon = require('sinon');
 const File = require('@frctl/ffs').File;
-const Fractal = require('../src/fractal');
+// const Fractal = require('../src/fractal');
+const factory = require('../.');
 
 describe('components API object', function () {
   let components;
 
   beforeEach(function (done) {
-    const fractal = new Fractal({
+    const fractal = factory({
       src: './test/fixtures/components'
     });
     fractal.parse((...args) => {
@@ -172,9 +173,9 @@ describe('components API object', function () {
 });
 
 function getInstanceWithAdapter() {
-  const fractal = new Fractal({
-    src: './test/fixtures/components'
+  const fractal = factory({
+    src: './test/fixtures/components',
+    adapters: ['nunjucks']
   });
-  fractal.addAdapter('nunjucks');
   return fractal;
 }
