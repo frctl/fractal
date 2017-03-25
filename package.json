@@ -1,6 +1,6 @@
 {
   "name": "@frctl/fractal",
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0-alpha.2",
   "description": "A toolkit for parsing and querying filesystem-based component libraries.",
   "homepage": "https://github.com/frctl/fractal",
   "repository": "https://github.com/frctl/fractal",
