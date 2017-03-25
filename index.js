@@ -55,7 +55,7 @@ function normalizeCollection(collection = [], isTarget) {
       items.push({
         name: key,
         target: isTarget(value) ? value : null,
-        opts: isTarget(value) ? {} : value
+        opts: isTarget(value) ? undefined : value
       });
     });
   } else if (Array.isArray(collection)) {
@@ -63,7 +63,7 @@ function normalizeCollection(collection = [], isTarget) {
       items.push({
         name: typeof item === 'string' ? item : null,
         target: isTarget(item) ? item : null,
-        opts: {}
+        opts: undefined
       });
     }
   }
