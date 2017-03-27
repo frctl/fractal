@@ -58,7 +58,7 @@ function normalizeCollection(collection = [], isTarget) {
         items.push({
           name: key,
           target: isTarget(value) ? value : null,
-          opts: isTarget(value) ? {} : value
+          opts: isTarget(value) ? undefined : value
         });
       }
     });
@@ -67,7 +67,7 @@ function normalizeCollection(collection = [], isTarget) {
       items.push({
         name: typeof item === 'string' ? item : null,
         target: isTarget(item) ? item : null,
-        opts: {}
+        opts: undefined
       });
     }
   }
@@ -87,6 +87,7 @@ function isExtension(item) {
 }
 
 function load(name, opts) {
+
   let mod;
   const cwd = process.cwd();
   const local = path.resolve(cwd, name);
