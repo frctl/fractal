@@ -54,11 +54,13 @@ function normalizeCollection(collection = [], isTarget) {
   const items = [];
   if (_.isPlainObject(collection)) {
     _.forEach(collection, (value, key) => {
-      items.push({
-        name: key,
-        target: isTarget(value) ? value : null,
-        opts: isTarget(value) ? {} : value
-      });
+      if (value !== false) {
+        items.push({
+          name: key,
+          target: isTarget(value) ? value : null,
+          opts: isTarget(value) ? {} : value
+        });
+      }
     });
   } else if (Array.isArray(collection)) {
     for (let item of collection) {
