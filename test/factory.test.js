@@ -73,8 +73,8 @@ describe('Fractal instance factory', function () {
     const stub = sinon.stub(fractal, 'addExtension');
     fractal = factory({
       extensions: [
-        function(){},
-        './test/fixtures/packages/extension',
+        function () {},
+        './test/fixtures/packages/extension'
       ]
     }, fractal);
     expect(stub.calledTwice).to.be.true;

@@ -1,5 +1,7 @@
 /* eslint import/no-dynamic-require: off */
 
+const fs = require('fs');
+const path = require('path');
 const _ = require('lodash');
 const utils = require('@frctl/utils');
 const adapters = require('@frctl/adapters');
@@ -22,17 +24,17 @@ module.exports = function (opts = {}, fractal) {
     } else if (adapters[adapter.name]) {
       return adapters[adapter.name](adapter.opts);
     }
-    return require(adapter.name)(adapter.opts);
+    return load(adapter.name, adapter.opts);
   });
 
   ['files', 'components'].forEach(set => {
     config.plugins[set] = normalizeCollection(config.plugins[set], isPlugin).map(plugin => {
-      return (plugin.target && typeof plugin.target !== 'string') ? plugin.target : require(plugin.name)(plugin.opts);
+      return (plugin.target && typeof plugin.target !== 'string') ? plugin.target : load(plugin.name, plugin.opts);
     });
   });
 
   config.extensions = normalizeCollection(config.extensions, isExtension).map(ext => {
-    return (ext.target && typeof ext.target !== 'string') ? ext.target : require(ext.name)(ext.opts);
+    return (ext.target && typeof ext.target !== 'string') ? ext.target : load(ext.name, ext.opts);
   });
 
   fractal = fractal || new Fractal();
@@ -55,7 +57,7 @@ function normalizeCollection(collection = [], isTarget) {
       items.push({
         name: key,
         target: isTarget(value) ? value : null,
-        opts: isTarget(value) ? undefined : value
+        opts: isTarget(value) ? {} : value
       });
     });
   } else if (Array.isArray(collection)) {
@@ -63,7 +65,7 @@ function normalizeCollection(collection = [], isTarget) {
       items.push({
         name: typeof item === 'string' ? item : null,
         target: isTarget(item) ? item : null,
-        opts: undefined
+        opts: {}
       });
     }
   }
@@ -80,6 +82,37 @@ function isPlugin(item) {
 
 function isExtension(item) {
   return item && typeof item === 'function';
+}
+
+function load(name, opts) {
+  let mod;
+  const cwd = process.cwd();
+  const local = path.resolve(cwd, name);
+  const npm = path.resolve(cwd, 'node_modules', name);
+
+  if (fs.existsSync(local)) {
+    mod = prequire(local);
+  } else if (fs.existsSync(npm)) {
+    mod = prequire(npm);
+  } else {
+    mod = prequire(name);
+  }
+
+  return mod(opts);
+}
+
+function prequire(id) {
+  try {
+    return require(id);
+  } catch (e) {
+    let parent = module.parent;
+    for (; parent; parent = parent.parent) {
+      try {
+        return parent.require(id);
+      } catch (e) {}
+    }
+    throw new Error(`Cannot find module '${id}' from parent`);
+  }
 }
 
 module.exports.Fractal = Fractal;
