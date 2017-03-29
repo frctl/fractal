@@ -7,11 +7,11 @@ module.exports = function (fractal) {
 
     desc: 'Output a list of all components in the library',
 
-    builder(yargs) {
-      return yargs.option('prop', {
-
-      });
-    },
+    // builder(yargs) {
+    //   return yargs.option('prop', {
+    //
+    //   });
+    // },
 
     handler() {
       cli.draw.br();

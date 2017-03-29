@@ -1,3 +1,4 @@
+const path = require('path');
 const utils = require('@frctl/utils');
 
 module.exports = function (files) {
@@ -17,6 +18,11 @@ module.exports = function (files) {
       return file.path.startsWith(utils.addTrailingSeparator(entityPath));
     }).map(file => {
       file.scope = 'component';
+      Object.defineProperty(file, 'componentPath', {
+        get() {
+          return path.relative(entityPath, file.path);
+        }
+      });
       return file;
     });
   }
