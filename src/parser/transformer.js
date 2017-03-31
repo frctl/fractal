@@ -1,7 +1,10 @@
-const path = require('path');
+const fs = require('@frctl/ffs');
+const assert = require('check-types').assert;
 const utils = require('@frctl/utils');
 
 module.exports = function (files) {
+  assert.array.of.instance(files, fs.File, `transformer: input must be an array of File objects [files-invalid]`);
+
   const components = files.filter(file => file.role === 'component').map(file => {
     return {
       path: file.path,
@@ -16,14 +19,6 @@ module.exports = function (files) {
   function getFiles(entityPath) {
     return files.filter(file => {
       return file.path.startsWith(utils.addTrailingSeparator(entityPath));
-    }).map(file => {
-      file.scope = 'component';
-      Object.defineProperty(file, 'componentPath', {
-        get() {
-          return path.relative(entityPath, file.path);
-        }
-      });
-      return file;
     });
   }
 

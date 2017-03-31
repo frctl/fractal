@@ -4,7 +4,7 @@ const Parser = require('@frctl/internals/parser');
 const expect = require('@frctl/utils/test').expect;
 const parser = require('../src/parser/components/parser');
 
-const defaultPlugins = ['setConfig', 'setName', 'setLabel'];
+const defaultPlugins = ['setConfig', 'addFileProps', 'setName', 'setLabel'];
 
 describe('components parser', function () {
   it(`is an instance of Parser`, function () {
@@ -13,7 +13,7 @@ describe('components parser', function () {
 
   it(`has the expected plugins auto-registered in the correct order`, function () {
     const componentsParser = parser();
-    expect(componentsParser.plugins.length).to.equal(3);
+    expect(componentsParser.plugins.length).to.equal(defaultPlugins.length);
     for (var i = 0; i < defaultPlugins.length; i++) {
       expect(componentsParser.plugins[i].name).to.equal(defaultPlugins[i]);
     }

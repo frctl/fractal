@@ -87,7 +87,6 @@ function isExtension(item) {
 }
 
 function load(name, opts) {
-
   let mod;
   const cwd = process.cwd();
   const local = path.resolve(cwd, name);
