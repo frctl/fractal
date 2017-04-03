@@ -1,9 +1,6 @@
-/* eslint import/no-dynamic-require: off */
-
-const fs = require('fs');
-const path = require('path');
 const _ = require('lodash');
 const utils = require('@frctl/utils');
+const loader = require('@frctl/utils/load');
 const adapters = require('@frctl/adapters');
 const Fractal = require('./src/fractal');
 
@@ -24,17 +21,17 @@ module.exports = function (opts = {}, fractal) {
     } else if (adapters[adapter.name]) {
       return adapters[adapter.name](adapter.opts);
     }
-    return load(adapter.name, adapter.opts);
+    return loader.load(adapter.name, adapter.opts);
   });
 
   ['files', 'components'].forEach(set => {
     config.plugins[set] = normalizeCollection(config.plugins[set], isPlugin).map(plugin => {
-      return (plugin.target && typeof plugin.target !== 'string') ? plugin.target : load(plugin.name, plugin.opts);
+      return (plugin.target && typeof plugin.target !== 'string') ? plugin.target : loader.load(plugin.name, plugin.opts);
     });
   });
 
   config.extensions = normalizeCollection(config.extensions, isExtension).map(ext => {
-    return (ext.target && typeof ext.target !== 'string') ? ext.target : load(ext.name, ext.opts);
+    return (ext.target && typeof ext.target !== 'string') ? ext.target : loader.load(ext.name, ext.opts);
   });
 
   fractal = fractal || new Fractal();
@@ -43,11 +40,23 @@ module.exports = function (opts = {}, fractal) {
   return fractal;
 };
 
+function isAdapter(item) {
+  return item && (typeof item === 'object' && typeof item.name === 'string' && typeof item.render === 'function');
+}
+
+function isPlugin(item) {
+  return item && typeof item === 'function';
+}
+
+function isExtension(item) {
+  return item && typeof item === 'function';
+}
+
 /**
  * Takes an array or object of plugins/adapters/extensions and normalizes into an
  * consisteny array of objects for loading in the factory method.
  *
- * @param  {Array|Object}  [collection=[]] Collection of items
+ * @param  {Array|Object} [collection=[]] Collection of items
  * @return {Array} Array of normalized objects
  */
 function normalizeCollection(collection = [], isTarget) {
@@ -72,49 +81,6 @@ function normalizeCollection(collection = [], isTarget) {
     }
   }
   return items;
-}
-
-function isAdapter(item) {
-  return item && (typeof item === 'object' && typeof item.name === 'string' && typeof item.render === 'function');
-}
-
-function isPlugin(item) {
-  return item && typeof item === 'function';
-}
-
-function isExtension(item) {
-  return item && typeof item === 'function';
-}
-
-function load(name, opts) {
-  let mod;
-  const cwd = process.cwd();
-  const local = path.resolve(cwd, name);
-  const npm = path.resolve(cwd, 'node_modules', name);
-
-  if (fs.existsSync(local)) {
-    mod = prequire(local);
-  } else if (fs.existsSync(npm)) {
-    mod = prequire(npm);
-  } else {
-    mod = prequire(name);
-  }
-
-  return mod(opts);
-}
-
-function prequire(id) {
-  try {
-    return require(id);
-  } catch (e) {
-    let parent = module.parent;
-    for (; parent; parent = parent.parent) {
-      try {
-        return parent.require(id);
-      } catch (e) {}
-    }
-    throw new Error(`Cannot find module '${id}' from parent`);
-  }
 }
 
 module.exports.Fractal = Fractal;
