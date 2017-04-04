@@ -120,10 +120,10 @@ describe('Fractal', function () {
   });
 
   describe('.parse()', function () {
-    it('throws an error if no callback is provided', function () {
-      const fractal = new Fractal(validConfig);
-      expect(fractal.parse).to.throw(TypeError, '[callback-invalid]');
-    });
+    // it('throws an error if an invalid callback is provided', function () {
+    //   const fractal = new Fractal(validConfig);
+    //   expect(() => fractal.parse('foo')).to.throw(TypeError, '[callback-invalid]');
+    // });
 
     it('calls the callback with component and file APIs when successful ', function (done) {
       const fractal = new Fractal(validConfig);

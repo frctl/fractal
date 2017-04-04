@@ -4,13 +4,13 @@ const name = require('./plugins/name');
 const files = require('./plugins/files');
 const label = require('./plugins/label');
 
-module.exports = function () {
-  const components = new Parser();
-
-  components.use(config())
-            .use(files())
-            .use(name())
-            .use(label());
+module.exports = function (fractal) {
+  const components = new Parser([
+    config(),
+    files(),
+    name(),
+    label()
+  ], fractal);
 
   return components;
 };

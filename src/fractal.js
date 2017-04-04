@@ -4,14 +4,12 @@ const _ = require('lodash');
 const EventEmitter = require('eventemitter2').EventEmitter2;
 const utils = require('@frctl/utils');
 const fs = require('@frctl/ffs');
-const reqAll = require('req-all');
 const assert = require('check-types').assert;
 const pkg = require('../package.json');
 const adapterPlugin = require('./parser/files/plugins/adapter');
 const transform = require('./parser/transformer');
 const files = require('./parser/files');
 const components = require('./parser/components');
-const debug = require('./debug');
 
 const entities = ['files', 'components'];
 
@@ -20,7 +18,8 @@ const refs = {
   adapters: new WeakMap(),
   files: new WeakMap(),
   components: new WeakMap(),
-  commands: new WeakMap()
+  commands: new WeakMap(),
+  logs: new WeakMap()
 };
 
 class Fractal extends EventEmitter {
@@ -42,6 +41,7 @@ class Fractal extends EventEmitter {
     refs.components.set(this, components(this));
     refs.commands.set(this, []);
     refs.adapters.set(this, new Map());
+    refs.logs.set(this, []);
 
     if (config) {
       this.configure(config);
@@ -55,7 +55,7 @@ class Fractal extends EventEmitter {
    * @return {Fractal} The Fractal instance
    */
   configure(config = {}) {
-    debug('Applying config:', config);
+    this.log('Applying config:', config);
 
     if (config.src) {
       this.addSrc(config.src);
@@ -88,7 +88,7 @@ class Fractal extends EventEmitter {
   addSrc(src) {
     const toAdd = utils.normalizePaths(src);
     const sources = refs.src.get(this) || [];
-    toAdd.forEach(src => debug(`Adding src: ${src}`));
+    toAdd.forEach(src => this.log(`Adding src: ${src}`));
     refs.src.set(this, sources.concat(toAdd));
     return this;
   }
@@ -130,18 +130,32 @@ class Fractal extends EventEmitter {
    *
    * @return {Fractal} The Fractal instance
    */
-  addCommand(...args) {
-    const command = args.length === 1 ? args[0] : {
-      command: args[0],
-      desc: args[1]
-    };
-    if (args.length === 3) {
-      command.handler = args[2];
-    } else if (args.length > 3) {
-      command.builder = args[2];
-      command.handler = args[3];
-    }
-    refs.commands.get(this).push(command);
+  addCommand(command, description, ...args) {
+    let [handler, opts] = args.reverse();
+    opts = opts || {};
+
+    assert.string(command, `Fractal.addCommand: command argument must be a string [command-invalid]`);
+    assert.string(description, `Fractal.addCommand: description argument must be a string [description-invalid]`);
+    assert.function(handler, `Fractal.addCommand: handler argument must be a function [handler-invalid]`);
+
+    // const command = args.length === 1 ? args[0] : {
+    //   command: args[0],
+    //   desc: args[1]
+    // };
+    // if (args.length === 3) {
+    //   command.handler = args[2];
+    // } else if (args.length > 3) {
+    //   command.builder = args[2];
+    //   command.handler = args[3];
+    // }
+
+    refs.commands.get(this).push({
+      command: command,
+      description: description,
+      opts: opts,
+      handler: handler
+    });
+
     return this;
   }
 
@@ -189,7 +203,7 @@ class Fractal extends EventEmitter {
    * @param  {function} [callback] A callback function
    */
   parse(callback) {
-    assert.function(callback, `Fractal.parse: callback must be a function [callback-invalid]`);
+    assert.maybe.function(callback, `Fractal.parse: callback must be a function [callback-invalid]`);
 
     this.emit('parse.start');
 
@@ -202,7 +216,17 @@ class Fractal extends EventEmitter {
           callback(null, components, files);
         });
       });
-    }).catch(callback);
+    }).catch(err => {
+      this.emit('error', err);
+      callback(err);
+    });
+  }
+
+  watch(...args) {
+    let [callback, paths] = args.reverse();
+    paths = utils.toArray(paths || []);
+    callback = callback || (() => {});
+    return fs.watch(this.src.concat(paths), callback);
   }
 
   /**
@@ -220,12 +244,24 @@ class Fractal extends EventEmitter {
     }));
   }
 
+  log(message, ...args) {
+    let [level, data] = typeof args[0] === 'string' ? args : args.reverse();
+    level = level || 'debug';
+    this.logs.push({message, data, level});
+    this.emit(`log.${level}`, message, data, level);
+    return this;
+  }
+
   get files() {
     return refs.files.get(this);
   }
 
   get components() {
     return refs.components.get(this);
+  }
+
+  get logs() {
+    return refs.logs.get(this);
   }
 
   /**
@@ -240,8 +276,9 @@ class Fractal extends EventEmitter {
    * @return {Array} Array of commands
    */
   get commands() {
-    const commands = _.values(reqAll('./commands')).map(command => command(this));
-    return commands.concat(refs.commands.get(this));
+    return refs.commands.get(this);
+    // const commands = _.values(reqAll('./commands')).map(command => command(this));
+    // return commands.concat(refs.commands.get(this));
   }
 
   /**

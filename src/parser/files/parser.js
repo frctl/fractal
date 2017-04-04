@@ -4,11 +4,11 @@ const name = require('./plugins/name');
 const role = require('./plugins/role');
 
 module.exports = function (fractal, opts = {}) {
-  const files = new Parser();
-
-  files.use(name(opts.name))
-       .use(role(opts.roles))
-       .use(config(opts.config));
+  const files = new Parser([
+    name(opts.name),
+    role(opts.roles),
+    config(opts.config)
+  ], fractal);
 
   return files;
 };

@@ -2,10 +2,12 @@
 
 const local = require('../.');
 const Liftoff = require('liftoff');
-const logger = require('@frctl/console');
+const utils = require('@frctl/utils');
 const semver = require('semver');
-const yargs = require('yargs');
-const yargonaut = require('yargonaut').style('cyan').errorsStyle('red.bold');
+let yargs = require('yargs');
+// const yargonaut = require('yargonaut').style('cyan').errorsStyle('red.bold');
+const handler = require('../src/cli/handler');
+const output = require('../src/cli/ui');
 
 const cli = new Liftoff({
   name: 'fractal',
@@ -18,7 +20,10 @@ const cli = new Liftoff({
   }
 });
 
-cli.launch({}, function(env){
+cli.launch({}, function(env) {
+
+  const ui = output();
+  const format = ui.utils.format;
 
   /**
    * Get or create Fractal instance
@@ -27,8 +32,7 @@ cli.launch({}, function(env){
   let app;
   const config = env.configPath ? require(env.configPath) : {};
 
-  env.isProject = Boolean(env.configPath);
-  env.isGlobal = ! env.isProject;
+  env.scope = Boolean(env.configPath) ? 'project' : 'global';
 
   if (config instanceof local.Fractal || (config.constructor && config.constructor.name === 'Fractal')) {
     app = config;
@@ -46,32 +50,65 @@ cli.launch({}, function(env){
    * Configure args parser/handler
    */
 
-  yargs.usage(logger.format(`\n$0 <command> [...]`, 'yellow.bold'))
-    .showHelpOnFail(true)
-    .help('h').alias('h', 'help')
-    .fail(function (msg, err, yargs) {
-      if (err) {
-        throw err;
-      }
-      logger.error(msg);
-      logger.draw.br();
-      logger.log(yargs.help());
-      logger.draw.br();
-      process.exit(1);
+  yargs.usage(format(`\n$0 <command> [...]`, 'yellow.bold'))
+    .help('help', 'show help information')
+    .option('debug', {
+      describe: 'show debug output',
+      global: true,
+      boolean: true
     })
-    .version(app.VERSION);
+    .option('version', {
+      describe: 'display version information',
+      global: false,
+      boolean: true
+    });
 
   /**
-   * Load bundled commands
+   * Default command
    */
 
-  for (const command of app.commands) {
-    command.handler = command.handler.bind({ env: env });
-    yargs.command(command);
+  yargs.command('*', 'Fractal info', {}, argv => {
+    const isError = argv._.length > 0;
+    ui.br();
+    if (isError) {
+      ui.error(`Command '${argv._[0]}' not recognised`);
+    } else {
+      ui.line().br().message(`Fractal ${format(`v${app.version}`, 'dim')}`).br();
+      ui.message(`Use ${format(`${argv.$0} --help`, 'cyan')} for usage information`).br().line();
+    }
+    ui.br();
+  });
+
+  /**
+   * Load commands, filter out those that do not match the current scope
+   */
+
+  const commands = app.commands.filter(command => {
+    let scope = utils.toArray(command.opts.scope || 'project');
+    return scope.includes(env.scope) || scope.includes('*');
+  });
+
+  for (const c of commands) {
+    let options = {};
+    if (typeof c.opts.options === 'function') {
+      options = c.opts.options;
+    } else {
+      options = yargs => {
+        yargs.reset()
+          .usage(format(`\n$0 ${c.command}`, 'yellow.bold'))
+          .options(c.opts.options || {})
+      };
+    }
+    yargs.command(
+      c.command,
+      c.description,
+      options,
+      handler(c.opts, c.handler, app, env, yargs)
+    );
   }
 
   /**
-   * Parse argv, run appropriate command
+   * Parse argv to trigger appropriate command
    */
 
   return yargs.argv;

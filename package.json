@@ -29,10 +29,10 @@
   },
   "dependencies": {
     "@frctl/adapters": "^0.1.0",
-    "@frctl/console": "^0.2.0",
+    "@frctl/console": "^0.3.0",
     "@frctl/ffs": "^0.2.0",
     "@frctl/fractal-plugin-files-parse-config": "^0.1.0",
-    "@frctl/internals": "^0.4.0",
+    "@frctl/internals": "^0.4.1",
     "@frctl/utils": "^0.5.0",
     "bluebird": "^3.4.7",
     "check-types": "^7.1.5",
@@ -41,9 +41,14 @@
     "liftoff": "^2.3.0",
     "lodash": "^4.17.4",
     "multimatch": "^2.1.0",
+    "nunjucks": "^3.0.0",
+    "ora": "^1.2.0",
+    "performance-now": "^2.1.0",
     "req-all": "^1.0.0",
+    "window-size": "^0.3.0",
+    "wrap-ansi": "^2.1.0",
     "yargonaut": "^1.1.2",
-    "yargs": "^7.0.1"
+    "yargs": "^7.0.2"
   },
   "devDependencies": {
     "@frctl/eslint-config-frctl": "0.1.0",
@@ -52,7 +57,6 @@
     "jsdoc": "^3.4.3",
     "mocha": "^3.2.0",
     "np": "^2.12.0",
-    "nunjucks": "^3.0.0",
     "nyc": "^10.1.2",
     "proxyquire": "^1.7.11",
     "sinon": "^1.17.7",
