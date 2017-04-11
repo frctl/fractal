@@ -5,3 +5,4 @@ npm-debug.log
 /build/*
 /fractal.js
 .idea/
+.nyc_output
