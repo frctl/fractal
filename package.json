@@ -32,6 +32,7 @@
     "@frctl/cli": "^0.0.1",
     "@frctl/ffs": "^0.2.0",
     "@frctl/internals": "^0.4.1",
+    "@frctl/presets": "^0.0.2",
     "@frctl/utils": "^0.5.2",
     "bluebird": "^3.4.7",
     "check-types": "^7.1.5",
