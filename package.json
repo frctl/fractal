@@ -25,14 +25,14 @@
     "lint:fix": "xo --fix",
     "generate:docs": "jsdoc src/*",
     "release": "np",
-    "test:plugins": "xo --fix test/plugins/**/*.test.js && xo test/plugins/**/*.js && nyc mocha \"test/plugins/**/*.test.js\" --require test/support/env"
+    "test:validate": "nyc mocha \"test/validate.test.js\" --require test/support/env"
   },
   "dependencies": {
     "@frctl/adapters": "^0.1.0",
     "@frctl/cli": "^0.0.1",
     "@frctl/ffs": "^0.2.0",
     "@frctl/internals": "^0.4.1",
-    "@frctl/utils": "^0.5.0",
+    "@frctl/utils": "^0.5.2",
     "bluebird": "^3.4.7",
     "check-types": "^7.1.5",
     "eventemitter2": "^3.0.0",
@@ -41,7 +41,6 @@
   },
   "devDependencies": {
     "@frctl/eslint-config-frctl": "0.1.0",
-    "@frctl/utils": "^0.5.0",
     "chai": "^3.5.0",
     "jsdoc": "^3.4.3",
     "mocha": "^3.2.0",

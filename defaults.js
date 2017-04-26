@@ -8,12 +8,12 @@ module.exports = {
 
   plugins: {
     files: [],
-    components: [],
+    components: []
   },
 
   methods: {
     files: [],
-    components: [],
+    components: []
   },
 
   commands: [],

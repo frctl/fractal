@@ -82,9 +82,9 @@
     titlecase "^1.1.2"
     uuid "^2.0.3"
 
-"@frctl/utils@^0.5", "@frctl/utils@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@frctl/utils/-/utils-0.5.0.tgz#64837bcdbb21777624eaf25c45b965b6c036ea87"
+"@frctl/utils@^0.5", "@frctl/utils@^0.5.2":
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/@frctl/utils/-/utils-0.5.2.tgz#1d4d537267eed2e23272b33337df3c6ebd3ddff2"
   dependencies:
     chai "^3.5.0"
     chai-as-promised "^6.0.0"
@@ -93,7 +93,7 @@
     lodash "^4.16.3"
     parent-require "^1.0.0"
     sinon "^1.17.7"
-    slug "^0.9.1"
+    slugify "^1.1.0"
     titlecase "^1.1.2"
     uuid "^2.0.3"
 
@@ -765,8 +765,8 @@ dashdash@^1.12.0:
     assert-plus "^1.0.0"
 
 date-fns@^1.27.2:
-  version "1.28.3"
-  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-1.28.3.tgz#145d87adc3f5a82c6bda668de97eee1132c97ea1"
+  version "1.28.4"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-1.28.4.tgz#7938aec34ba31fc8bd134d2344bc2e0bbfd95165"
 
 debug-log@^1.0.1:
   version "1.0.1"
@@ -1123,18 +1123,18 @@ eslint@^3.6.0:
     text-table "~0.2.0"
     user-home "^2.0.0"
 
-espree@^3.1.3, espree@^3.4.0:
-  version "3.4.2"
-  resolved "https://registry.yarnpkg.com/espree/-/espree-3.4.2.tgz#38dbdedbedc95b8961a1fbf04734a8f6a9c8c592"
-  dependencies:
-    acorn "^5.0.1"
-    acorn-jsx "^3.0.0"
-
-espree@~3.1.7:
+espree@^3.1.3, espree@~3.1.7:
   version "3.1.7"
   resolved "https://registry.yarnpkg.com/espree/-/espree-3.1.7.tgz#fd5deec76a97a5120a9cd3a7cb1177a0923b11d2"
   dependencies:
     acorn "^3.3.0"
+    acorn-jsx "^3.0.0"
+
+espree@^3.4.0:
+  version "3.4.2"
+  resolved "https://registry.yarnpkg.com/espree/-/espree-3.4.2.tgz#38dbdedbedc95b8961a1fbf04734a8f6a9c8c592"
+  dependencies:
+    acorn "^5.0.1"
     acorn-jsx "^3.0.0"
 
 esprima@^3.1.1:
@@ -1505,8 +1505,8 @@ get-stream@^3.0.0:
   resolved "https://registry.yarnpkg.com/get-stream/-/get-stream-3.0.0.tgz#8e943d1358dc37555054ecbe2edb05aa174ede14"
 
 getpass@^0.1.1:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/getpass/-/getpass-0.1.6.tgz#283ffd9fc1256840875311c1b60e8c40187110e6"
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/getpass/-/getpass-0.1.7.tgz#5eff8e3e684d569ae4cb2b1282604e8ba62149fa"
   dependencies:
     assert-plus "^1.0.0"
 
@@ -3110,8 +3110,8 @@ redeyed@~1.0.0:
     esprima "~3.0.0"
 
 regenerator-runtime@^0.10.0:
-  version "0.10.3"
-  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.10.3.tgz#8c4367a904b51ea62a908ac310bf99ff90a82a3e"
+  version "0.10.4"
+  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.10.4.tgz#74cb6598d3ba2eb18694e968a40e2b3b4df9cf93"
 
 regex-cache@^0.4.2:
   version "0.4.3"
@@ -3360,6 +3360,10 @@ slug@^0.9.1:
   resolved "https://registry.yarnpkg.com/slug/-/slug-0.9.1.tgz#af08f608a7c11516b61778aa800dce84c518cfda"
   dependencies:
     unicode ">= 0.3.1"
+
+slugify@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/slugify/-/slugify-1.1.0.tgz#7e5b0938d52b5efab1878247ef0f6a4f05db7ee0"
 
 sntp@1.x.x:
   version "1.0.9"

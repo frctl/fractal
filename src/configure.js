@@ -1,28 +1,10 @@
 const _ = require('lodash');
-const assert = require('check-types').assert;
-const utils = require('@frctl/utils');
 const loader = require('@frctl/utils/load');
 
 const configure = module.exports = function (fractal, config = {}, appliedPresets = []) {
-
   function resolveConfigItems(path) {
     const items = _.get(config, path, []);
-    assert.array(items, `Configuration for ${path} must be provided as an array`);
-    return items.map(item => {
-      let [pkg, config, ...args] = utils.toArray(item);
-      if (typeof pkg === 'string') {
-        pkg = loader.reqwire(pkg);
-      }
-
-      assert.function(pkg, `${path} loading error - package must be a function`);
-
-      if (!_.isPlainObject(config)) {
-        args.unshift(config);
-        config = {};
-      }
-
-      return [pkg, config, ...args];
-    });
+    return loader.resolve(items);
   }
 
   // apply any presets first
@@ -67,16 +49,14 @@ const configure = module.exports = function (fractal, config = {}, appliedPreset
   // load type-specific plugins and methods
 
   ['files', 'components'].forEach(type => {
-
     for (const [plugin, opts] of resolveConfigItems(`plugins.${type}`)) {
       fractal.addPlugin(plugin(opts), type);
     }
 
-    for (const [method, opts, target] of resolveConfigItems(`methods.${type}`)) {
+    for (const [method, opts] of resolveConfigItems(`methods.${type}`)) {
       const props = method(opts);
       fractal.addMethod(props.name, props.handler, type);
     }
-
   });
 
   return fractal;

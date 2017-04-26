@@ -1,4 +1,4 @@
-/* eslint "import/no-dynamic-require": "off" */
+/* eslint "import/no-dynamic-require": "off", "handle-callback-err": "off" */
 
 const _ = require('lodash');
 const EventEmitter = require('eventemitter2').EventEmitter2;
@@ -6,13 +6,8 @@ const utils = require('@frctl/utils');
 const fs = require('@frctl/ffs');
 const ApiBuilder = require('@frctl/internals/api');
 const Parser = require('@frctl/internals/parser');
-const pkg = require('../package.json');
-const adapterPlugin = require('./adapters/plugin');
-const adapterMethod = require('./adapters/method');
 const applyConfig = require('./configure');
 const validate = require('./validate');
-
-const entities = ['files', 'components'];
 
 const refs = {
   src: new WeakMap(),
@@ -57,7 +52,7 @@ class Fractal extends EventEmitter {
       this.configure(config);
     }
 
-    this.on('error', err => {});
+    this.on('error', () => {});
   }
 
   /**
@@ -82,14 +77,14 @@ class Fractal extends EventEmitter {
     const sources = refs.src.get(this) || [];
     toAdd.forEach(src => {
       validate.src(src);
-      this.log(`Adding src: ${src}`)
+      this.log(`Adding src: ${src}`);
     });
     refs.src.set(this, sources.concat(toAdd));
     return this;
   }
 
   /**
-   * Add a plugin to the specified entity parser
+   * Add a plugin to the specified parser
    *
    * @param  {function} plugin Parser plugin to add
    * @param  {string} [target=components] The parser stack to add the plugin to
@@ -103,11 +98,11 @@ class Fractal extends EventEmitter {
   }
 
   /**
-   * Register an API method
+   * Register a collection API method
    *
    * @param  {string} name The name of the method
    * @param  {function} handler The function to be used as the method
-   * @param  {string} [target=components] The result set to apply the method to
+   * @param  {string} [target=components] The collection to apply the method to
    * @return {Fractal} The Fractal instance
    */
   addMethod(name, handler, target = 'components') {
@@ -149,8 +144,8 @@ class Fractal extends EventEmitter {
    */
   addAdapter(adapter) {
     validate.adapter(adapter);
-    this.addPlugin(adapterPlugin(adapter), 'files');
-    this.addMethod(`render.${adapter.name}`, adapterMethod(adapter));
+    this.addPlugin(require('./adapters/plugin')(adapter), 'files');
+    this.addMethod(`render.${adapter.name}`, require('./adapters/method')(adapter));
     refs.adapters.get(this).push(adapter);
     return this;
   }
@@ -227,14 +222,10 @@ class Fractal extends EventEmitter {
     validate.entityType(target);
     const entity = this[target];
     return entity.parser.process(input).then(data => {
-      return entity.api.generate(Object.create(null, {
-        $data: {
-          value: data
-        },
-        $instance: {
-          value: this
-        }
-      }));
+      return entity.api.generate({
+        $data: data,
+        $instance: this
+      });
     });
   }
 
@@ -257,7 +248,7 @@ class Fractal extends EventEmitter {
    * The Fractal version specified in the package.json file
    */
   get version() {
-    return pkg.version;
+    return require('../package.json').version;
   }
 
   /**

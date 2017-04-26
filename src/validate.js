@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const assert = require('check-types').assert;
 const fs = require('@frctl/ffs');
 
@@ -23,27 +24,31 @@ module.exports = {
     assert.function(plugin, `Plugins must be functions [plugin-invalid]`);
   },
 
-  extension(extension){
+  extension(extension) {
     assert.function(extension, `Extensions must be functions [extension-invalid]`);
   },
 
   method(method) {
-    assert.object(method, `Methods must be objects [method-invalid]`);
-    assert.string(method.name, `Method name must be a string [method-name-invalid]`);
-    assert.function(method.handler, `Method handler must be a function [method-handler-invalid]`);
+    validateObj('method', method, {
+      name: 'string',
+      handler: 'function'
+    });
   },
 
-  command(cmd) {
-    assert.object(cmd, `Commands must be objects [command-invalid]`);
-    assert.string(cmd.command, `Command.command must be a string [command-command-invalid]`);
-    assert.string(cmd.description, `Command.description must be a string [command-description-invalid]`);
-    assert.function(cmd.handler, `Command.handler must be a function [command-handler-invalid]`);
+  command(command) {
+    validateObj('command', command, {
+      command: 'string',
+      description: 'string',
+      handler: 'function'
+    });
   },
 
   adapter(adapter) {
-    assert.object(adapter, `Adapters must be objects [adapter-invalid]`);
-    assert.string(adapter.name, `Adapter.name must be a string [adapter-name-invalid]`);
-    assert.function(adapter.render, `Adapter.render must be a function [adapter-render-invalid]`);
+    validateObj('adapter', adapter, {
+      name: 'string',
+      match: 'string',
+      render: 'function'
+    });
   },
 
   transformer(transformer) {
@@ -55,3 +60,15 @@ module.exports = {
   }
 
 };
+
+function validateObj(what, obj, props = {}) {
+  const propNames = _.keys(props);
+  for (const prop of propNames) {
+    if (typeof obj[prop] === 'undefined') {
+      throw new TypeError(`${what}s must be objects with props '${propNames.join(', ')}' [${what}-invalid]`);
+    }
+  }
+  _.forEach(props, (type, prop) => {
+    assert[type](obj[prop], `${what}.render must be a ${type} [${what}-${prop}-invalid]`);
+  });
+}
