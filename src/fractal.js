@@ -6,7 +6,6 @@ const utils = require('@frctl/utils');
 const fs = require('@frctl/ffs');
 const ApiBuilder = require('@frctl/internals/api');
 const Parser = require('@frctl/internals/parser');
-const assert = require('check-types').assert;
 const pkg = require('../package.json');
 const adapterPlugin = require('./adapters/plugin');
 const adapterMethod = require('./adapters/method');
