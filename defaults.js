@@ -1,10 +1,21 @@
 module.exports = {
 
   src: null,
+
   adapters: [],
+
   extensions: [],
-  plugins: [],
-  methods: [],
+
+  plugins: {
+    files: [],
+    components: [],
+  },
+
+  methods: {
+    files: [],
+    components: [],
+  },
+
   commands: [],
 
   presets: [
