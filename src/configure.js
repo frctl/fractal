@@ -5,7 +5,7 @@ const loader = require('@frctl/utils/load');
 
 const configure = module.exports = function (fractal, config = {}, appliedPresets = []) {
 
-  function resolveConfig(path) {
+  function resolveConfigItems(path) {
     const items = _.get(config, path, []);
     assert.array(items, `Configuration for ${path} must be provided as an array`);
     return items.map(item => {
@@ -27,7 +27,7 @@ const configure = module.exports = function (fractal, config = {}, appliedPreset
 
   // apply any presets first
 
-  const presets = resolveConfig('presets');
+  const presets = resolveConfigItems('presets');
 
   for (const [fn, opts] of presets) {
     const preset = fn(opts);
@@ -52,15 +52,15 @@ const configure = module.exports = function (fractal, config = {}, appliedPreset
 
   // load adapters, extensions and commands
 
-  for (const [adapter, opts] of resolveConfig('adapters')) {
+  for (const [adapter, opts] of resolveConfigItems('adapters')) {
     fractal.addAdapter(adapter(opts));
   }
 
-  for (const [extension, opts] of resolveConfig('extensions')) {
+  for (const [extension, opts] of resolveConfigItems('extensions')) {
     fractal.addExtension(extension(opts));
   }
 
-  for (const [command, opts] of resolveConfig('commands')) {
+  for (const [command, opts] of resolveConfigItems('commands')) {
     fractal.addCommand(command(opts));
   }
 
@@ -68,11 +68,11 @@ const configure = module.exports = function (fractal, config = {}, appliedPreset
 
   ['files', 'components'].forEach(type => {
 
-    for (const [plugin, opts] of resolveConfig(`plugins.${type}`)) {
+    for (const [plugin, opts] of resolveConfigItems(`plugins.${type}`)) {
       fractal.addPlugin(plugin(opts), type);
     }
 
-    for (const [method, opts, target] of resolveConfig(`methods.${type}`)) {
+    for (const [method, opts, target] of resolveConfigItems(`methods.${type}`)) {
       const props = method(opts);
       fractal.addMethod(props.name, props.handler, type);
     }

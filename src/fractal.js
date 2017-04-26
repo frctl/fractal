@@ -8,8 +8,10 @@ const ApiBuilder = require('@frctl/internals/api');
 const Parser = require('@frctl/internals/parser');
 const assert = require('check-types').assert;
 const pkg = require('../package.json');
-const wrapAdapter = require('./wrap-adapter');
+const adapterPlugin = require('./adapters/plugin');
+const adapterMethod = require('./adapters/method');
 const applyConfig = require('./configure');
+const validate = require('./validate');
 
 const entities = ['files', 'components'];
 
@@ -31,7 +33,7 @@ class Fractal extends EventEmitter {
    * @return {Fractal} The Fractal instance
    */
   constructor(config) {
-    assert.maybe.object(config, `Fractal.constructor: config must be an object [config-invalid]`);
+    validate.config(config);
 
     super({
       wildcard: true
@@ -50,7 +52,7 @@ class Fractal extends EventEmitter {
     refs.transformer.set(this, () => []);
 
     refs.commands.set(this, []);
-    refs.adapters.set(this, new Map());
+    refs.adapters.set(this, []);
 
     if (config) {
       this.configure(config);
@@ -60,9 +62,9 @@ class Fractal extends EventEmitter {
   }
 
   /**
-   * Configure the Fractal instance via a config object
+   * Apply configuration options
    *
-   * @param  {object|array} config A config object
+   * @param  {object} config A config object
    * @return {Fractal} The Fractal instance
    */
   configure(config = {}) {
@@ -79,28 +81,30 @@ class Fractal extends EventEmitter {
   addSrc(src) {
     const toAdd = utils.normalizePaths(src);
     const sources = refs.src.get(this) || [];
-    toAdd.forEach(src => this.log(`Adding src: ${src}`));
+    toAdd.forEach(src => {
+      validate.src(src);
+      this.log(`Adding src: ${src}`)
+    });
     refs.src.set(this, sources.concat(toAdd));
     return this;
   }
 
   /**
-   * Add a plugin
+   * Add a plugin to the specified entity parser
    *
    * @param  {function} plugin Parser plugin to add
    * @param  {string} [target=components] The parser stack to add the plugin to
    * @return {Fractal} The Fractal instance
    */
   addPlugin(plugin, target = 'components') {
-    assert.function(plugin, `Fractal.addPlugin: plugin argument must be a function [plugin-invalid]`);
-    assert.includes(entities, target, `Fractal.addMethod: target argument must be either 'components' or 'files' [target-invalid]`);
-
+    validate.plugin(plugin);
+    validate.entityType(target);
     this[target].parser.use(plugin);
     return this;
   }
 
   /**
-   * Add an API method
+   * Register an API method
    *
    * @param  {string} name The name of the method
    * @param  {function} handler The function to be used as the method
@@ -108,48 +112,32 @@ class Fractal extends EventEmitter {
    * @return {Fractal} The Fractal instance
    */
   addMethod(name, handler, target = 'components') {
-    if (target === '*') {
-      target = entities;
-    }
-    const targets = utils.toArray(target);
-    assert.string(name, `Fractal.addMethod: name argument must be a string [name-invalid]`);
-    assert.function(handler, `Fractal.addMethod: handler argument must be a function [handler-invalid]`);
-    for (const target of targets) {
-      assert.includes(entities, target, `Fractal.addMethod: target argument must be either 'components' or 'files' [target-invalid]`);
-      this[target].api.addMethod(name, handler);
-    }
+    validate.method({name, handler});
+    validate.entityType(target);
+    this[target].api.addMethod(name, handler);
     return this;
   }
 
   /**
-   * Add an CLI command
+   * Register a CLI command
    *
+   * @param  {object} command The CLI object to register
    * @return {Fractal} The Fractal instance
    */
-  addCommand(command, ...args) {
-    let cmd = command;
-    if (typeof command === 'string') {
-      let [description, handler, options] = args;
-      cmd = {command, description, handler, options};
-    }
-
-    assert.string(cmd.command, `Fractal.addCommand: command argument must be a string [command-invalid]`);
-    assert.string(cmd.description, `Fractal.addCommand: description argument must be a string [description-invalid]`);
-    assert.function(cmd.handler, `Fractal.addCommand: handler argument must be a function [handler-invalid]`);
-
-    refs.commands.get(this).push(cmd);
-
+  addCommand(command) {
+    validate.command(command);
+    refs.commands.get(this).push(command);
     return this;
   }
 
   /**
-   * Add an extension
+   * Apply an extension
    *
    * @param  {function} extension The extension wrapper function
    * @return {Fractal} The Fractal instance
    */
   addExtension(extension) {
-    assert.function(extension, `Fractal.addExtension handler argument must be a function [extension-invalid]`);
+    validate.extension(extension);
     extension(this);
     return this;
   }
@@ -161,27 +149,21 @@ class Fractal extends EventEmitter {
    * @return {Fractal} The Fractal instance
    */
   addAdapter(adapter) {
-    assert.like(adapter, {name: 'name', render: function () {}}, `'adapter' must be an object with 'name', 'match', and 'render' properties [adapter-invalid]`);
-
-    this.addPlugin(wrapAdapter({
-      name: adapter.name,
-      match: adapter.match
-    }), 'files');
-
-    this.addMethod(`render.${adapter.name}`, function (file, context, done) {
-      assert.instance(file, fs.File, `${adapter.name}.render: requires a 'file' argument of type File [file-invalid]`);
-      assert.object(context, `${adapter.name}.render: requires a 'context' argument of type object [context-invalid]`);
-      assert.function(done, `${adapter.name}.render: requires a 'done' callback [done-invalid]`);
-
-      return adapter.render(file, context, done);
-    });
-
-    refs.adapters.get(this).set(adapter.name, adapter);
+    validate.adapter(adapter);
+    this.addPlugin(adapterPlugin(adapter), 'files');
+    this.addMethod(`render.${adapter.name}`, adapterMethod(adapter));
+    refs.adapters.get(this).push(adapter);
     return this;
   }
 
+  /**
+   * Set the transformer function used for files -> components transformations
+   *
+   * @param  {function} transformer The transformer function
+   * @return {Fractal} The Fractal instance
+   */
   setTransformer(transformer) {
-    assert.function(transformer, `Fractal.setTransformer: transformer must be a function [transformer-invalid]`);
+    validate.transformer(transformer);
     refs.transformer.set(this, transformer);
     return this;
   }
@@ -189,7 +171,8 @@ class Fractal extends EventEmitter {
   /**
    * Read and process all source directories
    *
-   * @param  {function} [callback] A callback function
+   * @param  {function} callback A callback function
+   * @return {Promise|undefined} A Promise if no callback is defined
    */
   parse(callback) {
     if (!callback) {
@@ -203,7 +186,7 @@ class Fractal extends EventEmitter {
       });
     }
 
-    assert.function(callback, `Fractal.parse: callback must be a function [callback-invalid]`);
+    validate.callback(callback);
 
     this.emit('parse.start');
 
@@ -222,6 +205,11 @@ class Fractal extends EventEmitter {
     });
   }
 
+  /**
+   * Watch source directories for changes
+   *
+   * @return {object} Chokidar watch object
+   */
   watch(...args) {
     let [callback, paths] = args.reverse();
     paths = utils.toArray(paths || []);
@@ -233,11 +221,11 @@ class Fractal extends EventEmitter {
    * Run a set of input through the specified entity parser and return the
    * appropriate entity API object.
    *
-   * @param  {string} [target] Entity type - `files` or `components`
+   * @param  {string} target Entity type - `files` or `components`
    * @return {Promise} Returns a Promise that resolves to an entity API object
    */
   process(target, input = []) {
-    assert.includes(entities, target, `Fractal.process: target argument must be either 'components' or 'files' [target-invalid]`);
+    validate.entityType(target);
     const entity = this[target];
     return entity.parser.process(input).then(data => {
       return entity.api.generate(Object.create(null, {
@@ -251,6 +239,14 @@ class Fractal extends EventEmitter {
     });
   }
 
+  /**
+   * Emit a log event
+   *
+   * @param  {string} message The message string
+   * @param  {string} level The log level to use
+   * @param  {object} data Optional data object
+   * @return {Fractal} The Fractal instance
+   */
   log(message, ...args) {
     let [level, data] = typeof args[0] === 'string' ? args : args.reverse();
     level = level || 'debug';
@@ -265,21 +261,33 @@ class Fractal extends EventEmitter {
     return pkg.version;
   }
 
+  /**
+   * Files object with parser and api properties
+   * @return {Object}
+   */
   get files() {
     return refs.files.get(this);
   }
 
+  /**
+   * Components object with parser and api properties
+   * @return {Object}
+   */
   get components() {
     return refs.components.get(this);
   }
 
+  /**
+   * Transformer function
+   * @return {Function}
+   */
   get transformer() {
     return refs.transformer.get(this);
   }
 
   /**
    * An array of all registered and bundled commands
-   * @return {Array} Array of commands
+   * @return {Array}
    */
   get commands() {
     return refs.commands.get(this);
@@ -290,7 +298,7 @@ class Fractal extends EventEmitter {
    * @return {Array} Adapters
    */
   get adapters() {
-    return Array.from(refs.adapters.get(this).values());
+    return refs.adapters.get(this);
   }
 
   /**
@@ -299,10 +307,7 @@ class Fractal extends EventEmitter {
    */
   get defaultAdapter() {
     const adapters = refs.adapters.get(this);
-    if (adapters.size) {
-      return adapters.values().next().value;
-    }
-    return undefined;
+    return adapters[0];
   }
 
   /**
