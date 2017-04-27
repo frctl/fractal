@@ -6,9 +6,9 @@
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@frctl/adapters/-/adapters-0.1.1.tgz#5c034ce761514377ad71cf513ed100cdf1454a53"
 
-"@frctl/cli@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@frctl/cli/-/cli-0.0.1.tgz#4d7d498ec806f48ddfd2e97dafc559066d9c5aae"
+"@frctl/cli@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@frctl/cli/-/cli-0.0.2.tgz#904fe90832db0078f839ef0b968e1b87ce42ae41"
   dependencies:
     "@frctl/console" "^0.3.0"
     "@frctl/utils" "^0.5"
@@ -73,9 +73,9 @@
     check-types "^7.1.5"
     lodash "^4.17.4"
 
-"@frctl/presets@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@frctl/presets/-/presets-0.0.2.tgz#0091fd109b011ca17b33e3aea4ab75c8f6edfc30"
+"@frctl/presets@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@frctl/presets/-/presets-0.0.3.tgz#b819ccb38443c1ad7738f444955b6c43881e4f6b"
   dependencies:
     "@frctl/adapters" "^0.1.0"
     "@frctl/ffs" "^0.2.0"
@@ -3881,8 +3881,8 @@ wrappy@1:
   resolved "https://registry.yarnpkg.com/wrappy/-/wrappy-1.0.2.tgz#b5243d8f3ec1aa35f1364605bc0d1036e30ab69f"
 
 write-file-atomic@^1.1.2, write-file-atomic@^1.1.4:
-  version "1.3.3"
-  resolved "https://registry.yarnpkg.com/write-file-atomic/-/write-file-atomic-1.3.3.tgz#831dd22d491bdc135180bb996a0eb3f8bf587791"
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/write-file-atomic/-/write-file-atomic-1.3.4.tgz#f807a4f0b1d9e913ae7a48112e6cc3af1991b45f"
   dependencies:
     graceful-fs "^4.1.11"
     imurmurhash "^0.1.4"
