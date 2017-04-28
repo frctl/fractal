@@ -19,6 +19,10 @@ class Collection {
     return data.get(this);
   }
 
+  find(...args) {
+    return _.find(this.getAll(), ...args);
+  }
+
   [Symbol.iterator]() {
     return data.get(this)[Symbol.iterator]();
   }
