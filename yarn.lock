@@ -2,15 +2,15 @@
 # yarn lockfile v1
 
 
-"@frctl/adapters@^0.1.0":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@frctl/adapters/-/adapters-0.1.1.tgz#5c034ce761514377ad71cf513ed100cdf1454a53"
+"@frctl/adapters@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@frctl/adapters/-/adapters-0.2.0.tgz#7dcadb45c767d6a201a66361dcf914dbf95e4e84"
 
-"@frctl/cli@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@frctl/cli/-/cli-0.0.3.tgz#639558d46afd885bf2e30b57cd04fb86e1dfd88b"
+"@frctl/cli@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@frctl/cli/-/cli-0.1.0.tgz#34cea2d57f7f1deb0315822a3368939d877619d2"
   dependencies:
-    "@frctl/console" "^0.4.0"
+    "@frctl/console" "^0.4.1"
     "@frctl/utils" "^0.5"
     bluebird "^3.5.0"
     check-types "^7.1.5"
@@ -18,7 +18,7 @@
     lodash "^4.17.4"
     yargs "^7.0.2"
 
-"@frctl/console@^0.4.0":
+"@frctl/console@^0.4.1":
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/@frctl/console/-/console-0.4.1.tgz#f06256b2b3f821a3cf82aa98b57aaf415794e24b"
   dependencies:
@@ -35,7 +35,7 @@
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/@frctl/eslint-config-frctl/-/eslint-config-frctl-0.1.0.tgz#bf1c46e25f371a21ea80b11aa02c9a3773ab19cc"
 
-"@frctl/ffs@^0.2.0", "@frctl/ffs@^0.2.1":
+"@frctl/ffs@^0.2.1":
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/@frctl/ffs/-/ffs-0.2.1.tgz#438abf2a74367218c6b9578e98adb23ed47cf83b"
   dependencies:
@@ -67,12 +67,12 @@
     pify "^2.3.0"
     req-all "^1.0.0"
 
-"@frctl/presets@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@frctl/presets/-/presets-0.0.3.tgz#b819ccb38443c1ad7738f444955b6c43881e4f6b"
+"@frctl/presets@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@frctl/presets/-/presets-0.1.0.tgz#fcde922a2c4c8b77c4a51ac684a749e8f1678397"
   dependencies:
-    "@frctl/adapters" "^0.1.0"
-    "@frctl/ffs" "^0.2.0"
+    "@frctl/adapters" "^0.2.0"
+    "@frctl/ffs" "^0.2.1"
     "@frctl/fractal-plugin-files-parse-config" "^0.1.0"
     "@frctl/utils" "^0.5.0"
     bluebird "^3.4.7"
@@ -1236,18 +1236,18 @@ eslint@^3.6.0:
     text-table "~0.2.0"
     user-home "^2.0.0"
 
-espree@^3.1.3, espree@~3.1.7:
-  version "3.1.7"
-  resolved "https://registry.yarnpkg.com/espree/-/espree-3.1.7.tgz#fd5deec76a97a5120a9cd3a7cb1177a0923b11d2"
-  dependencies:
-    acorn "^3.3.0"
-    acorn-jsx "^3.0.0"
-
-espree@^3.4.0:
+espree@^3.1.3, espree@^3.4.0:
   version "3.4.2"
   resolved "https://registry.yarnpkg.com/espree/-/espree-3.4.2.tgz#38dbdedbedc95b8961a1fbf04734a8f6a9c8c592"
   dependencies:
     acorn "^5.0.1"
+    acorn-jsx "^3.0.0"
+
+espree@~3.1.7:
+  version "3.1.7"
+  resolved "https://registry.yarnpkg.com/espree/-/espree-3.1.7.tgz#fd5deec76a97a5120a9cd3a7cb1177a0923b11d2"
+  dependencies:
+    acorn "^3.3.0"
     acorn-jsx "^3.0.0"
 
 esprima@^3.1.1:

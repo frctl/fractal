@@ -1,10 +1,10 @@
 # Fractal
 
-Fractal is a toolkit for parsing and querying filesystem-based component libraries.
+Fractal is a toolkit for working with filesystem-based component libraries.
 
 > _This is a developer preview of the core Fractal v2 component library parser, and should not be considered stable or complete. For more detail on this release see the [article on Medium](https://medium.com/@frctl/dev-preview-fractal-component-parser-v2-d119a1d8bac7#.rl1rsdpw3) or jump into the Fractal [Slack community](http://slack.fractal.build) for further discussion._
 
-Fractal features a **plugin-based parsing engine** and a dynamic **entity API builder** to make it easily customisable to your needs. It is intended to be used as a dependency in tools such as static site builders, build systems and even in production applications to help deeply integrate your components into all stages of the development process.
+Fractal v2 features a **plugin-based parsing engine**, extendable collection API and lots of other features to make it easily customisable to your needs. It is intended to be used as a dependency in tools such as static site builders, build systems and even in production applications to help deeply integrate your components into all stages of the development process.
 
 [![Build Status](https://img.shields.io/travis/frctl/fractal/v2.svg?style=flat-square)](https://travis-ci.org/frctl/fractal)
 <!-- [![NPM Version](https://img.shields.io/npm/v/@frctl/fractal.svg?style=flat-square)](https://www.npmjs.com/package/@frctl/fractal) -->

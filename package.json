@@ -1,7 +1,7 @@
 {
   "name": "@frctl/fractal",
   "version": "2.0.0-alpha.2",
-  "description": "A toolkit for parsing and querying filesystem-based component libraries.",
+  "description": "A toolkit for working with filesystem-based component libraries.",
   "homepage": "https://github.com/frctl/fractal",
   "repository": "https://github.com/frctl/fractal",
   "bugs": "https://github.com/frctl/fractal/issues",
@@ -28,10 +28,9 @@
     "test:validate": "nyc mocha \"test/validate.test.js\" --require test/support/env"
   },
   "dependencies": {
-    "@frctl/adapters": "^0.1.0",
-    "@frctl/cli": "^0.0.3",
+    "@frctl/cli": "^0.1.0",
     "@frctl/ffs": "^0.2.1",
-    "@frctl/presets": "^0.0.3",
+    "@frctl/presets": "^0.1.0",
     "@frctl/utils": "^0.5.2",
     "async-done": "^1.2.2",
     "bluebird": "^3.4.7",
