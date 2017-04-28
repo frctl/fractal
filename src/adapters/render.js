@@ -5,7 +5,6 @@ const assert = check.assert;
 
 module.exports = function (adapter) {
   return function (args, state, app) {
-
     let [file, context, opts, callback] = args;
 
     if (typeof opts === 'function') {

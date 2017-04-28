@@ -4,8 +4,12 @@ const EventEmitter = require('eventemitter2').EventEmitter2;
 const expect = require('@frctl/utils/test').expect;
 const sinon = require('sinon');
 const Fractal = require('../src/fractal');
+const Plugins = require('../src/plugins');
+const Methods = require('../src/methods');
+const Adapters = require('../src/adapters');
+const Collection = require('../src/collection');
 
-const collections = ['files', 'components'];
+const entities = ['files', 'components'];
 const validConfig = {
   src: './test/fixtures/components'
 };
@@ -33,71 +37,50 @@ describe('Fractal', function () {
   });
 
   describe('.addPlugin()', function () {
-    // it(`throws an error if called with invalid arguments`, function () {
-    //   const fractal = new Fractal(validConfig);
-    //   expect(() => fractal.addPlugin()).to.throw(TypeError, `[plugin-invalid]`);
-    //   expect(() => fractal.addPlugin(123)).to.throw(TypeError, `[plugin-invalid]`);
-    //   expect(() => fractal.addPlugin(() => {}, 123)).to.throw(TypeError, `[target-invalid]`);
-    //   expect(() => fractal.addPlugin(() => {})).to.not.throw(TypeError, `[plugin-invalid]`);
-    //   expect(() => fractal.addPlugin(() => {}, 'files')).to.not.throw(TypeError, `[target-invalid]`);
-    // });
+    it(`checks the plugin is valid`);
 
-    it(`adds the plugin to the appropriate parser`, function () {
+    it(`adds the plugin to the appropriate plugin set`, function () {
       const fractal = new Fractal(validConfig);
       for (const entity of entities) {
-        const parser = fractal[entity].parser;
+        const plugins = fractal[entity].plugins;
         const plugin = sinon.spy();
-        expect(parser.plugins.includes(plugin)).to.be.false;
+        expect(plugins.getAll().includes(plugin)).to.be.false;
         fractal.addPlugin(plugin, entity);
-        expect(parser.plugins.includes(plugin)).to.be.true;
+        expect(plugins.getAll().includes(plugin)).to.be.true;
       }
     });
 
     it(`adds the plugin to the components parser if a target parser is not specified`, function () {
       const fractal = new Fractal(validConfig);
-      const parser = fractal.components.parser;
+      const plugins = fractal.components.plugins;
       const plugin = sinon.spy();
-      expect(parser.plugins.includes(plugin)).to.be.false;
+      expect(plugins.getAll().includes(plugin)).to.be.false;
       fractal.addPlugin(plugin);
-      expect(parser.plugins.includes(plugin)).to.be.true;
+      expect(plugins.getAll().includes(plugin)).to.be.true;
     });
   });
 
   describe('.addMethod()', function () {
-    // it(`throws an error if called with invalid arguments`, function () {
-    //   const fractal = new Fractal(validConfig);
-    //   expect(() => fractal.addMethod(123)).to.throw(TypeError, `[name-invalid]`);
-    //   expect(() => fractal.addMethod('foo', [])).to.throw(TypeError, `[handler-invalid]`);
-    //   expect(() => fractal.addMethod('foo', () => {})).to.not.throw(TypeError, `[name-invalid]`);
-    //   expect(() => fractal.addMethod('foo', () => {})).to.not.throw(TypeError, `[handler-invalid]`);
-    // });
+    it(`checks the method is valid`);
 
     it(`adds the method to the target interface`, function () {
       const fractal = new Fractal(validConfig);
       for (const entity of entities) {
-        const api = fractal[entity].api;
+        const methods = fractal[entity].methods;
         const methodName = `${entity}Test`;
         const method = sinon.spy();
-        const data = {};
-        expect(api.generate(data)[methodName]).to.be.undefined;
         fractal.addMethod(methodName, method, entity);
-        expect(api.generate(data)[methodName]).to.be.a('function');
-        api.generate(data)[methodName]();
-        expect(method.called).to.be.true;
+        expect(Boolean(methods.getAll().find(mth => mth.name === methodName))).to.be.true;
       }
     });
 
     it(`adds the method to the components interface if a target interface is not specified`, function () {
       const fractal = new Fractal(validConfig);
-      const api = fractal.components.api;
+      const methods = fractal.components.methods;
       const methodName = `componentsTest`;
       const method = sinon.spy();
-      const data = {};
-      expect(api.generate(data)[methodName]).to.be.undefined;
       fractal.addMethod(methodName, method);
-      expect(api.generate(data)[methodName]).to.be.a('function');
-      api.generate(data)[methodName]();
-      expect(method.called).to.be.true;
+      expect(Boolean(methods.getAll().find(mth => mth.name === methodName))).to.be.true;
     });
   });
 
@@ -117,18 +100,21 @@ describe('Fractal', function () {
     });
   });
 
-  describe('.parse()', function () {
-    // it('throws an error if an invalid callback is provided', function () {
-    //   const fractal = new Fractal(validConfig);
-    //   expect(() => fractal.parse('foo')).to.throw(TypeError, '[callback-invalid]');
-    // });
+  describe('.addCommand()', function () {
+    it(`checks the command is valid`);
+  });
 
-    it('calls the callback with component and file APIs when successful ', function (done) {
+  describe('.addAdapter()', function () {
+    it(`checks the adapter is valid`);
+  });
+
+  describe('.parse()', function () {
+    it('calls the callback with component and file collections when successful ', function (done) {
       const fractal = new Fractal(validConfig);
       fractal.parse((err, components, files) => {
         expect(err).to.equal(null);
-        expect(components).to.have.property('$data');
-        expect(files).to.have.property('$data');
+        expect(components).to.be.instanceOf(Collection);
+        expect(files).to.be.instanceOf(Collection);
         done();
       });
     });
@@ -147,48 +133,48 @@ describe('Fractal', function () {
       const fractal = new Fractal();
       const startSpy = sinon.spy();
       fractal.on('parse.start', startSpy);
+      fractal.parse(() => {
+        expect(startSpy.called).to.be.true;
+        done();
+      });
+    });
+
+    it('emits a `parse.start` event when starting', function (done) {
+      const fractal = new Fractal();
+      fractal.on('parse.complete', function () {
+        expect(true).to.be.true;
+      });
       fractal.parse(done);
-      expect(startSpy.called).to.be.true;
     });
 
-    it('emits a `parse.complete` event when finished', function (done) {
-      const fractal = new Fractal();
-      const endSpy = sinon.spy();
-      fractal.on('parse.complete', endSpy);
-      fractal.parse(() => {
-        expect(endSpy.called).to.be.true;
-        done();
-      });
-    });
-
-    it('processes all the entities in order', function (done) {
-      const fractal = new Fractal();
-      const stub = sinon.stub(fractal, 'process', function () {
-        return Promise.resolve({
-          getAll: function () {
-            return [];
-          }
-        });
-      });
-      fractal.parse(() => {
-        expect(stub.callCount).equals(entities.length);
-        let i = 0;
-        for (const entity of entities) {
-          expect(stub.calledWith(entity)).to.be.true;
-          expect(stub.getCall(i).calledWith(entity)).to.be.true;
-          i++;
-        }
-        done();
-      });
-    });
+    // it('processes all the entities in order', function (done) {
+    //   const fractal = new Fractal();
+    //   const stub = sinon.stub(fractal, 'process', function () {
+    //     return Promise.resolve({
+    //       getAll: function () {
+    //         return [];
+    //       }
+    //     });
+    //   });
+    //   fractal.parse(() => {
+    //     expect(stub.callCount).equals(entities.length);
+    //     let i = 0;
+    //     for (const entity of entities) {
+    //       expect(stub.calledWith(entity)).to.be.true;
+    //       expect(stub.getCall(i).calledWith(entity)).to.be.true;
+    //       i++;
+    //     }
+    //     done();
+    //   });
+    // });
   });
 
   describe('.files', function () {
     it(`provides access to the files object`, function () {
       const fractal = new Fractal(validConfig);
       expect(fractal.files).to.be.an('object');
-      expect(fractal.files.parser).to.be.an.instanceof(Parser);
-      expect(fractal.files.api).to.be.an.instanceof(ApiBuilder);
+      expect(fractal.files.plugins).to.be.an.instanceof(Plugins);
+      expect(fractal.files.methods).to.be.an.instanceof(Methods);
     });
   });
 
@@ -196,8 +182,8 @@ describe('Fractal', function () {
     it(`provides access to the components object`, function () {
       const fractal = new Fractal(validConfig);
       expect(fractal.components).to.be.an('object');
-      expect(fractal.components.parser).to.be.an.instanceof(Parser);
-      expect(fractal.components.api).to.be.an.instanceof(ApiBuilder);
+      expect(fractal.components.plugins).to.be.an.instanceof(Plugins);
+      expect(fractal.components.methods).to.be.an.instanceof(Methods);
     });
   });
 
@@ -210,9 +196,9 @@ describe('Fractal', function () {
         render() {}
       };
       fractal.addAdapter(adapterExample);
-      expect(fractal.adapters).to.be.an('array');
-      expect(fractal.adapters.length).to.equal(1);
-      expect(Boolean(fractal.adapters.find(adapter => adapter.name === 'adapter'))).to.be.true;
+      expect(fractal.adapters).to.be.an.instanceof(Adapters);
+      expect(fractal.adapters.count()).to.equal(1);
+      expect(Boolean(fractal.adapters.getAll().find(adapter => adapter.name === 'adapter'))).to.be.true;
     });
   });
 });

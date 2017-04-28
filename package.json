@@ -30,7 +30,7 @@
   "dependencies": {
     "@frctl/adapters": "^0.1.0",
     "@frctl/cli": "^0.0.3",
-    "@frctl/ffs": "^0.2.0",
+    "@frctl/ffs": "^0.2.1",
     "@frctl/presets": "^0.0.3",
     "@frctl/utils": "^0.5.2",
     "async-done": "^1.2.2",

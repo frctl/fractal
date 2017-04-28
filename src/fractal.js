@@ -198,7 +198,7 @@ class Fractal extends EventEmitter {
     }
 
     fs.readDir(this.src).then(input => {
-      return process(input, this.files)
+      return process(input || [], this.files)
         .then(files => this.transformer(files.getAll()))
         .then(output => process(output, this.components))
         .then(() => {

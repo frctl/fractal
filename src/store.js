@@ -1,5 +1,4 @@
 const _ = require('lodash');
-const validate = require('./validate');
 
 const items = new WeakMap();
 
@@ -28,7 +27,17 @@ class Store {
     return this;
   }
 
+  /**
+   * Validate an item. Intended to be overridden by child classes.
+   *
+   * @param  {object} item Item to validate
+   * @throws {TypeError} Throws an error if the item is not valid.
+   * @return {Boolean} Returns a reference to itself
+   */
   validate(item) {
+    if (!item) {
+      throw new TypeError('No item provided');
+    }
     return true;
   }
 

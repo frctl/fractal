@@ -54,7 +54,7 @@ class Plugins {
       if (context) {
         plugin = plugin.bind(context);
       }
-      return asyncDone(done => plugin(data, done));
+      return asyncDone(done => plugin(data, done, context));
     }).then(() => data);
   }
 
