@@ -39,7 +39,7 @@ launcher.launch({}, function(env) {
     return;
   }
 
-  if (app.commands.length === 0) {
+  if (app.commands.count() === 0) {
     console.log('No commands registered.'); // TODO: style error message properly
     process.exit(1);
   }
