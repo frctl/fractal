@@ -35,7 +35,7 @@ const validators = {
         expect: '[adapter-name-invalid]'
       },
       match: {
-        values: exclude('string'),
+        values: exclude('string', 'array'),
         expect: '[adapter-match-invalid]'
       },
       render: {

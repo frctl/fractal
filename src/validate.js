@@ -1,6 +1,8 @@
 const _ = require('lodash');
-const assert = require('check-types').assert;
+const check = require('check-types');
 const fs = require('@frctl/ffs');
+
+const assert = check.assert;
 
 module.exports = {
 
@@ -46,7 +48,7 @@ module.exports = {
   adapter(adapter) {
     validateObj('adapter', adapter, {
       name: 'string',
-      match: 'string',
+      match: ['string', 'array'],
       render: 'function'
     });
   },
@@ -69,6 +71,14 @@ function validateObj(what, obj, props = {}) {
     }
   }
   _.forEach(props, (type, prop) => {
-    assert[type](obj[prop], `${what}.render must be a ${type} [${what}-${prop}-invalid]`);
+    if (Array.isArray(type)) {
+      for (const test of type) {
+        if (check[test](obj[prop])) {
+          return;
+        }
+      }
+      throw new TypeError(`${what} must be one of ${type.join(', ')} [${what}-${prop}-invalid]`);
+    }
+    assert[type](obj[prop], `${what} must be a ${type} [${what}-${prop}-invalid]`);
   });
 }
