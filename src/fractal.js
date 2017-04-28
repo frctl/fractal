@@ -4,8 +4,11 @@ const _ = require('lodash');
 const EventEmitter = require('eventemitter2').EventEmitter2;
 const utils = require('@frctl/utils');
 const fs = require('@frctl/ffs');
-const ApiBuilder = require('@frctl/internals/api');
-const Parser = require('@frctl/internals/parser');
+const Collection = require('./collection');
+const Plugins = require('./plugins');
+const Commands = require('./commands');
+const Methods = require('./methods');
+const Adapters = require('./adapters');
 const applyConfig = require('./configure');
 const validate = require('./validate');
 
@@ -34,19 +37,21 @@ class Fractal extends EventEmitter {
     });
 
     refs.files.set(this, {
-      api: new ApiBuilder(),
-      parser: new Parser()
+      methods: new Methods(),
+      plugins: new Plugins(),
+      state: null
     });
 
     refs.components.set(this, {
-      api: new ApiBuilder(),
-      parser: new Parser()
+      methods: new Methods(),
+      plugins: new Plugins(),
+      state: null
     });
 
     refs.transformer.set(this, () => []);
 
-    refs.commands.set(this, []);
-    refs.adapters.set(this, []);
+    refs.commands.set(this, new Commands());
+    refs.adapters.set(this, new Adapters());
 
     if (config) {
       this.configure(config);
@@ -91,14 +96,16 @@ class Fractal extends EventEmitter {
    * @return {Fractal} The Fractal instance
    */
   addPlugin(plugin, target = 'components') {
-    validate.plugin(plugin);
     validate.entityType(target);
-    this[target].parser.use(plugin);
+    this[target].plugins.use(plugin);
     return this;
   }
 
   /**
-   * Register a collection API method
+   * Register a collection method
+   *
+   * Methods are wrapped so that the current fractal instance
+   * is always available as the last argument to the method.
    *
    * @param  {string} name The name of the method
    * @param  {function} handler The function to be used as the method
@@ -108,7 +115,8 @@ class Fractal extends EventEmitter {
   addMethod(name, handler, target = 'components') {
     validate.method({name, handler});
     validate.entityType(target);
-    this[target].api.addMethod(name, handler);
+    const wrappedHandler = (...args) => handler(args, this.state, this);
+    this[target].methods.add({name, handler: wrappedHandler});
     return this;
   }
 
@@ -119,8 +127,7 @@ class Fractal extends EventEmitter {
    * @return {Fractal} The Fractal instance
    */
   addCommand(command) {
-    validate.command(command);
-    refs.commands.get(this).push(command);
+    refs.commands.get(this).add(command);
     return this;
   }
 
@@ -143,10 +150,9 @@ class Fractal extends EventEmitter {
    * @return {Fractal} The Fractal instance
    */
   addAdapter(adapter) {
-    validate.adapter(adapter);
+    refs.adapters.get(this).add(adapter);
     this.addPlugin(require('./adapters/plugin')(adapter), 'files');
     this.addMethod(`render.${adapter.name}`, require('./adapters/method')(adapter));
-    refs.adapters.get(this).push(adapter);
     return this;
   }
 
@@ -184,15 +190,22 @@ class Fractal extends EventEmitter {
 
     this.emit('parse.start');
 
-    fs.readDir(this.src).then(input => {
-      return this.process('files', input).then(files => {
-        const components = this.transformer(files.$data);
-        return this.process('components', components).then(components => {
-          Object.defineProperty(components, 'files', {value: files});
-          this.emit('parse.complete', components, files);
-          callback(null, components, files);
-        });
+    function process(data, target) {
+      return target.plugins.process(data).then(items => {
+        target.state = new Collection(items, target.methods.getAll());
+        return target.state;
       });
+    }
+
+    fs.readDir(this.src).then(input => {
+      return process(input, this.files)
+        .then(files => this.transformer(files.getAll()))
+        .then(output => process(output, this.components))
+        .then(() => {
+          const state = [this.components.state, this.files.state];
+          this.emit('parse.complete', ...state);
+          callback(null, ...state);
+        });
     }).catch(err => {
       this.emit('error', err);
       callback(err);
@@ -209,24 +222,6 @@ class Fractal extends EventEmitter {
     paths = utils.toArray(paths || []);
     callback = callback || (() => {});
     return fs.watch(this.src.concat(paths), callback);
-  }
-
-  /**
-   * Run a set of input through the specified entity parser and return the
-   * appropriate entity API object.
-   *
-   * @param  {string} target Entity type - `files` or `components`
-   * @return {Promise} Returns a Promise that resolves to an entity API object
-   */
-  process(target, input = []) {
-    validate.entityType(target);
-    const entity = this[target];
-    return entity.parser.process(input).then(data => {
-      return entity.api.generate({
-        $data: data,
-        $instance: this
-      });
-    });
   }
 
   /**
@@ -249,6 +244,16 @@ class Fractal extends EventEmitter {
    */
   get version() {
     return require('../package.json').version;
+  }
+
+  /**
+   * The results of the last parse
+   */
+  get state() {
+    return {
+      files: this.files.state,
+      components: this.components.state
+    };
   }
 
   /**
@@ -289,15 +294,6 @@ class Fractal extends EventEmitter {
    */
   get adapters() {
     return refs.adapters.get(this);
-  }
-
-  /**
-   * The default (first registered) adapter
-   * @return {Object} Adapter
-   */
-  get defaultAdapter() {
-    const adapters = refs.adapters.get(this);
-    return adapters[0];
   }
 
   /**

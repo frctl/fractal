@@ -1,6 +1,6 @@
 # Entity data schemas
 
-All components and files are represented as plain JavaScript objects. These objects are returned from [Entity API](/docs/entity-apis.md) methods such as `components.getAll()`.
+All components and files are represented as plain JavaScript objects. These objects are returned from [collection](/docs/collection.md) methods such as `components.getAll()`.
 
 An example of the default properties available for each type of object is presented below.
 
@@ -11,7 +11,6 @@ An example of the default properties available for each type of object is presen
 ```js
 {
   name: "button",
-  label: "Button", // Title-case version of the component name
   role: "component",
   path: "/path/to/@button",
   config: {
@@ -21,7 +20,7 @@ An example of the default properties available for each type of object is presen
     // array of files contained within this component
   ],
   dir: {
-    // directory that this component was created from
+    // File object representing the directory that this component was created from
   }
 }
 ```

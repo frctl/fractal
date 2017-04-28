@@ -21,8 +21,8 @@ Parse the source directory. Accepts a `callback` function that is called once th
 #### callback(err, components, files)
 
 * `err`: An `Error` instance if an error has occurred during parsing, otherwise `null`
-* `components`: A components API object. See the [Entity APIs](/docs/entity-apis.md) documentation for more details.
-* `files`: A files API object. See the [Entity APIs](/docs/entity-apis.md) documentation for more details.
+* `components`: A components collection. See the [collections](/docs/collections.md) documentation for more details.
+* `files`: A files collection. See the [collections](/docs/collections.md) documentation for more details.
 
 ```js
 fractal.parse(function(err, components, files) {
@@ -48,7 +48,7 @@ fractal.addPlugin(function makeTagsUpperCase(components, done){
 
 ### .addMethod(name, method, applyTo = 'components')
 
-Register a method to be made available to the relevant [Entity API](/docs/entity-apis.md) object once parsing is complete.
+Register a [collection](/docs/collections.md) method.
 
 ```js
 fractal.addMethod('filterByTag', function(tagName){
@@ -57,7 +57,7 @@ fractal.addMethod('filterByTag', function(tagName){
   })
 });
 
-// the `filterByTag` method will now be available on the components API object returned by the .parse() method
+// the `filterByTag` method will now be available on the components collection returned by the .parse() method
 fractal.parse(function(err, components){
   console.log(components.filterByTag('foobar')); // array of components with the tag 'foobar'
 });
