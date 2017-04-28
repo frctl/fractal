@@ -2,12 +2,10 @@
 
 const EventEmitter = require('eventemitter2').EventEmitter2;
 const expect = require('@frctl/utils/test').expect;
-const ApiBuilder = require('@frctl/internals/api');
-const Parser = require('@frctl/internals/parser');
 const sinon = require('sinon');
 const Fractal = require('../src/fractal');
 
-const entities = ['files', 'components'];
+const collections = ['files', 'components'];
 const validConfig = {
   src: './test/fixtures/components'
 };

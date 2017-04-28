@@ -152,7 +152,7 @@ class Fractal extends EventEmitter {
   addAdapter(adapter) {
     refs.adapters.get(this).add(adapter);
     this.addPlugin(require('./adapters/plugin')(adapter), 'files');
-    this.addMethod(`render.${adapter.name}`, require('./adapters/method')(adapter));
+    this.addMethod(`render.${adapter.name}`, require('./adapters/render')(adapter));
     return this;
   }
 
