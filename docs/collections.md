@@ -40,7 +40,7 @@ All collections provide the following set of base methods:
 
 ### Components collection methods
 
-These methods are provided for working with the components in your library.
+These methods are only available on component collections.
 
 <!-- ### .count()
 
@@ -87,7 +87,7 @@ Find the view template for a component that is used by the specified adapter. Re
 const nunjucksButton = components.findView('button', 'nunjucks');
 ``` -->
 
-### .renderView(view, context, callback)
+#### .renderView(view, context, callback)
 
 Render a view file to HTML.
 
@@ -118,7 +118,9 @@ const button = components.findByName('button');
 
 ### Files collection methods
 
-These methods are provided for working with the files in your library.
+These methods are only available on file collections.
+
+> None defined yet!
 
 <!-- ### .count()
 
