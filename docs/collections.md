@@ -1,6 +1,6 @@
 # Collections
 
-The callback to the `Fractal.parse()` method receives `components` and `files` arguments. Each of these are collections that expose a set of methods for querying and working with the relevant entities.
+The callback to the `Fractal.parse()` method receives `components` and `files` collections when called.
 
 ```js
 const Fractal = require('@frctl/fractal');
@@ -14,27 +14,49 @@ fractal.parse(function(err, components, files){
 });
 ```
 
-Each collection provides a set of methods for working with this data, and exposes custom methods that have been been registered via the top-level `Fractal.addMethod()` method.
+Collection instances 'wrap' an array of objects and provide a set of useful methods for querying their contents, many of which are very similar to array methods such as `.find()` and `.filter()`, amongst others.
 
-## Components
+Additionally, component and file collections can have bespoke methods added via the top-level `Fractal.addMethod()` method.
 
-These are the default methods that are provided for working with the components in your library.
+## Collection API
 
-### .count()
+### Standard methods
+
+All collections provide the following set of base methods:
+
+#### .count()
+#### .find()
+#### .first()
+#### .last()
+#### .nth()
+#### .forEach()
+#### .filter()
+#### .slice()
+#### .map()
+#### .reduce()
+#### .sort()
+#### .sortBy()
+#### .toArray()
+
+### Components collection methods
+
+These methods are provided for working with the components in your library.
+
+<!-- ### .count()
 
 Returns the number of [components](/docs/entity-schemas.md#component) found.
 
 ```js
 const myComponents = components.getAll();
-```
+``` -->
 
-### .getAll()
+<!-- ### .getAll()
 
 Returns an array of all [components](/docs/entity-schemas.md#component).
 
 ```js
 const myComponents = components.getAll();
-```
+``` -->
 
 <!-- ### .getViews()
 
@@ -94,11 +116,11 @@ Find a component by name. Returns `undefined` if not found.
 const button = components.findByName('button');
 ``` -->
 
-## Files
+### Files collection methods
 
-These are the default methods that are provided for working with the files in your library.
+These methods are provided for working with the files in your library.
 
-### .count()
+<!-- ### .count()
 
 Returns the number of [files](/docs/entity-schemas.md#file) found.
 
@@ -108,7 +130,7 @@ Returns an array of all [files](/docs/entity-schemas.md#file).
 
 ```js
 const myFiles = files.getAll();
-```
+``` -->
 
 <!-- ### .filterByPath(match)
 
@@ -121,15 +143,15 @@ const stylesheets = files.filterByPath('**/assets/*.css'); // Single glob string
 const scripts = files.filterByPath(['**/*.js', '!**/config.js']); // Array of glob strings
 ``` -->
 
-## Custom methods
+### Custom methods
 
-Any methods registered via the top-level Fractal `.addMethod()` method (including any added via extensions) are bound to and made available on the appropriate library API object. For example:
+Any methods registered via the top-level Fractal `.addMethod()` method (including any added via extensions) are bound to and made available on the appropriate collection object. For example:
 
 ```js
 fractal.addMethod('getRandom', function(args, state, app){
   const num = args[0];
   const randoms = [];
-  const components = this.getAll(); // 'this' is bound to the API object itself
+  const components = this.toArray(); // 'this' is bound to the collection object itself
   for (var i = 0; i < num; i++) {
     randoms.push(components[Math.floor(Math.random() * components.length)]);
   }
