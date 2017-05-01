@@ -5,7 +5,7 @@ const validate = require('../validate');
 class Adapters extends Store {
 
   find(name) {
-    return this.find(adapter => name === adapter.name);
+    return super.find(adapter => name === adapter.name);
   }
 
   validate(adapter) {
