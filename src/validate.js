@@ -64,6 +64,7 @@ module.exports = {
 };
 
 function validateObj(what, obj, props = {}) {
+  assert.object(obj, `${what} must be an object [${what}-invalid]`);
   const propNames = _.keys(props);
   for (const prop of propNames) {
     if (typeof obj[prop] === 'undefined') {
