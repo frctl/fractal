@@ -44,9 +44,9 @@ describe('Fractal', function () {
       for (const entity of entities) {
         const plugins = fractal[entity].plugins;
         const plugin = sinon.spy();
-        expect(plugins.getAll().includes(plugin)).to.be.false;
+        expect(plugins.toArray().includes(plugin)).to.be.false;
         fractal.addPlugin(plugin, entity);
-        expect(plugins.getAll().includes(plugin)).to.be.true;
+        expect(plugins.toArray().includes(plugin)).to.be.true;
       }
     });
 
@@ -54,9 +54,9 @@ describe('Fractal', function () {
       const fractal = new Fractal(validConfig);
       const plugins = fractal.components.plugins;
       const plugin = sinon.spy();
-      expect(plugins.getAll().includes(plugin)).to.be.false;
+      expect(plugins.toArray().includes(plugin)).to.be.false;
       fractal.addPlugin(plugin);
-      expect(plugins.getAll().includes(plugin)).to.be.true;
+      expect(plugins.toArray().includes(plugin)).to.be.true;
     });
   });
 
@@ -70,7 +70,7 @@ describe('Fractal', function () {
         const methodName = `${entity}Test`;
         const method = sinon.spy();
         fractal.addMethod(methodName, method, entity);
-        expect(Boolean(methods.getAll().find(mth => mth.name === methodName))).to.be.true;
+        expect(Boolean(methods.toArray().find(mth => mth.name === methodName))).to.be.true;
       }
     });
 
@@ -80,7 +80,7 @@ describe('Fractal', function () {
       const methodName = `componentsTest`;
       const method = sinon.spy();
       fractal.addMethod(methodName, method);
-      expect(Boolean(methods.getAll().find(mth => mth.name === methodName))).to.be.true;
+      expect(Boolean(methods.toArray().find(mth => mth.name === methodName))).to.be.true;
     });
   });
 
@@ -151,7 +151,7 @@ describe('Fractal', function () {
     //   const fractal = new Fractal();
     //   const stub = sinon.stub(fractal, 'process', function () {
     //     return Promise.resolve({
-    //       getAll: function () {
+    //       toArray: function () {
     //         return [];
     //       }
     //     });
@@ -198,7 +198,7 @@ describe('Fractal', function () {
       fractal.addAdapter(adapterExample);
       expect(fractal.adapters).to.be.an.instanceof(Adapters);
       expect(fractal.adapters.count()).to.equal(1);
-      expect(Boolean(fractal.adapters.getAll().find(adapter => adapter.name === 'adapter'))).to.be.true;
+      expect(Boolean(fractal.adapters.toArray().find(adapter => adapter.name === 'adapter'))).to.be.true;
     });
   });
 });

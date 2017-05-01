@@ -42,6 +42,7 @@
   "devDependencies": {
     "@frctl/eslint-config-frctl": "0.1.0",
     "chai": "^3.5.0",
+    "chai-sorted": "^0.1.0",
     "jsdoc": "^3.4.3",
     "mocha": "^3.2.0",
     "np": "^2.12.0",

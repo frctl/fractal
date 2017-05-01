@@ -5,7 +5,7 @@ const validate = require('../validate');
 class Adapters extends Store {
 
   find(name) {
-    return this.getAll().find(adapter => name === adapter.name);
+    return this.find(adapter => name === adapter.name);
   }
 
   validate(adapter) {
@@ -13,7 +13,7 @@ class Adapters extends Store {
   }
 
   get default() {
-    return this.getAll()[0];
+    return this.first();
   }
 
 }

@@ -190,17 +190,22 @@ class Fractal extends EventEmitter {
 
     this.emit('parse.start');
 
-    function process(data, target) {
-      return target.plugins.process(data).then(items => {
-        target.state = new Collection(items, target.methods.getAll());
+    const mutate = (data, target) => {
+      return target.plugins.process(data, this).then(items => {
+        const collection = new Collection(items);
+        // bind methods to the collection
+        for (const method of target.methods) {
+          _.set(collection, method.name, method.handler.bind(collection));
+        }
+        target.state = collection;
         return target.state;
       });
-    }
+    };
 
     fs.readDir(this.src).then(input => {
-      return process(input || [], this.files)
-        .then(files => this.transformer(files.getAll()))
-        .then(output => process(output, this.components))
+      return mutate(input || [], this.files)
+        .then(files => this.transformer(files.toArray()))
+        .then(output => mutate(output, this.components))
         .then(() => {
           const state = [this.components.state, this.files.state];
           this.emit('parse.complete', ...state);

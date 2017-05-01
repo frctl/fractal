@@ -1,18 +1,13 @@
 const _ = require('lodash');
+const Collection = require('./collection');
 
-const items = new WeakMap();
+class Store extends Collection {
 
-class Store {
-
-  /**
-   * Creates a new Store instance
-   *
-   * @constructor
-   * @return {Store}
-   *
-   */
-  constructor() {
-    items.set(this, []);
+  constructor(items = []) {
+    super(items);
+    for (const item of this) {
+      this.validate(item);
+    }
   }
 
   /**
@@ -23,7 +18,7 @@ class Store {
    */
   add(item) {
     this.validate(item);
-    items.get(this).push(item);
+    this._items.push(item);
     return this;
   }
 
@@ -39,18 +34,6 @@ class Store {
       throw new TypeError('No item provided');
     }
     return true;
-  }
-
-  count() {
-    return items.get(this).length;
-  }
-
-  getAll() {
-    return items.get(this);
-  }
-
-  [Symbol.iterator]() {
-    return items.get(this)[Symbol.iterator]();
   }
 
 }
