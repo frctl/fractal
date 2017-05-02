@@ -2,7 +2,7 @@ module.exports = {
 
   src: null,
 
-  adapters: [],
+  transforms: [],
 
   extensions: [],
 

@@ -2,23 +2,18 @@
 
 const _ = require('lodash');
 const EventEmitter = require('eventemitter2').EventEmitter2;
+const Bluebird = require('bluebird');
 const utils = require('@frctl/utils');
 const fs = require('@frctl/ffs');
-const Collection = require('./collection');
-const Plugins = require('./plugins');
+const Transforms = require('./transforms');
 const Commands = require('./commands');
-const Methods = require('./methods');
-const Adapters = require('./adapters');
 const applyConfig = require('./configure');
 const validate = require('./validate');
 
 const refs = {
   src: new WeakMap(),
-  adapters: new WeakMap(),
-  files: new WeakMap(),
-  components: new WeakMap(),
   commands: new WeakMap(),
-  transformer: new WeakMap()
+  transforms: new WeakMap()
 };
 
 class Fractal extends EventEmitter {
@@ -36,22 +31,8 @@ class Fractal extends EventEmitter {
       wildcard: true
     });
 
-    refs.files.set(this, {
-      methods: new Methods(),
-      plugins: new Plugins(),
-      state: null
-    });
-
-    refs.components.set(this, {
-      methods: new Methods(),
-      plugins: new Plugins(),
-      state: null
-    });
-
-    refs.transformer.set(this, () => []);
-
+    refs.transforms.set(this, new Transforms());
     refs.commands.set(this, new Commands());
-    refs.adapters.set(this, new Adapters());
 
     if (config) {
       this.configure(config);
@@ -92,12 +73,12 @@ class Fractal extends EventEmitter {
    * Add a plugin to the specified parser
    *
    * @param  {function} plugin Parser plugin to add
-   * @param  {string} [target=components] The parser stack to add the plugin to
+   * @param  {string} target The transformer to add the plugin to
    * @return {Fractal} The Fractal instance
    */
-  addPlugin(plugin, target = 'components') {
-    validate.entityType(target);
-    this[target].plugins.use(plugin);
+  addPlugin(plugin, target) {
+    const transformer = this.transforms.get(target);
+    transformer.plugins.use(plugin);
     return this;
   }
 
@@ -109,14 +90,14 @@ class Fractal extends EventEmitter {
    *
    * @param  {string} name The name of the method
    * @param  {function} handler The function to be used as the method
-   * @param  {string} [target=components] The collection to apply the method to
+   * @param  {string} target The transformer to register the method with
    * @return {Fractal} The Fractal instance
    */
-  addMethod(name, handler, target = 'components') {
+  addMethod(name, handler, target) {
     validate.method({name, handler});
-    validate.entityType(target);
+    const transformer = this.transforms.get(target);
     const wrappedHandler = (...args) => handler(args, this.state, this);
-    this[target].methods.add({name, handler: wrappedHandler});
+    transformer.methods.add({name, handler: wrappedHandler});
     return this;
   }
 
@@ -144,32 +125,18 @@ class Fractal extends EventEmitter {
   }
 
   /**
-   * Add a render adapter
+   * Add a transform
    *
-   * @param  {object} adapter The adapter object to register
+   * @param  {object} transform The transform object to register
    * @return {Fractal} The Fractal instance
    */
-  addAdapter(adapter) {
-    refs.adapters.get(this).add(adapter);
-    this.addPlugin(require('./adapters/plugin')(adapter), 'files');
-    this.addMethod(`render.${adapter.name}`, require('./adapters/render')(adapter));
+  addTransform(transform) {
+    refs.transforms.get(this).add(transform);
     return this;
   }
 
   /**
-   * Set the transformer function used for files -> components transformations
-   *
-   * @param  {function} transformer The transformer function
-   * @return {Fractal} The Fractal instance
-   */
-  setTransformer(transformer) {
-    validate.transformer(transformer);
-    refs.transformer.set(this, transformer);
-    return this;
-  }
-
-  /**
-   * Read and process all source directories
+   * Read and transform the source files into a state object
    *
    * @param  {function} callback A callback function
    * @return {Promise|undefined} A Promise if no callback is defined
@@ -177,11 +144,11 @@ class Fractal extends EventEmitter {
   parse(callback) {
     if (!callback) {
       return new Promise((resolve, reject) => {
-        this.parse((err, components, files) => {
+        this.parse((err, state) => {
           if (err) {
             return reject(err);
           }
-          resolve({components, files});
+          resolve(state);
         });
       });
     }
@@ -190,27 +157,15 @@ class Fractal extends EventEmitter {
 
     this.emit('parse.start');
 
-    const mutate = (data, target) => {
-      return target.plugins.process(data, this).then(items => {
-        const collection = new Collection(items);
-        // bind methods to the collection
-        for (const method of target.methods) {
-          _.set(collection, method.name, method.handler.bind(collection));
-        }
-        target.state = collection;
-        return target.state;
-      });
-    };
-
-    fs.readDir(this.src).then(input => {
-      return mutate(input || [], this.files)
-        .then(files => this.transformer(files.toArray()))
-        .then(output => mutate(output, this.components))
-        .then(() => {
-          const state = [this.components.state, this.files.state];
-          this.emit('parse.complete', ...state);
-          callback(null, ...state);
+    fs.readDir(this.src).then(files => {
+      return Bluebird.each(this.transforms, transform => {
+        return transform.run(files, this).then(result => {
+          return result;
         });
+      }).then(() => {
+        this.emit('parse.complete', this.state);
+        callback(null, this.state);
+      });
     }).catch(err => {
       this.emit('error', err);
       callback(err);
@@ -252,53 +207,30 @@ class Fractal extends EventEmitter {
   }
 
   /**
-   * The results of the last parse
+   * The results of the last parsing operation
    */
   get state() {
-    return {
-      files: this.files.state,
-      components: this.components.state
-    };
+    const state = {};
+    this.transforms.forEach(trans => {
+      state[trans.name] = trans.state;
+    });
+    return state;
   }
 
   /**
-   * Files object with parser and api properties
-   * @return {Object}
+   * Registered transforms
+   * @return {Collection}
    */
-  get files() {
-    return refs.files.get(this);
+  get transforms() {
+    return refs.transforms.get(this);
   }
 
   /**
-   * Components object with parser and api properties
-   * @return {Object}
-   */
-  get components() {
-    return refs.components.get(this);
-  }
-
-  /**
-   * Transformer function
-   * @return {Function}
-   */
-  get transformer() {
-    return refs.transformer.get(this);
-  }
-
-  /**
-   * An array of all registered and bundled commands
-   * @return {Array}
+   * Registered commands
+   * @return {Collection}
    */
   get commands() {
     return refs.commands.get(this);
-  }
-
-  /**
-   * An array of registered adapter names => adapters
-   * @return {Array} Adapters
-   */
-  get adapters() {
-    return refs.adapters.get(this);
   }
 
   /**

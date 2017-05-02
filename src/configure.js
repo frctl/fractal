@@ -24,18 +24,14 @@ const configure = module.exports = function (fractal, config = {}, appliedPreset
     fractal.addSrc(config.src);
   }
 
-  if (config.transformer) {
-    let transformer = config.transformer;
-    if (typeof transformer === 'string') {
-      transformer = loader.reqwire(config.transformer);
-    }
-    fractal.setTransformer(transformer);
+  // load transforms, extensions and commands
+
+  for (const [transform, opts] of resolveConfigItems('transforms')) {
+    fractal.addTransform(transform(opts));
   }
 
-  // load adapters, extensions and commands
-
-  for (const [adapter, opts] of resolveConfigItems('adapters')) {
-    fractal.addAdapter(adapter(opts));
+  if (config.defaultTransform) {
+    fractal.transforms.default = config.defaultTransform;
   }
 
   for (const [extension, opts] of resolveConfigItems('extensions')) {
@@ -48,7 +44,7 @@ const configure = module.exports = function (fractal, config = {}, appliedPreset
 
   // load type-specific plugins and methods
 
-  ['files', 'components'].forEach(type => {
+  fractal.transforms.map(trans => trans.name).forEach(type => {
     for (const [plugin, opts] of resolveConfigItems(`plugins.${type}`)) {
       fractal.addPlugin(plugin(opts), type);
     }

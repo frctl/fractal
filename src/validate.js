@@ -45,16 +45,11 @@ module.exports = {
     });
   },
 
-  adapter(adapter) {
-    validateObj('adapter', adapter, {
+  transform(transform) {
+    validateObj('transform', transform, {
       name: 'string',
-      match: ['string', 'array'],
-      render: 'function'
+      transformer: 'function'
     });
-  },
-
-  transformer(transformer) {
-    assert.function(transformer, `Transformers must be functions [transformer-invalid]`);
   },
 
   callback(callback) {
