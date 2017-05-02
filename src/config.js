@@ -39,7 +39,7 @@ module.exports = {
     for (const transform of app.transforms) {
       if (Array.isArray(plugins[transform.name])) {
         for (const [plugin, opts] of loader.resolve(plugins[transform.name])) {
-          transform.plugins.add(plugin(opts));
+          app.addPlugin(plugin(opts), transform.name);
         }
       }
     }
@@ -49,7 +49,8 @@ module.exports = {
     for (const transform of app.transforms) {
       if (Array.isArray(methods[transform.name])) {
         for (const [method, opts] of loader.resolve(methods[transform.name])) {
-          transform.methods.add(method(opts));
+          const mth = method(opts);
+          app.addMethod(mth.name, mth.handler, transform.name);
         }
       }
     }
