@@ -18,18 +18,19 @@ const fractal = Fractal({
 
 Parse the source directory. Accepts a `callback` function that is called once the parsing process is complete.
 
-#### callback(err, components, files)
+#### callback(err, result)
 
 * `err`: An `Error` instance if an error has occurred during parsing, otherwise `null`
-* `components`: A components collection. See the [collections](/docs/collections.md) documentation for more details.
-* `files`: A files collection. See the [collections](/docs/collections.md) documentation for more details.
+* `result`: An object containing the following keys:
+  * `components`: A components collection. See the [collections](/docs/collections.md) documentation for more details.
+  * `files`: A files collection. See the [collections](/docs/collections.md) documentation for more details.
 
 ```js
-fractal.parse(function(err, components, files) {
+fractal.parse(function(err, results) {
   if (err) {
     return console.log(err); // an error has occurred
   }
-  console.log(components.getAll());
+  console.log(results.components.toArray());
 });
 ```
 
@@ -52,20 +53,16 @@ Register a [collection](/docs/collections.md) method.
 
 ```js
 fractal.addMethod('filterByTag', function(tagName){
-  return this.getAll().filter(component => {
+  return this.filter(component => {
     return component.tags.includes(tagName);
   })
 });
 
 // the `filterByTag` method will now be available on the components collection returned by the .parse() method
-fractal.parse(function(err, components){
-  console.log(components.filterByTag('foobar')); // array of components with the tag 'foobar'
+fractal.parse(function(err, result){
+  console.log(result.components.filterByTag('foobar')); // array of components with the tag 'foobar'
 });
 ```
-
-### .addAdapter(adapter)
-
-Add a template engine adapter.
 
 ### .addExtension(extension)
 

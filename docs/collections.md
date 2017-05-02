@@ -1,6 +1,6 @@
 # Collections
 
-The callback to the `Fractal.parse()` method receives `components` and `files` collections when called.
+The callback to the `Fractal.parse()` method receives a results object with `components` and `files` collections:
 
 ```js
 const Fractal = require('@frctl/fractal');
@@ -9,7 +9,7 @@ const fractal = Fractal({
   src: './path/to/components'
 });
 
-fractal.parse(function(err, components, files){
+fractal.parse(function(err, {components, files}){
   // 'components' and 'files' are collections.
 });
 ```
