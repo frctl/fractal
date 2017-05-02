@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const utils = require('@frctl/utils');
 const Collection = require('./collection');
 
 class Store extends Collection {
@@ -17,8 +18,10 @@ class Store extends Collection {
    * @return {Store} Returns a reference to itself
    */
   add(item) {
-    this.validate(item);
-    this._items.push(item);
+    utils.toArray(item).forEach(item => {
+      this.validate(item);
+      this._items.push(item);
+    });
     return this;
   }
 

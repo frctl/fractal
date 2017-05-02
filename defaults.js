@@ -6,15 +6,9 @@ module.exports = {
 
   extensions: [],
 
-  plugins: {
-    files: [],
-    components: []
-  },
+  plugins: {},
 
-  methods: {
-    files: [],
-    components: []
-  },
+  methods: {},
 
   commands: [],
 

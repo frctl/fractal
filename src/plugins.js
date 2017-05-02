@@ -1,5 +1,4 @@
 const _ = require('lodash');
-const utils = require('@frctl/utils');
 const check = require('check-types');
 const Bluebird = require('bluebird');
 const asyncDone = Bluebird.promisify(require('async-done'));
@@ -19,18 +18,6 @@ class Plugins extends Store {
   constructor(plugins = []) {
     super(plugins);
     this.current = null;
-  }
-
-  /**
-   * Add a plugin or array of plugins to the collection
-   *
-   * @param  {function|function[]} plugins A function or array of functions to add to the collection of plugins
-   * @return {Plugins} Returns a reference to itself
-   */
-  use(plugins) {
-    plugins = utils.toArray(plugins);
-    plugins.forEach(plugin => this.add(plugin));
-    return this;
   }
 
   validate(plugin) {

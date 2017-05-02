@@ -4,16 +4,18 @@ const _ = require('lodash');
 const EventEmitter = require('eventemitter2').EventEmitter2;
 const Bluebird = require('bluebird');
 const utils = require('@frctl/utils');
+const loader = require('@frctl/utils/load');
 const fs = require('@frctl/ffs');
+const configHandlers = require('./config');
 const Transforms = require('./transforms');
 const Commands = require('./commands');
-const applyConfig = require('./configure');
 const validate = require('./validate');
 
 const refs = {
   src: new WeakMap(),
   commands: new WeakMap(),
-  transforms: new WeakMap()
+  transforms: new WeakMap(),
+  configHandlers: new WeakMap()
 };
 
 class Fractal extends EventEmitter {
@@ -33,6 +35,9 @@ class Fractal extends EventEmitter {
 
     refs.transforms.set(this, new Transforms());
     refs.commands.set(this, new Commands());
+    refs.configHandlers.set(this, []);
+
+    _.forEach(configHandlers, (handler, prop) => this.addConfigHandler(prop, handler));
 
     if (config) {
       this.configure(config);
@@ -49,7 +54,30 @@ class Fractal extends EventEmitter {
    */
   configure(config = {}) {
     this.log('Applying configuration', config);
-    return applyConfig(this, config);
+
+    const handlers = loader.resolve(_.get(config, 'config', []));
+    handlers.forEach(handler => this.addConfigHandler(handler.prop, handler.handler));
+
+    for (const handler of refs.configHandlers.get(this)) {
+      const value = _.get(config, handler.prop);
+      if (value !== undefined) {
+        handler.handler(value, this);
+      }
+    }
+
+    return this;
+  }
+
+  /**
+   * Register a config property handler
+   *
+   * @param  {string} prop The property name to listen for
+   * @param  {handler} function Callback
+   * @return {Fractal} The Fractal instance
+   */
+  addConfigHandler(prop, handler) {
+    refs.configHandlers.get(this).push({prop, handler});
+    return this;
   }
 
   /**
@@ -78,7 +106,7 @@ class Fractal extends EventEmitter {
    */
   addPlugin(plugin, target) {
     const transformer = this.transforms.get(target);
-    transformer.plugins.use(plugin);
+    transformer.plugins.add(plugin);
     return this;
   }
 
@@ -158,6 +186,12 @@ class Fractal extends EventEmitter {
     this.emit('parse.start');
 
     fs.readDir(this.src).then(files => {
+      if (this.transforms.count() === 0) {
+        this.emit('parse.complete', {});
+        callback(null, {});
+        return;
+      }
+
       return Bluebird.each(this.transforms, transform => {
         return transform.run(files, this).then(result => {
           return result;

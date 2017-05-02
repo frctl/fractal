@@ -12,8 +12,8 @@ class Transformer {
     validate.transform(opts);
     state.set(this, null);
     this.name = opts.name;
-    this.plugins = opts.plugins || new Plugins();
-    this.methods = opts.methods || new Methods();
+    this.plugins = new Plugins(opts.plugins || []);
+    this.methods = new Methods(opts.methods || []);
     this.transform = opts.transformer;
   }
 

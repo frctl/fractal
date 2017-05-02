@@ -11,7 +11,7 @@ describe('Methods', function () {
   describe('.validate()', function () {
     it('throws an error if the method supplied does not validate', function () {
       const methods = new Methods();
-      expect(() => methods.add(null)).to.throw(TypeError, '[method-invalid]');
+      expect(() => methods.add('foo')).to.throw(TypeError, '[method-invalid]');
     });
     it('does not throw an erro when passed a valid commmand object', function () {
       const methods = new Methods();
