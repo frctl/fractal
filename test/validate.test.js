@@ -15,35 +15,35 @@ function exclude(...exclude) {
 }
 
 const validators = {
-  adapter: {
-    valid: [
-      {
-        name: 'test',
-        match: '.doo',
-        render() {}
-      }
-    ],
-    invalid: [
-      {
-        attempt: ['foo', {}, {name: 'valid'}, {render() {}}],
-        expect: '[adapter-invalid]'
-      }
-    ],
-    invalidProps: {
-      name: {
-        values: exclude('string'),
-        expect: '[adapter-name-invalid]'
-      },
-      match: {
-        values: exclude('string', 'array'),
-        expect: '[adapter-match-invalid]'
-      },
-      render: {
-        values: exclude('function'),
-        expect: '[adapter-render-invalid]'
-      }
-    }
-  },
+  // adapter: {
+  //   valid: [
+  //     {
+  //       name: 'test',
+  //       match: '.doo',
+  //       render() {}
+  //     }
+  //   ],
+  //   invalid: [
+  //     {
+  //       attempt: ['foo', {}, {name: 'valid'}, {render() {}}],
+  //       expect: '[adapter-invalid]'
+  //     }
+  //   ],
+  //   invalidProps: {
+  //     name: {
+  //       values: exclude('string'),
+  //       expect: '[adapter-name-invalid]'
+  //     },
+  //     match: {
+  //       values: exclude('string', 'array'),
+  //       expect: '[adapter-match-invalid]'
+  //     },
+  //     render: {
+  //       values: exclude('function'),
+  //       expect: '[adapter-render-invalid]'
+  //     }
+  //   }
+  // },
   plugin: {
     valid: [
       function () {}

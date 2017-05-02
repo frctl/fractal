@@ -4,14 +4,17 @@ const EventEmitter = require('eventemitter2').EventEmitter2;
 const expect = require('@frctl/utils/test').expect;
 const sinon = require('sinon');
 const Fractal = require('../src/fractal');
-const Plugins = require('../src/plugins');
-const Methods = require('../src/methods');
-const Adapters = require('../src/adapters');
+// const Plugins = require('../src/plugins');
+// const Methods = require('../src/methods');
+// const Adapters = require('../src/adapters');
 const Collection = require('../src/collection');
 
-const entities = ['files', 'components'];
+// const collections = ['files', 'components'];
 const validConfig = {
-  src: './test/fixtures/components'
+  src: './test/fixtures/components',
+  presets: [
+    '@frctl/presets/core'
+  ]
 };
 
 describe('Fractal', function () {
@@ -36,53 +39,53 @@ describe('Fractal', function () {
     });
   });
 
-  describe('.addPlugin()', function () {
-    it(`checks the plugin is valid`);
-
-    it(`adds the plugin to the appropriate plugin set`, function () {
-      const fractal = new Fractal(validConfig);
-      for (const entity of entities) {
-        const plugins = fractal[entity].plugins;
-        const plugin = sinon.spy();
-        expect(plugins.toArray().includes(plugin)).to.be.false;
-        fractal.addPlugin(plugin, entity);
-        expect(plugins.toArray().includes(plugin)).to.be.true;
-      }
-    });
-
-    it(`adds the plugin to the components parser if a target parser is not specified`, function () {
-      const fractal = new Fractal(validConfig);
-      const plugins = fractal.components.plugins;
-      const plugin = sinon.spy();
-      expect(plugins.toArray().includes(plugin)).to.be.false;
-      fractal.addPlugin(plugin);
-      expect(plugins.toArray().includes(plugin)).to.be.true;
-    });
-  });
-
-  describe('.addMethod()', function () {
-    it(`checks the method is valid`);
-
-    it(`adds the method to the target interface`, function () {
-      const fractal = new Fractal(validConfig);
-      for (const entity of entities) {
-        const methods = fractal[entity].methods;
-        const methodName = `${entity}Test`;
-        const method = sinon.spy();
-        fractal.addMethod(methodName, method, entity);
-        expect(Boolean(methods.toArray().find(mth => mth.name === methodName))).to.be.true;
-      }
-    });
-
-    it(`adds the method to the components interface if a target interface is not specified`, function () {
-      const fractal = new Fractal(validConfig);
-      const methods = fractal.components.methods;
-      const methodName = `componentsTest`;
-      const method = sinon.spy();
-      fractal.addMethod(methodName, method);
-      expect(Boolean(methods.toArray().find(mth => mth.name === methodName))).to.be.true;
-    });
-  });
+  // describe('.addPlugin()', function () {
+  //   it(`checks the plugin is valid`);
+  //
+  //   it(`adds the plugin to the appropriate plugin set`, function () {
+  //     const fractal = new Fractal(validConfig);
+  //     for (const entity of collections) {
+  //       const plugins = fractal.transforms.get(entity).plugins;
+  //       const plugin = sinon.spy();
+  //       expect(plugins.toArray().includes(plugin)).to.be.false;
+  //       fractal.addPlugin(plugin, entity);
+  //       expect(plugins.toArray().includes(plugin)).to.be.true;
+  //     }
+  //   });
+  //
+  //   it(`adds the plugin to the components parser if a target parser is not specified`, function () {
+  //     const fractal = new Fractal(validConfig);
+  //     const plugins = fractal.transforms.get('components').plugins;
+  //     const plugin = sinon.spy();
+  //     expect(plugins.toArray().includes(plugin)).to.be.false;
+  //     fractal.addPlugin(plugin);
+  //     expect(plugins.toArray().includes(plugin)).to.be.true;
+  //   });
+  // });
+  //
+  // describe('.addMethod()', function () {
+  //   it(`checks the method is valid`);
+  //
+  //   it(`adds the method to the target interface`, function () {
+  //     const fractal = new Fractal(validConfig);
+  //     for (const entity of collections) {
+  //       const methods = fractal.transforms.get(entity).methods;
+  //       const methodName = `${entity}Test`;
+  //       const method = sinon.spy();
+  //       fractal.addMethod(methodName, method, entity);
+  //       expect(Boolean(methods.toArray().find(mth => mth.name === methodName))).to.be.true;
+  //     }
+  //   });
+  //
+  //   it(`adds the method to the components interface if a target interface is not specified`, function () {
+  //     const fractal = new Fractal(validConfig);
+  //     const methods = fractal.transforms.get('components').methods;
+  //     const methodName = `componentsTest`;
+  //     const method = sinon.spy();
+  //     fractal.addMethod(methodName, method);
+  //     expect(Boolean(methods.toArray().find(mth => mth.name === methodName))).to.be.true;
+  //   });
+  // });
 
   describe('.addExtension()', function () {
     it(`throws an error if called with invalid arguments`, function () {
@@ -104,17 +107,14 @@ describe('Fractal', function () {
     it(`checks the command is valid`);
   });
 
-  describe('.addAdapter()', function () {
-    it(`checks the adapter is valid`);
-  });
-
   describe('.parse()', function () {
-    it('calls the callback with component and file collections when successful ', function (done) {
+    it('calls the callback with collections when successful ', function (done) {
       const fractal = new Fractal(validConfig);
-      fractal.parse((err, components, files) => {
+      fractal.parse((err, state) => {
+        console.log(err);
         expect(err).to.equal(null);
-        expect(components).to.be.instanceOf(Collection);
-        expect(files).to.be.instanceOf(Collection);
+        expect(state.components).to.be.instanceOf(Collection);
+        expect(state.files).to.be.instanceOf(Collection);
         done();
       });
     });
@@ -169,36 +169,21 @@ describe('Fractal', function () {
     // });
   });
 
-  describe('.files', function () {
-    it(`provides access to the files object`, function () {
-      const fractal = new Fractal(validConfig);
-      expect(fractal.files).to.be.an('object');
-      expect(fractal.files.plugins).to.be.an.instanceof(Plugins);
-      expect(fractal.files.methods).to.be.an.instanceof(Methods);
-    });
-  });
-
-  describe('.components', function () {
-    it(`provides access to the components object`, function () {
-      const fractal = new Fractal(validConfig);
-      expect(fractal.components).to.be.an('object');
-      expect(fractal.components.plugins).to.be.an.instanceof(Plugins);
-      expect(fractal.components.methods).to.be.an.instanceof(Methods);
-    });
-  });
-
-  describe('.adapters', function () {
-    it(`provides access to the set of registered adapters`, function () {
-      const fractal = new Fractal(validConfig);
-      const adapterExample = {
-        name: 'adapter',
-        match: '.someext',
-        render() {}
-      };
-      fractal.addAdapter(adapterExample);
-      expect(fractal.adapters).to.be.an.instanceof(Adapters);
-      expect(fractal.adapters.count()).to.equal(1);
-      expect(Boolean(fractal.adapters.toArray().find(adapter => adapter.name === 'adapter'))).to.be.true;
-    });
-  });
+  // describe('.files', function () {
+  //   it(`provides access to the files object`, function () {
+  //     const fractal = new Fractal(validConfig);
+  //     expect(fractal.files).to.be.an('object');
+  //     expect(fractal.files.plugins).to.be.an.instanceof(Plugins);
+  //     expect(fractal.files.methods).to.be.an.instanceof(Methods);
+  //   });
+  // });
+  //
+  // describe('.components', function () {
+  //   it(`provides access to the components object`, function () {
+  //     const fractal = new Fractal(validConfig);
+  //     expect(fractal.components).to.be.an('object');
+  //     expect(fractal.components.plugins).to.be.an.instanceof(Plugins);
+  //     expect(fractal.components.methods).to.be.an.instanceof(Methods);
+  //   });
+  // });
 });
