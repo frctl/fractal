@@ -26,11 +26,11 @@ Parse the source directory. Accepts a `callback` function that is called once th
   * `files`: A files collection. See the [collections](/docs/collections.md) documentation for more details.
 
 ```js
-fractal.parse(function(err, results) {
+fractal.parse(function(err, {components, files}) {
   if (err) {
     return console.log(err); // an error has occurred
   }
-  console.log(results.components.toArray());
+  console.log(components.toArray());
 });
 ```
 

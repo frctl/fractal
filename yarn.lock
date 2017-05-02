@@ -55,6 +55,12 @@
   dependencies:
     pify "^2.3.0"
 
+"@frctl/fractal-extension-statuses@^0.1.3":
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/@frctl/fractal-extension-statuses/-/fractal-extension-statuses-0.1.3.tgz#60dddaee260f11c588be7764950edda5feb2137d"
+  dependencies:
+    "@frctl/utils" "^0.4.2"
+
 "@frctl/fractal-plugin-files-parse-config@^0.1.0":
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/@frctl/fractal-plugin-files-parse-config/-/fractal-plugin-files-parse-config-0.1.0.tgz#a4d7b0849d620d7bf7ef4bd8e35ff0fb502ff113"
@@ -67,12 +73,13 @@
     pify "^2.3.0"
     req-all "^1.0.0"
 
-"@frctl/presets@^0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@frctl/presets/-/presets-0.1.1.tgz#8dc1bffc6952107828a86d88843ba513b4a97310"
+"@frctl/presets@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@frctl/presets/-/presets-0.2.0.tgz#684310db2a28ccda03507beef5ffea1cea0e2839"
   dependencies:
     "@frctl/adapters" "^0.2.0"
     "@frctl/ffs" "^0.2.1"
+    "@frctl/fractal-extension-statuses" "^0.1.3"
     "@frctl/fractal-plugin-files-parse-config" "^0.1.0"
     "@frctl/utils" "^0.5.0"
     bluebird "^3.4.7"
@@ -96,7 +103,7 @@
     titlecase "^1.1.2"
     uuid "^2.0.3"
 
-"@frctl/utils@^0.4.0":
+"@frctl/utils@^0.4.0", "@frctl/utils@^0.4.2":
   version "0.4.5"
   resolved "https://registry.yarnpkg.com/@frctl/utils/-/utils-0.4.5.tgz#1daa34a4cf617f910a7a8dcefb9305da3e980e31"
   dependencies:
@@ -1846,8 +1853,8 @@ http-signature@~1.1.0:
     sshpk "^1.7.0"
 
 ignore@^3.2.0:
-  version "3.2.7"
-  resolved "https://registry.yarnpkg.com/ignore/-/ignore-3.2.7.tgz#4810ca5f1d8eca5595213a34b94f2eb4ed926bbd"
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/ignore/-/ignore-3.3.0.tgz#3812d22cbe9125f2c2b4915755a1b8abd745a001"
 
 imurmurhash@^0.1.4:
   version "0.1.4"
@@ -2835,8 +2842,8 @@ normalize-path@^2.0.1:
     remove-trailing-separator "^1.0.1"
 
 np@^2.12.0:
-  version "2.14.0"
-  resolved "https://registry.yarnpkg.com/np/-/np-2.14.0.tgz#68bbac755c84705442d399e71c005de0551c1ed9"
+  version "2.14.1"
+  resolved "https://registry.yarnpkg.com/np/-/np-2.14.1.tgz#5ccb94a84cba12a5d198e73494ba65ef7f6356e8"
   dependencies:
     any-observable "^0.2.0"
     chalk "^1.1.3"
