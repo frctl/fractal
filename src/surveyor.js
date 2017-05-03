@@ -87,7 +87,7 @@ class Surveyor extends EventEmitter {
       validate.src(src);
       this.log(`Adding src: ${src}`);
     });
-    sources.set(this, this.sources.concat(toAdd));
+    sources.set(this, _.uniq(this.sources.concat(toAdd)));
     return this;
   }
 
