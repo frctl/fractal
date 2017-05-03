@@ -2,9 +2,7 @@ const _ = require('lodash');
 const Surveyor = require('./surveyor');
 const Commands = require('./commands');
 
-const refs = {
-  commands: new WeakMap(),
-};
+const commands = new WeakMap();
 
 class Fractal extends Surveyor {
 
@@ -16,7 +14,7 @@ class Fractal extends Surveyor {
    */
   constructor(config) {
     super(config);
-    refs.commands.set(this, new Commands());
+    commands.set(this, new Commands());
   }
 
   /**
@@ -26,7 +24,7 @@ class Fractal extends Surveyor {
    * @return {Fractal} The Fractal instance
    */
   addCommand(command) {
-    refs.commands.get(this).add(command);
+    commands.get(this).add(command);
     return this;
   }
 
@@ -42,7 +40,7 @@ class Fractal extends Surveyor {
    * @return {Collection}
    */
   get commands() {
-    return refs.commands.get(this);
+    return commands.get(this);
   }
 
 }

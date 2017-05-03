@@ -6,15 +6,13 @@ const Bluebird = require('bluebird');
 const utils = require('@frctl/utils');
 const loader = require('@frctl/utils/load');
 const fs = require('@frctl/ffs');
-const configHandlers = require('./config');
+const defaultConfigHandlers = require('./config');
 const Transforms = require('./transforms');
 const validate = require('./validate');
 
-const refs = {
-  src: new WeakMap(),
-  transforms: new WeakMap(),
-  configHandlers: new WeakMap()
-};
+const sources = new WeakMap();
+const transforms = new WeakMap();
+const configHandlers = new WeakMap();
 
 class Surveyor extends EventEmitter {
 
@@ -31,10 +29,10 @@ class Surveyor extends EventEmitter {
       wildcard: true
     });
 
-    refs.transforms.set(this, new Transforms());
-    refs.configHandlers.set(this, []);
+    transforms.set(this, new Transforms());
+    configHandlers.set(this, []);
 
-    _.forEach(configHandlers, (handler, prop) => this.addConfigHandler(prop, handler));
+    _.forEach(defaultConfigHandlers, (handler, prop) => this.addConfigHandler(prop, handler));
 
     if (config) {
       this.configure(config);
@@ -55,7 +53,7 @@ class Surveyor extends EventEmitter {
     const handlers = loader.resolve(_.get(config, 'config', []));
     handlers.forEach(handler => this.addConfigHandler(handler.prop, handler.handler));
 
-    for (const handler of refs.configHandlers.get(this)) {
+    for (const handler of configHandlers.get(this)) {
       const value = _.get(config, handler.prop);
       if (value !== undefined) {
         handler.handler(value, this);
@@ -73,7 +71,7 @@ class Surveyor extends EventEmitter {
    * @return {Surveyor} The Surveyor instance
    */
   addConfigHandler(prop, handler) {
-    refs.configHandlers.get(this).push({prop, handler});
+    configHandlers.get(this).push({prop, handler});
     return this;
   }
 
@@ -85,12 +83,11 @@ class Surveyor extends EventEmitter {
    */
   addSrc(src) {
     const toAdd = utils.normalizePaths(src);
-    const sources = refs.src.get(this) || [];
     toAdd.forEach(src => {
       validate.src(src);
       this.log(`Adding src: ${src}`);
     });
-    refs.src.set(this, sources.concat(toAdd));
+    sources.set(this, this.sources.concat(toAdd));
     return this;
   }
 
@@ -145,7 +142,7 @@ class Surveyor extends EventEmitter {
    * @return {Surveyor} The Surveyor instance
    */
   addTransform(transform) {
-    refs.transforms.get(this).add(transform);
+    transforms.get(this).add(transform);
     return this;
   }
 
@@ -171,7 +168,7 @@ class Surveyor extends EventEmitter {
 
     this.emit('parse.start');
 
-    fs.readDir(this.src).then(files => {
+    fs.readDir(this.sources).then(files => {
       if (this.transforms.count() === 0) {
         this.emit('parse.complete', {});
         callback(null, {});
@@ -235,15 +232,15 @@ class Surveyor extends EventEmitter {
    * @return {Collection}
    */
   get transforms() {
-    return refs.transforms.get(this);
+    return transforms.get(this);
   }
 
   /**
    * The target src directories
    * @return {Array} Paths array
    */
-  get src() {
-    return refs.src.get(this) || [];
+  get sources() {
+    return sources.get(this) || [];
   }
 
 }
