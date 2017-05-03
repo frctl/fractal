@@ -210,7 +210,17 @@ class Surveyor extends EventEmitter {
    * @return {Surveyor} The Surveyor instance
    */
   log(message, ...args) {
-    let [level, data] = typeof args[0] === 'string' ? args : args.reverse();
+    let data, level;
+    for (const arg of args) {
+      if (typeof arg === 'string') {
+        level = arg;
+        continue;
+      }
+      if (_.isPlainObject(arg)) {
+        data = arg;
+        continue;
+      }
+    }
     level = level || 'debug';
     this.emit(`log.${level}`, message, data, level);
     return this;

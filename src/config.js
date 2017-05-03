@@ -61,13 +61,6 @@ module.exports = {
     for (const [extension, opts] of extensions) {
       app.addExtension(extension(opts));
     }
-  },
-
-  commands: function (items = [], app) {
-    const commands = loader.resolve(items);
-    for (const [command, opts] of commands) {
-      app.addCommand(command(opts));
-    }
   }
 
 };

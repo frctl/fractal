@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const loader = require('@frctl/utils/load');
 const Surveyor = require('./surveyor');
 const Commands = require('./commands');
 
@@ -14,7 +15,14 @@ class Fractal extends Surveyor {
    */
   constructor(config) {
     super(config);
+
     commands.set(this, new Commands());
+
+    this.addConfigHandler('commands', items => {
+      for (const [command, opts] of loader.resolve(items || [])) {
+        this.addCommand(command(opts));
+      }
+    });
   }
 
   /**

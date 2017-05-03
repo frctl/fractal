@@ -14,3 +14,4 @@ module.exports = function (opts = {}, fractal) {
 
 module.exports.Fractal = Fractal;
 module.exports.Surveyor = require('./src/surveyor');
+module.exports.Collection = require('./src/collection');
