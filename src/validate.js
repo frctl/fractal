@@ -18,10 +18,6 @@ module.exports = {
     assert.instance(file, fs.File, `file is not a valid File object [file-invalid]`);
   },
 
-  entityType(type, entities = ['files', 'components']) {
-    assert.includes(entities, type, `Target entity type must be one of [${entities.join(',')}] [entity-invalid]`);
-  },
-
   plugin(plugin) {
     assert.function(plugin, `Plugins must be functions [plugin-invalid]`);
   },
