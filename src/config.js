@@ -4,13 +4,13 @@ const appliedPresets = [];
 
 module.exports = {
 
-  src: function (src, app) {
+  src: function (src, key, app) {
     if (src) {
       app.addSrc(src);
     }
   },
 
-  presets: function (items = [], app) {
+  presets: function (items = [], key, app) {
     const presets = loader.resolve(items);
     for (const [fn, opts] of presets) {
       const preset = fn(opts);
@@ -22,20 +22,20 @@ module.exports = {
     }
   },
 
-  transforms: function (items = [], app) {
+  transforms: function (items = [], key, app) {
     const transforms = loader.resolve(items);
     for (const [transform, opts] of transforms) {
       app.addTransform(transform(opts));
     }
   },
 
-  'defaults.transform': function (value, app) {
+  'defaults.transform': function (value, key, app) {
     if (value) {
       app.transforms.default = value;
     }
   },
 
-  plugins: function (plugins = {}, app) {
+  plugins: function (plugins = {}, key, app) {
     for (const transform of app.transforms) {
       if (Array.isArray(plugins[transform.name])) {
         for (const [plugin, opts] of loader.resolve(plugins[transform.name])) {
@@ -45,7 +45,7 @@ module.exports = {
     }
   },
 
-  methods: function (methods = {}, app) {
+  methods: function (methods = {}, key, app) {
     for (const transform of app.transforms) {
       if (Array.isArray(methods[transform.name])) {
         for (const [method, opts] of loader.resolve(methods[transform.name])) {
@@ -56,7 +56,7 @@ module.exports = {
     }
   },
 
-  extensions: function (items = [], app) {
+  extensions: function (items = [], key, app) {
     const extensions = loader.resolve(items);
     for (const [extension, opts] of extensions) {
       app.addExtension(extension(opts));

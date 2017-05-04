@@ -56,7 +56,7 @@ class Surveyor extends EventEmitter {
     for (const handler of configHandlers.get(this)) {
       const value = _.get(config, handler.prop);
       if (value !== undefined) {
-        handler.handler(value, this);
+        handler.handler(value, handler.prop, this);
       }
     }
 
@@ -71,7 +71,10 @@ class Surveyor extends EventEmitter {
    * @return {Surveyor} The Surveyor instance
    */
   addConfigHandler(prop, handler) {
-    configHandlers.get(this).push({prop, handler});
+    const props = utils.toArray(prop);
+    for (const prop of props) {
+      configHandlers.get(this).push({prop, handler});
+    }
     return this;
   }
 
