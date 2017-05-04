@@ -31,11 +31,9 @@
     "@frctl/cli": "^0.1.0",
     "@frctl/ffs": "^0.2.1",
     "@frctl/presets": "^0.2.1",
+    "@frctl/surveyor": "^0.1.0",
     "@frctl/utils": "^0.5.2",
-    "async-done": "^1.2.2",
-    "bluebird": "^3.4.7",
     "check-types": "^7.1.5",
-    "eventemitter2": "^3.0.0",
     "liftoff": "^2.3.0",
     "lodash": "^4.17.4"
   },

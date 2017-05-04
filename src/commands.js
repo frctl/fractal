@@ -1,11 +1,21 @@
-const _ = require('lodash');
-const Store = require('./store');
-const validate = require('./validate');
+const Surveyor = require('@frctl/surveyor').Surveyor;
+const Store = require('@frctl/surveyor').Store;
+
+const commandSpec = {
+  type: 'object',
+  props: {
+    command: 'string',
+    description: 'string',
+    handler: 'function'
+  }
+};
 
 class Commands extends Store {
 
-  validate(command) {
-    return validate.command(command);
+  constructor(items) {
+    super(items, {
+      validator: item => Surveyor.validate('command', item, commandSpec)
+    });
   }
 
 }

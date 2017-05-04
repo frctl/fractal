@@ -102,6 +102,20 @@
   dependencies:
     bluebird "^3.4.7"
 
+"@frctl/surveyor@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@frctl/surveyor/-/surveyor-0.1.0.tgz#58c17155728dd5eaf2b36c55b176d5748945f949"
+  dependencies:
+    "@frctl/ffs" "^0.2.1"
+    "@frctl/utils" "^0.5.2"
+    async-done "^1.2.2"
+    bluebird "^3.5.0"
+    chai "^3.5.0"
+    chai-sorted "^0.1.0"
+    check-types "^7.1.5"
+    eventemitter2 "^4.1.0"
+    lodash "^4.17.4"
+
 "@frctl/utils@^0.3.1":
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/@frctl/utils/-/utils-0.3.2.tgz#189e15f5a7a9a11cbfd1b087de1706cc11ab8cca"
@@ -1262,18 +1276,18 @@ eslint@^3.6.0:
     text-table "~0.2.0"
     user-home "^2.0.0"
 
-espree@^3.1.3, espree@^3.4.0:
-  version "3.4.2"
-  resolved "https://registry.yarnpkg.com/espree/-/espree-3.4.2.tgz#38dbdedbedc95b8961a1fbf04734a8f6a9c8c592"
-  dependencies:
-    acorn "^5.0.1"
-    acorn-jsx "^3.0.0"
-
-espree@~3.1.7:
+espree@^3.1.3, espree@~3.1.7:
   version "3.1.7"
   resolved "https://registry.yarnpkg.com/espree/-/espree-3.1.7.tgz#fd5deec76a97a5120a9cd3a7cb1177a0923b11d2"
   dependencies:
     acorn "^3.3.0"
+    acorn-jsx "^3.0.0"
+
+espree@^3.4.0:
+  version "3.4.2"
+  resolved "https://registry.yarnpkg.com/espree/-/espree-3.4.2.tgz#38dbdedbedc95b8961a1fbf04734a8f6a9c8c592"
+  dependencies:
+    acorn "^5.0.1"
     acorn-jsx "^3.0.0"
 
 esprima@^3.1.1:
@@ -1322,9 +1336,9 @@ event-emitter@~0.3.5:
     d "1"
     es5-ext "~0.10.14"
 
-eventemitter2@^3.0.0:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/eventemitter2/-/eventemitter2-3.0.2.tgz#81c0edb739ffa64fb9f21bbcb1d2b419a5133512"
+eventemitter2@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/eventemitter2/-/eventemitter2-4.1.0.tgz#b1fb8a1144e7dfcf80cecce9877ff6d68e7d8506"
 
 execa@^0.4.0:
   version "0.4.0"
@@ -1763,8 +1777,8 @@ growl@1.9.2:
   resolved "https://registry.yarnpkg.com/growl/-/growl-1.9.2.tgz#0ea7743715db8d8de2c5ede1775e1b45ac85c02f"
 
 handlebars@^4.0.3:
-  version "4.0.7"
-  resolved "https://registry.yarnpkg.com/handlebars/-/handlebars-4.0.7.tgz#e97325aeb8ea0b9e12b9c4dd73c4c312ad0ede59"
+  version "4.0.8"
+  resolved "https://registry.yarnpkg.com/handlebars/-/handlebars-4.0.8.tgz#22b875cd3f0e6cbea30314f144e82bc7a72ff420"
   dependencies:
     async "^1.4.0"
     optimist "^0.6.1"
@@ -3354,8 +3368,8 @@ regex-cache@^0.4.2:
     is-primitive "^2.0.0"
 
 registry-auth-token@^3.0.1:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/registry-auth-token/-/registry-auth-token-3.3.0.tgz#57ae67347e73d96345ed1bc01294c7237c02aa63"
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/registry-auth-token/-/registry-auth-token-3.3.1.tgz#fb0d3289ee0d9ada2cbb52af5dfe66cb070d3006"
   dependencies:
     rc "^1.1.6"
     safe-buffer "^5.0.1"
@@ -3518,8 +3532,8 @@ rx@^4.1.0:
   resolved "https://registry.yarnpkg.com/rx/-/rx-4.1.0.tgz#a5f13ff79ef3b740fe30aa803fb09f98805d4782"
 
 rxjs@^5.0.0-beta.11, rxjs@^5.0.0-beta.9:
-  version "5.3.0"
-  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-5.3.0.tgz#d88ccbdd46af290cbdb97d5d8055e52453fabe2d"
+  version "5.3.1"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-5.3.1.tgz#9ecc9e722247e4f4490d30a878577a3740fd0cb7"
   dependencies:
     symbol-observable "^1.0.1"
 

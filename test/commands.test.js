@@ -1,5 +1,5 @@
 const expect = require('@frctl/utils/test').expect;
-const Store = require('../src/store');
+const Store = require('@frctl/surveyor').Store;
 const Commands = require('../src/commands');
 
 describe('Commands', function () {

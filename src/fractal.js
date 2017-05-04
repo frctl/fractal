@@ -1,6 +1,6 @@
 const _ = require('lodash');
 const loader = require('@frctl/utils/load');
-const Surveyor = require('./surveyor');
+const Surveyor = require('@frctl/surveyor').Surveyor;
 const Commands = require('./commands');
 
 const commands = new WeakMap();
