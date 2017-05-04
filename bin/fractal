@@ -36,8 +36,8 @@ launcher.launch({}, function(env) {
     app = config;
     listen(app);
   } else {
-    const frctl = env.modulePath ? require(env.modulePath) : local;
-    app = frctl();
+    const factory = env.modulePath ? require(env.modulePath) : local;
+    app = factory();
     listen(app);
     app.configure(config);
   }

@@ -13,7 +13,8 @@ module.exports = {
   commands: [],
 
   presets: [
-    '@frctl/presets/core'
+    '@frctl/presets/core',
+    '@frctl/presets/core-cli',
   ]
 
 };
