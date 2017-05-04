@@ -4,8 +4,11 @@ const local = require('../.');
 const Liftoff = require('liftoff');
 const utils = require('@frctl/utils');
 const commander = require('@frctl/cli');
-const konsole = require('@frctl/console')();
 const semver = require('semver');
+const argv = require('yargs').argv;
+const konsole = require('@frctl/console')({
+  debug: argv.debug
+});
 
 const launcher = new Liftoff({
   name: 'fractal',
@@ -27,12 +30,16 @@ launcher.launch({}, function(env) {
   let app;
   const config = env.configPath ? require(env.configPath) : {};
   const scope = Boolean(env.configPath) ? 'project' : 'global';
+  const debug = argv.debug;
 
   if (config instanceof local.Fractal || (config.constructor && config.constructor.name === 'Fractal')) {
     app = config;
+    listen(app);
   } else {
     const frctl = env.modulePath ? require(env.modulePath) : local;
-    app = frctl(config);
+    app = frctl();
+    listen(app);
+    app.configure(config);
   }
 
   if (semver.major(app.version) < 2) {
@@ -45,12 +52,16 @@ launcher.launch({}, function(env) {
     process.exit(1);
   }
 
-  const cli = commander(app, { scope });
+  const cli = commander(app, { scope, debug });
 
   for (const cmd of app.commands) {
     cli.addCommand(cmd);
   }
 
   cli.run();
+
+  function listen(app) {
+    app.on('log.*', (...args) => konsole.log(...args));
+  }
 
 });

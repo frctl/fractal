@@ -28,15 +28,16 @@
     "test:validate": "nyc mocha \"test/validate.test.js\" --require test/support/env"
   },
   "dependencies": {
-    "@frctl/cli": "^0.1.1",
-    "@frctl/console": "^0.4.2",
+    "@frctl/cli": "^0.1.2",
+    "@frctl/console": "^0.4.4",
     "@frctl/ffs": "^0.2.1",
     "@frctl/presets": "^0.2.1",
-    "@frctl/surveyor": "^0.1.0",
+    "@frctl/surveyor": "^0.1.1",
     "@frctl/utils": "^0.5.2",
     "check-types": "^7.1.5",
     "liftoff": "^2.3.0",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "yargs": "^8.0.1"
   },
   "devDependencies": {
     "@frctl/eslint-config-frctl": "0.1.0",
