@@ -28,7 +28,8 @@
     "test:validate": "nyc mocha \"test/validate.test.js\" --require test/support/env"
   },
   "dependencies": {
-    "@frctl/cli": "^0.1.0",
+    "@frctl/cli": "^0.1.1",
+    "@frctl/console": "^0.4.2",
     "@frctl/ffs": "^0.2.1",
     "@frctl/presets": "^0.2.1",
     "@frctl/surveyor": "^0.1.0",

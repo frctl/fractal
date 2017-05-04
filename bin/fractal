@@ -4,6 +4,7 @@ const local = require('../.');
 const Liftoff = require('liftoff');
 const utils = require('@frctl/utils');
 const commander = require('@frctl/cli');
+const konsole = require('@frctl/console')();
 const semver = require('semver');
 
 const launcher = new Liftoff({
@@ -40,17 +41,11 @@ launcher.launch({}, function(env) {
   }
 
   if (app.commands.count() === 0) {
-    console.log('No commands registered.'); // TODO: style error message properly
+    konsole.error('No commands registered.');
     process.exit(1);
   }
 
-  /**
-   * Initialise new CLI instance and run
-   */
-
-  const cli = commander(app, {
-    scope: scope
-  });
+  const cli = commander(app, { scope });
 
   for (const cmd of app.commands) {
     cli.addCommand(cmd);
