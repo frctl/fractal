@@ -2,15 +2,7 @@
 
 const Surveyor = require('@frctl/surveyor').Surveyor;
 const expect = require('@frctl/utils/test').expect;
-const sinon = require('sinon');
 const Fractal = require('../src/fractal');
-
-const validConfig = {
-  src: './test/fixtures/components',
-  presets: [
-    '@frctl/presets/core'
-  ]
-};
 
 describe('Fractal', function () {
   describe('constructor()', function () {
@@ -64,5 +56,4 @@ describe('Fractal', function () {
   //   });
   //
   // });
-
 });
