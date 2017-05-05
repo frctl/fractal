@@ -1,14 +1,8 @@
 #!/usr/bin/env node
 
-const local = require('../.');
 const Liftoff = require('liftoff');
 const utils = require('@frctl/utils');
-const commander = require('@frctl/cli');
 const semver = require('semver');
-const argv = require('yargs').argv;
-const konsole = require('@frctl/console')({
-  debug: argv.debug
-});
 
 const launcher = new Liftoff({
   name: 'fractal',
@@ -23,20 +17,26 @@ const launcher = new Liftoff({
 
 launcher.launch({}, function(env) {
 
-  /**
-   * Get or create Fractal instance
-   */
-
   let app;
+
+  const argv = require('yargs').argv;
+  const konsole = require('@frctl/console')({
+    debug: argv.debug
+  });
+
   const config = env.configPath ? require(env.configPath) : {};
   const scope = Boolean(env.configPath) ? 'project' : 'global';
   const debug = argv.debug;
 
-  if (config instanceof local.Fractal || (config.constructor && config.constructor.name === 'Fractal')) {
+  /**
+   * Get or create Fractal instance
+   */
+
+  if (config.constructor && config.constructor.name === 'Fractal') {
     app = config;
     listen(app);
   } else {
-    const factory = env.modulePath ? require(env.modulePath) : local;
+    const factory = env.modulePath ? require(env.modulePath) : require('../.');
     app = factory();
     listen(app);
     app.configure(config);
@@ -52,7 +52,7 @@ launcher.launch({}, function(env) {
     process.exit(1);
   }
 
-  const cli = commander(app, { scope, debug });
+  const cli = require('@frctl/cli')(app, { scope, debug });
 
   for (const cmd of app.commands) {
     cli.addCommand(cmd);
