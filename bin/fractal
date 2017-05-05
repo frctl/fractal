@@ -20,7 +20,7 @@ launcher.launch({}, function(env) {
   let app;
 
   const argv = require('yargs').argv;
-  const konsole = require('@frctl/console')({
+  const log = require('@frctl/cli/console')({
     debug: argv.debug
   });
 
@@ -48,11 +48,11 @@ launcher.launch({}, function(env) {
   }
 
   if (app.commands.count() === 0) {
-    konsole.error('No commands registered.');
+    log.error('No commands registered.');
     process.exit(1);
   }
 
-  const cli = require('@frctl/cli')(app, { scope, debug });
+  const cli = require('@frctl/cli')(app, { scope, debug, console: log });
 
   for (const cmd of app.commands) {
     cli.addCommand(cmd);
@@ -61,7 +61,7 @@ launcher.launch({}, function(env) {
   cli.run();
 
   function listen(app) {
-    app.on('log.*', (...args) => konsole.log(...args));
+    app.on('log.*', (message, opts) => log(message, opts));
   }
 
 });
