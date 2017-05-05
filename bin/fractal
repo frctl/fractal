@@ -20,13 +20,11 @@ launcher.launch({}, function(env) {
   let app;
 
   const argv = require('yargs').argv;
-  const log = require('@frctl/cli/console')({
-    debug: argv.debug
-  });
+  const debug = argv.debug;
+  const log = require('@frctl/cli/console')({debug});
 
   const config = env.configPath ? require(env.configPath) : {};
   const scope = Boolean(env.configPath) ? 'project' : 'global';
-  const debug = argv.debug;
 
   /**
    * Get or create Fractal instance
