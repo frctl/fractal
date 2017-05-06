@@ -1,6 +1,5 @@
-const _ = require('lodash');
-const loader = require('@frctl/utils/load');
-const Surveyor = require('@frctl/surveyor').Surveyor;
+const {resolve} = require('@frctl/utils/load');
+const {Surveyor} = require('@frctl/surveyor');
 const Commands = require('./commands');
 
 const commands = new WeakMap();
@@ -18,8 +17,10 @@ class Fractal extends Surveyor {
 
     commands.set(this, new Commands());
 
+    this.setOption('namespace', 'fractal');
+
     this.addConfigHandler('commands', items => {
-      for (const [command, opts] of loader.resolve(items || [])) {
+      for (const [command, opts] of resolve(items || [])) {
         this.addCommand(command(opts));
       }
     });

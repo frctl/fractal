@@ -1,5 +1,5 @@
-const Surveyor = require('@frctl/surveyor').Surveyor;
-const Store = require('@frctl/surveyor').Store;
+const {Surveyor} = require('@frctl/surveyor');
+const {Store} = require('@frctl/surveyor');
 
 const commandSpec = {
   type: 'object',
