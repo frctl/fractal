@@ -1,6 +1,6 @@
 {
   "name": "@frctl/twig",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "description": "Twig template adapter for Fractal.",
   "main": "index.js",
   "repository": {
