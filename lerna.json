@@ -1,0 +1,16 @@
+{
+  "lerna": "2.0.0",
+  "version": "2.0.0-alpha.5",
+  "npmClient": "yarn",
+  "packages": [
+    "packages/**/*"
+  ],
+  "command": {
+    "publish": {
+      "npm-tag": "alpha",
+      "ignore": [
+        "test/**"
+      ]
+    }
+  }
+}

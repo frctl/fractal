@@ -1,0 +1,37 @@
+{
+  "name": "@frctl/fractal",
+  "private": true,
+  "license": "MIT",
+  "contributors": [
+    "Mark Perkins <mark@allmarkedup.com> (http://allmarkedup.com)",
+    "Danielle Huntrods <danielle.huntrods@clearleft.com> (http://clearleft.com)",
+    "Paul Lloyd (https://github.com/paulrobertlloyd)"
+  ],
+  "engines": {
+    "node": ">= 7.6.0"
+  },
+  "scripts": {
+    "lerna": "lerna",
+    "test": "yarn run lint:fix && nyc yarn run test:unit",
+    "test:unit": "mocha $(find ./packages -name '*.test.js' ! -ipath '*node_modules*') --require test/support/env",
+    "test:watch": "yarn run test:unit -- --watch",
+    "lint": "xo",
+    "lint:fix": "xo --fix",
+    "bootstrap": "lerna bootstrap --hoist"
+  },
+  "devDependencies": {
+    "@frctl/eslint-config-frctl": "0.1.2",
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
+    "chai-sorted": "^0.1.0",
+    "lerna": "^2.0.0",
+    "mocha": "^3.2.0",
+    "nyc": "^10.1.2",
+    "sinon": "^1.17.7",
+    "xo": "^0.17.1",
+    "yarn": "^0.27.5"
+  },
+  "xo": {
+    "extends": "@frctl/eslint-config-frctl"
+  }
+}

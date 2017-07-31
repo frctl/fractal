@@ -1,0 +1,9 @@
+sudo: false
+language: node_js
+node_js:
+  - '7.6'
+  - '8'
+cache:
+  yarn: true
+  directories:
+    - node_modules

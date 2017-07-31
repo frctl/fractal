@@ -1,0 +1,7 @@
+node_modules
+.nyc_output
+coverage
+*.log
+.wip
+.notes
+.DS_Store
