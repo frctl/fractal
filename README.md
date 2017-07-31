@@ -1,9 +1,6 @@
 # Fractal
 
-> A flexible toolkit for working with filesystem-based component libraries.
-
-[![Build Status](https://img.shields.io/travis/frctl/fractal/v2.svg?style=flat-square)](https://travis-ci.org/frctl/fractal)
-<!-- [![NPM Version](https://img.shields.io/npm/v/@frctl/fractal.svg?style=flat-square)](https://www.npmjs.com/package/@frctl/fractal) -->
+**A toolkit for working with filesystem-based component libraries.**
 
 ---
 
@@ -11,6 +8,9 @@ This branch is for development of the work-in-progress Fractal version **2.0** r
 Feel free to play around with it but be warned that breaking changes are likely to happen until we get to a stable release candidate :rocket:
 
 ---
+
+[![Build Status](https://img.shields.io/travis/frctl/fractal/v2.svg?style=flat-square)](https://travis-ci.org/frctl/fractal)
+<!-- [![NPM Version](https://img.shields.io/npm/v/@frctl/fractal.svg?style=flat-square)](https://www.npmjs.com/package/@frctl/fractal) -->
 
 ### Current status (v2.0)
 
