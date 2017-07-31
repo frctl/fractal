@@ -73,6 +73,10 @@
         background-color: rgba($color-text, 0.075);
     }
 
+    img {
+        max-width: 100%;
+    }
+
     p code,
     li code {
         padding: 0.125rem;
