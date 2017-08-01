@@ -12,9 +12,9 @@
   },
   "scripts": {
     "lerna": "lerna",
-    "test": "npm run lint:fix && nyc npm run test:unit",
+    "test": "yarn run lint:fix && nyc yarn run test:unit",
     "test:unit": "mocha $(find ./packages -name '*.test.js' ! -ipath '*node_modules*') --require test/support/env",
-    "test:watch": "npm run test:unit -- --watch",
+    "test:watch": "yarn run test:unit -- --watch",
     "lint": "xo",
     "lint:fix": "xo --fix",
     "bootstrap": "lerna bootstrap --hoist"
