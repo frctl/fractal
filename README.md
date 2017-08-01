@@ -25,14 +25,14 @@ We are moving development of Fractal v2.0 and all first-party add-ons into a 'mo
 #### Running locally
 
 1. Clone this repository
-2. Install dependencies - `yarn install`
-3. Bootstrap the packages together using Lerna - `yarn run bootstrap`
+2. Install dependencies - `npm install`
+3. Bootstrap the packages together using Lerna - `npm run bootstrap`
 
 #### Tests
 
 Code is linted via xo/eslint using the [Fractal eslint config](https://github.com/frctl/eslint-config-frctl), and tests are written using Mocha & Chai.
 
-Test can be run with `yarn test`. There are also NPM package scripts available for running subsets of the tests if required.
+Test can be run with `npm test`. There are also NPM package scripts available for running subsets of the tests if required.
 
 ### Requirements
 
