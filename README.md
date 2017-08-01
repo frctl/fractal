@@ -20,7 +20,7 @@ As soon as we have a beta release candidate together we will be soliciting feedb
 
 ### Development and contributing
 
-We are moving development of Fractal v2.0 and all first-party add-ons into a 'monorepo' format, using [Lerna](https://github.com/lerna/lerna) to help manage linking and publishing individual packages within the monorepo and with [Yarn](https://github.com/yarnpkg/yarn) as the preferred NPM client.
+We are moving development of Fractal v2.0 and all first-party add-ons into a 'monorepo' format, using [Lerna](https://github.com/lerna/lerna) to help manage linking and publishing individual packages within the monorepo.
 
 #### Running locally
 
@@ -32,7 +32,7 @@ We are moving development of Fractal v2.0 and all first-party add-ons into a 'mo
 
 Code is linted via xo/eslint using the [Fractal eslint config](https://github.com/frctl/eslint-config-frctl), and tests are written using Mocha & Chai.
 
-Test can be run with `npm test`. There are also NPM scripts available for running subsets of the tests if required.
+Test can be run with `npm test`. There are also NPM package scripts available for running subsets of the tests if required.
 
 ### Requirements
 

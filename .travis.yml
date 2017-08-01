@@ -7,3 +7,6 @@ cache:
   yarn: true
   directories:
     - node_modules
+install:
+  - yarn install
+  - yarn bootstrap
