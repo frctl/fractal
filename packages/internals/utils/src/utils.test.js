@@ -158,7 +158,6 @@ describe('.toJSON()', function () {
     let a = {foo: 'bar', toJSON: function () {
       return 'bar';
     }};
-    console.log(a.toJSON());
     expect(utils.toJSON(a)).to.equal('bar');
   });
 });
