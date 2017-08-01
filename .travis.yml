@@ -9,4 +9,4 @@ cache:
     - node_modules
 install:
   - yarn install
-  - yarn run bootstrap
+  - yarn bootstrap
