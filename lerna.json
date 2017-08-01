@@ -2,6 +2,7 @@
   "lerna": "2.0.0",
   "version": "2.0.0-beta.1",
   "npmClient": "yarn",
+  "npmClientArgs": ["--production", "--no-optional"],
   "packages": [
     "packages/**/*"
   ],
@@ -11,6 +12,9 @@
       "ignore": [
         "test/**"
       ]
+    },
+    "bootstrap": {
+      "hoist": true
     }
   }
 }

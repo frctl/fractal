@@ -13,11 +13,12 @@
   "scripts": {
     "lerna": "lerna",
     "test": "yarn run lint:fix && nyc yarn run test:unit",
+    "test:ci": "yarn run bootstrap && yarn run test:unit",
     "test:unit": "mocha $(find ./packages -name '*.test.js' ! -ipath '*node_modules*') --require test/support/env",
     "test:watch": "yarn run test:unit -- --watch",
     "lint": "xo",
     "lint:fix": "xo --fix",
-    "bootstrap": "lerna bootstrap --hoist"
+    "bootstrap": "lerna bootstrap"
   },
   "devDependencies": {
     "@frctl/eslint-config-frctl": "0.1.2",
