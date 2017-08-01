@@ -20,7 +20,7 @@ As soon as we have a beta release candidate together we will be soliciting feedb
 
 ### Development and contributing
 
-We are moving development of Fractal v2.0 and all first-party add-ons into a 'monorepo' format, using [Lerna](https://github.com/lerna/lerna) to help manage linking and publishing individual packages within the monorepo and with [Yarn](https://github.com/yarnpkg/yarn) as the preferred NPM client.
+We are moving development of Fractal v2.0 and all first-party add-ons into a 'monorepo' format, using [Lerna](https://github.com/lerna/lerna) to help manage linking and publishing individual packages within the monorepo.
 
 #### Running locally
 

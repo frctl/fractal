@@ -9,4 +9,4 @@ cache:
     - node_modules
 install:
   - npm install
-  - npm bootstrap
+  - npm run bootstrap
