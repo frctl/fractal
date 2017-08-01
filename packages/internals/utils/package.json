@@ -1,7 +1,7 @@
 {
   "name": "@frctl/utils",
   "version": "2.0.0-beta.0",
-  "description": "Utilities and helpers for Fractal.",
+  "description": "Library of utility functions for Fractal package development",
   "homepage": "http://fractal.build",
   "repository": "https://github.com/frctl/fractal/tree/v2/packages/internals/utils",
   "bugs": "https://github.com/frctl/fractal/issues",
@@ -15,13 +15,11 @@
   "dependencies": {
     "check-types": "^7.1.5",
     "deep-aplus": "^1.0.4",
-    "eventemitter2": "^4.1.0",
     "lodash": "^4.17.4",
     "multimatch": "^2.1.0",
     "pify": "^3.0.0",
     "slash": "^1.0.0",
     "slugify": "^1.1.0",
-    "titlecase": "^1.1.2",
-    "vinyl": "^2.0.2"
+    "titlecase": "^1.1.2"
   }
 }
