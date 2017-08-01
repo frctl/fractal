@@ -5,7 +5,7 @@
   "packages": [
     "packages/**/*"
   ],
-  "command": {
+  "commands": {
     "publish": {
       "npm-tag": "beta",
       "ignore": [
