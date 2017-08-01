@@ -13,7 +13,7 @@
   "license": "MIT",
   "main": "./src/utils.js",
   "dependencies": {
-    "check-types": "^7.1.5",
+    "check-types": "^7.2.0",
     "deep-aplus": "^1.0.4",
     "lodash": "^4.17.4",
     "multimatch": "^2.1.0",
