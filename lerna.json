@@ -7,7 +7,7 @@
   ],
   "command": {
     "publish": {
-      "npm-tag": "alpha",
+      "npm-tag": "beta",
       "ignore": [
         "test/**"
       ]
