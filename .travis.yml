@@ -4,8 +4,9 @@ node_js:
   - '7.6'
   - '8'
 cache:
+  yarn: true
   directories:
     - node_modules
 install:
-  - npm install
+  - yarn install
   - yarn run bootstrap
