@@ -7,4 +7,4 @@ cache:
   yarn: true
   directories:
     - node_modules
-script: test:ci
+script: yarn run test:ci
