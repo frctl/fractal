@@ -24,12 +24,21 @@ module.exports = function(theme, env, app){
     });
 
     env.engine.addFilter('beautify', function(str) {
-        return beautifyHTML(str, {
-            // TODO: move to config
-            indent_size: 4,
-            preserve_newlines: true,
-            max_preserve_newlines: 1
-        });
+        const defaults = {
+          indent_size: 4,
+          preserve_newlines: true,
+          max_preserve_newlines: 1
+        };
+
+        let beautifyOptions = theme.getOption('beautify') || {};
+
+        if (typeof beautifyOptions === 'function') {
+            return beautifyOptions(str);
+        }
+
+        beautifyOptions = _.merge({}, defaults, beautifyOptions);
+
+        return beautifyHTML(str, beautifyOptions);
     });
 
     env.engine.addFilter('resourceUrl', function(str) {
