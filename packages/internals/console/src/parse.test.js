@@ -49,7 +49,7 @@ const styleTags = [
   'bgWhiteBright'
 ];
 
-describe('parse', function () {
+describe('parse()', function () {
   it('throws an error on invalid input', function () {
     for (const input of [null, undefined, {}, () => {}]) {
       expect(() => parse(input)).to.throw(TypeError);
