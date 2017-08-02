@@ -1,10 +1,9 @@
 const {expect, sinon} = require('../../../../test/helpers');
 const utils = require('./utils');
+const log = require('./log');
 
 const formatSpy = sinon.spy(utils, 'format');
 const consoleSpy = sinon.spy(console, 'log');
-
-const log = require('./log');
 
 describe('log', function () {
   beforeEach(function () {

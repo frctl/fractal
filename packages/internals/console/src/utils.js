@@ -54,7 +54,7 @@ const utils = module.exports = {
   },
 
   format(str, opts = {}) {
-    str = stripIndent(str).replace(/^\n/,'').replace(/\n$/,'');
+    str = stripIndent(str).replace(/^\n/, '').replace(/\n$/, '');
     const prefix = opts.prefix ? parse(opts.prefix, opts) : null;
     const content = parse(str, opts);
     return utils.prefix(content, prefix);

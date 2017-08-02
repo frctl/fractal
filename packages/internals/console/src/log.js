@@ -1,8 +1,8 @@
 const figures = require('figures');
-const {format, parseError} = require('./utils');
+const utils = require('./utils');
 
 function write(str, opts = {}) {
-  console.log(format(str, opts));
+  console.log(utils.format(str, opts));
 }
 
 function error(err, opts = {}) {
@@ -10,7 +10,7 @@ function error(err, opts = {}) {
     prefix: `<red>${figures.cross}</red> `,
     stack: true
   };
-  let {message, stack} = parseError(err);
+  let {message, stack} = utils.parseError(err);
   return write(`<red>${message}</red>${stack && opts.stack ? `\n<dim>${stack}</dim>` : ''}`, Object.assign(defaults, opts));
 }
 

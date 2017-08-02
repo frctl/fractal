@@ -60,7 +60,6 @@ describe('console utils', function () {
       foo
           bar
       `;
-      console.log(utils.format(input));
       expect(utils.format(input)).to.equal('foo\n    bar');
     });
   });
