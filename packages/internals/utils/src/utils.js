@@ -38,6 +38,7 @@ const utils = module.exports = {
     return item;
   },
 
+  // TODO: Consider renaming to clarify function: resolve Function or Object
   async resolveDeep(target, ...args) {
     target = await Promise.resolve(target);
     if (_.isPlainObject(target)) {
