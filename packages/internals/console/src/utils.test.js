@@ -55,5 +55,13 @@ describe('console utils', function () {
       };
       expect(utils.format(input, opts)).to.equal(parse(opts.prefix) + input);
     });
+    it('strips unnessary indentation and first & last new lines', function () {
+      const input = `
+      foo
+          bar
+      `;
+      console.log(utils.format(input));
+      expect(utils.format(input)).to.equal('foo\n    bar');
+    });
   });
 });
