@@ -337,6 +337,14 @@ describe('.matches()', function () {
   });
 });
 
+describe('.splitLines()', function () {
+  it('Splits a string into an array of lines', function () {
+    expect(utils.splitLines('foo')).to.eql(['foo']);
+    expect(utils.splitLines('foo\nbar')).to.eql(['foo', 'bar']);
+    expect(utils.splitLines('foo\r\nbar')).to.eql(['foo', 'bar']);
+  });
+});
+
 /*
  * Paths
  */
