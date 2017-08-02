@@ -8,6 +8,7 @@
   "author": "Mark Perkins <mark@allmarkedup.com> (http://allmarkedup.com)",
   "license": "MIT",
   "dependencies": {
+    "@frctl/utils": "^2.0.0-beta.0",
     "highlight.js": "^9.11.0",
     "js-beautify": "^1.6.14",
     "markdown-it": "^8.3.1",
