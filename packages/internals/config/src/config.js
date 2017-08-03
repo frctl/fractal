@@ -1,5 +1,5 @@
 const {assert} = require('check-types');
-const {get} = require('lodash');
+const {get, set} = require('lodash');
 
 const _config = new WeakMap();
 
@@ -17,6 +17,11 @@ class Config {
   get(prop, fallback) {
     assert.string(prop, 'Config.get - `prop` argument must be a string [prop-invalid]');
     return get(this.data, prop, fallback);
+  }
+
+  set(prop, value) {
+    assert.string(prop, 'Config.set - `prop` argument must be a string [prop-invalid]');
+    return set(this.data, prop, value);
   }
 
 }

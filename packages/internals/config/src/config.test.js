@@ -28,5 +28,19 @@ describe('Config', function () {
       const config = new Config(data);
       expect(config.get('three.nested')).to.eql(data.three.nested);
     });
+    it('returns the supplied fallback argument if the property lookup returns undefined', function () {
+      const config = new Config({});
+      expect(config.get('does.not.exist')).to.equal(undefined);
+      expect(config.get('does.not.exist', 'fallback')).to.equal('fallback');
+    });
+  });
+
+  describe('.set()', function () {
+    it('sets a config property via dot-notation syntax', function () {
+      const data = {};
+      const config = new Config(data);
+      config.set('test.this', 'foo');
+      expect(config.get('test.this')).to.equal('foo');
+    });
   });
 });
