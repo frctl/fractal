@@ -147,8 +147,8 @@ const utils = module.exports = {
    * Other
    */
 
-  promisify(fn) {
-    return pify(fn);
+  promisify(fn, opts) {
+    return pify(fn, opts);
   },
 
   toArray(args) {
