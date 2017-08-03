@@ -99,6 +99,10 @@ const utils = module.exports = {
     return matches && matches.length > 0;
   },
 
+  splitLines(str) {
+    return str.split(/\r?\n/);
+  },
+
   /*
    * Paths
    */
