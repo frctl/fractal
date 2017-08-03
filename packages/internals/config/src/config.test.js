@@ -1,6 +1,6 @@
 /* eslint handle-callback-err: off, no-unused-expressions: off */
 
-const {expect} = require('../../../../test/helpers');
+const {expect, sinon} = require('../../../../test/helpers');
 const Config = require('./config');
 
 const schema = {
@@ -69,15 +69,38 @@ describe('Config', function () {
     });
 
     it('runs the result through all relevant accessors', function () {
-      const data = {
-        foo: {
-          bar: 'baz'
+      const config = new Config({
+        data: {
+          foo: {
+            bar: 'baz'
+          }
         }
-      };
-      const config = new Config({data});
+      });
       config.addAccessor('foo.bar', value => '!' + value);
       config.addAccessor('foo', value => '@' + value);
       expect(config.get('foo.bar')).to.equal('@!baz');
+    });
+
+    it('returns cached data where possible to prevent needlessly re-running accessors', function () {
+      const config = new Config({
+        data: {
+          foo: {
+            bar: 'baz'
+          }
+        }
+      });
+
+      const accessorSpy = sinon.spy(val => val);
+      config.addAccessor('foo.bar', accessorSpy);
+
+      expect(config.get('foo.bar')).to.equal('baz');
+      expect(accessorSpy.calledOnce).to.equal(true);
+      expect(config.get('foo.bar')).to.equal('baz');
+      expect(accessorSpy.calledTwice).to.equal(false);
+
+      config.set('foo.bar', 'boop');
+      expect(config.get('foo.bar')).to.equal('boop');
+      expect(accessorSpy.calledTwice).to.equal(true);
     });
   });
 
