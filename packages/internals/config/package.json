@@ -9,6 +9,7 @@
   "license": "MIT",
   "dependencies": {
     "@frctl/utils": "^2.0.0-beta.0",
+    "ajv": "^5.2.2",
     "lodash": "^4.17.4",
     "check-types": "^7.2.0",
     "check-more-types": "^2.24.0"
