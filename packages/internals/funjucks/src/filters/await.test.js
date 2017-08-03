@@ -32,5 +32,14 @@ describe('await', function () {
         done();
       });
     });
+
+    it('works correctly if a non-promise argument is supplied', function (done) {
+      const filter = factory();
+      filter.filter('foo', function (err, result) {
+        expect(result).to.equal('foo');
+        expect(err).to.equal(null);
+        done();
+      });
+    });
   });
 });

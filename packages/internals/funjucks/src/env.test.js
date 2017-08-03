@@ -1,4 +1,4 @@
-/* eslint handle-callback-err: off */
+/* eslint handle-callback-err: off, no-unused-expressions: off */
 
 const nunjucks = require('nunjucks');
 const {expect} = require('../../../../test/helpers');
@@ -32,6 +32,12 @@ describe('factory', function () {
     });
 
     it('adds the fractal instance as a property on the environment');
+
+    for (const filter of ['await', 'beautify', 'highlight', 'stringify']) {
+      it(`adds the ${filter} filter`, function () {
+        expect(() => env.getFilter(filter)).to.not.throw(Error);
+      });
+    }
   });
 });
 

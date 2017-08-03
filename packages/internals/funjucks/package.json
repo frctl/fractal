@@ -11,6 +11,7 @@
     "@frctl/utils": "^2.0.0-beta.0",
     "highlight.js": "^9.11.0",
     "js-beautify": "^1.6.14",
+    "lodash": "^4.17.4",
     "markdown-it": "^8.3.1",
     "nunjucks": "^3.0.1",
     "vinyl": "^2.0.2"

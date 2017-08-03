@@ -8,7 +8,7 @@ module.exports = function (opts = {}) {
     async filter(promise, ...args) {
       const done = args.pop();
       try {
-        done(null, await promise);
+        done(null, await Promise.resolve(promise));
       } catch (err) {
         done(err);
       }
