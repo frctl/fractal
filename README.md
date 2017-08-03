@@ -10,7 +10,8 @@ Feel free to play around with it but be warned that breaking changes are likely 
 ---
 
 [![Build Status](https://img.shields.io/travis/frctl/fractal/v2.svg?style=flat-square)](https://travis-ci.org/frctl/fractal)
-<!-- [![NPM Version](https://img.shields.io/npm/v/@frctl/fractal.svg?style=flat-square)](https://www.npmjs.com/package/@frctl/fractal) -->
+[![Coverage Status](https://img.shields.io/coveralls/frctl/fractal/v2.svg?style=flat-square)](https://coveralls.io/github/frctl/fractal?branch=v2)
+[![NPM Version](https://img.shields.io/npm/v/@frctl/fractal/beta.svg?style=flat-square)](https://www.npmjs.com/package/@frctl/fractal)
 
 ### Current status (v2.0)
 
