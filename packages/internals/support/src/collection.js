@@ -1,4 +1,4 @@
-const {find, filter, reject, iteratee, sortBy, orderBy, uniq, uniqBy, compact} = require('lodash');
+const {find, filter, reject, iteratee, sortBy, orderBy, groupBy, uniq, uniqBy, mapValues, cloneDeep} = require('lodash');
 
 const assert = require('check-types').assert;
 
@@ -9,8 +9,7 @@ class Collection {
       items = items.toArray();
     }
 
-    assert.maybe.array(items, `Collection.constructor: The 'items' argument is optional but must be of type array [items-invalid]`);
-
+    assert.maybe.array.of.object(items, `Collection.constructor: The 'items' argument is optional but must be an array of objects [items-invalid]`);
     this._items = items;
 
     /*
@@ -130,10 +129,6 @@ class Collection {
     return this._new(items);
   }
 
-  compact() {
-    return this._new(compact(this.items));
-  }
-
   map(...args) {
     return new this.constructor(this._items.map(...args));
   }
@@ -143,8 +138,54 @@ class Collection {
     return Promise.all(results).then(items => new this.constructor(items));
   }
 
+  mapToArray(...args) {
+    return this._items.map(...args);
+  }
+
+  mapToArrayAsync(...args) {
+    return Promise.all(this._items.map(...args));
+  }
+
+  groupBy(grouper) {
+    const groups = groupBy(this.toArray(), grouper);
+    return mapValues(groups, items => new this.constructor(items));
+  }
+
+  reduce(...args) {
+    return this._items.reduce(...args);
+  }
+
+  reverse() {
+    return this._new(this.items.reverse());
+  }
+
+  all() {
+    return this.toArray();
+  }
+
   toArray() {
     return this._items.slice(0);
+  }
+
+  toJSON() {
+    return this.toArray().map(item => {
+      return mapValues(item, prop => {
+        if (prop && typeof prop.toJSON === 'function') {
+          return prop.toJSON();
+        }
+        return prop;
+      });
+    });
+  }
+
+  clone() {
+    const items = this.toArray().map(item => {
+      if (typeof item.clone === 'function') {
+        return item.clone();
+      }
+      return cloneDeep(item);
+    });
+    return new this.constructor(items);
   }
 
   _new(items) {

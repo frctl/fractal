@@ -115,14 +115,17 @@ describe('Collection', function () {
     });
 
     it('throws an error if invalid input is supplied', function () {
-      const makeStringCol = function () {
-        makeCollection('Invalid string input');
-      };
-      expect(makeStringCol).to.throw(TypeError, '[items-invalid]');
-      const makeObjectCol = function () {
-        makeCollection({invalid: 'object'});
-      };
-      expect(makeObjectCol).to.throw(TypeError, '[items-invalid]');
+      const makeList = [
+        () => makeCollection('Invalid string input'),
+        () => makeCollection({invalid: 'object'}),
+        () => makeCollection([1, 2, 3])
+      ];
+      for (let make of makeList) {
+        expect(make).to.throw(TypeError, '[items-invalid]');
+      }
+    });
+    it(`doesn't throw an error if valid input is supplied`, function () {
+      expect(() => makeCollection(items)).to.not.throw();
     });
   });
 
@@ -466,18 +469,6 @@ describe('Collection', function () {
     });
   });
 
-  describe('.compact()', function () {
-    it('removes empty items from the collection', function () {
-      const collection = makeCollection();
-      const newCollection = collection.concat([null, undefined, 0, '']);
-      expect(newCollection.length).to.equal(items.length + 4);
-      const compacted = newCollection.compact();
-      expect(compacted).to.not.equal(newCollection);
-      expect(Collection.isCollection(compacted)).to.be.true;
-      expect(compacted.length).to.eql(items.length);
-    });
-  });
-
   describe('.map()', function () {
     it('returns an new Collection', function () {
       const collection = makeCollection();
@@ -487,28 +478,139 @@ describe('Collection', function () {
     });
     it('returns a collection where each item has been run through the provided mapper', function () {
       const collection = makeCollection();
-      expect(collection.map(i => i.type === 'dog').toArray()).to.eql(items.map(i => i.type === 'dog'));
+      expect(collection.map(isDogObj).toArray()).to.eql(items.map(isDogObj));
+    });
+    it(`errors if the mapper doesn't return an Object`, function () {
+      const collection = makeCollection();
+      expect(function () {
+        collection.map(isDogBool).toArray();
+      }).to.throw(TypeError, '[items-invalid]');
     });
   });
 
   describe('.mapAsync()', function () {
-    // it('returns an new Collection', function () {
-    //   const collection = makeCollection();
-    //   let newCollection = collection.mapAsync(async () => timeoutPromiseFromObj({}));
-    //   expect(Array.isArray(newCollection)).to.be.false;
-    //   testInstance(newCollection, collection);
-    // });
-    // it('returns a collection where each item has been run through the provided mapper', function () {
-    //   const collection = makeCollection();
-    //   expect(collection.mapAsync(i => i.type === 'dog').toArray()).to.eql(items.map(i => i.type === 'dog'));
-    // });
+    it('returns an new Collection', function () {
+      const collection = makeCollection();
+      return collection.mapAsync(i => i).then(function (resultCollection) {
+        expect(Array.isArray(resultCollection)).to.be.false;
+        testInstance(resultCollection, collection);
+      });
+    });
+    it('returns a collection where each item has been run through the provided mapper', function () {
+      const collection = makeCollection();
+      return collection.mapAsync(isDogObj).then(function (resultCollection) {
+        expect(resultCollection.toArray()).to.eql(items.map(isDogObj));
+      });
+    });
+    it(`errors if the mapper doesn't return an Object`, function () {
+      const collection = makeCollection();
+      return collection.mapAsync(isDogBool).then(
+        function (resultCollection) {},
+        function (error) {
+          expect(error instanceof TypeError).to.be.true;
+          expect(error.message).to.match(/\[items-invalid\]/);
+        });
+    });
+  });
+
+  describe('.mapToArray()', function () {
+    it('returns an new Array from a mapped Collection', function () {
+      const collection = makeCollection();
+      let newArray = collection.mapToArray(i => i);
+      expect(Array.isArray(newArray)).to.be.true;
+      expect(newArray).to.not.equal(collection);
+      expect(newArray.length).to.equal(items.length);
+    });
+    it('returns a collection where each item has been run through the provided mapper', function () {
+      const collection = makeCollection();
+      expect(collection.mapToArray(isDogBool)).to.eql(items.map(isDogBool));
+    });
+  });
+
+  describe('.mapToArrayAsync()', function () {
+    it('returns an new Collection', function () {
+      const collection = makeCollection();
+      return collection.mapToArrayAsync(() => ({})).then(function (resultArray) {
+        expect(Array.isArray(resultArray)).to.be.true;
+        expect(resultArray).to.not.equal(collection);
+        expect(resultArray.length).to.equal(items.length);
+      });
+    });
+    it('returns a collection where each item has been run through the provided mapper', function () {
+      const collection = makeCollection();
+      return collection.mapToArrayAsync(isDogBool).then(function (resultCollection) {
+        expect(resultCollection).to.eql(items.map(isDogBool));
+      });
+    });
+  });
+
+  describe('.groupBy()', function () {
+    it('returns an aggregate Object of grouped Collections', function () {
+      const collection = makeCollection();
+      const groupedCollection = collection.groupBy('type');
+      expect(Object.keys(groupedCollection)).to.eql(['mouse', 'dog']);
+      expect(Collection.isCollection(groupedCollection.mouse)).to.be.true;
+      expect(Collection.isCollection(groupedCollection.dog)).to.be.true;
+      expect(groupedCollection.mouse.length).to.equal(3);
+      expect(groupedCollection.dog.length).to.equal(2);
+    });
+  });
+
+  describe('.reduce()', function () {
+    it('returns an accumulated value via the provided reducer', function () {
+      const collection = makeCollection();
+      const dogsCounter = (acc, i) => i.type === 'dog' ? acc + 1 : acc;
+      expect(collection.reduce(dogsCounter, 0)).to.eql(items.reduce(dogsCounter, 0));
+    });
+  });
+
+  describe('.reverse()', function () {
+    it('returns a new Collection instance', function () {
+      const collection = makeCollection();
+      const newCollection = collection.reverse();
+      testInstance(newCollection, collection);
+    });
+    it('reverses the order of the items', function () {
+      const collection = makeCollection();
+      const itemzCopy = itemsCopy();
+      expect(collection.reverse().toArray()).to.eql(itemzCopy.reverse());
+    });
+  });
+
+  describe('.all()', function () {
+    it('converts the Collection to a plain javascript array', function () {
+      const collection = makeCollection();
+      expect(collection.all()).to.eql(items);
+    });
+  });
+
+  describe('.toArray()', function () {
+    it('converts the Collection to a plain javascript array', function () {
+      const collection = makeCollection();
+      expect(collection.toArray()).to.eql(items);
+    });
+  });
+
+  describe('.toJSON()', function () {
+    it('returns a JSON representation of the Collection', function () {
+      const disFunc = function (age) {
+        !(age > 5);
+      };
+      const collection = makeCollection([items[0], items[1], items[2], {name: 'odie', type: 'dog', disney: disFunc}]);
+      const jsonCollection = collection.toJSON();
+      expect(jsonCollection).to.be.an('array');
+      expect(jsonCollection[3].disney).to.eql(disFunc);
+    });
+  });
+
+  describe('.clone()', function () {
+    const collection = makeCollection();
+    const newCollection = collection.clone();
+    testInstance(newCollection, collection);
+    expect(newCollection.length).to.equal(collection.length);
+    expect(newCollection.items).to.eql(newCollection.items);
   });
 });
 
-// function timeoutPromiseFromObj(obj) {
-//   return new Promise(function (resolve, reject) {
-//     setTimeout(function () {
-//       resolve(obj);
-//     }, 200);
-//   });
-// }
+const isDogObj = i => ({isDog: i.type === 'dog'});
+const isDogBool = i => i.type === 'dog';
