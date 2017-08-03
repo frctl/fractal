@@ -38,6 +38,7 @@ const utils = module.exports = {
     return item;
   },
 
+  // TODO: Consider renaming to clarify function: resolve Function or Object
   async resolveDeep(target, ...args) {
     target = await Promise.resolve(target);
     if (_.isPlainObject(target)) {
@@ -96,6 +97,10 @@ const utils = module.exports = {
       nocase: !caseSensitive
     });
     return matches && matches.length > 0;
+  },
+
+  splitLines(str) {
+    return str.split(/\r?\n/);
   },
 
   /*
