@@ -16,5 +16,8 @@
     "lodash": "^4.17.4",
     "check-types": "^7.2.0",
     "check-more-types": "^2.24.0"
+  },
+  "xo": {
+    "extends": "@frctl/eslint-config-frctl"
   }
 }

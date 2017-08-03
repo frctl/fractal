@@ -31,7 +31,7 @@ describe('Config', function () {
       expect(config.data).to.not.equal(data);
     });
 
-    it('validates input data against a schema, if supplied', function () {
+    it('validates initial input data against a schema, if supplied', function () {
       expect(() => new Config({data: {foo: 123}, schema})).to.not.throw();
       expect(() => new Config({data: {foo: '123'}, schema})).to.throw();
     });
@@ -67,6 +67,18 @@ describe('Config', function () {
       expect(config.get('does.not.exist')).to.equal(undefined);
       expect(config.get('does.not.exist', 'fallback')).to.equal('fallback');
     });
+
+    it('runs the result through all relevant accessors', function () {
+      const data = {
+        foo: {
+          bar: 'baz'
+        }
+      };
+      const config = new Config({data});
+      config.addAccessor('foo.bar', value => '!' + value);
+      config.addAccessor('foo', value => '@' + value);
+      expect(config.get('foo.bar')).to.equal('@!baz');
+    });
   });
 
   describe('.set()', function () {
@@ -85,6 +97,41 @@ describe('Config', function () {
       const config = new Config({schema});
       expect(() => config.set('foo', 123)).to.not.throw();
       expect(() => config.set('foo', 'bar')).to.throw();
+    });
+  });
+
+  describe('.addAccessor()', function () {
+    it('adds an accessor', function () {
+      const config = new Config();
+      config.addAccessor('foo.bar', val => val);
+      const accessor = config.accessors.find(acc => acc.path === 'foo.bar');
+      expect(accessor).to.be.an('object');
+      expect(accessor).to.have.property('path');
+      expect(accessor).to.have.property('handler');
+    });
+  });
+
+  describe('.getAccessorsForPath()', function () {
+    it('retrieves all accessors that match the dot-notation path', function () {
+      const config = new Config();
+      config.addAccessor('foo.bar', val => val);
+      config.addAccessor('foo.bar.baz', val => val);
+      config.addAccessor('bax.foo.bar', val => val);
+      config.addAccessor('fooooo', val => val);
+      config.addAccessor('bar', val => val);
+      expect(config.getAccessorsForPath('foo.bar').length).to.equal(1);
+      expect(config.getAccessorsForPath('foo.bar.baz').length).to.equal(2);
+      expect(config.getAccessorsForPath('bar').length).to.equal(1);
+      expect(config.getAccessorsForPath('foo').length).to.equal(0);
+    });
+
+    it('returns accessors sorted by descending path length', function () {
+      const config = new Config();
+      config.addAccessor('foo.bar', val => val);
+      config.addAccessor('foo.bar.baz.boop', val => val);
+      config.addAccessor('foo.bar.baz', val => val);
+      const accessors = config.getAccessorsForPath('foo.bar.baz.boop');
+      expect(accessors.map(acc => acc.path)).to.eql(['foo.bar.baz.boop', 'foo.bar.baz', 'foo.bar']);
     });
   });
 });
