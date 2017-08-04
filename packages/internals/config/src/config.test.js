@@ -35,6 +35,15 @@ describe('Config', function () {
       expect(() => new Config({data: {foo: 123}, schema})).to.not.throw();
       expect(() => new Config({data: {foo: '123'}, schema})).to.throw();
     });
+
+    it('adds accessors supplied cia opts.accessors', function () {
+      const accessors = [{
+        path: 'foo.bar',
+        handler() {}
+      }];
+      const config = new Config({accessors});
+      expect(config.getAccessorsForPath('foo.bar').length).to.equal(1);
+    });
   });
 
   describe('.data', function () {
@@ -156,6 +165,14 @@ describe('Config', function () {
       expect(accessor).to.be.an('object');
       expect(accessor).to.have.property('path');
       expect(accessor).to.have.property('handler');
+    });
+
+    it('attempts to require a bundled accessor by name if the handler argument is a string', function () {
+      const packageLoader = require('./accessors/package-loader');
+      const config = new Config();
+      config.addAccessor('foo.bar', 'package-loader');
+      const accessor = config.accessors.find(acc => acc.path === 'foo.bar');
+      expect(accessor.handler).to.equal(packageLoader);
     });
   });
 
