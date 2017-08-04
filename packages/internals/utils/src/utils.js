@@ -17,14 +17,8 @@ const utils = module.exports = {
     let output = {};
     args.reverse().map(item => _.cloneDeep(item)).forEach(item => {
       _.mergeWith(output, item, (objectValue, sourceValue) => {
-        if (_.isArray(sourceValue)) {
+        if (Array.isArray(sourceValue)) {
           return sourceValue;
-        }
-        if (!_.isPlainObject(sourceValue) || !_.isPlainObject(objectValue)) {
-          return sourceValue;
-        }
-        if (_.isUndefined(sourceValue)) {
-          return objectValue;
         }
       });
     });
