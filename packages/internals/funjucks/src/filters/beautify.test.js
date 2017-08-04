@@ -1,8 +1,8 @@
 /* eslint max-nested-callbacks: off, handle-callback-err: off */
 
 const Vinyl = require('vinyl');
-const beautify = require('js-beautify');
-const {expect, sinon} = require('../../../../../test/helpers');
+const {defaultsDeep} = require('@frctl/utils');
+const {expect, sinon, mockRequire} = require('../../../../../test/helpers');
 const factory = require('./beautify');
 
 describe('beautify', function () {
@@ -61,19 +61,47 @@ describe('beautify', function () {
     });
 
     it('supports specifying a language', function (done) {
-      const filter = factory();
-      const spy = sinon.spy(beautify, 'js');
+      const spy = sinon.spy(v => v);
+      mockRequire('js-beautify', {js: spy});
+      const filter = mockRequire.reRequire('./beautify')();
       filter.filter('{foo: "bar"}', 'js', function (err, result) {
         expect(spy.called).to.equal(true);
+        mockRequire.stop('js-beautify');
+        done();
+      });
+    });
+
+    it('calls done with an error if the language isn\'t supported', function (done) {
+      const filter = factory();
+      filter.filter('foo', 'foo', function (err, result) {
+        expect(err).to.be.instanceOf(Error);
+        expect(err.message).to.include('[lang-invalid]');
         done();
       });
     });
 
     it('defaults to HTML if no language is specified', function (done) {
-      const filter = factory();
-      const spy = sinon.spy(beautify, 'html');
+      const spy = sinon.spy(v => v);
+      mockRequire('js-beautify', {html: spy});
+      const filter = mockRequire.reRequire('./beautify')();
       filter.filter('<span>\ntest</div>', function (err, result) {
         expect(spy.called).to.equal(true);
+        mockRequire.stop('js-beautify');
+        done();
+      });
+    });
+
+    it('accepts an options object which is merged with package options before applying', function (done) {
+      const packageOpts = {foo: 'bar', baz: 'boop'};
+      const runtimeOpts = {foo: 'nope'};
+      const spy = sinon.spy(v => v);
+      mockRequire('js-beautify', {html: spy});
+      const filter = mockRequire.reRequire('./beautify')(packageOpts);
+
+      filter.filter('<span>\ntest</div>', 'html', runtimeOpts, function (err, result) {
+        expect(spy.called).to.equal(true);
+        expect(spy.args[0][1]).to.eql(defaultsDeep(runtimeOpts, packageOpts));
+        mockRequire.stop('js-beautify');
         done();
       });
     });

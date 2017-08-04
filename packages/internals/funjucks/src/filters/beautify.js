@@ -1,5 +1,6 @@
 const beautify = require('js-beautify');
 const Vinyl = require('vinyl');
+const {isPlainObject} = require('lodash');
 const {defaultsDeep} = require('@frctl/utils');
 
 module.exports = function (opts = {}) {
@@ -10,7 +11,13 @@ module.exports = function (opts = {}) {
     async: true,
 
     async filter(target, ...args) {
-      const [done, lang = 'html', runtimeOpts = {}] = args.reverse();
+      let [done, lang = 'html', runtimeOpts = {}] = args.reverse();
+
+      if (isPlainObject(lang)) {
+        runtimeOpts = lang;
+        lang = 'html';
+      }
+
       const options = defaultsDeep(runtimeOpts, opts);
 
       try {
