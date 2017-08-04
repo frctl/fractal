@@ -31,11 +31,6 @@ describe('Config', function () {
       expect(config.data).to.not.equal(data);
     });
 
-    it('validates initial input data against a schema, if supplied', function () {
-      expect(() => new Config({data: {foo: 123}, schema})).to.not.throw();
-      expect(() => new Config({data: {foo: '123'}, schema})).to.throw();
-    });
-
     it('adds accessors supplied cia opts.accessors', function () {
       const accessors = [{
         path: 'foo.bar',
@@ -43,6 +38,17 @@ describe('Config', function () {
       }];
       const config = new Config({accessors});
       expect(config.getAccessorsForPath('foo.bar').length).to.equal(1);
+    });
+
+    it('validates initial input data against a schema, if supplied', function () {
+      expect(() => new Config({data: {foo: 123}, schema})).to.not.throw();
+      expect(() => new Config({data: {foo: '123'}, schema})).to.throw();
+    });
+
+    it('calls the init callback with the config instance', function () {
+      const init = sinon.spy();
+      const config = new Config({init});
+      expect(init.calledWith(config)).to.equal(true);
     });
   });
 
@@ -110,6 +116,20 @@ describe('Config', function () {
       config.set('foo.bar', 'boop');
       expect(config.get('foo.bar')).to.equal('boop');
       expect(accessorSpy.calledTwice).to.equal(true);
+    });
+
+    it('calls accessors with the property value and the current instance as arguments', function () {
+      const config = new Config({
+        data: {
+          foo: {
+            bar: 'baz'
+          }
+        }
+      });
+      const accessorSpy = sinon.spy(val => val);
+      config.addAccessor('foo.bar', accessorSpy);
+      config.get('foo.bar');
+      expect(accessorSpy.calledWith('baz', config)).to.equal(true);
     });
   });
 

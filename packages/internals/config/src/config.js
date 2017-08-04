@@ -18,14 +18,20 @@ class Config {
     _accessors.set(this, []);
     _cache.set(this, []);
 
-    const ajv = new Ajv();
-    _validator.set(this, ajv.compile(opts.schema || {}));
+    if (opts.schema) {
+      const ajv = new Ajv();
+      _validator.set(this, ajv.compile(opts.schema));
+    }
 
     for (const accessor of opts.accessors || []) {
       this.addAccessor(accessor.path, accessor.handler);
     }
 
     this.validate();
+
+    if (typeof opts.init === 'function') {
+      opts.init(this);
+    }
   }
 
   get(path, fallback) {
@@ -38,7 +44,7 @@ class Config {
     assert.string(path, 'Config.get - `path` argument must be a string [path-invalid]');
     let value = this.getData(path, fallback);
     for (const accessor of this.getAccessorsForPath(path)) {
-      value = accessor.handler(value);
+      value = accessor.handler(value, this);
     }
     if (value !== fallback) {
       _cache.get(this).push({path, value});
@@ -60,6 +66,9 @@ class Config {
 
   validate() {
     const validate = _validator.get(this);
+    if (!validate) {
+      return this;
+    }
     if (!validate(this.data)) {
       const errors = validate.errors.map(err => `'${err.dataPath.replace(/^\./, '')}' ${err.message}`);
       throw new Error(`Config data validation failed with the following errors:\n${errors.join('\n')}`);
