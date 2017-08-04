@@ -16,5 +16,6 @@ describe('packages-loader', function () {
     mockRequire('./package-loader', spy);
     mockRequire.reRequire('./packages-loader')(packages);
     expect(spy.callCount).to.equal(packages.length);
+    mockRequire.stop('./package-loader');
   });
 });
