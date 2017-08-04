@@ -50,17 +50,12 @@ const newItems = [
   }
 ];
 
-function makeCollection(input) {
-  return new Collection(input || items.slice(0));
-}
+const makeCollection = input => new Collection(input || items.slice(0));
+const makeCollectionFrom = input => Collection.from(input || items.slice(0));
+const itemsCopy = () => items.slice(0);
 
-function makeCollectionFrom(input) {
-  return Collection.from(input || items.slice(0));
-}
-
-function itemsCopy() {
-  return items.slice(0);
-}
+const isDogObj = i => ({isDog: i.type === 'dog'});
+const isDogBool = i => i.type === 'dog';
 
 function testInstance(newCollection, oldCollection, lItems = items) {
   expect(newCollection).to.not.equal(oldCollection);
@@ -572,8 +567,8 @@ describe('Collection', function () {
     });
     it('reverses the order of the items', function () {
       const collection = makeCollection();
-      const itemzCopy = itemsCopy();
-      expect(collection.reverse().toArray()).to.eql(itemzCopy.reverse());
+      const newItems = itemsCopy();
+      expect(collection.reverse().toArray()).to.eql(newItems.reverse());
     });
   });
 
@@ -611,6 +606,3 @@ describe('Collection', function () {
     expect(newCollection.items).to.eql(newCollection.items);
   });
 });
-
-const isDogObj = i => ({isDog: i.type === 'dog'});
-const isDogBool = i => i.type === 'dog';
