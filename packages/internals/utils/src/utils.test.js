@@ -417,6 +417,10 @@ describe('Utils', function () {
     it('Leaves existing arrays untouched', function () {
       expect(utils.toArray(['foo', 'bar'])).to.eql(['foo', 'bar']);
     });
+
+    it('Returns an empty array if null or undefined passed', function () {
+      expect(utils.toArray()).to.eql([]);
+    });
   });
 
   describe('.promisify()', function () {

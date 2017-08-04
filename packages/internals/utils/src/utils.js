@@ -23,9 +23,6 @@ const utils = module.exports = {
         if (!_.isPlainObject(sourceValue) || !_.isPlainObject(objectValue)) {
           return sourceValue;
         }
-        if (_.isUndefined(sourceValue)) {
-          return objectValue;
-        }
       });
     });
     return output;

@@ -588,13 +588,13 @@ describe('Collection', function () {
 
   describe('.toJSON()', function () {
     it('returns a JSON representation of the Collection', function () {
-      const disFunc = function (age) {
-        !(age > 5);
+      const disFunc = {
+        toJSON: () => true
       };
       const collection = makeCollection([items[0], items[1], items[2], {name: 'odie', type: 'dog', disney: disFunc}]);
       const jsonCollection = collection.toJSON();
       expect(jsonCollection).to.be.an('array');
-      expect(jsonCollection[3].disney).to.eql(disFunc);
+      expect(jsonCollection[3].disney).to.eql(true);
     });
   });
 
