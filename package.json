@@ -35,5 +35,8 @@
   },
   "xo": {
     "extends": "@frctl/eslint-config-frctl"
+  },
+  "dependencies": {
+    "mock-require": "^2.0.2"
   }
 }

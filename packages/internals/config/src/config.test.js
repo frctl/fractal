@@ -123,6 +123,31 @@ describe('Config', function () {
     });
   });
 
+  describe('.getData()', function () {
+    it('retrieves a config property via dot-notation syntax', function () {
+      const data = {
+        one: 'two',
+        three: {
+          nested: 'four'
+        }
+      };
+      const config = new Config({data});
+      expect(config.getData('three.nested')).to.eql(data.three.nested);
+    });
+    it('does not run the result through accessors', function () {
+      const config = new Config({
+        data: {
+          foo: {
+            bar: 'baz'
+          }
+        }
+      });
+      config.addAccessor('foo.bar', value => '!' + value);
+      config.addAccessor('foo', value => '@' + value);
+      expect(config.getData('foo.bar')).to.equal('baz');
+    });
+  });
+
   describe('.addAccessor()', function () {
     it('adds an accessor', function () {
       const config = new Config();

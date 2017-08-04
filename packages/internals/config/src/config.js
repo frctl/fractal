@@ -1,3 +1,5 @@
+/* eslint import/no-dynamic-require: off */
+
 const Ajv = require('ajv');
 const {assert} = require('check-types');
 const {get, set, remove, cloneDeep, sortBy} = require('lodash');
@@ -13,11 +15,15 @@ class Config {
     assert.object(opts, 'config opts must be an object [config-opts-invalid]');
 
     _data.set(this, cloneDeep(opts.data || {}));
-    _accessors.set(this, opts.accessors || []);
+    _accessors.set(this, []);
     _cache.set(this, []);
 
     const ajv = new Ajv();
     _validator.set(this, ajv.compile(opts.schema || {}));
+
+    for (const accessor of opts.accessors || []) {
+      this.addAccessor(accessor.path, accessor.handler);
+    }
 
     this.validate();
   }
@@ -30,7 +36,7 @@ class Config {
       return cached.value;
     }
     assert.string(path, 'Config.get - `path` argument must be a string [path-invalid]');
-    let value = cloneDeep(get(this.data, path, fallback));
+    let value = this.getData(path, fallback);
     for (const accessor of this.getAccessorsForPath(path)) {
       value = accessor.handler(value);
     }
@@ -48,6 +54,10 @@ class Config {
     return this;
   }
 
+  getData(path, fallback) {
+    return cloneDeep(get(this.data, path, fallback));
+  }
+
   validate() {
     const validate = _validator.get(this);
     if (!validate(this.data)) {
@@ -58,6 +68,11 @@ class Config {
   }
 
   addAccessor(path, handler) {
+    if (typeof handler === 'string') {
+      handler = require(`./accessors/${handler}`);
+    }
+    assert.string(path, 'Accessor path must be a string [accessor-path-invalid]');
+    assert.function(handler, 'Accessor handler must be a function [accessor-handler-invalid]');
     this.accessors.push({path, handler});
     this.removeFromCache(path);
     return this;
