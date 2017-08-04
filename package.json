@@ -13,7 +13,7 @@
   "scripts": {
     "lerna": "lerna",
     "test": "yarn run lint:fix && nyc yarn run test:unit",
-    "test:ci": "yarn run bootstrap && yarn run test:unit",
+    "test:ci": "yarn run bootstrap && nyc yarn run test:unit && nyc report --reporter=text-lcov | coveralls",
     "test:unit": "mocha $(find ./packages -name '*.test.js' ! -ipath '*node_modules*') --require test/support/env",
     "test:watch": "yarn run test:unit -- --watch",
     "lint": "xo",
@@ -25,6 +25,7 @@
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",
     "chai-sorted": "^0.1.0",
+    "coveralls": "^2.13.1",
     "lerna": "^2.0.0",
     "mocha": "^3.2.0",
     "nyc": "^10.1.2",

@@ -99,6 +99,10 @@ const utils = module.exports = {
     return matches && matches.length > 0;
   },
 
+  splitLines(str) {
+    return str.split(/\r?\n/);
+  },
+
   /*
    * Paths
    */
@@ -143,8 +147,8 @@ const utils = module.exports = {
    * Other
    */
 
-  promisify(fn) {
-    return pify(fn);
+  promisify(fn, opts) {
+    return pify(fn, opts);
   },
 
   toArray(args) {
