@@ -12,7 +12,10 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "check-more-types": "^2.24.0",
     "check-types": "^7.2.0",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "multimatch": "^2.1.0",
+    "slash": "^1.0.0"
   }
 }
