@@ -101,6 +101,14 @@ class Collection {
     return find(this._items, iter(...args));
   }
 
+  findOrFail(...args) {
+    const item = this.find(...args);
+    if (!item) {
+      throw new Error(`Item not found [item-not-found]`);
+    }
+    return item;
+  }
+
   filter(...args) {
     const items = filter(this._items, iter(...args));
     return this._new(items);

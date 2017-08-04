@@ -316,6 +316,19 @@ describe('Collection', function () {
     });
   });
 
+  describe('.findOrFail()', function () {
+    it(`throws an error if an item cannot be found via 'find'`, function () {
+      const collection = makeCollection();
+      const fail = function () {
+        collection.findOrFail({
+          name: 'mickey',
+          disney: false
+        });
+      };
+      expect(fail).to.throw(Error, '[item-not-found]');
+    });
+  });
+
   describe('.filter()', function () {
     it('returns a new Collection instance', function () {
       const collection = makeCollection();
