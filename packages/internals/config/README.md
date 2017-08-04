@@ -2,7 +2,7 @@
 
 Configuration manager for Fractal.
 
-[![NPM Version](https://img.shields.io/npm/v/@frctl/config.svg?style=flat-square)](https://www.npmjs.com/package/@frctl/funjucks)
+[![NPM Version](https://img.shields.io/npm/v/@frctl/config.svg?style=flat-square)](https://www.npmjs.com/package/@frctl/config)
 
 ## Installation
 
