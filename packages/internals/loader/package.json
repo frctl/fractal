@@ -8,6 +8,7 @@
   "author": "Mark Perkins <mark@allmarkedup.com> (http://allmarkedup.com)",
   "license": "MIT",
   "dependencies": {
-    "enhanced-resolve": "^3.1.0"
+    "enhanced-resolve": "^3.4.1",
+    "@frctl/utils": "^2.0.0-beta.0"
   }
 }
