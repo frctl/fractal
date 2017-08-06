@@ -9,15 +9,7 @@ const tags = {
 
   br: {
     display: 'inline',
-    open: '%BR%',
-    strip: {
-      after: true,
-      true: true
-    }
-  },
-
-  p: {
-    display: 'block'
+    open: '%BR%'
   },
 
   div: {
@@ -25,10 +17,6 @@ const tags = {
   },
 
   ul: {
-    display: 'block'
-  },
-
-  ol: {
     display: 'block'
   },
 
@@ -51,9 +39,38 @@ const tags = {
     style: 'bold'
   },
 
+  message: {
+    display: 'block'
+  },
+
   success: {
     display: 'block',
-    bullet: figures.tick
+    bullet: figures.tick,
+    color: 'green'
+  },
+
+  warning: {
+    display: 'block',
+    bullet: figures.warning,
+    color: 'yellow'
+  },
+
+  error: {
+    display: 'block',
+    bullet: figures.cross,
+    color: 'red'
+  },
+
+  details: {
+    display: 'block',
+    color: 'dim',
+    preformatted: true
+  },
+
+  section: {
+    display: 'block',
+    open: '%BR%',
+    close: '%BR%'
   }
 
 };
@@ -105,11 +122,7 @@ styles.forEach(name => {
   tags[name] = {
     display: 'inline',
     open: `{${name} `,
-    close: '}',
-    strip: {
-      after: false,
-      true: false
-    }
+    close: '}'
   };
 });
 

@@ -4,6 +4,8 @@ const stripIndent = require('strip-indent');
 const Tokenizer = require('html-tokenizer');
 const entities = require('html-tokenizer/entity-map');
 const {assert} = require('check-types');
+const {defaultsDeep} = require('@frctl/utils');
+const config = require('./config');
 const TagSet = require('./tag-set');
 
 const tokenTypes = {
@@ -11,33 +13,51 @@ const tokenTypes = {
   INLINE_CLOSE: 'inline-close',
   BLOCK_OPEN: 'block-open',
   BLOCK_CLOSE: 'block-close',
-  TEXT: 'text',
-  LINEBREAK: '%BR%'
+  TEXT: 'text'
 };
+
+const {INLINE_OPEN, INLINE_CLOSE, BLOCK_OPEN, BLOCK_CLOSE, TEXT} = tokenTypes;
+const LINEBREAK = '%BR%';
+// const SPACE = '%SP%';
 
 module.exports = function (str, opts = {}) {
   assert.string(str, `Console string parser input must be a string [input-invalid]`);
 
   const tokenizer = new Tokenizer({entities});
-  const tags = new TagSet(opts.tags);
-  const {INLINE_OPEN, INLINE_CLOSE, BLOCK_OPEN, BLOCK_CLOSE, TEXT, LINEBREAK} = tokenTypes;
+  const tags = new TagSet(defaultsDeep(opts.tags, config.tags));
 
   let tokens = [];
   let output = [];
+
+  // str = str.replace(/&nbsp;/, SPACE);
 
   /*
    * Tokenize markup
    */
   tokenizer.on('opening-tag', function (name) {
     const tag = tags.get(name);
-    const type = getTokenType(tag, 'open');
-    tokens.push({tag, type});
+    if (tag) {
+      const type = getTokenType(tag, 'open');
+      tokens.push({tag, type});
+    } else {
+      tokens.push({
+        content: name,
+        type: TEXT
+      });
+    }
   });
 
   tokenizer.on('closing-tag', function (name) {
     const tag = tags.get(name);
-    const type = getTokenType(tag, 'close');
-    tokens.push({tag, type});
+    if (tag) {
+      const type = getTokenType(tag, 'close');
+      tokens.push({tag, type});
+    } else {
+      tokens.push({
+        content: name,
+        type: TEXT
+      });
+    }
   });
 
   tokenizer.on('text', text => {
@@ -83,7 +103,8 @@ module.exports = function (str, opts = {}) {
           current.content = trimEnd(current.content);
         }
 
-        current.content = current.content.replace(/\s*%BR%\s*/g, LINEBREAK);
+        current.content = current.content.replace(new RegExp(`\\s*${LINEBREAK}\\s*`, 'g'), LINEBREAK);
+        // current.content = current.content.replace(new RegExp(`(${SPACE})${LINEBREAK}(${SPACE})`, 'g'), LINEBREAK);
       }
     }
 
@@ -138,8 +159,9 @@ module.exports = function (str, opts = {}) {
   });
 
   const stringified = compact(output).join('');
+
   const rendered = Function(['chalk'], 'return chalk`' + stringified + '`')(chalk); // eslint-disable-line no-new-func
-  return rendered.replace(new RegExp(/%BR%/, 'g'), '\n');
+  return rendered.replace(new RegExp(LINEBREAK, 'g'), '\n');
 };
 
 function getTokenType(tag, type) {

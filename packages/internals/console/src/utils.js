@@ -1,55 +1,35 @@
-const {EOL} = require('os');
 const stripIndent = require('strip-indent');
 const indentString = require('indent-string');
 const extractStack = require('extract-stack');
 const cleanStack = require('clean-stack');
-const stringLength = require('string-length');
-const check = require('check-more-types');
-const {splitLines} = require('@frctl/utils');
+const render = require('./render');
 
-const utils = module.exports = {
-
-  countLeadingEmptyLines(str) {
-    let count = 0;
-    for (const line of splitLines(str)) {
-      if (line.trim() === '') {
-        count++;
-      } else {
-        return count;
-      }
-    }
-    return count - 1; // all empty lines, no content
-  },
-
-  parseError(err) {
-    if (!check.error(err)) {
-      return {
-        message: err,
-        stack: null
-      };
-    }
-    const stack = cleanStack(extractStack(err), {
-      pretty: true
-    });
+function parseError(err) {
+  if (!(err instanceof Error)) {
     return {
-      message: stripIndent(err.message),
-      stack: stripIndent(stack)
+      message: err,
+      stack: null
     };
-  },
-
-  prefix(str, prefix) {
-    if (!prefix) {
-      return str;
-    }
-    const prefixChars = stringLength(prefix);
-    const prefixIndex = utils.countLeadingEmptyLines(str);
-    const lines = splitLines(indentString(str, prefixChars));
-    lines[prefixIndex] = prefix + lines[prefixIndex].slice(prefixChars);
-    return lines.join(EOL);
-  },
-
-  indent(...args) {
-    return indentString(...args);
   }
+  const stack = cleanStack(extractStack(err), {
+    pretty: true
+  });
+  return {
+    message: indent(err.message),
+    stack: indent(stack)
+  };
+}
 
-};
+function indent(...args) {
+  return indentString(...args);
+}
+
+function unIndent(...args) {
+  return stripIndent(...args);
+}
+
+function reIndent(...args) {
+  return stripIndent(indentString(...args));
+}
+
+module.exports = {parseError, indent, render, reIndent, unIndent};

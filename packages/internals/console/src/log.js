@@ -1,38 +1,35 @@
-const figures = require('figures');
-const utils = require('./utils');
-const render = require('./render');
+const {parseError, reIndent, render} = require('./utils');
 
-function write(str, opts = {}) {
-  const prefix = opts.prefix ? render(opts.prefix, opts) : null;
-  const content = render(str, opts);
-  console.log(utils.prefix(content, prefix));
+function log(str, opts = {}) {
+  console.log(render(str, opts));
 }
 
-function error(err, opts = {}) {
-  opts = Object.assign({
-    prefix: `<red>${figures.cross}</red> `,
-    stack: true
-  }, opts);
-  const {message, stack} = utils.parseError(err);
-  return write(`<red>${message}</red>${stack && opts.stack ? `\n<dim>${stack}</dim>` : ''}`, opts);
+function error(err, includeStack = true) {
+  const {message, stack} = parseError(err);
+  return log(`
+    <section>
+      <error>${message}</error>
+      ${stack && includeStack ? `<details>${reIndent(stack, 2, '&nbsp;')}</details>` : ''}
+    </section>
+  `);
 }
 
-function success(str, opts = {}) {
-  const defaults = {
-    prefix: `<green>${figures.tick}</green> `
-  };
-  return write(str, Object.assign(defaults, opts));
+function success(message, text) {
+  return log(`
+    <section>
+      <success>${message}</success>
+      ${text ? `<details>${reIndent(text, 2, '&nbsp;')}</details>` : ''}
+    </section>
+  `);
 }
 
-function warning(str, opts = {}) {
-  const defaults = {
-    prefix: `<yellow>${figures.warning}</yellow> `
-  };
-  return write(`<yellow>${str}<yellow>`, Object.assign(defaults, opts));
+function warning(message, text) {
+  return log(`
+    <section>
+      <warning>${message}</warning>
+      ${text ? `<details>${reIndent(text, 2, '&nbsp;')}</details>` : ''}
+    </section>
+  `);
 }
 
-module.exports = write;
-module.exports.write = write;
-module.exports.error = error;
-module.exports.warning = warning;
-module.exports.success = success;
+module.exports = {log, error, warning, success};

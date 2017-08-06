@@ -4,7 +4,7 @@ const _config = new WeakMap();
 
 class Tag {
 
-  constructor(name, config) {
+  constructor(name, config = {}) {
     this.name = name;
     _config.set(this, config);
   }
@@ -14,7 +14,7 @@ class Tag {
   }
 
   get preformatted() {
-    return this.config.preformatted;
+    return Boolean(this.config.preformatted);
   }
 
   open(stack) {
