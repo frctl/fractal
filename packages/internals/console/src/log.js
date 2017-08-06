@@ -9,12 +9,12 @@ function write(str, opts = {}) {
 }
 
 function error(err, opts = {}) {
-  const defaults = {
+  opts = Object.assign({
     prefix: `<red>${figures.cross}</red> `,
     stack: true
-  };
-  let {message, stack} = utils.parseError(err);
-  return write(`<red>${message}</red>${stack && opts.stack ? `\n<dim>${stack}</dim>` : ''}`, Object.assign(defaults, opts));
+  }, opts);
+  const {message, stack} = utils.parseError(err);
+  return write(`<red>${message}</red>${stack && opts.stack ? `\n<dim>${stack}</dim>` : ''}`, opts);
 }
 
 function success(str, opts = {}) {

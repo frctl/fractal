@@ -17,14 +17,8 @@ const utils = module.exports = {
     let output = {};
     args.reverse().map(item => _.cloneDeep(item)).forEach(item => {
       _.mergeWith(output, item, (objectValue, sourceValue) => {
-        if (_.isArray(sourceValue)) {
+        if (Array.isArray(sourceValue)) {
           return sourceValue;
-        }
-        if (!_.isPlainObject(sourceValue) || !_.isPlainObject(objectValue)) {
-          return sourceValue;
-        }
-        if (_.isUndefined(sourceValue)) {
-          return objectValue;
         }
       });
     });
@@ -38,6 +32,7 @@ const utils = module.exports = {
     return item;
   },
 
+  // TODO: Consider renaming to clarify function: resolve Function or Object
   async resolveDeep(target, ...args) {
     target = await Promise.resolve(target);
     if (_.isPlainObject(target)) {
@@ -146,8 +141,8 @@ const utils = module.exports = {
    * Other
    */
 
-  promisify(fn) {
-    return pify(fn);
+  promisify(fn, opts) {
+    return pify(fn, opts);
   },
 
   toArray(args) {
