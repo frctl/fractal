@@ -6,7 +6,6 @@ const cleanStack = require('clean-stack');
 const stringLength = require('string-length');
 const check = require('check-more-types');
 const {splitLines} = require('@frctl/utils');
-const parse = require('./parse');
 
 const utils = module.exports = {
 
@@ -51,13 +50,6 @@ const utils = module.exports = {
 
   indent(...args) {
     return indentString(...args);
-  },
-
-  format(str, opts = {}) {
-    str = stripIndent(str).replace(/^\n/, '').replace(/\n$/, '');
-    const prefix = opts.prefix ? parse(opts.prefix, opts) : null;
-    const content = parse(str, opts);
-    return utils.prefix(content, prefix);
   }
 
 };

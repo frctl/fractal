@@ -1,8 +1,11 @@
 const figures = require('figures');
 const utils = require('./utils');
+const render = require('./render');
 
 function write(str, opts = {}) {
-  console.log(utils.format(str, opts));
+  const prefix = opts.prefix ? render(opts.prefix, opts) : null;
+  const content = render(str, opts);
+  console.log(utils.prefix(content, prefix));
 }
 
 function error(err, opts = {}) {

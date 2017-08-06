@@ -11,6 +11,7 @@
     "@frctl/utils": "^2.0.0-beta.0",
     "html-tokenizer": "2.0.0",
     "chalk": "^2.0.1",
+    "condense-whitespace": "1.0.0",
     "clean-stack": "^1.3.0",
     "extract-stack": "^1.0.0",
     "check-types": "^7.2.0",
@@ -21,6 +22,8 @@
     "strip-indent": "^2.0.0",
     "ansi-styles": "^3.2.0",
     "term-size": "^1.2.0",
-    "figures": "^2.0.0"
+    "figures": "^2.0.0",
+    "lodash": "^4.17.4",
+    "normalize-html-whitespace": "0.2.0"
   }
 }

@@ -1,6 +1,6 @@
 const {expect} = require('../../../../test/helpers');
 const utils = require('./utils');
-const parse = require('./parse');
+const render = require('./render');
 
 describe('console utils', function () {
   describe('.countLeadingEmptyLines()', function () {
@@ -44,16 +44,16 @@ describe('console utils', function () {
   });
 
   describe('.format()', function () {
-    it('runs the input through the string parser', function () {
+    it('runs the input through the string renderer', function () {
       const input = '<red>foo</red>';
-      expect(utils.format(input)).to.equal(parse(input));
+      expect(utils.format(input)).to.equal(render(input));
     });
-    it('adds a parses a prefix if supplied as an option', function () {
+    it('adds a prefix if supplied as an option', function () {
       const input = 'foo';
       const opts = {
         prefix: '<green>foo</green>'
       };
-      expect(utils.format(input, opts)).to.equal(parse(opts.prefix) + input);
+      expect(utils.format(input, opts)).to.equal(render(opts.prefix) + input);
     });
     it('strips unnessary indentation and first & last new lines', function () {
       const input = `
