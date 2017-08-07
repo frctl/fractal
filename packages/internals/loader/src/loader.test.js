@@ -31,7 +31,7 @@ describe('Loader', function () {
 
     it('throws an error if the path cannot be resolved', function () {
       const loader = new Loader();
-      expect(() => loader.resolve('./foo', __dirname)).to.throw();
+      expect(() => loader.resolve('./foo', __dirname)).to.throw('[resolver-error]');
     });
 
     it('falls back to native node resolution if the path cannot be resolved', function () {

@@ -22,8 +22,12 @@ class Loader {
   resolve(path, root) {
     try {
       return this.resolver.resolveSync({}, root || process.cwd(), path);
-    } catch (err) {
-      return require.resolve(path);
+    } catch (resolverError) {
+      try {
+        return require.resolve(path);
+      } catch (nativeError) {
+        throw new Error(`Could not resolve module ${path} [resolver-error]\n${resolverError.message}\n${nativeError.message}`);
+      }
     }
   }
 
