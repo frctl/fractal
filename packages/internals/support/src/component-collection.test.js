@@ -69,9 +69,10 @@ const makeComponent = input => new Component(Object.assign({
   variants: new Collection(),
   files: new FileCollection()
 }, input));
-const makeCollection = input => new ComponentCollection(input || items.slice(0));
 
 items = items.map(makeComponent);
+
+const makeCollection = input => new ComponentCollection(input || items.slice(0));
 
 describe('ComponentCollection', function () {
   describe('constructor', function () {

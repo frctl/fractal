@@ -15,7 +15,7 @@ const baseFileData = {
 };
 const makeFile = input => new File(input || baseFileData);
 
-describe.only('File', function () {
+describe('File', function () {
   describe('constructor', function () {
     it('returns a new instance', function () {
       const file = makeFile();
