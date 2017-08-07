@@ -65,7 +65,7 @@ let items = [{
 ];
 
 const makeComponent = input => new Component(Object.assign({
-  src: new File(),
+  src: new File({path: '/src/test/index.js'}),
   variants: new Collection(),
   files: new FileCollection()
 }, input));

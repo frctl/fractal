@@ -71,8 +71,7 @@ describe('Entity', function () {
       const entityWithHidden = {_hidden: {chemicals: 'arsenic'}};
       const entity = makeEntity(entityWithHidden);
       const jsonEntity = entity.toJSON();
-      // QUESTION: Should the key be deleted as well?
-      expect(jsonEntity).to.eql({_hidden: undefined});
+      expect(jsonEntity).to.eql({});
     });
     it(`defers to a property's 'toJSON' method`, function () {
       const entityWithToJSON = {colour: {toJSON: () => 'purple'}};
