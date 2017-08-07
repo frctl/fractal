@@ -21,6 +21,7 @@ const LINEBREAK = '%BR%';
 // const SPACE = '%SP%';
 
 module.exports = function (str, opts = {}) {
+
   assert.string(str, `Console string parser input must be a string [input-invalid]`);
 
   const tokenizer = new Tokenizer({entities});
