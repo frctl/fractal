@@ -7,11 +7,11 @@ const srcExports = {
   Entity: require('./src/entity'),
   File: require('./src/file'),
   FileCollection: require('./src/file-collection'),
-  Component: require('./src/component')
+  Component: require('./src/component'),
+  Variant: require('./src/variant')
 };
 
 const pendingSrcExports = {
-  Variant: undefined,
   Emitter: undefined
 };
 
