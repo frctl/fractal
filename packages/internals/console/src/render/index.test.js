@@ -73,7 +73,7 @@ describe('render()', () => {
     expect(render(`<span> foo </span>`)).to.equal(expected);
     expect(render(`<span>\nfoo\n</span>`)).to.equal(expected);
     expect(render(`<span> foo <span>bar</span></span>`)).to.equal(renderWithChalk('foo bar'));
-    expect(render(`<span> foo <span> bar </span></span>`)).to.equal(renderWithChalk('foo bar'));
+    expect(render(`<span> foo <span> bar </span> baz </span>`)).to.equal(renderWithChalk('foo bar baz'));
   });
 
   it('strips whitespace correctly inside block tags', () => {
