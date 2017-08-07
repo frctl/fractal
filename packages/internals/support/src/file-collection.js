@@ -17,7 +17,6 @@ class FileCollection extends Collection {
     paths = paths.map(path => slash(path));
 
     const items = this._items.filter(file => {
-      console.log(file.relative);
       return multimatch([slash(file.relative)], paths).length;
     });
 
