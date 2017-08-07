@@ -1,0 +1,25 @@
+#!/usr/bin/env node
+
+const {dirname} = require('path');
+const semver = require('semver');
+const yargs = require('yargs');
+const findUp = require('find-up');
+const {error, write} = require('@frctl/console');
+const debug = require('../src/debug')(yargs.argv.debug);
+const cli = require('../src/cli');
+const settings = require('../src/settings');
+
+const configPath = findUp.sync(settings.configFiles);
+
+if (configPath) {
+  const cwd = dirname(configPath);
+  process.chdir(cwd);
+  debug(`
+    Using config file found at <info>${configPath}</info>
+    Current working directory set to <info>${cwd}</info>
+  `);
+} else {
+  debug(`No config file found (searched for <info>${settings.configFiles.join('<reset>,</reset> ')}</info>).`);
+}
+
+const config = require('../src/config/load')(configPath);
