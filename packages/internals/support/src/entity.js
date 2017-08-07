@@ -1,4 +1,4 @@
-const {cloneDeep, isPlainObject, mapValues} = require('lodash');
+const {cloneDeep, isPlainObject, mapValues, pickBy} = require('lodash');
 const {hash} = require('@frctl/utils');
 
 class Entity {
@@ -8,10 +8,10 @@ class Entity {
   }
 
   toJSON() {
-    return mapValues(this, (item, key) => {
-      if (key.startsWith('_')) {
-        return;
-      }
+    const props = pickBy(this, (item, key) => {
+      return !key.startsWith('_');
+    });
+    return mapValues(props, (item, key) => {
       if (Buffer.isBuffer(item)) {
         return item.toString();
       }

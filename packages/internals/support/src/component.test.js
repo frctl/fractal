@@ -11,7 +11,7 @@ const basicComponent = {
   path: '/path/to/component',
   relative: 'path/to/component',
   config: {},
-  src: new File(),
+  src: new File({path: '/src/test.js'}),
   variants: new Collection(),
   files: new FileCollection()
 };

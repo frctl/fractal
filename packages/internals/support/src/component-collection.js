@@ -7,7 +7,7 @@ const Component = require('./component');
 class ComponentCollection extends Collection {
 
   constructor(items = []) {
-    assert.maybe.array.of.instance(items, Component, `Collection.constructor: The 'items' argument is optional but must be an array of objects [items-invalid]`);
+    assert.maybe.array.of.instance(items, Component, `ComponentCollection.constructor: The 'items' argument is optional but must be an array of Components [items-invalid]`);
     super(items);
   }
 
@@ -46,7 +46,7 @@ class ComponentCollection extends Collection {
 
   filterByPath(...args) {
     let paths = [].concat(...args);
-    assert.array.of.string(paths, `files.filterByPath: path argument must be a string or array of strings [paths-invalid]`);
+    assert.array.of.string(paths, `ComponentCollection.filterByPath: path argument must be a string or array of strings [paths-invalid]`);
     paths = paths.map(path => slash(path));
 
     const items = this._items.filter(file => {
@@ -58,7 +58,7 @@ class ComponentCollection extends Collection {
 
   rejectByPath(...args) {
     let paths = [].concat(...args);
-    assert.array.of.string(paths, `files.rejectByPath: path argument must be a string or array of strings [paths-invalid]`);
+    assert.array.of.string(paths, `ComponentCollection.rejectByPath: path argument must be a string or array of strings [paths-invalid]`);
     paths = paths.map(path => slash(path));
 
     const items = this._items.filter(file => {
@@ -69,7 +69,7 @@ class ComponentCollection extends Collection {
   }
 
   toJSON() {
-    return this._items.slice(0).map(component => component.toJSON());
+    return this._items.map(component => component.toJSON());
   }
 }
 module.exports = ComponentCollection;
