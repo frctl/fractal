@@ -327,6 +327,10 @@ describe('Collection', function () {
       };
       expect(fail).to.throw(Error, '[item-not-found]');
     });
+    it(`returns the same value as 'find' if item exists`, function () {
+      const collection = makeCollection();
+      expect(collection.findOrFail('name', 'mickey')).to.equal(items[0]);
+    });
   });
 
   describe('.filter()', function () {
