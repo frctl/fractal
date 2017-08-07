@@ -30,7 +30,7 @@ describe('Component', function () {
     it('returns true if an instance is a Component', function () {
       expect(Component.isComponent(new Component(basicComponent))).to.equal(true);
     });
-    it('returns true if an instance is a Component', function () {
+    it('returns false if an instance is not a Component', function () {
       expect(Component.isComponent([])).to.equal(false);
     });
   });

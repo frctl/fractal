@@ -1,4 +1,5 @@
-const {cloneDeep, isPlainObject} = require('lodash');
+const {cloneDeep, isPlainObject, mapValues} = require('lodash');
+const {hash} = require('@frctl/utils');
 
 class Entity {
 
@@ -7,19 +8,18 @@ class Entity {
   }
 
   toJSON() {
-    // return mapValues(this, (item, key) => {
-    //   if (key.startsWith('_')) {
-    //     return;
-    //   }
-    //   if (typeof item.toJSON === 'function') {
-    //     return item.toJSON();
-    //   }
-    //   if (Buffer.isBuffer(item)) {
-    //     return item.toString();
-    //   }
-    //   return item;
-    // });
-    return this.name || {}; // TODO: write tests & swap for the above functionality
+    return mapValues(this, (item, key) => {
+      if (key.startsWith('_')) {
+        return;
+      }
+      if (Buffer.isBuffer(item)) {
+        return item.toString();
+      }
+      if (typeof item.toJSON === 'function') {
+        return item.toJSON();
+      }
+      return item;
+    });
   }
 
   clone() {
@@ -42,7 +42,12 @@ class Entity {
     return cloned;
   }
 
-  hash() {}
+  hash() {
+    const hashProps = mapValues(this, (item, key) => {
+      return (typeof item.hash === 'function') ? item.hash() : item;
+    });
+    return hash(JSON.stringify(hashProps));
+  }
 
   static from(props) {
     return new this(props);

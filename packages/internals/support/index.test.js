@@ -12,9 +12,6 @@ const srcExports = {
 
 const pendingSrcExports = {
   Variant: undefined,
-  Scenario: undefined,
-  Store: undefined,
-  ConfigStore: undefined,
   Emitter: undefined
 };
 
