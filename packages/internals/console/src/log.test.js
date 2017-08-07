@@ -45,6 +45,15 @@ describe('log', function () {
       log.error(new Error('This is an error message'));
       expect(console.log.calledOnce).to.equal(true);
     });
+
+    it('includes stack in error if opts.stack is not false', function () {
+      const error = new Error('This is an error message');
+      log.error(error);
+      expect(consoleSpy.args[0][0].indexOf('at Context.')).to.be.above(-1);
+      consoleSpy.reset();
+      log.error(error, {stack: false});
+      expect(consoleSpy.args[0][0].indexOf('at Context.')).to.equal(-1);
+    });
   });
 
   describe('.warning()', function () {

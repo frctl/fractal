@@ -1,7 +1,7 @@
 const {expect} = require('../../../test/helpers');
 const log = require('./src/log');
 const utils = require('./src/utils');
-const main = require('./index');
+const main = require('.');
 
 describe('main exports', function () {
   it('exports all log methods', function () {
