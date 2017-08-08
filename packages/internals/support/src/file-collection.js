@@ -1,15 +1,12 @@
 const multimatch = require('multimatch');
-const assert = require('check-types').assert;
+const check = require('check-types');
+
 const slash = require('slash');
 const File = require('./file');
 const Collection = require('./collection');
 
+const assert = check.assert;
 class FileCollection extends Collection {
-
-  constructor(items = []) {
-    assert.maybe.array.of.instance(items, File, `FileCollection.constructor: The 'items' argument is optional but must be an array of Files [items-invalid]`);
-    super(items);
-  }
 
   filterByPath(...args) {
     let paths = [].concat(...args);
@@ -37,6 +34,16 @@ class FileCollection extends Collection {
 
   toJSON() {
     return this._items.map(file => file.toJSON());
+  }
+
+  validateOrThrow(items) {
+    const isValid = FileCollection.validate(items);
+    assert(isValid, `FileCollection.constructor: The 'items' argument is optional but must be an array of Files [items-invalid]`, TypeError);
+    return isValid;
+  }
+
+  static validate(items) {
+    return check.maybe.array.of.instance(items, File);
   }
 
   get [Symbol.toStringTag]() {
