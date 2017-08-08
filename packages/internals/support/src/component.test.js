@@ -34,4 +34,8 @@ describe('Component', function () {
       expect(Component.isComponent([])).to.equal(false);
     });
   });
+  describe('[Symbol.toStringTag]', function () {
+    const component = new Component(basicComponent);
+    expect(component[Symbol.toStringTag]).to.equal('Component');
+  });
 });

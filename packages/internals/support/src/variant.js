@@ -6,6 +6,10 @@ class Variant extends Entity {
     return item instanceof Variant;
   }
 
+  get [Symbol.toStringTag]() {
+    return 'Variant';
+  }
+
 }
 
 module.exports = Variant;

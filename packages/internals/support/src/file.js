@@ -3,8 +3,7 @@ const {mapValues, pick, pickBy, assign} = require('lodash');
 const Vinyl = require('vinyl');
 const {promisify} = require('@frctl/utils');
 
-const
-pfs = promisify(fs);
+const pfs = promisify(fs);
 const getters = ['relative', 'path', 'extname', 'base', 'basename', 'contents', 'dirname', 'stem', 'cwd'];
 
 class File extends Vinyl {
@@ -28,6 +27,10 @@ class File extends Vinyl {
 
   toString() {
     return this.contents ? this.contents.toString() : '';
+  }
+
+  get [Symbol.toStringTag]() {
+    return 'File';
   }
 
   static isFile(item) {

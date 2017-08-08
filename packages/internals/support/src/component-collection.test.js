@@ -141,8 +141,13 @@ describe('ComponentCollection', function () {
 
   describe(`.toJSON()`, function () {
     it(`calls to the 'toJSON' method of each item in the collection`, function () {
-      let collection = makeCollection();
+      const collection = makeCollection();
       expect(collection.toJSON()).to.eql(items.map(item => item.toJSON()));
     });
+  });
+
+  describe('[Symbol.toStringTag]', function () {
+    const collection = makeCollection();
+    expect(collection[Symbol.toStringTag]).to.equal('ComponentCollection');
   });
 });

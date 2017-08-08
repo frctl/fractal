@@ -39,5 +39,9 @@ class FileCollection extends Collection {
     return this._items.map(file => file.toJSON());
   }
 
+  get [Symbol.toStringTag]() {
+    return 'FileCollection';
+  }
+
 }
 module.exports = FileCollection;

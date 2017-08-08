@@ -71,5 +71,9 @@ class ComponentCollection extends Collection {
   toJSON() {
     return this._items.map(component => component.toJSON());
   }
+  get [Symbol.toStringTag]() {
+    return 'ComponentCollection';
+  }
+
 }
 module.exports = ComponentCollection;

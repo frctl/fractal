@@ -27,6 +27,10 @@ class Component extends Entity {
     super(props);
   }
 
+  get [Symbol.toStringTag]() {
+    return 'Component';
+  }
+
   static isComponent(item) {
     return item instanceof Component;
   }

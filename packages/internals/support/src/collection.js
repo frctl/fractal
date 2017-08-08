@@ -204,6 +204,10 @@ class Collection {
     return this._items[Symbol.iterator]();
   }
 
+  get [Symbol.toStringTag]() {
+    return 'Collection';
+  }
+
   static isCollection(item) {
     return item instanceof Collection;
   }
