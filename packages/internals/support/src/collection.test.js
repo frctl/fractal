@@ -622,4 +622,9 @@ describe('Collection', function () {
     expect(newCollection.length).to.equal(collection.length);
     expect(newCollection.items).to.eql(newCollection.items);
   });
+
+  describe('[Symbol.toStringTag]', function () {
+    const collection = makeCollection();
+    expect(collection[Symbol.toStringTag]).to.equal('Collection');
+  });
 });

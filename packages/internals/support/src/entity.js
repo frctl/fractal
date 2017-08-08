@@ -49,6 +49,10 @@ class Entity {
     return hash(JSON.stringify(hashProps));
   }
 
+  get [Symbol.toStringTag]() {
+    return 'Entity';
+  }
+
   static from(props) {
     return new this(props);
   }

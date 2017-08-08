@@ -107,4 +107,8 @@ describe('Entity', function () {
       expect(hashedEntity).to.equal(hash(JSON.stringify({value: '123456789'})));
     });
   });
+  describe('[Symbol.toStringTag]', function () {
+    const entity = makeEntity();
+    expect(entity[Symbol.toStringTag]).to.equal('Entity');
+  });
 });

@@ -1,15 +1,12 @@
 const multimatch = require('multimatch');
-const assert = require('check-types').assert;
+const check = require('check-types');
+
 const slash = require('slash');
 const Collection = require('./collection');
 const Component = require('./component');
 
+const assert = check.assert;
 class ComponentCollection extends Collection {
-
-  constructor(items = []) {
-    assert.maybe.array.of.instance(items, Component, `ComponentCollection.constructor: The 'items' argument is optional but must be an array of Components [items-invalid]`);
-    super(items);
-  }
 
   /*
    * find('name')
@@ -71,5 +68,20 @@ class ComponentCollection extends Collection {
   toJSON() {
     return this._items.map(component => component.toJSON());
   }
+
+  validateOrThrow(items) {
+    const isValid = ComponentCollection.validate(items);
+    assert(isValid, `ComponentCollection.constructor: The 'items' argument is optional but must be an array of Components [items-invalid]`, TypeError);
+    return isValid;
+  }
+
+  static validate(items) {
+    return check.maybe.array.of.instance(items, Component);
+  }
+
+  get [Symbol.toStringTag]() {
+    return 'ComponentCollection';
+  }
+
 }
 module.exports = ComponentCollection;

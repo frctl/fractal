@@ -3,7 +3,6 @@
 const {expect} = require('../../../../test/helpers');
 const Collection = require('./collection');
 const File = require('./file');
-const FileCollection = require('./file-collection');
 const Component = require('./component');
 
 const ComponentCollection = require('./component-collection');
@@ -11,7 +10,6 @@ const ComponentCollection = require('./component-collection');
 let items = [{
   name: 'mickey',
   path: '/characters/mice/mickey',
-  relative: 'characters/mice/mickey',
   config: {
     disney: true,
     type: 'mouse'
@@ -20,7 +18,6 @@ let items = [{
 {
   name: 'jerry',
   path: '/characters/mice/jerry',
-  relative: 'characters/mice/jerry',
   config: {
     disney: false,
     type: 'mouse'
@@ -29,7 +26,6 @@ let items = [{
 {
   name: 'mighty',
   path: '/characters/mice/mighty',
-  relative: 'characters/mice/mighty',
   config: {
     disney: false,
     type: 'mouse'
@@ -38,7 +34,6 @@ let items = [{
 {
   name: 'pluto',
   path: '/characters/dogs/pluto',
-  relative: 'characters/dogs/pluto',
   config: {
     disney: true,
     type: 'dog'
@@ -47,7 +42,6 @@ let items = [{
 {
   name: 'odie',
   path: '/characters/dogs/odie',
-  relative: 'characters/dogs/odie',
   config: {
     disney: false,
     type: 'dog'
@@ -56,7 +50,6 @@ let items = [{
 {
   name: 'jerry',
   path: '/characters/dogs/jerry',
-  relative: 'characters/dogs/jerry',
   config: {
     disney: false,
     type: 'dog'
@@ -64,11 +57,11 @@ let items = [{
 }
 ];
 
-const makeComponent = input => new Component(Object.assign({
-  src: new File({path: '/src/test/index.js'}),
-  variants: new Collection(),
-  files: new FileCollection()
-}, input));
+const makeComponent = input => new Component({
+  src: new File({path: input.path, cwd: '/'}),
+  config: input.config,
+  name: input.name
+});
 
 items = items.map(makeComponent);
 
@@ -141,8 +134,13 @@ describe('ComponentCollection', function () {
 
   describe(`.toJSON()`, function () {
     it(`calls to the 'toJSON' method of each item in the collection`, function () {
-      let collection = makeCollection();
+      const collection = makeCollection();
       expect(collection.toJSON()).to.eql(items.map(item => item.toJSON()));
     });
+  });
+
+  describe('[Symbol.toStringTag]', function () {
+    const collection = makeCollection();
+    expect(collection[Symbol.toStringTag]).to.equal('ComponentCollection');
   });
 });

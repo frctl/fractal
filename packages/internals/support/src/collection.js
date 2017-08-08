@@ -1,6 +1,7 @@
 const {find, filter, reject, iteratee, sortBy, orderBy, groupBy, uniq, uniqBy, mapValues, cloneDeep} = require('lodash');
+const check = require('check-types');
 
-const assert = require('check-types').assert;
+const assert = check.assert;
 
 class Collection {
 
@@ -9,7 +10,7 @@ class Collection {
       items = items.toArray();
     }
 
-    assert.maybe.array.of.object(items, `Collection.constructor: The 'items' argument is optional but must be an array of objects [items-invalid]`);
+    this.validateOrThrow(items);
     this._items = items;
 
     /*
@@ -196,12 +197,22 @@ class Collection {
     return new this.constructor(items);
   }
 
+  validateOrThrow(items) {
+    const isValid = Collection.validate(items);
+    assert(isValid, `Collection.constructor: The 'items' argument is optional but must be an array of objects [items-invalid]`, TypeError);
+    return isValid;
+  }
+
   _new(items) {
     return new this.constructor(items);
   }
 
   [Symbol.iterator]() {
     return this._items[Symbol.iterator]();
+  }
+
+  get [Symbol.toStringTag]() {
+    return 'Collection';
   }
 
   static isCollection(item) {
@@ -211,6 +222,11 @@ class Collection {
   static from(items) {
     return new this(items);
   }
+
+  static validate(items) {
+    return check.maybe.array.of.object(items);
+  }
+
 }
 
 function iter(...args) {

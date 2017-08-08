@@ -19,4 +19,8 @@ describe('Variant', function () {
       expect(Variant.isVariant({})).to.be.false;
     });
   });
+  describe('.[Symbol.toStringTag]', function () {
+    const variant = new Variant();
+    expect(variant[Symbol.toStringTag]).to.equal('Variant');
+  });
 });
