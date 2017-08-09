@@ -1,4 +1,6 @@
-const {parseError, reIndent, render} = require('./utils');
+const render = require('@allmarkedup/climate');
+const redent = require('redent');
+const {parseError} = require('./utils');
 
 function log(str, opts = {}) {
   console.log(render(str, opts));
@@ -9,7 +11,7 @@ function error(err, includeStack = true) {
   return log(`
     <section>
       <error>${message}</error>
-      ${stack && includeStack ? `<details>${reIndent(stack, 2, '&nbsp;')}</details>` : ''}
+      ${stack && includeStack ? `<details>${redent(stack, 2, '&nbsp;')}</details>` : ''}
     </section>
   `);
 }
@@ -18,7 +20,7 @@ function success(message, text) {
   return log(`
     <section>
       <success>${message}</success>
-      ${text ? `<details>${reIndent(text, 2, '&nbsp;')}</details>` : ''}
+      ${text ? `<details>${redent(text, 2, '&nbsp;')}</details>` : ''}
     </section>
   `);
 }
@@ -27,7 +29,7 @@ function warning(message, text) {
   return log(`
     <section>
       <warning>${message}</warning>
-      ${text ? `<details>${reIndent(text, 2, '&nbsp;')}</details>` : ''}
+      ${text ? `<details>${redent(text, 2, '&nbsp;')}</details>` : ''}
     </section>
   `);
 }

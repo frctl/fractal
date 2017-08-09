@@ -1,8 +1,6 @@
-const stripIndent = require('strip-indent');
 const indentString = require('indent-string');
 const extractStack = require('extract-stack');
 const cleanStack = require('clean-stack');
-const render = require('./render');
 
 function parseError(err) {
   if (!(err instanceof Error)) {
@@ -15,21 +13,9 @@ function parseError(err) {
     pretty: true
   });
   return {
-    message: indent(err.message),
-    stack: indent(stack)
+    message: indentString(err.message),
+    stack: indentString(stack)
   };
 }
 
-function indent(...args) {
-  return indentString(...args);
-}
-
-function unIndent(...args) {
-  return stripIndent(...args);
-}
-
-function reIndent(...args) {
-  return stripIndent(indentString(...args));
-}
-
-module.exports = {parseError, indent, render, reIndent, unIndent};
+module.exports = {parseError};
