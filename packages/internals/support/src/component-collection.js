@@ -1,15 +1,12 @@
 const multimatch = require('multimatch');
-const assert = require('check-types').assert;
+const check = require('check-types');
+
 const slash = require('slash');
 const Collection = require('./collection');
 const Component = require('./component');
 
+const assert = check.assert;
 class ComponentCollection extends Collection {
-
-  constructor(items = []) {
-    assert.maybe.array.of.instance(items, Component, `Collection.constructor: The 'items' argument is optional but must be an array of objects [items-invalid]`);
-    super(items);
-  }
 
   /*
    * find('name')
@@ -46,7 +43,7 @@ class ComponentCollection extends Collection {
 
   filterByPath(...args) {
     let paths = [].concat(...args);
-    assert.array.of.string(paths, `files.filterByPath: path argument must be a string or array of strings [paths-invalid]`);
+    assert.array.of.string(paths, `ComponentCollection.filterByPath: path argument must be a string or array of strings [paths-invalid]`);
     paths = paths.map(path => slash(path));
 
     const items = this._items.filter(file => {
@@ -58,7 +55,7 @@ class ComponentCollection extends Collection {
 
   rejectByPath(...args) {
     let paths = [].concat(...args);
-    assert.array.of.string(paths, `files.rejectByPath: path argument must be a string or array of strings [paths-invalid]`);
+    assert.array.of.string(paths, `ComponentCollection.rejectByPath: path argument must be a string or array of strings [paths-invalid]`);
     paths = paths.map(path => slash(path));
 
     const items = this._items.filter(file => {
@@ -69,7 +66,22 @@ class ComponentCollection extends Collection {
   }
 
   toJSON() {
-    return this._items.slice(0).map(component => component.toJSON());
+    return this._items.map(component => component.toJSON());
   }
+
+  validateOrThrow(items) {
+    const isValid = ComponentCollection.validate(items);
+    assert(isValid, `ComponentCollection.constructor: The 'items' argument is optional but must be an array of Components [items-invalid]`, TypeError);
+    return isValid;
+  }
+
+  static validate(items) {
+    return check.maybe.array.of.instance(items, Component);
+  }
+
+  get [Symbol.toStringTag]() {
+    return 'ComponentCollection';
+  }
+
 }
 module.exports = ComponentCollection;

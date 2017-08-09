@@ -2,7 +2,19 @@
 # yarn lockfile v1
 
 
-"@frctl/utils@2.0.0-beta.0":
+"@frctl/support@^2.0.0-beta.0":
+  version "2.0.0-alpha.7"
+  resolved "https://registry.yarnpkg.com/@frctl/support/-/support-2.0.0-alpha.7.tgz#b545153bb3491fc0532d14616953ed53cba8d38b"
+  dependencies:
+    "@frctl/utils" "^2.0.0-alpha.7"
+    check-types "^7.1.5"
+    eventemitter2 "^4.1.0"
+    lodash "^4.17.4"
+    multimatch "^2.1.0"
+    slash "^1.0.0"
+    vinyl "^2.0.2"
+
+"@frctl/utils@^2.0.0-alpha.7", "@frctl/utils@^2.0.0-beta.0":
   version "2.0.0-alpha.7"
   resolved "https://registry.yarnpkg.com/@frctl/utils/-/utils-2.0.0-alpha.7.tgz#96a5367274c487c1f3055d3d00521d023444dfe7"
   dependencies:
@@ -51,8 +63,8 @@ check-more-types@^2.24.0:
   resolved "https://registry.yarnpkg.com/check-more-types/-/check-more-types-2.24.0.tgz#1420ffb10fd444dcfc79b43891bbfffd32a84600"
 
 check-types@^7.1.5, check-types@^7.2.0:
-  version "7.2.0"
-  resolved "https://registry.yarnpkg.com/check-types/-/check-types-7.2.0.tgz#a42786e795be2970b5620d334d40e9ff6f2511a5"
+  version "7.3.0"
+  resolved "https://registry.yarnpkg.com/check-types/-/check-types-7.3.0.tgz#468f571a4435c24248f5fd0cb0e8d87c3c341e7d"
 
 clone-buffer@^1.0.0:
   version "1.0.0"
@@ -88,7 +100,7 @@ deep-aplus@^1.0.4:
   dependencies:
     lodash.isplainobject "^4.0.6"
 
-eventemitter2@^4.1.0, eventemitter2@^4.1.2:
+eventemitter2@^4.1.0:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/eventemitter2/-/eventemitter2-4.1.2.tgz#0e1a8477af821a6ef3995b311bf74c23a5247f15"
 
@@ -113,6 +125,10 @@ minimatch@^3.0.0:
   resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-3.0.4.tgz#5166e286457f03306064be5497e8dbb0c3d32083"
   dependencies:
     brace-expansion "^1.1.7"
+
+mock-fs@^4.4.1:
+  version "4.4.1"
+  resolved "https://registry.yarnpkg.com/mock-fs/-/mock-fs-4.4.1.tgz#f285fa025b42a4031faf75b66f632b21e7056683"
 
 multimatch@^2.1.0:
   version "2.1.0"
@@ -184,7 +200,7 @@ util-deprecate@~1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
 
-vinyl@^2.0.2, vinyl@^2.1.0:
+vinyl@^2.0.2:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/vinyl/-/vinyl-2.1.0.tgz#021f9c2cf951d6b939943c89eb5ee5add4fd924c"
   dependencies:
