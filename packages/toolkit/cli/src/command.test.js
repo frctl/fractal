@@ -10,7 +10,7 @@ mockRequire('@frctl/console', {
   error: errorSpy
 });
 mockRequire('yargs', {
-  showhelp: helpSpy
+  showHelp: helpSpy
 });
 
 const command = require('./command');
