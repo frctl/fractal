@@ -1,65 +1,73 @@
-const {expect, sinon} = require('../../../../test/helpers');
-const utils = require('./utils');
-const log = require('./log');
+const {expect, sinon, mockRequire} = require('../../../../test/helpers');
+const logger = require('./log');
 
-const formatSpy = sinon.spy(utils, 'format');
 const consoleSpy = sinon.spy(console, 'log');
+const renderSpy = sinon.spy(v => v);
 
-describe('log', function () {
+describe('logger', function () {
   beforeEach(function () {
-    formatSpy.reset();
+    renderSpy.reset();
     consoleSpy.reset();
   });
 
-  describe('default export', function () {
+  describe('.log()', function () {
     it('outputs to the console', function () {
       const input = 'foo';
-      log(input);
+      logger.log(input);
       expect(console.log.calledOnce).to.equal(true);
-      expect(console.log.calledWith(input)).to.equal(true);
     });
 
-    it('runs the input through the `format` utility', function () {
-      const args = ['foo', {}];
-      log(...args);
-      expect(utils.format.calledOnce).to.equal(true);
-      expect(utils.format.calledWith(...args)).to.equal(true);
-    });
-  });
-
-  describe('.write()', function () {
-    it('is the same function as the default export', function () {
-      expect(log.write).to.equal(log);
+    it('renders the input', function () {
+      mockRequire('@allmarkedup/climate', renderSpy);
+      const logger = mockRequire.reRequire('./log');
+      logger.log('foo');
+      expect(renderSpy.called).to.equal(true);
+      mockRequire.stop('@allmarkedup/climate');
     });
   });
 
   describe('.success()', function () {
     it('outputs to the console', function () {
-      log.success('This is a success message');
-      expect(console.log.calledOnce).to.equal(true);
+      logger.success('This is a success message');
+      expect(consoleSpy.calledOnce).to.equal(true);
+      expect(consoleSpy.args[0][0].indexOf('This is a success message')).to.be.above(-1);
+    });
+
+    it('accepts an optional second argument for an extended description', function () {
+      logger.success('main', 'secondary');
+      expect(consoleSpy.args[0][0].indexOf('secondary')).to.be.above(-1);
+      consoleSpy.reset();
     });
   });
 
   describe('.error()', function () {
     it('outputs to the console', function () {
-      log.error(new Error('This is an error message'));
-      expect(console.log.calledOnce).to.equal(true);
+      logger.error(new Error('This is an error message'));
+      expect(consoleSpy.calledOnce).to.equal(true);
+      expect(consoleSpy.args[0][0].indexOf('This is an error message')).to.be.above(-1);
     });
 
     it('includes stack in error if opts.stack is not false', function () {
       const error = new Error('This is an error message');
-      log.error(error);
+      logger.error(error);
       expect(consoleSpy.args[0][0].indexOf('at Context.')).to.be.above(-1);
       consoleSpy.reset();
-      log.error(error, {stack: false});
+      logger.error(error, false);
       expect(consoleSpy.args[0][0].indexOf('at Context.')).to.equal(-1);
     });
   });
 
   describe('.warning()', function () {
     it('outputs to the console', function () {
-      log.warning('This is a warning message');
-      expect(console.log.calledOnce).to.equal(true);
+      logger.warning('This is a warning message');
+      expect(consoleSpy.calledOnce).to.equal(true);
+      expect(consoleSpy.args[0][0].indexOf('This is a warning message')).to.be.above(-1);
+    });
+
+    it('accepts an optional second argument for an extended description', function () {
+      logger.warning('main', 'secondary');
+      expect(consoleSpy.args[0][0].indexOf('secondary')).to.be.above(-1);
+      consoleSpy.reset();
     });
   });
 });
