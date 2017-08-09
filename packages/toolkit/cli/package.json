@@ -11,14 +11,18 @@
     "fractal": "./bin/fractal"
   },
   "dependencies": {
+    "@frctl/fractal": "^2.0.0-beta.0",
+    "@frctl/config": "^2.0.0-beta.0",
     "@frctl/console": "^2.0.0-beta.0",
     "@frctl/support": "^2.0.0-beta.0",
     "@frctl/utils": "^2.0.0-beta.0",
-    "bluebird": "^3.5.0",
+    "check-more-types": "^2.24.0",
     "check-types": "^7.2.0",
-    "json5": "^0.5.1",
+    "debug": "^3.0.0",
+    "import-cwd": "^2.1.0",
     "lodash": "^4.17.4",
     "semver": "^5.3.0",
+    "supports-color": "^4.2.1",
     "yargs": "^8.0.1",
     "find-up": "^2.1.0"
   }

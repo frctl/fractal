@@ -1,25 +1,68 @@
 #!/usr/bin/env node
 
-const {dirname} = require('path');
-const semver = require('semver');
 const yargs = require('yargs');
-const findUp = require('find-up');
-const {error, write} = require('@frctl/console');
-const debug = require('../src/debug')(yargs.argv.debug);
-const cli = require('../src/cli');
-const settings = require('../src/settings');
 
-const configPath = findUp.sync(settings.configFiles);
-
-if (configPath) {
-  const cwd = dirname(configPath);
-  process.chdir(cwd);
-  debug(`
-    Using config file found at <info>${configPath}</info>
-    Current working directory set to <info>${cwd}</info>
-  `);
-} else {
-  debug(`No config file found (searched for <info>${settings.configFiles.join('<reset>,</reset> ')}</info>).`);
+if (yargs.argv.debug && !process.env.DEBUG) {
+  process.env.DEBUG = 'fractal:*';
 }
 
-const config = require('../src/config/load')(configPath);
+const {dirname} = require('path');
+const findUp = require('find-up');
+const importCwd = require('import-cwd');
+const debug = require('debug')('fractal:cli');
+const {error, log} = require('@frctl/console');
+const command = require('../src/command');
+const settings = require('../src/settings');
+
+try {
+
+  let factory;
+  let config = {};
+  const configPath = findUp.sync(settings.configFiles);
+
+  if (configPath) {
+    const cwd = dirname(configPath);
+    const config = require(configPath);
+
+    process.chdir(cwd);
+
+    debug(`config file found: %s`, configPath);
+    debug(`set current working directory: %s`, cwd);
+
+    try {
+      factory = importCwd('@frctl/fractal');
+    } catch(err) {
+      debug(err);
+      log(`
+        <error>No local Fractal instance found.</error>
+        <details>&nbsp;&nbsp;Have you installed the <cyan>@frctl/fractal </cyan> package in your project?</details>
+      `);
+      process.exit(1);
+    }
+
+  } else {
+    debug(`no config file found. Assuming global scope.`);
+    factory = require('@frctl/fractal');
+  }
+
+  const app = factory(config);
+  const env = {
+    debug: process.env.DEBUG
+  };
+
+  yargs.usage(settings.usage)
+       .options(settings.options)
+       .strict()
+       .demandCommand(1, 'You must specify a command.');
+
+  for (const cmd of app.get('commands', [])) {
+    yargs.command(command(cmd, app, env));
+    debug(`registered command %s`, cmd.name);
+  }
+
+  yargs.argv;
+
+} catch(err) {
+  error(err);
+  process.exit(1);
+}
