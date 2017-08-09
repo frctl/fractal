@@ -1,13 +1,10 @@
 /* eslint handle-callback-err: off, no-unused-expressions: off */
 
 const {expect} = require('../../../../../test/helpers');
+const makePlugin = require('../../test/helpers').makePlugin;
 const Plugins = require('./plugins');
 
-const validPlugin = {
-  name: 'test-plugin',
-  collection: 'files',
-  handler: function () {}
-};
+const validPlugin = makePlugin('test-plugin');
 const validCollectionfreePlugin = {
   name: 'test-plugin',
   handler: function () {}
@@ -16,11 +13,7 @@ const invalidPlugin = {
   name: 'test-plugin',
   collection: 'files'
 };
-const newPlugin = (n, t = 'files') => ({
-  name: 'test-plugin-' + n,
-  collection: t,
-  handler: function () {}
-});
+const newPlugin = n => makePlugin(`test-plugin-${n}`);
 const pluginList = [
   newPlugin(1),
   newPlugin(2, 'components'),
@@ -61,7 +54,6 @@ describe('Plugins', function () {
     it('assigns defaults correctly, where missing', function () {
       let plugins = new Plugins();
       plugins.add(validCollectionfreePlugin);
-      // QUESTION: should we have a getter for individual plugins?
       let currentPlugin = plugins.items[0];
       expect(currentPlugin).to.have.a.property('collection').that.equals('files');
       plugins = new Plugins(null, {defaultCollection: 'components'});
