@@ -1,9 +1,9 @@
-const Surveyor = require('./src/surveyor');
+const Parser = require('./src/parser');
 const Transformer = require('./src/transform/transformer');
 
 module.exports = function (opts = {}) {
-  return new Surveyor(opts);
+  return new Parser(opts);
 };
 
-module.exports.Surveyor = Surveyor;
+module.exports.Parser = Parser;
 module.exports.Transformer = Transformer;

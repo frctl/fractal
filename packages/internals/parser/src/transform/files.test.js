@@ -27,7 +27,7 @@ let items = [{
 
 const getFileArray = input => input || items.slice(0);
 
-describe.only('Files Transform', function () {
+describe('Files Transform', function () {
   describe('factory', function () {
     it('exported as a function', function () {
       expect(filesTransform).to.be.a('function');

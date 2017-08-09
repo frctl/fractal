@@ -1,9 +1,9 @@
 {
-  "name": "@frctl/surveyor",
+  "name": "@frctl/parser",
   "description": "An extensible filesystem parser.",
   "version": "2.0.0-beta.0",
   "homepage": "http://fractal.build",
-  "repository": "https://github.com/frctl/fractal/tree/v2/packages/internals/surveyor",
+  "repository": "https://github.com/frctl/fractal/tree/v2/packages/internals/parser",
   "bugs": "https://github.com/frctl/fractal/issues",
   "author": "Mark Perkins <mark@allmarkedup.com> (http://allmarkedup.com)",
   "contributors": [
