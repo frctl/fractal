@@ -18,13 +18,11 @@ describe('logger', function () {
     });
 
     it('renders the input', function () {
-      mockRequire('./utils', {
-        render: renderSpy
-      });
+      mockRequire('@allmarkedup/climate', renderSpy);
       const logger = mockRequire.reRequire('./log');
       logger.log('foo');
       expect(renderSpy.called).to.equal(true);
-      mockRequire.stop('./utils');
+      mockRequire.stop('@allmarkedup/climate');
     });
   });
 
