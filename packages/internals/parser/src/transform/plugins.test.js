@@ -85,4 +85,11 @@ describe('Plugins', function () {
       expect(() => new Plugins().add([validPlugin, invalidPlugin])).to.throw(TypeError, '[plugins-invalid]');
     });
   });
+  describe('[Symbol.toStringTag]', function () {
+    it('has the correct value', function () {
+      const plugins = new Plugins(validPlugin);
+      expect(plugins[Symbol.toStringTag]).to.equal('Plugins');
+      expect(plugins).to.be.a('Plugins');
+    });
+  });
 });

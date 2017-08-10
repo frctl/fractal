@@ -215,6 +215,10 @@ class Collection {
     return 'Collection';
   }
 
+  static get [Symbol.species]() {
+    return this;
+  }
+
   static isCollection(item) {
     return item instanceof Collection;
   }

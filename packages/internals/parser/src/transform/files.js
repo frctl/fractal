@@ -5,11 +5,7 @@ module.exports = function () {
 
     name: 'files',
 
-    priority: 0,
-
     passthru: true,
-
-    collection: FileCollection,
 
     transform(files) {
       return FileCollection.from(files.map(file => {

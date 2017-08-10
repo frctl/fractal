@@ -17,6 +17,7 @@
     "check-more-types": "^2.24.0",
     "check-types": "^7.2.0",
     "lodash": "^4.17.4",
-    "mock-fs": "^4.4.1"
+    "mock-fs": "^4.4.1",
+    "mock-require": "^2.0.2"
   }
 }

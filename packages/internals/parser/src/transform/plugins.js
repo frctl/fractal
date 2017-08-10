@@ -42,6 +42,10 @@ class Plugins {
   get options() {
     return cloneDeep(_opts.get(this));
   }
+
+  get [Symbol.toStringTag]() {
+    return 'Plugins';
+  }
 }
 
 const pluginSchema = {
