@@ -133,7 +133,7 @@ describe('Utils', function () {
       let defaults = {
         items: ['three', 'four']
       };
-      function customizer(objValue, srcValue){
+      function customizer(objValue, srcValue) {
         if (Array.isArray(objValue)) {
           return objValue.concat(srcValue);
         }

@@ -216,20 +216,20 @@ describe('Config', function () {
     it('accepts a customizer to customize the defaults merging behaviour', function () {
       const config = new Config({
         foo: 'bar',
-        baz: [1,2]
+        baz: [1, 2]
       });
       config.defaults({
         one: 2,
-        baz: [3,4]
+        baz: [3, 4]
       }, customizer);
-      function customizer(objValue, srcValue){
+      function customizer(objValue, srcValue) {
         if (Array.isArray(objValue)) {
           return objValue.concat(srcValue);
         }
       }
       expect(config.data).to.have.property('one').that.equals(2);
       expect(config.data).to.have.property('foo').that.equals('bar');
-      expect(config.data).to.have.property('baz').that.has.same.members([1,2,3,4]);
+      expect(config.data).to.have.property('baz').that.has.same.members([1, 2, 3, 4]);
     });
     it('returns the config class instance', function () {
       const config = new Config({});
