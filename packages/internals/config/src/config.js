@@ -2,7 +2,7 @@
 
 const Ajv = require('ajv');
 const {assert} = require('check-types');
-const {get, set, remove, cloneDeep, sortBy} = require('lodash');
+const {get, set, remove, cloneDeep, isObjectLike, mapValues} = require('lodash');
 
 const _data = new WeakMap();
 const _accessors = new WeakMap();
@@ -39,17 +39,27 @@ class Config {
     // not run needlessly over the same data
     const cached = this.getCached(path);
     if (cached) {
-      return cached.value;
+      return cached.result;
     }
     assert.string(path, 'Config.get - `path` argument must be a string [path-invalid]');
-    let value = this.getData(path, fallback);
-    for (const accessor of this.getAccessorsForPath(path)) {
-      value = accessor.handler(value, this);
+    let result = this.getData(path);
+
+    if (Array.isArray(result)) {
+      result = result.map((value, i) => this.get(`${path}.${i}`));
+    } else if (isObjectLike(result)) {
+      result = mapValues(result, (val, prop) => this.get(`${path}.${prop}`));
+    } else if (typeof result === 'undefined') {
+      result = fallback;
     }
-    if (value !== fallback) {
-      _cache.get(this).push({path, value});
+
+    if (result !== fallback) {
+      for (const accessor of this.accessors.filter(acc => acc.path === path)) {
+        result = accessor.handler(result, this);
+      }
+
+      _cache.get(this).push({path, result});
     }
-    return value;
+    return result;
   }
 
   set(path, value) {
@@ -87,11 +97,6 @@ class Config {
     return this;
   }
 
-  getAccessorsForPath(path) {
-    const matches = this.accessors.filter(acc => path.startsWith(`${acc.path}.`) || path === acc.path);
-    return sortBy(matches, m => m.path.length).reverse();
-  }
-
   getCached(path) {
     const cache = _cache.get(this);
     return cache.find(item => item.path === path);
@@ -99,7 +104,7 @@ class Config {
 
   removeFromCache(path) {
     const cache = _cache.get(this);
-    return remove(cache, item => path.startsWith(`${item.path}.`) || path === item.path);
+    return remove(cache, item => path.endsWith(`.${item.path}`) || path === item.path);
   }
 
   get data() {

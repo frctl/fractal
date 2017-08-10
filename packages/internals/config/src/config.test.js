@@ -11,7 +11,7 @@ const schema = {
   }
 };
 
-describe('Config', function () {
+describe.only('Config', function () {
   describe('constructor', function () {
     it('throws an error if a non-object options argument is provided', function () {
       expect(() => new Config('foo')).to.throw(TypeError, '[config-opts-invalid]');
@@ -31,13 +31,13 @@ describe('Config', function () {
       expect(config.data).to.not.equal(data);
     });
 
-    it('adds accessors supplied cia opts.accessors', function () {
+    it('adds accessors supplied via opts.accessors', function () {
       const accessors = [{
         path: 'foo.bar',
         handler() {}
       }];
       const config = new Config({accessors});
-      expect(config.getAccessorsForPath('foo.bar').length).to.equal(1);
+      expect(config.accessors.find(acc => acc.path === 'foo.bar')).to.not.equal(undefined);
     });
 
     it('validates initial input data against a schema, if supplied', function () {
@@ -92,8 +92,10 @@ describe('Config', function () {
         }
       });
       config.addAccessor('foo.bar', value => '!' + value);
-      config.addAccessor('foo', value => '@' + value);
+      expect(config.get('foo.bar')).to.equal('!baz');
+      config.addAccessor('foo.bar', value => '@' + value);
       expect(config.get('foo.bar')).to.equal('@!baz');
+      expect(config.get('foo')).to.be.an('object').with.property('bar').that.equals('@!baz');
     });
 
     it('returns cached data where possible to prevent needlessly re-running accessors', function () {
@@ -172,7 +174,6 @@ describe('Config', function () {
         }
       });
       config.addAccessor('foo.bar', value => '!' + value);
-      config.addAccessor('foo', value => '@' + value);
       expect(config.getData('foo.bar')).to.equal('baz');
     });
   });
@@ -193,30 +194,6 @@ describe('Config', function () {
       config.addAccessor('foo.bar', 'package-loader');
       const accessor = config.accessors.find(acc => acc.path === 'foo.bar');
       expect(accessor.handler).to.equal(packageLoader);
-    });
-  });
-
-  describe('.getAccessorsForPath()', function () {
-    it('retrieves all accessors that match the dot-notation path', function () {
-      const config = new Config();
-      config.addAccessor('foo.bar', val => val);
-      config.addAccessor('foo.bar.baz', val => val);
-      config.addAccessor('bax.foo.bar', val => val);
-      config.addAccessor('fooooo', val => val);
-      config.addAccessor('bar', val => val);
-      expect(config.getAccessorsForPath('foo.bar').length).to.equal(1);
-      expect(config.getAccessorsForPath('foo.bar.baz').length).to.equal(2);
-      expect(config.getAccessorsForPath('bar').length).to.equal(1);
-      expect(config.getAccessorsForPath('foo').length).to.equal(0);
-    });
-
-    it('returns accessors sorted by descending path length', function () {
-      const config = new Config();
-      config.addAccessor('foo.bar', val => val);
-      config.addAccessor('foo.bar.baz.boop', val => val);
-      config.addAccessor('foo.bar.baz', val => val);
-      const accessors = config.getAccessorsForPath('foo.bar.baz.boop');
-      expect(accessors.map(acc => acc.path)).to.eql(['foo.bar.baz.boop', 'foo.bar.baz', 'foo.bar']);
     });
   });
 });
