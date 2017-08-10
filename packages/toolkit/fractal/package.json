@@ -9,6 +9,8 @@
   "license": "MIT",
   "dependencies": {
     "@frctl/utils": "^2.0.0-beta.0",
-    "@frctl/support": "^2.0.0-beta.0"
+    "@frctl/config": "^2.0.0-beta.0",
+    "@frctl/support": "^2.0.0-beta.0",
+    "lodash": "^4.17.4"
   }
 }
