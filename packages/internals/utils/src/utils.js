@@ -15,13 +15,18 @@ const utils = module.exports = {
 
   defaultsDeep(...args) {
     let output = {};
-    args.reverse().map(item => _.cloneDeep(item)).forEach(item => {
-      _.mergeWith(output, item, (objectValue, sourceValue) => {
+    let customizer;
+    if (typeof args[args.length - 1] === 'function') {
+      customizer = args.pop();
+    } else {
+      customizer = (objectValue, sourceValue) => {
         if (Array.isArray(sourceValue)) {
           return sourceValue;
         }
-      });
-    });
+      };
+    }
+    const items = args.reverse().map(item => _.cloneDeep(item));
+    items.forEach(item => _.mergeWith(output, item, customizer));
     return output;
   },
 

@@ -1,10 +1,7 @@
 /* eslint no-unused-expressions: "off" */
 
 const path = require('path');
-const {
-  expect,
-  sinon
-} = require('../../../../test/helpers');
+const {expect, sinon} = require('../../../../test/helpers');
 const utils = require('../.');
 
 /*
@@ -127,6 +124,21 @@ describe('Utils', function () {
         items: ['one', 'three', 'four']
       };
       expect(utils.defaultsDeep(target, defaults).items).to.eql(target.items);
+    });
+
+    it('accepts a customizer as the last argument to customize the merging behaviour', function () {
+      let target = {
+        items: ['one', 'two']
+      };
+      let defaults = {
+        items: ['three', 'four']
+      };
+      function customizer(objValue, srcValue){
+        if (Array.isArray(objValue)) {
+          return objValue.concat(srcValue);
+        }
+      }
+      expect(utils.defaultsDeep(target, defaults, customizer).items).to.have.same.members(['one', 'two', 'three', 'four']);
     });
 
     it('Returns the default value if the target property is undefined', function () {
