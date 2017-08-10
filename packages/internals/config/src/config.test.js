@@ -11,7 +11,7 @@ const schema = {
   }
 };
 
-describe.only('Config', function () {
+describe('Config', function () {
   describe('constructor', function () {
     it('throws an error if a non-object options argument is provided', function () {
       expect(() => new Config('foo')).to.throw(TypeError, '[config-opts-invalid]');
@@ -95,7 +95,23 @@ describe.only('Config', function () {
       expect(config.get('foo.bar')).to.equal('!baz');
       config.addAccessor('foo.bar', value => '@' + value);
       expect(config.get('foo.bar')).to.equal('@!baz');
-      expect(config.get('foo')).to.be.an('object').with.property('bar').that.equals('@!baz');
+    });
+
+    it('maps values through matching accessors if the lookup value is an array or object', function () {
+      const config = new Config({
+        data: {
+          foo: {
+            bar: 'baz'
+          },
+          arr: ['one', 'two']
+        }
+      });
+      config.addAccessor('foo.bar', value => '!' + value);
+      expect(config.get('foo')).to.be.an('object').with.property('bar').that.equals('!baz');
+      config.addAccessor('arr.0', value => '1' + value);
+      config.addAccessor('arr.1', value => '2' + value);
+      config.addAccessor('arr', items => items.map(item => item + '!'));
+      expect(config.get('arr')).to.eql(['1one!', '2two!']);
     });
 
     it('returns cached data where possible to prevent needlessly re-running accessors', function () {
