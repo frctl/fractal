@@ -9,7 +9,7 @@ const config = {
 };
 
 describe('Fractal', function () {
-  it.skip('extends the Emitter class', function () {
+  it('extends the Emitter class', function () {
     expect(new Fractal()).to.be.instanceOf(Emitter);
   });
 
