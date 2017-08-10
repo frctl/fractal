@@ -2,6 +2,7 @@
 
 const Ajv = require('ajv');
 const {assert} = require('check-types');
+const {defaultsDeep} = require('@frctl/utils');
 const {get, set, remove, cloneDeep, isObjectLike, mapValues} = require('lodash');
 
 const _data = new WeakMap();
@@ -11,10 +12,11 @@ const _cache = new WeakMap();
 
 class Config {
 
-  constructor(opts = {}) {
+  constructor(data = {}, opts = {}) {
+    assert.object(data, 'config data must be an object [config-data-invalid]');
     assert.object(opts, 'config opts must be an object [config-opts-invalid]');
 
-    _data.set(this, cloneDeep(opts.data || {}));
+    _data.set(this, cloneDeep(data));
     _accessors.set(this, []);
     _cache.set(this, []);
 
@@ -56,7 +58,6 @@ class Config {
       for (const accessor of this.accessors.filter(acc => acc.path === path)) {
         result = accessor.handler(result, this);
       }
-
       _cache.get(this).push({path, result});
     }
     return result;
@@ -70,6 +71,14 @@ class Config {
     return this;
   }
 
+  defaults(data, customizer) {
+    assert.object(data, 'Config.extend - `data` argument must be an object [data-invalid]');
+    assert.maybe.function(customizer, 'Config.extend - `customizer` argument must be an function if supplied [customizer-invalid]');
+    const result = defaultsDeep(this.data, data, customizer || {});
+    _data.set(this, result);
+    return this;
+  }
+
   getData(path, fallback) {
     return cloneDeep(get(this.data, path, fallback));
   }
@@ -80,8 +89,8 @@ class Config {
       return this;
     }
     if (!validate(this.data)) {
-      const errors = validate.errors.map(err => `'${err.dataPath.replace(/^\./, '')}' ${err.message}`);
-      throw new Error(`Config data validation failed with the following errors:\n${errors.join('\n')}`);
+      const errors = validate.errors.map(err => `'${err.dataPath ? err.dataPath.replace(/^\./, '') : 'config'}' ${err.message}`);
+      throw new Error(`Config data validation failed with the following errors:\n${errors.join('\n')} [config-invalid]`);
     }
     return this;
   }
@@ -105,6 +114,11 @@ class Config {
   removeFromCache(path) {
     const cache = _cache.get(this);
     return remove(cache, item => path.endsWith(`.${item.path}`) || path === item.path);
+  }
+
+  clearCache() {
+    _cache.set(this, []);
+    return this;
   }
 
   get data() {
