@@ -1,5 +1,7 @@
 # Fractal
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/frctl/fractal.svg)](https://greenkeeper.io/)
+
 Fractal is a tool to help you **build** and **document** web component libraries and then **integrate** them into your projects.
 
 [![Build Status](https://img.shields.io/travis/frctl/fractal/master.svg?style=flat-square)](https://travis-ci.org/frctl/fractal)
