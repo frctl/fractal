@@ -1,9 +1,18 @@
+const stringArray = [
+  {
+    type: 'string'
+  },
+  {
+    type: 'array'
+  }
+];
+
 module.exports = {
 
   properties: {
 
-    presets: {
-      type: 'array'
+    extends: {
+      anyOf: stringArray
     },
 
     commands: {
@@ -23,14 +32,7 @@ module.exports = {
     },
 
     src: {
-      anyOf: [
-        {
-          type: 'string'
-        },
-        {
-          type: 'array'
-        }
-      ]
+      anyOf: stringArray
     }
 
   }
