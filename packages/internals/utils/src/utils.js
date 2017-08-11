@@ -15,13 +15,21 @@ const utils = module.exports = {
 
   defaultsDeep(...args) {
     let output = {};
-    args.reverse().map(item => _.cloneDeep(item)).forEach(item => {
-      _.mergeWith(output, item, (objectValue, sourceValue) => {
-        if (Array.isArray(sourceValue)) {
-          return sourceValue;
+    let customizer;
+    args = _.compact(args);
+    if (typeof args[args.length - 1] === 'function') {
+      const fn = args.pop();
+      customizer = (defaultValue, targetValue, ...other) => fn(targetValue, defaultValue, ...other);
+    } else {
+      customizer = (defaultValue, targetValue) => {
+        if (Array.isArray(targetValue)) {
+           // don't merge arrays - the target array overrides the default value
+          return targetValue;
         }
-      });
-    });
+      };
+    }
+    const items = args.reverse().map(item => _.cloneDeep(item));
+    items.forEach(item => _.mergeWith(output, item, customizer));
     return output;
   },
 
