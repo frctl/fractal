@@ -1,5 +1,3 @@
-/* eslint handle-callback-err: off, no-unused-expressions: off */
-
 const {expect, sinon} = require('../../../../test/helpers');
 const Config = require('./config');
 
@@ -47,13 +45,7 @@ describe('Config', function () {
 
     it('validates initial input data against a schema, if supplied', function () {
       expect(() => new Config({foo: 123}, {schema})).to.not.throw();
-      expect(() => new Config({foo: '123'}, {schema})).to.throw();
-    });
-
-    it('calls the init callback with the config instance', function () {
-      const init = sinon.spy();
-      const config = new Config({}, {init});
-      expect(init.calledWith(config)).to.equal(true);
+      expect(() => new Config({foo: '123'}, {schema})).to.throw('[config-invalid]');
     });
   });
 
@@ -213,20 +205,24 @@ describe('Config', function () {
         }
       });
     });
-    it('accepts a customizer to customize the defaults merging behaviour', function () {
+    it('uses the defaults customizer to customize the defaults merging behaviour', function () {
+      const opts = {
+        customizers: {
+          defaults(targetValue, defaultValue) {
+            if (Array.isArray(targetValue) && Array.isArray(defaultValue)) {
+              return targetValue.concat(defaultValue);
+            }
+          }
+        }
+      };
       const config = new Config({
         foo: 'bar',
         baz: [1, 2]
-      });
+      }, opts);
       config.defaults({
         one: 2,
         baz: [3, 4]
-      }, customizer);
-      function customizer(objValue, srcValue) {
-        if (Array.isArray(objValue)) {
-          return objValue.concat(srcValue);
-        }
-      }
+      });
       expect(config.data).to.have.property('one').that.equals(2);
       expect(config.data).to.have.property('foo').that.equals('bar');
       expect(config.data).to.have.property('baz').that.has.same.members([1, 2, 3, 4]);
@@ -253,6 +249,52 @@ describe('Config', function () {
       config.addAccessor('foo.bar', 'package-loader');
       const accessor = config.accessors.find(acc => acc.path === 'foo.bar');
       expect(accessor.handler).to.equal(packageLoader);
+    });
+  });
+
+  describe('.validate()', function () {
+    it('throws an error if the data does not match the provided schema', function () {
+      const config = new Config({}, {schema});
+      expect(() => config.validate({foo: '123'})).to.throw('[config-invalid]');
+    });
+    it('includes the propery path and in the validation error', function () {
+      try {
+        const config = new Config({}, {schema});
+        config.validate({foo: '124'});
+      } catch (err) {
+        expect(/'foo'/.test(err.message)).to.equal(true);
+      }
+      try {
+        const config = new Config({}, {
+          schema: {
+            required: ['foo']
+          }
+        });
+        config.validate({});
+      } catch (err) {
+        expect(/'config'/.test(err.message)).to.equal(true);
+      }
+    });
+  });
+
+  describe('.clearCache()', function () {
+    it('clears all cached results', function () {
+      const config = new Config({
+        foo: {
+          bar: 'baz'
+        }
+      });
+
+      const accessorSpy = sinon.spy(val => val);
+      config.addAccessor('foo.bar', accessorSpy);
+
+      expect(config.get('foo.bar')).to.equal('baz');
+      expect(accessorSpy.calledOnce).to.equal(true);
+
+      config.clearCache();
+
+      expect(config.get('foo.bar')).to.equal('baz');
+      expect(accessorSpy.calledTwice).to.equal(true);
     });
   });
 });

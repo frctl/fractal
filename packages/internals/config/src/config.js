@@ -9,16 +9,21 @@ const _data = new WeakMap();
 const _accessors = new WeakMap();
 const _validator = new WeakMap();
 const _cache = new WeakMap();
+const _customizers = new WeakMap();
 
 class Config {
 
   constructor(data = {}, opts = {}) {
-    assert.object(data, 'config data must be an object [config-data-invalid]');
-    assert.object(opts, 'config opts must be an object [config-opts-invalid]');
+    assert.object(data, 'Config.constructor - config data must be an object [config-data-invalid]');
+    assert.object(opts, 'Config.constructor - config opts must be an object [config-opts-invalid]');
 
     _data.set(this, cloneDeep(data));
     _accessors.set(this, []);
     _cache.set(this, []);
+
+    _customizers.set(this, {
+      defaults: get(opts, 'customizers.defaults')
+    });
 
     if (opts.schema) {
       const ajv = new Ajv();
@@ -29,11 +34,7 @@ class Config {
       this.addAccessor(accessor.path, accessor.handler);
     }
 
-    this.validate();
-
-    if (typeof opts.init === 'function') {
-      opts.init(this);
-    }
+    this.validate(this.data);
   }
 
   get(path, fallback) {
@@ -67,14 +68,13 @@ class Config {
     assert.string(path, 'Config.set - `path` argument must be a string [path-invalid]');
     this.removeFromCache(path);
     set(this.data, path, cloneDeep(value));
-    this.validate();
+    this.validate(this.data);
     return this;
   }
 
-  defaults(data, customizer) {
-    assert.object(data, 'Config.extend - `data` argument must be an object [data-invalid]');
-    assert.maybe.function(customizer, 'Config.extend - `customizer` argument must be an function if supplied [customizer-invalid]');
-    const result = defaultsDeep(this.data, data, customizer || {});
+  defaults(...data) {
+    assert.array.of.object(data, 'Config.extend - `data` arguments must be objects [data-invalid]');
+    const result = defaultsDeep(this.data, ...data, _customizers.get(this).defaults);
     _data.set(this, result);
     return this;
   }
@@ -83,12 +83,12 @@ class Config {
     return cloneDeep(get(this.data, path, fallback));
   }
 
-  validate() {
+  validate(data) {
     const validate = _validator.get(this);
     if (!validate) {
       return this;
     }
-    if (!validate(this.data)) {
+    if (!validate(data)) {
       const errors = validate.errors.map(err => `'${err.dataPath ? err.dataPath.replace(/^\./, '') : 'config'}' ${err.message}`);
       throw new Error(`Config data validation failed with the following errors:\n${errors.join('\n')} [config-invalid]`);
     }

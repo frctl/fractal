@@ -1,7 +1,7 @@
 const {isPlainObject} = require('lodash');
 const importCwd = require('import-cwd');
 
-module.exports = function (target) {
+module.exports = function packageLoader(target) {
   if (!Array.isArray(target)) {
     target = [target];
   }

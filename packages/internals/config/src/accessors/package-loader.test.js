@@ -1,8 +1,6 @@
 const {expect, sinon} = require('../../../../../test/helpers');
 const loadPkg = require('./package-loader');
 
-// const plugin = require('../../../../../test/fixtures/add-ons/plugin');
-
 describe('package-loader', function () {
   it('exports a function', function () {
     expect(loadPkg).to.be.a('function');
