@@ -36,6 +36,10 @@ function timeoutPromiseFromObj(obj) {
  */
 describe('Utils', function () {
   describe('.defaultsDeep()', function () {
+    it('Ignores empty arguments', function () {
+      const result = utils.defaultsDeep({three: '3'}, null, {two: '2'}, undefined, {one: '1'});
+      expect(result).to.eql({one: '1', two: '2', three: '3'});
+    });
     it('Does not modify source objects', function () {
       let target = {};
       let defaults = {
@@ -133,12 +137,12 @@ describe('Utils', function () {
       let defaults = {
         items: ['three', 'four']
       };
-      function customizer(objValue, srcValue) {
-        if (Array.isArray(objValue)) {
-          return objValue.concat(srcValue);
+      function customizer(targetValue, defaultValue) {
+        if (Array.isArray(defaultValue) && Array.isArray(targetValue)) {
+          return targetValue.concat(defaultValue);
         }
       }
-      expect(utils.defaultsDeep(target, defaults, customizer).items).to.have.same.members(['one', 'two', 'three', 'four']);
+      expect(utils.defaultsDeep(target, defaults, customizer).items).to.eql(['one', 'two', 'three', 'four']);
     });
 
     it('Returns the default value if the target property is undefined', function () {

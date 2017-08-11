@@ -16,12 +16,15 @@ const utils = module.exports = {
   defaultsDeep(...args) {
     let output = {};
     let customizer;
+    args = _.compact(args);
     if (typeof args[args.length - 1] === 'function') {
-      customizer = args.pop();
+      const fn = args.pop();
+      customizer = (defaultValue, targetValue, ...other) => fn(targetValue, defaultValue, ...other);
     } else {
-      customizer = (objectValue, sourceValue) => {
-        if (Array.isArray(sourceValue)) {
-          return sourceValue;
+      customizer = (defaultValue, targetValue) => {
+        if (Array.isArray(targetValue)) {
+           // don't merge arrays - the target array overrides the default value
+          return targetValue;
         }
       };
     }
