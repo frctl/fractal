@@ -16,28 +16,8 @@ class ComponentCollection extends Collection {
    */
   find(...args) {
     if (args.length === 1 && typeof args[0] === 'string') {
-      const lookupParts = args[0].split('/');
-      const name = lookupParts.pop();
-      const matches = this._items.filter(comp => comp.name === name);
-
-      if (matches.length === 1) {
-        return matches[0];
-      }
-
-      // TODO: decide if/how we want to support: `find('pathpart/pathend')`
-      // if (matches.length > 1 && lookupParts.length > 0) {
-      //   const dirpath = join(...lookupParts);
-      //   for (const component of matches) {
-      //     if (dirname(component.path).endsWith(dirpath)) {
-      //       return component;
-      //     }
-      //   }
-      //   return null;
-      // }
-
       return super.find('name', args[0]);
     }
-
     return super.find(...args);
   }
 
