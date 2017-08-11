@@ -1,10 +1,12 @@
+const {Emitter} = require('@frctl/support');
 const Config = require('@frctl/config');
 
 const _config = new WeakMap();
 
-class Fractal {
+class Fractal extends Emitter {
 
   constructor(config = {}) {
+    super();
     // TODO: provide expected config schema for validation
     _config.set(this, new Config({
       data: config

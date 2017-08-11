@@ -1,10 +1,12 @@
 /* eslint handle-callback-err: off, no-unused-expressions: off */
 
 const nunjucks = require('nunjucks');
+const {Fractal} = require('@frctl/fractal');
 const {expect} = require('../../../../test/helpers');
 const factory = require('./env');
 
-const env = makeEnv();
+const fractal = new Fractal();
+const env = makeEnv(fractal);
 
 describe('factory', function () {
   it('exports a function', function () {
@@ -31,7 +33,9 @@ describe('factory', function () {
       expect(env.addFilter('foo', () => {})).to.not.be.instanceOf(Promise);
     });
 
-    it('adds the fractal instance as a property on the environment');
+    it('adds the fractal instance as a property on the environment', function () {
+      expect(env.fractal).to.equal(fractal);
+    });
 
     for (const filter of ['await', 'beautify', 'highlight', 'stringify']) {
       it(`adds the ${filter} filter`, function () {
@@ -41,7 +45,6 @@ describe('factory', function () {
   });
 });
 
-function makeEnv() {
-  const fractal = {}; // TODO: Use proper Fractal instance
-  return factory(fractal);
+function makeEnv(fractal) {
+  return factory(fractal || new Fractal());
 }
