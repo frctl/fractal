@@ -29,6 +29,16 @@ const validTransformWithPlugin = {
   transform: toC,
   plugins: validPlugin
 };
+const validTransformWithPluginAlt = {
+  name: 'valid-transform-with-plugin-alt',
+  passthru: true,
+  transform: toC,
+  plugins: {
+    name: 'plugin-tested',
+    collection: 'files',
+    handler: items => items.map(i => Object.assign({}, i, { tested: true}))
+  }
+};
 const transformWithInvalidPlugin = {
   name: 'valid-transform-with-invalid-plugin',
   passthru: true,
@@ -56,7 +66,7 @@ const validTransformWithPlugins = {
 
 let addSpy;
 
-describe('Transformer', function () {
+describe.only('Transformer', function () {
   describe('constructor', function () {
     it('returns a new instance', function () {
       const transformer = new Transformer(validFCTransform);
@@ -123,7 +133,14 @@ describe('Transformer', function () {
       expect(result).to.be.a('FileCollection').that.has.a.property('length').that.equals(2);
     });
 
-    it('it emits the expected events', async function () {
+    it('it returns the expected result of its transform and plugin methods', async function () {
+      const transformer = new Transformer(validTransformWithPluginAlt);
+      const result = await transformer.run([{title: 'Red'}, {title: 'Blue'}]);
+      expect(result).to.be.a('Collection').that.has.a.property('length').that.equals(2);
+      expect(result.toArray()).to.eql([{title: 'Red', tested: true}, {title: 'Blue', tested: true}])
+    });
+
+    it('it emits the expected events for transform', async function () {
       const transformer = new Transformer(validFCTransform);
       const emitSpy = sinon.spy(transformer, 'emit');
       await transformer.run([new File(), new File()]);
@@ -131,6 +148,18 @@ describe('Transformer', function () {
       expect(emitSpy.args[0][0]).to.equal('transform.start');
       expect(emitSpy.args[1][0]).to.equal('transform.complete');
     });
+
+    it('it emits the expected events for transform and plugins', async function () {
+      const transformer = new Transformer(validTransformWithPluginAlt);
+      const emitSpy = sinon.spy(transformer, 'emit');
+      await transformer.run([{title: 'Red'}, {title: 'Blue'}]);
+      expect(emitSpy.callCount).to.equal(4);
+      expect(emitSpy.args[0][0]).to.equal('transform.start');
+      expect(emitSpy.args[1][0]).to.equal('plugin.start');
+      expect(emitSpy.args[2][0]).to.equal('plugin.complete');
+      expect(emitSpy.args[3][0]).to.equal('transform.complete');
+    });
+
   });
 
   describe('[Symbol.toStringTag]', function () {

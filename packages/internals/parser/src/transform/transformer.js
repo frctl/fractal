@@ -31,8 +31,34 @@ class Transformer extends Emitter {
     const transformer = this;
 
     this.emit('transform.start', {transformer});
-
+    console.log(transformer.name);
     let dataset = await this.transform(data, state, context);
+
+
+    for (const plugin of this.plugins) {
+      this.emit('plugin.start', {plugin, transformer});
+      console.log(plugin.name);
+      /*
+       * Run the input through the plugin function to manipulate the data set.
+       */
+      dataset = await plugin.handler(dataset, state, context);
+
+      if (!Array.isArray(dataset) && !Collection.isCollection(dataset)) {
+        throw new TypeError(`Plugins must either return an array or a Collection [plugin-return-invalid]`);
+      }
+
+      /*
+       * If the plugin return value is a Collection, unwrap it and re-wrap to ensure that we
+       * have the correct collection for this transformer to get passed
+       * to the next plugin in the list. If it returns an array then we wrap that
+       * to ensure that plugins always receive collections.
+       */
+
+      dataset = this.getCollection(dataset);
+
+      this.emit('plugin.complete', {plugin, transformer});
+    }
+
     const collection = this.getCollection(dataset);
 
     this.emit('transform.complete', {transformer, collection});

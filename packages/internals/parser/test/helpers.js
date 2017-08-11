@@ -1,7 +1,7 @@
 const makePlugin = (n, t = 'files') => ({
   name: n,
   collection: t,
-  handler: function () {}
+  handler: i=>i
 });
 
 module.exports.makePlugin = makePlugin;
