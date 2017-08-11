@@ -1,6 +1,6 @@
-/* eslint no-unused-expressions: "off" */
-
-const {expect} = require('../../../../test/helpers');
+/* eslint no-unused-expressions: "off", guard-for-in: "off" */
+const {EventEmitter2} = require('eventemitter2');
+const {expect, sinon} = require('../../../../test/helpers');
 const EmittingPromise = require('./emitting-promise');
 
 const basicResolver = (resolve, reject) => resolve('value');
@@ -33,6 +33,27 @@ describe('EmittingPromise', function () {
       });
 
       return eProm;
+    });
+    it('proxies to its emitter properly', function () {
+      const eventEmitter = new EventEmitter2({wildcard: true});
+      const eProm = new EmittingPromise(basicResolver);
+      const spies = {};
+      for (let prop in eventEmitter) {
+        if (typeof Reflect.get(eventEmitter, prop) === 'function') {
+          spies[prop] = sinon.spy(EventEmitter2.prototype, prop);
+        }
+      }
+      for (let prop in eventEmitter) {
+        const proxied = Reflect.get(eProm, prop);
+        expect(proxied).to.exist;
+        expect(typeof Reflect.get(eventEmitter, prop)).to.equal(typeof proxied);
+        if (typeof proxied === 'function') {
+          try {
+            proxied.call(eProm);
+          } catch (err) {}
+          expect(spies[prop].called).to.be.true;
+        }
+      }
     });
   });
   describe('.on()', function () {
