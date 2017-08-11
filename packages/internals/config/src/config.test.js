@@ -181,7 +181,7 @@ describe('Config', function () {
     });
   });
 
-  describe('.defaults()', function () {
+  describe('.addDefaults()', function () {
     it('deep merges the supplied data as defaults', function () {
       const config = new Config({
         foo: 'bar',
@@ -189,7 +189,7 @@ describe('Config', function () {
           nested: 'child'
         }
       });
-      config.defaults({
+      config.addDefaults({
         one: 2,
         baz: {
           nested: 'parent',
@@ -219,7 +219,7 @@ describe('Config', function () {
         foo: 'bar',
         baz: [1, 2]
       }, opts);
-      config.defaults({
+      config.addDefaults({
         one: 2,
         baz: [3, 4]
       });
@@ -229,7 +229,7 @@ describe('Config', function () {
     });
     it('returns the config class instance', function () {
       const config = new Config({});
-      expect(config.defaults({})).to.equal(config);
+      expect(config.addDefaults({})).to.equal(config);
     });
   });
 

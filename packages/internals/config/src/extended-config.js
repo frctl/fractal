@@ -7,7 +7,7 @@ class ExtendedConfig extends Config {
     super(...args);
     this.addAccessor('extends', 'extends-resolver');
     const configs = this.get('extends', []).reverse();
-    this.defaults(...configs.map(preset => omit(preset.config || {}, 'extends')));
+    this.addDefaults(...configs.map(preset => omit(preset.config || {}, 'extends')));
   }
 
 }

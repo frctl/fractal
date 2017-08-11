@@ -35,7 +35,7 @@ describe('ExtendedConfig', function () {
       expect(config.accessors.find(acc => acc.path === 'extends').handler.name).to.equal('extendsResolver');
     });
     it('applies config as defaults from all extended presets in the correct order', function () {
-      const spy = sinon.spy(ExtendedConfig.prototype, 'defaults');
+      const spy = sinon.spy(ExtendedConfig.prototype, 'addDefaults');
       new ExtendedConfig({
         extends: [
           preset
@@ -46,7 +46,7 @@ describe('ExtendedConfig', function () {
       spy.restore();
     });
     it('omits extend keys from the defaults that are merged', function () {
-      const spy = sinon.spy(ExtendedConfig.prototype, 'defaults');
+      const spy = sinon.spy(ExtendedConfig.prototype, 'addDefaults');
       new ExtendedConfig({
         extends: [
           preset

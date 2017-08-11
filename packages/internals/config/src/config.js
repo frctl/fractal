@@ -72,7 +72,7 @@ class Config {
     return this;
   }
 
-  defaults(...data) {
+  addDefaults(...data) {
     assert.array.of.object(data, 'Config.extend - `data` arguments must be objects [data-invalid]');
     const result = defaultsDeep(this.data, ...data, _customizers.get(this).defaults);
     _data.set(this, result);
