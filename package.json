@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "@frctl/eslint-config-frctl": "^0.1.2",
+    "ajv": "^5.2.2",
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",
     "chai-sorted": "^0.1.0",
