@@ -1,8 +1,8 @@
 /* eslint import/no-dynamic-require: off */
 
-const Ajv = require('ajv');
 const {assert} = require('check-types');
 const {defaultsDeep} = require('@frctl/utils');
+const {Validator} = require('@frctl/support');
 const {get, set, remove, cloneDeep, isObjectLike, mapValues} = require('lodash');
 
 const _data = new WeakMap();
@@ -26,8 +26,8 @@ class Config {
     });
 
     if (opts.schema) {
-      const ajv = new Ajv();
-      _validator.set(this, ajv.compile(opts.schema));
+      const validator = new Validator();
+      _validator.set(this, validator.compile(opts.schema));
     }
 
     for (const accessor of opts.accessors || []) {
