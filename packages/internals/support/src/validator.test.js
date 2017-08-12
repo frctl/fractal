@@ -8,21 +8,34 @@ describe('Validator', function () {
     expect(validator).to.be.instanceOf(Ajv);
   });
 
-  describe('Validator.validate()', function () {
+  describe('Validator.assertValid()', function () {
     it('is a function', function () {
-      expect(Validator.validate).to.be.a('function');
+      expect(Validator.assertValid).to.be.a('function');
     });
 
-    it('validates data against a schema', function () {
-      const data = {foo: 'bar'};
+    it('throws an error if the data is not valid', function () {
       const schema = {
         properties: {
           foo: {
-            type: 'string'
+            type: 'integer'
           }
         }
       };
-      expect(Validator.validate(schema, data)).to.be.equal(true);
+      expect(() => Validator.assertValid({foo: 'bar'}, schema)).to.throw(TypeError);
+      expect(() => Validator.assertValid({foo: 123}, schema)).to.not.throw(TypeError);
+    });
+    it('supports supplying a custom error message', function () {
+      const schema = {
+        properties: {
+          foo: {
+            type: 'integer'
+          },
+          bar: {
+            type: 'array'
+          }
+        }
+      };
+      expect(() => Validator.assertValid({foo: 'bar'}, schema, '[foo]')).to.throw(TypeError, '[foo]');
     });
   });
 });
