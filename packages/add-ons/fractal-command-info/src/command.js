@@ -8,7 +8,6 @@ module.exports = function infoCommand(opts = {}) {
     command: '*',
 
     handler(argv, app, cli) {
-
       return `
         &nbsp;
         <hr>
