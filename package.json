@@ -23,6 +23,8 @@
   "devDependencies": {
     "@frctl/eslint-config-frctl": "^0.1.2",
     "ajv": "^5.2.2",
+    "ajv-keywords": "^2.1.0",
+    "mock-require": "^2.0.2",
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",
     "chai-sorted": "^0.1.0",
@@ -36,8 +38,5 @@
   },
   "xo": {
     "extends": "@frctl/eslint-config-frctl"
-  },
-  "dependencies": {
-    "mock-require": "^2.0.2"
   }
 }
