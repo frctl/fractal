@@ -81,7 +81,8 @@ class Config {
   }
 
   getData(path, fallback) {
-    return cloneDeep(get(this.data, path, fallback));
+    const result = get(this.data, path, fallback);
+    return isObjectLike(result) ? cloneDeep(result) : result;
   }
 
   validate(data) {
