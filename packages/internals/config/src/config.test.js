@@ -191,7 +191,7 @@ describe('Config', function () {
     });
     it('leaves functions intact', function () {
       const data = {
-        foo: function(){}
+        foo: function () {}
       };
       const config = new Config(data);
       expect(config.getData('foo')).to.equal(data.foo);

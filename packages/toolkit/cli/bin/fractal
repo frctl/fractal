@@ -9,10 +9,12 @@ if (yargs.argv.debug && !process.env.DEBUG) {
 const {dirname} = require('path');
 const findUp = require('find-up');
 const importCwd = require('import-cwd');
+const {uniqBy} = require('lodash');
 const debug = require('debug')('fractal:cli');
 const {error, log} = require('@frctl/console');
 const command = require('../src/command');
 const settings = require('../src/settings');
+const cliPackage = require('../package.json');
 
 try {
 
@@ -22,7 +24,7 @@ try {
 
   if (configPath) {
     const cwd = dirname(configPath);
-    const config = require(configPath);
+    config = require(configPath);
 
     process.chdir(cwd);
 
@@ -46,8 +48,13 @@ try {
   }
 
   const app = factory(config);
-  const env = {
-    debug: process.env.DEBUG
+  const commands = uniqBy(app.get('commands',[]).slice(0).reverse(), 'name');
+  const cli = {
+    commands,
+    configPath,
+    cwd: process.cwd(),
+    debug: Boolean(process.env.DEBUG),
+    version: cliPackage.version,
   };
 
   yargs.usage(settings.usage)
@@ -55,9 +62,9 @@ try {
        .strict()
        .demandCommand(1, 'You must specify a command.');
 
-  for (const cmd of app.get('commands', [])) {
-    yargs.command(command(cmd, app, env));
-    debug(`registered command %s`, cmd.name);
+  for (const cmd of cli.commands) {
+    yargs.command(command(cmd, app, cli));
+    debug(`registered command: %s`, cmd.name);
   }
 
   yargs.argv;

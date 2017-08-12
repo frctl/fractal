@@ -1,4 +1,5 @@
-const {expect, sinon, mockRequire} = require('../../../../test/helpers');
+const {expect, sinon, mockRequire, validateSchema} = require('../../../../test/helpers');
+const commandSchema = require('./command.schema');
 
 const logSpy = sinon.spy(() => {});
 const errorSpy = sinon.spy(() => {});
@@ -23,7 +24,8 @@ const validCommand = {
 const argv = {};
 const app = {};
 const env = {
-  debug: false
+  debug: false,
+  commands: []
 };
 
 describe('Cli', function () {
@@ -50,7 +52,7 @@ describe('Cli', function () {
     it('wraps the command handler to provide a custom argument set', function () {
       const cmd = command(validCommand, app, env);
       cmd.handler(argv);
-      expect(handlerSpy.calledWith(argv, app, env)).to.equal(true);
+      expect(handlerSpy.calledWithMatch(argv, app, env)).to.equal(true);
     });
 
     describe('.handler()', function () {
@@ -91,6 +93,12 @@ describe('Cli', function () {
         await cmd.handler(argv);
         expect(errorSpy.calledWith(err)).to.equal(true);
       });
+    });
+  });
+
+  describe('Command schema', function () {
+    it('is a valid schema', function () {
+      expect(validateSchema(commandSchema)).to.equal(true);
     });
   });
 });
