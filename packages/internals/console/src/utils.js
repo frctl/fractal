@@ -1,4 +1,4 @@
-const indentString = require('indent-string');
+const stripIndent = require('strip-indent');
 const extractStack = require('extract-stack');
 const cleanStack = require('clean-stack');
 
@@ -13,8 +13,8 @@ function parseError(err) {
     pretty: true
   });
   return {
-    message: indentString(err.message),
-    stack: indentString(stack)
+    message: err.message.trim(),
+    stack: stripIndent(stack)
   };
 }
 

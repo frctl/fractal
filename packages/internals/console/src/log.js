@@ -1,5 +1,6 @@
 const render = require('@allmarkedup/climate');
-const redent = require('redent');
+const indent = require('indent-string');
+const {html} = require('common-tags');
 const {parseError} = require('./utils');
 
 function log(str, opts = {}) {
@@ -8,29 +9,29 @@ function log(str, opts = {}) {
 
 function error(err, includeStack = true) {
   const {message, stack} = parseError(err);
-  return log(`
-    <section>
-      <error>${message}</error>
-      ${stack && includeStack ? `<details>${redent(stack, 2, '&nbsp;')}</details>` : ''}
-    </section>
+  return log(html`
+    &nbsp;
+    <error>${message}</error>
+    ${stack && includeStack ? `<debug>${indent(stack, 2, ' ')}</debug>` : ''}
+    &nbsp;
   `);
 }
 
 function success(message, text) {
-  return log(`
-    <section>
-      <success>${message}</success>
-      ${text ? `<details>${redent(text, 2, '&nbsp;')}</details>` : ''}
-    </section>
+  return log(html`
+    &nbsp;
+    <success>${message}</success>
+    ${text ? `<debug>${indent(text, 2, ' ')}</debug>` : ''}
+    &nbsp;
   `);
 }
 
 function warning(message, text) {
-  return log(`
-    <section>
-      <warning>${message}</warning>
-      ${text ? `<details>${redent(text, 2, '&nbsp;')}</details>` : ''}
-    </section>
+  return log(html`
+    &nbsp;
+    <warning>${message}</warning>
+    ${text ? `<debug>${indent(text, 2, ' ')}</debug>` : ''}
+    &nbsp;
   `);
 }
 

@@ -8,6 +8,9 @@
   "author": "Mark Perkins <mark@allmarkedup.com> (http://allmarkedup.com)",
   "license": "MIT",
   "main": "./src/command.js",
+  "dependencies": {
+    "tildify": "^1.2.0"
+  },
   "devDependencies": {
     "@frctl/cli": "^2.0.0-beta.0",
     "@frctl/fractal": "^2.0.0-beta.0"
