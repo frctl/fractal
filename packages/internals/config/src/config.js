@@ -26,8 +26,9 @@ class Config {
     });
 
     if (opts.schema) {
-      const validator = new Validator();
-      _validator.set(this, validator.compile(opts.schema));
+      const validator = new Validator({allErrors: true});
+      validator.addSchema(opts.schema, 'config');
+      _validator.set(this, validator);
     }
 
     for (const accessor of opts.accessors || []) {
@@ -84,13 +85,12 @@ class Config {
   }
 
   validate(data) {
-    const validate = _validator.get(this);
-    if (!validate) {
+    const validator = _validator.get(this);
+    if (!validator) {
       return this;
     }
-    if (!validate(data)) {
-      const errors = validate.errors.map(err => `'${err.dataPath ? err.dataPath.replace(/^\./, '') : 'config'}' ${err.message}`);
-      throw new Error(`Config data validation failed with the following errors:\n${errors.join('\n')} [config-invalid]`);
+    if (!validator.validate('config', data)) {
+      throw new Error(`Config data validation failed: ${validator.errorsText()} [config-invalid]`);
     }
     return this;
   }

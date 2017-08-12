@@ -257,22 +257,12 @@ describe('Config', function () {
       const config = new Config({}, {schema});
       expect(() => config.validate({foo: '123'})).to.throw('[config-invalid]');
     });
-    it('includes the propery path and in the validation error', function () {
+    it('includes the propery path in the validation error', function () {
       try {
         const config = new Config({}, {schema});
         config.validate({foo: '124'});
       } catch (err) {
-        expect(/'foo'/.test(err.message)).to.equal(true);
-      }
-      try {
-        const config = new Config({}, {
-          schema: {
-            required: ['foo']
-          }
-        });
-        config.validate({});
-      } catch (err) {
-        expect(/'config'/.test(err.message)).to.equal(true);
+        expect(err.message.indexOf('data.foo')).to.be.greaterThan(-1);
       }
     });
   });
