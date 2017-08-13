@@ -1,5 +1,6 @@
 const {Emitter} = require('@frctl/support');
-const config = require('./config/init');
+const debug = require('debug')('fractal:core');
+const config = require('./config');
 
 const _config = new WeakMap();
 
@@ -8,6 +9,8 @@ class Fractal extends Emitter {
   constructor(opts = {}) {
     super();
     _config.set(this, config(opts));
+    debug('new Fractal instance created');
+    debug('using config %O', this.config);
   }
 
   get(prop, fallback) {

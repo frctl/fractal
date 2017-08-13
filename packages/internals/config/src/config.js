@@ -1,8 +1,8 @@
 /* eslint import/no-dynamic-require: off */
 
-const Ajv = require('ajv');
 const {assert} = require('check-types');
 const {defaultsDeep} = require('@frctl/utils');
+const {Validator} = require('@frctl/support');
 const {get, set, remove, cloneDeep, isObjectLike, mapValues} = require('lodash');
 
 const _data = new WeakMap();
@@ -26,8 +26,9 @@ class Config {
     });
 
     if (opts.schema) {
-      const ajv = new Ajv();
-      _validator.set(this, ajv.compile(opts.schema));
+      const validator = new Validator({allErrors: true});
+      validator.addSchema(opts.schema, 'config');
+      _validator.set(this, validator);
     }
 
     for (const accessor of opts.accessors || []) {
@@ -80,17 +81,17 @@ class Config {
   }
 
   getData(path, fallback) {
-    return cloneDeep(get(this.data, path, fallback));
+    const result = get(this.data, path, fallback);
+    return isObjectLike(result) ? cloneDeep(result) : result;
   }
 
   validate(data) {
-    const validate = _validator.get(this);
-    if (!validate) {
+    const validator = _validator.get(this);
+    if (!validator) {
       return this;
     }
-    if (!validate(data)) {
-      const errors = validate.errors.map(err => `'${err.dataPath ? err.dataPath.replace(/^\./, '') : 'config'}' ${err.message}`);
-      throw new Error(`Config data validation failed with the following errors:\n${errors.join('\n')} [config-invalid]`);
+    if (!validator.validate('config', data)) {
+      throw new Error(`Config data validation failed: ${validator.errorsText()} [config-invalid]`);
     }
     return this;
   }

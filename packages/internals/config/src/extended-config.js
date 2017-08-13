@@ -6,8 +6,8 @@ class ExtendedConfig extends Config {
   constructor(...args) {
     super(...args);
     this.addAccessor('extends', 'extends-resolver');
-    const configs = this.get('extends', []).reverse();
-    this.addDefaults(...configs.map(preset => omit(preset.config || {}, 'extends')));
+    const presets = this.get('extends', []).reverse();
+    this.addDefaults(...presets.map(preset => omit(preset.config || {}, 'extends')));
   }
 
 }

@@ -179,6 +179,23 @@ describe('Config', function () {
       config.addAccessor('foo.bar', value => '!' + value);
       expect(config.getData('foo.bar')).to.equal('baz');
     });
+    it('deep clones objects and arrays', function () {
+      const data = {
+        foo: {
+          bar: 'baz'
+        }
+      };
+      const config = new Config(data);
+      expect(config.getData('foo')).to.eql(data.foo);
+      expect(config.getData('foo')).to.not.equal(data.foo);
+    });
+    it('leaves functions intact', function () {
+      const data = {
+        foo: function () {}
+      };
+      const config = new Config(data);
+      expect(config.getData('foo')).to.equal(data.foo);
+    });
   });
 
   describe('.addDefaults()', function () {
@@ -257,22 +274,12 @@ describe('Config', function () {
       const config = new Config({}, {schema});
       expect(() => config.validate({foo: '123'})).to.throw('[config-invalid]');
     });
-    it('includes the propery path and in the validation error', function () {
+    it('includes the propery path in the validation error', function () {
       try {
         const config = new Config({}, {schema});
         config.validate({foo: '124'});
       } catch (err) {
-        expect(/'foo'/.test(err.message)).to.equal(true);
-      }
-      try {
-        const config = new Config({}, {
-          schema: {
-            required: ['foo']
-          }
-        });
-        config.validate({});
-      } catch (err) {
-        expect(/'config'/.test(err.message)).to.equal(true);
+        expect(err.message.indexOf('data.foo')).to.be.greaterThan(-1);
       }
     });
   });

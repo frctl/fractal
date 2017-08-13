@@ -1,6 +1,7 @@
 const {Config} = require('@frctl/config');
-const {expect} = require('../../../../../test/helpers');
-const factory = require('./init');
+const {expect, validateSchema} = require('../../../../test/helpers');
+const factory = require('./config');
+const configSchema = require('./config.schema');
 
 const addOns = ['commands', 'plugins', 'extensions', 'adapters'];
 
@@ -57,7 +58,7 @@ const configData = {
   ]
 };
 
-describe('config creator', function () {
+describe('Fractal config initializer', function () {
   describe('factory()', function () {
     it('returns a Config instance', function () {
       const config = factory({});
@@ -99,5 +100,11 @@ describe('config creator', function () {
       expect(factory.defaultsCustomizer(undefined, [3, 4], 'foo')).to.equal(undefined);
       expect(factory.defaultsCustomizer([1, 2], undefined, 'foo')).to.equal(undefined);
     });
+  });
+});
+
+describe('Fractal config schema', function () {
+  it('is a valid schema', function () {
+    expect(validateSchema(configSchema)).to.equal(true);
   });
 });
