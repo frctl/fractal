@@ -13,7 +13,7 @@ const {uniqBy} = require('lodash');
 const loudRejection = require('loud-rejection');
 const debug = require('debug')('fractal:cli');
 const {error, log} = require('@frctl/console');
-const command = require('../src/command');
+const CommandStore = require('../src/command-store');
 const settings = require('../src/settings');
 const cliPackage = require('../package.json');
 
@@ -51,22 +51,23 @@ try {
   }
 
   const app = factory(config);
-  const commands = uniqBy(app.get('commands',[]).slice(0).reverse(), 'name');
+
   const cli = {
-    commands,
     configPath,
     cwd: process.cwd(),
     debug: Boolean(process.env.DEBUG),
-    version: cliPackage.version,
+    version: cliPackage.version
   };
+
+  const commandStore = new CommandStore(app, cli, app.get('commands',[]));
 
   yargs.usage(settings.usage)
        .options(settings.options)
        .strict()
        .demandCommand(1, 'You must specify a command.');
 
-  for (const cmd of cli.commands) {
-    yargs.command(command(cmd, app, cli));
+  for (const cmd of commandStore.commands) {
+    yargs.command(cmd);
     debug(`registered command: %s`, cmd.name);
   }
 
