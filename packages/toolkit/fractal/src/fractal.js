@@ -44,6 +44,14 @@ class Fractal {
     return _config.get(this).data;
   }
 
+  get isFractal() {
+    return true;
+  }
+
+  get [Symbol.toStringTag]() {
+    return 'Fractal';
+  }
+
 }
 
 module.exports = Fractal;

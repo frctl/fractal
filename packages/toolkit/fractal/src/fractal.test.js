@@ -87,6 +87,13 @@ describe('Fractal', function () {
     });
   });
 
+  describe('.toString()', function () {
+    it('property describes the Fractal instance', function () {
+      const fractal = new Fractal();
+      expect(fractal.toString()).to.equal('[object Fractal]');
+    });
+  });
+
   describe('.version', function () {
     it('returns the version number from the package.json file', function () {
       const fractal = new Fractal();
