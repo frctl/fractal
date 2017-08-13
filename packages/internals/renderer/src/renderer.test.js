@@ -24,11 +24,15 @@ const component = new Component({
 
 const variant = new Variant();
 
-function makeRenderer() {
-  return new Renderer(new Fractal());
+function makeRenderer(adapter) {
+  const renderer = new Renderer(new Fractal());
+  if (adapter) {
+    renderer.addAdapter(adapter);
+  }
+  return renderer;
 }
 
-describe('Renderer', function () {
+describe.only('Renderer', function () {
   describe('constructor', function () {
     it('throws an error if no Fractal instance is provided', function () {
       expect(() => new Renderer('fractal')).to.throw('[fractal-required]');
@@ -83,10 +87,37 @@ describe('Renderer', function () {
 
   describe('.renderView()', function () {
     it('returns a promise that resolves to a string', async function () {
-      const renderer = makeRenderer();
+      const renderer = makeRenderer(adapter);
       const result = renderer.renderView(funjucksFile);
       expect(result).to.be.instanceOf(Promise);
       expect(await result).to.be.a('string');
+    });
+    it('calls the adapter render method with the expected arguments', async function () {
+      const renderSpy = sinon.spy(adapter, 'render');
+      const fractal = new Fractal();
+      const renderer = new Renderer(fractal);
+      const context = {};
+      const opts = {};
+      const collections = await fractal.parse();
+      renderer.addAdapter(adapter);
+      const result = await renderer.renderView(funjucksFile, context, opts);
+      expect(renderSpy.calledWith(funjucksFile, context, opts, collections, fractal)).to.equal(true);
+      expect(result).to.equal(await adapter.render(funjucksFile, context, opts, collections, fractal));
+    });
+    it('rejects if no matching adapter can be found', function () {
+      return expect(makeRenderer().renderView(funjucksFile)).to.be.rejectedWith('[adapter-not-found]');
+    });
+    it('rejects if the file is not a File instance', function () {
+      return expect(makeRenderer(adapter).renderView({foo: 'bar'})).to.be.rejectedWith('[file-invalid]');
+    });
+    it('rejects if no file is provided', function () {
+      return expect(makeRenderer(adapter).renderView()).to.be.rejectedWith('[file-invalid]');
+    });
+    it('rejects if invalid context is supplied', function () {
+      return expect(makeRenderer(adapter).renderView(funjucksFile, 'foo')).to.be.rejectedWith('[context-invalid]');
+    });
+    it('rejects if invalid options are supplied', function () {
+      return expect(makeRenderer(adapter).renderView(funjucksFile, {}, 'foo')).to.be.rejectedWith('[opts-invalid]');
     });
   });
 

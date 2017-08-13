@@ -16,7 +16,7 @@ const funjucksFile = new File({
   path: 'path/to/file.fjk'
 });
 
-describe.only('Renderer - AdapterStore', function () {
+describe('Renderer - AdapterStore', function () {
   describe('constructor', function () {
     it('adds adapters if provided', function () {
       const adapterStore = new AdapterStore(adapters);
@@ -58,6 +58,10 @@ describe.only('Renderer - AdapterStore', function () {
       expect(adapterStore.adapters.length).to.equal(adapters.length);
       const adapter = adapterStore.adapters.find(adapter => adapter.name === 'funjucks');
       expect(await adapter.render(funjucksFile)).to.equal('override');
+    });
+    it('returns the store instance', function () {
+      const adapterStore = new AdapterStore();
+      expect(adapterStore.add(adapters)).to.equal(adapterStore);
     });
   });
 

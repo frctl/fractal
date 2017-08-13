@@ -1,4 +1,5 @@
 const debug = require('debug')('fractal:renderer');
+const {assert} = require('check-types');
 const AdapterStore = require('./adapter-store');
 
 const _fractal = new WeakMap();
@@ -28,19 +29,29 @@ class Renderer {
     return _adapters.get(this).getDefaultAdapter();
   }
 
-  render(target) {
+  async render(target) {
     return Promise.resolve('rendered target');
   }
 
-  renderView(view) {
-    return Promise.resolve('rendered view');
+  async renderView(view, context = {}, opts = {}) {
+    const fractal = _fractal.get(this);
+    const adapter = this.getAdapterFor(view);
+
+    assert.object(context, 'Renderer.renderView - context data must be an object [context-invalid]');
+    assert.object(opts, 'Renderer.renderView - options data must be an object [opts-invalid]');
+
+    if (!adapter) {
+      throw new Error(`No adapter found to render view ${view.relative} [adapter-not-found]`);
+    }
+    const collections = await fractal.parse();
+    return adapter.render(view, context, opts, collections, fractal);
   }
 
-  renderVariant(variant) {
+  async renderVariant(variant) {
     return Promise.resolve('rendered variant');
   }
 
-  renderComponent(component) {
+  async renderComponent(component) {
     return Promise.resolve('rendered component');
   }
 
