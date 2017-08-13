@@ -1,10 +1,12 @@
 const {join} = require('path');
+const {ComponentCollection, FileCollection} = require('@frctl/support');
 const {expect} = require('../../../../test/helpers');
 const pkg = require('../package.json');
 const Fractal = require('./fractal');
 
 const config = {
   src: join(__dirname, '../../../../test/fixtures/components'),
+  extends: null,
   commands: [
     './test/fixtures/add-ons/command.js'
   ]
@@ -32,6 +34,56 @@ describe('Fractal', function () {
       const fractal = new Fractal(config);
       const fallback = 'whoops!';
       expect(fractal.get('boop', fallback)).to.equal(fallback);
+    });
+  });
+
+  describe('.parse()', function () {
+    it('returns a Promise', function () {
+      const fractal = new Fractal();
+      expect(fractal.parse()).to.be.instanceOf(Promise);
+    });
+    it('resolves to an object with file and component collections', async function () {
+      const fractal = new Fractal();
+      const {components, files} = await fractal.parse();
+      expect(components).to.be.instanceOf(ComponentCollection);
+      expect(files).to.be.instanceOf(FileCollection);
+    });
+  });
+
+  describe('.render()', function () {
+    it('returns a Promise', function () {
+      const fractal = new Fractal();
+      const target = 'foo';
+      expect(fractal.render(target)).to.be.instanceOf(Promise);
+    });
+    it('resolves to a string', async function () {
+      const fractal = new Fractal();
+      const target = 'foo';
+      expect(await fractal.render(target)).to.be.a('string');
+    });
+  });
+
+  describe('.getComponents()', function () {
+    it('returns a Promise', function () {
+      const fractal = new Fractal();
+      expect(fractal.getComponents()).to.be.instanceOf(Promise);
+    });
+    it('resolves to a ComponentCollection instance', async function () {
+      const fractal = new Fractal();
+      const components = await fractal.getComponents();
+      expect(components).to.be.instanceOf(ComponentCollection);
+    });
+  });
+
+  describe('.getFiles()', function () {
+    it('returns a Promise', function () {
+      const fractal = new Fractal();
+      expect(fractal.getComponents()).to.be.instanceOf(Promise);
+    });
+    it('resolves to a FileCollection instance', async function () {
+      const fractal = new Fractal();
+      const files = await fractal.getFiles();
+      expect(files).to.be.instanceOf(FileCollection);
     });
   });
 

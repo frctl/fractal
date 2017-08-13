@@ -12,7 +12,17 @@ module.exports = {
   properties: {
 
     extends: {
-      anyOf: stringArray
+      anyOf: [
+        {
+          type: 'string'
+        },
+        {
+          type: 'array'
+        },
+        {
+          type: 'null'
+        }
+      ]
     },
 
     commands: {
