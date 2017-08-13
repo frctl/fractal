@@ -32,7 +32,7 @@ function makeRenderer(adapter) {
   return renderer;
 }
 
-describe.only('Renderer', function () {
+describe('Renderer', function () {
   describe('constructor', function () {
     it('throws an error if no Fractal instance is provided', function () {
       expect(() => new Renderer('fractal')).to.throw('[fractal-required]');
