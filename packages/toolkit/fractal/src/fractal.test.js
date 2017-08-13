@@ -1,5 +1,4 @@
 const {join} = require('path');
-const {Emitter} = require('@frctl/support');
 const {expect} = require('../../../../test/helpers');
 const pkg = require('../package.json');
 const Fractal = require('./fractal');
@@ -12,10 +11,6 @@ const config = {
 };
 
 describe('Fractal', function () {
-  it('extends the Emitter class', function () {
-    expect(new Fractal()).to.be.instanceOf(Emitter);
-  });
-
   describe('constructor()', function () {
     it('accepts optional configuration data', () => {
       const fractal = new Fractal(config);
