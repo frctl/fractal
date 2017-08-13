@@ -8,13 +8,19 @@ const _adapters = new WeakMap();
 
 class Renderer {
 
-  constructor(fractal, opts = {}) {
+  constructor(fractal) {
     if (!fractal.isFractal) {
       throw new Error(`Renderer.constructor: A Fractal instance must be provided [fractal-required]`);
     }
     debug('Initialising renderer');
+
+    const adapters = fractal.get('adapters', []);
+    const store = new AdapterStore(adapters);
+
+    debug('Initialising renderer with %i adapter(s) %o', adapters.length, adapters.map(adapter => adapter.name));
+
     _fractal.set(this, fractal);
-    _adapters.set(this, new AdapterStore());
+    _adapters.set(this, store);
   }
 
   addAdapter(adapter) {

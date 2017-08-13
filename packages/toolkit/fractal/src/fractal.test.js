@@ -1,5 +1,5 @@
 const {join} = require('path');
-const {ComponentCollection, FileCollection} = require('@frctl/support');
+const {File, ComponentCollection, FileCollection} = require('@frctl/support');
 const {expect} = require('../../../../test/helpers');
 const pkg = require('../package.json');
 const Fractal = require('./fractal');
@@ -9,8 +9,16 @@ const config = {
   extends: null,
   commands: [
     './test/fixtures/add-ons/command.js'
+  ],
+  adapters: [
+    './test/fixtures/add-ons/adapter.js'
   ]
 };
+
+const view = new File({
+  path: 'path/to/view.fjk',
+  contents: Buffer.from('file contents')
+});
 
 describe('Fractal', function () {
   describe('constructor()', function () {
@@ -52,14 +60,12 @@ describe('Fractal', function () {
 
   describe('.render()', function () {
     it('returns a Promise', function () {
-      const fractal = new Fractal();
-      const target = 'foo';
-      expect(fractal.render(target)).to.be.instanceOf(Promise);
+      const fractal = new Fractal(config);
+      expect(fractal.render(view)).to.be.instanceOf(Promise);
     });
     it('resolves to a string', async function () {
-      const fractal = new Fractal();
-      const target = 'foo';
-      expect(await fractal.render(target)).to.be.a('string');
+      const fractal = new Fractal(config);
+      expect(await fractal.render(view)).to.be.a('string');
     });
   });
 

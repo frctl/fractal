@@ -46,6 +46,7 @@ describe('Renderer', function () {
       const spy = sinon.spy(renderer.adapterStore, 'add');
       renderer.addAdapter(adapter);
       expect(spy.calledWith(adapter)).to.equal(true);
+      spy.restore();
     });
     it('returns the renderer instance', function () {
       const renderer = makeRenderer();
@@ -62,6 +63,7 @@ describe('Renderer', function () {
       const fkj = renderer.getAdapterFor(funjucksFile);
       expect(spy.calledWith(funjucksFile)).to.equal(true);
       expect(fkj.name).to.equal('funjucks');
+      spy.restore();
     });
   });
 
@@ -73,6 +75,7 @@ describe('Renderer', function () {
       const fkj = renderer.getDefaultAdapter();
       expect(spy.called).to.equal(true);
       expect(fkj.name).to.equal('funjucks');
+      spy.restore();
     });
   });
 
@@ -106,6 +109,7 @@ describe('Renderer', function () {
       const result = await renderer.renderView(funjucksFile, context, opts);
       expect(renderSpy.calledWith(funjucksFile, context, opts, collections, fractal)).to.equal(true);
       expect(result).to.equal(await adapter.render(funjucksFile, context, opts, collections, fractal));
+      renderSpy.restore();
     });
     it('rejects if no matching adapter can be found', function () {
       return expect(makeRenderer().renderView(funjucksFile)).to.be.rejectedWith('[adapter-not-found]');
