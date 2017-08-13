@@ -14,7 +14,7 @@ mockRequire('yargs', {
   showHelp: helpSpy
 });
 
-const command = require('./command');
+const command = mockRequire.reRequire('./command');
 
 const validCommand = {
   name: 'foo',
