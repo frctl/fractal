@@ -2,7 +2,7 @@ const yargs = require('yargs');
 const {defaultsDeep} = require('@frctl/utils');
 const {Validator} = require('@frctl/support');
 const {error, log} = require('@frctl/console');
-const debug = require('debug')('fractal:cli:command');
+const debug = require('debug')('fractal:cli');
 const schema = require('./command.schema');
 
 module.exports = function (props, app, cli) {

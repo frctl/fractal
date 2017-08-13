@@ -51,14 +51,15 @@ try {
   }
 
   const app = factory(config);
-  const commandStore = new CommandStore(app, cli, app.get('commands',[]));
+
   const cli = {
     configPath,
     cwd: process.cwd(),
     debug: Boolean(process.env.DEBUG),
-    version: cliPackage.version,
-    commands: commandStore.commands
+    version: cliPackage.version
   };
+
+  const commandStore = new CommandStore(app, cli, app.get('commands',[]));
 
   yargs.usage(settings.usage)
        .options(settings.options)
@@ -66,7 +67,7 @@ try {
        .demandCommand(1, 'You must specify a command.');
 
   for (const cmd of commandStore.commands) {
-    yargs.command(command(cmd, app, cli));
+    yargs.command(cmd);
     debug(`registered command: %s`, cmd.name);
   }
 

@@ -1,6 +1,6 @@
 const {remove} = require('lodash');
 const {toArray} = require('@frctl/utils');
-const debug = require('debug')('fractal:cli:commands');
+const debug = require('debug')('fractal:cli');
 const command = require('./command');
 
 const _commands = new WeakMap();
