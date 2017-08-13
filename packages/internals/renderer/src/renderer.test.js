@@ -38,6 +38,17 @@ describe('Renderer', function () {
       expect(() => new Renderer('fractal')).to.throw('[fractal-required]');
       expect(() => makeRenderer()).to.not.throw('[fractal-required]');
     });
+    it('adds adapters from the Fractal config', function () {
+      const fractal = new Fractal({
+        adapters: [
+          adapter
+        ]
+      });
+      const renderer = new Renderer(new Fractal());
+      expect(renderer.adapters.length).to.equal(0);
+      const renderer2 = new Renderer(fractal);
+      expect(renderer2.adapters.length).to.equal(1);
+    });
   });
 
   describe('.addAdapter()', function () {
