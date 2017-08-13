@@ -1,4 +1,5 @@
 const debug = require('debug')('fractal:renderer');
+const {File} = require('@frctl/support');
 const {assert} = require('check-types');
 const AdapterStore = require('./adapter-store');
 
@@ -29,11 +30,17 @@ class Renderer {
     return _adapters.get(this).getDefaultAdapter();
   }
 
-  async render(target) {
-    return Promise.resolve('rendered target');
+  async render(target, context, opts) {
+    if (File.isFile(target)) {
+      return this.renderView(target, context, opts);
+    }
+
+    debug('render target not recognised %o', target);
+    throw new TypeError('Could not render target [target-type-unknown]');
   }
 
   async renderView(view, context = {}, opts = {}) {
+    debug('rendering view %o', view);
     const fractal = _fractal.get(this);
     const adapter = this.getAdapterFor(view);
 

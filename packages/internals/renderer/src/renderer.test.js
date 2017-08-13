@@ -77,8 +77,11 @@ describe('Renderer', function () {
   });
 
   describe('.render()', function () {
+    it('rejects if the target type is not supported', function () {
+      return expect(makeRenderer(adapter).render({foo: 'bar'})).to.be.rejectedWith('[target-type-unknown]');
+    });
     it('returns a promise that resolves to a string', async function () {
-      const renderer = makeRenderer();
+      const renderer = makeRenderer(adapter);
       const result = renderer.render(funjucksFile);
       expect(result).to.be.instanceOf(Promise);
       expect(await result).to.be.a('string');
