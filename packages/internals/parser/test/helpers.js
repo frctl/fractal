@@ -1,4 +1,4 @@
-const makePlugin = (n, t = 'files') => ({
+const makePlugin = (n = 'plugin-name', t = 'files') => ({
   name: n,
   collection: t,
   handler: i => i
