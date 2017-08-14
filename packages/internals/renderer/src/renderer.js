@@ -3,24 +3,16 @@ const {File} = require('@frctl/support');
 const {assert} = require('check-types');
 const AdapterStore = require('./adapter-store');
 
-const _fractal = new WeakMap();
 const _adapters = new WeakMap();
 
 class Renderer {
 
-  constructor(fractal) {
-    if (!fractal.isFractal) {
-      throw new Error(`Renderer.constructor: A Fractal instance must be provided [fractal-required]`);
-    }
-    debug('Initialising renderer');
+  constructor(adapters = []) {
+    assert.array(adapters, `Renderer.constructor: adapters must be an array [adapters-invalid]`);
 
-    const adapters = fractal.get('adapters', []);
-    const store = new AdapterStore(adapters);
+    _adapters.set(this, new AdapterStore(adapters));
 
-    debug('Initialising renderer with %i adapter(s) %o', adapters.length, adapters.map(adapter => adapter.name));
-
-    _fractal.set(this, fractal);
-    _adapters.set(this, store);
+    debug('Initialising renderer with %i adapter(s) %o', this.adapters.length, this.adapters.map(adapter => adapter.name));
   }
 
   addAdapter(adapter) {
@@ -47,24 +39,21 @@ class Renderer {
 
   async renderView(view, context = {}, opts = {}) {
     debug('rendering view %o', view);
-    const fractal = _fractal.get(this);
     const adapter = this.getAdapterFor(view);
-
     assert.object(context, 'Renderer.renderView - context data must be an object [context-invalid]');
     assert.object(opts, 'Renderer.renderView - options data must be an object [opts-invalid]');
 
     if (!adapter) {
       throw new Error(`No adapter found to render view ${view.relative} [adapter-not-found]`);
     }
-    const collections = await fractal.parse();
-    return adapter.render(view, context, opts, collections, fractal);
+    return adapter.render(view, context, opts);
   }
 
-  async renderVariant(variant) {
+  async renderVariant(variant, context, opts = {}) {
     return Promise.resolve('rendered variant');
   }
 
-  async renderComponent(component) {
+  async renderComponent(component, context, opts = {}) {
     return Promise.resolve('rendered component');
   }
 

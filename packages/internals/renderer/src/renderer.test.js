@@ -1,5 +1,5 @@
 const {File, Component, Variant} = require('@frctl/support');
-const {Fractal} = require('@frctl/fractal');
+const {toArray} = require('@frctl/utils');
 const {expect, sinon} = require('../../../../test/helpers');
 const Renderer = require('./renderer');
 const AdapterStore = require('./adapter-store');
@@ -24,29 +24,20 @@ const component = new Component({
 
 const variant = new Variant();
 
-function makeRenderer(adapter) {
-  const renderer = new Renderer(new Fractal());
-  if (adapter) {
-    renderer.addAdapter(adapter);
-  }
-  return renderer;
+function makeRenderer(adapter = []) {
+  return new Renderer(toArray(adapter));
 }
 
 describe('Renderer', function () {
   describe('constructor', function () {
-    it('throws an error if no Fractal instance is provided', function () {
-      expect(() => new Renderer('fractal')).to.throw('[fractal-required]');
+    it('throws an error on invalid arguments', function () {
+      expect(() => new Renderer('foo')).to.throw('[adapters-invalid]');
       expect(() => makeRenderer()).to.not.throw('[fractal-required]');
     });
-    it('adds adapters from the Fractal config', function () {
-      const fractal = new Fractal({
-        adapters: [
-          adapter
-        ]
-      });
-      const renderer = new Renderer(new Fractal());
+    it('adds adapters is provided', function () {
+      const renderer = new Renderer([]);
       expect(renderer.adapters.length).to.equal(0);
-      const renderer2 = new Renderer(fractal);
+      const renderer2 = new Renderer([adapter]);
       expect(renderer2.adapters.length).to.equal(1);
     });
   });
@@ -111,15 +102,13 @@ describe('Renderer', function () {
     });
     it('calls the adapter render method with the expected arguments', async function () {
       const renderSpy = sinon.spy(adapter, 'render');
-      const fractal = new Fractal();
-      const renderer = new Renderer(fractal);
-      const context = {};
+      const renderer = new Renderer([adapter]);
       const opts = {};
-      const collections = await fractal.parse();
+      const context = {};
       renderer.addAdapter(adapter);
       const result = await renderer.renderView(funjucksFile, context, opts);
-      expect(renderSpy.calledWith(funjucksFile, context, opts, collections, fractal)).to.equal(true);
-      expect(result).to.equal(await adapter.render(funjucksFile, context, opts, collections, fractal));
+      expect(renderSpy.calledWith(funjucksFile, context, opts)).to.equal(true);
+      expect(result).to.equal(await adapter.render(funjucksFile, context, opts));
       renderSpy.restore();
     });
     it('rejects if no matching adapter can be found', function () {

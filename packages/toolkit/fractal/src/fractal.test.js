@@ -88,6 +88,7 @@ describe('Fractal', function () {
       const fractal = new Fractal(config);
       expect(await fractal.render(view)).to.be.a('string');
     });
+    it('provides collections to the renderer unless supplied in opts');
   });
 
   describe('.getComponents()', function () {
