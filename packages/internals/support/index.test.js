@@ -10,7 +10,8 @@ const srcExports = {
   Component: require('./src/component'),
   Variant: require('./src/variant'),
   Emitter: require('./src/emitter'),
-  EmittingPromise: require('./src/emitting-promise')
+  EmittingPromise: require('./src/emitting-promise'),
+  Validator: require('./src/validator')
 };
 
 describe('Support exports', function () {
