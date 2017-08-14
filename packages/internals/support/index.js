@@ -6,4 +6,5 @@ module.exports.FileCollection = require('./src/file-collection');
 module.exports.Component = require('./src/component');
 module.exports.Variant = require('./src/variant');
 module.exports.Emitter = require('./src/emitter');
+module.exports.EmittingPromise = require('./src/emitting-promise');
 module.exports.Validator = require('./src/validator');
