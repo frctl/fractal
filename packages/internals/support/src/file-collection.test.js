@@ -85,7 +85,9 @@ describe('FileCollection', function () {
     });
   });
   describe('[Symbol.toStringTag]', function () {
-    const collection = makeCollection();
-    expect(collection[Symbol.toStringTag]).to.equal('FileCollection');
+    it('should resolve correctly', function () {
+      const collection = makeCollection();
+      expect(collection[Symbol.toStringTag]).to.equal('FileCollection');
+    });
   });
 });

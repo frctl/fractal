@@ -9,12 +9,14 @@ const srcExports = {
   FileCollection: require('./src/file-collection'),
   Component: require('./src/component'),
   Variant: require('./src/variant'),
-  Emitter: require('./src/emitter')
+  Emitter: require('./src/emitter'),
+  EmittingPromise: require('./src/emitting-promise'),
+  Validator: require('./src/validator')
 };
 
 describe('Support exports', function () {
   it('exports all support classes', function () {
-    Object.keys(srcExports).forEach(key => {
+    Object.keys(main).forEach(key => {
       expect(main[key]).to.equal(srcExports[key]);
     });
   });

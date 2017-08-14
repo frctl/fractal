@@ -35,7 +35,9 @@ describe('EmittingPromise', function () {
       return eProm;
     });
     it('proxies to its emitter properly', function () {
-      const eventEmitter = new EventEmitter2({wildcard: true});
+      const eventEmitter = new EventEmitter2({
+        wildcard: true
+      });
       const eProm = new EmittingPromise(basicResolver);
       const spies = {};
       for (let prop in eventEmitter) {
@@ -81,19 +83,19 @@ describe('EmittingPromise', function () {
   describe('.reject()/.catch()', function () {
     it('rejects as expected on catch prop', function () {
       return new EmittingPromise((resolve, reject) =>
-      reject(new Error('failed to deliver on my promise to you')))
-      .catch(err => {
-        expect(err).to.exist;
-      });
+          reject(new Error('failed to deliver on my promise to you')))
+        .catch(err => {
+          expect(err).to.exist;
+        });
     });
     it('rejects as expected as second param', function () {
       return new EmittingPromise((resolve, reject) =>
-      reject(new Error('failed to deliver on my promise to you')))
-      .then(res => {
-        console.log(res);
-      }, err => {
-        expect(err).to.exist;
-      });
+          reject(new Error('failed to deliver on my promise to you')))
+        .then(res => {
+          console.log(res);
+        }, err => {
+          expect(err).to.exist;
+        });
     });
   });
   describe('emitting and resolving', function () {
@@ -108,6 +110,13 @@ describe('EmittingPromise', function () {
         expect(result).to.equal('very final value');
       }).catch(err => console.log(err));
 
+      return eProm;
+    });
+  });
+  describe('[Symbol.toStringTag]', function () {
+    it('should resolve correctly', function () {
+      const eProm = new EmittingPromise(resolver);
+      expect(eProm[Symbol.toStringTag]).to.equal('EmittingPromise');
       return eProm;
     });
   });

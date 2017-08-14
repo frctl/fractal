@@ -634,7 +634,7 @@ describe('Collection', function () {
   });
 
   describe('[Symbol.toStringTag]', function () {
-    it('returns the expected string tag', function () {
+    it('should resolve correctly', function () {
       const collection = makeCollection();
       expect(collection[Symbol.toStringTag]).to.equal('Collection');
     });

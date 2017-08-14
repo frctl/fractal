@@ -31,5 +31,10 @@ class EmittingPromise extends Promise {
 
     this.emitter = emitter;
   }
+
+  get [Symbol.toStringTag]() {
+    return 'EmittingPromise';
+  }
+
 }
 module.exports = EmittingPromise;
