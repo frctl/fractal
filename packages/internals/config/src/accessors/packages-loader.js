@@ -1,5 +1,5 @@
 const loadPkg = require('./package-loader');
 
-module.exports = function (targets) {
+module.exports = function packagesLoader(targets) {
   return targets.map(target => loadPkg(target));
 };

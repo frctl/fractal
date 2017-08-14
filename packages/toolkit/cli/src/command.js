@@ -1,39 +1,29 @@
 const yargs = require('yargs');
 const {defaultsDeep} = require('@frctl/utils');
+const {Validator} = require('@frctl/support');
 const {error, log} = require('@frctl/console');
 const debug = require('debug')('fractal:cli');
-const assert = require('check-types').assert;
-const check = require('check-more-types');
+const schema = require('./command.schema');
 
-const commandSchema = {
-  name: check.unemptyString,
-  command: check.unemptyString,
-  description: check.maybe.unemptyString,
-  builder: check.maybe.object,
-  handler: function () {}
-};
-
-module.exports = function (props, app, env) {
-  assert(
-    check.schema(commandSchema, props),
-    `Command.constructor: The properties provided do not match the schema of a command [properties-invalid]`,
-    TypeError
-  );
+module.exports = function (props, app, cli) {
+  Validator.assertValid(props, schema, 'Command schema invalid [properties-invalid]: ');
 
   const command = defaultsDeep(props, {
     description: false,
     builder: {}
   });
 
+  cli = Object.assign({}, cli, {command});
+
   command.handler = async function (argv) {
-    debug(`running command: %s`, command.name);
+    debug(`running command '%s' with args %o`, command.name, argv);
 
     if (argv.help) {
       return yargs.showHelp();
     }
 
     try {
-      const output = await Promise.resolve(props.handler(argv, app, env));
+      const output = await Promise.resolve(props.handler(argv, app, cli));
       if (typeof output === 'string') {
         log(output);
       }

@@ -1,11 +1,14 @@
-
+const {join} = require('path');
 const {Emitter} = require('@frctl/support');
 const {expect} = require('../../../../test/helpers');
 const pkg = require('../package.json');
 const Fractal = require('./fractal');
 
 const config = {
-  foo: 'bar'
+  src: join(__dirname, '../../../../test/fixtures/components'),
+  commands: [
+    './test/fixtures/add-ons/command.js'
+  ]
 };
 
 describe('Fractal', function () {
@@ -17,6 +20,10 @@ describe('Fractal', function () {
     it('accepts optional configuration data', () => {
       const fractal = new Fractal(config);
       expect(fractal.config).to.eql(config);
+    });
+
+    it('throws an error if invalid config data is provided', () => {
+      expect(() => new Fractal({commands: 'foo'})).to.throw('[config-invalid]');
     });
   });
 
