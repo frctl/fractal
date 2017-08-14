@@ -60,18 +60,11 @@
     "node": ">= 4.4.7"
   },
   "scripts": {
-    "test": "./node_modules/.bin/_mocha --require test/support/env --reporter spec",
-    "lint": "./node_modules/.bin/eslint src; exit 0",
-    "lint:fix": "./node_modules/.bin/eslint src --fix; exit 0"
+    "test": "./node_modules/.bin/_mocha --require test/support/env --reporter spec"
   },
   "devDependencies": {
     "chai": "^4.1.1",
     "chai-as-promised": "^7.1.1",
-    "eslint": "^4.4.1",
-    "eslint-config-airbnb": "^15.1.0",
-    "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-jsx-a11y": "^6.0.2",
-    "eslint-plugin-react": "^7.2.0",
     "istanbul": "^0.4.4",
     "mocha": "^3.0.0",
     "pre-commit": "^1.1.3",
