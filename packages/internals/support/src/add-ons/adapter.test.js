@@ -1,5 +1,5 @@
-const {File} = require('@frctl/support');
-const {expect, validateSchema, sinon} = require('../../../../test/helpers');
+const {expect, validateSchema, sinon} = require('../../../../../test/helpers');
+const File = require('../entities/file');
 const adapterSchema = require('./adapter.schema');
 const Adapter = require('./adapter');
 

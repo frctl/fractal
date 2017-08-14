@@ -1,5 +1,5 @@
 /* eslint no-unused-expressions: "off" */
-const {expect} = require('../../../../test/helpers');
+const {expect} = require('../../../../../test/helpers');
 const Variant = require('./variant');
 const Entity = require('./entity');
 

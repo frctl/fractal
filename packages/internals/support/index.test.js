@@ -2,13 +2,15 @@ const {expect} = require('../../../test/helpers');
 const main = require('./index');
 
 const srcExports = {
-  Collection: require('./src/collection'),
-  ComponentCollection: require('./src/component-collection'),
-  Entity: require('./src/entity'),
-  File: require('./src/file'),
-  FileCollection: require('./src/file-collection'),
-  Component: require('./src/component'),
-  Variant: require('./src/variant'),
+  Collection: require('./src/collections/collection'),
+  ComponentCollection: require('./src/collections/component-collection'),
+  FileCollection: require('./src/collections/file-collection'),
+  Entity: require('./src/entities/entity'),
+  File: require('./src/entities/file'),
+  Component: require('./src/entities/component'),
+  Variant: require('./src/entities/variant'),
+  Command: require('./src/add-ons/command'),
+  Adapter: require('./src/add-ons/adapter'),
   Emitter: require('./src/emitter'),
   EmittingPromise: require('./src/emitting-promise'),
   Validator: require('./src/validator')

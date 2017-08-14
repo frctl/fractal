@@ -1,8 +1,7 @@
 const {remove} = require('lodash');
-const {File} = require('@frctl/support');
+const {File, Adapter} = require('@frctl/support');
 const {toArray} = require('@frctl/utils');
-const debug = require('debug')('fractal:renderer:adapters');
-const Adapter = require('./adapter');
+const debug = require('debug')('fractal:renderer');
 
 const _adapters = new WeakMap();
 

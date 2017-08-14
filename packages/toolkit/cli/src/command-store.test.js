@@ -1,7 +1,6 @@
-const fractal = require('@frctl/fractal');
+const {Command} = require('@frctl/support');
 const {expect} = require('../../../../test/helpers');
 const CommandStore = require('./command-store');
-const Command = require('./command');
 
 const commands = [{
   name: 'do-that',
@@ -13,22 +12,17 @@ const commands = [{
   handler: () => Promise.resolve('all done')
 }];
 
-const cli = {};
-
 function makeStore(commands = []) {
-  return new CommandStore(fractal(), cli, commands);
+  return new CommandStore(commands);
 }
 
 describe('Cli - CommandStore', function () {
   describe('constructor', function () {
-    it('requires fractal and cli arguments', function () {
-      expect(() => new CommandStore()).to.throw('[fractal-required]');
-      expect(() => new CommandStore(fractal())).to.throw('[cli-required]');
-      expect(() => new CommandStore(fractal(), cli)).to.not.throw();
-    });
     it('adds commands if provided', function () {
-      const commandStore = new CommandStore(fractal(), cli, commands);
+      const commandStore = new CommandStore(commands);
       expect(commandStore.commands.length).to.equal(commands.length);
+      const emptyCommandStore = new CommandStore();
+      expect(emptyCommandStore.commands.length).to.equal(0);
     });
   });
 

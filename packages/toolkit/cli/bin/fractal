@@ -10,13 +10,15 @@ const {dirname} = require('path');
 const findUp = require('find-up');
 const importCwd = require('import-cwd');
 const updateNotifier = require('update-notifier');
-const {uniqBy} = require('lodash');
+const {uniqBy, pick, assign} = require('lodash');
 const loudRejection = require('loud-rejection');
 const debug = require('debug')('fractal:cli');
-const {error, log} = require('@frctl/console');
+const logger = require('@frctl/console');
 const CommandStore = require('../src/command-store');
 const settings = require('../src/settings');
 const pkg = require('../package.json');
+
+const {log, error} = logger;
 
 loudRejection();
 updateNotifier({pkg}).notify();
@@ -54,14 +56,14 @@ try {
 
   const app = factory(config);
 
-  const cli = {
+  const env = {
     configPath,
     cwd: process.cwd(),
     debug: Boolean(process.env.DEBUG),
-    version: pkg.version
+    version: pkg.version,
   };
 
-  const commandStore = new CommandStore(app, cli, app.get('commands',[]));
+  const commandStore = new CommandStore(app.get('commands',[]));
 
   yargs.usage(settings.usage)
        .options(settings.options)
@@ -69,8 +71,28 @@ try {
        .demandCommand(1, 'You must specify a command.');
 
   for (const cmd of commandStore.commands) {
-    yargs.command(cmd);
-    debug(`registered command: %s`, cmd.name);
+
+    const handler = async function (argv) {
+      debug(`running command '%s' with args %o`, cmd.name, argv);
+
+      if (argv.help) {
+        return yargs.showHelp();
+      }
+
+      try {
+        const result = cmd.handler(argv, app, env, logger);
+        const output = await Promise.resolve(result);
+        if (typeof output === 'string') {
+          log(output);
+        }
+      } catch (err) {
+        error(err);
+      }
+    };
+
+    yargs.command(assign({handler}, pick(cmd, ['name','command','aliases','description','builder'])));
+
+    debug(`registered command with CLI: %s`, cmd.name);
   }
 
   yargs.argv;
