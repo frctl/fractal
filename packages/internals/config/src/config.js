@@ -35,7 +35,7 @@ class Config {
       this.addAccessor(accessor.path, accessor.handler);
     }
 
-    this.validate(this.data);
+    this.validate(_data.get(this));
   }
 
   get(path, fallback) {
@@ -68,20 +68,20 @@ class Config {
   set(path, value) {
     assert.string(path, 'Config.set - `path` argument must be a string [path-invalid]');
     this.removeFromCache(path);
-    set(this.data, path, cloneDeep(value));
-    this.validate(this.data);
+    set(_data.get(this), path, cloneDeep(value));
+    this.validate(_data.get(this));
     return this;
   }
 
   addDefaults(...data) {
     assert.array.of.object(data, 'Config.extend - `data` arguments must be objects [data-invalid]');
-    const result = defaultsDeep(this.data, ...data, _customizers.get(this).defaults);
+    const result = defaultsDeep(_data.get(this), ...data, _customizers.get(this).defaults);
     _data.set(this, result);
     return this;
   }
 
   getData(path, fallback) {
-    const result = get(this.data, path, fallback);
+    const result = get(_data.get(this), path, fallback);
     return isObjectLike(result) ? cloneDeep(result) : result;
   }
 
@@ -123,7 +123,7 @@ class Config {
   }
 
   get data() {
-    return _data.get(this);
+    return cloneDeep(_data.get(this));
   }
 
   get accessors() {
