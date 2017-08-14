@@ -60,6 +60,19 @@ describe('Config', function () {
       const config = new Config(data);
       expect(config.data).to.eql(data);
     });
+    it('is cloned so that the data is not mutable', function () {
+      const data = {
+        one: 'two',
+        three: {
+          nested: 'four'
+        }
+      };
+      const config = new Config(data);
+      const configData = config.data;
+      expect(configData).to.not.equal(data);
+      configData.one = 2;
+      expect(config.getData('one')).to.equal('two');
+    });
   });
 
   describe('.get()', function () {

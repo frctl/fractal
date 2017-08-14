@@ -25,6 +25,18 @@ module.exports = {
       ]
     },
 
+    cache: {
+      anyOf: [
+        {
+          type: 'boolean',
+          enum: [false]
+        },
+        {
+          type: 'integer'
+        }
+      ]
+    },
+
     commands: {
       type: 'array'
     },
