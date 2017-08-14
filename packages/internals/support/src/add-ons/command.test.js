@@ -86,6 +86,14 @@ describe('Command', function () {
       const cmd = command(validCommand);
       expect(cmd.description).to.equal(validCommand.description);
     });
+    it('returns false if no description is provided', function () {
+      const cmd = command({
+        name: 'foo',
+        command: 'foo [bar]',
+        handler: () => {}
+      });
+      expect(cmd.description).to.equal(false);
+    });
   });
 
   describe('.handler', function () {
