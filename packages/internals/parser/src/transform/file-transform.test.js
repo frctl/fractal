@@ -1,7 +1,7 @@
 /* eslint no-unused-expressions: "off" */
 const {FileCollection} = require('@frctl/support');
 const {expect} = require('../../../../../test/helpers');
-const filesTransform = require('./files');
+const filesTransform = require('./file-transform');
 
 let items = [{
   cwd: '/',
@@ -27,7 +27,7 @@ let items = [{
 
 const getFileArray = input => input || items.slice(0);
 
-describe('Files Transform', function () {
+describe('File Transform', function () {
   describe('factory', function () {
     it('exported as a function', function () {
       expect(filesTransform).to.be.a('function');

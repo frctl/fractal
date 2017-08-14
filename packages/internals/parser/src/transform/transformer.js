@@ -3,10 +3,10 @@ const checkMore = require('check-more-types');
 const {Emitter, Collection} = require('@frctl/support');
 const {bind} = require('lodash');
 
-const Plugins = require('./plugins');
+const PluginStore = require('./plugin-store');
 
-const arePlugins = Plugins.arePlugins;
-const isPlugin = Plugins.isPlugin;
+const arePlugins = PluginStore.arePlugins;
+const isPlugin = PluginStore.isPlugin;
 
 const assert = checkTypes.assert;
 
@@ -16,7 +16,7 @@ class Transformer extends Emitter {
     assert(isTransformerish(props), `Transformer.constructor: The properties provided do not match the schema of a transform [transform-invalid]`, TypeError);
 
     this.name = props.name;
-    this.plugins = new Plugins(props.plugins || []);
+    this.plugins = new PluginStore(props.plugins || []);
     this.transform = props.transform;
     this.passthru = props.passthru || false;
     this.Collection = getConstructor(props.transform) || Collection;

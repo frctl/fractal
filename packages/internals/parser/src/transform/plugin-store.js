@@ -44,7 +44,7 @@ class Plugins {
   }
 
   get [Symbol.toStringTag]() {
-    return 'Plugins';
+    return 'PluginStore';
   }
 
   [Symbol.iterator]() {

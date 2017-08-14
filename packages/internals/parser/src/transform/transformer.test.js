@@ -4,7 +4,7 @@ const {Emitter, Collection, FileCollection, ComponentCollection, File} = require
 const {expect, sinon} = require('../../../../../test/helpers');
 const makePlugin = require('../../test/helpers').makePlugin;
 const Transformer = require('./transformer');
-const Plugins = require('./plugins');
+const PluginStore = require('./plugin-store');
 
 const toFC = i => new FileCollection(i);
 const toC = i => new Collection(i);
@@ -88,7 +88,7 @@ describe('Transformer', function () {
       const transformer = new Transformer(validFCTransform);
       expect(transformer).to.be.a('Transformer').and.include.all.keys(['name', 'plugins', 'transform', 'passthru']);
       expect(transformer.name).to.equal('valid-transform');
-      expect(transformer.plugins).to.be.a('Plugins').and.have.property('items').that.has.property('length').that.equals(0);
+      expect(transformer.plugins).to.be.a('PluginStore').and.have.property('items').that.has.property('length').that.equals(0);
       expect(transformer.transform).to.equal(toFC);
       expect(transformer.passthru).to.equal(true);
       expect(transformer.Collection).to.equal(FileCollection);
@@ -97,7 +97,7 @@ describe('Transformer', function () {
 
   describe('.addPlugin()', function () {
     before(function () {
-      addSpy = sinon.spy(Plugins.prototype, 'add');
+      addSpy = sinon.spy(PluginStore.prototype, 'add');
       mockRequire.reRequire('./transformer');
     });
     beforeEach(function () {
