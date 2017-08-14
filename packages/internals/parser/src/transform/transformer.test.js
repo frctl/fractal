@@ -36,7 +36,7 @@ const validTransformWithPluginAlt = {
   plugins: {
     name: 'plugin-tested',
     collection: 'files',
-    handler: items => items.map(i => Object.assign({}, i, { tested: true}))
+    handler: items => items.map(i => Object.assign({}, i, {tested: true}))
   }
 };
 const transformWithInvalidPlugin = {
@@ -66,7 +66,7 @@ const validTransformWithPlugins = {
 
 let addSpy;
 
-describe.only('Transformer', function () {
+describe('Transformer', function () {
   describe('constructor', function () {
     it('returns a new instance', function () {
       const transformer = new Transformer(validFCTransform);
@@ -137,7 +137,7 @@ describe.only('Transformer', function () {
       const transformer = new Transformer(validTransformWithPluginAlt);
       const result = await transformer.run([{title: 'Red'}, {title: 'Blue'}]);
       expect(result).to.be.a('Collection').that.has.a.property('length').that.equals(2);
-      expect(result.toArray()).to.eql([{title: 'Red', tested: true}, {title: 'Blue', tested: true}])
+      expect(result.toArray()).to.eql([{title: 'Red', tested: true}, {title: 'Blue', tested: true}]);
     });
 
     it('it emits the expected events for transform', async function () {
@@ -159,7 +159,6 @@ describe.only('Transformer', function () {
       expect(emitSpy.args[2][0]).to.equal('plugin.complete');
       expect(emitSpy.args[3][0]).to.equal('transform.complete');
     });
-
   });
 
   describe('[Symbol.toStringTag]', function () {

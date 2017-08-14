@@ -46,7 +46,7 @@ class Plugins {
   get [Symbol.toStringTag]() {
     return 'Plugins';
   }
-  
+
   [Symbol.iterator]() {
     return this.items[Symbol.iterator]();
   }

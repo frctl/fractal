@@ -34,7 +34,6 @@ class Transformer extends Emitter {
     console.log(transformer.name);
     let dataset = await this.transform(data, state, context);
 
-
     for (const plugin of this.plugins) {
       this.emit('plugin.start', {plugin, transformer});
       console.log(plugin.name);
