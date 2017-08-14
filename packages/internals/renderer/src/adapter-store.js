@@ -2,7 +2,7 @@ const {remove} = require('lodash');
 const {File} = require('@frctl/support');
 const {toArray} = require('@frctl/utils');
 const debug = require('debug')('fractal:renderer:adapters');
-const adapter = require('./adapter');
+const Adapter = require('./adapter');
 
 const _adapters = new WeakMap();
 
@@ -31,7 +31,7 @@ class AdapterStore {
 
   add(items) {
     const adapters = _adapters.get(this);
-    toArray(items).map(props => adapter(props)).forEach(adapter => {
+    toArray(items).map(props => new Adapter(props)).forEach(adapter => {
       const removed = remove(adapters, item => item.name === adapter.name);
       if (removed.length > 0) {
         debug('Removed exisiting adapter: %s', removed.map(adapter => adapter.name).join(', '));
