@@ -1,36 +1,49 @@
+const {omit} = require('lodash');
 const yargs = require('yargs');
-const {defaultsDeep} = require('@frctl/utils');
 const {Validator} = require('@frctl/support');
 const {error, log} = require('@frctl/console');
 const debug = require('debug')('fractal:cli');
 const schema = require('./command.schema');
 
-module.exports = function (props, app, cli) {
-  Validator.assertValid(props, schema, 'Command schema invalid [properties-invalid]: ');
+const _props = new WeakMap();
 
-  const command = defaultsDeep(props, {
-    description: false,
-    builder: {}
-  });
+class Command {
 
-  cli = Object.assign({}, cli, {command});
+  constructor(props, ...args) {
+    Validator.assertValid(props, schema, 'Command schema invalid [properties-invalid]: ');
+    _props.set(this, props);
 
-  command.handler = async function (argv) {
-    debug(`running command '%s' with args %o`, command.name, argv);
+    // have to assign this in the constructor because yargs messes
+    // with the `this` binding of command handlers
+    this.handler = async function (argv) {
+      debug(`running command '%s' with args %o`, props.name, argv);
 
-    if (argv.help) {
-      return yargs.showHelp();
-    }
-
-    try {
-      const output = await Promise.resolve(props.handler(argv, app, cli));
-      if (typeof output === 'string') {
-        log(output);
+      if (argv.help) {
+        return yargs.showHelp();
       }
-    } catch (err) {
-      error(err);
-    }
-  };
 
-  return command;
-};
+      try {
+        const output = await Promise.resolve(props.handler(argv, ...args));
+        if (typeof output === 'string') {
+          log(output);
+        }
+      } catch (err) {
+        error(err);
+      }
+    };
+
+    Object.assign(this, omit(props, ['description', 'builder', 'handler']));
+  }
+
+  get description() {
+    const props = _props.get(this);
+    return props.description || props.desc || props.describe || false;
+  }
+
+  get builder() {
+    return _props.get(this).builder || {};
+  }
+
+}
+
+module.exports = Command;

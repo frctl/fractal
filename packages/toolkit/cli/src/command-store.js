@@ -1,7 +1,7 @@
 const {remove} = require('lodash');
 const {toArray} = require('@frctl/utils');
 const debug = require('debug')('fractal:cli');
-const command = require('./command');
+const Command = require('./command');
 
 const _commands = new WeakMap();
 const _app = new WeakMap();
@@ -26,7 +26,7 @@ class CommandStore {
     const app = _app.get(this);
     const cli = _cli.get(this);
     const commands = _commands.get(this);
-    toArray(items).map(props => command(props, app, cli)).forEach(command => {
+    toArray(items).map(props => new Command(props, app, cli)).forEach(command => {
       const removed = remove(commands, item => item.name === command.name);
       if (removed.length > 0) {
         debug('Removed exisiting command: %s', removed.map(command => command.name).join(', '));

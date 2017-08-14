@@ -9,7 +9,7 @@ module.exports = {
     description: {
       anyOf: [
         {
-          type: 'object'
+          type: 'string'
         },
         {
           type: 'boolean',

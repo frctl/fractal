@@ -1,6 +1,7 @@
 const fractal = require('@frctl/fractal');
 const {expect} = require('../../../../test/helpers');
 const CommandStore = require('./command-store');
+const Command = require('./command');
 
 const commands = [{
   name: 'do-that',
@@ -63,6 +64,13 @@ describe('Cli - CommandStore', function () {
       expect(commandStore.commands.length).to.equal(commands.length);
       const command = commandStore.commands.find(command => command.name === 'do-that');
       expect(command.command).to.equal('dosomething');
+    });
+    it('wraps all commands object sin Command instances', function () {
+      const commandStore = makeStore();
+      commandStore.add(commands);
+      for (const command of commandStore.commands) {
+        expect(command).to.be.instanceOf(Command);
+      }
     });
   });
 

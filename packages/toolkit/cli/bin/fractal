@@ -9,15 +9,17 @@ if (yargs.argv.debug && !process.env.DEBUG) {
 const {dirname} = require('path');
 const findUp = require('find-up');
 const importCwd = require('import-cwd');
+const updateNotifier = require('update-notifier');
 const {uniqBy} = require('lodash');
 const loudRejection = require('loud-rejection');
 const debug = require('debug')('fractal:cli');
 const {error, log} = require('@frctl/console');
 const CommandStore = require('../src/command-store');
 const settings = require('../src/settings');
-const cliPackage = require('../package.json');
+const pkg = require('../package.json');
 
 loudRejection();
+updateNotifier({pkg}).notify();
 
 try {
 
@@ -56,7 +58,7 @@ try {
     configPath,
     cwd: process.cwd(),
     debug: Boolean(process.env.DEBUG),
-    version: cliPackage.version
+    version: pkg.version
   };
 
   const commandStore = new CommandStore(app, cli, app.get('commands',[]));
