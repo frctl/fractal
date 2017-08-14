@@ -95,7 +95,9 @@ describe('Component', function () {
     });
   });
   describe('[Symbol.toStringTag]', function () {
-    const component = new Component(basicComponent);
-    expect(component[Symbol.toStringTag]).to.equal('Component');
+    it('should resolve correctly', function () {
+      const component = new Component(basicComponent);
+      expect(component[Symbol.toStringTag]).to.equal('Component');
+    });
   });
 });

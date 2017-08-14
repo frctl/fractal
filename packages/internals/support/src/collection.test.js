@@ -624,7 +624,9 @@ describe('Collection', function () {
   });
 
   describe('[Symbol.toStringTag]', function () {
-    const collection = makeCollection();
-    expect(collection[Symbol.toStringTag]).to.equal('Collection');
+    it('should resolve correctly', function () {
+      const collection = makeCollection();
+      expect(collection[Symbol.toStringTag]).to.equal('Collection');
+    });
   });
 });

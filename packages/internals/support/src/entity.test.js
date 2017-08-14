@@ -108,7 +108,9 @@ describe('Entity', function () {
     });
   });
   describe('[Symbol.toStringTag]', function () {
-    const entity = makeEntity();
-    expect(entity[Symbol.toStringTag]).to.equal('Entity');
+    it('should resolve correctly', function () {
+      const entity = makeEntity();
+      expect(entity[Symbol.toStringTag]).to.equal('Entity');
+    });
   });
 });

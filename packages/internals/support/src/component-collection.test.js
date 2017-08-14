@@ -140,7 +140,9 @@ describe('ComponentCollection', function () {
   });
 
   describe('[Symbol.toStringTag]', function () {
-    const collection = makeCollection();
-    expect(collection[Symbol.toStringTag]).to.equal('ComponentCollection');
+    it('should resolve correctly', function () {
+      const collection = makeCollection();
+      expect(collection[Symbol.toStringTag]).to.equal('ComponentCollection');
+    });
   });
 });
