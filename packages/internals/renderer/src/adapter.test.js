@@ -36,7 +36,7 @@ describe.only('Adapter', function () {
       });
     });
 
-    it('throws an error if the file arguement is not a File instance', function () {
+    it('throws an error if the file argument is not a File instance', function () {
       const adapter = new Adapter(validAdapter);
       expect(() => adapter.match('bar')).to.throw(TypeError, '[file-invalid]');
     });
