@@ -19,7 +19,7 @@ const otherFile = new File({
   path: 'path/to/file.foo'
 });
 
-describe.only('Adapter', function () {
+describe('Adapter', function () {
   describe('constructor()', function () {
     it('throws an error on invalid props', function () {
       expect(() => new Adapter({invalid: 'adapter'})).to.throw(TypeError, ['properties-invalid']);
