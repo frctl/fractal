@@ -1,5 +1,5 @@
 const Parser = require('./src/parser');
-const Transformer = require('./src/transform/transformer');
+const Transformer = require('./src/transform/transform');
 
 module.exports = function (opts = {}) {
   return new Parser(opts);

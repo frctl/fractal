@@ -1,8 +1,9 @@
 /* eslint handle-callback-err: off, no-unused-expressions: off */
 
-const {expect} = require('../../../../../test/helpers');
-const makePlugin = require('../../test/helpers').makePlugin;
+const {expect, validateSchema} = require('../../../../../test/helpers');
+const {makePlugin} = require('../../test/helpers');
 const PluginStore = require('./plugin-store');
+const pluginStoreSchema = require('./plugin-store.schema');
 
 const validPlugin = makePlugin('test-plugin');
 const validCollectionfreePlugin = {
@@ -90,6 +91,11 @@ describe('Plugins', function () {
       const plugins = new PluginStore(validPlugin);
       expect(plugins[Symbol.toStringTag]).to.equal('PluginStore');
       expect(plugins).to.be.a('PluginStore');
+    });
+  });
+  describe('PluginStore schema', function () {
+    it('is a valid schema', function () {
+      expect(validateSchema(pluginStoreSchema)).to.equal(true);
     });
   });
 });

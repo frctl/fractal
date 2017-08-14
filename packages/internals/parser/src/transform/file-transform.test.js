@@ -29,7 +29,7 @@ const getFileArray = input => input || items.slice(0);
 
 describe('File Transform', function () {
   describe('factory', function () {
-    it('exported as a function', function () {
+    it('is exported as a function', function () {
       expect(filesTransform).to.be.a('function');
     });
     it('returns a valid transform object', function () {

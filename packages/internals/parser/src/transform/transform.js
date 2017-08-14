@@ -1,18 +1,14 @@
 const checkTypes = require('check-types');
 const checkMore = require('check-more-types');
-const {Collection, EmittingPromise} = require('@frctl/support');
-const {bind} = require('lodash');
-
+const {Collection, EmittingPromise, Validator} = require('@frctl/support');
+const schema = require('./transform.schema');
 const PluginStore = require('./plugin-store');
-
-const arePlugins = PluginStore.arePlugins;
-const isPlugin = PluginStore.isPlugin;
 
 const assert = checkTypes.assert;
 
-class Transformer {
+class Transform {
   constructor(props = {}) {
-    assert(isTransformerish(props), `Transformer.constructor: The properties provided do not match the schema of a transform [transform-invalid]`, TypeError);
+    Validator.assertValid(props, schema, 'Transform schema invalid [invalid-properties]');
 
     this.name = props.name;
     this.plugins = new PluginStore(props.plugins || []);
@@ -27,16 +23,16 @@ class Transformer {
   }
 
   run(data = [], state, context) {
-    const transformer = this;
+    const transform = this;
 
     return new EmittingPromise(async (resolve, reject, emit) => {
-      emit('transform.start', {transformer});
+      emit('transform.start', {transform});
 
       try {
         let dataset = await this.transform(data, state, context);
 
         for (const plugin of this.plugins) {
-          emit('plugin.start', {plugin, transformer});
+          emit('plugin.start', {plugin, transform});
           /*
            * Run the input through the plugin function to manipulate the data set.
            */
@@ -48,19 +44,19 @@ class Transformer {
 
           /*
            * If the plugin return value is a Collection, unwrap it and re-wrap to ensure that we
-           * have the correct collection for this transformer to get passed
+           * have the correct collection for this transform to get passed
            * to the next plugin in the list. If it returns an array then we wrap that
            * to ensure that plugins always receive collections.
            */
 
           dataset = this.getCollection(dataset);
 
-          emit('plugin.complete', {plugin, transformer});
+          emit('plugin.complete', {plugin, transform});
         }
 
         const collection = this.getCollection(dataset);
 
-        emit('transform.complete', {transformer, collection});
+        emit('transform.complete', {transform, collection});
 
         resolve(collection);
       } catch (err) {
@@ -77,14 +73,14 @@ class Transformer {
   }
 
   get [Symbol.toStringTag]() {
-    return 'Transformer';
+    return 'Transform';
   }
 
   static from(props) {
-    if (props instanceof Transformer) {
+    if (props instanceof Transform) {
       return props;
     }
-    return new Transformer(props);
+    return new Transform(props);
   }
 }
 
@@ -94,20 +90,10 @@ const getConstructor = func => {
 
   const val = func([]);
   assert(checkMore.defined(val), errMsg, TypeError);
-  const Species = val.constructor[Symbol.species];
+  const Species = val.constructor[Symbol.species] || val.constructor;
   assert(checkMore.defined(Species), errMsg, TypeError);
   assert.instance(Species.prototype, Collection, errMsg);
   return Species;
 };
 
-const transformerSchema = {
-  name: checkMore.unemptyString,
-  transform: checkTypes.function,
-  passthru: checkMore.maybe.bool,
-  plugins: checkMore.or(checkTypes.null, checkTypes.undefined, arePlugins, isPlugin)
-};
-const isTransformerSchema = checkMore.schema.bind(null, transformerSchema);
-const isTransformer = bind(checkTypes.instance, null, bind.placeholder, Transformer);
-const isTransformerish = checkMore.or(isTransformer, isTransformerSchema);
-
-module.exports = Transformer;
+module.exports = Transform;

@@ -1,10 +1,9 @@
 
 const {cloneDeep} = require('lodash');
-const checkTypes = require('check-types');
-const checkMore = require('check-more-types');
+const {Validator} = require('@frctl/support');
 const {toArray, defaultsDeep} = require('@frctl/utils');
-
-const assert = checkTypes.assert;
+const schema = require('./plugin-store.schema');
+const Plugin = require('./plugin');
 
 const _items = new WeakMap();
 const _opts = new WeakMap();
@@ -24,13 +23,13 @@ class Plugins {
   /**
    * Adds a new item to the store
    *
-   * @param  {object|array} item Item or array of items to add
-   * @return {Plugin} Returns a reference to itself
+   * @param  {Plugin|array<Plugin>} item Item or array of items to add
+   * @return {PluginStore} Returns a reference to itself
    */
   add(item) {
     let items = toArray(item);
-    assert(arePlugins(items), `Plugins.add: The items provided do not match the schema of a plugins [plugins-invalid]`, TypeError);
-    items = items.map(item => Object.assign({collection: _opts.get(this).defaultCollection}, item));
+    Validator.assertValid(items, schema, 'Plugins.add: The items provided do not match the schema of a plugins [plugins-invalid]');
+    items = items.map(item => new Plugin(Object.assign({collection: _opts.get(this).defaultCollection}, item)));
     _items.get(this).push(...items);
     return this;
   }
@@ -52,14 +51,4 @@ class Plugins {
   }
 }
 
-const pluginSchema = {
-  name: checkMore.unemptyString,
-  collection: checkMore.maybe.unemptyString,
-  handler: checkTypes.function
-};
-const isPlugin = checkMore.schema.bind(null, pluginSchema);
-const arePlugins = items => checkTypes.all(checkTypes.apply(items, isPlugin));
-
 module.exports = Plugins;
-module.exports.isPlugin = isPlugin;
-module.exports.arePlugins = arePlugins;

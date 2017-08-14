@@ -1,9 +1,10 @@
 /* eslint handle-callback-err: off, no-unused-expressions: off */
 const mockRequire = require('mock-require');
 const {Collection, EmittingPromise, FileCollection, ComponentCollection, File} = require('@frctl/support');
-const {expect, sinon} = require('../../../../../test/helpers');
+const {expect, sinon, validateSchema} = require('../../../../../test/helpers');
 const makePlugin = require('../../test/helpers').makePlugin;
-const Transformer = require('./transformer');
+const Transform = require('./transform');
+const transformSchema = require('./transform.schema');
 const PluginStore = require('./plugin-store');
 
 const toFC = i => new FileCollection(i);
@@ -76,117 +77,117 @@ const validTransformWithPlugins = {
 
 let addSpy;
 
-describe('Transformer', function () {
+describe('Transform', function () {
   describe('constructor', function () {
     it('returns a new instance', function () {
-      const transformer = new Transformer(validFCTransform);
-      expect(transformer instanceof Transformer).to.be.true;
+      const transform = new Transform(validFCTransform);
+      expect(transform instanceof Transform).to.be.true;
     });
     it('validates its input', function () {
-      expect(() => new Transformer(/* Empty */)).to.throw(TypeError, '[transform-invalid]');
-      expect(() => new Transformer('Invalid string')).to.throw(TypeError, '[transform-invalid]');
-      expect(() => new Transformer({name: 'transform without required props'})).to.throw(TypeError, '[transform-invalid]');
-      expect(() => new Transformer(transformWithInvalidTransform1)).to.throw(TypeError, '[transform-function-invalid]');
-      expect(() => new Transformer(transformWithInvalidTransform2)).to.throw(TypeError, '[transform-function-invalid]');
-      expect(() => new Transformer(transformWithInvalidPlugin)).to.throw(TypeError, '[transform-invalid]');
-      expect(() => new Transformer(validFCTransform)).to.not.throw();
-      expect(() => new Transformer(validTransformWithPlugin)).to.not.throw();
-      expect(() => new Transformer(validTransformWithPlugins)).to.not.throw();
+      expect(() => new Transform(/* Empty */)).to.throw(TypeError, '[invalid-properties]');
+      expect(() => new Transform('Invalid string')).to.throw(TypeError, '[invalid-properties]');
+      expect(() => new Transform({name: 'transform without required props'})).to.throw(TypeError, '[invalid-properties]');
+      expect(() => new Transform(transformWithInvalidTransform1)).to.throw(TypeError, '[transform-function-invalid]');
+      expect(() => new Transform(transformWithInvalidTransform2)).to.throw(TypeError, '[transform-function-invalid]');
+      expect(() => new Transform(transformWithInvalidPlugin)).to.throw(TypeError, '[invalid-properties]');
+      expect(() => new Transform(validFCTransform)).to.not.throw();
+      expect(() => new Transform(validTransformWithPlugin)).to.not.throw();
+      expect(() => new Transform(validTransformWithPlugins)).to.not.throw();
     });
     it('assigns items passed to constructor correctly', function () {
-      const transformer = new Transformer(validFCTransform);
-      expect(transformer).to.be.a('Transformer').and.include.all.keys(['name', 'plugins', 'transform', 'passthru']);
-      expect(transformer.name).to.equal('valid-transform');
-      expect(transformer.plugins).to.be.a('PluginStore').and.have.property('items').that.has.property('length').that.equals(0);
-      expect(transformer.transform).to.equal(toFC);
-      expect(transformer.passthru).to.equal(true);
-      expect(transformer.Collection).to.equal(FileCollection);
+      const transform = new Transform(validFCTransform);
+      expect(transform).to.be.a('Transform').and.include.all.keys(['name', 'plugins', 'transform', 'passthru']);
+      expect(transform.name).to.equal('valid-transform');
+      expect(transform.plugins).to.be.a('PluginStore').and.have.property('items').that.has.property('length').that.equals(0);
+      expect(transform.transform).to.equal(toFC);
+      expect(transform.passthru).to.equal(true);
+      expect(transform.Collection).to.equal(FileCollection);
     });
   });
 
   describe('.addPlugin()', function () {
     before(function () {
       addSpy = sinon.spy(PluginStore.prototype, 'add');
-      mockRequire.reRequire('./transformer');
+      mockRequire.reRequire('./transform');
     });
     beforeEach(function () {
       addSpy.reset();
     });
     it('returns a reference to itself', function () {
-      const transformer = new Transformer(validFCTransform);
-      expect(transformer.addPlugin(validPlugin)).to.equal(transformer);
+      const transform = new Transform(validFCTransform);
+      expect(transform.addPlugin(validPlugin)).to.equal(transform);
     });
     it('defers to its Plugin.add() method', function () {
-      const transformer = new Transformer(validFCTransform);
-      expect(transformer.addPlugin(validPlugin)).to.equal(transformer);
+      const transform = new Transform(validFCTransform);
+      expect(transform.addPlugin(validPlugin)).to.equal(transform);
       expect(addSpy.calledWith(validPlugin)).to.equal(true);
       addSpy.reset();
-      expect(transformer.addPlugin(validPluginList)).to.equal(transformer);
+      expect(transform.addPlugin(validPluginList)).to.equal(transform);
       expect(addSpy.calledWith(validPluginList)).to.equal(true);
       addSpy.reset();
-      expect(() => transformer.addPlugin(invalidPlugin)).to.throw(TypeError);
+      expect(() => transform.addPlugin(invalidPlugin)).to.throw(TypeError);
       expect(addSpy.calledWith(invalidPlugin)).to.equal(true);
     });
   });
 
   describe('.run()', function () {
     it('it returns an EmittingPromise', function () {
-      const transformer = new Transformer(validFCTransform);
-      const promise = transformer.run();
+      const transform = new Transform(validFCTransform);
+      const promise = transform.run();
       expect(promise).to.be.a('Promise');
       expect(promise).to.be.an.instanceof(EmittingPromise);
       expect(promise.on).to.be.a('function');
     });
 
     it('it returns the expected result of its transform methods', async function () {
-      const transformer = new Transformer(validFCTransform);
-      const result = await transformer.run([new File(), new File()]);
+      const transform = new Transform(validFCTransform);
+      const result = await transform.run([new File(), new File()]);
       expect(result).to.be.a('FileCollection').that.has.a.property('length').that.equals(2);
     });
 
     it('it returns the expected result of its transform and plugin methods', async function () {
-      const transformer = new Transformer(validTransformWithPluginAlt);
-      const result = await transformer.run([{title: 'Red'}, {title: 'Blue'}]);
+      const transform = new Transform(validTransformWithPluginAlt);
+      const result = await transform.run([{title: 'Red'}, {title: 'Blue'}]);
       expect(result).to.be.a('Collection').that.has.a.property('length').that.equals(2);
       expect(result.toArray()).to.eql([{title: 'Red', tested: true}, {title: 'Blue', tested: true}]);
     });
 
     it('it emits the expected events for transform', function () {
-      const _transformer = new Transformer(validFCTransform);
-      const task = _transformer.run([new File(), new File()]);
-      task.on('transform.start', ({transformer}) => {
-        expect(_transformer).to.eql(_transformer);
+      const _transform = new Transform(validFCTransform);
+      const task = _transform.run([new File(), new File()]);
+      task.on('transform.start', ({transform}) => {
+        expect(_transform).to.eql(_transform);
       });
-      task.on('transform.complete', ({transformer, collection}) => {
-        expect(_transformer).to.eql(_transformer);
+      task.on('transform.complete', ({transform, collection}) => {
+        expect(_transform).to.eql(_transform);
         expect(collection).to.be.a('FileCollection').with.property('length').that.equals(2);
       });
       return task;
     });
 
     it('it emits the expected events for transform and plugins', function () {
-      const _transformer = new Transformer(validTransformWithPluginAlt);
-      const task = _transformer.run([{title: 'Red'}, {title: 'Blue'}]);
-      task.on('transform.start', ({transformer}) => {
-        expect(_transformer).to.eql(_transformer);
+      const _transform = new Transform(validTransformWithPluginAlt);
+      const task = _transform.run([{title: 'Red'}, {title: 'Blue'}]);
+      task.on('transform.start', ({transform}) => {
+        expect(_transform).to.eql(_transform);
       });
-      task.on('plugin.start', ({plugin, transformer}) => {
-        expect(_transformer).to.eql(_transformer);
+      task.on('plugin.start', ({plugin, transform}) => {
+        expect(_transform).to.eql(_transform);
         expect(plugin).to.be.an('object');
       });
-      task.on('plugin.complete', ({plugin, transformer}) => {
-        expect(_transformer).to.eql(_transformer);
+      task.on('plugin.complete', ({plugin, transform}) => {
+        expect(_transform).to.eql(_transform);
         expect(plugin).to.be.an('object');
       });
-      task.on('transform.complete', ({transformer, collection}) => {
-        expect(_transformer).to.eql(_transformer);
+      task.on('transform.complete', ({transform, collection}) => {
+        expect(_transform).to.eql(_transform);
         expect(collection).to.be.a('FileCollection').with.property('length').that.equals(2);
       });
 
       return task;
     });
     it('throws an error if plugins return invalid types', function () {
-      const task = new Transformer(transformWithInvalidPluginReturnValue)
+      const task = new Transform(transformWithInvalidPluginReturnValue)
         .run([new File(), new File()])
         .catch(err => {
           expect(err).to.be.an('Error').with.a.property('message').that.matches(/\[plugin-return-invalid\]/);
@@ -197,31 +198,37 @@ describe('Transformer', function () {
 
   describe('[Symbol.toStringTag]', function () {
     it('has the correct value', function () {
-      const transformer = new Transformer(validFCTransform);
-      expect(transformer[Symbol.toStringTag]).to.equal('Transformer');
-      expect(transformer).to.be.a('Transformer');
+      const transform = new Transform(validFCTransform);
+      expect(transform[Symbol.toStringTag]).to.equal('Transform');
+      expect(transform).to.be.a('Transform');
     });
   });
 
   describe('.getCollection()', function () {
     it('wraps items in the correct constructor', function () {
-      const transformer = Transformer.from(validTransformWithPlugins);
-      let items = transformer.getCollection([]);
+      const transform = Transform.from(validTransformWithPlugins);
+      let items = transform.getCollection([]);
       expect(items).to.be.a('ComponentCollection');
-      items = transformer.getCollection(new ComponentCollection());
+      items = transform.getCollection(new ComponentCollection());
       expect(items).to.be.a('ComponentCollection');
     });
   });
 
   describe('.from()', function () {
     it('returns a new instance', function () {
-      const transformer = Transformer.from(validFCTransform);
-      expect(transformer instanceof Transformer).to.be.true;
+      const transform = Transform.from(validFCTransform);
+      expect(transform instanceof Transform).to.be.true;
     });
     it('returns a new instance from an existing instance', function () {
-      const transformer1 = Transformer.from(validFCTransform);
-      const transformer2 = Transformer.from(transformer1);
-      expect(transformer2 instanceof Transformer).to.be.true;
+      const transform1 = Transform.from(validFCTransform);
+      const transform2 = Transform.from(transform1);
+      expect(transform2 instanceof Transform).to.be.true;
+    });
+  });
+
+  describe('Transform schema', function () {
+    it('is a valid schema', function () {
+      expect(validateSchema(transformSchema)).to.equal(true);
     });
   });
 });

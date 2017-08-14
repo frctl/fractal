@@ -3,8 +3,8 @@ const schema = require('./plugin.schema');
 
 class Plugin {
 
-  constructor(props={}) {
-    console.log(Validator.assertValid(props, schema, 'Plugin schema invalid [invalid-properties]'));
+  constructor(props = {}) {
+    Validator.assertValid(props, schema, 'Plugin schema invalid [invalid-properties]');
     Object.assign(this, props);
   }
 
