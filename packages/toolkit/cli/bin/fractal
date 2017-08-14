@@ -9,10 +9,15 @@ if (yargs.argv.debug && !process.env.DEBUG) {
 const {dirname} = require('path');
 const findUp = require('find-up');
 const importCwd = require('import-cwd');
+const {uniqBy} = require('lodash');
+const loudRejection = require('loud-rejection');
 const debug = require('debug')('fractal:cli');
 const {error, log} = require('@frctl/console');
-const command = require('../src/command');
+const CommandStore = require('../src/command-store');
 const settings = require('../src/settings');
+const cliPackage = require('../package.json');
+
+loudRejection();
 
 try {
 
@@ -22,7 +27,7 @@ try {
 
   if (configPath) {
     const cwd = dirname(configPath);
-    const config = require(configPath);
+    config = require(configPath);
 
     process.chdir(cwd);
 
@@ -35,7 +40,7 @@ try {
       debug(err);
       log(`
         <error>No local Fractal instance found.</error>
-        <details>&nbsp;&nbsp;Have you installed the <cyan>@frctl/fractal </cyan> package in your project?</details>
+        <debug>&nbsp;&nbsp;Have you installed the <cyan>@frctl/fractal</cyan> package in your project?</debug>
       `);
       process.exit(1);
     }
@@ -46,18 +51,24 @@ try {
   }
 
   const app = factory(config);
-  const env = {
-    debug: process.env.DEBUG
+
+  const cli = {
+    configPath,
+    cwd: process.cwd(),
+    debug: Boolean(process.env.DEBUG),
+    version: cliPackage.version
   };
+
+  const commandStore = new CommandStore(app, cli, app.get('commands',[]));
 
   yargs.usage(settings.usage)
        .options(settings.options)
        .strict()
        .demandCommand(1, 'You must specify a command.');
 
-  for (const cmd of app.get('commands', [])) {
-    yargs.command(command(cmd, app, env));
-    debug(`registered command %s`, cmd.name);
+  for (const cmd of commandStore.commands) {
+    yargs.command(cmd);
+    debug(`registered command: %s`, cmd.name);
   }
 
   yargs.argv;

@@ -1,5 +1,3 @@
-/* eslint handle-callback-err: off, no-unused-expressions: off */
-
 const {expect, sinon} = require('../../../../test/helpers');
 const Config = require('./config');
 
@@ -13,20 +11,25 @@ const schema = {
 
 describe('Config', function () {
   describe('constructor', function () {
-    it('throws an error if a non-object options argument is provided', function () {
-      expect(() => new Config('foo')).to.throw(TypeError, '[config-opts-invalid]');
+    it('throws an error if a non-object data argument is provided', function () {
+      expect(() => new Config('foo')).to.throw(TypeError, '[config-data-invalid]');
       expect(() => new Config({})).to.not.throw(TypeError);
     });
 
-    it('accepts an initial config data via opts.data', function () {
+    it('throws an error if a non-object options argument is provided', function () {
+      expect(() => new Config({}, 'foo')).to.throw(TypeError, '[config-opts-invalid]');
+      expect(() => new Config({}, {})).to.not.throw(TypeError);
+    });
+
+    it('accepts initial config data', function () {
       const data = {prop: 'val'};
-      const config = new Config({data});
+      const config = new Config(data);
       expect(config.data).to.eql(data);
     });
 
     it('clones provided data to prevent mutation', function () {
       const data = {prop: 'val'};
-      const config = new Config({data});
+      const config = new Config(data);
       expect(config.data).to.eql(data);
       expect(config.data).to.not.equal(data);
     });
@@ -36,19 +39,13 @@ describe('Config', function () {
         path: 'foo.bar',
         handler() {}
       }];
-      const config = new Config({accessors});
+      const config = new Config({}, {accessors});
       expect(config.accessors.find(acc => acc.path === 'foo.bar')).to.not.equal(undefined);
     });
 
     it('validates initial input data against a schema, if supplied', function () {
-      expect(() => new Config({data: {foo: 123}, schema})).to.not.throw();
-      expect(() => new Config({data: {foo: '123'}, schema})).to.throw();
-    });
-
-    it('calls the init callback with the config instance', function () {
-      const init = sinon.spy();
-      const config = new Config({init});
-      expect(init.calledWith(config)).to.equal(true);
+      expect(() => new Config({foo: 123}, {schema})).to.not.throw();
+      expect(() => new Config({foo: '123'}, {schema})).to.throw('[config-invalid]');
     });
   });
 
@@ -60,7 +57,7 @@ describe('Config', function () {
           nested: 'four'
         }
       };
-      const config = new Config({data});
+      const config = new Config(data);
       expect(config.data).to.eql(data);
     });
   });
@@ -73,7 +70,7 @@ describe('Config', function () {
           nested: 'four'
         }
       };
-      const config = new Config({data});
+      const config = new Config(data);
       expect(config.get('three.nested')).to.eql(data.three.nested);
     });
 
@@ -85,10 +82,8 @@ describe('Config', function () {
 
     it('runs the result through all relevant accessors', function () {
       const config = new Config({
-        data: {
-          foo: {
-            bar: 'baz'
-          }
+        foo: {
+          bar: 'baz'
         }
       });
       config.addAccessor('foo.bar', value => '!' + value);
@@ -99,12 +94,10 @@ describe('Config', function () {
 
     it('maps values through matching accessors if the lookup value is an array or object', function () {
       const config = new Config({
-        data: {
-          foo: {
-            bar: 'baz'
-          },
-          arr: ['one', 'two']
-        }
+        foo: {
+          bar: 'baz'
+        },
+        arr: ['one', 'two']
       });
       config.addAccessor('foo.bar', value => '!' + value);
       expect(config.get('foo')).to.be.an('object').with.property('bar').that.equals('!baz');
@@ -116,10 +109,8 @@ describe('Config', function () {
 
     it('returns cached data where possible to prevent needlessly re-running accessors', function () {
       const config = new Config({
-        data: {
-          foo: {
-            bar: 'baz'
-          }
+        foo: {
+          bar: 'baz'
         }
       });
 
@@ -138,10 +129,8 @@ describe('Config', function () {
 
     it('calls accessors with the property value and the current instance as arguments', function () {
       const config = new Config({
-        data: {
-          foo: {
-            bar: 'baz'
-          }
+        foo: {
+          bar: 'baz'
         }
       });
       const accessorSpy = sinon.spy(val => val);
@@ -164,7 +153,7 @@ describe('Config', function () {
     });
 
     it('throws an error if setting a value invalidates the config schema', function () {
-      const config = new Config({schema});
+      const config = new Config({}, {schema});
       expect(() => config.set('foo', 123)).to.not.throw();
       expect(() => config.set('foo', 'bar')).to.throw();
     });
@@ -178,19 +167,86 @@ describe('Config', function () {
           nested: 'four'
         }
       };
-      const config = new Config({data});
+      const config = new Config(data);
       expect(config.getData('three.nested')).to.eql(data.three.nested);
     });
     it('does not run the result through accessors', function () {
       const config = new Config({
-        data: {
-          foo: {
-            bar: 'baz'
-          }
+        foo: {
+          bar: 'baz'
         }
       });
       config.addAccessor('foo.bar', value => '!' + value);
       expect(config.getData('foo.bar')).to.equal('baz');
+    });
+    it('deep clones objects and arrays', function () {
+      const data = {
+        foo: {
+          bar: 'baz'
+        }
+      };
+      const config = new Config(data);
+      expect(config.getData('foo')).to.eql(data.foo);
+      expect(config.getData('foo')).to.not.equal(data.foo);
+    });
+    it('leaves functions intact', function () {
+      const data = {
+        foo: function () {}
+      };
+      const config = new Config(data);
+      expect(config.getData('foo')).to.equal(data.foo);
+    });
+  });
+
+  describe('.addDefaults()', function () {
+    it('deep merges the supplied data as defaults', function () {
+      const config = new Config({
+        foo: 'bar',
+        baz: {
+          nested: 'child'
+        }
+      });
+      config.addDefaults({
+        one: 2,
+        baz: {
+          nested: 'parent',
+          another: 'prop'
+        }
+      });
+      expect(config.data).to.eql({
+        one: 2,
+        foo: 'bar',
+        baz: {
+          nested: 'child',
+          another: 'prop'
+        }
+      });
+    });
+    it('uses the defaults customizer to customize the defaults merging behaviour', function () {
+      const opts = {
+        customizers: {
+          defaults(targetValue, defaultValue) {
+            if (Array.isArray(targetValue) && Array.isArray(defaultValue)) {
+              return targetValue.concat(defaultValue);
+            }
+          }
+        }
+      };
+      const config = new Config({
+        foo: 'bar',
+        baz: [1, 2]
+      }, opts);
+      config.addDefaults({
+        one: 2,
+        baz: [3, 4]
+      });
+      expect(config.data).to.have.property('one').that.equals(2);
+      expect(config.data).to.have.property('foo').that.equals('bar');
+      expect(config.data).to.have.property('baz').that.has.same.members([1, 2, 3, 4]);
+    });
+    it('returns the config class instance', function () {
+      const config = new Config({});
+      expect(config.addDefaults({})).to.equal(config);
     });
   });
 
@@ -210,6 +266,42 @@ describe('Config', function () {
       config.addAccessor('foo.bar', 'package-loader');
       const accessor = config.accessors.find(acc => acc.path === 'foo.bar');
       expect(accessor.handler).to.equal(packageLoader);
+    });
+  });
+
+  describe('.validate()', function () {
+    it('throws an error if the data does not match the provided schema', function () {
+      const config = new Config({}, {schema});
+      expect(() => config.validate({foo: '123'})).to.throw('[config-invalid]');
+    });
+    it('includes the propery path in the validation error', function () {
+      try {
+        const config = new Config({}, {schema});
+        config.validate({foo: '124'});
+      } catch (err) {
+        expect(err.message.indexOf('data.foo')).to.be.greaterThan(-1);
+      }
+    });
+  });
+
+  describe('.clearCache()', function () {
+    it('clears all cached results', function () {
+      const config = new Config({
+        foo: {
+          bar: 'baz'
+        }
+      });
+
+      const accessorSpy = sinon.spy(val => val);
+      config.addAccessor('foo.bar', accessorSpy);
+
+      expect(config.get('foo.bar')).to.equal('baz');
+      expect(accessorSpy.calledOnce).to.equal(true);
+
+      config.clearCache();
+
+      expect(config.get('foo.bar')).to.equal('baz');
+      expect(accessorSpy.calledTwice).to.equal(true);
     });
   });
 });

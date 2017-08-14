@@ -1,7 +1,7 @@
 /* eslint no-unused-expressions: "off" */
 
 // const path = require('path');
-const {expect} = require('../../../../test/helpers');
+const {expect, sinon} = require('../../../../test/helpers');
 
 const Collection = require('./collection');
 
@@ -616,11 +616,21 @@ describe('Collection', function () {
   });
 
   describe('.clone()', function () {
-    const collection = makeCollection();
-    const newCollection = collection.clone();
-    testInstance(newCollection, collection);
-    expect(newCollection.length).to.equal(collection.length);
-    expect(newCollection.items).to.eql(newCollection.items);
+    it('deep clones all items in the collection', function () {
+      const collection = makeCollection();
+      const newCollection = collection.clone();
+      testInstance(newCollection, collection);
+      expect(newCollection.length).to.equal(collection.length);
+      expect(newCollection.items).to.eql(newCollection.items);
+    });
+    it('uses the .clone method on items that support it', () => {
+      const cloneSpy = sinon.spy();
+      const collection = makeCollection([{
+        clone: cloneSpy
+      }]);
+      collection.clone();
+      expect(cloneSpy.called).to.equal(true);
+    });
   });
 
   describe('[Symbol.toStringTag]', function () {
