@@ -7,6 +7,7 @@ module.exports.Component = require('./src/entities/component');
 module.exports.Variant = require('./src/entities/variant');
 module.exports.Command = require('./src/add-ons/command');
 module.exports.Adapter = require('./src/add-ons/adapter');
+module.exports.Preset = require('./src/add-ons/preset');
 module.exports.Emitter = require('./src/emitter');
 module.exports.EmittingPromise = require('./src/emitting-promise');
 module.exports.Validator = require('./src/validator');
