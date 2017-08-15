@@ -1,25 +1,33 @@
 const {ComponentCollection, FileCollection} = require('@frctl/support');
 const {Renderer} = require('@frctl/renderer');
+const {Parser} = require('@frctl/parser');
 const debug = require('debug')('fractal:core');
-const ConfigStore = require('./config-store');
+const Config = require('./config/store');
 const Cache = require('./parser-cache');
 
-const _config = new WeakMap();
-const _renderer = new WeakMap();
-const _cache = new WeakMap();
 const _dirty = new WeakMap();
+const _cache = new WeakMap();
+const _config = new WeakMap();
+const _parser = new WeakMap();
+const _renderer = new WeakMap();
 
 class Fractal {
 
-  constructor(config = {}) {
+  constructor(configData = {}) {
     debug('instantiating new Fractal instance');
 
-    _config.set(this, new ConfigStore(config));
-    _cache.set(this, new Cache(this.get('cache')));
-    _renderer.set(this, new Renderer(this.get('adapters')));
-    _dirty.set(this, true);
+    const config = new Config(configData);
+    const cache = new Cache(config.get('cache'));
+    const renderer = new Renderer(config.get('adapters'));
+    const parser = new Parser(config.pick('src', 'plugins', 'transforms'));
 
-    debug('using config %O', this.config);
+    _dirty.set(this, true);
+    _cache.set(this, cache);
+    _config.set(this, config);
+    _parser.set(this, parser);
+    _renderer.set(this, renderer);
+
+    debug('using config %O', config.data);
   }
 
   async parse() {
@@ -84,6 +92,10 @@ class Fractal {
 
   get renderer() {
     return _renderer.get(this);
+  }
+
+  get parser() {
+    return _parser.get(this);
   }
 
   get isFractal() {

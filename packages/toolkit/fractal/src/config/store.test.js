@@ -1,7 +1,7 @@
 const {Config} = require('@frctl/config');
-const {expect, validateSchema} = require('../../../../test/helpers');
-const ConfigStore = require('./config-store');
-const configSchema = require('./config.schema');
+const {expect, validateSchema} = require('../../../../../test/helpers');
+const ConfigStore = require('./store');
+const configSchema = require('./schema');
 
 const addOns = ['commands', 'plugins', 'extensions', 'adapters'];
 

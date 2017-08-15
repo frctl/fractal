@@ -63,7 +63,7 @@ try {
     version: pkg.version,
   };
 
-  const commandStore = new CommandStore(app.get('commands',[]));
+  const commandStore = new CommandStore(app.get('commands'));
 
   yargs.usage(settings.usage)
        .options(settings.options)

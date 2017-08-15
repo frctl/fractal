@@ -1,8 +1,11 @@
 const {join} = require('path');
 const {File, ComponentCollection, FileCollection} = require('@frctl/support');
+const {defaultsDeep} = require('@frctl/utils');
 const {Renderer} = require('@frctl/renderer');
+const {Parser} = require('@frctl/parser');
 const {expect, sinon} = require('../../../../test/helpers');
 const pkg = require('../package.json');
+const defaults = require('./config/defaults');
 const Fractal = require('./fractal');
 const ParserCache = require('./parser-cache');
 
@@ -26,7 +29,7 @@ describe('Fractal', function () {
   describe('constructor()', function () {
     it('accepts configuration data', () => {
       const fractal = new Fractal(config);
-      expect(fractal.config).to.eql(config);
+      expect(fractal.config).to.eql(defaultsDeep(config, defaults));
     });
 
     it('throws an error if invalid config data is provided', () => {
@@ -153,6 +156,13 @@ describe('Fractal', function () {
     it('returns the renderer instance', function () {
       const fractal = new Fractal();
       expect(fractal.renderer).to.be.instanceof(Renderer);
+    });
+  });
+
+  describe('.parser', function () {
+    it('returns the parser instance', function () {
+      const fractal = new Fractal();
+      expect(fractal.parser).to.be.instanceof(Parser);
     });
   });
 

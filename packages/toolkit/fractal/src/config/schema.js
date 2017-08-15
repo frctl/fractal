@@ -1,15 +1,19 @@
-const stringArray = [
-  {
-    type: 'string'
-  },
-  {
-    type: 'array'
-  }
-];
-
 module.exports = {
 
+  type: 'object',
+
   properties: {
+
+    src: {
+      anyOf:  [
+        {
+          type: 'string'
+        },
+        {
+          type: 'array'
+        }
+      ]
+    },
 
     extends: {
       anyOf: [
@@ -41,21 +45,17 @@ module.exports = {
       type: 'array'
     },
 
-    plugins: {
-      type: 'array'
-    },
-
     adapters: {
       type: 'array'
     },
 
-    extensions: {
+    plugins: {
       type: 'array'
     },
 
-    src: {
-      anyOf: stringArray
-    }
+    transforms: {
+      type: 'array'
+    },
 
   }
 
