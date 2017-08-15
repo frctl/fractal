@@ -22,7 +22,7 @@ class Fractal {
     const cache = new Cache({
       stdTTL: config.get('cache.ttl'),
       checkperiod: config.get('cache.check'),
-      useClones: false
+      useClones: true
     });
 
     _dirty.set(this, true);
