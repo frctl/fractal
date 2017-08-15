@@ -2,7 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 const Vinyl = require('vinyl');
-const {expect, sinon} = require('../../../../test/helpers');
+const {expect, sinon} = require('../../../../../test/helpers');
 const File = require('./file');
 
 const fileContents = 'var x = 123';

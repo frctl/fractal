@@ -1,8 +1,8 @@
 /* eslint no-unused-expressions: "off" */
-const {expect} = require('../../../../test/helpers');
-const Collection = require('./collection');
+const {expect} = require('../../../../../test/helpers');
+const Collection = require('../collections/collection');
+const FileCollection = require('../collections/file-collection');
 const File = require('./file');
-const FileCollection = require('./file-collection');
 
 const Component = require('./component');
 

@@ -1,15 +1,18 @@
 const {isFunction} = require('lodash');
-const {Validator, File} = require('@frctl/support');
 const {toArray, normalizeExt} = require('@frctl/utils');
-const adapterSchema = require('./adapter.schema');
+const debug = require('debug')('fractal:support');
+const Validator = require('../validator');
+const File = require('../entities/file');
+const schema = require('./adapter.schema');
 
 const _props = new WeakMap();
 
 class Adapter {
 
   constructor(props) {
-    Validator.assertValid(props, adapterSchema, 'Adapter schema invalid [adapter-invalid]: ');
+    Validator.assertValid(props, schema, 'Adapter schema invalid [adapter-invalid]');
     _props.set(this, props);
+    debug('intialised adapter %s', props.name);
   }
 
   match(file) {
@@ -36,5 +39,7 @@ class Adapter {
   }
 
 }
+
+Adapter.schema = schema;
 
 module.exports = Adapter;

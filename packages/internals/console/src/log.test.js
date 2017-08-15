@@ -24,6 +24,11 @@ describe('logger', function () {
       expect(renderSpy.called).to.equal(true);
       mockRequire.stop('@allmarkedup/climate');
     });
+
+    it('catches render errors and console.logs the string instead', function () {
+      logger.log('}');
+      expect(console.log.calledWith('}')).to.equal(true);
+    });
   });
 
   describe('.success()', function () {

@@ -1,7 +1,7 @@
 /* eslint no-unused-expressions: "off" */
 
 const {hash} = require('@frctl/utils');
-const {expect} = require('../../../../test/helpers');
+const {expect} = require('../../../../../test/helpers');
 const Entity = require('./entity');
 
 const basicEntity = {

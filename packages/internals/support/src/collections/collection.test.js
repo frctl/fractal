@@ -1,7 +1,7 @@
 /* eslint no-unused-expressions: "off" */
 
 // const path = require('path');
-const {expect, sinon} = require('../../../../test/helpers');
+const {expect, sinon} = require('../../../../../test/helpers');
 
 const Collection = require('./collection');
 

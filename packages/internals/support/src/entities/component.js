@@ -1,10 +1,10 @@
 const assert = require('check-types').assert;
 const check = require('check-more-types');
 const {omit} = require('lodash');
+const Collection = require('../collections/collection');
+const FileCollection = require('../collections/file-collection');
 const Entity = require('./entity');
-const Collection = require('./collection');
 const File = require('./file');
-const FileCollection = require('./file-collection');
 
 const isFile = value => value instanceof File;
 check.mixin(isFile, 'file');

@@ -1,11 +1,11 @@
 const multimatch = require('multimatch');
 const check = require('check-types');
-
 const slash = require('slash');
+const Component = require('../entities/component');
 const Collection = require('./collection');
-const Component = require('./component');
 
 const assert = check.assert;
+
 class ComponentCollection extends Collection {
 
   /*
