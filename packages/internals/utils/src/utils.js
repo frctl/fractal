@@ -129,6 +129,10 @@ const utils = module.exports = {
     return `.${ext.toLowerCase().replace(/^\./, '')}`;
   },
 
+  getExt(filePath) {
+    return path.extname(filePath);
+  },
+
   normalizePath(filePath, cwd) {
     assert.string(filePath, `Path must be a string. Received '${typeof filePath}' [paths-invalid]`);
     cwd = cwd || process.cwd();

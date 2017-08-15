@@ -25,7 +25,7 @@ class Pipeline {
     } else {
       _transforms.get(this).push(transform);
     }
-    debug(`transform.addTransform: '%s'`, transform.name);
+    debug(`Pipeline.addTransform: '%s'`, transform.name);
     return transform;
   }
 
@@ -35,10 +35,11 @@ class Pipeline {
 
   async process(data = [], context, emitter) {
     emitter.emit('process.start', data, context);
-    debug(`transform.process:\n  %O \n  %O`, data, context);
+    debug(`Pipeline.process start:\n  %O \n  %O`, data, context);
     const state = {};
     data = Collection.from(data);
     for (const transform of _transforms.get(this)) {
+      debug(`Pipeline processing transform: '%s'`, transform.name);
       state[transform.name] = await transform.run(data, state, context, emitter);
 
       // Passthru transformers pass their output to the input of the next transformer
@@ -46,10 +47,9 @@ class Pipeline {
       if (transform.passthru) {
         data = state[transform.name];
       }
-      debug(`transform.processing: '%s'`, transform.name);
     }
     emitter.emit('process.complete', state);
-    debug(`transform complete:\n%O`, state);
+    debug(`Pipeline.process complete:\n%O`, state);
     return state;
   }
 
