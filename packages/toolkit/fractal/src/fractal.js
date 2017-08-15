@@ -1,4 +1,5 @@
 const Cache = require('node-cache');
+const chokidar = require('chokidar');
 const {ComponentCollection, FileCollection} = require('@frctl/support');
 const {Renderer} = require('@frctl/renderer');
 const {Parser} = require('@frctl/parser');
@@ -10,6 +11,7 @@ const _cache = new WeakMap();
 const _config = new WeakMap();
 const _parser = new WeakMap();
 const _renderer = new WeakMap();
+const _watcher = new WeakMap();
 
 class Fractal {
 
@@ -36,7 +38,6 @@ class Fractal {
 
   async parse() {
     const cached = this.cache.get('collections');
-
     if (cached) {
       return cached;
     }
@@ -64,6 +65,32 @@ class Fractal {
 
   async getFiles() {
     return this.parse().then(collections => collections.files);
+  }
+
+  watch() {
+    let watcher = _watcher.get(this);
+    if (watcher) {
+      return watcher;
+    }
+
+    watcher = chokidar.watch(this.get('src'), {
+      ignoreInitial: true,
+      cwd: process.cwd()
+    }).on('all', () => {
+      this.dirty = true;
+    })
+
+    _watcher.set(this, watcher);
+    return watcher;
+  }
+
+  unwatch() {
+    const watcher = _watcher.get(this);
+    if (watcher) {
+      watcher.close();
+    }
+    _watcher.set(this, null);
+    return this;
   }
 
   get(prop, fallback) {

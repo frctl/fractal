@@ -1,9 +1,12 @@
+const {writeFileSync, mkdirSync} = require('fs');
+const {tmpdir} = require('os');
 const {join} = require('path');
 const {File, ComponentCollection, FileCollection} = require('@frctl/support');
 const {defaultsDeep} = require('@frctl/utils');
 const {Renderer} = require('@frctl/renderer');
 const {Parser} = require('@frctl/parser');
 const Cache = require('node-cache');
+const {FSWatcher} = require('chokidar');
 const {expect, sinon} = require('../../../../test/helpers');
 const pkg = require('../package.json');
 const defaults = require('./config/defaults');
@@ -24,6 +27,14 @@ const view = new File({
   path: 'path/to/view.fjk',
   contents: Buffer.from('file contents')
 });
+
+const tmp = join(tmpdir(), Date.now().toString());
+
+mkdirSync(tmp);
+
+function writeFile(name, contents) {
+  writeFileSync(join(tmp, name), contents);
+}
 
 describe('Fractal', function () {
   describe('constructor()', function () {
@@ -116,6 +127,62 @@ describe('Fractal', function () {
       const fractal = new Fractal();
       const files = await fractal.getFiles();
       expect(files).to.be.instanceOf(FileCollection);
+    });
+  });
+
+  describe('.watch()', function () {
+    let fractal;
+    let watcher;
+    beforeEach(function () {
+      fractal = new Fractal({
+        src: [tmp + '/**/*']
+      });
+      watcher = fractal.watch();
+    });
+    afterEach(function () {
+      watcher.close();
+    });
+    it('returns a chokidar instance', function () {
+      expect(watcher).to.be.instanceOf(FSWatcher);
+    });
+    it('returns the same instance if called twice', function () {
+      const sameWatcher = fractal.watch();
+      expect(watcher).to.equal(sameWatcher);
+    });
+    it('sets the chokidar opts correctly', function () {
+      expect(watcher.options.ignoreInitial).to.equal(true);
+      expect(watcher.options.cwd).to.equal(process.cwd());
+    });
+    it('sets the dirty flag when the filesystem changes', function (done) {
+      fractal.dirty = false;
+      writeFile('foo.js');
+      setTimeout(function(){
+        expect(fractal.dirty).to.equal(true);
+        done();
+      }, 250);
+    });
+  });
+
+  describe('.unwatch()', function () {
+    let fractal;
+    let watcher;
+    beforeEach(function () {
+      fractal = new Fractal({
+        src: [tmp + '/**/*']
+      });
+      watcher = fractal.watch();
+    });
+    afterEach(function () {
+      watcher.close();
+    });
+    it('closes the chokidar instance', function () {
+      fractal.unwatch();
+      expect(watcher.closed).to.equal(true);
+    });
+    it('removes the instance so the next call to watch() initializes a fresh one', function () {
+      fractal.unwatch();
+      const newWatcher = fractal.watch();
+      expect(watcher).to.not.equal(newWatcher);
     });
   });
 
