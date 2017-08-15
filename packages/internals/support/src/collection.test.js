@@ -121,6 +121,7 @@ describe('Collection', function () {
     });
     it(`doesn't throw an error if valid input is supplied`, function () {
       expect(() => makeCollection(items)).to.not.throw();
+      expect(() => makeCollection([])).to.not.throw();
     });
   });
 
@@ -484,7 +485,7 @@ describe('Collection', function () {
   describe('.map()', function () {
     it('returns an new Collection', function () {
       const collection = makeCollection();
-      let newCollection = collection.map(() => ({}));
+      let newCollection = collection.map(() => ({src: 'path'}));
       expect(Array.isArray(newCollection)).to.be.false;
       testInstance(newCollection, collection);
     });

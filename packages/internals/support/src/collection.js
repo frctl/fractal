@@ -1,5 +1,6 @@
 const {find, filter, reject, iteratee, sortBy, orderBy, groupBy, uniq, uniqBy, mapValues, cloneDeep} = require('lodash');
 const check = require('check-types');
+const File = require('./file');
 
 const assert = check.assert;
 
@@ -228,7 +229,7 @@ class Collection {
   }
 
   static validate(items) {
-    return check.maybe.array.of.object(items);
+    return (check.maybe.array.of.nonEmptyObject(items) || check.maybe.array.of.instance(items, File));
   }
 
 }

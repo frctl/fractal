@@ -22,7 +22,7 @@ class Transform {
     return this;
   }
 
-  run(data = [], state, context) {
+  run(data = [], state, context, emitter) {
     const transform = this;
 
     return new EmittingPromise(async (resolve, reject, emit) => {
@@ -88,7 +88,7 @@ const getConstructor = func => {
   const errMsg = `Transform methods must return a value that inherits from the 'Collection' base class\n:
   please check the return value of the supplied transform. [transform-function-invalid]`;
 
-  const val = func([]);
+  const val = func(new Collection());
   assert(checkMore.defined(val), errMsg, TypeError);
   const Species = val.constructor[Symbol.species] || val.constructor;
   assert(checkMore.defined(Species), errMsg, TypeError);

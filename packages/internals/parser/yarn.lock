@@ -100,13 +100,19 @@ core-util-is@~1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
 
+debug@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-3.0.0.tgz#1d2feae53349047b08b264ec41906ba17a8516e4"
+  dependencies:
+    ms "2.0.0"
+
 deep-aplus@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/deep-aplus/-/deep-aplus-1.0.4.tgz#e1ec4c10a00b5046b59e0ddd0519d101ae315e8f"
   dependencies:
     lodash.isplainobject "^4.0.6"
 
-eventemitter2@^4.1.0:
+eventemitter2@^4.1.0, eventemitter2@^4.1.2:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/eventemitter2/-/eventemitter2-4.1.2.tgz#0e1a8477af821a6ef3995b311bf74c23a5247f15"
 
@@ -141,6 +147,10 @@ mock-require@^2.0.2:
   resolved "https://registry.yarnpkg.com/mock-require/-/mock-require-2.0.2.tgz#1eaa71aad23013773d127dc7e91a3fbb4837d60d"
   dependencies:
     caller-id "^0.1.0"
+
+ms@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
 
 multimatch@^2.1.0:
   version "2.1.0"
