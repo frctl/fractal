@@ -12,7 +12,29 @@ module.exports = {
   properties: {
 
     extends: {
-      anyOf: stringArray
+      anyOf: [
+        {
+          type: 'string'
+        },
+        {
+          type: 'array'
+        },
+        {
+          type: 'null'
+        }
+      ]
+    },
+
+    cache: {
+      anyOf: [
+        {
+          type: 'boolean',
+          enum: [false]
+        },
+        {
+          type: 'integer'
+        }
+      ]
     },
 
     commands: {

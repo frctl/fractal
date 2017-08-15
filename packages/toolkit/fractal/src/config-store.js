@@ -3,7 +3,6 @@ const {get} = require('lodash');
 const schema = require('./config.schema');
 
 const addOns = ['commands', 'plugins', 'extensions', 'adapters'];
-
 const accessors = addOns.map(prop => ({
   path: prop,
   handler: 'packages-loader'
@@ -19,23 +18,28 @@ function defaultsCustomizer(targetValue, defaultValue, key) {
   }
 }
 
-module.exports = function configFactory(data) {
-  const presets = get(data, 'extends', []);
+class ConfigStore extends ExtendedConfig {
 
-  if (Array.isArray(presets) && presets.length === 0) {
-    data.extends = [
-      require('@frctl/fractal-preset-core')
-    ];
+  constructor(data) {
+    const presets = get(data, 'extends', []);
+
+    if (Array.isArray(presets) && presets.length === 0) {
+      data.extends = [
+        require('@frctl/fractal-preset-core')
+      ];
+    }
+
+    super(data, {
+      schema,
+      accessors,
+      customizers: {
+        defaults: defaultsCustomizer
+      }
+    });
   }
 
-  return new ExtendedConfig(data, {
-    schema,
-    accessors,
-    customizers: {
-      defaults: defaultsCustomizer
-    }
-  });
-};
+}
 
+module.exports = ConfigStore;
 module.exports.accessors = accessors;
 module.exports.defaultsCustomizer = defaultsCustomizer;
