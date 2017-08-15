@@ -1,6 +1,7 @@
 /* eslint handle-callback-err: off, no-unused-expressions: off */
 const mockRequire = require('mock-require');
-const {Collection, EmittingPromise, FileCollection, ComponentCollection, File} = require('@frctl/support');
+const {EventEmitter2} = require('eventemitter2');
+const {Collection, FileCollection, ComponentCollection, File} = require('@frctl/support');
 const {expect, sinon, validateSchema} = require('../../../../../test/helpers');
 const makePlugin = require('../../test/helpers').makePlugin;
 const Transform = require('./transform');
@@ -131,12 +132,10 @@ describe('Transform', function () {
   });
 
   describe('.run()', function () {
-    it('it returns an EmittingPromise', function () {
+    it('it returns a Promise', function () {
       const transform = new Transform(validFCTransform);
       const promise = transform.run();
       expect(promise).to.be.a('Promise');
-      expect(promise).to.be.an.instanceof(EmittingPromise);
-      expect(promise.on).to.be.a('function');
     });
 
     it('it returns the expected result of its transform methods', async function () {
@@ -152,39 +151,45 @@ describe('Transform', function () {
       expect(result.toArray()).to.eql([{title: 'Red', tested: true}, {title: 'Blue', tested: true}]);
     });
 
-    it('it emits the expected events for transform', function () {
+    it('it emits the expected events for transform when an emitter is provided', async function () {
       const _transform = new Transform(validFCTransform);
-      const task = _transform.run([new File(), new File()]);
-      task.on('transform.start', ({transform}) => {
-        expect(_transform).to.eql(_transform);
+      const emitter = new EventEmitter2();
+
+      emitter.on('transform.start', ({transform}) => {
+        expect(_transform).to.eql(transform);
       });
-      task.on('transform.complete', ({transform, collection}) => {
-        expect(_transform).to.eql(_transform);
-        expect(collection).to.be.a('FileCollection').with.property('length').that.equals(2);
+      emitter.on('transform.complete', ({transform, collection}) => {
+        expect(_transform).to.eql(transform);
+        expect(collection).to.be.a('FileCollection').with.property('length').that.equals(3);
       });
-      return task;
+      const emittedSpy = sinon.spy(emitter, 'emit');
+
+      await _transform.run([new File(), new File(), new File()], {}, {}, emitter);
+      expect(emittedSpy.callCount).to.equal(2);
     });
 
-    it('it emits the expected events for transform and plugins', function () {
+    it('it emits the expected events for transform and plugins', async function () {
       const _transform = new Transform(validTransformWithPluginAlt);
-      const task = _transform.run([{title: 'Red'}, {title: 'Blue'}]);
-      task.on('transform.start', ({transform}) => {
-        expect(_transform).to.eql(_transform);
-      });
-      task.on('plugin.start', ({plugin, transform}) => {
-        expect(_transform).to.eql(_transform);
-        expect(plugin).to.be.an('object');
-      });
-      task.on('plugin.complete', ({plugin, transform}) => {
-        expect(_transform).to.eql(_transform);
-        expect(plugin).to.be.an('object');
-      });
-      task.on('transform.complete', ({transform, collection}) => {
-        expect(_transform).to.eql(_transform);
-        expect(collection).to.be.a('FileCollection').with.property('length').that.equals(2);
-      });
+      const emitter = new EventEmitter2();
 
-      return task;
+      emitter.on('transform.start', ({transform}) => {
+        expect(_transform).to.eql(transform);
+      });
+      emitter.on('plugin.start', ({plugin, transform}) => {
+        expect(_transform).to.eql(transform);
+        expect(plugin).to.be.a('Plugin');
+      });
+      emitter.on('plugin.complete', ({plugin, transform}) => {
+        expect(_transform).to.eql(transform);
+        expect(plugin).to.be.a('Plugin');
+      });
+      emitter.on('transform.complete', ({transform, collection}) => {
+        expect(_transform).to.eql(transform);
+        expect(collection).to.be.a('Collection').with.property('length').that.equals(2);
+      });
+      const emittedSpy = sinon.spy(emitter, 'emit');
+      await _transform.run([{title: 'Red'}, {title: 'Blue'}], {}, {}, emitter);
+      expect(emittedSpy.callCount).to.equal(4);
     });
     it('throws an error if plugins return invalid types', function () {
       const task = new Transform(transformWithInvalidPluginReturnValue)
