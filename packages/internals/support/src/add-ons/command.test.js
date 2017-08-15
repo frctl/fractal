@@ -102,52 +102,6 @@ describe('Command', function () {
       expect(cmd.handler).to.equal(validCommand.handler);
     });
   });
-
-  // describe.skip('.handler()', function () {
-  //   it('returns a promise', function () {
-  //     const cmd = command(validCommand, app, env);
-  //     expect(cmd.handler(argv)).to.be.instanceOf(Promise);
-  //   });
-  //
-  //   it('calls the yargs help method if the argv.help property is true', function () {
-  //     const cmd = command(validCommand, app, env);
-  //     cmd.handler({
-  //       help: true
-  //     });
-  //     expect(helpSpy.called).to.equal(true);
-  //   });
-  //
-  //   it('logs the output if the return value is a string', async function () {
-  //     const cmd = command({
-  //       name: 'foo',
-  //       command: 'foo [bar]',
-  //       handler() {
-  //         return 'woop';
-  //       }
-  //     }, app, env);
-  //     await cmd.handler(argv);
-  //     expect(logSpy.calledWith('woop')).to.equal(true);
-  //   });
-  //
-  //   it('logs the error if the promise rejects', async function () {
-  //     const err = new Error('boo');
-  //     const cmd = command({
-  //       name: 'foo',
-  //       command: 'foo [bar]',
-  //       handler() {
-  //         throw err;
-  //       }
-  //     }, app, env);
-  //     await cmd.handler(argv);
-  //     expect(errorSpy.calledWith(err)).to.equal(true);
-  //   });
-  //
-  //   it('calls the handler prop with the expected arguments', function () {
-  //     const cmd = command(validCommand, app, env);
-  //     cmd.handler(argv);
-  //     expect(handlerSpy.calledWithMatch(argv, app, env)).to.equal(true);
-  //   });
-  // });
 });
 
 describe('Command schema', function () {
