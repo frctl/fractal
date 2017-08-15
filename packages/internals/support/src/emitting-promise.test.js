@@ -4,11 +4,11 @@ const {expect, sinon} = require('../../../../test/helpers');
 const EmittingPromise = require('./emitting-promise');
 
 const basicResolver = (resolve, reject) => resolve('value');
-const resolver = (resolve, reject, emit) => {
+const resolver = (resolve, reject, emitter) => {
   try {
-    emit('transform.start', 'initial value');
+    emitter.emit('transform.start', 'initial value');
     setTimeout(() => {
-      emit('transform.end', 'final value');
+      emitter.emit('transform.end', 'final value');
       resolve('very final value');
     }, 200);
   } catch (err) {
@@ -25,10 +25,10 @@ describe('EmittingPromise', function () {
       return eProm;
     });
     it('passes expected params to the resolver', function () {
-      const eProm = new EmittingPromise((resolve, reject, emit) => {
+      const eProm = new EmittingPromise((resolve, reject, emitter) => {
         expect(resolve).to.be.a('function');
         expect(reject).to.be.a('function');
-        expect(emit).to.be.a('function');
+        expect(emitter).to.be.instanceOf(EventEmitter2);
         resolve('value');
       });
 
@@ -46,6 +46,9 @@ describe('EmittingPromise', function () {
         }
       }
       for (let prop in eventEmitter) {
+        if (prop === 'emit') {
+          continue;
+        }
         const proxied = Reflect.get(eProm, prop);
         expect(proxied).to.exist;
         expect(typeof Reflect.get(eventEmitter, prop)).to.equal(typeof proxied);
@@ -60,12 +63,17 @@ describe('EmittingPromise', function () {
   });
   describe('.on()', function () {
     it('emits events and resolves as expected', function () {
+      let counter = 0;
       const eProm = new EmittingPromise(resolver);
       eProm.on('transform.start', result => {
         expect(result).to.equal('initial value');
+        counter++;
       }).on('transform.end', function (result) {
         expect(result).to.equal('final value');
-      }).catch(err => console.log(err));
+        counter++;
+      }).catch(err => console.log(err)).then(() => {
+        expect(counter).to.equal(2);
+      });
       return eProm;
     });
   });

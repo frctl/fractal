@@ -9,13 +9,13 @@ class EmittingPromise extends Promise {
       wildcard: true
     });
 
-    super((resolve, reject) => {
-      resolver(resolve, reject, (eventName, ...args) => {
-        process.nextTick(() => {
-          emitter.emit(eventName, ...args);
-        });
-      });
-    });
+    const oldEmit = emitter.emit.bind(emitter);
+    emitter.emit = function (...args) {
+      process.nextTick(() => oldEmit(...args));
+      return this;
+    };
+
+    super((resolve, reject) => resolver(resolve, reject, emitter));
 
     for (let prop in emitter) {
       Reflect.defineProperty(this, prop, {
