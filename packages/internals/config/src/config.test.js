@@ -211,6 +211,29 @@ describe('Config', function () {
     });
   });
 
+  describe('.pick()', function () {
+    it('returns an object consisting of key/values picked from the data', function () {
+      const config = new Config({
+        foo: 'bar',
+        one: 'two',
+        nested: {
+          prop: 'child'
+        }
+      });
+      expect(config.pick('foo', 'nested.prop')).to.eql({
+        foo: 'bar',
+        nested: {
+          prop: 'child'
+        }
+      });
+      expect(config.pick(['foo', 'nested.prop'])).to.eql(config.pick('foo', 'nested.prop'));
+      config.addAccessor('foo', val => '!' + val);
+      expect(config.pick(['foo'])).to.eql({
+        foo: '!bar'
+      });
+    });
+  });
+
   describe('.addDefaults()', function () {
     it('deep merges the supplied data as defaults', function () {
       const config = new Config({
