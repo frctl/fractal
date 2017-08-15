@@ -3,11 +3,11 @@ const {File, ComponentCollection, FileCollection} = require('@frctl/support');
 const {defaultsDeep} = require('@frctl/utils');
 const {Renderer} = require('@frctl/renderer');
 const {Parser} = require('@frctl/parser');
+const Cache = require('node-cache');
 const {expect, sinon} = require('../../../../test/helpers');
 const pkg = require('../package.json');
 const defaults = require('./config/defaults');
 const Fractal = require('./fractal');
-const ParserCache = require('./parser-cache');
 
 const config = {
   src: join(__dirname, '../../../../test/fixtures/components'),
@@ -70,15 +70,16 @@ describe('Fractal', function () {
       expect(components).to.be.instanceOf(ComponentCollection);
       expect(files).to.be.instanceOf(FileCollection);
     });
-    it('returns the cached result if valid', async function () {
+    it('uses the cached result if valid', async function () {
       const fractal = new Fractal();
+      const spy = sinon.spy(fractal.cache, 'get');
       const collections = await fractal.parse();
-      const collections2 = await fractal.parse();
-      expect(collections).to.equal(collections2);
-      fractal.dirty = true;
-      const collections3 = await fractal.parse();
-      expect(collections3).to.not.equal(collections);
-      expect(collections3).to.not.equal(collections2);
+      expect(spy.called).to.equal(true);
+      expect(spy.returned(collections)).to.equal(false);
+      spy.reset();
+      const cachedCollections = await fractal.parse();
+      expect(spy.returned(cachedCollections)).to.equal(true);
+      spy.restore();
     });
   });
 
@@ -135,7 +136,7 @@ describe('Fractal', function () {
     });
     it('clears the cache when set to true', function () {
       const fractal = new Fractal();
-      const spy = sinon.spy(fractal.cache, 'clear');
+      const spy = sinon.spy(fractal.cache, 'del');
       fractal.dirty = true;
       expect(spy.called).to.equal(true);
       spy.reset();
@@ -148,7 +149,7 @@ describe('Fractal', function () {
   describe('.cache', function () {
     it('returns the parser cache instance', function () {
       const fractal = new Fractal();
-      expect(fractal.cache).to.be.instanceof(ParserCache);
+      expect(fractal.cache).to.be.instanceof(Cache);
     });
   });
 

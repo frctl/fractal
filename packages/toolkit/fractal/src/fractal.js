@@ -1,9 +1,9 @@
+const Cache = require('node-cache');
 const {ComponentCollection, FileCollection} = require('@frctl/support');
 const {Renderer} = require('@frctl/renderer');
 const {Parser} = require('@frctl/parser');
 const debug = require('debug')('fractal:core');
 const Config = require('./config/store');
-const Cache = require('./parser-cache');
 
 const _dirty = new WeakMap();
 const _cache = new WeakMap();
@@ -17,9 +17,13 @@ class Fractal {
     debug('instantiating new Fractal instance');
 
     const config = new Config(configData);
-    const cache = new Cache(config.get('cache'));
     const renderer = new Renderer(config.get('adapters'));
     const parser = new Parser(config.pick('src', 'plugins', 'transforms'));
+    const cache = new Cache({
+      stdTTL: config.get('cache.ttl'),
+      checkperiod: config.get('cache.check'),
+      useClones: false
+    });
 
     _dirty.set(this, true);
     _cache.set(this, cache);
@@ -31,7 +35,7 @@ class Fractal {
   }
 
   async parse() {
-    const cached = this.cache.get();
+    const cached = this.cache.get('collections');
 
     if (cached) {
       return cached;
@@ -44,7 +48,7 @@ class Fractal {
     });
 
     this.dirty = false;
-    this.cache.set(collections);
+    this.cache.set('collections', collections);
 
     return collections;
   }
@@ -73,7 +77,7 @@ class Fractal {
   set dirty(isDirty) {
     _dirty.set(this, isDirty);
     if (isDirty) {
-      this.cache.clear();
+      this.cache.del('collections');
     }
     return this;
   }

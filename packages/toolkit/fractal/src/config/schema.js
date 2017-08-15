@@ -5,7 +5,7 @@ module.exports = {
   properties: {
 
     src: {
-      anyOf:  [
+      anyOf: [
         {
           type: 'string'
         },
@@ -55,7 +55,7 @@ module.exports = {
 
     transforms: {
       type: 'array'
-    },
+    }
 
   }
 
