@@ -1,4 +1,4 @@
-const cli = require('@frctl/cli');
+const {Command} = require('@frctl/support');
 const fractal = require('@frctl/fractal');
 const {expect, validate} = require('../../../../test/helpers');
 const command = require('./command');
@@ -14,7 +14,7 @@ const env = {
 
 describe('command-info', function () {
   it('has the expected format', function () {
-    expect(validate(cli.schema.command, command())).to.equal(true);
+    expect(validate(Command.schema, command())).to.equal(true);
   });
 
   describe('.handler()', () => {

@@ -16,7 +16,7 @@ class Fractal {
 
     _config.set(this, new ConfigStore(config));
     _cache.set(this, new Cache(this.get('cache')));
-    _renderer.set(this, new Renderer(this));
+    _renderer.set(this, new Renderer(this.get('adapters')));
     _dirty.set(this, true);
 
     debug('using config %O', this.config);
@@ -41,7 +41,8 @@ class Fractal {
     return collections;
   }
 
-  async render(target, context, opts) {
+  async render(target, context = {}, opts = {}) {
+    opts.collections = opts.collections ? opts.collections : await this.parse();
     return this.renderer.render(target, context, opts);
   }
 

@@ -1,11 +1,11 @@
 const multimatch = require('multimatch');
 const check = require('check-types');
-
 const slash = require('slash');
-const File = require('./file');
+const File = require('../entities/file');
 const Collection = require('./collection');
 
 const assert = check.assert;
+
 class FileCollection extends Collection {
 
   filterByPath(...args) {

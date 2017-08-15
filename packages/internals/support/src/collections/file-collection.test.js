@@ -1,7 +1,7 @@
 /* eslint no-unused-expressions: "off" */
 
-const {expect} = require('../../../../test/helpers');
-const File = require('./file');
+const {expect} = require('../../../../../test/helpers');
+const File = require('../entities/file');
 const FileCollection = require('./file-collection');
 
 let items = [{
