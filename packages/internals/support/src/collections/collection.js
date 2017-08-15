@@ -1,6 +1,6 @@
 const {find, filter, reject, iteratee, sortBy, orderBy, groupBy, uniq, uniqBy, mapValues, cloneDeep} = require('lodash');
 const check = require('check-types');
-const File = require('./file');
+const File = require('../entities/file');
 
 const assert = check.assert;
 
