@@ -9,9 +9,9 @@ class EmittingPromise extends Promise {
       wildcard: true
     });
 
-    const oldEmit = emitter.emit;
+    const oldEmit = emitter.emit.bind(emitter);
     emitter.emit = function (...args) {
-      process.nextTick(() => oldEmit.bind(emitter)(...args));
+      process.nextTick(() => oldEmit(...args));
       return this;
     };
 
