@@ -1,4 +1,4 @@
-const {find, filter, reject, iteratee, sortBy, orderBy, groupBy, uniq, uniqBy, mapValues, cloneDeep} = require('lodash');
+const {find, filter, reject, iteratee, sortBy, orderBy, groupBy, uniq, uniqBy, mapValues, cloneDeep, isArray, isObjectLike} = require('lodash');
 const check = require('check-types');
 
 const assert = check.assert;
@@ -224,7 +224,10 @@ class Collection {
   }
 
   static validate(items) {
-    return check.maybe.array.of.object(items);
+    if (items) {
+      return isArray(items) && items.reduce((acc, i) => (acc && isObjectLike(i)), true);
+    }
+    return true;
   }
 
 }
