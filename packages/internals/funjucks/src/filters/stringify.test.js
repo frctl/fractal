@@ -1,7 +1,7 @@
 const {expect} = require('../../../../../test/helpers');
 const factory = require('./stringify');
 
-describe('await', function () {
+describe('stringify', function () {
   it('exports a function', function () {
     expect(factory).to.be.a('function');
   });
