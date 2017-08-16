@@ -1,6 +1,7 @@
 const Cache = require('node-cache');
 const chokidar = require('chokidar');
-const {ComponentCollection, FileCollection} = require('@frctl/support');
+const {defaultsDeep} = require('@frctl/utils');
+const {Component, Variant, File, ComponentCollection, FileCollection, EmittingPromise} = require('@frctl/support');
 const {Renderer} = require('@frctl/renderer');
 const {Parser} = require('@frctl/parser');
 const debug = require('debug')('fractal:core');
@@ -55,8 +56,54 @@ class Fractal {
   }
 
   async render(target, context = {}, opts = {}) {
-    opts.collections = opts.collections ? opts.collections : await this.parse();
-    return this.renderer.render(target, context, opts);
+    const renderer = this.renderer;
+
+    if (renderer.adapters.length === 0) {
+      throw new Error(`Fractal.render - You must register one or more adapters before you can render views [no-adapters]`);
+    }
+
+    const adapter = opts.adapter ? renderer.getAdapter(opts.adapter) : renderer.getDefaultAdapter();
+    if (!adapter) {
+      throw new Error(`Fractal.render - The adapter '${opts.adapter}' could not be found [no-adapters]`);
+    }
+
+    if (!(Component.isComponent(target) || Variant.isVariant(target) || File.isFile(target))) {
+      throw new Error(`Fractal.render - Only components, variants or views can be rendered [target-invalid]`);
+    }
+
+    const collections = opts.collections ? opts.collections : await this.parse();
+
+    return new EmittingPromise(async (resolve, reject, emitter) => {
+      try {
+        let view;
+        if (Component.isComponent(target)) {
+          // reduce to a variant
+          const variant = target.variants.find(variant => {
+            return opts.variant ? variant.name === opts.variant : variant.default;
+          });
+          if (!variant) {
+            throw new Error(`Could not find variant '${opts.variant || 'default'}' for component '${target.name}' [variant-not-found]`);
+          }
+          target = variant;
+        }
+
+        if (Variant.isVariant(target)) {
+          // reduce to a view
+          const component = collections.components.find(c => c.name === target.component);
+          const views = component.files.filter(this.get('components.views.filter'));
+          view = views.find(v => adapter.match(v.extname));
+          if (!view) {
+            throw new Error(`Could not find view for component '${component.name}' (using adapter '${adapter.name}') [view-not-found]`);
+          }
+          context = defaultsDeep(context, target.context || {});
+          target = view;
+        }
+
+        resolve(await this.renderer.render(view, context, collections, opts, emitter));
+      } catch (err) {
+        reject(err);
+      }
+    });
   }
 
   async getComponents() {
@@ -78,7 +125,7 @@ class Fractal {
       cwd: process.cwd()
     }).on('all', () => {
       this.dirty = true;
-    })
+    });
 
     _watcher.set(this, watcher);
     return watcher;

@@ -156,7 +156,7 @@ describe('Fractal', function () {
     it('sets the dirty flag when the filesystem changes', function (done) {
       fractal.dirty = false;
       writeFile('foo.js');
-      setTimeout(function(){
+      setTimeout(function () {
         expect(fractal.dirty).to.equal(true);
         done();
       }, 250);

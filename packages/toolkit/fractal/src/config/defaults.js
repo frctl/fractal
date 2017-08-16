@@ -7,6 +7,20 @@ module.exports = {
     check: 600
   },
 
+  components: {
+    config: {
+      defaults: {},
+      filter: {
+        name: 'config'
+      }
+    },
+    views: {
+      filter: {
+        name: 'view'
+      }
+    }
+  },
+
   extends: [],
   commands: [],
   adapters: [],
