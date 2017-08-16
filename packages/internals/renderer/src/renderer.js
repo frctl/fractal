@@ -1,3 +1,6 @@
+/* eslint max-params: off */
+
+const EventEmitter = require('events');
 const {remove} = require('lodash');
 const {File, Adapter} = require('@frctl/support');
 const {toArray} = require('@frctl/utils');
@@ -50,7 +53,7 @@ class Renderer {
     return this;
   }
 
-  async render(view, context = {}, collections = {}, opts = {}) {
+  async render(view, context = {}, collections = {}, opts = {}, emitter = new EventEmitter()) {
     if (!File.isFile(view)) {
       throw new Error(`view must be a File instance [file-invalid]`);
     }
@@ -65,7 +68,10 @@ class Renderer {
     if (!adapter) {
       throw new Error(`No adapter found to render view ${view.relative} [adapter-not-found]`);
     }
-    return adapter.render(view, context, collections, opts);
+    emitter.emit('render.start', {view, context, adapter, opts});
+    const result = adapter.render(view, context, collections, opts);
+    emitter.emit('render.complete', {result, view, context, adapter, opts});
+    return result;
   }
 
   get adapters() {

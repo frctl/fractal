@@ -11,12 +11,12 @@ module.exports = {
     config: {
       defaults: {},
       filter: {
-        name: 'config'
+        stem: 'config'
       }
     },
     views: {
       filter: {
-        name: 'view'
+        stem: 'view'
       }
     }
   },

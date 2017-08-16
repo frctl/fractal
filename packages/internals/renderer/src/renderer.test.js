@@ -1,4 +1,5 @@
-const {File} = require('@frctl/support');
+const EventEmitter = require('events');
+const {File, Adapter} = require('@frctl/support');
 const {toArray} = require('@frctl/utils');
 const {expect, sinon} = require('../../../../test/helpers');
 // const parserOutput = require('../../../../test/fixtures/parser-result');
@@ -46,6 +47,13 @@ describe('Renderer', function () {
       expect(renderer.adapters[0].name).to.equal(adapters[0].name);
       expect(renderer.adapters[1].name).to.equal(adapters[1].name);
     });
+    it('wraps all adapter objects in Adapter instances', function () {
+      const renderer = makeRenderer();
+      renderer.addAdapter(adapters);
+      for (const adapter of renderer.adapters) {
+        expect(adapter).to.be.instanceOf(Adapter);
+      }
+    });
     it('pushes adapters onto the end of the stack', function () {
       const renderer = makeRenderer();
       renderer.addAdapter(adapters[0]);
@@ -77,6 +85,14 @@ describe('Renderer', function () {
     it('returns the first adapter', function () {
       const renderer = makeRenderer(adapters);
       expect(renderer.getDefaultAdapter().name).to.equal(adapters[0].name);
+    });
+  });
+
+  describe('.getAdapter()', function () {
+    it('finds an adapter by name', function () {
+      const renderer = makeRenderer(adapters);
+      expect(renderer.getAdapter('funjucks')).to.be.instanceOf(Adapter);
+      expect(renderer.getAdapter('funjucks').name).to.equal('funjucks');
     });
   });
 
@@ -119,6 +135,21 @@ describe('Renderer', function () {
       expect(renderSpy.calledWith(funjucksFile, context, collections, opts)).to.equal(true);
       expect(result).to.equal(await adapters[0].render(funjucksFile, context, collections, opts));
       renderSpy.restore();
+    });
+    it('calls start and end events on an emitter if provided', function () {
+      let counter = 0;
+      const emitter = new EventEmitter();
+      emitter.on('render.start', props => {
+        counter++;
+        expect(props).to.have.all.keys(['view', 'adapter', 'opts', 'context']);
+      });
+      emitter.on('render.complete', props => {
+        counter++;
+        expect(props).to.have.all.keys(['result', 'view', 'adapter', 'opts', 'context']);
+      });
+      return makeRenderer(adapters).render(funjucksFile, {}, {}, {}, emitter).then(() => {
+        expect(counter).to.equal(2);
+      });
     });
     it('rejects if no matching adapter can be found', function () {
       return expect(makeRenderer().render(funjucksFile)).to.be.rejectedWith('[adapter-not-found]');

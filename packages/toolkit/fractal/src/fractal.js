@@ -55,25 +55,25 @@ class Fractal {
     return collections;
   }
 
-  async render(target, context = {}, opts = {}) {
+  render(target, context = {}, opts = {}) {
     const renderer = this.renderer;
 
     if (renderer.adapters.length === 0) {
-      throw new Error(`Fractal.render - You must register one or more adapters before you can render views [no-adapters]`);
+      return EmittingPromise.reject(new Error(`Fractal.render - You must register one or more adapters before you can render views [no-adapters]`));
     }
 
     const adapter = opts.adapter ? renderer.getAdapter(opts.adapter) : renderer.getDefaultAdapter();
     if (!adapter) {
-      throw new Error(`Fractal.render - The adapter '${opts.adapter}' could not be found [no-adapters]`);
+      return EmittingPromise.reject(new Error(`Fractal.render - The adapter '${opts.adapter}' could not be found [adapter-not-found]`));
     }
 
     if (!(Component.isComponent(target) || Variant.isVariant(target) || File.isFile(target))) {
-      throw new Error(`Fractal.render - Only components, variants or views can be rendered [target-invalid]`);
+      return EmittingPromise.reject(new Error(`Fractal.render - Only components, variants or views can be rendered [target-invalid]`));
     }
 
-    const collections = opts.collections ? opts.collections : await this.parse();
-
     return new EmittingPromise(async (resolve, reject, emitter) => {
+      const collections = opts.collections ? opts.collections : await this.parse();
+
       try {
         let view;
         if (Component.isComponent(target)) {
@@ -90,8 +90,11 @@ class Fractal {
         if (Variant.isVariant(target)) {
           // reduce to a view
           const component = collections.components.find(c => c.name === target.component);
+          if (!component) {
+            throw new Error(`Component '${target.component}' not found [component-not-found]`);
+          }
           const views = component.files.filter(this.get('components.views.filter'));
-          view = views.find(v => adapter.match(v.extname));
+          view = views.find(v => adapter.match(v));
           if (!view) {
             throw new Error(`Could not find view for component '${component.name}' (using adapter '${adapter.name}') [view-not-found]`);
           }
@@ -99,7 +102,7 @@ class Fractal {
           target = view;
         }
 
-        resolve(await this.renderer.render(view, context, collections, opts, emitter));
+        resolve(await this.renderer.render(target, context, collections, opts, emitter));
       } catch (err) {
         reject(err);
       }

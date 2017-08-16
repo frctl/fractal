@@ -1,7 +1,7 @@
 const {writeFileSync, mkdirSync} = require('fs');
 const {tmpdir} = require('os');
 const {join} = require('path');
-const {File, ComponentCollection, FileCollection} = require('@frctl/support');
+const {File, ComponentCollection, FileCollection, EmittingPromise, Component, Variant, Collection} = require('@frctl/support');
 const {defaultsDeep} = require('@frctl/utils');
 const {Renderer} = require('@frctl/renderer');
 const {Parser} = require('@frctl/parser');
@@ -28,6 +28,37 @@ const view = new File({
   contents: Buffer.from('file contents')
 });
 
+const files = new FileCollection([
+  new File({path: 'components/@test-component'}),
+  new File({
+    name: 'view',
+    path: 'components/@test-component/view.fjk',
+    contents: Buffer.from('component!')
+  })
+]);
+
+const components = new ComponentCollection([
+  new Component({
+    name: 'test-component',
+    src: files.find({stem: '@test-component'}),
+    files: new FileCollection([
+      files.find({stem: 'view'})
+    ]),
+    variants: new Collection([
+      new Variant({
+        name: 'default',
+        default: true,
+        component: 'test-component',
+        context: {
+          foo: 'bar'
+        }
+      })
+    ])
+  })
+]);
+
+const parserOutput = {components, files};
+
 const tmp = join(tmpdir(), Date.now().toString());
 
 mkdirSync(tmp);
@@ -36,10 +67,14 @@ function writeFile(name, contents) {
   writeFileSync(join(tmp, name), contents);
 }
 
+function makeFractal(customConfig) {
+  return new Fractal(customConfig || config);
+}
+
 describe('Fractal', function () {
   describe('constructor()', function () {
     it('accepts configuration data', () => {
-      const fractal = new Fractal(config);
+      const fractal = makeFractal();
       expect(fractal.config).to.eql(defaultsDeep(config, defaults));
     });
 
@@ -59,12 +94,12 @@ describe('Fractal', function () {
 
   describe('.get()', function () {
     it('retrieves a value from the config data', () => {
-      const fractal = new Fractal(config);
+      const fractal = makeFractal();
       expect(fractal.get('foo')).to.equal(config.foo);
     });
 
     it('accepts a fallback argument which is returned if the property is undefined', () => {
-      const fractal = new Fractal(config);
+      const fractal = makeFractal();
       const fallback = 'whoops!';
       expect(fractal.get('boop', fallback)).to.equal(fallback);
     });
@@ -96,14 +131,82 @@ describe('Fractal', function () {
 
   describe('.render()', function () {
     it('returns a Promise', function () {
-      const fractal = new Fractal(config);
-      expect(fractal.render(view)).to.be.instanceOf(Promise);
+      const fractal = makeFractal();
+      expect(fractal.render(view)).to.be.instanceOf(EmittingPromise);
     });
     it('resolves to a string', async function () {
-      const fractal = new Fractal(config);
+      const fractal = makeFractal();
       expect(await fractal.render(view)).to.be.a('string');
     });
-    it('provides collections to the renderer unless supplied in opts');
+    it('rejects if no adapters have been added', function () {
+      const fractal = makeFractal({
+        extends: null
+      });
+      const result = fractal.render(view);
+      expect(result).to.be.instanceOf(EmittingPromise);
+      return expect(result).to.be.rejectedWith(Error, '[no-adapters]');
+    });
+    it('rejects the specified adapter cannot be found', function () {
+      const fractal = makeFractal();
+      return expect(fractal.render(view, {}, {
+        adapter: 'foo'
+      })).to.eventually.be.rejectedWith(Error, '[adapter-not-found]');
+    });
+    it('rejects the target is not a view, component or variant', function () {
+      const fractal = makeFractal();
+      return expect(fractal.render('foo')).to.be.rejectedWith(Error, '[target-invalid]');
+    });
+    it('returns an EmittingPromise', function () {
+      const fractal = makeFractal();
+      expect(fractal.render(view)).to.be.instanceOf(EmittingPromise);
+    });
+    it('Can render components', async function () {
+      const fractal = makeFractal();
+      const component = parserOutput.components.first();
+      const opts = {collections: parserOutput};
+      expect(await fractal.render(component, {}, opts)).to.equal('component!');
+    });
+    it('Can render variants', async function () {
+      const fractal = makeFractal();
+      const spy = sinon.spy(fractal.renderer, 'render');
+      const variant = parserOutput.components.first().variants.first();
+      const view = parserOutput.components.first().files.find({stem: 'view'});
+      const opts = {collections: parserOutput};
+      const result = await fractal.render(variant, {}, opts);
+      expect(result).to.equal('component!');
+      expect(spy.calledWith(view, variant.context)).to.equal(true);
+      spy.restore();
+    });
+    it('rejects if a specified variant cannot be found', function () {
+      const fractal = makeFractal();
+      return expect(fractal.render(parserOutput.components.first(), {}, {
+        collections: parserOutput,
+        variant: 'foo'
+      })).to.be.rejectedWith(Error, '[variant-not-found]');
+    });
+    it('rejects if a variants\' component cannot be found', function () {
+      const fractal = makeFractal();
+      const variant = new Variant({
+        name: 'default',
+        default: true,
+        component: 'foo-component'
+      });
+      return expect(fractal.render(variant, {}, {
+        collections: parserOutput
+      })).to.be.rejectedWith(Error, '[component-not-found]');
+    });
+    it('rejects if a suitable view cannot be found', function () {
+      const fractal = makeFractal();
+      fractal.renderer.addAdapter({
+        name: 'fwig',
+        match: '.fwig',
+        render: () => {}
+      });
+      return expect(fractal.render(parserOutput.components.first(), {}, {
+        adapter: 'fwig',
+        collections: parserOutput
+      })).to.be.rejectedWith(Error, '[view-not-found]');
+    });
   });
 
   describe('.getComponents()', function () {
@@ -154,12 +257,12 @@ describe('Fractal', function () {
       expect(watcher.options.cwd).to.equal(process.cwd());
     });
     it('sets the dirty flag when the filesystem changes', function (done) {
-      fractal.dirty = false;
-      writeFile('foo.js');
-      setTimeout(function () {
+      watcher.on('all', function () {
         expect(fractal.dirty).to.equal(true);
         done();
-      }, 250);
+      });
+      fractal.dirty = false;
+      writeFile('foo.js');
     });
   });
 
