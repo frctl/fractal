@@ -67,9 +67,9 @@ describe('Plugins', function () {
       plugins.add(validPlugin);
       plugins.add(pluginList);
       let addedPlugins = plugins.items;
-      expect(addedPlugins[0]).to.eql(validPlugin);
-      expect(addedPlugins[2]).to.eql(pluginList[1]);
-      expect(addedPlugins[3]).to.eql(pluginList[2]);
+      expect(addedPlugins[0].name).to.eql(validPlugin.name);
+      expect(addedPlugins[2].name).to.eql(pluginList[1].name);
+      expect(addedPlugins[3].name).to.eql(pluginList[2].name);
     });
     it('allows for more than one instance of a plugin to be added', function () {
       let plugins = new PluginStore();

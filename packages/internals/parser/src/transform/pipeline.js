@@ -39,7 +39,7 @@ class Pipeline {
     const state = {};
     data = Collection.from(data);
     for (const transform of _transforms.get(this)) {
-      debug(`Pipeline processing transform: '%s'`, transform.name);
+      debug(`Pipeline.process processing transform: '%s'`, transform.name);
       state[transform.name] = await transform.run(data, state, context, emitter);
 
       // Passthru transformers pass their output to the input of the next transformer

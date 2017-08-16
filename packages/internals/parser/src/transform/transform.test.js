@@ -129,6 +129,28 @@ describe('Transform', function () {
       expect(() => transform.addPlugin(invalidPlugin)).to.throw(TypeError);
       expect(addSpy.calledWith(invalidPlugin)).to.equal(true);
     });
+    it('passes config options on to its PluginStore', function () {
+      const transformDefinition = {
+        name: 'valid-transform-with-default-plugin-collection',
+        passthru: true,
+        transform: toCC,
+        plugins: validPluginList,
+        pluginOptions: {
+          defaultCollection: 'components'
+        }
+      };
+      const transform = new Transform(transformDefinition);
+      expect(transform).to.have.a.property('plugins')
+      .that.has.a.property('options')
+      .that.has.a.property('defaultCollection')
+      .that.equals('components');
+
+      const transformNotSet = new Transform({name: 'transform-not-set', transform: i => i});
+      expect(transformNotSet).to.have.a.property('plugins')
+      .that.has.a.property('options')
+      .that.has.a.property('defaultCollection')
+      .that.equals('files');
+    });
   });
 
   describe('.run()', function () {

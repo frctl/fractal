@@ -19,6 +19,10 @@ describe('Parser', function () {
     it('is a getter', function () {
       expect(makeParser().sources).to.eql([]);
     });
+    it('returns a copy of the original', function () {
+      const originalSources = ['/src/components', '/src/components2/', 'lib/from/components'];
+      expect(makeParser(originalSources).sources).to.not.equal(originalSources);
+    });
   });
 
   describe('.addSource()', function () {

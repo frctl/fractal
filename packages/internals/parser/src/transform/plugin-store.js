@@ -1,5 +1,6 @@
 
 const {cloneDeep} = require('lodash');
+const debug = require('debug')('fractal:parser');
 const {Validator} = require('@frctl/support');
 const {toArray, defaultsDeep} = require('@frctl/utils');
 const schema = require('./plugin-store.schema');
@@ -7,13 +8,16 @@ const Plugin = require('./plugin');
 
 const _items = new WeakMap();
 const _opts = new WeakMap();
+const defaultOpts = {
+  defaultCollection: 'files'
+};
 
-class Plugins {
+class PluginStore {
   constructor(items, config = {}) {
+    debug('Instantiating new PluginStore with:\n items: %O\n config: %O', items, config);
+
     _items.set(this, []);
-    _opts.set(this, defaultsDeep(config, {
-      defaultCollection: 'files'
-    }));
+    _opts.set(this, defaultsDeep(config, defaultOpts));
 
     if (items) {
       this.add(items);
@@ -28,7 +32,8 @@ class Plugins {
    */
   add(item) {
     let items = toArray(item);
-    Validator.assertValid(items, schema, 'Plugins.add: The items provided do not match the schema of a plugins [plugins-invalid]');
+    Validator.assertValid(items, schema, 'PluginStore.add: The items provided do not match the schema of a plugins [plugins-invalid]');
+    debug('PluginStore.add: \n %O', items);
     items = items.map(item => new Plugin(Object.assign({collection: _opts.get(this).defaultCollection}, item)));
     _items.get(this).push(...items);
     return this;
@@ -51,4 +56,4 @@ class Plugins {
   }
 }
 
-module.exports = Plugins;
+module.exports = PluginStore;
