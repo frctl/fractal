@@ -1,6 +1,7 @@
 const {ExtendedConfig} = require('@frctl/config');
 const {get} = require('lodash');
-const schema = require('./config.schema');
+const defaults = require('./defaults');
+const schema = require('./schema');
 
 const addOns = ['commands', 'plugins', 'extensions', 'adapters'];
 const accessors = addOns.map(prop => ({
@@ -31,6 +32,7 @@ class ConfigStore extends ExtendedConfig {
 
     super(data, {
       schema,
+      defaults,
       accessors,
       customizers: {
         defaults: defaultsCustomizer

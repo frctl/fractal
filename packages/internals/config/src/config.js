@@ -1,9 +1,9 @@
 /* eslint import/no-dynamic-require: off */
 
 const {assert} = require('check-types');
-const {defaultsDeep} = require('@frctl/utils');
+const {toArray, defaultsDeep} = require('@frctl/utils');
 const {Validator} = require('@frctl/support');
-const {get, set, remove, cloneDeep, isObjectLike, mapValues} = require('lodash');
+const {get, set, remove, cloneDeep, isObjectLike, mapValues, flatten} = require('lodash');
 
 const _data = new WeakMap();
 const _accessors = new WeakMap();
@@ -17,6 +17,14 @@ class Config {
     assert.object(data, 'Config.constructor - config data must be an object [config-data-invalid]');
     assert.object(opts, 'Config.constructor - config opts must be an object [config-opts-invalid]');
 
+    if (opts.schema) {
+      const validator = new Validator({allErrors: true});
+      validator.addSchema(opts.schema, 'config');
+      _validator.set(this, validator);
+    }
+
+    this.validate(data);
+
     _data.set(this, cloneDeep(data));
     _accessors.set(this, []);
     _cache.set(this, []);
@@ -25,17 +33,13 @@ class Config {
       defaults: get(opts, 'customizers.defaults')
     });
 
-    if (opts.schema) {
-      const validator = new Validator({allErrors: true});
-      validator.addSchema(opts.schema, 'config');
-      _validator.set(this, validator);
-    }
-
     for (const accessor of opts.accessors || []) {
       this.addAccessor(accessor.path, accessor.handler);
     }
 
-    this.validate(_data.get(this));
+    if (opts.defaults) {
+      this.addDefaults(opts.defaults);
+    }
   }
 
   get(path, fallback) {
@@ -71,6 +75,15 @@ class Config {
     set(_data.get(this), path, cloneDeep(value));
     this.validate(_data.get(this));
     return this;
+  }
+
+  pick(...paths) {
+    const result = {};
+    flatten(toArray(paths)).forEach(path => {
+      const value = this.get(path);
+      set(result, path, value);
+    });
+    return result;
   }
 
   addDefaults(...data) {
