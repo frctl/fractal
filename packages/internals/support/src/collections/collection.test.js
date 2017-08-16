@@ -2,7 +2,7 @@
 
 // const path = require('path');
 const {expect, sinon} = require('../../../../../test/helpers');
-
+const Variant = require('../entities/variant');
 const Collection = require('./collection');
 
 const items = [{
@@ -122,6 +122,7 @@ describe('Collection', function () {
     it(`doesn't throw an error if valid input is supplied`, function () {
       expect(() => makeCollection(items)).to.not.throw();
       expect(() => makeCollection([])).to.not.throw();
+      expect(() => makeCollection([new Variant(), new Variant()])).to.not.throw();
     });
   });
 
@@ -625,10 +626,13 @@ describe('Collection', function () {
       expect(newCollection.items).to.eql(newCollection.items);
     });
     it('uses the .clone method on items that support it', () => {
-      const cloneSpy = sinon.spy();
-      const collection = makeCollection([{
-        clone: cloneSpy
-      }]);
+      const item = {
+        clone: function () {
+          return {item: 'item'};
+        }
+      };
+      const cloneSpy = sinon.spy(item, 'clone');
+      const collection = makeCollection([item]);
       collection.clone();
       expect(cloneSpy.called).to.equal(true);
     });
