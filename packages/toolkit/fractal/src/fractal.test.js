@@ -257,6 +257,9 @@ describe('Fractal', function () {
       expect(watcher.options.cwd).to.equal(process.cwd());
     });
     it('sets the dirty flag when the filesystem changes', function (done) {
+      if (process.env.IS_CI) {
+        this.skip();
+      }
       watcher.on('all', function () {
         expect(fractal.dirty).to.equal(true);
         done();
