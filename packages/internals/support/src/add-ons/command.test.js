@@ -39,7 +39,7 @@ describe('Command', function () {
 
   describe('constructor()', function () {
     it('validates command schema', function () {
-      expect(() => command({invalid: 'command'})).to.throw(TypeError, ['properties-invalid']);
+      expect(() => command({invalid: 'command'})).to.throw(TypeError, '[properties-invalid]');
       expect(() => command(validCommand)).to.not.throw();
     });
   });

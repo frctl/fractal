@@ -36,8 +36,10 @@ describe('Entity', function () {
     it('clones an entity when it is composed of plain object(s)', function () {
       const entity = makeEntity();
       const newEntity = entity.clone();
-      expect(newEntity).to.eql(entity);
-      expect(newEntity).to.eql(basicEntity);
+      expect(newEntity).to.deep.equal(entity);
+      Object.keys(basicEntity).forEach(key => {
+        expect(newEntity).to.have.deep.nested.property(key, basicEntity[key]);
+      });
     });
     it('clones an entity and binds functions when it is composed of mixed object(s) and functions', function () {
       const entityWithMethod = Object.assign({src: function () {
