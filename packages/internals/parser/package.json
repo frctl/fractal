@@ -18,11 +18,14 @@
     "check-types": "^7.2.0",
     "debug": "^3.0.0",
     "glob-base": "^0.3.0",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "stream-to-promise": "^2.2.0",
+    "vinyl-fs": "^2.4.4"
   },
   "devDependencies": {
     "eventemitter2": "^4.1.2",
     "mock-fs": "^4.4.1",
-    "mock-require": "^2.0.2"
+    "mock-require": "^2.0.2",
+    "vinyl": "^2.1.0"
   }
 }
