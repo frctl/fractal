@@ -25,10 +25,6 @@ module.exports = {
   commands: [],
   adapters: [],
   plugins: [],
-  transforms: [],
-
-  cli: {},
-  pages: {},
-  inspector: {}
+  transforms: []
 
 };
