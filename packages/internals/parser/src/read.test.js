@@ -24,7 +24,7 @@ describe(`'read' function`, function () {
     mockFs.restore();
   });
 
-  describe.only('factory', function () {
+  describe('factory', function () {
     it('is exported as an async function', async function () {
       expect(read).to.be.a('Function');
       expect(read()).to.be.a('Promise');
@@ -63,16 +63,16 @@ describe(`'read' function`, function () {
       const emitter = new EventEmitter2();
 
       let count = 0;
-      emitter.on('read.start', function(fileStream){
+      emitter.on('read.start', function (fileStream) {
         count++;
         expect(fileStream).to.exist;
       });
-      emitter.on('read.file', function(file){
+      emitter.on('read.file', function (file) {
         count++;
         expect(file).to.exist;
         expect(Vinyl.isVinyl(file)).to.be.true;
-      })
-      emitter.on('read.complete', function(files){
+      });
+      emitter.on('read.complete', function (files) {
         count++;
         expect(files).to.exist;
         expect(files).to.be.an('array');

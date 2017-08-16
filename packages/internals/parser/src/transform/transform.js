@@ -49,12 +49,12 @@ class Transform {
        * to the next plugin in the list. If it returns an array then we wrap that
        * to ensure that plugins always receive collections.
        */
-      dataset = this.getCollection(dataset);
+      dataset = this.toCollection(dataset);
 
       emitter.emit('plugin.complete', {plugin, transform});
     }
 
-    const collection = this.getCollection(dataset);
+    const collection = this.toCollection(dataset);
 
     debug('Transform.run complete, collection is:\n %O', collection);
     emitter.emit('transform.complete', {transform, collection});
@@ -62,7 +62,7 @@ class Transform {
     return collection;
   }
 
-  getCollection(items) {
+  toCollection(items) {
     if (items instanceof this.Collection) {
       return items; // already the correct collection instance so just return.
     }

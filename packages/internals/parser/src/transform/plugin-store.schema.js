@@ -14,6 +14,9 @@ module.exports = {
       items: {
         $ref: '#/definitions/plugin'
       }
+    },
+    {
+      type: 'null'
     }
   ]
 };
