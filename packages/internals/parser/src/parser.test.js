@@ -1,7 +1,11 @@
 /* eslint handle-callback-err: off, no-unused-expressions: off */
 const {join} = require('path');
 const {expect} = require('../../../../test/helpers');
+const {
+  validComponentCollectionTransform, invalidTransform,
+  filesToComponents, filesToComponentsTransform, toCC} = require('../test/helpers');
 const Parser = require('./parser');
+const fileTransform = require('./transform/file-transform')();
 
 const makeParser = props => {
   return new Parser(props);
@@ -68,5 +72,16 @@ describe('Parser', function () {
         isGlob: false,
         src: join(cwd, 'lib/from/components/index.js')});
     });
+  });
+
+  describe('.addTransform()', function () {
+    it('adds a transform definition to the parser\'s pipeline instance', function(){
+      const parser = makeParser();
+      parser.addTransform(fileTransform);
+      expect(parser.pipeline.transforms.length).to.equal(1);
+    });
+  });
+  describe('.getTransform()', function () {
+    it('retrieves a transform definition from the parser\'s pipeline instance');
   });
 });
