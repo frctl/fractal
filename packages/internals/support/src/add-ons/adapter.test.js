@@ -22,7 +22,7 @@ const otherFile = new File({
 describe('Adapter', function () {
   describe('constructor()', function () {
     it('throws an error on invalid props', function () {
-      expect(() => new Adapter({invalid: 'adapter'})).to.throw(TypeError, ['properties-invalid']);
+      expect(() => new Adapter({invalid: 'adapter'})).to.throw(TypeError, '[adapter-invalid]');
       expect(() => new Adapter(validAdapter)).to.not.throw();
     });
   });
