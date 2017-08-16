@@ -3,7 +3,7 @@ const {Fractal} = require('@frctl/fractal');
 const {expect, sinon} = require('../../../../../test/helpers');
 const factory = require('./render');
 
-describe.only('render', function () {
+describe('render', function () {
   it('exports a function', function () {
     expect(factory).to.be.a('function');
   });
