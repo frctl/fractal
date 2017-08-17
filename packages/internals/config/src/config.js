@@ -86,6 +86,24 @@ class Config {
     return result;
   }
 
+  push(path, value) {
+    const target = this.getRaw(path, []);
+    if (!Array.isArray(target)) {
+      throw new Error(`Cannot push values onto a non-array config property [push-array-only]`);
+    }
+    target.push(value);
+    return this.set(path, target);
+  }
+
+  unshift(path, value) {
+    const target = this.getRaw(path, []);
+    if (!Array.isArray(target)) {
+      throw new Error(`Cannot unsift values onto a non-array config property [unshift-array-only]`);
+    }
+    target.unshift(value);
+    return this.set(path, target);
+  }
+
   addDefaults(...data) {
     assert.array.of.object(data, 'Config.extend - `data` arguments must be objects [data-invalid]');
     const result = defaultsDeep(_data.get(this), ...data, _customizers.get(this).defaults);
@@ -96,6 +114,10 @@ class Config {
   getData(path, fallback) {
     const result = get(_data.get(this), path, fallback);
     return isObjectLike(result) ? cloneDeep(result) : result;
+  }
+
+  getRaw(path, fallback) {
+    return get(_data.get(this), path, fallback);
   }
 
   validate(data) {

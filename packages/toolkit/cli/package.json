@@ -26,6 +26,7 @@
     "supports-color": "^4.2.1",
     "yargs": "^8.0.1",
     "find-up": "^2.1.0",
+    "pkg-up": "^2.0.0",
     "update-notifier": "^2.2.0"
   }
 }

@@ -10,8 +10,6 @@ const Config = require('./config/store');
 const _dirty = new WeakMap();
 const _cache = new WeakMap();
 const _config = new WeakMap();
-const _parser = new WeakMap();
-const _renderer = new WeakMap();
 const _watcher = new WeakMap();
 
 class Fractal {
@@ -20,8 +18,6 @@ class Fractal {
     debug('instantiating new Fractal instance');
 
     const config = new Config(configData);
-    const renderer = new Renderer(config.get('adapters'));
-    const parser = new Parser(config.pick('src', 'plugins', 'transforms'));
     const cache = new Cache({
       stdTTL: config.get('cache.ttl'),
       checkperiod: config.get('cache.check'),
@@ -31,44 +27,53 @@ class Fractal {
     _dirty.set(this, true);
     _cache.set(this, cache);
     _config.set(this, config);
-    _parser.set(this, parser);
-    _renderer.set(this, renderer);
 
     debug('using config %O', config.data);
+
+    for (const extension of this.get('extensions')) {
+      if (typeof extension.register === 'function') {
+        debug('registering extension %s', extension.name);
+        extension.register(this);
+      }
+    }
   }
 
-  async parse() {
+  parse() {
     const cached = this.cache.get('collections');
     if (cached) {
       return cached;
     }
 
+    // const parser = this.getParser();
+
     // TODO: hook up proper parser
-    const collections = await Promise.resolve({
+    const collections = EmittingPromise.resolve({
       components: new ComponentCollection(),
       files: new FileCollection()
     });
 
-    this.dirty = false;
-    this.cache.set('collections', collections);
-
-    return collections;
+    return collections.then(collections => {
+      this.dirty = false;
+      this.cache.set('collections', collections);
+      return collections;
+    });
   }
 
   render(target, context = {}, opts = {}) {
-    const renderer = this.renderer;
+    const renderer = opts.renderer || this.getRenderer();
+    const reject = message => EmittingPromise.reject(new Error(message));
 
     if (renderer.adapters.length === 0) {
-      return EmittingPromise.reject(new Error(`Fractal.render - You must register one or more adapters before you can render views [no-adapters]`));
+      return reject(`Fractal.render - You must register one or more adapters before you can render views [no-adapters]`);
     }
 
     const adapter = opts.adapter ? renderer.getAdapter(opts.adapter) : renderer.getDefaultAdapter();
     if (!adapter) {
-      return EmittingPromise.reject(new Error(`Fractal.render - The adapter '${opts.adapter}' could not be found [adapter-not-found]`));
+      return reject(`Fractal.render - The adapter '${opts.adapter}' could not be found [adapter-not-found]`);
     }
 
     if (!(Component.isComponent(target) || Variant.isVariant(target) || File.isFile(target))) {
-      return EmittingPromise.reject(new Error(`Fractal.render - Only components, variants or views can be rendered [target-invalid]`));
+      return reject(`Fractal.render - Only components, variants or views can be rendered [target-invalid]`);
     }
 
     return new EmittingPromise(async (resolve, reject, emitter) => {
@@ -102,18 +107,18 @@ class Fractal {
           target = view;
         }
 
-        resolve(await this.renderer.render(target, context, collections, opts, emitter));
+        resolve(await renderer.render(target, context, collections, opts, emitter));
       } catch (err) {
         reject(err);
       }
     });
   }
 
-  async getComponents() {
+  getComponents() {
     return this.parse().then(collections => collections.components);
   }
 
-  async getFiles() {
+  getFiles() {
     return this.parse().then(collections => collections.files);
   }
 
@@ -123,10 +128,13 @@ class Fractal {
       return watcher;
     }
 
+    debug(`starting watch task`);
+
     watcher = chokidar.watch(this.get('src'), {
       ignoreInitial: true,
       cwd: process.cwd()
     }).on('all', () => {
+      debug(`fractal source change detected`);
       this.dirty = true;
     });
 
@@ -139,6 +147,7 @@ class Fractal {
     if (watcher) {
       watcher.close();
     }
+    debug(`stopping watch task`);
     _watcher.set(this, null);
     return this;
   }
@@ -147,11 +156,55 @@ class Fractal {
     return _config.get(this).get(prop, fallback);
   }
 
+  set(prop, value) {
+    debug(`setting config value %s = %s`, prop, value);
+    this.dirty = true;
+    _config.get(this).set(prop, value);
+    return this;
+  }
+
+  addPlugin(plugin) {
+    debug(`adding plugin %s`, plugin);
+    this.dirty = true;
+    this.config.push('plugins', plugin);
+    return this;
+  }
+
+  addAdapter(adapter) {
+    debug(`adding adapter %s`, adapter);
+    this.dirty = true;
+    this.config.push('adapters', adapter);
+    return this;
+  }
+
+  addTransform(transform) {
+    debug(`adding transform %s`, transform);
+    this.dirty = true;
+    this.config.push('transforms', transform);
+    return this;
+  }
+
+  addCommand(command) {
+    debug(`adding command %s`, command);
+    this.dirty = true;
+    this.config.push('commands', command);
+    return this;
+  }
+
+  getParser() {
+    return new Parser(this.config.pick('src', 'plugins', 'transforms'));
+  }
+
+  getRenderer() {
+    return new Renderer(this.config.get('adapters'));
+  }
+
   get dirty() {
     return _dirty.get(this);
   }
 
   set dirty(isDirty) {
+    debug(`setting dirty flag to '%s'`, isDirty ? 'true' : 'false');
     _dirty.set(this, isDirty);
     if (isDirty) {
       this.cache.del('collections');
@@ -168,15 +221,7 @@ class Fractal {
   }
 
   get config() {
-    return _config.get(this).data;
-  }
-
-  get renderer() {
-    return _renderer.get(this);
-  }
-
-  get parser() {
-    return _parser.get(this);
+    return _config.get(this);
   }
 
   get isFractal() {
