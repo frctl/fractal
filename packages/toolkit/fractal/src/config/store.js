@@ -3,7 +3,7 @@ const {get} = require('lodash');
 const defaults = require('./defaults');
 const schema = require('./schema');
 
-const addOns = ['commands', 'plugins', 'extensions', 'adapters'];
+const addOns = ['commands', 'plugins', 'extensions', 'adapters', 'transforms'];
 const accessors = addOns.map(prop => ({
   path: prop,
   handler: 'packages-loader'

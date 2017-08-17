@@ -2,10 +2,8 @@ const {expect, validate} = require('../../../../../test/helpers');
 const defaults = require('./defaults');
 const configSchema = require('./schema');
 
-describe.only('Fractal default config', function () {
-
+describe('Fractal default config', function () {
   it('validates against the config schema', function () {
     expect(validate(configSchema, defaults)).to.equal(true);
   });
-
 });

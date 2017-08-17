@@ -6,9 +6,9 @@ module.exports = {
 
     src: {
       anyOf: [
-        { type: 'string' },
-        { type: 'array' },
-        { type: 'null' }
+        {type: 'string'},
+        {type: 'array'},
+        {type: 'null'}
       ]
     },
 
@@ -34,8 +34,8 @@ module.exports = {
           properties: {
             filter: {
               anyOf: [
-                { type: 'object' },
-                { typeof: 'function' }
+                {type: 'object'},
+                {typeof: 'function'}
               ]
             }
           }
@@ -43,11 +43,11 @@ module.exports = {
         config: {
           type: 'object',
           properties: {
-            defaults: { type: 'object' },
+            defaults: {type: 'object'},
             filter: {
               anyOf: [
-                { type: 'object' },
-                { typeof: 'function' }
+                {type: 'object'},
+                {typeof: 'function'}
               ]
             }
           }
@@ -57,9 +57,9 @@ module.exports = {
 
     extends: {
       anyOf: [
-        { type: 'string' },
-        { type: 'array' },
-        { type: 'null' }
+        {type: 'string'},
+        {type: 'array'},
+        {type: 'null'}
       ]
     },
 
