@@ -42,7 +42,7 @@ describe('ExtendedConfig', function () {
         ]
       });
       expect(spy.args[0][0].testName).to.equal('preset');
-      expect(spy.args[0][1].testName).to.equal('parent');
+      expect(spy.args[1][0].testName).to.equal('parent');
       spy.restore();
     });
     it('omits extend keys from the defaults that are merged', function () {
@@ -53,7 +53,7 @@ describe('ExtendedConfig', function () {
         ]
       });
       expect(spy.args[0][0]).to.not.have.property('extends');
-      expect(spy.args[0][1]).to.not.have.property('extends');
+      expect(spy.args[1][0]).to.not.have.property('extends');
       spy.restore();
     });
     it('uses an empty object if no config prop is found for the preset', function () {
@@ -62,6 +62,20 @@ describe('ExtendedConfig', function () {
           presetNoConfig
         ]
       })).to.not.throw();
+    });
+  });
+
+  describe('.concatArrays', function () {
+    it('is a function', function () {
+      expect(ExtendedConfig.concatArrays).to.be.a('function');
+    });
+    it('concats array sources', function () {
+      expect(ExtendedConfig.concatArrays([1, 2], [3, 4])).to.have.members([1, 2, 3, 4]);
+      expect(ExtendedConfig.concatArrays({one: 1}, {two: 2})).to.equal(undefined);
+    });
+    it('casts undefined values to arrays', function () {
+      expect(ExtendedConfig.concatArrays(undefined, [3, 4])).to.have.members([3, 4]);
+      expect(ExtendedConfig.concatArrays([1, 2], undefined)).to.have.members([1, 2]);
     });
   });
 });

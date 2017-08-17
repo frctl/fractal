@@ -304,24 +304,20 @@ describe('Config', function () {
         }
       });
     });
-    it('uses the defaults customizer to customize the defaults merging behaviour', function () {
-      const opts = {
-        customizers: {
-          defaults(targetValue, defaultValue) {
-            if (Array.isArray(targetValue) && Array.isArray(defaultValue)) {
-              return targetValue.concat(defaultValue);
-            }
-          }
+    it('accepts a customizer to customize the defaults merging behaviour', function () {
+      const defaultCustomizer = function (targetValue, defaultValue) {
+        if (Array.isArray(targetValue) && Array.isArray(defaultValue)) {
+          return targetValue.concat(defaultValue);
         }
       };
       const config = new Config({
         foo: 'bar',
         baz: [1, 2]
-      }, opts);
+      });
       config.addDefaults({
         one: 2,
         baz: [3, 4]
-      });
+      }, defaultCustomizer);
       expect(config.data).to.have.property('one').that.equals(2);
       expect(config.data).to.have.property('foo').that.equals('bar');
       expect(config.data).to.have.property('baz').that.has.same.members([1, 2, 3, 4]);

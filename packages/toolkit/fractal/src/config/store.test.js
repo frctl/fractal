@@ -84,27 +84,6 @@ describe('Fractal config initializer', function () {
       }
     });
   });
-
-  describe('.defaultsCustomizer', function () {
-    it('is a function', function () {
-      expect(ConfigStore.defaultsCustomizer).to.be.a('function');
-    });
-    it('concats array sources if the key is in the add-ons list', function () {
-      for (const addOn of addOns) {
-        expect(ConfigStore.defaultsCustomizer([1, 2], [3, 4], addOn)).to.have.members([1, 2, 3, 4]);
-        expect(ConfigStore.defaultsCustomizer({one: 1}, {two: 2}, addOn)).to.equal(undefined);
-      }
-      expect(ConfigStore.defaultsCustomizer([1, 2], [3, 4], 'foo')).to.equal(undefined);
-    });
-    it('casts undefined values to arrays if the key is in the add-ons list', function () {
-      for (const addOn of addOns) {
-        expect(ConfigStore.defaultsCustomizer(undefined, [3, 4], addOn)).to.have.members([3, 4]);
-        expect(ConfigStore.defaultsCustomizer([1, 2], undefined, addOn)).to.have.members([1, 2]);
-      }
-      expect(ConfigStore.defaultsCustomizer(undefined, [3, 4], 'foo')).to.equal(undefined);
-      expect(ConfigStore.defaultsCustomizer([1, 2], undefined, 'foo')).to.equal(undefined);
-    });
-  });
 });
 
 describe('Fractal config schema', function () {

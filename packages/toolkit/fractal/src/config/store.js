@@ -9,16 +9,6 @@ const accessors = addOns.map(prop => ({
   handler: 'packages-loader'
 }));
 
-function defaultsCustomizer(targetValue, defaultValue, key) {
-  if (addOns.includes(key)) {
-    targetValue = typeof targetValue === 'undefined' ? [] : targetValue;
-    defaultValue = typeof defaultValue === 'undefined' ? [] : defaultValue;
-    if (Array.isArray(targetValue) && Array.isArray(defaultValue)) {
-      return [...defaultValue, ...targetValue];
-    }
-  }
-}
-
 class ConfigStore extends ExtendedConfig {
 
   constructor(data) {
@@ -30,18 +20,10 @@ class ConfigStore extends ExtendedConfig {
       ];
     }
 
-    super(data, {
-      schema,
-      defaults,
-      accessors,
-      customizers: {
-        defaults: defaultsCustomizer
-      }
-    });
+    super(data, {schema, defaults, accessors});
   }
 
 }
 
 module.exports = ConfigStore;
 module.exports.accessors = accessors;
-module.exports.defaultsCustomizer = defaultsCustomizer;

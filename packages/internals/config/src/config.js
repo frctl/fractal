@@ -9,13 +9,12 @@ const _data = new WeakMap();
 const _accessors = new WeakMap();
 const _validator = new WeakMap();
 const _cache = new WeakMap();
-const _customizers = new WeakMap();
 
 class Config {
 
   constructor(data = {}, opts = {}) {
-    assert.object(data, 'Config.constructor - config data must be an object [config-data-invalid]');
-    assert.object(opts, 'Config.constructor - config opts must be an object [config-opts-invalid]');
+    assert.object(data, 'Config.constructor - data must be an object [config-data-invalid]');
+    assert.object(opts, 'Config.constructor - opts must be an object [config-opts-invalid]');
 
     if (opts.schema) {
       const validator = new Validator({allErrors: true});
@@ -28,10 +27,6 @@ class Config {
     _data.set(this, cloneDeep(data));
     _accessors.set(this, []);
     _cache.set(this, []);
-
-    _customizers.set(this, {
-      defaults: get(opts, 'customizers.defaults')
-    });
 
     for (const accessor of opts.accessors || []) {
       this.addAccessor(accessor.path, accessor.handler);
@@ -104,9 +99,10 @@ class Config {
     return this.set(path, target);
   }
 
-  addDefaults(...data) {
-    assert.array.of.object(data, 'Config.extend - `data` arguments must be objects [data-invalid]');
-    const result = defaultsDeep(_data.get(this), ...data, _customizers.get(this).defaults);
+  addDefaults(data, customizer) {
+    assert.object(data, 'Config.extend - `data` arguments must an object [data-invalid]');
+    assert.maybe.function(customizer, 'Config.extend - `customizer` must a function if provided [customizer-invalid]');
+    const result = defaultsDeep(_data.get(this), data, customizer);
     _data.set(this, result);
     return this;
   }
