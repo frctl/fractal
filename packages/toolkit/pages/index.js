@@ -1,4 +1,7 @@
+const Pages = require('./src/pages');
+
 module.exports = function (opts = {}) {
+
   return {
 
     name: 'fractal-pages',
@@ -9,3 +12,5 @@ module.exports = function (opts = {}) {
 
   };
 };
+
+module.exports.Pages = Pages;
