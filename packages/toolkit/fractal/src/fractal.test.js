@@ -300,7 +300,7 @@ describe('Fractal', function () {
     });
   });
 
-  for (const addOn of ['plugin', 'adapter', 'transform']) {
+  for (const addOn of ['plugin', 'adapter', 'transform', 'command']) {
     const method = `add${capitalize(addOn)}`;
     describe(`${method}()`, function () {
       it(`adds a plugin to the ${addOn}s config array`, function () {

@@ -169,6 +169,13 @@ class Fractal {
     return this;
   }
 
+  addCommand(command) {
+    debug(`adding command %s`, command);
+    this.dirty = true;
+    this.config.push('commands', command);
+    return this;
+  }
+
   get dirty() {
     return _dirty.get(this);
   }
