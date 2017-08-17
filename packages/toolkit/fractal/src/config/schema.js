@@ -7,7 +7,8 @@ module.exports = {
     src: {
       anyOf: [
         { type: 'string' },
-        { type: 'array' }
+        { type: 'array' },
+        { type: 'null' }
       ]
     },
 
