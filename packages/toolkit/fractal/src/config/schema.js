@@ -77,6 +77,10 @@ module.exports = {
 
     transforms: {
       type: 'array'
+    },
+
+    extensions: {
+      type: 'array'
     }
 
   }

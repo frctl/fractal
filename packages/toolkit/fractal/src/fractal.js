@@ -3,7 +3,7 @@ const chokidar = require('chokidar');
 const {defaultsDeep} = require('@frctl/utils');
 const {Component, Variant, File, ComponentCollection, FileCollection, EmittingPromise} = require('@frctl/support');
 const {Renderer} = require('@frctl/renderer');
-// const {Parser} = require('@frctl/parser');
+const {Parser} = require('@frctl/parser');
 const debug = require('debug')('fractal:core');
 const Config = require('./config/store');
 
@@ -29,30 +29,38 @@ class Fractal {
     _config.set(this, config);
 
     debug('using config %O', config.data);
+
+    for (const extension of this.get('extensions')) {
+      if (typeof extension.register === 'function') {
+        debug('registering extension %s', extension.name);
+        extension.register(this);
+      }
+    }
   }
 
-  async parse() {
+  parse() {
     const cached = this.cache.get('collections');
     if (cached) {
       return cached;
     }
 
-    // const parser = new Parser(this.pick('src', 'plugins', 'transforms'));
+    // const parser = this.getParser();
 
     // TODO: hook up proper parser
-    const collections = await Promise.resolve({
+    const collections = EmittingPromise.resolve({
       components: new ComponentCollection(),
       files: new FileCollection()
     });
 
-    this.dirty = false;
-    this.cache.set('collections', collections);
-
-    return collections;
+    return collections.then(collections => {
+      this.dirty = false;
+      this.cache.set('collections', collections);
+      return collections;
+    });
   }
 
   render(target, context = {}, opts = {}) {
-    const renderer = opts.renderer || new Renderer(this.get('adapters'));
+    const renderer = opts.renderer || this.getRenderer();
     const reject = message => EmittingPromise.reject(new Error(message));
 
     if (renderer.adapters.length === 0) {
@@ -106,11 +114,11 @@ class Fractal {
     });
   }
 
-  async getComponents() {
+  getComponents() {
     return this.parse().then(collections => collections.components);
   }
 
-  async getFiles() {
+  getFiles() {
     return this.parse().then(collections => collections.files);
   }
 
@@ -148,6 +156,13 @@ class Fractal {
     return _config.get(this).get(prop, fallback);
   }
 
+  set(prop, value) {
+    debug(`setting config value %s = %s`, prop, value);
+    this.dirty = true;
+    _config.get(this).set(prop, value);
+    return this;
+  }
+
   addPlugin(plugin) {
     debug(`adding plugin %s`, plugin);
     this.dirty = true;
@@ -174,6 +189,14 @@ class Fractal {
     this.dirty = true;
     this.config.push('commands', command);
     return this;
+  }
+
+  getParser() {
+    return new Parser(this.config.pick('src', 'plugins', 'transforms'));
+  }
+
+  getRenderer() {
+    return new Renderer(this.config.get('adapters'));
   }
 
   get dirty() {

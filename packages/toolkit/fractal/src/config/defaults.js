@@ -25,6 +25,7 @@ module.exports = {
   commands: [],
   adapters: [],
   plugins: [],
-  transforms: []
+  transforms: [],
+  extensions: []
 
 };

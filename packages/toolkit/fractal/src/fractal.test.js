@@ -7,7 +7,7 @@ const {capitalize} = require('lodash');
 const {File, ComponentCollection, FileCollection, EmittingPromise, Component, Variant, Collection} = require('@frctl/support');
 const {defaultsDeep} = require('@frctl/utils');
 const {Renderer} = require('@frctl/renderer');
-// const {Parser} = require('@frctl/parser');
+const {Parser} = require('@frctl/parser');
 const Cache = require('node-cache');
 const {FSWatcher} = require('chokidar');
 const {expect, sinon} = require('../../../../test/helpers');
@@ -94,6 +94,13 @@ describe('Fractal', function () {
       const fractal = new Fractal();
       expect(fractal.dirty).to.equal(true);
     });
+
+    it('calls the register method of each extension with the current fractal instance', () => {
+      const register = sinon.spy();
+      const extension = {name: 'foo', register};
+      const fractal = new Fractal({extensions: [extension]});
+      expect(register.calledWith(fractal)).to.equal(true);
+    });
   });
 
   describe('.get()', function () {
@@ -101,7 +108,6 @@ describe('Fractal', function () {
       const fractal = makeFractal();
       expect(fractal.get('foo')).to.equal(config.foo);
     });
-
     it('accepts a fallback argument which is returned if the property is undefined', () => {
       const fractal = makeFractal();
       const fallback = 'whoops!';
@@ -109,10 +115,24 @@ describe('Fractal', function () {
     });
   });
 
+  describe('.set()', function () {
+    it('sets a value in the config data', () => {
+      const fractal = makeFractal();
+      fractal.set('foo.bar', 'baz');
+      expect(fractal.get('foo.bar')).to.equal('baz');
+    });
+    it('sets the dirty flag', () => {
+      const fractal = makeFractal();
+      fractal.dirty = false;
+      fractal.set('foo.bar', 'baz');
+      expect(fractal.dirty).to.equal(true);
+    });
+  });
+
   describe('.parse()', function () {
-    it('returns a Promise', function () {
+    it('returns an EmittingPromise', function () {
       const fractal = new Fractal();
-      expect(fractal.parse()).to.be.instanceOf(Promise);
+      expect(fractal.parse()).to.be.instanceOf(EmittingPromise);
     });
     it('resolves to an object with file and component collections', async function () {
       const fractal = new Fractal();
@@ -134,7 +154,7 @@ describe('Fractal', function () {
   });
 
   describe('.render()', function () {
-    it('returns a Promise', function () {
+    it('returns an EmittingPromise', function () {
       const fractal = makeFractal();
       expect(fractal.render(view)).to.be.instanceOf(EmittingPromise);
     });
@@ -218,9 +238,9 @@ describe('Fractal', function () {
   });
 
   describe('.getComponents()', function () {
-    it('returns a Promise', function () {
+    it('returns an EmittingPromise', function () {
       const fractal = new Fractal();
-      expect(fractal.getComponents()).to.be.instanceOf(Promise);
+      expect(fractal.getComponents()).to.be.instanceOf(EmittingPromise);
     });
     it('resolves to a ComponentCollection instance', async function () {
       const fractal = new Fractal();
@@ -230,9 +250,9 @@ describe('Fractal', function () {
   });
 
   describe('.getFiles()', function () {
-    it('returns a Promise', function () {
+    it('returns an EmittingPromise', function () {
       const fractal = new Fractal();
-      expect(fractal.getComponents()).to.be.instanceOf(Promise);
+      expect(fractal.getComponents()).to.be.instanceOf(EmittingPromise);
     });
     it('resolves to a FileCollection instance', async function () {
       const fractal = new Fractal();
@@ -346,6 +366,33 @@ describe('Fractal', function () {
       });
     });
   }
+
+  describe('.getParser()', function () {
+    it('returns a new Parser instance', function () {
+      const fractal = new Fractal();
+      const parser = fractal.getParser();
+      expect(parser).to.be.instanceOf(Parser);
+      expect(fractal.getParser()).to.not.equal(parser);
+    });
+    it('initialises the parser with src, plugins and transforms from the config');
+  });
+
+  describe('.getRenderer()', function () {
+    it('returns a new Renderer instance', function () {
+      const fractal = new Fractal();
+      const renderer = fractal.getRenderer();
+      expect(renderer).to.be.instanceOf(Renderer);
+      expect(fractal.getRenderer()).to.not.equal(renderer);
+    });
+    it('initialises the renderer with adapters from the config', function () {
+      const fractal = new Fractal();
+      const renderer = fractal.getRenderer();
+      expect(renderer.adapters.length).to.equal(0);
+      fractal.addAdapter('./test/fixtures/add-ons/adapter');
+      const renderer2 = fractal.getRenderer();
+      expect(renderer2.adapters.length).to.equal(1);
+    });
+  });
 
   describe('.toString()', function () {
     it('property describes the Fractal instance', function () {
