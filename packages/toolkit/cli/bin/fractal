@@ -6,6 +6,7 @@ if (yargs.argv.debug && !process.env.DEBUG) {
   process.env.DEBUG = 'fractal:*';
 }
 
+const fractal = require('@frctl/fractal')
 const {dirname} = require('path');
 const findUp = require('find-up');
 const importCwd = require('import-cwd');
@@ -25,7 +26,7 @@ updateNotifier({pkg}).notify();
 
 try {
 
-  let factory;
+  let app;
   let config = {};
   const configPath = findUp.sync(settings.configFiles);
 
@@ -37,6 +38,12 @@ try {
 
     debug(`config file found: %s`, configPath);
     debug(`set current working directory: %s`, cwd);
+
+    if (config instanceof fractal.Fractal) {
+      app = config;
+    } else {
+      app = fractal();
+    }
 
     try {
       factory = importCwd('@frctl/fractal');
@@ -51,10 +58,8 @@ try {
 
   } else {
     debug(`no config file found. Assuming global scope.`);
-    factory = require('@frctl/fractal');
+    app = fractal();
   }
-
-  const app = factory(config);
 
   const env = {
     configPath,
