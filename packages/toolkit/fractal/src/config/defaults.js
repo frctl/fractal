@@ -26,9 +26,6 @@ module.exports = {
   adapters: [],
   plugins: [],
   transforms: [],
-
-  cli: {},
-  pages: {},
-  inspector: {}
+  extensions: []
 
 };

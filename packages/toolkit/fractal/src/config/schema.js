@@ -6,38 +6,60 @@ module.exports = {
 
     src: {
       anyOf: [
-        {
-          type: 'string'
-        },
-        {
-          type: 'array'
-        }
-      ]
-    },
-
-    extends: {
-      anyOf: [
-        {
-          type: 'string'
-        },
-        {
-          type: 'array'
-        },
-        {
-          type: 'null'
-        }
+        {type: 'string'},
+        {type: 'array'},
+        {type: 'null'}
       ]
     },
 
     cache: {
-      anyOf: [
-        {
-          type: 'boolean',
-          enum: [false]
+      type: 'object',
+      required: ['ttl', 'check'],
+      properties: {
+        ttl: {
+          type: 'integer'
         },
-        {
+        check: {
           type: 'integer'
         }
+      }
+    },
+
+    components: {
+      type: 'object',
+      required: ['views', 'config'],
+      properties: {
+        views: {
+          type: 'object',
+          properties: {
+            filter: {
+              anyOf: [
+                {type: 'object'},
+                {typeof: 'function'}
+              ]
+            }
+          }
+        },
+        config: {
+          type: 'object',
+          properties: {
+            defaults: {type: 'object'},
+            filter: {
+              anyOf: [
+                {type: 'object'},
+                {typeof: 'function'}
+              ]
+            }
+          }
+        }
+      }
+    },
+
+    extends: {
+      anyOf: [
+        {type: 'string'},
+        {type: 'array'},
+        {type: 'null'}
       ]
     },
 
@@ -54,6 +76,10 @@ module.exports = {
     },
 
     transforms: {
+      type: 'array'
+    },
+
+    extensions: {
       type: 'array'
     }
 
