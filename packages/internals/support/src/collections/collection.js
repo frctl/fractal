@@ -1,4 +1,4 @@
-const {find, filter, reject, iteratee, sortBy, orderBy, groupBy, uniq, uniqBy, mapValues, cloneDeep, isArray, isObjectLike} = require('lodash');
+const {compact, find, filter, reject, iteratee, sortBy, orderBy, groupBy, uniq, uniqBy, mapValues, cloneDeep, isArray, isObjectLike} = require('lodash');
 const check = require('check-types');
 
 const assert = check.assert;
@@ -9,7 +9,9 @@ class Collection {
     if (Collection.isCollection(items)) {
       items = items.toArray();
     }
-
+    if (isArray(items)) {
+      items = compact(items);
+    }
     this.validateOrThrow(items);
     this._items = items;
 
@@ -213,6 +215,10 @@ class Collection {
 
   get [Symbol.toStringTag]() {
     return 'Collection';
+  }
+
+  static get [Symbol.species]() {
+    return this;
   }
 
   static isCollection(item) {

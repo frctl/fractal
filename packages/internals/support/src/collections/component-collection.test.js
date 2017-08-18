@@ -139,6 +139,13 @@ describe('ComponentCollection', function () {
     });
   });
 
+  describe('.from()', function () {
+    it('returns a ComponentCollection instance', function () {
+      const collection = ComponentCollection.from(items);
+      expect(collection instanceof ComponentCollection).to.equal(true);
+    });
+  });
+
   describe('[Symbol.toStringTag]', function () {
     it('should resolve correctly', function () {
       const collection = makeCollection();
