@@ -13,7 +13,7 @@ class Transform {
 
     debug('Instantiating new Transform with:\n props: %O', props);
     this.name = props.name;
-    this.plugins = new PluginStore(props.plugins || [], props.pluginOptions);
+    this.plugins = new PluginStore(props.plugins || []);
     this.transform = props.transform;
     this.passthru = props.passthru || false;
     this.Collection = getConstructor(props.transform) || Collection;

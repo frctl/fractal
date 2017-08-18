@@ -2,7 +2,7 @@
 const {join} = require('path');
 const mockFs = require('mock-fs');
 const {EventEmitter2} = require('eventemitter2');
-const {expect,sinon} = require('../../../../test/helpers');
+const {expect, sinon} = require('../../../../test/helpers');
 const {filesToComponentsTransform} = require('../test/helpers');
 const Parser = require('./parser');
 const fileTransform = require('./transform/file-transform')();
@@ -11,26 +11,26 @@ const makeParser = props => {
   return new Parser(props);
 };
 
-describe('Parser', function() {
-  describe('constructor', function() {
-    it('creates a new instance', function() {
+describe('Parser', function () {
+  describe('constructor', function () {
+    it('creates a new instance', function () {
       const parser = new Parser();
       expect(parser instanceof Parser).to.be.true;
     });
   });
 
-  describe('.sources', function() {
-    it('is a getter', function() {
+  describe('.sources', function () {
+    it('is a getter', function () {
       expect(makeParser().sources).to.eql([]);
     });
-    it('returns a copy of the original', function() {
+    it('returns a copy of the original', function () {
       const originalSources = ['/src/components', '/src/components2/', 'lib/from/components'];
       expect(makeParser(originalSources).sources).to.not.equal(originalSources);
     });
   });
 
-  describe('.addSource()', function() {
-    it('converts a single string dir path to a srcInfo object and adds it', function() {
+  describe('.addSource()', function () {
+    it('converts a single string dir path to a srcInfo object and adds it', function () {
       const parser = makeParser();
       parser.addSource('/src/components');
       expect(parser.sources.length).to.equal(1);
@@ -41,7 +41,7 @@ describe('Parser', function() {
         src: '/src/components/**/*'
       });
     });
-    it('converts an array of dir path strings to srcInfo objects and adds then', function() {
+    it('converts an array of dir path strings to srcInfo objects and adds then', function () {
       const parser = makeParser();
       const cwd = process.cwd();
       parser.addSource(['/src/components', '/src/components2/', 'lib/from/components']);
@@ -53,7 +53,7 @@ describe('Parser', function() {
         src: join(cwd, 'lib/from/components/**/*')
       });
     });
-    it('converts a single string file path to a srcInfo object and adds it', function() {
+    it('converts a single string file path to a srcInfo object and adds it', function () {
       const parser = makeParser();
       parser.addSource('/src/components/index.js');
       expect(parser.sources.length).to.equal(1);
@@ -64,7 +64,7 @@ describe('Parser', function() {
         src: '/src/components/index.js'
       });
     });
-    it('converts an array of file path strings to srcInfo objects and adds then', function() {
+    it('converts an array of file path strings to srcInfo objects and adds then', function () {
       const parser = makeParser();
       const cwd = process.cwd();
       parser.addSource(['/src/components/index.js', '/src/components2/index.js', 'lib/from/components/index.js']);
@@ -78,27 +78,27 @@ describe('Parser', function() {
     });
   });
 
-  describe('.addTransform()', function() {
-    it('adds a transform definition to the parser\'s pipeline instance', function() {
+  describe('.addTransform()', function () {
+    it('adds a transform definition to the parser\'s pipeline instance', function () {
       const parser = makeParser();
       parser.addTransform(fileTransform);
       expect(parser.pipeline.transforms.length).to.equal(1);
     });
   });
-  describe('.getTransform()', function() {
-    it('retrieves a transform definition from the parser\'s pipeline instance', function() {
+  describe('.getTransform()', function () {
+    it('retrieves a transform definition from the parser\'s pipeline instance', function () {
       const parser = makeParser();
       parser.addTransform(fileTransform);
       expect(parser.getTransform('files')).to.be.a('Transform').with.property('name').that.equals('files');
     });
-    it(`returns 'undefined' if a transform cannot be found for a given name`, function() {
+    it(`returns 'undefined' if a transform cannot be found for a given name`, function () {
       const parser = makeParser();
       expect(parser.getTransform('files')).to.be.undefined;
     });
   });
 
-  describe('.addPluginToTransform()', function() {
-    it('adds a plugin object definition to a named transform', function() {
+  describe('.addPluginToTransform()', function () {
+    it('adds a plugin object definition to a named transform', function () {
       const parser = makeParser();
       parser.addTransform(fileTransform);
       const transform = parser.getTransform('files');
@@ -111,7 +111,7 @@ describe('Parser', function() {
       });
       expect(transform.plugins.items.length).to.equal(1);
     });
-    it('throws an error if an undefined transform is named', function() {
+    it('throws an error if an undefined transform is named', function () {
       const parser = makeParser();
       expect(() => {
         parser.addPluginToTransform('files', {
@@ -122,8 +122,8 @@ describe('Parser', function() {
     });
   });
 
-  describe('.run()', function() {
-    before(function() {
+  describe('.run()', function () {
+    before(function () {
       mockFs({
         'path/to/fake/@a-component': {
           'some-file.txt': 'file content here',
@@ -137,11 +137,11 @@ describe('Parser', function() {
       });
     });
 
-    after(function() {
+    after(function () {
       mockFs.restore();
     });
 
-    it('parses a set of files', async function() {
+    it('parses a set of files', async function () {
       const parser = makeParser({
         src: ['path/to/fake/**']
       });
@@ -151,7 +151,7 @@ describe('Parser', function() {
         .that.eqls({});
     });
 
-    it('emits events when an emitter is supplied', async function() {
+    it('emits events when an emitter is supplied', async function () {
       const parser = makeParser({
         src: ['path/to/fake/**']
       });
@@ -163,7 +163,7 @@ describe('Parser', function() {
       expect(spy.args[spy.args.length - 1][0]).to.equal('run.complete');
     });
 
-    it('runs all transforms and their associated plugins via its pipeline', async function() {
+    it('runs all transforms and their associated plugins via its pipeline', async function () {
       const parser = makeParser({
         src: ['path/to/fake/**'],
         transforms: [fileTransform, filesToComponentsTransform]

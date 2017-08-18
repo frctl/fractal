@@ -5,11 +5,6 @@ const {validPlugin, validPluginList, invalidPlugin} = require('../../test/helper
 const PluginStore = require('./plugin-store');
 const pluginStoreSchema = require('./plugin-store.schema');
 
-const validCollectionfreePlugin = {
-  name: 'test-plugin',
-  handler: function () {}
-};
-
 describe('Plugins', function () {
   describe('constructor', function () {
     it('returns a new instance', function () {
@@ -23,12 +18,6 @@ describe('Plugins', function () {
       plugins = new PluginStore(validPluginList);
       expect(plugins).to.have.a.property('items').that.has.a.property('length').that.equals(3);
     });
-    it('sets options correctly', function () {
-      let plugins = new PluginStore();
-      expect(plugins).to.have.a.property('options').that.has.a.property('defaultCollection').that.equals('files');
-      plugins = new PluginStore(null, {defaultCollection: 'components'});
-      expect(plugins).to.have.a.property('options').that.has.a.property('defaultCollection').that.equals('components');
-    });
     it('throws a TypeError if invalid items are passed in', function () {
       expect(() => new PluginStore('wkahsd')).to.throw(TypeError, '[plugins-invalid]');
       expect(() => new PluginStore(invalidPlugin)).to.throw(TypeError, '[plugins-invalid]');
@@ -40,16 +29,6 @@ describe('Plugins', function () {
       const plugins = new PluginStore();
       expect(plugins.add(validPlugin)).to.have.a.property('items').that.has.a.property('length').that.equals(1);
       expect(plugins.add(validPluginList)).to.have.a.property('items').that.has.a.property('length').that.equals(4);
-    });
-    it('assigns defaults correctly, where missing', function () {
-      let plugins = new PluginStore();
-      plugins.add(validCollectionfreePlugin);
-      let currentPlugin = plugins.items[0];
-      expect(currentPlugin).to.have.a.property('collection').that.equals('files');
-      plugins = new PluginStore(null, {defaultCollection: 'components'});
-      plugins.add(validCollectionfreePlugin);
-      currentPlugin = plugins.items[0];
-      expect(currentPlugin).to.have.a.property('collection').that.equals('components');
     });
     it('maintains the order of addition', function () {
       let plugins = new PluginStore();
