@@ -1,13 +1,12 @@
 /* eslint handle-callback-err: off, no-unused-expressions: off */
 const {EventEmitter2} = require('eventemitter2');
-const {ComponentCollection, File, Component} = require('@frctl/support');
+const {File} = require('@frctl/support');
 const {expect, sinon} = require('../../../../../test/helpers');
 const {
   validComponentCollectionTransform, invalidTransform,
-  filesToComponents, filesToComponentsTransform, toCC} = require('../../test/helpers');
+  filesToComponentsTransform, toCC} = require('../../test/helpers');
 const Pipeline = require('./pipeline');
 const fileTransform = require('./file-transform')();
-
 
 const noOpTransform = {
   name: 'no-op',
@@ -61,7 +60,6 @@ describe('Pipeline', function () {
       const pipeline = makePipeline([fileTransform, validComponentCollectionTransform]);
       const transform = pipeline.getTransform('valid-component-collection-transform');
       expect(transform).to.be.a('Transform');
-      console.log(transform);
       expect(transform.transform).to.equal(toCC);
     });
   });
@@ -97,7 +95,7 @@ describe('Pipeline', function () {
       const pipelineNoPass = makePipeline([noPassThru, noOpTransform]);
       const result = await pipelineNoPass.process(data, context, emitter);
 
-      expect(result).to.be.an('object').with.a.property('no-op').that.is.a('Collection').with.a.property('_items').that.equals(data);
+      expect(result).to.be.an('object').with.a.property('no-op').that.is.a('Collection').with.a.property('_items').that.eqls(data);
     });
     it(`passes 'data' to next transform when 'passthru' is true`, async function () {
       const emitter = new EventEmitter2();

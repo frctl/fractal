@@ -42,14 +42,13 @@ const invalidTransform = {name: 'transform without required props'};
 const validTransformWithPlugin = makeTransform('valid-transform-with-plugin', toC, validPlugin);
 const validTransformWithPluginList = makeTransform('valid-transform-with-plugin-list', toC, validPluginList);
 
-
 const filesToComponents = files => {
-  const comps = files.toArray().map(f => {
-    return new Component({
+  const comps = files.filter(f => (f.stem.indexOf('@') === 0))
+    .toArray()
+    .map(f => new Component({
       src: new File({path: f.dirname}),
       name: f.stem
-    });
-  });
+    }));
   return ComponentCollection.from(comps);
 };
 

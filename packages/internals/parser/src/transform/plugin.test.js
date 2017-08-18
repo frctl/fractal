@@ -1,7 +1,7 @@
 /* eslint handle-callback-err: off, no-unused-expressions: off */
 
 const {expect, validateSchema} = require('../../../../../test/helpers');
-const makePlugin = require('../../test/helpers').makePlugin;
+const {makePlugin, invalidPlugin} = require('../../test/helpers');
 const Plugin = require('./plugin');
 const pluginSchema = require('./plugin.schema');
 
@@ -18,6 +18,7 @@ describe('Plugin', function () {
       expect(() => new Plugin()).to.throw(TypeError, '[invalid-properties]');
       expect(() => new Plugin(['name', 'val'])).to.throw(TypeError, '[invalid-properties]');
       expect(() => new Plugin({name: 'name'})).to.throw(TypeError, '[invalid-properties]');
+      expect(() => new Plugin(invalidPlugin)).to.throw(TypeError, '[invalid-properties]');
     });
   });
 

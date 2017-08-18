@@ -124,6 +124,10 @@ describe('Collection', function () {
       expect(() => makeCollection([])).to.not.throw();
       expect(() => makeCollection([new Variant(), new Variant()])).to.not.throw();
     });
+    it('automatically compacts input with a mixture of valid and falsey values', function () {
+      expect(makeCollection([{valid: 'object'}, null, null, {other: 'valid-object'}]).length).to.equal(2);
+      expect(makeCollection([{valid: 'object'}, undefined, undefined, {other: 'valid-object'}]).length).to.equal(2);
+    });
   });
 
   describe('.length', function () {
