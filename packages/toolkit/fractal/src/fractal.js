@@ -4,7 +4,7 @@ const {defaultsDeep} = require('@frctl/utils');
 const {Component, Variant, File, ComponentCollection, FileCollection, EmittingPromise} = require('@frctl/support');
 const {Renderer} = require('@frctl/renderer');
 const {Parser} = require('@frctl/parser');
-const debug = require('debug')('fractal:core');
+const debug = require('debug')('frctl:fractal');
 const Config = require('./config/store');
 
 const _dirty = new WeakMap();
@@ -27,15 +27,6 @@ class Fractal {
     _dirty.set(this, true);
     _cache.set(this, cache);
     _config.set(this, config);
-
-    debug('using config %O', config.data);
-
-    for (const extension of this.get('extensions')) {
-      if (typeof extension.register === 'function') {
-        debug('registering extension %s', extension.name);
-        extension.register(this);
-      }
-    }
   }
 
   parse() {
@@ -181,13 +172,6 @@ class Fractal {
     debug(`adding transform %s`, transform);
     this.dirty = true;
     this.config.push('transforms', transform);
-    return this;
-  }
-
-  addCommand(command) {
-    debug(`adding command %s`, command);
-    this.dirty = true;
-    this.config.push('commands', command);
     return this;
   }
 

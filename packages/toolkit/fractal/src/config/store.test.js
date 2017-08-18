@@ -3,7 +3,7 @@ const {expect, validateSchema} = require('../../../../../test/helpers');
 const ConfigStore = require('./store');
 const configSchema = require('./schema');
 
-const addOns = ['commands', 'plugins', 'extensions', 'adapters', 'transforms', 'extensions'];
+const addOns = ['plugins', 'adapters', 'transforms'];
 
 const plugins = {
   parent: {
@@ -29,7 +29,7 @@ const parentPreset = {
 const firstPreset = {
   name: 'first-preset',
   config: {
-    extends: [
+    presets: [
       parentPreset
     ],
     plugins: [
@@ -41,7 +41,7 @@ const firstPreset = {
 const secondPreset = {
   name: 'second-preset',
   config: {
-    extends: [
+    presets: [
       parentPreset,
       firstPreset
     ],
@@ -52,7 +52,7 @@ const secondPreset = {
 };
 
 const configData = {
-  extends: [
+  presets: [
     firstPreset,
     secondPreset
   ]
@@ -77,10 +77,10 @@ describe('Fractal config initializer', function () {
 
   describe('.accessors', function () {
     it('includes an package loader array accessor for each add-on type', function () {
-      expect(ConfigStore.accessors.length).to.equal(addOns.length);
       for (const key of addOns) {
-        const accessor = ConfigStore.accessors.find(acc => acc.path === key);
-        expect(accessor).to.be.an('object').with.property('handler').that.equals('packages-loader');
+        const config = factory({});
+        const accessor = config.accessors.find(acc => acc.path === key);
+        expect(accessor).to.be.an('object').with.property('handler').that.has.property('name').that.equals('packagesLoader');
       }
     });
   });

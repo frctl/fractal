@@ -1,6 +1,6 @@
-# Fractal info command
+# Fractal CLI info command
 
-A Fractal CLI command to display information about the current Fractal project and environment.
+Displays information about the current Fractal project and environment.
 
 ## Installation & usage
 
@@ -9,23 +9,23 @@ A Fractal CLI command to display information about the current Fractal project a
 Install from NPM:
 
 ```
-npm i @frctl/fractal-command-info
+npm i @frctl/cli-command-info
 ```
 
-Then add `'@frctl/fractal-command-info'` to the commands array in your project's Fractal configuration file:
+Then add `'@frctl/cli-command-info'` to the `cli.commands` array in your project's Fractal configuration file:
 
 ```js
 // fractal.config.js
 module.exports = {
-  commands: [
-    '@frctl/fractal-command-info'
-  ]
+  cli: {
+    commands: [
+      '@frctl/cli-command-info'
+    ]
+  }
 }
 ```
 
 Unless otherwise configured it will now be available as the default CLI command - run `fractal` from the command line to view info about the current project and more.
-
-## Requirements
 
 ## Requirements
 

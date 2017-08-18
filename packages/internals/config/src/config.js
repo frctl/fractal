@@ -128,6 +128,10 @@ class Config {
   }
 
   addAccessor(path, handler) {
+    if (Array.isArray(path)) {
+      path.forEach(target => this.addAccessor(target, handler));
+      return this;
+    }
     if (typeof handler === 'string') {
       handler = require(`./accessors/${handler}`);
     }

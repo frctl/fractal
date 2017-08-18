@@ -3,31 +3,32 @@
 const yargs = require('yargs');
 
 if (yargs.argv.debug && !process.env.DEBUG) {
-  process.env.DEBUG = 'fractal:*';
+  process.env.DEBUG = 'frctl:*';
 }
 
-const {Fractal} = require('@frctl/fractal');
 const {dirname} = require('path');
 const findUp = require('find-up');
 const pkgUp = require('pkg-up');
 const importCwd = require('import-cwd');
 const updateNotifier = require('update-notifier');
-const {uniqBy, pick, assign} = require('lodash');
+const {uniqBy, pick, assign, omit, keys} = require('lodash');
 const loudRejection = require('loud-rejection');
-const debug = require('debug')('fractal:cli');
+const debug = require('debug')('frctl:cli');
 const logger = require('@frctl/console');
-const CommandStore = require('../src/command-store');
+const Cli = require('../src/cli');
+const loadExtension = require('../src/load-extension');
 const settings = require('../src/settings');
 const cliPkg = require('../package.json');
-const {log, error} = logger;
+const {log, error, warning} = logger;
 
 loudRejection();
 updateNotifier({pkg: cliPkg}).notify();
 
 try {
 
-  let app;
+  let Fractal;
   let configPath;
+  let config = {};
 
   /*
    * look for a package.json to find the root of the project...
@@ -43,7 +44,6 @@ try {
      * the `fractal.config` property in the package.json
      */
 
-    let config = {};
     const pkg = require(pkgPath);
     const cwd = dirname(pkgPath);
     const pkgConfig = pkg.fractal || {};
@@ -57,80 +57,100 @@ try {
     configPath = findUp.sync(configFiles);
 
     if (configPath) {
-
       debug(`config file found: %s`, configPath);
-
-      /*
-       * Config file found. The main export of the config file
-       * must either be a configuration object or a configured
-       * Fractal instance.
-       */
-
       config = require(configPath);
       debug(`config file read OK`);
-
-      if (config instanceof Fractal) {
-        app = config; // use the exported fractal instance directly
-      }
-
     } else {
       debug(`no config file found, looked for %s`, configFiles.join(', '));
-    }
-
-    if (!app) {
-
-      /*
-       * Attempt to load a local fractal instance
-       * and instantiate it with the config file contents.
-       */
-
-      try {
-        factory = importCwd('@frctl/fractal');
-        app = factory(config);
-      } catch(err) {
-        debug(err);
-      }
     }
 
   } else {
     debug(`no package.json file found. Assuming global scope.`);
   }
 
-  if (!app) {
-    debug(`no local fractal instance available - using global instead (may result in version mismatch!)`);
-    // TODO: detect and warn on version mismatch between app version and package.json dependency version?
-    app = require('@frctl/fractal')();
+  /*
+   * Frist try and load a local Fractal instance,
+   * falling back to the CLI dependency version if not found.
+   */
+
+  try {
+    Fractal = importCwd('@frctl/fractal').Fractal;
+  } catch(err) {
+    debug(err);
+    if (pkgPath) {
+      debug(`no local Fractal instance available - using global instead (may result in version mismatch!)`);
+       // TODO: detect and warn on version mismatch between app version and package.json dependency version?
+    }
+    Fractal = require('@frctl/fractal').Fractal;
   }
 
   /*
-   * Configure the yargs instance with available commands.
+   * Build CLI config data.
+   * The core CLI preset is pushed onto the front of the stack so that
+   * user-defined commands can override the default set.
    */
 
-  const env = {
-    configPath,
-    cwd: process.cwd(),
-    debug: Boolean(process.env.DEBUG),
-    version: cliPkg.version,
-  };
+  const cliConfig = Object.assign({}, config.cli || {}, {configPath});
+  cliConfig.commands = cliConfig.commands || [];
+  cliConfig.presets = cliConfig.presets || [];
+  cliConfig.presets.unshift(require('@frctl/cli-preset-core'));
 
-  const commandStore = new CommandStore(app.get('commands'));
+  const cli = new Cli(cliConfig);
+
+  /*
+   * Initialise Fractal instance.
+   */
+
+  const app = new Fractal(config.fractal);
+
+  /*
+   * Initialise extensions.
+   *
+   * Each key in the config is assumed to be an extension package name or path.
+   * All core Fractal extensions can have the `@frctl/` namespace omitted and those
+   * are checked for first, falling back to the un-namespaced package name if not found.
+   *
+   * Any extensions that are located are initialised with the fractal instance
+   * and the relevant config options object.
+   */
+
+  for (const key of keys(omit(config, ['fractal', 'cli']))) {
+    const extension = loadExtension(key, config[key], app);
+    if (extension) {
+      cli.config.push('commands', extension.commands || []);
+      if (typeof extension.register === 'function') {
+        extension.register(app);
+      }
+    } else {
+      debug(`[!] A configuration key '${key}' was defined but no matching package could be loaded`);
+    }
+  }
+
+  /*
+   * Initialise CLI and yargs
+   */
+
+
+
+  let commandMatched = false;
 
   yargs.usage(settings.usage)
        .options(settings.options)
-       .strict()
+       .help()
        .demandCommand(1, 'You must specify a command.');
 
-  for (const cmd of commandStore.commands) {
+  for (const cmd of cli.getCommands()) {
 
     const handler = async function (argv) {
       debug(`running command '%s' with args %o`, cmd.name, argv);
+      commandMatched = true;
 
       if (argv.help) {
         return yargs.showHelp();
       }
 
       try {
-        const result = cmd.handler(argv, app, env, logger);
+        const result = cmd.handler(argv, app, cli, logger);
         const output = await Promise.resolve(result);
         if (typeof output === 'string') {
           log(output);
@@ -142,10 +162,14 @@ try {
 
     yargs.command(assign({handler}, pick(cmd, ['name','command','aliases','description','builder'])));
 
-    debug(`registered command with CLI: %s`, cmd.name);
+    debug(`registered command: %s`, cmd.name);
   }
 
-  yargs.argv;
+  const argv = yargs.argv;
+
+  if (!commandMatched) {
+    throw new Error(`The command '${argv._.join(' ')}' was not recognised`);
+  }
 
 } catch(err) {
   error(err);

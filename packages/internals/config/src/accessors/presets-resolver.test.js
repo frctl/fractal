@@ -1,5 +1,5 @@
 const {expect, sinon, mockRequire} = require('../../../../../test/helpers');
-const resolver = require('./extends-resolver');
+const resolver = require('./presets-resolver');
 
 const grandParentPreset = {
   name: 'grandparent-preset'
@@ -8,7 +8,7 @@ const grandParentPreset = {
 const parentPreset = {
   name: 'parent-preset',
   config: {
-    extends: [
+    presets: [
       grandParentPreset
     ]
   }
@@ -17,7 +17,7 @@ const parentPreset = {
 const firstPreset = {
   name: 'first-preset',
   config: {
-    extends: [
+    presets: [
       parentPreset
     ]
   }
@@ -26,7 +26,7 @@ const firstPreset = {
 const secondPreset = {
   name: 'second-preset',
   config: {
-    extends: [
+    presets: [
       firstPreset,
       parentPreset
     ]
@@ -36,7 +36,7 @@ const secondPreset = {
 const thirdPreset = {
   name: 'third-preset',
   config: {
-    extends: [
+    presets: [
       parentPreset,
       firstPreset,
       secondPreset,
@@ -45,7 +45,7 @@ const thirdPreset = {
   }
 };
 
-describe('extends-resolver', function () {
+describe('presets-resolver', function () {
   it('exports a function', function () {
     expect(resolver).to.be.a('function');
   });
@@ -54,12 +54,12 @@ describe('extends-resolver', function () {
     const packages = [() => ({}), () => ({})];
     const spy = sinon.spy(v => v);
     mockRequire('./packages-loader', spy);
-    mockRequire.reRequire('./extends-resolver')(packages);
+    mockRequire.reRequire('./presets-resolver')(packages);
     expect(spy.calledWith(packages)).to.equal(true);
     mockRequire.stop('./packages-loader');
   });
 
-  it('recursively resolves and de-dupes `extends` into a flattened list of presets', function () {
+  it('recursively resolves and de-dupes `presets` into a flattened list of presets', function () {
     const presets = resolver([firstPreset, secondPreset]);
     expect(presets.map(preset => preset.name)).to.be.eql(['grandparent-preset', 'parent-preset', 'first-preset', 'second-preset']);
     const morePresets = resolver([thirdPreset, firstPreset, secondPreset]);

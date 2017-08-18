@@ -1,13 +1,9 @@
-module.exports = function corePreset(opts = {}) {
+module.exports = function (opts = {}) {
   return {
 
-    name: 'fractal-core',
+    name: 'fractal-preset-core',
 
     config: {
-
-      commands: [
-        require('@frctl/fractal-command-info')
-      ]
 
     }
 

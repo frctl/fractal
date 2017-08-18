@@ -1,4 +1,3 @@
-const debug = require('debug')('fractal:support');
 const Validator = require('../validator');
 const schema = require('./command.schema');
 
@@ -9,7 +8,6 @@ class Command {
   constructor(props) {
     Validator.assertValid(props, schema, 'Command schema invalid [properties-invalid]');
     _props.set(this, props);
-    debug('intialised command %s', props.name);
   }
 
   get name() {

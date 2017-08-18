@@ -8,12 +8,14 @@ module.exports = {
   },
 
   components: {
+
     config: {
       defaults: {},
       filter: {
         stem: 'config'
       }
     },
+
     views: {
       filter: {
         stem: 'view'
@@ -21,11 +23,12 @@ module.exports = {
     }
   },
 
-  extends: [],
-  commands: [],
+  presets: [],
+
   adapters: [],
+
   plugins: [],
-  transforms: [],
-  extensions: []
+
+  transforms: []
 
 };

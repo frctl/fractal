@@ -3,22 +3,21 @@ const {get} = require('lodash');
 const defaults = require('./defaults');
 const schema = require('./schema');
 
-const addOns = ['commands', 'plugins', 'extensions', 'adapters', 'transforms', 'extensions'];
-const accessors = addOns.map(prop => ({
-  path: prop,
-  handler: 'packages-loader'
-}));
-
 class ConfigStore extends ExtendedConfig {
 
   constructor(data) {
-    const presets = get(data, 'extends', []);
+    const presets = get(data, 'presets', []);
 
     if (Array.isArray(presets) && presets.length === 0) {
-      data.extends = [
+      data.presets = [
         require('@frctl/fractal-preset-core')
       ];
     }
+
+    const accessors = [{
+      path: ['plugins', 'adapters', 'transforms'],
+      handler: 'packages-loader'
+    }];
 
     super(data, {schema, defaults, accessors});
   }
@@ -26,4 +25,3 @@ class ConfigStore extends ExtendedConfig {
 }
 
 module.exports = ConfigStore;
-module.exports.accessors = accessors;

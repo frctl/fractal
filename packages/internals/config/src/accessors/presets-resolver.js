@@ -1,24 +1,24 @@
 const {toArray} = require('@frctl/utils');
 const loadPkgs = require('./packages-loader');
 
-module.exports = function extendsResolver(target) {
+module.exports = function presetsResolver(target) {
   let resolved = [];
 
-  function resolveExtends(preset) {
+  function resolvePresets(preset) {
     const presets = loadPkgs(toArray(preset));
     for (const preset of presets) {
       if (resolved.find(config => config.name === preset.name)) {
         continue; // already been applied, skip
       }
-      if (preset.config && Array.isArray(preset.config.extends)) {
+      if (preset.config && Array.isArray(preset.config.presets)) {
         // the preset itself specifies presets to extend from
-        resolveExtends(preset.config.extends);
+        resolvePresets(preset.config.presets);
       }
       resolved.push(preset);
     }
   }
 
-  resolveExtends(target);
+  resolvePresets(target);
 
   return resolved;
 };

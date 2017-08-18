@@ -55,16 +55,12 @@ module.exports = {
       }
     },
 
-    extends: {
+    presets: {
       anyOf: [
         {type: 'string'},
         {type: 'array'},
         {type: 'null'}
       ]
-    },
-
-    commands: {
-      type: 'array'
     },
 
     adapters: {
@@ -76,10 +72,6 @@ module.exports = {
     },
 
     transforms: {
-      type: 'array'
-    },
-
-    extensions: {
       type: 'array'
     }
 

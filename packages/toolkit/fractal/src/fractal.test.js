@@ -83,7 +83,7 @@ describe('Fractal', function () {
     });
 
     it('throws an error if invalid config data is provided', () => {
-      expect(() => new Fractal({commands: 'foo'})).to.throw('[config-invalid]');
+      expect(() => new Fractal({adapters: 'foo'})).to.throw('[config-invalid]');
     });
 
     it('does not throw an error if no config data is provided', () => {
@@ -93,13 +93,6 @@ describe('Fractal', function () {
     it('sets the dirty flag to true', () => {
       const fractal = new Fractal();
       expect(fractal.dirty).to.equal(true);
-    });
-
-    it('calls the register method of each extension with the current fractal instance', () => {
-      const register = sinon.spy();
-      const extension = {name: 'foo', register};
-      const fractal = new Fractal({extensions: [extension]});
-      expect(register.calledWith(fractal)).to.equal(true);
     });
   });
 
@@ -320,7 +313,7 @@ describe('Fractal', function () {
     });
   });
 
-  for (const addOn of ['plugin', 'adapter', 'transform', 'command']) {
+  for (const addOn of ['plugin', 'adapter', 'transform']) {
     const method = `add${capitalize(addOn)}`;
     describe(`${method}()`, function () {
       it(`adds a plugin to the ${addOn}s config array`, function () {

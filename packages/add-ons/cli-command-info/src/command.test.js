@@ -4,8 +4,10 @@ const {expect, validate} = require('../../../../test/helpers');
 const command = require('./command');
 
 const app = fractal();
-const env = {
-  commands: [],
+const cli = {
+  getCommands() {
+    return [];
+  },
   configPath: 'path/to/config.js',
   cwd: process.cwd(),
   debug: false,
@@ -19,11 +21,11 @@ describe('command-info', function () {
 
   describe('.handler()', () => {
     it('returns a string', function () {
-      expect(command().handler({}, app, env)).to.be.a('string');
+      expect(command().handler({}, app, cli)).to.be.a('string');
     });
     it('includes the config path, if set', function () {
-      expect(command().handler({}, app, env).indexOf(env.configPath)).to.be.greaterThan(-1);
-      expect(command().handler({}, app, Object.assign({}, env, {configPath: null})).indexOf('No config')).to.be.greaterThan(-1);
+      expect(command().handler({}, app, cli).indexOf(cli.configPath)).to.be.greaterThan(-1);
+      expect(command().handler({}, app, Object.assign({}, cli, {configPath: null})).indexOf('No config')).to.be.greaterThan(-1);
     });
   });
 });

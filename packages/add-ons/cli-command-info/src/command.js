@@ -8,6 +8,14 @@ module.exports = function infoCommand(opts = {}) {
     command: '*',
 
     handler(argv, app, cli) {
+      const commands = cli.getCommands().filter(cmd => cmd.description);
+
+      let commandList = '';
+      if (commands.length > 0) {
+        commandList = `<br><dim>Available commands:</dim><br><br>`;
+        commandList += `${commands.map(cmd => `<dim>$</dim> <yellow>${argv.$0} ${cmd.command}</yellow> - ${cmd.description}`).join('<br>')}<br>`;
+      }
+
       return `
         &nbsp;
         <hr>
@@ -16,8 +24,8 @@ module.exports = function infoCommand(opts = {}) {
 
         <dim>CWD:</dim> ${tildify(cli.cwd)}
         <dim>Config path:</dim> ${cli.configPath ? tildify(cli.configPath) : 'No config file found'}
-
-        <dim>Run <reset><cyan>${argv.$0} --help</cyan></reset> for a list of available commands.</dim>
+        ${commandList}
+        <dim>Run <reset><cyan>${argv.$0} --help</cyan></reset> for full details on available commands and options.</dim>
 
         <hr>
         &nbsp;

@@ -1,6 +1,6 @@
 # Fractal core preset
 
-Core set of commands, plugins and adapters for Fractal.
+Core set of plugins, adapters and transforms for Fractal.
 
 ## Installation & usage
 
@@ -12,14 +12,16 @@ Install from NPM:
 npm i @frctl/fractal-preset-core
 ```
 
-Then add `'@frctl/fractal-preset-core'` to the `extends` array in your project's Fractal configuration file:
+Then add `'@frctl/fractal-preset-core'` to the `fractal.presets` array in your project's Fractal configuration file:
 
 ```js
 // fractal.config.js
 module.exports = {
-  extends: [
-    '@frctl/fractal-preset-core'
-  ]
+  fractal {
+    presets: [
+      '@frctl/fractal-preset-core'
+    ]
+  }
 }
 ```
 

@@ -1,18 +1,19 @@
+const {ExtendedConfig} = require('@frctl/config');
 const {remove} = require('lodash');
 const {toArray} = require('@frctl/utils');
-const debug = require('debug')('fractal:cli');
+const debug = require('debug')('frctl:cli');
 const {Command} = require('@frctl/support');
 
 const _commands = new WeakMap();
 
-class CommandStore {
+class Cli {
 
-  constructor(commands = []) {
+  constructor(opts = {}) {
     _commands.set(this, []);
-    this.add(commands);
+    this.addCommand(opts.commands || []);
   }
 
-  add(items) {
+  addCommand(items) {
     const commands = _commands.get(this);
     toArray(items).map(props => new Command(props)).forEach(command => {
       const removed = remove(commands, item => item.name === command.name);
