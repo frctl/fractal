@@ -7,7 +7,7 @@ module.exports = function(opts = {}){
       match: '.fjk',
 
       render(file, context, opts = {}, collections, app){
-        return Promise.resolve('rendered!');
+        return Promise.resolve(file.contents.toString());
       }
 
     }

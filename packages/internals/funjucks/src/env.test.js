@@ -1,6 +1,7 @@
 /* eslint handle-callback-err: off, no-unused-expressions: off */
 
 const nunjucks = require('nunjucks');
+const _ = require('lodash');
 const {Fractal} = require('@frctl/fractal');
 const {expect} = require('../../../../test/helpers');
 const factory = require('./env');
@@ -42,6 +43,14 @@ describe('factory', function () {
         expect(() => env.getFilter(filter)).to.not.throw(Error);
       });
     }
+
+    it('adds all lodash functions as filters', function () {
+      for (const key of Object.keys(_)) {
+        if (_.isFunction(key)) {
+          expect(() => env.getFilter(key)).to.not.throw(Error);
+        }
+      }
+    });
   });
 });
 

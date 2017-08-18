@@ -6,8 +6,10 @@ if (yargs.argv.debug && !process.env.DEBUG) {
   process.env.DEBUG = 'fractal:*';
 }
 
+const {Fractal} = require('@frctl/fractal');
 const {dirname} = require('path');
 const findUp = require('find-up');
+const pkgUp = require('pkg-up');
 const importCwd = require('import-cwd');
 const updateNotifier = require('update-notifier');
 const {uniqBy, pick, assign} = require('lodash');
@@ -16,54 +18,102 @@ const debug = require('debug')('fractal:cli');
 const logger = require('@frctl/console');
 const CommandStore = require('../src/command-store');
 const settings = require('../src/settings');
-const pkg = require('../package.json');
-
+const cliPkg = require('../package.json');
 const {log, error} = logger;
 
 loudRejection();
-updateNotifier({pkg}).notify();
+updateNotifier({pkg: cliPkg}).notify();
 
 try {
 
-  let factory;
-  let config = {};
-  const configPath = findUp.sync(settings.configFiles);
+  let app;
+  let configPath;
 
-  if (configPath) {
-    const cwd = dirname(configPath);
-    config = require(configPath);
+  /*
+   * look for a package.json to find the root of the project...
+   */
+
+  const pkgPath = pkgUp.sync();
+
+  if (pkgPath) {
+
+    /*
+     * package.json found, load it and look for a config file.
+     * Custom config file names can be specified using
+     * the `fractal.config` property in the package.json
+     */
+
+    let config = {};
+    const pkg = require(pkgPath);
+    const cwd = dirname(pkgPath);
+    const pkgConfig = pkg.fractal || {};
+    const configFiles = [].concat(pkgConfig.config || settings.config);
 
     process.chdir(cwd);
 
-    debug(`config file found: %s`, configPath);
+    debug(`package.json file found: %s`, pkgPath);
     debug(`set current working directory: %s`, cwd);
 
-    try {
-      factory = importCwd('@frctl/fractal');
-    } catch(err) {
-      debug(err);
-      log(`
-        <error>No local Fractal instance found.</error>
-        <debug>&nbsp;&nbsp;Have you installed the <cyan>@frctl/fractal</cyan> package in your project?</debug>
-      `);
-      process.exit(1);
+    configPath = findUp.sync(configFiles);
+
+    if (configPath) {
+
+      debug(`config file found: %s`, configPath);
+
+      /*
+       * Config file found. The main export of the config file
+       * must either be a configuration object or a configured
+       * Fractal instance.
+       */
+
+      config = require(configPath);
+      debug(`config file read OK`);
+
+      if (config instanceof Fractal) {
+        app = config; // use the exported fractal instance directly
+      }
+
+    } else {
+      debug(`no config file found, looked for %s`, configFiles.join(', '));
+    }
+
+    if (!app) {
+
+      /*
+       * Attempt to load a local fractal instance
+       * and instantiate it with the config file contents.
+       */
+
+      try {
+        factory = importCwd('@frctl/fractal');
+        app = factory(config);
+      } catch(err) {
+        debug(err);
+      }
     }
 
   } else {
-    debug(`no config file found. Assuming global scope.`);
-    factory = require('@frctl/fractal');
+    debug(`no package.json file found. Assuming global scope.`);
   }
 
-  const app = factory(config);
+  if (!app) {
+    debug(`no local fractal instance available - using global instead (may result in version mismatch!)`);
+    // TODO: detect and warn on version mismatch between app version and package.json dependency version?
+    app = require('@frctl/fractal')();
+  }
+
+  /*
+   * Configure the yargs instance with available commands.
+   */
 
   const env = {
     configPath,
     cwd: process.cwd(),
     debug: Boolean(process.env.DEBUG),
-    version: pkg.version,
+    version: cliPkg.version,
   };
 
-  const commandStore = new CommandStore(app.get('commands',[]));
+  const commandStore = new CommandStore(app.get('commands'));
 
   yargs.usage(settings.usage)
        .options(settings.options)

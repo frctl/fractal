@@ -211,6 +211,75 @@ describe('Config', function () {
     });
   });
 
+  describe('.getRaw()', function () {
+    it('retrieves the raw config property value', function () {
+      const data = {
+        one: 'two',
+        three: {
+          nested: 'four'
+        }
+      };
+      const config = new Config(data);
+      config.addAccessor('three.nested', value => '!' + value);
+      expect(config.getRaw('three.nested')).to.eql(data.three.nested);
+    });
+  });
+
+  describe('.pick()', function () {
+    it('returns an object consisting of key/values picked from the data', function () {
+      const config = new Config({
+        foo: 'bar',
+        one: 'two',
+        nested: {
+          prop: 'child'
+        }
+      });
+      expect(config.pick('foo', 'nested.prop')).to.eql({
+        foo: 'bar',
+        nested: {
+          prop: 'child'
+        }
+      });
+      expect(config.pick(['foo', 'nested.prop'])).to.eql(config.pick('foo', 'nested.prop'));
+      config.addAccessor('foo', val => '!' + val);
+      expect(config.pick(['foo'])).to.eql({
+        foo: '!bar'
+      });
+    });
+  });
+
+  describe('.push()', function () {
+    it('pushes a value onto an array property', function () {
+      const config = new Config({
+        foo: ['bar']
+      });
+      config.push('foo', 'baz');
+      expect(config.get('foo')).to.eql(['bar', 'baz']);
+    });
+    it('throws an error if the property is defined but not an array', function () {
+      const config = new Config({
+        foo: 'bar'
+      });
+      expect(() => config.push('foo', 'baz')).to.throw('[push-array-only]');
+    });
+  });
+
+  describe('.unshift()', function () {
+    it('unshifts a value onto an array property', function () {
+      const config = new Config({
+        foo: ['bar']
+      });
+      config.unshift('foo', 'baz');
+      expect(config.get('foo')).to.eql(['baz', 'bar']);
+    });
+    it('throws an error if the property is defined but not an array', function () {
+      const config = new Config({
+        foo: 'bar'
+      });
+      expect(() => config.unshift('foo', 'baz')).to.throw('[unshift-array-only]');
+    });
+  });
+
   describe('.addDefaults()', function () {
     it('deep merges the supplied data as defaults', function () {
       const config = new Config({
@@ -235,24 +304,20 @@ describe('Config', function () {
         }
       });
     });
-    it('uses the defaults customizer to customize the defaults merging behaviour', function () {
-      const opts = {
-        customizers: {
-          defaults(targetValue, defaultValue) {
-            if (Array.isArray(targetValue) && Array.isArray(defaultValue)) {
-              return targetValue.concat(defaultValue);
-            }
-          }
+    it('accepts a customizer to customize the defaults merging behaviour', function () {
+      const defaultCustomizer = function (targetValue, defaultValue) {
+        if (Array.isArray(targetValue) && Array.isArray(defaultValue)) {
+          return targetValue.concat(defaultValue);
         }
       };
       const config = new Config({
         foo: 'bar',
         baz: [1, 2]
-      }, opts);
+      });
       config.addDefaults({
         one: 2,
         baz: [3, 4]
-      });
+      }, defaultCustomizer);
       expect(config.data).to.have.property('one').that.equals(2);
       expect(config.data).to.have.property('foo').that.equals('bar');
       expect(config.data).to.have.property('baz').that.has.same.members([1, 2, 3, 4]);

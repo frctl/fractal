@@ -8,8 +8,10 @@
   "author": "Mark Perkins <mark@allmarkedup.com> (http://allmarkedup.com)",
   "license": "MIT",
   "dependencies": {
+    "@frctl/support": "^2.0.0-beta.0",
     "@frctl/utils": "^2.0.0-beta.0",
     "@frctl/fractal": "^2.0.0-beta.0",
+    "debug": "^3.0.0",
     "highlight.js": "^9.11.0",
     "js-beautify": "^1.6.14",
     "lodash": "^4.17.4",

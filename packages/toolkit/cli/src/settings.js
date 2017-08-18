@@ -1,6 +1,6 @@
 module.exports = {
 
-  configFiles: ['fractal.config.js', 'fractal.config.json'],
+  config: ['fractal.config.js', 'fractal.config.json'],
 
   usage: `\n$0 <command> [...]`,
 
