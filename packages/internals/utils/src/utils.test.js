@@ -396,6 +396,14 @@ describe('Utils', function () {
     });
   });
 
+  describe('.getExt()', function () {
+    it('Correctly returns extension of filepath', function () {
+      expect(utils.getExt('index.js')).to.equal('.js');
+      expect(utils.getExt('index.min.js')).to.equal('.js');
+      expect(utils.getExt('index.last.html')).to.equal('.html');
+    });
+  });
+
   describe('.normalizePath()', function () {
     it('Throws an error if non-string input is received', function () {
       expect(function () {
