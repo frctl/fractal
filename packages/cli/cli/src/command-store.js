@@ -1,4 +1,3 @@
-const {ExtendedConfig} = require('@frctl/config');
 const {remove} = require('lodash');
 const {toArray} = require('@frctl/utils');
 const debug = require('debug')('frctl:cli');
@@ -8,12 +7,12 @@ const _commands = new WeakMap();
 
 class Cli {
 
-  constructor(opts = {}) {
+  constructor(commands = []) {
     _commands.set(this, []);
-    this.addCommand(opts.commands || []);
+    this.add(commands);
   }
 
-  addCommand(items) {
+  add(items) {
     const commands = _commands.get(this);
     toArray(items).map(props => new Command(props)).forEach(command => {
       const removed = remove(commands, item => item.name === command.name);
@@ -32,4 +31,4 @@ class Cli {
 
 }
 
-module.exports = CommandStore;
+module.exports = Cli;
