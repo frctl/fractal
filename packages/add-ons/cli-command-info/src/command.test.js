@@ -14,6 +14,17 @@ const cli = {
   version: '1.0.0'
 };
 
+const commands = [
+  {
+    description: 'does this',
+    command: 'foo-command'
+  }
+];
+
+function callHandler(args = {}, cliOverrides = {}) {
+  return command().handler(args, app, Object.assign({}, cli, cliOverrides));
+}
+
 describe('command-info', function () {
   it('has the expected format', function () {
     expect(validate(Command.schema, command())).to.equal(true);
@@ -21,11 +32,15 @@ describe('command-info', function () {
 
   describe('.handler()', () => {
     it('returns a string', function () {
-      expect(command().handler({}, app, cli)).to.be.a('string');
+      expect(callHandler()).to.be.a('string');
     });
     it('includes the config path, if set', function () {
-      expect(command().handler({}, app, cli).indexOf(cli.configPath)).to.be.greaterThan(-1);
-      expect(command().handler({}, app, Object.assign({}, cli, {configPath: null})).indexOf('No config')).to.be.greaterThan(-1);
+      expect(callHandler().indexOf(cli.configPath)).to.be.greaterThan(-1);
+      expect(callHandler({}, {configPath: null}).indexOf('No config')).to.be.greaterThan(-1);
+    });
+    it('includes the list of commands, if any are available', function () {
+      expect(callHandler().indexOf(cli.configPath)).to.be.greaterThan(-1);
+      expect(callHandler({}, {getCommands: () => commands}).indexOf('foo-command')).to.be.greaterThan(-1);
     });
   });
 });

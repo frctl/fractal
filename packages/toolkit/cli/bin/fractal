@@ -69,7 +69,7 @@ try {
   }
 
   /*
-   * Frist try and load a local Fractal instance,
+   * First try and load a project-specific Fractal instance,
    * falling back to the CLI dependency version if not found.
    */
 
@@ -115,7 +115,8 @@ try {
    */
 
   for (const key of keys(omit(config, ['fractal', 'cli']))) {
-    const extension = loadExtension(key, config[key], app);
+    const opts = config[key] === true ? {} : config[key];
+    const extension = loadExtension(key, opts);
     if (extension) {
       cli.config.push('commands', extension.commands || []);
       if (typeof extension.register === 'function') {
@@ -160,7 +161,8 @@ try {
       }
     };
 
-    yargs.command(assign({handler}, pick(cmd, ['name','command','aliases','description','builder'])));
+    const cmdProps = ['name','command','aliases','description','builder'];
+    yargs.command(assign({handler}, pick(cmd, cmdProps)));
 
     debug(`registered command: %s`, cmd.name);
   }

@@ -6,14 +6,14 @@ const _commands = new WeakMap();
 
 class Cli {
 
-  constructor(config = {}) {
+  constructor(config = {}, store) {
     _config.set(this, new ExtendedConfig(config, {
       accessors: [{
         path: 'commands',
         handler: 'packages-loader'
       }]
     }));
-    _commands.set(this, new CommandStore());
+    _commands.set(this, store || new CommandStore());
 
     this.addCommands(this.config.get('commands', []));
   }
@@ -27,6 +27,10 @@ class Cli {
     return _commands.get(this).commands;
   }
 
+  get store() {
+    return _commands.get(this);
+  }
+
   get config() {
     return _config.get(this);
   }
@@ -36,7 +40,8 @@ class Cli {
   }
 
   get debug() {
-    return Boolean(process.env.DEBUG);
+    const flag = process.env.DEBUG;
+    return Boolean(flag && !['false', 'null', 'undefined'].includes(flag));
   }
 
   get version() {

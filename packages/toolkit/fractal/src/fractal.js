@@ -78,7 +78,7 @@ class Fractal {
             return opts.variant ? variant.name === opts.variant : variant.default;
           });
           if (!variant) {
-            throw new Error(`Could not find variant '${opts.variant || 'default'}' for component '${target.name}' [variant-not-found]`);
+            throw new Error(`Could not find variant '${opts.variant}' for component '${target.name}' [variant-not-found]`);
           }
           target = variant;
         }
@@ -94,7 +94,7 @@ class Fractal {
           if (!view) {
             throw new Error(`Could not find view for component '${component.name}' (using adapter '${adapter.name}') [view-not-found]`);
           }
-          context = defaultsDeep(context, target.context || {});
+          context = defaultsDeep(context, target.context);
           target = view;
         }
 
