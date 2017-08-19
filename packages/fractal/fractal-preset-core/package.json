@@ -9,7 +9,7 @@
   "license": "MIT",
   "main": "./src/preset.js",
   "dependencies": {
-
+    "@frctl/fractal-transform-components": "^2.0.0-beta.0"
   },
   "devDependencies": {
     "@frctl/support": "^2.0.0-beta.0"

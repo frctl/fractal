@@ -7,3 +7,4 @@ module.exports = function (opts = {}) {
 
 module.exports.Parser = Parser;
 module.exports.Transformer = Transformer;
+module.exports.filesTransform = require('./src/transform/file-transform');

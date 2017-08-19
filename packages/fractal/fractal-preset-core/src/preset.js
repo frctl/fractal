@@ -5,6 +5,9 @@ module.exports = function (opts = {}) {
 
     config: {
 
+      transforms: [
+        require('@frctl/fractal-transform-components')
+      ]
     }
 
   };

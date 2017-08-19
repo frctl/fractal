@@ -1,9 +1,9 @@
 const Cache = require('node-cache');
 const chokidar = require('chokidar');
 const {defaultsDeep} = require('@frctl/utils');
-const {Component, Variant, File, ComponentCollection, FileCollection, EmittingPromise} = require('@frctl/support');
+const {Component, Variant, File, EmittingPromise} = require('@frctl/support');
 const {Renderer} = require('@frctl/renderer');
-const {Parser} = require('@frctl/parser');
+const {Parser, filesTransform} = require('@frctl/parser');
 const debug = require('debug')('frctl:fractal');
 const Config = require('./config/store');
 
@@ -30,23 +30,22 @@ class Fractal {
   }
 
   parse() {
-    const cached = this.cache.get('collections');
-    if (cached) {
-      return cached;
-    }
+    return new EmittingPromise(async (resolve, reject, emitter) => {
+      const cached = this.cache.get('collections');
+      if (cached) {
+        return resolve(cached);
+      }
 
-    // const parser = this.getParser();
+      try {
+        const parser = this.getParser();
+        const result = await parser.run();
 
-    // TODO: hook up proper parser
-    const collections = EmittingPromise.resolve({
-      components: new ComponentCollection(),
-      files: new FileCollection()
-    });
-
-    return collections.then(collections => {
-      this.dirty = false;
-      this.cache.set('collections', collections);
-      return collections;
+        this.dirty = false;
+        this.cache.set('collections', result.collections);
+        resolve(result.collections);
+      } catch (err) {
+        reject(err);
+      }
     });
   }
 
@@ -176,7 +175,17 @@ class Fractal {
   }
 
   getParser() {
-    return new Parser(this.config.pick('src', 'plugins', 'transforms'));
+    const parser = new Parser(this.config.pick('src'));
+    parser.addTransform(filesTransform());
+    this.get('transforms').forEach(transform => {
+      debug(`Adding transform %s to parser`, transform.name);
+      parser.addTransform(transform);
+    });
+    this.get('plugins').forEach(plugin => {
+      debug(`Adding plugin %s to parser`, plugin.name);
+      parser.addPluginToTransform(plugin.collection || 'components', plugin);
+    });
+    return parser;
   }
 
   getRenderer() {
