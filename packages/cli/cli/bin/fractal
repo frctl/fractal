@@ -90,12 +90,14 @@ try {
    * user-defined commands can override the default set.
    */
 
-  const cliConfig = Object.assign({}, config.cli || {}, {configPath});
-  cliConfig.commands = cliConfig.commands || [];
+  const cliConfig = config.cli || {};
   cliConfig.presets = cliConfig.presets || [];
   cliConfig.presets.unshift(require('@frctl/cli-preset-core'));
 
-  const cli = new Cli(cliConfig);
+  const cli = new Cli({
+    configPath,
+    config: cliConfig
+  });
 
   /*
    * Initialise Fractal instance.

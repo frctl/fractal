@@ -318,7 +318,7 @@ describe('Fractal', function () {
     describe(`${method}()`, function () {
       it(`adds a plugin to the ${addOn}s config array`, function () {
         const fractal = new Fractal({extends: null});
-        const length = addOn === 'transform' ? 1 : 0; //TODO find a nicer way to do this
+        const length = addOn === 'transform' ? 1 : 0; // TODO find a nicer way to do this
         expect(fractal.get(`${addOn}s`)).to.be.an('array').and.have.property('length').which.equals(length);
         fractal[method](`./test/fixtures/add-ons/${addOn}`);
         expect(fractal.get(`${addOn}s`).length).equal(length + 1);

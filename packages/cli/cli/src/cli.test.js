@@ -23,14 +23,18 @@ describe('Cli', function () {
     });
     it('initialises a config store instance with the supplied config', function () {
       const cli = new Cli({
-        foo: 'bar'
+        config: {
+          foo: 'bar'
+        }
       });
       expect(cli.config).to.be.instanceOf(ExtendedConfig);
       expect(cli.config.get('foo')).to.equal('bar');
     });
     it('add commands from the config', function () {
       const cli = new Cli({
-        commands: [command]
+        config: {
+          commands: [command]
+        }
       });
       expect(cli.getCommands().length).to.equal(1);
     });
@@ -54,10 +58,20 @@ describe('Cli', function () {
   describe('.config', function () {
     it('returns the config store instance', function () {
       const cli = new Cli({
-        foo: 'bar'
+        config: {
+          foo: 'bar'
+        }
       });
       expect(cli.config).to.be.instanceOf(ExtendedConfig);
       expect(cli.config.get('foo')).to.equal('bar');
+    });
+  });
+  describe('.configPath', function () {
+    it('returns the config path', function () {
+      const cli = new Cli({
+        configPath: 'foo/config.js'
+      });
+      expect(cli.configPath).to.equal('foo/config.js');
     });
   });
   describe('.config', function () {

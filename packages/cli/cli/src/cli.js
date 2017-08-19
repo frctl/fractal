@@ -6,8 +6,8 @@ const _commands = new WeakMap();
 
 class Cli {
 
-  constructor(config = {}, store) {
-    _config.set(this, new ExtendedConfig(config, {
+  constructor(opts = {}, store) {
+    _config.set(this, new ExtendedConfig(opts.config || {}, {
       accessors: [{
         path: 'commands',
         handler: 'packages-loader'
@@ -15,6 +15,7 @@ class Cli {
     }));
     _commands.set(this, store || new CommandStore());
 
+    this.configPath = opts.configPath;
     this.addCommands(this.config.get('commands', []));
   }
 
