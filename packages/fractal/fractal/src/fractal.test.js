@@ -286,7 +286,7 @@ describe('Fractal', function () {
         done();
       });
       fractal.dirty = false;
-      writeFile('foo.js');
+      watcher.on('ready', () => writeFile('foo.js'));
     });
   });
 
