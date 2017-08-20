@@ -17,12 +17,6 @@ module.exports = {
       describe: 'get help',
       global: true,
       boolean: true
-    },
-
-    version: {
-      describe: 'display version information',
-      global: false,
-      boolean: true
     }
 
   }

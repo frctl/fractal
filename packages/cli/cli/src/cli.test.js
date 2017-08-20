@@ -1,9 +1,7 @@
 const {ExtendedConfig} = require('@frctl/config');
-const command = require('../../../../test/fixtures/add-ons/command');
-const {expect, sinon} = require('../../../../test/helpers');
+const {expect} = require('../../../../test/helpers');
 const pkg = require('../package.json');
 const Cli = require('./cli');
-const CommandStore = require('./command-store');
 
 const commands = [{
   name: 'do-that',
@@ -17,10 +15,6 @@ const commands = [{
 
 describe('Cli', function () {
   describe('constructor', function () {
-    it('initialises a command store instance', function () {
-      const cli = new Cli();
-      expect(cli.store).to.be.instanceOf(CommandStore);
-    });
     it('initialises a config store instance with the supplied config', function () {
       const cli = new Cli({
         config: {
@@ -33,26 +27,20 @@ describe('Cli', function () {
     it('add commands from the config', function () {
       const cli = new Cli({
         config: {
-          commands: [command]
+          commands: commands
         }
       });
-      expect(cli.getCommands().length).to.equal(1);
+      expect(cli.getCommands().length).to.equal(2);
     });
   });
   describe('.addCommands()', function () {
     it('adds commands to the CommandStore', function () {
-      const store = new CommandStore();
-      const spy = sinon.spy(store, 'add');
-      const cli = new Cli({}, store);
-      cli.addCommands(commands);
-      expect(spy.calledWith(commands)).to.equal(true);
+
     });
   });
   describe('.getCommands()', function () {
     it('gets commands from the CommandStore', function () {
-      const store = new CommandStore(commands);
-      const cli = new Cli({}, store);
-      expect(cli.getCommands()).to.eql(store.commands);
+
     });
   });
   describe('.config', function () {

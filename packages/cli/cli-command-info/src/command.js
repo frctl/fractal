@@ -1,3 +1,4 @@
+const {relative} = require('path');
 const tildify = require('tildify');
 
 module.exports = function infoCommand(opts = {}) {
@@ -12,9 +13,11 @@ module.exports = function infoCommand(opts = {}) {
 
       let commandList = '';
       if (commands.length > 0) {
-        commandList = `<br><dim>Available commands:</dim><br><br>`;
-        commandList += `${commands.map(cmd => `<dim>$</dim> <yellow>${argv.$0} ${cmd.command}</yellow> - ${cmd.description}`).join('<br>')}<br>`;
+        commandList = `<hr><br><br><dim>Available commands:</dim><br><br>`;
+        commandList += `${commands.map(cmd => `<cyan>${argv.$0} ${cmd.command}</cyan> - ${cmd.description}`).join('<br>')}`;
       }
+
+      const configPath = cli.configPath ? relative(cli.cwd, cli.configPath) : null;
 
       return `
         &nbsp;
@@ -23,11 +26,13 @@ module.exports = function infoCommand(opts = {}) {
         <green>Fractal CLI <dim>v${cli.version}</dim></green>
 
         <dim>CWD:</dim> ${tildify(cli.cwd)}
-        <dim>Config path:</dim> ${cli.configPath ? tildify(cli.configPath) : 'No config file found'}
+        ${cli.configPath ? `<dim>Using config from</dim> ${configPath}` : '<dim>No config file found</dim>'}
+
         ${commandList}
-        <dim>Run <reset><cyan>${argv.$0} --help</cyan></reset> for full details on available commands and options.</dim>
 
         <hr>
+
+        <dim>Run <reset><cyan>${argv.$0} --help</cyan></reset> for full details on available commands and options.</dim>
         &nbsp;
       `;
     }

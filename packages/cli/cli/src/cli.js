@@ -1,35 +1,33 @@
 const {ExtendedConfig} = require('@frctl/config');
-const CommandStore = require('./command-store');
+const {uniqBy} = require('lodash');
+const {Command} = require('@frctl/support');
 
 const _config = new WeakMap();
-const _commands = new WeakMap();
+const configSettings = {
+  accessors: [{
+    path: 'commands',
+    handler: 'packages-loader'
+  }],
+  defaults: {
+    commands: []
+  }
+};
 
 class Cli {
 
-  constructor(opts = {}, store) {
-    _config.set(this, new ExtendedConfig(opts.config || {}, {
-      accessors: [{
-        path: 'commands',
-        handler: 'packages-loader'
-      }]
-    }));
-    _commands.set(this, store || new CommandStore());
-
+  constructor(opts = {}) {
     this.configPath = opts.configPath;
-    this.addCommands(this.config.get('commands', []));
+    _config.set(this, new ExtendedConfig(opts.config || {}, configSettings));
   }
 
   addCommands(commands) {
-    _commands.get(this).add(commands);
+    _config.get(this).push('commands', commands);
     return this;
   }
 
   getCommands() {
-    return _commands.get(this).commands;
-  }
-
-  get store() {
-    return _commands.get(this);
+    const commands = _config.get(this).get('commands').slice(0).reverse();
+    return uniqBy(commands, 'name').reverse().map(props => new Command(props));
   }
 
   get config() {

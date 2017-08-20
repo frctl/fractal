@@ -7,16 +7,18 @@ if (yargs.argv.debug && !process.env.DEBUG) {
 }
 
 const {dirname} = require('path');
-const findUp = require('find-up');
-const pkgUp = require('pkg-up');
-const importCwd = require('import-cwd');
+
 const updateNotifier = require('update-notifier');
-const {uniqBy, pick, assign, omit, keys} = require('lodash');
+const {get, pick, assign, omit} = require('lodash');
 const loudRejection = require('loud-rejection');
+const pkgUp = require('pkg-up');
 const debug = require('debug')('frctl:cli');
 const logger = require('@frctl/console');
+const corePreset = require('@frctl/cli-preset-core');
 const Cli = require('../src/cli');
-const loadExtension = require('../src/load-extension');
+const loadConfig = require('../src/loaders/config');
+const loadFractal = require('../src/loaders/fractal');
+const loadExtensions = require('../src/loaders/extensions');
 const settings = require('../src/settings');
 const cliPkg = require('../package.json');
 const {log, error, warning} = logger;
@@ -26,73 +28,46 @@ updateNotifier({pkg: cliPkg}).notify();
 
 try {
 
-  let Fractal;
-  let configPath;
-  let config = {};
-
   /*
-   * look for a package.json to find the root of the project...
+   * Look for a package.json to find the root of the project.
+   * If one is found, then the directory it resides in is assumed
+   * to be the root of the project and is set as the CWD.
+   *
+   * If no package.json is found, the CWD is left untouched.
    */
 
   const pkgPath = pkgUp.sync();
 
   if (pkgPath) {
-
-    /*
-     * package.json found, load it and look for a config file.
-     * Custom config file names can be specified using
-     * the `fractal.config` property in the package.json
-     */
-
-    const pkg = require(pkgPath);
     const cwd = dirname(pkgPath);
-    const pkgConfig = pkg.fractal || {};
-    const configFiles = [].concat(pkgConfig.config || settings.config);
-
     process.chdir(cwd);
-
     debug(`package.json file found: %s`, pkgPath);
     debug(`set current working directory: %s`, cwd);
-
-    configPath = findUp.sync(configFiles);
-
-    if (configPath) {
-      debug(`config file found: %s`, configPath);
-      config = require(configPath);
-      debug(`config file read OK`);
-    } else {
-      debug(`no config file found, looked for %s`, configFiles.join(', '));
-    }
-
   } else {
-    debug(`no package.json file found. Assuming global scope.`);
+    debug(`no package.json file found`);
   }
 
   /*
-   * First try and load a project-specific Fractal instance,
-   * falling back to the CLI dependency version if not found.
+   * Load config data (if a package.json has been found)
    */
 
-  try {
-    Fractal = importCwd('@frctl/fractal').Fractal;
-  } catch(err) {
-    debug(err);
-    if (pkgPath) {
-      debug(`no local Fractal instance available - using global instead (may result in version mismatch!)`);
-       // TODO: detect and warn on version mismatch between app version and package.json dependency version?
-    }
-    Fractal = require('@frctl/fractal').Fractal;
-  }
+  const {configPath, config} = loadConfig(pkgPath, settings);
 
   /*
-   * Build CLI config data.
-   * The core CLI preset is pushed onto the front of the stack so that
-   * user-defined commands can override the default set.
+   * Load and initialise Fractal instance with any data set
+   * under the 'app' key in the config.
+   */
+
+  const app = loadFractal(pkgPath, config.app);
+
+  /*
+   * Build config data and initialise CLI instance.
+   * The core CLI preset is pushed onto the front of the presets stack so that
+   * user-defined commands can override the default set if desired.
    */
 
   const cliConfig = config.cli || {};
-  cliConfig.presets = cliConfig.presets || [];
-  cliConfig.presets.unshift(require('@frctl/cli-preset-core'));
+  cliConfig.presets = [corePreset].concat(cliConfig.presets || []);
 
   const cli = new Cli({
     configPath,
@@ -100,47 +75,31 @@ try {
   });
 
   /*
-   * Initialise Fractal instance.
+   * Load and register extensions.
    */
 
-  const app = new Fractal(config.fractal);
-
-  /*
-   * Initialise extensions.
-   *
-   * Each key in the config is assumed to be an extension package name or path.
-   * All core Fractal extensions can have the `@frctl/` namespace omitted and those
-   * are checked for first, falling back to the un-namespaced package name if not found.
-   *
-   * Any extensions that are located are initialised with the fractal instance
-   * and the relevant config options object.
-   */
-
-  for (const key of keys(omit(config, ['fractal', 'cli']))) {
-    const opts = config[key] === true ? {} : config[key];
-    const extension = loadExtension(key, opts);
-    if (extension) {
-      cli.config.push('commands', extension.commands || []);
-      if (typeof extension.register === 'function') {
-        extension.register(app);
-      }
-    } else {
-      debug(`[!] A configuration key '${key}' was defined but no matching package could be loaded`);
+  const extensions = loadExtensions(omit(config, ['fractal', 'cli']));
+  for (const {name, commands, register} of extensions) {
+    if (commands) {
+      cli.addCommands(commands);
+    }
+    if (typeof register === 'function') {
+      register(app);
+      debug(`registered extension: '${name}'`);
     }
   }
 
   /*
-   * Initialise CLI and yargs
+   * Configure yargs.
    */
-
-
-
-  let commandMatched = false;
 
   yargs.usage(settings.usage)
        .options(settings.options)
        .help()
+       .version(cliPkg.version)
        .demandCommand(1, 'You must specify a command.');
+
+  let commandMatched = false;
 
   for (const cmd of cli.getCommands()) {
 
@@ -156,7 +115,7 @@ try {
         const result = cmd.handler(argv, app, cli, logger);
         const output = await Promise.resolve(result);
         if (typeof output === 'string') {
-          log(output);
+          log(output.replace(/^\s*[\r\n]/gm, '\n'));
         }
       } catch (err) {
         error(err);
