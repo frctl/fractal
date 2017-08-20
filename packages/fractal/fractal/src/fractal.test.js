@@ -1,4 +1,4 @@
-/* eslint import/no-dynamic-require: off */
+/* eslint import/no-dynamic-require: off,  no-unused-expressions: off */
 
 const {writeFileSync, mkdirSync} = require('fs');
 const {tmpdir} = require('os');
@@ -143,6 +143,25 @@ describe('Fractal', function () {
       const cachedCollections = await fractal.parse();
       expect(spy.returned(cachedCollections)).to.equal(true);
       spy.restore();
+    });
+    it('rejects if an error is thrown by the parser', async function () {
+      const fractal = new Fractal();
+      const stub = sinon.stub(fractal, 'getParser').callsFake(function () {
+        return {
+          run() {
+            return Promise.reject(new Error('oops!'));
+          }
+        };
+      });
+      let tested = false;
+      try {
+        await fractal.parse();
+      } catch (err) {
+        expect(err).to.be.instanceOf(Error);
+        tested = true;
+        stub.restore();
+      }
+      expect(tested).to.equal(true);
     });
   });
 
@@ -368,7 +387,30 @@ describe('Fractal', function () {
       expect(parser).to.be.instanceOf(Parser);
       expect(fractal.getParser()).to.not.equal(parser);
     });
-    it('initialises the parser with src, plugins and transforms from the config');
+    it('initialises the parser with src, plugins and transforms from the config', function () {
+      const fractal = new Fractal({
+        src: ['/foo'],
+        plugins: [
+          {
+            name: 'foo-plugin',
+            collection: 'components',
+            handler: function () {}
+          }
+        ],
+        transforms: [
+          {
+            name: 'tests',
+            transform: function () {
+              return new Collection();
+            }
+          }
+        ]
+      });
+      const parser = fractal.getParser();
+      expect(parser.sources.map(src => src.base)[0]).to.equal('/foo');
+      expect(parser.getTransform('tests')).to.have.property('name').that.equals('tests');
+      expect(parser.getTransform('components').plugins.items.map(plugin => plugin.name)).to.include('foo-plugin');
+    });
   });
 
   describe('.getRenderer()', function () {

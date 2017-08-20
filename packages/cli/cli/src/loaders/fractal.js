@@ -13,7 +13,9 @@ module.exports = function (pkgPath, config = {}) {
     fractal = importCwd('@frctl/fractal');
   } catch (err) {
     debug(err);
+    /* istanbul ignore next */
     if (pkgPath) {
+      /* istanbul ignore next */
       debug(`no local Fractal instance available - using global instead (may result in version mismatch!)`);
        // TODO: detect and warn on version mismatch between app version and package.json dependency version?
     }

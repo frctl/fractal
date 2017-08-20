@@ -12,7 +12,6 @@ const debug = require('debug')('frctl:cli');
  */
 
 module.exports = function (config = {}) {
-
   const extensions = [];
 
   for (const key of Object.keys(config)) {

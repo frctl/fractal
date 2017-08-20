@@ -21,7 +21,9 @@ class Cli {
   }
 
   addCommands(commands) {
-    _config.get(this).push('commands', commands);
+    for (const cmd of commands) {
+      _config.get(this).push('commands', cmd);
+    }
     return this;
   }
 

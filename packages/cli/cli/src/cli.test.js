@@ -1,5 +1,5 @@
 const {ExtendedConfig} = require('@frctl/config');
-const {expect} = require('../../../../test/helpers');
+const {expect, sinon} = require('../../../../test/helpers');
 const pkg = require('../package.json');
 const Cli = require('./cli');
 
@@ -34,13 +34,20 @@ describe('Cli', function () {
     });
   });
   describe('.addCommands()', function () {
-    it('adds commands to the CommandStore', function () {
-
+    it('adds commands to the config', function () {
+      const cli = new Cli();
+      const spy = sinon.spy(cli.config, 'push');
+      cli.addCommands(commands);
+      expect(spy.calledWith('commands', commands[0])).to.equal(true);
+      expect(spy.calledWith('commands', commands[1])).to.equal(true);
+      spy.restore();
     });
   });
   describe('.getCommands()', function () {
-    it('gets commands from the CommandStore', function () {
-
+    it('returns a de-deuplicated list of commands', function () {
+      const cli = new Cli();
+      cli.addCommands([commands[0], commands[0], commands[1]]);
+      expect(cli.getCommands().map(cmd => cmd.name)).to.eql([commands[0].name, commands[1].name]);
     });
   });
   describe('.config', function () {

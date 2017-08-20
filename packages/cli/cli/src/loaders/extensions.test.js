@@ -1,6 +1,6 @@
 const {expect, sinon, mockRequire} = require('../../../../../test/helpers');
 
-describe('Cli - load-extension', function () {
+describe('CLI extension loader', function () {
   let spy;
   let loader;
   beforeEach(function () {
@@ -46,7 +46,7 @@ describe('Cli - load-extension', function () {
     const opts = {};
     const pkgSpy = sinon.spy(() => extension);
     mockRequire('import-cwd', () => pkgSpy);
-    loader = mockRequire.reRequire('./extensions');
+    const loader = mockRequire.reRequire('./extensions');
     const result = loader({'./foobar': opts});
     expect(result[0]).to.equal(extension);
     expect(pkgSpy.calledWith(opts)).to.equal(true);

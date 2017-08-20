@@ -12,9 +12,9 @@ module.exports = function (pkgPath, opts = {}) {
 
   if (pkgPath) {
     /*
-    * package.json found, load it and look for a config file.
+    * package.json exists, load it and look for a config file.
     * Custom config file names can be specified using
-    * the `fractal.config` property in the package.json
+    * the `fractal.cli.config` property in the package.json
     */
 
     const pkg = require(pkgPath);
@@ -25,7 +25,7 @@ module.exports = function (pkgPath, opts = {}) {
     configPath = locatePath.sync(filePaths);
 
     if (!configPath && pkgConfig) {
-      configPath = './package.json';
+      configPath = join(process.cwd(), 'package.json');
       config = pkgConfig;
       debug(`no config file found, using config from package.json`);
     } else if (configPath) {
@@ -33,6 +33,7 @@ module.exports = function (pkgPath, opts = {}) {
       config = require(configPath);
       debug(`config file read OK`);
     } else {
+      /* istanbul ignore next */
       debug(`no config file found, looked for %s`, fileNames.join(', '));
     }
   }

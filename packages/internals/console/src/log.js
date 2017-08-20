@@ -1,16 +1,10 @@
 const render = require('@allmarkedup/climate');
 const indent = require('indent-string');
-const debug = require('debug')('fractal:console');
 const {html} = require('common-tags');
 const {parseError} = require('./utils');
 
 function log(str, opts = {}) {
-  try {
-    console.log(render(str.replace(/\{/g, '\\{').replace(/\}/g, '\\}'), opts));
-  } catch (err) {
-    console.log(str);
-    debug('error rendering console output: %s', err.message);
-  }
+  console.log(render(str.replace(/\{/g, '\\{').replace(/\}/g, '\\}'), opts));
 }
 
 function error(err, includeStack = true) {

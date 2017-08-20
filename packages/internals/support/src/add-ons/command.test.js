@@ -102,6 +102,13 @@ describe('Command', function () {
       expect(cmd.handler).to.equal(validCommand.handler);
     });
   });
+
+  describe('.command', function () {
+    it('returns the command string', function () {
+      const cmd = command(validCommand);
+      expect(cmd.command).to.equal(validCommand.command);
+    });
+  });
 });
 
 describe('Command schema', function () {
