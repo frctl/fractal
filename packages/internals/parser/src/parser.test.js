@@ -17,6 +17,11 @@ describe('Parser', function () {
       const parser = new Parser();
       expect(parser instanceof Parser).to.be.true;
     });
+    it('adds a file transform', function () {
+      const parser = new Parser();
+      expect(parser.pipeline.transforms.length).to.equal(1);
+      expect(parser.getTransform('files')).to.be.a('Transform').with.property('name').that.equals('files');
+    });
   });
 
   describe('.sources', function () {
@@ -81,8 +86,8 @@ describe('Parser', function () {
   describe('.addTransform()', function () {
     it('adds a transform definition to the parser\'s pipeline instance', function () {
       const parser = makeParser();
-      parser.addTransform(fileTransform);
-      expect(parser.pipeline.transforms.length).to.equal(1);
+      parser.addTransform(filesToComponentsTransform);
+      expect(parser.pipeline.transforms.length).to.equal(2);
     });
   });
   describe('.getTransform()', function () {
@@ -93,7 +98,7 @@ describe('Parser', function () {
     });
     it(`returns 'undefined' if a transform cannot be found for a given name`, function () {
       const parser = makeParser();
-      expect(parser.getTransform('files')).to.be.undefined;
+      expect(parser.getTransform('files-zoop')).to.be.undefined;
     });
   });
 
@@ -114,7 +119,7 @@ describe('Parser', function () {
     it('throws an error if an undefined transform is named', function () {
       const parser = makeParser();
       expect(() => {
-        parser.addPluginToTransform('files', {
+        parser.addPluginToTransform('files-zoop', {
           name: 'files-plugin',
           handler: i => i
         });
@@ -147,8 +152,9 @@ describe('Parser', function () {
       });
       const result = await parser.run();
       expect(result).to.be.an('object')
-        .with.a.property('collections')
-        .that.eqls({});
+        .with.a.property('files')
+        .that.is.a('FileCollection');
+      expect(result.files.items.length).to.equal(10);
     });
 
     it('emits events when an emitter is supplied', async function () {
@@ -158,9 +164,10 @@ describe('Parser', function () {
       const emitter = new EventEmitter2();
       const spy = sinon.spy(emitter, 'emit');
 
-      await parser.run({}, emitter);
+      const result = await parser.run({}, emitter);
       expect(spy.args[0][0]).to.equal('run.start');
       expect(spy.args[spy.args.length - 1][0]).to.equal('run.complete');
+      expect(spy.args[spy.args.length - 1][1]).to.equal(result);
     });
 
     it('runs all transforms and their associated plugins via its pipeline', async function () {
@@ -170,10 +177,44 @@ describe('Parser', function () {
       });
       const result = await parser.run();
       expect(result).to.be.an('object')
-        .with.a.property('collections')
         .with.a.property('files-to-comps')
         .that.is.a('ComponentCollection');
-      expect(result.collections['files-to-comps'].items.length).to.equal(2);
+      expect(result['files-to-comps'].items.length).to.equal(2);
+      expect(result.files.items.length).to.equal(10);
+    });
+  });
+
+  describe('.getLastRunInfo()', function () {
+    before(function () {
+      mockFs({
+        'path/to/fake/@a-component': {
+          'some-file.txt': 'file content here',
+          'empty-dir': { /** empty directory */ }
+        },
+        'path/to/fake/some.png': new Buffer([8, 6, 7, 5, 3, 0, 9]),
+        'path/to/fake/other/different/@b-component': {
+          'other-file.txt': 'file content here',
+          'other-dir': { /** empty directory */ }
+        }
+      });
+    });
+
+    after(function () {
+      mockFs.restore();
+    });
+
+    it('stores information about the last `run` command', async function () {
+      const parser = makeParser({
+        src: ['path/to/fake/**']
+      });
+      let lastrun = parser.getLastRunInfo();
+      expect(lastrun).to.eql({});
+      await parser.run();
+      lastrun = parser.getLastRunInfo();
+      expect(lastrun).to.be.an('object').with.all.keys(['src', 'hash']);
+      expect(lastrun.src).to.be.an('array');
+      expect(lastrun.src.length).to.equal(10);
+      expect(lastrun.hash).to.equal('df739ae3b5f46a84f7b97d8d2631c8c4');
     });
   });
 });
