@@ -1,5 +1,4 @@
-const {expect, sinon, mockRequire, validateSchema} = require('../../../../../test/helpers');
-const commandSchema = require('./command.schema');
+const {expect, sinon, mockRequire} = require('../../../../test/helpers');
 
 const logSpy = sinon.spy(() => {});
 const errorSpy = sinon.spy(() => {});
@@ -108,11 +107,5 @@ describe('Command', function () {
       const cmd = command(validCommand);
       expect(cmd.command).to.equal(validCommand.command);
     });
-  });
-});
-
-describe('Command schema', function () {
-  it('is a valid schema', function () {
-    expect(validateSchema(commandSchema)).to.equal(true);
   });
 });

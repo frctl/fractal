@@ -1,9 +1,8 @@
 /* eslint handle-callback-err: off, no-unused-expressions: off */
 
-const {expect, validateSchema} = require('../../../../../test/helpers');
+const {expect} = require('../../../../../test/helpers');
 const {makePlugin, invalidPlugin} = require('../../test/helpers');
 const Plugin = require('./plugin');
-const pluginSchema = require('./plugin.schema');
 
 const validPluginProps = makePlugin();
 
@@ -19,12 +18,6 @@ describe('Plugin', function () {
       expect(() => new Plugin(['name', 'val'])).to.throw(TypeError, '[invalid-properties]');
       expect(() => new Plugin({name: 'name'})).to.throw(TypeError, '[invalid-properties]');
       expect(() => new Plugin(invalidPlugin)).to.throw(TypeError, '[invalid-properties]');
-    });
-  });
-
-  describe('Plugin schema', function () {
-    it('is a valid schema', function () {
-      expect(validateSchema(pluginSchema)).to.equal(true);
     });
   });
 });

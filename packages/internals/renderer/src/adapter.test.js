@@ -1,6 +1,5 @@
-const {expect, validateSchema, sinon} = require('../../../../../test/helpers');
-const File = require('../entities/file');
-const adapterSchema = require('./adapter.schema');
+const {File} = require('@frctl/support');
+const {expect, sinon} = require('../../../../test/helpers');
 const Adapter = require('./adapter');
 
 const validAdapter = {
@@ -60,11 +59,5 @@ describe('Adapter', function () {
       const adapter = new Adapter(validAdapter);
       return expect(adapter.render('bar')).to.be.rejectedWith(TypeError, '[file-invalid]');
     });
-  });
-});
-
-describe('Adapter schema', function () {
-  it('is a valid schema', function () {
-    expect(validateSchema(adapterSchema)).to.equal(true);
   });
 });

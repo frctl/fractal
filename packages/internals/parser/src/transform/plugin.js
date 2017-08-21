@@ -1,10 +1,10 @@
 const {Validator} = require('@frctl/support');
-const schema = require('./plugin.schema');
+const schema = require('@frctl/support/schema');
 
 class Plugin {
 
   constructor(props = {}) {
-    Validator.assertValid(props, schema, 'Plugin schema invalid [invalid-properties]');
+    Validator.assertValid(props, schema.plugin, 'Plugin schema invalid [invalid-properties]');
     Object.assign(this, props);
   }
 

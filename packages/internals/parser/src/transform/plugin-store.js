@@ -1,7 +1,7 @@
 const debug = require('debug')('fractal:parser');
 const {Validator} = require('@frctl/support');
 const {toArray} = require('@frctl/utils');
-const schema = require('./plugin-store.schema');
+const schema = require('@frctl/support/schema');
 const Plugin = require('./plugin');
 
 const _items = new WeakMap();
@@ -25,7 +25,7 @@ class PluginStore {
    */
   add(item) {
     let items = toArray(item);
-    Validator.assertValid(items, schema, 'PluginStore.add: The items provided do not match the schema of a plugins [plugins-invalid]');
+    Validator.assertValid(items, schema.pluginStore, 'PluginStore.add: The items provided do not match the schema of a plugins [plugins-invalid]');
     debug('PluginStore.add: \n %O', items);
     items = items.map(item => new Plugin(item));
     _items.get(this).push(...items);

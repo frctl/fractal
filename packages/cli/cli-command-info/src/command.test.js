@@ -1,4 +1,4 @@
-const {Command} = require('@frctl/support');
+const schema = require('@frctl/support/schema');
 const fractal = require('@frctl/fractal');
 const {expect, validate} = require('../../../../test/helpers');
 const command = require('./command');
@@ -27,7 +27,7 @@ function callHandler(args = {}, cliOverrides = {}) {
 
 describe('command-info', function () {
   it('has the expected format', function () {
-    expect(validate(Command.schema, command())).to.equal(true);
+    expect(validate(schema.command, command())).to.equal(true);
   });
 
   describe('.handler()', () => {

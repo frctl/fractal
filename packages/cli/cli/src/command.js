@@ -1,12 +1,12 @@
-const Validator = require('../validator');
-const schema = require('./command.schema');
+const schema = require('@frctl/support/schema');
+const {Validator} = require('@frctl/support');
 
 const _props = new WeakMap();
 
 class Command {
 
   constructor(props) {
-    Validator.assertValid(props, schema, 'Command schema invalid [properties-invalid]');
+    Validator.assertValid(props, schema.command, 'Command schema invalid [properties-invalid]');
     _props.set(this, props);
   }
 
@@ -36,7 +36,5 @@ class Command {
   }
 
 }
-
-Command.schema = schema;
 
 module.exports = Command;

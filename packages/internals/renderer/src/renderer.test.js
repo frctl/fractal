@@ -1,8 +1,8 @@
 const EventEmitter = require('events');
-const {File, Adapter} = require('@frctl/support');
+const {File} = require('@frctl/support');
 const {toArray} = require('@frctl/utils');
 const {expect, sinon} = require('../../../../test/helpers');
-// const parserOutput = require('../../../../test/fixtures/parser-result');
+const Adapter = require('./adapter');
 const Renderer = require('./renderer');
 
 const adapters = [{

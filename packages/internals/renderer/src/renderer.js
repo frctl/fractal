@@ -2,10 +2,11 @@
 
 const EventEmitter = require('events');
 const {remove} = require('lodash');
-const {File, Adapter} = require('@frctl/support');
+const {File} = require('@frctl/support');
 const {toArray} = require('@frctl/utils');
 const debug = require('debug')('fractal:renderer');
 const {assert} = require('check-types');
+const Adapter = require('./adapter');
 
 const _adapters = new WeakMap();
 

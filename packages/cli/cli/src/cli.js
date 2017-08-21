@@ -1,6 +1,6 @@
 const {ExtendedConfig} = require('@frctl/config');
 const {uniqBy} = require('lodash');
-const {Command} = require('@frctl/support');
+const Command = require('./command');
 
 const _config = new WeakMap();
 const configSettings = {
