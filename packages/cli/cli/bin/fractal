@@ -78,7 +78,7 @@ try {
    * Load and register extensions.
    */
 
-  const extensions = loadExtensions(omit(config, ['fractal', 'cli']));
+  const extensions = loadExtensions(omit(config, ['app', 'cli']));
   for (const {name, commands, register} of extensions) {
     if (commands) {
       cli.addCommands(commands);
