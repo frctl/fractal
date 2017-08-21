@@ -8,11 +8,14 @@ const assert = check.assert;
 const {toArray, hash, normalizePath, getExt} = require('@frctl/utils');
 const {sortBy} = require('lodash');
 
+const fileTransform = require('./transform/file-transform')();
+
 const Pipeline = require('./transform/pipeline');
 const read = require('./read');
 
 const _sources = new WeakMap();
 const _pipeline = new WeakMap();
+const _lastRunInfo = new WeakMap();
 
 class Parser {
   /**
@@ -25,6 +28,9 @@ class Parser {
 
     _sources.set(this, []);
     _pipeline.set(this, new Pipeline());
+    _lastRunInfo.set(this, {});
+
+    this.addTransform(fileTransform);
 
     if (opts.src) {
       this.addSource(opts.src);
@@ -101,24 +107,18 @@ class Parser {
     const context = opts.context || null;
     const pipeline = _pipeline.get(this);
 
-    const result = {
+    _lastRunInfo.set(this, {
       src: files,
-      hash: filesHash,
-      collections: {}
-    };
-
-    /*
-     * No transformers provided, we can exit early
-     */
-    if (pipeline.transforms.length === 0) {
-      emitter.emit('run.complete', result);
-      return result;
-    }
+      hash: filesHash
+    });
 
     const collections = await pipeline.process(files, context, emitter);
-    result.collections = collections;
-    emitter.emit('run.complete', result);
-    return result;
+    emitter.emit('run.complete', collections);
+    return collections;
+  }
+
+  getLastRunInfo() {
+    return Object.assign({}, _lastRunInfo.get(this));
   }
 
   /**
@@ -132,6 +132,7 @@ class Parser {
   get pipeline() {
     return _pipeline.get(this);
   }
+
 }
 
 const getSrcInfo = src => {

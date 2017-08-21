@@ -3,7 +3,7 @@ const chokidar = require('chokidar');
 const {defaultsDeep} = require('@frctl/utils');
 const {Component, Variant, File, EmittingPromise} = require('@frctl/support');
 const {Renderer} = require('@frctl/renderer');
-const {Parser, filesTransform} = require('@frctl/parser');
+const {Parser} = require('@frctl/parser');
 const debug = require('debug')('frctl:fractal');
 const Config = require('./config/store');
 
@@ -38,11 +38,11 @@ class Fractal {
 
       try {
         const parser = this.getParser();
-        const result = await parser.run();
+        const collections = await parser.run();
 
         this.dirty = false;
-        this.cache.set('collections', result.collections);
-        resolve(result.collections);
+        this.cache.set('collections', collections);
+        resolve(collections);
       } catch (err) {
         reject(err);
       }
@@ -176,7 +176,6 @@ class Fractal {
 
   getParser() {
     const parser = new Parser(this.config.pick('src'));
-    parser.addTransform(filesTransform());
     this.get('transforms').forEach(transform => {
       debug(`Adding transform %s to parser`, transform.name);
       parser.addTransform(transform);
