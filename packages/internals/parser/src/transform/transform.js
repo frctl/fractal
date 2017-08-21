@@ -2,14 +2,14 @@ const checkTypes = require('check-types');
 const checkMore = require('check-more-types');
 const debug = require('debug')('fractal:parser');
 const {Collection, Validator} = require('@frctl/support');
-const schema = require('./transform.schema');
+const schema = require('@frctl/support/schema');
 const PluginStore = require('./plugin-store');
 
 const assert = checkTypes.assert;
 
 class Transform {
   constructor(props = {}) {
-    Validator.assertValid(props, schema, 'Transform schema invalid [invalid-properties]');
+    Validator.assertValid(props, schema.transform, 'Transform schema invalid [invalid-properties]');
 
     debug('Instantiating new Transform with:\n props: %O', props);
     this.name = props.name;

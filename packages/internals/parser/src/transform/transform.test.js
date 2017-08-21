@@ -2,7 +2,7 @@
 const mockRequire = require('mock-require');
 const {EventEmitter2} = require('eventemitter2');
 const {FileCollection, ComponentCollection, File} = require('@frctl/support');
-const {expect, sinon, validateSchema} = require('../../../../../test/helpers');
+const {expect, sinon} = require('../../../../../test/helpers');
 const {
   validPlugin,
   validPluginList,
@@ -17,7 +17,6 @@ const {
   toC
 } = require('../../test/helpers');
 const Transform = require('./transform');
-const transformSchema = require('./transform.schema');
 const PluginStore = require('./plugin-store');
 
 const toTestedPlugin = {
@@ -242,12 +241,6 @@ describe('Transform', function () {
       const transform1 = Transform.from(validFileCollectionTransform);
       const transform2 = Transform.from(transform1);
       expect(transform2 instanceof Transform).to.be.true;
-    });
-  });
-
-  describe('Transform schema', function () {
-    it('is a valid schema', function () {
-      expect(validateSchema(transformSchema)).to.equal(true);
     });
   });
 });

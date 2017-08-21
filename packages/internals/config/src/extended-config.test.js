@@ -19,7 +19,7 @@ const preset = {
   name: 'preset',
   config: {
     testName: 'preset',
-    extends: [
+    presets: [
       parentPreset
     ]
   }
@@ -30,14 +30,14 @@ describe('ExtendedConfig', function () {
     expect(new ExtendedConfig()).to.be.instanceOf(Config);
   });
   describe('constructor', function () {
-    it('adds the extends-resolver accessor for the `extends` property', function () {
+    it('adds the presets-resolver accessor for the `presets` property', function () {
       const config = new ExtendedConfig();
-      expect(config.accessors.find(acc => acc.path === 'extends').handler.name).to.equal('extendsResolver');
+      expect(config.accessors.find(acc => acc.path === 'presets').handler.name).to.equal('presetsResolver');
     });
     it('applies config as defaults from all extended presets in the correct order', function () {
       const spy = sinon.spy(ExtendedConfig.prototype, 'addDefaults');
       new ExtendedConfig({
-        extends: [
+        presets: [
           preset
         ]
       });
@@ -48,17 +48,17 @@ describe('ExtendedConfig', function () {
     it('omits extend keys from the defaults that are merged', function () {
       const spy = sinon.spy(ExtendedConfig.prototype, 'addDefaults');
       new ExtendedConfig({
-        extends: [
+        presets: [
           preset
         ]
       });
-      expect(spy.args[0][0]).to.not.have.property('extends');
-      expect(spy.args[1][0]).to.not.have.property('extends');
+      expect(spy.args[0][0]).to.not.have.property('presets');
+      expect(spy.args[1][0]).to.not.have.property('presets');
       spy.restore();
     });
     it('uses an empty object if no config prop is found for the preset', function () {
       expect(() => new ExtendedConfig({
-        extends: [
+        presets: [
           presetNoConfig
         ]
       })).to.not.throw();
