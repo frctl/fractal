@@ -214,7 +214,7 @@ describe('Parser', function () {
       expect(lastrun).to.be.an('object').with.all.keys(['src', 'hash']);
       expect(lastrun.src).to.be.an('array');
       expect(lastrun.src.length).to.equal(10);
-      expect(lastrun.hash).to.equal('df739ae3b5f46a84f7b97d8d2631c8c4');
+      expect(lastrun.hash).to.be.a('string').with.lengthOf(32);
     });
   });
 });
