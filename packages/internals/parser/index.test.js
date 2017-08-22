@@ -4,7 +4,7 @@ const main = require('.');
 
 const srcExports = {
   Parser: require('./src/parser'),
-  Transformer: require('./src/transform/transform')
+  Transform: require('./src/transform/transform')
 };
 
 describe('Parser main', function () {
