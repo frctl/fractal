@@ -3,6 +3,8 @@ module.exports = function (opts = {}) {
 
     name: 'example-plugin',
 
+    transform: 'files',
+
     handler(items) {
       return items;
     }

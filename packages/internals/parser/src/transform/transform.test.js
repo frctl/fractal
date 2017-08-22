@@ -21,7 +21,7 @@ const PluginStore = require('./plugin-store');
 
 const toTestedPlugin = {
   name: 'plugin-tested',
-  collection: 'files',
+  transform: 'files',
   handler: items => items.map(i => Object.assign({}, i, {
     tested: true
   }))
