@@ -182,7 +182,7 @@ class Fractal {
     });
     this.get('plugins').forEach(plugin => {
       debug(`Adding plugin %s to parser`, plugin.name);
-      parser.addPluginToTransform(plugin.collection || 'components', plugin);
+      parser.addPluginToTransform(plugin.transform || 'components', plugin);
     });
     return parser;
   }

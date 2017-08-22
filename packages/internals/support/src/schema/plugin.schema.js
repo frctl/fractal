@@ -5,7 +5,7 @@ module.exports = {
     name: {
       type: 'string'
     },
-    collection: {
+    transform: {
       type: 'string'
     },
     handler: {
