@@ -1,52 +1,14 @@
-const Cache = require('node-cache');
-const chokidar = require('chokidar');
 const {defaultsDeep} = require('@frctl/utils');
+const App = require('@frctl/app');
 const {Component, Variant, File, EmittingPromise} = require('@frctl/support');
 const {Renderer} = require('@frctl/renderer');
-const {Parser} = require('@frctl/parser');
 const debug = require('debug')('frctl:fractal');
 const Config = require('./config/store');
 
-const _dirty = new WeakMap();
-const _cache = new WeakMap();
-const _config = new WeakMap();
-const _watcher = new WeakMap();
+class Fractal extends App {
 
-class Fractal {
-
-  constructor(configData = {}) {
-    debug('instantiating new Fractal instance');
-
-    const config = new Config(configData);
-    const cache = new Cache({
-      stdTTL: config.get('cache.ttl'),
-      checkperiod: config.get('cache.check'),
-      useClones: true
-    });
-
-    _dirty.set(this, true);
-    _cache.set(this, cache);
-    _config.set(this, config);
-  }
-
-  parse() {
-    return new EmittingPromise(async (resolve, reject, emitter) => {
-      const cached = this.cache.get('collections');
-      if (cached) {
-        return resolve(cached);
-      }
-
-      try {
-        const parser = this.getParser();
-        const collections = await parser.run();
-
-        this.dirty = false;
-        this.cache.set('collections', collections);
-        resolve(collections);
-      } catch (err) {
-        reject(err);
-      }
-    });
+  constructor(config = {}) {
+    super(new Config(config));
   }
 
   render(target, context = {}, opts = {}) {
@@ -112,108 +74,24 @@ class Fractal {
     return this.parse().then(collections => collections.files);
   }
 
-  watch() {
-    let watcher = _watcher.get(this);
-    if (watcher) {
-      return watcher;
-    }
-
-    debug(`starting watch task`);
-
-    watcher = chokidar.watch(this.get('src'), {
-      ignoreInitial: true,
-      cwd: process.cwd()
-    }).on('all', () => {
-      debug(`fractal source change detected`);
-      this.dirty = true;
-    });
-
-    _watcher.set(this, watcher);
-    return watcher;
-  }
-
-  unwatch() {
-    const watcher = _watcher.get(this);
-    if (watcher) {
-      watcher.close();
-    }
-    debug(`stopping watch task`);
-    _watcher.set(this, null);
-    return this;
-  }
-
-  get(prop, fallback) {
-    return _config.get(this).get(prop, fallback);
-  }
-
-  set(prop, value) {
-    debug(`setting config value %s = %s`, prop, value);
-    this.dirty = true;
-    _config.get(this).set(prop, value);
-    return this;
-  }
-
-  addPlugin(plugin) {
-    debug(`adding plugin %s`, plugin);
-    this.dirty = true;
-    this.config.push('plugins', plugin);
-    return this;
-  }
-
   addAdapter(adapter) {
-    debug(`adding adapter %s`, adapter);
+    this.debug(`adding adapter %s`, adapter);
     this.dirty = true;
     this.config.push('adapters', adapter);
     return this;
-  }
-
-  addTransform(transform) {
-    debug(`adding transform %s`, transform);
-    this.dirty = true;
-    this.config.push('transforms', transform);
-    return this;
-  }
-
-  getParser() {
-    const parser = new Parser(this.config.pick('src'));
-    this.get('transforms').forEach(transform => {
-      debug(`Adding transform %s to parser`, transform.name);
-      parser.addTransform(transform);
-    });
-    this.get('plugins').forEach(plugin => {
-      debug(`Adding plugin %s to parser`, plugin.name);
-      parser.addPluginToTransform(plugin.collection || 'components', plugin);
-    });
-    return parser;
   }
 
   getRenderer() {
     return new Renderer(this.config.get('adapters'));
   }
 
-  get dirty() {
-    return _dirty.get(this);
-  }
-
-  set dirty(isDirty) {
-    debug(`setting dirty flag to '%s'`, isDirty ? 'true' : 'false');
-    _dirty.set(this, isDirty);
-    if (isDirty) {
-      this.cache.del('collections');
-    }
+  debug(...args) {
+    debug(...args);
     return this;
   }
 
   get version() {
     return require('../package.json').version;
-  }
-
-  get cache() {
-    return _cache.get(this);
-  }
-
-  get config() {
-    return _config.get(this);
   }
 
   get isFractal() {
