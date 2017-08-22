@@ -6,6 +6,10 @@ module.exports = function (opts = {}) {
 
     name: 'fractal-pages',
 
+    commands: [
+      require('./src/commands/info')(opts)
+    ],
+
     register(fractal) {
 
     }
