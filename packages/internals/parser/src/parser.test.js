@@ -102,16 +102,17 @@ describe('Parser', function () {
     });
   });
 
-  describe('.addPluginToTransform()', function () {
-    it('adds a plugin object definition to a named transform', function () {
+  describe('.addPlugin()', function () {
+    it('adds a plugin object definition to the transform specified in the transform property', function () {
       const parser = makeParser();
       parser.addTransform(fileTransform);
       const transform = parser.getTransform('files');
       expect(transform).to.be.a('Transform');
       expect(transform.plugins).to.be.a('PluginStore');
       expect(transform.plugins.items.length).to.equal(0);
-      parser.addPluginToTransform('files', {
+      parser.addPlugin({
         name: 'files-plugin',
+        transform: 'files',
         handler: i => i
       });
       expect(transform.plugins.items.length).to.equal(1);
@@ -119,8 +120,9 @@ describe('Parser', function () {
     it('throws an error if an undefined transform is named', function () {
       const parser = makeParser();
       expect(() => {
-        parser.addPluginToTransform('files-zoop', {
+        parser.addPlugin({
           name: 'files-plugin',
+          transform: 'files-zoop',
           handler: i => i
         });
       }).to.throw(Error, '[invalid-transform-name]');

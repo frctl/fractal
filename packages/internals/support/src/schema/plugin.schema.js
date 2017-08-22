@@ -5,12 +5,12 @@ module.exports = {
     name: {
       type: 'string'
     },
-    collection: {
+    transform: {
       type: 'string'
     },
     handler: {
       typeof: 'function'
     }
   },
-  required: ['name', 'handler']
+  required: ['name', 'transform', 'handler']
 };
