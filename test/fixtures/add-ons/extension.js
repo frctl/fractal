@@ -4,6 +4,10 @@ module.exports = function(opts = {}){
 
     name: 'foo-extension',
 
+    commands: [
+
+    ],
+
     register(fractal){
 
     }

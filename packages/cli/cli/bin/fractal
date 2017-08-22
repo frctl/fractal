@@ -1,0 +1,140 @@
+#!/usr/bin/env node
+
+const yargs = require('yargs');
+
+if (yargs.argv.debug && !process.env.DEBUG) {
+  process.env.DEBUG = 'frctl:*';
+}
+
+const {dirname} = require('path');
+
+const updateNotifier = require('update-notifier');
+const {get, pick, assign, omit} = require('lodash');
+const loudRejection = require('loud-rejection');
+const pkgUp = require('pkg-up');
+const debug = require('debug')('frctl:cli');
+const logger = require('@frctl/console');
+const corePreset = require('@frctl/cli-preset-core');
+const Cli = require('../src/cli');
+const loadConfig = require('../src/loaders/config');
+const loadFractal = require('../src/loaders/fractal');
+const loadExtensions = require('../src/loaders/extensions');
+const settings = require('../src/settings');
+const cliPkg = require('../package.json');
+const {log, error, warning} = logger;
+
+loudRejection();
+updateNotifier({pkg: cliPkg}).notify();
+
+try {
+
+  /*
+   * Look for a package.json to find the root of the project.
+   * If one is found, then the directory it resides in is assumed
+   * to be the root of the project and is set as the CWD.
+   *
+   * If no package.json is found, the CWD is left untouched.
+   */
+
+  const pkgPath = pkgUp.sync();
+
+  if (pkgPath) {
+    const cwd = dirname(pkgPath);
+    process.chdir(cwd);
+    debug(`package.json file found: %s`, pkgPath);
+    debug(`set current working directory: %s`, cwd);
+  } else {
+    debug(`no package.json file found`);
+  }
+
+  /*
+   * Load config data (if a package.json has been found)
+   */
+
+  const {configPath, config} = loadConfig(pkgPath, settings);
+
+  /*
+   * Load and initialise Fractal instance with any data set
+   * under the 'app' key in the config.
+   */
+
+  const app = loadFractal(pkgPath, config.app);
+
+  /*
+   * Build config data and initialise CLI instance.
+   * The core CLI preset is pushed onto the front of the presets stack so that
+   * user-defined commands can override the default set if desired.
+   */
+
+  const cliConfig = config.cli || {};
+  cliConfig.presets = [corePreset].concat(cliConfig.presets || []);
+
+  const cli = new Cli({
+    configPath,
+    config: cliConfig
+  });
+
+  /*
+   * Load and register extensions.
+   */
+
+  const extensions = loadExtensions(omit(config, ['app', 'cli']));
+  for (const {name, commands, register} of extensions) {
+    if (commands) {
+      cli.addCommands(commands);
+    }
+    if (typeof register === 'function') {
+      register(app);
+      debug(`registered extension: '${name}'`);
+    }
+  }
+
+  /*
+   * Configure yargs.
+   */
+
+  yargs.usage(settings.usage)
+       .options(settings.options)
+       .help()
+       .version(cliPkg.version)
+       .demandCommand(1, 'You must specify a command.');
+
+  let commandMatched = false;
+
+  for (const cmd of cli.getCommands()) {
+
+    const handler = async function (argv) {
+      debug(`running command '%s' with args %o`, cmd.name, argv);
+      commandMatched = true;
+
+      if (argv.help) {
+        return yargs.showHelp();
+      }
+
+      try {
+        const result = cmd.handler(argv, app, cli, logger);
+        const output = await Promise.resolve(result);
+        if (typeof output === 'string') {
+          log(output.replace(/^\s*[\r\n]/gm, '\n'));
+        }
+      } catch (err) {
+        error(err);
+      }
+    };
+
+    const cmdProps = ['name','command','aliases','description','builder'];
+    yargs.command(assign({handler}, pick(cmd, cmdProps)));
+
+    debug(`registered command: %s`, cmd.name);
+  }
+
+  const argv = yargs.argv;
+
+  if (!commandMatched) {
+    throw new Error(`The command '${argv._.join(' ')}' was not recognised`);
+  }
+
+} catch(err) {
+  error(err);
+  process.exit(1);
+}
