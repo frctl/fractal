@@ -24,10 +24,10 @@ class Component extends Entity {
     super(omit(props, privateProps));
 
     _src.set(this, props.src);
-    _config.set(this, (props.config || {}));
+    _config.set(this, Object.assign({}, props.config));
     _files.set(this, (props.files || new FileCollection()));
     _variants.set(this, (props.variants || new Collection()));
-    _data.set(this, {}); // QUESTION: is this inited with the config data, or empty unless explicitly set with `set`?
+    _data.set(this, {});
 
     // TODO: Revisit if memory impacted
     Object.defineProperty(this, 'path', {
@@ -110,7 +110,6 @@ const configSet = function (config) {
 const configGet = function () {
   return cloneDeep(_config.get(this));
 };
-
 
 const isFile = value => value instanceof File;
 check.mixin(isFile, 'file');
