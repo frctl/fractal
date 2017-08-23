@@ -16,8 +16,6 @@ const privateProps = [
   'path', 'relative', 'name'
 ];
 
-let inc = 0;
-
 class Component extends Entity {
   constructor(props = {}) {
     assert(check.schema(componentSchema, props), `Component.constructor: The properties provided do not match the schema of a component [properties-invalid]`, TypeError);
@@ -26,12 +24,8 @@ class Component extends Entity {
 
     super(omit(props, privateProps));
 
-    this.inc = inc++;
-
     _data.set(this, {});
     _config.set(this, Object.assign({}, props.config));
-
-    // const configG =
 
     const core = {
       src: props.src,
@@ -69,7 +63,6 @@ class Component extends Entity {
         if (typeof originalProp === 'function') {
           return function (...args) {
             let result = originalProp.apply(target, args);
-            //   ' -> ' + JSON.stringify(result));
             return result;
           };
         }
@@ -95,9 +88,7 @@ class Component extends Entity {
   get(path, fallback) {
     const fallback1 = get(_defaults.get(this), path, fallback);
     const fallback2 = get(_config.get(this), path, fallback1);
-    let result = get(_data.get(this), path, fallback2);
-    result = cloneValue(get(_data.get(this), path, fallback2));
-    return result;
+    return cloneValue(get(_data.get(this), path, fallback2));
   }
 
   set(path, value) {
