@@ -18,7 +18,7 @@ const fullComponent = {
   files: new FileCollection([new File({path: '/src/component/component.js'}), new File({path: '/src/component/component.hbs'})])
 };
 
-describe('Component', function () {
+describe.only('Component', function () {
   describe('constructor', function () {
     it('returns a new instance if correct properties provided', function () {
       const componentB = new Component(basicComponent);
@@ -51,7 +51,8 @@ describe('Component', function () {
     });
     it(`assigns 'config', 'variants', and 'files' properties correctly if provided`, function () {
       const component = new Component(fullComponent);
-      expect(component).to.have.a.property('config').that.is.an('object').and.deep.equals({refresh: true});
+      expect(component).to.have.a.property('config').that.is.an('object').and.deep.eqls(fullComponent.config);
+      expect(component).to.have.a.property('config').that.is.an('object').and.not.equals(fullComponent.config);
       expect(component).to.have.a.property('variants').that.is.a('Collection').and.has.a.property('length').that.equals(2);
       expect(component).to.have.a.property('files').that.is.a('FileCollection').and.has.a.property('length').that.equals(2);
     });
@@ -93,6 +94,45 @@ describe('Component', function () {
     it('returns false if an instance is not a Component', function () {
       expect(Component.isComponent([])).to.equal(false);
     });
+  });
+  describe('.set()/get()', function(){
+    it('sets and gets a value on the private data store', function(){
+      const component = new Component(basicComponent);
+      component.set('foo', 'bar');
+      expect(component.foo).to.not.exist;
+      expect(component.get('foo')).to.equal('bar');
+    });
+    it('sets and gets nested paths', function(){
+      const component = new Component(basicComponent);
+      component.set('foo.bar[0]', 'one');
+      expect(component.get('foo.bar[0]')).to.equal('one');
+      expect(component.get('foo')).to.eql({ bar: ['one']});
+    });
+  })
+  describe('.set()', function(){
+    it('returns a reference to the component', function(){
+      const component = new Component(basicComponent);
+      expect(component.set('foo', 'bar')).to.equal(component);
+    });
+  });
+  describe('.get()', function(){
+    it('falls back to config data if a value does not exist on the store', function(){
+      const component = new Component(fullComponent);
+      expect(component.get('refresh')).to.equal(true);
+    });
+    it(`falls back to the 'fallback' argument if neither 'data' nor 'config' return a value`, function(){
+      const component = new Component(fullComponent);
+      expect(component.get('fabulous', 'hair')).to.equal('hair');
+    });
+    it('creates a copy of the original value', function(){
+      const component = new Component(basicComponent);
+      const status = {
+        tag: 'wip',
+        label: 'Work in progress'
+      };
+      component.set('status', status);
+      expect(component.get('status')).to.not.equal(status);
+    })
   });
   describe('[Symbol.toStringTag]', function () {
     it('should resolve correctly', function () {
