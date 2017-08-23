@@ -39,6 +39,9 @@ class Parser {
     if (opts.transforms) {
       opts.transforms.forEach(transform => this.addTransform(transform));
     }
+    if (opts.plugins) {
+      opts.plugins.forEach(plugin => this.addPlugin(plugin));
+    }
   }
 
   /**
@@ -67,16 +70,15 @@ class Parser {
   }
 
   /**
-   * Add a plugin to a transform
+   * Add a plugin
    *
-   * @param  {string} transformName The transform object to add to
    * @param  {object} plugin The plugin definition object to add
    * @return {Parser} The Parser instance
    */
-  addPluginToTransform(transformName, plugin) {
-    const transform = this.getTransform(transformName);
+  addPlugin(plugin) {
+    const transform = this.getTransform(plugin.transform);
     if (!transform) {
-      throw new Error(`Could not find a transform with the name '${transformName}' [invalid-transform-name]`);
+      throw new Error(`Could not find a transform with the name '${plugin.transform}' [invalid-transform-name]`);
     }
     transform.addPlugin(plugin);
     return this;

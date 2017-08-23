@@ -382,4 +382,12 @@ describe('Config', function () {
       expect(accessorSpy.calledTwice).to.equal(true);
     });
   });
+
+  describe('Config.isConfig', function () {
+    it('returns true if the test value is a Config instance', function () {
+      const config = new Config();
+      expect(Config.isConfig(config)).to.equal(true);
+      expect(Config.isConfig({})).to.equal(false);
+    });
+  });
 });

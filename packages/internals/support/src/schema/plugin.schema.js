@@ -12,5 +12,5 @@ module.exports = {
       typeof: 'function'
     }
   },
-  required: ['name', 'handler']
+  required: ['name', 'transform', 'handler']
 };

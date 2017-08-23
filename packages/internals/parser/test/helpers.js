@@ -6,7 +6,7 @@ const toCC = i => new ComponentCollection(i);
 
 const makePlugin = (name = 'plugin-name', type = 'files', handler = i => i) => ({
   name: name,
-  collection: type,
+  transform: type,
   handler: handler
 });
 
@@ -57,7 +57,7 @@ const filesToComponentsTransform = {
   transform: filesToComponents,
   plugins: {
     name: 'plugin-status',
-    collection: 'files',
+    transform: 'files',
     handler: items => items.map(i => Object.assign(i, {
       ready: true
     }))

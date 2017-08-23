@@ -165,6 +165,10 @@ class Config {
     return _accessors.get(this);
   }
 
+  static isConfig(config) {
+    return config instanceof Config;
+  }
+
 }
 
 module.exports = Config;
