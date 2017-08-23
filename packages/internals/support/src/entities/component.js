@@ -102,10 +102,12 @@ class Component extends Entity {
     return result;
   }
 
-  // toString() {
-    // TODO: Not sure why toString is having no effect? :<
-    // return _defaults.get(this);
-  // }
+  inspect(depth, opts) {
+    return ` Component ${JSON.stringify(Object.assign({},
+      _defaults.get(this),
+      _config.get(this),
+      _data.get(this)))}`;
+  }
 
   get [Symbol.toStringTag]() {
     return 'Component';
