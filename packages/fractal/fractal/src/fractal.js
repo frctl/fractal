@@ -11,6 +11,25 @@ class Fractal extends App {
     super(new Config(config));
   }
 
+  getComponents() {
+    return this.parse().then(collections => collections.components);
+  }
+
+  getFiles() {
+    return this.parse().then(collections => collections.files);
+  }
+
+  addAdapter(adapter) {
+    this.debug(`adding adapter %s`, adapter);
+    this.dirty = true;
+    this.config.push('adapters', adapter);
+    return this;
+  }
+
+  getRenderer() {
+    return new Renderer(this.config.get('adapters'));
+  }
+
   render(target, context = {}, opts = {}) {
     const renderer = opts.renderer || this.getRenderer();
     const reject = message => EmittingPromise.reject(new Error(message));
@@ -66,25 +85,6 @@ class Fractal extends App {
     });
   }
 
-  getComponents() {
-    return this.parse().then(collections => collections.components);
-  }
-
-  getFiles() {
-    return this.parse().then(collections => collections.files);
-  }
-
-  addAdapter(adapter) {
-    this.debug(`adding adapter %s`, adapter);
-    this.dirty = true;
-    this.config.push('adapters', adapter);
-    return this;
-  }
-
-  getRenderer() {
-    return new Renderer(this.config.get('adapters'));
-  }
-
   debug(...args) {
     debug(...args);
     return this;
@@ -92,10 +92,6 @@ class Fractal extends App {
 
   get version() {
     return require('../package.json').version;
-  }
-
-  get isFractal() {
-    return true;
   }
 
   get [Symbol.toStringTag]() {

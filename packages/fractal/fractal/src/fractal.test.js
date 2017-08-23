@@ -67,11 +67,9 @@ describe('Fractal', function () {
       expect(fractal.config.data).to.eql(defaultsDeep(config, defaults));
       expect(fractal.config).to.be.instanceOf(ConfigStore);
     });
-
     it('throws an error if invalid config data is provided', () => {
       expect(() => new Fractal({adapters: 'foo'})).to.throw('[config-invalid]');
     });
-
     it('does not throw an error if no config data is provided', () => {
       expect(() => new Fractal()).to.not.throw();
     });
@@ -179,7 +177,7 @@ describe('Fractal', function () {
   describe('.getFiles()', function () {
     it('returns an EmittingPromise', function () {
       const fractal = new Fractal();
-      expect(fractal.getComponents()).to.be.instanceOf(EmittingPromise);
+      expect(fractal.getFiles()).to.be.instanceOf(EmittingPromise);
     });
     it('resolves to a FileCollection instance', async function () {
       const fractal = new Fractal();
@@ -263,13 +261,6 @@ describe('Fractal', function () {
     it('returns the version number from the package.json file', function () {
       const fractal = new Fractal();
       expect(fractal.version).to.equal(pkg.version);
-    });
-  });
-
-  describe('.isFractal', function () {
-    it('is true', function () {
-      const fractal = new Fractal();
-      expect(fractal.isFractal).to.equal(true);
     });
   });
 });

@@ -10,7 +10,6 @@ module.exports = function pagesInfoCommand(opts = {}) {
     description: 'Get information about your Pages site(s)',
 
     handler(argv, app, cli) {
-
       const pages = new Pages(opts);
 
       return `
@@ -24,5 +23,4 @@ module.exports = function pagesInfoCommand(opts = {}) {
       `;
     }
   };
-
 };

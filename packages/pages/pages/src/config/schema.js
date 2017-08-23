@@ -18,7 +18,7 @@ module.exports = {
 
     transforms: {
       type: 'array'
-    },
+    }
 
   }
 
