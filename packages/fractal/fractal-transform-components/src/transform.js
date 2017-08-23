@@ -1,4 +1,4 @@
-const {normalizeName, addTrailingSeparator} = require('@frctl/utils');
+const {addTrailingSeparator} = require('@frctl/utils');
 const {Component, Collection, ComponentCollection, FileCollection} = require('@frctl/support');
 
 module.exports = function (opts = {}) {
@@ -20,13 +20,16 @@ module.exports = function (opts = {}) {
           return file;
         }));
 
+        // TODO: proper config file loading. this is for example only!!
+        let config = {};
+        const configFile = componentFiles.find({basename: 'config.js'});
+        if (configFile) {
+          config = require(configFile.path);
+        }
+
         return Component.from({
-          path: dir.path,
-          relative: dir.relative,
           src: dir,
-          name: normalizeName(dir.stem),
-          config: {},
-          variants: new Collection(),
+          config: config,
           files: componentFiles
         });
       }));
