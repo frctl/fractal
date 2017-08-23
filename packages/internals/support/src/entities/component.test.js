@@ -108,6 +108,15 @@ describe('Component', function () {
       expect(component.get('foo.bar[0]')).to.equal('one');
       expect(component.get('foo')).to.eql({bar: ['one']});
     });
+    it('create a copy of the original value', function () {
+      const component = new Component(basicComponent);
+      const status = {
+        tag: 'wip',
+        label: 'Work in progress'
+      };
+      component.set('status', status);
+      expect(component.get('status')).to.not.equal(status);
+    });
   });
   describe('.set()', function () {
     it('returns a reference to the component', function () {
@@ -123,15 +132,6 @@ describe('Component', function () {
     it(`falls back to the 'fallback' argument if neither 'data' nor 'config' return a value`, function () {
       const component = new Component(fullComponent);
       expect(component.get('fabulous', 'hair')).to.equal('hair');
-    });
-    it('creates a copy of the original value', function () {
-      const component = new Component(basicComponent);
-      const status = {
-        tag: 'wip',
-        label: 'Work in progress'
-      };
-      component.set('status', status);
-      expect(component.get('status')).to.not.equal(status);
     });
   });
   describe('[Symbol.toStringTag]', function () {
