@@ -1,27 +1,56 @@
 /* eslint import/no-dynamic-require: off */
 
+const Module = require('module');
 const {defaultsDeep} = require('@frctl/utils');
 const {NodeJsInputFileSystem, CachedInputFileSystem, ResolverFactory} = require('enhanced-resolve');
 
 const _resolver = new WeakMap();
+const nodeContext = {
+  environments: ['node+es3+es5+process+native']
+};
 
 class Loader {
 
   constructor(config = {}) {
     const opts = defaultsDeep(config, {
       useSyncFileSystemCalls: true,
+      extensions: ['.js', '.json', '.node'],
       fileSystem: new CachedInputFileSystem(new NodeJsInputFileSystem(), 4000)
     });
+
     _resolver.set(this, ResolverFactory.createResolver(opts));
   }
 
   require(path, root) {
-    return require(this.resolve(path, root));
+    const loader = this;
+    const originalRequire = Module.prototype.require;
+
+    /*
+     * Monkey-patch require calls within this config file to allow
+     * for resolving paths via the Fractal loader.
+     */
+    Module.prototype.require = function (path) {
+      try {
+        return Module._load(path, this, false);
+      } catch (err) {
+        const resolvedPath = loader.resolve(path, root);
+        return Module._load(resolvedPath, this, false);
+      }
+    };
+
+    const result = require(this.resolve(path, root));
+
+    /*
+     * Restore monkey-patched require call after the module has been compiled
+     */
+    Module.prototype.require = originalRequire;
+
+    return result;
   }
 
   resolve(path, root) {
     try {
-      return this.resolver.resolveSync({}, root || process.cwd(), path);
+      return this.resolver.resolveSync(nodeContext, root || process.cwd(), path);
     } catch (resolverError) {
       try {
         return require.resolve(path);
