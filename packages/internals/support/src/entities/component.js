@@ -98,7 +98,19 @@ class Component extends Entity {
     return _variants.get(this);
   }
 
+  getVariant(name){
+    // TODO
+  }
+
   addVariant(props){
+    // TODO
+  }
+
+  getViews(){
+    // TODO
+  }
+
+  getView(name){
     // TODO
   }
 
