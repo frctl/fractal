@@ -1,24 +1,10 @@
 /* eslint import/no-unresolved: off */
 
 const {join} = require('path');
-const Resolver = require('enhanced-resolve/lib/Resolver');
-const {ResolverFactory} = require('enhanced-resolve');
 const {expect, sinon} = require('../../../../test/helpers');
 const Loader = require('./loader');
 
 describe('Loader', function () {
-  describe('constructor()', function () {
-    it('passes configuration options to the resolver', function () {
-      const spy = sinon.spy(ResolverFactory, 'createResolver');
-      // eslint-disable-next-line no-unused-vars
-      const loader = new Loader({
-        fileSystem: 'foo'
-      });
-      expect(spy.args[0][0].fileSystem).to.equal('foo');
-      spy.restore();
-    });
-  });
-
   describe('.resolve()', function () {
     it('synchronously resolves the path with respect to the root', function () {
       const loader = new Loader();
@@ -81,13 +67,6 @@ describe('Loader', function () {
       });
       loader.require('~/parent', __dirname);
       expect(() => require('~/parent')).to.throw();
-    });
-  });
-
-  describe('.resolver', function () {
-    it('returns the internal resolver instance', function () {
-      const loader = new Loader();
-      expect(loader.resolver).to.be.instanceOf(Resolver);
     });
   });
 });
