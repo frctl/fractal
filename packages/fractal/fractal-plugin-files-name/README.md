@@ -1,4 +1,4 @@
-# Fractal component transform
+# Fractal file name plugin
 
 Adds a name property to Fractal File objects.
 
