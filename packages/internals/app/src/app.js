@@ -4,7 +4,7 @@ const chokidar = require('chokidar');
 const parentModule = require('parent-module');
 const debug = require('debug')('frctl:app');
 const {Config} = require('@frctl/config');
-const Parser = require('@frctl/parser');
+const {Parser} = require('@frctl/parser');
 const {Loader} = require('@frctl/loader');
 const {EmittingPromise} = require('@frctl/support');
 
@@ -47,7 +47,7 @@ class App {
       }
       try {
         const parser = this.getParser();
-        const collections = await parser.run();
+        const collections = await parser.run({context: this});
         this.dirty = false;
         this.cache.set('collections', collections);
         resolve(collections);

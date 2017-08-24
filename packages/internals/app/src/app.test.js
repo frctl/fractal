@@ -10,7 +10,7 @@ const {Parser} = require('@frctl/parser');
 const {Loader} = require('@frctl/loader');
 const Cache = require('node-cache');
 const {FSWatcher} = require('chokidar');
-const {expect, sinon} = require('../../../../test/helpers');
+const {expect, sinon, mockRequire} = require('../../../../test/helpers');
 const App = require('./app');
 
 const config = {
@@ -81,6 +81,22 @@ describe('App', function () {
       const app = new App();
       const {files} = await app.parse();
       expect(files).to.be.instanceOf(FileCollection);
+    });
+    it('calls the parser.run method with the current App instance as context', function () {
+      const spy = sinon.spy(() => Promise.resolve({}));
+      class Parser {
+        run(...args) {
+          spy(...args);
+          return Promise.resolve({});
+        }
+      }
+      mockRequire('@frctl/parser', {Parser});
+      const App = mockRequire.reRequire('./app');
+      const app = new App();
+      app.parse();
+      expect(spy.calledWith({context: app})).to.be.equal(true);
+      mockRequire.stop('@frctl/parser');
+      mockRequire.reRequire('./app');
     });
     it('uses the cached result if valid', async function () {
       const app = new App();
