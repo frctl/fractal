@@ -7,6 +7,10 @@ module.exports = {
     check: 600
   },
 
+  alias: {
+    '~': process.cwd()
+  },
+
   components: {
 
     config: {

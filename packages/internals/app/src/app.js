@@ -1,14 +1,18 @@
+const {dirname} = require('path');
 const Cache = require('node-cache');
 const chokidar = require('chokidar');
+const parentModule = require('parent-module');
 const debug = require('debug')('frctl:app');
 const {Config} = require('@frctl/config');
 const Parser = require('@frctl/parser');
+const {Loader} = require('@frctl/loader');
 const {EmittingPromise} = require('@frctl/support');
 
 const _dirty = new WeakMap();
 const _cache = new WeakMap();
 const _config = new WeakMap();
 const _watcher = new WeakMap();
+const _loader = new WeakMap();
 
 class App {
 
@@ -30,6 +34,7 @@ class App {
     }));
 
     _dirty.set(this, true);
+    _loader.set(this, new Loader(this.config.pick('alias')));
 
     this.debug('instantiated new %s instance', this.constructor.name);
   }
@@ -115,6 +120,11 @@ class App {
     });
   }
 
+  require(path, startPath) {
+    startPath = startPath || dirname(parentModule());
+    return _loader.get(this).require(path, startPath);
+  }
+
   debug(...args) {
     debug(...args);
     return this;
@@ -139,6 +149,10 @@ class App {
 
   get config() {
     return _config.get(this);
+  }
+
+  get loader() {
+    return _loader.get(this);
   }
 
 }
