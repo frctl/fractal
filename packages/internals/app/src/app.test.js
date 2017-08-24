@@ -198,8 +198,10 @@ describe('App', function () {
   describe('.require()', function () {
     it('calls the loader with the expected args', () => {
       const app = makeApp({
-        alias: {
-          '~': join(__dirname, '../test/fixtures')
+        resolve: {
+          alias: {
+            '~': join(__dirname, '../test/fixtures')
+          }
         }
       });
       const spy = sinon.spy(app.loader, 'require');

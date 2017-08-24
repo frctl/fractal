@@ -7,8 +7,10 @@ module.exports = {
     check: 600
   },
 
-  alias: {
-    '~': process.cwd()
+  resolve: {
+    alias: {
+      '~': process.cwd()
+    }
   },
 
   components: {

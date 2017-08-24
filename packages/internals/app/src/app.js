@@ -34,7 +34,7 @@ class App {
     }));
 
     _dirty.set(this, true);
-    _loader.set(this, new Loader(this.config.pick('alias')));
+    _loader.set(this, new Loader(this.get('resolve')));
 
     this.debug('instantiated new %s instance', this.constructor.name);
   }
