@@ -20,12 +20,14 @@ module.exports = function (opts = {}) {
           return file;
         }));
 
-        const configFiles = componentFiles.filter(app.get('components.config.filter'));
-        const data = configFiles.sort().reverse().mapToArray(file => file.data || {});
-        const config = Object.assign({}, ...data);
+        const configFiles = componentFiles.filter(app.get('components.config.filter')).sortBy('basename');
+        const data = configFiles.mapToArray(file => {
+          const data = app.loader.loadFile(file);
+          return (typeof data === 'function') ? data(app, files) : data;
+        });
 
         return Component.from({
-          config,
+          config: Object.assign({}, ...data),
           path: dir.path,
           relative: dir.relative,
           src: dir,
