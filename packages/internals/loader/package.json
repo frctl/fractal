@@ -8,7 +8,12 @@
   "author": "Mark Perkins <mark@allmarkedup.com> (http://allmarkedup.com)",
   "license": "MIT",
   "dependencies": {
+    "@frctl/support": "^2.0.0-beta.0",
+    "@frctl/utils": "^2.0.0-beta.0",
     "enhanced-resolve": "^3.4.1",
-    "@frctl/utils": "^2.0.0-beta.0"
+    "js-yaml": "^3.8.4",
+    "json5": "^0.5.1",
+    "debug": "^3.0.0",
+    "node-hook": "^1.0.0"
   }
 }

@@ -1,6 +1,7 @@
 /* eslint import/no-unresolved: off */
 
 const {join} = require('path');
+const {File} = require('@frctl/support');
 const {expect, sinon} = require('../../../../test/helpers');
 const Loader = require('./loader');
 
@@ -67,6 +68,29 @@ describe('Loader', function () {
       });
       loader.require('~/parent', __dirname);
       expect(() => require('~/parent')).to.throw();
+    });
+  });
+
+  describe('.loadFile()', function () {
+    it('throws an error if the file argument is not a File instance', function () {
+      const loader = new Loader();
+      expect(() => loader.loadFile({})).to.throw('[file-invalid]');
+    });
+    it('loads the contents of .js files', function () {
+      const loader = new Loader();
+      const file = new File({
+        path: 'path/to/file.js',
+        contents: Buffer.from('module.exports = {foo:"bar"}')
+      });
+      expect(loader.loadFile(file)).to.eql({foo: 'bar'});
+    });
+    it('loads the contents of .json(5) files', function () {
+      const loader = new Loader();
+      const file = new File({
+        path: 'path/to/file.json',
+        contents: Buffer.from('{foo:"bar"}')
+      });
+      expect(loader.loadFile(file)).to.eql({foo: 'bar'});
     });
   });
 });
