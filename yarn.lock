@@ -3004,6 +3004,10 @@ node-cache@^4.1.1:
     clone "2.x"
     lodash "4.x"
 
+node-hook@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/node-hook/-/node-hook-1.0.0.tgz#82ca39af991d726d5c7952e59c992378bb296f7e"
+
 node-pre-gyp@^0.6.36:
   version "0.6.36"
   resolved "https://registry.yarnpkg.com/node-pre-gyp/-/node-pre-gyp-0.6.36.tgz#db604112cb74e0d477554e9b505b17abddfab786"
