@@ -1,3 +1,5 @@
+/* eslint import/no-unresolved: off */
+
 const {join} = require('path');
 const Resolver = require('enhanced-resolve/lib/Resolver');
 const {ResolverFactory} = require('enhanced-resolve');
@@ -62,6 +64,23 @@ describe('Loader', function () {
     it('throws an error if the module cannot be required', function () {
       const loader = new Loader();
       expect(() => loader.require('./foo', __dirname)).to.throw();
+    });
+    it('correctly resolves child dependencies', function () {
+      const loader = new Loader({
+        alias: {
+          '~': join(__dirname, '../test/fixtures')
+        }
+      });
+      expect(() => loader.require('~/parent', __dirname)).to.not.throw();
+    });
+    it('un-patches the require method when done', function () {
+      const loader = new Loader({
+        alias: {
+          '~': join(__dirname, '../test/fixtures')
+        }
+      });
+      loader.require('~/parent', __dirname);
+      expect(() => require('~/parent')).to.throw();
     });
   });
 

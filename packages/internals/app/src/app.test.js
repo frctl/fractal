@@ -7,6 +7,7 @@ const {capitalize} = require('lodash');
 const {FileCollection, Collection, EmittingPromise} = require('@frctl/support');
 const {Config} = require('@frctl/config');
 const {Parser} = require('@frctl/parser');
+const {Loader} = require('@frctl/loader');
 const Cache = require('node-cache');
 const {FSWatcher} = require('chokidar');
 const {expect, sinon} = require('../../../../test/helpers');
@@ -36,15 +37,9 @@ describe('App', function () {
       const app = makeApp();
       expect(app.config.data).to.eql(config);
     });
-
     it('does not throw an error if no config data is provided', () => {
       expect(() => new App()).to.not.throw();
     });
-
-    it('does not throw an error if no config data is provided', () => {
-      expect(() => new App()).to.not.throw();
-    });
-
     it('sets the dirty flag to true', () => {
       const app = new App();
       expect(app.dirty).to.equal(true);
@@ -200,6 +195,25 @@ describe('App', function () {
     });
   }
 
+  describe('.require()', function () {
+    it('calls the loader with the expected args', () => {
+      const app = makeApp({
+        resolve: {
+          alias: {
+            '~': join(__dirname, '../test/fixtures')
+          }
+        }
+      });
+      const spy = sinon.spy(app.loader, 'require');
+      app.require('~/parent');
+      expect(spy.calledWith('~/parent', __dirname)).to.equal(true);
+    });
+    it('throws an error if the file is not found', () => {
+      const app = makeApp();
+      expect(() => app.require('~/parent')).to.throw('[resolver-error]');
+    });
+  });
+
   describe('.getParser()', function () {
     it('returns a new Parser instance', function () {
       const app = new App();
@@ -254,9 +268,16 @@ describe('App', function () {
   });
 
   describe('.cache', function () {
-    it('returns the parser cache instance', function () {
+    it('returns the application cache instance', function () {
       const app = new App();
       expect(app.cache).to.be.instanceof(Cache);
+    });
+  });
+
+  describe('.loader', function () {
+    it('returns the loader instance', function () {
+      const app = new App();
+      expect(app.loader).to.be.instanceof(Loader);
     });
   });
 
