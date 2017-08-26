@@ -2,11 +2,14 @@
 
 const Module = require('module');
 const {readFileSync} = require('fs');
-const {extname, dirname} = require('path');
+const {extname, dirname, join} = require('path');
 const parentModule = require('parent-module');
 const {create} = require('enhanced-resolve');
+const requireFromString = require('require-from-string');
 const {toArray} = require('@frctl/utils');
 const debug = require('debug')('frctl:loader');
+
+const moduleLoad = Module._load;
 
 const _resolve = new WeakMap();
 const _transforms = new WeakMap();
@@ -22,28 +25,31 @@ class Loader {
   }
 
   require(path, root) {
-    const loader = this;
-    const originalLoad = Module._load;
-
-    root = root || dirname(parentModule());
-
     try {
-      Module._load = function (request, parent, ...args) {
-        const resolvedPath = loader.resolve(request, root);
-        const transform = loader.getTransformerForPath(resolvedPath);
-        if (transform) {
-          const contents = readFileSync(resolvedPath, 'utf-8');
-          return transform(contents, resolvedPath);
-        }
-        return originalLoad(resolvedPath, parent, ...args);
-      };
-
+      this.hook();
       const result = require(path);
-      Module._load = originalLoad;
-
+      this.unhook();
       return result;
     } catch (err) {
-      Module._load = originalLoad;
+      this.unhook();
+      throw err;
+    }
+  }
+
+  requireFromString(contents, path) {
+    path = path || join(dirname(parentModule()), `${Date.now}.js`);
+    this.hook();
+    try {
+      let result;
+      if (this.hasTransformerForPath(path)) {
+        result = this.transform(contents, path);
+      } else {
+        result = requireFromString(contents, path);
+      }
+      this.unhook();
+      return result;
+    } catch (err) {
+      this.unhook();
       throw err;
     }
   }
@@ -51,7 +57,7 @@ class Loader {
   resolve(path, root) {
     const resolve = _resolve.get(this);
     try {
-      return resolve(root || process.cwd(), path);
+      return resolve(root || dirname(parentModule()), path);
     } catch (resolverError) {
       try {
         return require.resolve(path);
@@ -63,18 +69,42 @@ class Loader {
     }
   }
 
+  hook() {
+    const loader = this;
+    Module._load = function (request, parent, ...args) {
+      const resolvedPath = loader.resolve(request);
+      if (loader.hasTransformerForPath(resolvedPath)) {
+        const contents = readFileSync(resolvedPath, 'utf-8');
+        return loader.transform(contents, resolvedPath);
+      }
+      return moduleLoad(resolvedPath, parent, ...args);
+    };
+    return this;
+  }
+
+  unhook() {
+    Module._load = moduleLoad;
+    return this;
+  }
+
+  transform(contents, path) {
+    const ext = extname(path);
+    for (const handler of _transforms.get(this)) {
+      if (toArray(handler.match).includes(ext)) {
+        const transform = handler.transform.bind(handler);
+        return transform(contents, path);
+      }
+    }
+    return contents;
+  }
+
   addTransform(transform) {
     _transforms.get(this).push(transform);
     return this;
   }
 
-  getTransformerForPath(path) {
-    const ext = extname(path);
-    for (const handler of _transforms.get(this)) {
-      if (toArray(handler.match).includes(ext)) {
-        return handler.transform.bind(handler);
-      }
-    }
+  hasTransformerForPath(path) {
+    return [].concat(..._transforms.get(this).map(t => toArray(t.match))).includes(extname(path));
   }
 
   get transforms() {

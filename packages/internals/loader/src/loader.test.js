@@ -1,5 +1,6 @@
 /* eslint import/no-unresolved: off */
 
+const Module = require('module');
 const {join} = require('path');
 const {expect} = require('../../../../test/helpers');
 const Loader = require('./loader');
@@ -25,10 +26,10 @@ describe('Loader', function () {
       expect(loader.resolve('./loader', __dirname)).to.equal(join(__dirname, 'loader.js'));
     });
 
-    it('resolved paths relative to the cwd if no root is supplied', function () {
+    it('resolved paths relative to the parent module if no root is supplied', function () {
       const loader = new Loader();
-      const result = loader.resolve('./test/fixtures/add-ons/plugin');
-      expect(result).to.equal(join(process.cwd(), 'test/fixtures/add-ons/plugin.js'));
+      const result = loader.resolve('../test/fixtures/config.js');
+      expect(result).to.equal(require.resolve('../test/fixtures/config.js'));
     });
 
     it('throws an error if the path cannot be resolved', function () {
@@ -96,6 +97,45 @@ describe('Loader', function () {
     });
   });
 
+  describe('.requireFromString()', function () {
+    it('can require commonjs module format strings', function () {
+      const loader = new Loader(fixturesResolver);
+      expect(loader.requireFromString(`module.exports = {foo:'bar'}`, 'foo.js')).to.eql({foo: 'bar'});
+    });
+    it('resolved child modules via the resolver', function () {
+      const loader = new Loader(fixturesResolver);
+      expect(loader.requireFromString(`const child = require('~/child'); module.exports = {foo:'bar'}`, 'foo.js')).to.eql({foo: 'bar'});
+    });
+    it('can require .json(5) files', function () {
+      const loader = new Loader(fixturesResolver);
+      expect(loader.requireFromString(`{foo:'bar'}`, 'foo.json')).to.eql({foo: 'bar'});
+    });
+    it('can require .yml files', function () {
+      const loader = new Loader(fixturesResolver);
+      expect(loader.requireFromString(`foo: bar`, 'foo.yml')).to.eql({foo: 'bar'});
+    });
+  });
+
+  describe('.hook()', function () {
+    it('monkeypatches the Module._load function', function () {
+      const loader = new Loader();
+      const originalLoad = Module._load;
+      loader.hook();
+      expect(Module._load).to.not.equal(originalLoad);
+      loader.unhook();
+    });
+  });
+
+  describe('.unhook()', function () {
+    it('removes the monkeypatch from the Module._load function', function () {
+      const loader = new Loader();
+      const originalLoad = Module._load;
+      loader.hook();
+      loader.unhook();
+      expect(Module._load).to.equal(originalLoad);
+    });
+  });
+
   describe('.addTransform()', function () {
     it('registers a transform object', function () {
       const loader = new Loader();
@@ -104,14 +144,15 @@ describe('Loader', function () {
     });
   });
 
-  describe('.getTransformerForPath()', function () {
-    it('retrieves the transform handler from the first transform that matches the path extension', function () {
+  describe('.transform()', function () {
+    it('transforms the content using the first transform that matches the path extension', function () {
       const loader = new Loader();
       loader.addTransform(fooTransform);
-      const handler = fooTransform.transform.bind(fooTransform);
-      expect(loader.getTransformerForPath('bar/file.foo')).to.be.a('function');
-      expect(handler('test', 'bar/file.foo')).to.equal('foo!');
-      expect(loader.getTransformerForPath('bar.js')).to.equal(undefined);
+      expect(loader.transform('asdasd', 'bar/file.foo')).to.equal('foo!');
+    });
+    it('returns the raw value if no matching transform is found', function () {
+      const loader = new Loader();
+      expect(loader.transform('asdasd', 'bar/file.foo')).to.equal('asdasd');
     });
   });
 });
