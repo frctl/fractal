@@ -1,7 +1,7 @@
 /* eslint no-unused-expressions: "off" */
 const fractal = require('@frctl/fractal');
-const {File, FileCollection} = require('@frctl/support');
-const {expect} = require('../../../../test/helpers');
+const {File, FileCollection, Component} = require('@frctl/support');
+const {expect, sinon} = require('../../../../test/helpers');
 const componentTransform = require('./transform');
 
 const items = [{
@@ -42,6 +42,16 @@ const items = [{
 },
 {
   cwd: '/',
+  path: 'path/to/fake/@b-component/config.js',
+  contents: new Buffer(`module.exports = {name: 'config.js', foo: 'bar'}`)
+},
+{
+  cwd: '/',
+  path: 'path/to/fake/@b-component/config.json',
+  contents: new Buffer(`{name: 'config.json', bar: 'baz'}`)
+},
+{
+  cwd: '/',
   path: 'path/to/fake/some.png',
   contents: new Buffer([8, 6, 7, 5, 3, 0, 9])
 }
@@ -73,6 +83,14 @@ describe('Component Transform', function () {
       const output = transform(fileCollection, {}, app);
       expect(output).to.be.a('ComponentCollection');
       expect(output).to.have.property('length').that.equals(2);
+    });
+    it('instantiates the component with config merged from config files', function () {
+      const spy = sinon.spy(Component, 'from');
+      const fileCollection = FileCollection.from(items.slice(1).map(item => File.from(item)));
+      const transform = componentTransform().transform;
+      transform(fileCollection, {}, app);
+      expect(spy.args[0][0].config).to.eql({name: 'config.json', bar: 'baz', foo: 'bar'});
+      spy.restore();
     });
   });
 });
