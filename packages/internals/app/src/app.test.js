@@ -73,7 +73,7 @@ describe('App', function () {
     });
   });
 
-  describe.only('.parse()', function () {
+  describe('.parse()', function () {
     it('returns an EmittingPromise', function () {
       const app = new App();
       expect(app.parse()).to.be.instanceOf(EmittingPromise);

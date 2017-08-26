@@ -1,5 +1,5 @@
 const {join} = require('path');
-const debug = require('debug')('fractal:parser');
+const debug = require('debug')('frctl:parser');
 const check = require('check-types');
 const globBase = require('glob-base');
 
@@ -53,7 +53,7 @@ class Parser {
     toArray(sources).forEach(src => {
       const srcInfo = getSrcInfo(src);
       _sources.get(this).push(srcInfo);
-      debug(`Parser.addSource %o`, srcInfo);
+      debug(`Parser.addSource %s`, srcInfo.src);
     });
     return this;
   }

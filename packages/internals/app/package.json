@@ -19,5 +19,8 @@
     "chokidar": "^1.7.0",
     "parent-module": "^0.1.0",
     "node-cache": "^4.1.1"
+  },
+  "devDependencies": {
+    "proxyquire": "^1.8.0"
   }
 }

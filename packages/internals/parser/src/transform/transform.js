@@ -1,6 +1,6 @@
 const checkTypes = require('check-types');
 const checkMore = require('check-more-types');
-const debug = require('debug')('fractal:parser');
+const debug = require('debug')('frctl:parser');
 const {Collection, Validator} = require('@frctl/support');
 const schema = require('@frctl/support/schema');
 const PluginStore = require('./plugin-store');
@@ -11,7 +11,7 @@ class Transform {
   constructor(props = {}) {
     Validator.assertValid(props, schema.transform, 'Transform schema invalid [invalid-properties]');
 
-    debug('Instantiating new Transform with:\n props: %O', props);
+    debug(`Instantiating transform %s`, props.name);
     this.name = props.name;
     this.plugins = new PluginStore(props.plugins || []);
     this.transform = props.transform;
@@ -26,7 +26,7 @@ class Transform {
 
   async run(data = [], state, context, emitter = {emit: () => {}}) {
     const transform = this;
-    debug('Transform.run starting with: \n data: %O\n state: %O\n context: %O', data, state, context);
+    debug('Transform.run start');
     emitter.emit('transform.start', {transform});
 
     let dataset = await this.transform(data, state, context);
@@ -56,7 +56,7 @@ class Transform {
 
     const collection = this.toCollection(dataset);
 
-    debug('Transform.run complete, collection is:\n %O', collection);
+    debug('Transform.run complete');
     emitter.emit('transform.complete', {transform, collection});
 
     return collection;

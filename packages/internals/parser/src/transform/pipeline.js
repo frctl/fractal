@@ -1,6 +1,6 @@
 const {findIndex} = require('lodash');
 const {Collection} = require('@frctl/support');
-const debug = require('debug')('fractal:parser');
+const debug = require('debug')('frctl:parser');
 const check = require('check-types');
 
 const assert = check.assert;
@@ -35,7 +35,7 @@ class Pipeline {
 
   async process(data = [], context, emitter) {
     emitter.emit('process.start', data, context);
-    debug(`Pipeline.process start:\n  %O \n  %O`, data, context);
+    debug(`Pipeline.process start`);
     const state = {};
     data = Collection.from(data);
     for (const transform of _transforms.get(this)) {
@@ -49,7 +49,7 @@ class Pipeline {
       }
     }
     emitter.emit('process.complete', state);
-    debug(`Pipeline.process complete:\n%O`, state);
+    debug(`Pipeline.process complete`);
     return state;
   }
 
