@@ -82,7 +82,7 @@ describe('App', function () {
       const {files} = await app.parse();
       expect(files).to.be.instanceOf(FileCollection);
     });
-    it('calls the parser.run method with the current App instance as context', function () {
+    it('calls the parser.run method with the current App instance as context', async function () {
       const spy = sinon.spy(() => Promise.resolve({}));
       class Parser {
         run(...args) {
@@ -93,7 +93,7 @@ describe('App', function () {
       mockRequire('@frctl/parser', {Parser});
       const App = mockRequire.reRequire('./app');
       const app = new App();
-      app.parse();
+      await app.parse();
       expect(spy.calledWith({context: app})).to.be.equal(true);
       mockRequire.stop('@frctl/parser');
       mockRequire.reRequire('./app');
