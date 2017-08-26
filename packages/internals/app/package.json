@@ -9,6 +9,7 @@
   "license": "MIT",
   "dependencies": {
     "@frctl/parser": "2.0.0-beta.0",
+    "@frctl/loader": "^2.0.0-beta.0",
     "@frctl/support": "2.0.0-beta.0",
     "@frctl/config": "2.0.0-beta.0",
     "@frctl/utils": "2.0.0-beta.0",
@@ -16,6 +17,7 @@
     "lodash": "^4.17.4",
     "debug": "^3.0.0",
     "chokidar": "^1.7.0",
+    "parent-module": "^0.1.0",
     "node-cache": "^4.1.1"
   }
 }

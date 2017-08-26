@@ -1,40 +1,115 @@
 /* eslint import/no-dynamic-require: off */
 
-const {defaultsDeep} = require('@frctl/utils');
-const {NodeJsInputFileSystem, CachedInputFileSystem, ResolverFactory} = require('enhanced-resolve');
+const Module = require('module');
+const {readFileSync} = require('fs');
+const {extname, dirname, join} = require('path');
+const parentModule = require('parent-module');
+const {create} = require('enhanced-resolve');
+const requireFromString = require('require-from-string');
+const {toArray} = require('@frctl/utils');
+const debug = require('debug')('frctl:loader');
 
-const _resolver = new WeakMap();
+const moduleLoad = Module._load;
+
+const _resolve = new WeakMap();
+const _transforms = new WeakMap();
 
 class Loader {
 
-  constructor(config = {}) {
-    const opts = defaultsDeep(config, {
-      useSyncFileSystemCalls: true,
-      fileSystem: new CachedInputFileSystem(new NodeJsInputFileSystem(), 4000)
-    });
-    _resolver.set(this, ResolverFactory.createResolver(opts));
+  constructor(opts = {}) {
+    _transforms.set(this, []);
+    _resolve.set(this, create.sync(opts));
+
+    this.addTransform(require('./transforms/yaml'));
+    this.addTransform(require('./transforms/json'));
   }
 
   require(path, root) {
-    return require(this.resolve(path, root));
+    try {
+      this.hook();
+      const result = require(path);
+      this.unhook();
+      return result;
+    } catch (err) {
+      this.unhook();
+      throw err;
+    }
+  }
+
+  requireFromString(contents, path) {
+    path = path || join(dirname(parentModule()), `${Date.now}.js`);
+    this.hook();
+    try {
+      let result;
+      if (this.hasTransformerForPath(path)) {
+        result = this.transform(contents, path);
+      } else {
+        result = requireFromString(contents, path);
+      }
+      this.unhook();
+      return result;
+    } catch (err) {
+      this.unhook();
+      throw err;
+    }
   }
 
   resolve(path, root) {
+    const resolve = _resolve.get(this);
     try {
-      return this.resolver.resolveSync({}, root || process.cwd(), path);
+      return resolve(root || dirname(parentModule()), path);
     } catch (resolverError) {
       try {
         return require.resolve(path);
       } catch (nativeError) {
-        throw new Error(`Could not resolve module ${path} [resolver-error]\n${resolverError.message}\n${nativeError.message}`);
+        debug('error resolving module. resolver error: %s', resolverError.message);
+        debug('error resolving module. native error: %s', nativeError.message);
+        throw new Error(`Could not resolve module ${path} [resolver-error]`);
       }
     }
   }
 
-  get resolver() {
-    return _resolver.get(this);
+  hook() {
+    const loader = this;
+    Module._load = function (request, parent, ...args) {
+      const resolvedPath = loader.resolve(request);
+      if (loader.hasTransformerForPath(resolvedPath)) {
+        const contents = readFileSync(resolvedPath, 'utf-8');
+        return loader.transform(contents, resolvedPath);
+      }
+      return moduleLoad(resolvedPath, parent, ...args);
+    };
+    return this;
   }
 
+  unhook() {
+    Module._load = moduleLoad;
+    return this;
+  }
+
+  transform(contents, path) {
+    const ext = extname(path);
+    for (const handler of _transforms.get(this)) {
+      if (toArray(handler.match).includes(ext)) {
+        const transform = handler.transform.bind(handler);
+        return transform(contents, path);
+      }
+    }
+    return contents;
+  }
+
+  addTransform(transform) {
+    _transforms.get(this).push(transform);
+    return this;
+  }
+
+  hasTransformerForPath(path) {
+    return [].concat(..._transforms.get(this).map(t => toArray(t.match))).includes(extname(path));
+  }
+
+  get transforms() {
+    return _transforms.get(this).slice(0);
+  }
 }
 
 module.exports = Loader;

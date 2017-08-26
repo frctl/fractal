@@ -25,6 +25,10 @@ module.exports = {
       }
     },
 
+    resolve: {
+      type: 'object'
+    },
+
     components: {
       type: 'object',
       required: ['views', 'config'],

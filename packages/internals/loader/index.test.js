@@ -1,9 +1,15 @@
 const {expect} = require('../../../test/helpers');
 const Loader = require('./src/loader');
-const main = require('.');
+const factory = require('.');
 
-describe('main', function () {
-  it('exports the loader class', function () {
-    expect(main).to.equal(Loader);
+describe('Loader', () => {
+  describe('main export', () => {
+    it('exports a factory function that instantiates a Loader instance', () => {
+      expect(factory()).to.be.instanceOf(Loader);
+    });
+
+    it('provides a reference to the Loader class', () => {
+      expect(factory.Loader).to.equal(Loader);
+    });
   });
 });

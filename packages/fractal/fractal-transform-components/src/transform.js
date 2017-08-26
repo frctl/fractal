@@ -8,7 +8,7 @@ module.exports = function (opts = {}) {
 
     name: 'components',
 
-    transform(files, state) {
+    transform(files, state, app) {
       const components = files.toArray().filter(file => {
         return file.isDirectory() && file.stem.startsWith(marker);
       });
@@ -20,12 +20,18 @@ module.exports = function (opts = {}) {
           return file;
         }));
 
+        const configFiles = componentFiles.filter(app.get('components.config.filter')).sortBy('basename');
+        const data = configFiles.mapToArray(file => {
+          const data = app.loader.requireFromString(file.contents.toString(), file.path);
+          return (typeof data === 'function') ? data(app, files) : data;
+        });
+
         return Component.from({
+          config: Object.assign({}, ...data),
           path: dir.path,
           relative: dir.relative,
           src: dir,
           name: normalizeName(dir.stem),
-          config: {},
           variants: new Collection(),
           files: componentFiles
         });
