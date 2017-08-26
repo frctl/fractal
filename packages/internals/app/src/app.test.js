@@ -10,7 +10,8 @@ const {Parser} = require('@frctl/parser');
 const {Loader} = require('@frctl/loader');
 const Cache = require('node-cache');
 const {FSWatcher} = require('chokidar');
-const {expect, sinon, mockRequire} = require('../../../../test/helpers');
+const proxyquire = require('proxyquire');
+const {expect, sinon} = require('../../../../test/helpers');
 const App = require('./app');
 
 const config = {
@@ -72,7 +73,7 @@ describe('App', function () {
     });
   });
 
-  describe('.parse()', function () {
+  describe.only('.parse()', function () {
     it('returns an EmittingPromise', function () {
       const app = new App();
       expect(app.parse()).to.be.instanceOf(EmittingPromise);
@@ -82,7 +83,7 @@ describe('App', function () {
       const {files} = await app.parse();
       expect(files).to.be.instanceOf(FileCollection);
     });
-    it('calls the parser.run method with the current App instance as context', function () {
+    it('calls the parser.run method with the current App instance as context', async function () {
       const spy = sinon.spy(() => Promise.resolve({}));
       class Parser {
         run(...args) {
@@ -90,13 +91,12 @@ describe('App', function () {
           return Promise.resolve({});
         }
       }
-      mockRequire('@frctl/parser', {Parser});
-      const App = mockRequire.reRequire('./app');
+      const App = proxyquire('./app', {
+        '@frctl/parser': {Parser}
+      });
       const app = new App();
-      app.parse();
+      await app.parse();
       expect(spy.calledWith({context: app})).to.be.equal(true);
-      mockRequire.stop('@frctl/parser');
-      mockRequire.reRequire('./app');
     });
     it('uses the cached result if valid', async function () {
       const app = new App();

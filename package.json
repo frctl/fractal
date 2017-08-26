@@ -38,5 +38,8 @@
   },
   "xo": {
     "extends": "@frctl/eslint-config-frctl"
+  },
+  "dependencies": {
+    "proxyquire": "^1.8.0"
   }
 }
