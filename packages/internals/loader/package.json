@@ -13,7 +13,7 @@
     "enhanced-resolve": "^3.4.1",
     "js-yaml": "^3.8.4",
     "json5": "^0.5.1",
-    "debug": "^3.0.0",
-    "node-hook": "^1.0.0"
+    "parent-module": "^0.1.0",
+    "debug": "^3.0.0"
   }
 }

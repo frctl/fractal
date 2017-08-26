@@ -1,101 +1,50 @@
 /* eslint import/no-dynamic-require: off */
 
 const Module = require('module');
-const {File} = require('@frctl/support');
+const {readFileSync} = require('fs');
+const {extname, dirname} = require('path');
+const parentModule = require('parent-module');
 const {create} = require('enhanced-resolve');
-const hook = require('node-hook');
+const {toArray} = require('@frctl/utils');
 const debug = require('debug')('frctl:loader');
-const JSON5 = require('json5');
-const YAML = require('js-yaml');
 
 const _resolve = new WeakMap();
-const _hooks = new WeakMap();
+const _transforms = new WeakMap();
 
 class Loader {
 
   constructor(opts = {}) {
-    _hooks.set(this, []);
+    _transforms.set(this, []);
     _resolve.set(this, create.sync(opts));
 
-    this.registerHook('.json', str => JSON5.parse(str));
-    this.registerHook('.yml', str => YAML.safeLoad(str));
+    this.addTransform(require('./transforms/yaml'));
+    this.addTransform(require('./transforms/json'));
   }
 
   require(path, root) {
-    debug('requiring %s via loader', path);
     const loader = this;
-    const hooks = _hooks.get(this);
-    const originalRequire = Module.prototype.require;
+    const originalLoad = Module._load;
 
-    hooks.forEach(h => hook.hook(h.ext, h.hook));
-
-    /*
-     * Monkey-patch require calls within this config file to allow
-     * for resolving paths via the Fractal loader.
-     */
-
-    Module.prototype.require = function (path) {
-      try {
-        return Module._load(path, this, false);
-      } catch (err) {
-        const resolvedPath = loader.resolve(path, root);
-        return Module._load(resolvedPath, this, false);
-      }
-    };
-
-    const result = require(this.resolve(path, root));
-
-    /*
-     * Restore monkey-patched require method and unhook handlers
-     */
-    Module.prototype.require = originalRequire;
-    hooks.forEach(h => hook.unhook(h.ext));
-
-    return result;
-  }
-
-  loadFile(file) {
-    debug('loading file %s via loader', file.relative);
-    if (!(file instanceof File)) {
-      throw new Error(`Loader.requireFile - file must be a File instance [file-invalid]`);
-    }
+    root = root || dirname(parentModule());
 
     try {
-      const hooks = _hooks.get(this);
-      let contents = file.contents.toString();
-
-      /*
-       * Run all matching hooks on the file contents
-       */
-      hooks.forEach(h => {
-        if (h.ext === file.extname) {
-          contents = h.hook(contents, file.path);
+      Module._load = function (request, parent, ...args) {
+        const resolvedPath = loader.resolve(request, root);
+        const transform = loader.getTransformerForPath(resolvedPath);
+        if (transform) {
+          const contents = readFileSync(resolvedPath, 'utf-8');
+          return transform(contents, resolvedPath);
         }
-      });
+        return originalLoad(resolvedPath, parent, ...args);
+      };
 
-      if (file.extname === '.js') {
-        const originalRequire = Module.prototype.require;
-        Module.prototype.require = path => this.require(path, file.dirname);
+      const result = require(path);
+      Module._load = originalLoad;
 
-        /*
-         * Create a new Module instance from the file contents and compile.
-         */
-        const m = new Module(file.basename, module.parent);
-        m.filename = file.basename;
-        m.paths = Module._nodeModulePaths(file.dirname);
-        m._compile(contents, file.basename);
-
-        /*
-         * Restore monkey-patched require method after the module has been compiled
-         */
-        Module.prototype.require = originalRequire;
-        contents = m.exports;
-      }
-
-      return contents;
+      return result;
     } catch (err) {
-      debug('error loading file: %s', err.message);
-      throw new Error(`Error loading file '${file.relative}' [file-load-error]`);
+      Module._load = originalLoad;
+      throw err;
     }
   }
 
@@ -114,9 +63,22 @@ class Loader {
     }
   }
 
-  registerHook(ext, hook) {
-    _hooks.get(this).push({ext, hook});
+  addTransform(transform) {
+    _transforms.get(this).push(transform);
     return this;
+  }
+
+  getTransformerForPath(path) {
+    const ext = extname(path);
+    for (const handler of _transforms.get(this)) {
+      if (toArray(handler.match).includes(ext)) {
+        return handler.transform.bind(handler);
+      }
+    }
+  }
+
+  get transforms() {
+    return _transforms.get(this).slice(0);
   }
 }
 

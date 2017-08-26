@@ -1,9 +1,22 @@
 /* eslint import/no-unresolved: off */
 
 const {join} = require('path');
-const {File} = require('@frctl/support');
-const {expect, sinon} = require('../../../../test/helpers');
+const {expect} = require('../../../../test/helpers');
 const Loader = require('./loader');
+
+const fixturesResolver = {
+  alias: {
+    '~': join(__dirname, '../test/fixtures')
+  }
+};
+
+const fooTransform = {
+  name: 'foo',
+  match: ['.foo'],
+  transform(contents, path) {
+    return 'foo!';
+  }
+};
 
 describe('Loader', function () {
   describe('.resolve()', function () {
@@ -41,13 +54,6 @@ describe('Loader', function () {
   });
 
   describe('.require()', function () {
-    it('requires a module after resolving the path', function () {
-      const loader = new Loader();
-      const spy = sinon.spy(loader, 'resolve');
-      loader.require('./loader', __dirname);
-      expect(spy.calledWith('./loader', __dirname)).to.equal(true);
-    });
-
     it('throws an error if the module cannot be required', function () {
       const loader = new Loader();
       expect(() => loader.require('./foo', __dirname)).to.throw();
@@ -59,6 +65,7 @@ describe('Loader', function () {
         }
       });
       expect(() => loader.require('~/parent', __dirname)).to.not.throw();
+      expect(loader.require('~/parent', __dirname)).to.not.equal(undefined);
     });
     it('un-patches the require method when done', function () {
       const loader = new Loader({
@@ -69,28 +76,42 @@ describe('Loader', function () {
       loader.require('~/parent', __dirname);
       expect(() => require('~/parent')).to.throw();
     });
+    it('can require .js files', function () {
+      const loader = new Loader(fixturesResolver);
+      expect(loader.require('~/config.js')).to.eql({foo: 'bar'});
+    });
+    it('can require .json(5) files', function () {
+      const loader = new Loader(fixturesResolver);
+      expect(loader.require('~/config.json')).to.eql({foo: 'bar'});
+    });
+    it('can require .yml files', function () {
+      const loader = new Loader(fixturesResolver);
+      expect(loader.require('~/config.yml')).to.eql({foo: 'bar'});
+    });
+    it('doesn\'t break requiring NPM modules', function () {
+      const loader = new Loader(fixturesResolver);
+      expect(loader.require('~/config.js')).to.eql({foo: 'bar'});
+      delete require.cache['@frctl/utils'];
+      expect(() => require('@frctl/utils')).to.not.throw();
+    });
   });
 
-  describe('.loadFile()', function () {
-    it('throws an error if the file argument is not a File instance', function () {
+  describe('.addTransform()', function () {
+    it('registers a transform object', function () {
       const loader = new Loader();
-      expect(() => loader.loadFile({})).to.throw('[file-invalid]');
+      loader.addTransform(fooTransform);
+      expect(loader.transforms).to.include(fooTransform);
     });
-    it('loads the contents of .js files', function () {
+  });
+
+  describe('.getTransformerForPath()', function () {
+    it('retrieves the transform handler from the first transform that matches the path extension', function () {
       const loader = new Loader();
-      const file = new File({
-        path: 'path/to/file.js',
-        contents: Buffer.from('module.exports = {foo:"bar"}')
-      });
-      expect(loader.loadFile(file)).to.eql({foo: 'bar'});
-    });
-    it('loads the contents of .json(5) files', function () {
-      const loader = new Loader();
-      const file = new File({
-        path: 'path/to/file.json',
-        contents: Buffer.from('{foo:"bar"}')
-      });
-      expect(loader.loadFile(file)).to.eql({foo: 'bar'});
+      loader.addTransform(fooTransform);
+      const handler = fooTransform.transform.bind(fooTransform);
+      expect(loader.getTransformerForPath('bar/file.foo')).to.be.a('function');
+      expect(handler('test', 'bar/file.foo')).to.equal('foo!');
+      expect(loader.getTransformerForPath('bar.js')).to.equal(undefined);
     });
   });
 });

@@ -22,7 +22,7 @@ module.exports = function (opts = {}) {
 
         const configFiles = componentFiles.filter(app.get('components.config.filter')).sortBy('basename');
         const data = configFiles.mapToArray(file => {
-          const data = app.loader.loadFile(file);
+          const data = app.loader.require(file.path);
           return (typeof data === 'function') ? data(app, files) : data;
         });
 
