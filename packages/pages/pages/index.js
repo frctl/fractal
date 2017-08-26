@@ -7,6 +7,7 @@ module.exports = function (opts = {}) {
 
     commands: [
       require('./src/commands/info')(opts)
+,      require('./src/commands/serve')(opts)
     ],
 
     register(fractal) {

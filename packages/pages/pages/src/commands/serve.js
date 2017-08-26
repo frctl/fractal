@@ -3,17 +3,17 @@ const Pages = require('../pages');
 module.exports = function pagesInfoCommand(opts = {}) {
   return {
 
-    name: 'pages-info',
+    name: 'pages-serve',
 
-    command: 'pages',
+    command: 'serve',
 
-    description: 'Get information about your Pages site(s)',
+    description: 'Start the Pages server',
 
     handler(argv, app, cli) {
       const pages = new Pages(opts);
 
       return `
-        <green>Fractal Pages <dim>${pages.version}</dim></green>
+        <success><reset>Fractal Pages dev server started</reset></success>
       `;
     }
   };
