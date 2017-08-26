@@ -71,19 +71,19 @@ class Loader {
 
   hook() {
     const loader = this;
-    Module._load = function (request, parent, ...args) {
-      const resolvedPath = loader.resolve(request);
-      if (loader.hasTransformerForPath(resolvedPath)) {
-        const contents = readFileSync(resolvedPath, 'utf-8');
-        return loader.transform(contents, resolvedPath);
-      }
-      return moduleLoad(resolvedPath, parent, ...args);
-    };
+    // Module._load = function (request, parent, ...args) {
+    //   const resolvedPath = loader.resolve(request);
+    //   if (loader.hasTransformerForPath(resolvedPath)) {
+    //     const contents = readFileSync(resolvedPath, 'utf-8');
+    //     return loader.transform(contents, resolvedPath);
+    //   }
+    //   return moduleLoad(resolvedPath, parent, ...args);
+    // };
     return this;
   }
 
   unhook() {
-    Module._load = moduleLoad;
+    // Module._load = moduleLoad;
     return this;
   }
 
