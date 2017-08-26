@@ -19,7 +19,7 @@ const fooTransform = {
   }
 };
 
-describe.skip('Loader', function () {
+describe('Loader', function () {
   describe('.resolve()', function () {
     it('synchronously resolves the path with respect to the root', function () {
       const loader = new Loader();
