@@ -13,13 +13,11 @@ module.exports = function pagesInfoCommand(opts = {}) {
       const pages = new Pages(opts);
 
       return `
-        &nbsp;
         <hr>
 
         <green>Fractal Pages <dim>${pages.version}</dim></green>
 
         <hr>
-        &nbsp;
       `;
     }
   };

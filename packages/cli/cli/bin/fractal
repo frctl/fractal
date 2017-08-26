@@ -115,7 +115,9 @@ try {
         const result = cmd.handler(argv, app, cli, logger);
         const output = await Promise.resolve(result);
         if (typeof output === 'string') {
+          console.log('');
           log(output.replace(/^\s*[\r\n]/gm, '\n'));
+          console.log('');
         }
       } catch (err) {
         error(err);

@@ -20,7 +20,6 @@ module.exports = function infoCommand(opts = {}) {
       const configPath = cli.configPath ? relative(cli.cwd, cli.configPath) : null;
 
       return `
-        &nbsp;
         <hr>
 
         <green>Fractal CLI <dim>v${cli.version}</dim></green>
@@ -33,7 +32,6 @@ module.exports = function infoCommand(opts = {}) {
         <hr>
 
         <dim>Run <reset><cyan>${argv.$0} --help</cyan></reset> for full details on available commands and options.</dim>
-        &nbsp;
       `;
     }
   };
