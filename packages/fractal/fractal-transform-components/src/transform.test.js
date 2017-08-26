@@ -1,4 +1,5 @@
 /* eslint no-unused-expressions: "off" */
+const fractal = require('@frctl/fractal');
 const {File, FileCollection} = require('@frctl/support');
 const {expect} = require('../../../../test/helpers');
 const componentTransform = require('./transform');
@@ -50,6 +51,8 @@ const getFileCollection = () => {
   return FileCollection.from(items.map(item => File.from(item)));
 };
 
+const app = fractal();
+
 describe('Component Transform', function () {
   describe('factory', function () {
     it('is exported as a function', function () {
@@ -67,7 +70,7 @@ describe('Component Transform', function () {
     it('transforms a FileCollection into a ComponentCollection', function () {
       const fileCollection = getFileCollection();
       const transform = componentTransform().transform;
-      const output = transform(fileCollection);
+      const output = transform(fileCollection, {}, app);
       expect(output).to.be.a('ComponentCollection');
       expect(output).to.have.property('length').that.equals(2);
     });

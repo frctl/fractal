@@ -1,69 +1,85 @@
 /* eslint import/no-dynamic-require: off */
 
 const Module = require('module');
-const {defaultsDeep} = require('@frctl/utils');
-const {NodeJsInputFileSystem, CachedInputFileSystem, ResolverFactory} = require('enhanced-resolve');
+const {readFileSync} = require('fs');
+const {extname, dirname} = require('path');
+const parentModule = require('parent-module');
+const {create} = require('enhanced-resolve');
+const {toArray} = require('@frctl/utils');
+const debug = require('debug')('frctl:loader');
 
-const _resolver = new WeakMap();
-const nodeContext = {
-  environments: ['node+es3+es5+process+native']
-};
+const _resolve = new WeakMap();
+const _transforms = new WeakMap();
 
 class Loader {
 
-  constructor(config = {}) {
-    const opts = defaultsDeep(config, {
-      useSyncFileSystemCalls: true,
-      extensions: ['.js', '.json', '.node'],
-      fileSystem: new CachedInputFileSystem(new NodeJsInputFileSystem(), 4000)
-    });
+  constructor(opts = {}) {
+    _transforms.set(this, []);
+    _resolve.set(this, create.sync(opts));
 
-    _resolver.set(this, ResolverFactory.createResolver(opts));
+    this.addTransform(require('./transforms/yaml'));
+    this.addTransform(require('./transforms/json'));
   }
 
   require(path, root) {
     const loader = this;
-    const originalRequire = Module.prototype.require;
+    const originalLoad = Module._load;
 
-    /*
-     * Monkey-patch require calls within this config file to allow
-     * for resolving paths via the Fractal loader.
-     */
-    Module.prototype.require = function (path) {
-      try {
-        return Module._load(path, this, false);
-      } catch (err) {
-        const resolvedPath = loader.resolve(path, root);
-        return Module._load(resolvedPath, this, false);
-      }
-    };
+    root = root || dirname(parentModule());
 
-    const result = require(this.resolve(path, root));
+    try {
+      Module._load = function (request, parent, ...args) {
+        const resolvedPath = loader.resolve(request, root);
+        const transform = loader.getTransformerForPath(resolvedPath);
+        if (transform) {
+          const contents = readFileSync(resolvedPath, 'utf-8');
+          return transform(contents, resolvedPath);
+        }
+        return originalLoad(resolvedPath, parent, ...args);
+      };
 
-    /*
-     * Restore monkey-patched require call after the module has been compiled
-     */
-    Module.prototype.require = originalRequire;
+      const result = require(path);
+      Module._load = originalLoad;
 
-    return result;
+      return result;
+    } catch (err) {
+      Module._load = originalLoad;
+      throw err;
+    }
   }
 
   resolve(path, root) {
+    const resolve = _resolve.get(this);
     try {
-      return this.resolver.resolveSync(nodeContext, root || process.cwd(), path);
+      return resolve(root || process.cwd(), path);
     } catch (resolverError) {
       try {
         return require.resolve(path);
       } catch (nativeError) {
-        throw new Error(`Could not resolve module ${path} [resolver-error]\n${resolverError.message}\n${nativeError.message}`);
+        debug('error resolving module. resolver error: %s', resolverError.message);
+        debug('error resolving module. native error: %s', nativeError.message);
+        throw new Error(`Could not resolve module ${path} [resolver-error]`);
       }
     }
   }
 
-  get resolver() {
-    return _resolver.get(this);
+  addTransform(transform) {
+    _transforms.get(this).push(transform);
+    return this;
   }
 
+  getTransformerForPath(path) {
+    const ext = extname(path);
+    for (const handler of _transforms.get(this)) {
+      if (toArray(handler.match).includes(ext)) {
+        return handler.transform.bind(handler);
+      }
+    }
+  }
+
+  get transforms() {
+    return _transforms.get(this).slice(0);
+  }
 }
 
 module.exports = Loader;

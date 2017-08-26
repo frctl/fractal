@@ -1,24 +1,24 @@
 /* eslint import/no-unresolved: off */
 
 const {join} = require('path');
-const Resolver = require('enhanced-resolve/lib/Resolver');
-const {ResolverFactory} = require('enhanced-resolve');
-const {expect, sinon} = require('../../../../test/helpers');
+const {expect} = require('../../../../test/helpers');
 const Loader = require('./loader');
 
-describe('Loader', function () {
-  describe('constructor()', function () {
-    it('passes configuration options to the resolver', function () {
-      const spy = sinon.spy(ResolverFactory, 'createResolver');
-      // eslint-disable-next-line no-unused-vars
-      const loader = new Loader({
-        fileSystem: 'foo'
-      });
-      expect(spy.args[0][0].fileSystem).to.equal('foo');
-      spy.restore();
-    });
-  });
+const fixturesResolver = {
+  alias: {
+    '~': join(__dirname, '../test/fixtures')
+  }
+};
 
+const fooTransform = {
+  name: 'foo',
+  match: ['.foo'],
+  transform(contents, path) {
+    return 'foo!';
+  }
+};
+
+describe('Loader', function () {
   describe('.resolve()', function () {
     it('synchronously resolves the path with respect to the root', function () {
       const loader = new Loader();
@@ -54,13 +54,6 @@ describe('Loader', function () {
   });
 
   describe('.require()', function () {
-    it('requires a module after resolving the path', function () {
-      const loader = new Loader();
-      const spy = sinon.spy(loader, 'resolve');
-      loader.require('./loader', __dirname);
-      expect(spy.calledWith('./loader', __dirname)).to.equal(true);
-    });
-
     it('throws an error if the module cannot be required', function () {
       const loader = new Loader();
       expect(() => loader.require('./foo', __dirname)).to.throw();
@@ -72,6 +65,7 @@ describe('Loader', function () {
         }
       });
       expect(() => loader.require('~/parent', __dirname)).to.not.throw();
+      expect(loader.require('~/parent', __dirname)).to.not.equal(undefined);
     });
     it('un-patches the require method when done', function () {
       const loader = new Loader({
@@ -82,12 +76,42 @@ describe('Loader', function () {
       loader.require('~/parent', __dirname);
       expect(() => require('~/parent')).to.throw();
     });
+    it('can require .js files', function () {
+      const loader = new Loader(fixturesResolver);
+      expect(loader.require('~/config.js')).to.eql({foo: 'bar'});
+    });
+    it('can require .json(5) files', function () {
+      const loader = new Loader(fixturesResolver);
+      expect(loader.require('~/config.json')).to.eql({foo: 'bar'});
+    });
+    it('can require .yml files', function () {
+      const loader = new Loader(fixturesResolver);
+      expect(loader.require('~/config.yml')).to.eql({foo: 'bar'});
+    });
+    it('doesn\'t break requiring NPM modules', function () {
+      const loader = new Loader(fixturesResolver);
+      expect(loader.require('~/config.js')).to.eql({foo: 'bar'});
+      delete require.cache['@frctl/utils'];
+      expect(() => require('@frctl/utils')).to.not.throw();
+    });
   });
 
-  describe('.resolver', function () {
-    it('returns the internal resolver instance', function () {
+  describe('.addTransform()', function () {
+    it('registers a transform object', function () {
       const loader = new Loader();
-      expect(loader.resolver).to.be.instanceOf(Resolver);
+      loader.addTransform(fooTransform);
+      expect(loader.transforms).to.include(fooTransform);
+    });
+  });
+
+  describe('.getTransformerForPath()', function () {
+    it('retrieves the transform handler from the first transform that matches the path extension', function () {
+      const loader = new Loader();
+      loader.addTransform(fooTransform);
+      const handler = fooTransform.transform.bind(fooTransform);
+      expect(loader.getTransformerForPath('bar/file.foo')).to.be.a('function');
+      expect(handler('test', 'bar/file.foo')).to.equal('foo!');
+      expect(loader.getTransformerForPath('bar.js')).to.equal(undefined);
     });
   });
 });

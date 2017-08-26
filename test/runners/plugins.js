@@ -25,14 +25,14 @@ module.exports = function (testPath) {
     describe('.handler()', function () {
       it('returns an array, collection (or a promise that resolves to an array or collection)', function () {
         const handler = pluginFactory().handler;
-        const result = Promise.resolve(handler([], runner.createMockState(), runner.createApp()));
+        const result = Promise.resolve(handler(Collection.from([]), runner.createMockState(), runner.createApp()));
         result.then(result => {
           expect(Array.isArray(result) || Collection.isCollection(result)).to.equal(true);
         });
         return result;
       });
 
-      for (let {description, test, throws, opts = {}, input = [], state, app} of pluginTests) {
+      for (let {description, test, throws, opts = {}, input = Collection.from([]), state, app} of pluginTests) {
         const plugin = pluginFactory(opts);
         input = Collection.from(input);
 

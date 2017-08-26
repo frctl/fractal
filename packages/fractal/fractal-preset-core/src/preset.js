@@ -7,6 +7,10 @@ module.exports = function (opts = {}) {
 
       transforms: [
         require('@frctl/fractal-transform-components')
+      ],
+
+      plugins: [
+        require('@frctl/fractal-plugin-files-name')
       ]
     }
 
