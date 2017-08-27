@@ -1,8 +1,8 @@
 /* eslint max-nested-callbacks: off, handle-callback-err: off */
-
+const proxyquire = require('proxyquire');
 const Vinyl = require('vinyl');
 const {defaultsDeep} = require('@frctl/utils');
-const {expect, sinon, mockRequire} = require('../../../../../test/helpers');
+const {expect, sinon} = require('../../../../../test/helpers');
 const factory = require('./beautify');
 
 describe('beautify', function () {
@@ -61,12 +61,12 @@ describe('beautify', function () {
     });
 
     it('supports specifying a language', function (done) {
-      const spy = sinon.spy(v => v);
-      mockRequire('js-beautify', {js: spy});
-      const filter = mockRequire.reRequire('./beautify')();
+      const spy = sinon.spy();
+      const filter = proxyquire('./beautify', {
+        'js-beautify': {js: spy}
+      })();
       filter.filter('{foo: "bar"}', 'js', function (err, result) {
         expect(spy.called).to.equal(true);
-        mockRequire.stop('js-beautify');
         done();
       });
     });
@@ -81,12 +81,12 @@ describe('beautify', function () {
     });
 
     it('defaults to HTML if no language is specified', function (done) {
-      const spy = sinon.spy(v => v);
-      mockRequire('js-beautify', {html: spy});
-      const filter = mockRequire.reRequire('./beautify')();
+      const spy = sinon.spy();
+      const filter = proxyquire('./beautify', {
+        'js-beautify': {html: spy}
+      })();
       filter.filter('<span>\ntest</div>', function (err, result) {
         expect(spy.called).to.equal(true);
-        mockRequire.stop('js-beautify');
         done();
       });
     });
@@ -94,14 +94,13 @@ describe('beautify', function () {
     it('accepts an options object which is merged with package options before applying', function (done) {
       const packageOpts = {foo: 'bar', baz: 'boop'};
       const runtimeOpts = {foo: 'nope'};
-      const spy = sinon.spy(v => v);
-      mockRequire('js-beautify', {html: spy});
-      const filter = mockRequire.reRequire('./beautify')(packageOpts);
-
+      const spy = sinon.spy();
+      const filter = proxyquire('./beautify', {
+        'js-beautify': {html: spy}
+      })(packageOpts);
       filter.filter('<span>\ntest</div>', 'html', runtimeOpts, function (err, result) {
         expect(spy.called).to.equal(true);
         expect(spy.args[0][1]).to.eql(defaultsDeep(runtimeOpts, packageOpts));
-        mockRequire.stop('js-beautify');
         done();
       });
     });

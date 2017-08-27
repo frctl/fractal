@@ -1,6 +1,7 @@
 /* eslint no-unused-expressions: "off" */
+const proxyquire = require('proxyquire');
 const {EventEmitter2} = require('eventemitter2');
-const {expect, sinon, mockRequire} = require('../../../../test/helpers');
+const {expect, sinon} = require('../../../../test/helpers');
 const Emitter = require('./emitter');
 
 describe('Emitter', function () {
@@ -13,12 +14,12 @@ describe('Emitter', function () {
     });
     it('calls superclass constructor with expected properties', function () {
       const spy = sinon.spy();
-      mockRequire('eventemitter2', {EventEmitter2: spy});
-      const Emitter = mockRequire.reRequire('./emitter');
+      const Emitter = proxyquire('./emitter', {
+        eventemitter2: {EventEmitter2: spy}
+      });
       const emitter = new Emitter();
       expect(emitter).to.exist;
       expect(spy.args[0][0]).to.eql({wildcard: true});
-      mockRequire.stop('eventemitter2');
     });
     it('sets the namespace correctly', function () {
       const emitter = new Emitter({namespace: '@ns'});

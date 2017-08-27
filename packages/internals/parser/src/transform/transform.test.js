@@ -1,5 +1,4 @@
 /* eslint handle-callback-err: off, no-unused-expressions: off */
-const mockRequire = require('mock-require');
 const {EventEmitter2} = require('eventemitter2');
 const {ComponentCollection, Collection, File} = require('@frctl/support');
 const {expect, sinon} = require('../../../../../test/helpers');
@@ -92,7 +91,6 @@ describe('Transform', function () {
   describe('.addPlugin()', function () {
     before(function () {
       addSpy = sinon.spy(PluginStore.prototype, 'add');
-      mockRequire.reRequire('./transform');
     });
     beforeEach(function () {
       addSpy.reset();

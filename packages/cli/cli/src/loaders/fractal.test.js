@@ -10,16 +10,4 @@ describe('CLI fractal loader', function () {
   it('returns a Fractal instance', function () {
     expect(loader()).to.be.an.instanceOf(fractal.Fractal);
   });
-
-  // it('attempts to load the fractal version from the CWD first', function () {
-  //   spy = sinon.spy(() => {
-  //     throw new Error('err');
-  //   });
-  //   mockRequire('import-cwd', function(){
-  //
-  //   });
-  //   const loader = mockRequire.reRequire('./fractal');
-  //   loader()
-  //   console.log(spy.getCall(0));
-  // });
 });

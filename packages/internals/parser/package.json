@@ -25,7 +25,7 @@
   "devDependencies": {
     "eventemitter2": "^4.1.2",
     "mock-fs": "^4.4.1",
-    "mock-require": "^2.0.2",
+    "proxyquire": "^1.8.0",
     "vinyl": "^2.1.0"
   }
 }

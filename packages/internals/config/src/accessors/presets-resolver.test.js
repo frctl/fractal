@@ -1,4 +1,5 @@
-const {expect, sinon, mockRequire} = require('../../../../../test/helpers');
+const proxyquire = require('proxyquire');
+const {expect, sinon} = require('../../../../../test/helpers');
 const resolver = require('./presets-resolver');
 
 const grandParentPreset = {
@@ -53,10 +54,13 @@ describe('presets-resolver', function () {
   it('loads items via the package loader', function () {
     const packages = [() => ({}), () => ({})];
     const spy = sinon.spy(v => v);
-    mockRequire('./packages-loader', spy);
-    mockRequire.reRequire('./presets-resolver')(packages);
+    const resolver = proxyquire('./presets-resolver', {
+      './packages-loader': function (...args) {
+        return spy(...args);
+      }
+    });
+    resolver(packages);
     expect(spy.calledWith(packages)).to.equal(true);
-    mockRequire.stop('./packages-loader');
   });
 
   it('recursively resolves and de-dupes `presets` into a flattened list of presets', function () {

@@ -1,4 +1,5 @@
-const {expect, sinon, mockRequire} = require('../../../../test/helpers');
+const proxyquire = require('proxyquire');
+const {expect, sinon} = require('../../../../test/helpers');
 const logger = require('./log');
 
 const consoleSpy = sinon.spy(console, 'log');
@@ -18,11 +19,13 @@ describe('logger', function () {
     });
 
     it('renders the input', function () {
-      mockRequire('@allmarkedup/climate', renderSpy);
-      const logger = mockRequire.reRequire('./log');
+      const logger = proxyquire('./log', {
+        '@allmarkedup/climate': (...args) => {
+          return renderSpy(...args);
+        }
+      });
       logger.log('foo');
       expect(renderSpy.called).to.equal(true);
-      mockRequire.stop('@allmarkedup/climate');
     });
 
     it('catches render errors and console.logs the string instead', function () {
