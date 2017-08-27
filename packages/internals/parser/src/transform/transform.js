@@ -16,7 +16,6 @@ class Transform {
     this.plugins = new PluginStore(props.plugins || []);
     this.transform = props.transform;
     this.passthru = props.passthru || false;
-    this.Collection = getConstructor(props.transform) || Collection;
   }
 
   addPlugin(plugin) {
@@ -24,12 +23,15 @@ class Transform {
     return this;
   }
 
-  async run(data = [], state, context, emitter = {emit: () => {}}) {
+  async run(data = [], state = {}, context, emitter = {emit: () => {}}) {
     const transform = this;
     debug('Transform.run start');
     emitter.emit('transform.start', {transform});
 
     let dataset = await this.transform(data, state, context);
+    const collectionClass = getConstructor(dataset) || Collection;
+
+    dataset = this.toCollection(dataset, collectionClass);
 
     for (const plugin of this.plugins) {
       debug('Transform.run processing plugin: %s', plugin.name);
@@ -49,12 +51,12 @@ class Transform {
        * to the next plugin in the list. If it returns an array then we wrap that
        * to ensure that plugins always receive collections.
        */
-      dataset = this.toCollection(dataset);
+      dataset = this.toCollection(dataset, collectionClass);
 
       emitter.emit('plugin.complete', {plugin, transform});
     }
 
-    const collection = this.toCollection(dataset);
+    const collection = this.toCollection(dataset, collectionClass);
 
     debug('Transform.run complete');
     emitter.emit('transform.complete', {transform, collection});
@@ -62,11 +64,11 @@ class Transform {
     return collection;
   }
 
-  toCollection(items) {
-    if (items instanceof this.Collection) {
+  toCollection(items, collectionClass) {
+    if (items instanceof collectionClass) {
       return items; // already the correct collection instance so just return.
     }
-    return this.Collection.from(items);
+    return collectionClass.from(items);
   }
 
   get [Symbol.toStringTag]() {
@@ -81,11 +83,13 @@ class Transform {
   }
 }
 
-const getConstructor = func => {
+const getConstructor = val => {
+  if (Array.isArray(val)) {
+    return Collection;
+  }
   const errMsg = `Transform methods must return a value that inherits from the 'Collection' base class\n:
   please check the return value of the supplied transform. [transform-function-invalid]`;
 
-  const val = func(new Collection());
   assert(checkMore.defined(val), errMsg, TypeError);
   const Species = val.constructor[Symbol.species] || val.constructor;
   assert(checkMore.defined(Species), errMsg, TypeError);
