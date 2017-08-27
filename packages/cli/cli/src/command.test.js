@@ -1,19 +1,5 @@
-const {expect, sinon, mockRequire} = require('../../../../test/helpers');
-
-const logSpy = sinon.spy(() => {});
-const errorSpy = sinon.spy(() => {});
-const handlerSpy = sinon.spy(() => {});
-const helpSpy = sinon.spy(() => {});
-
-mockRequire('@frctl/console', {
-  log: logSpy,
-  error: errorSpy
-});
-mockRequire('yargs', {
-  showHelp: helpSpy
-});
-
-const Command = mockRequire.reRequire('./command');
+const {expect} = require('../../../../test/helpers');
+const Command = require('./command');
 
 const validCommand = {
   name: 'foo',
@@ -21,7 +7,7 @@ const validCommand = {
   command: 'foo [bar]',
   description: 'a command',
   builder: {},
-  handler: handlerSpy
+  handler: function () {}
 };
 
 function command(...args) {
@@ -29,13 +15,6 @@ function command(...args) {
 }
 
 describe('Command', function () {
-  beforeEach(function () {
-    logSpy.reset();
-    errorSpy.reset();
-    handlerSpy.reset();
-    helpSpy.reset();
-  });
-
   describe('constructor()', function () {
     it('validates command schema', function () {
       expect(() => command({invalid: 'command'})).to.throw(TypeError, '[properties-invalid]');

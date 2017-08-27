@@ -23,5 +23,8 @@
     "slash": "^1.0.0",
     "debug": "^3.0.0",
     "vinyl": "^2.1.0"
+  },
+  "devDependencies": {
+    "proxyquire": "^1.8.0"
   }
 }

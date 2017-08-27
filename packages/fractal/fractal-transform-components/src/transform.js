@@ -1,4 +1,4 @@
-const {normalizeName, addTrailingSeparator} = require('@frctl/utils');
+const {normalizeName, addTrailingSeparator, defaultsDeep} = require('@frctl/utils');
 const {Component, Collection, ComponentCollection, FileCollection} = require('@frctl/support');
 
 module.exports = function (opts = {}) {
@@ -20,14 +20,16 @@ module.exports = function (opts = {}) {
           return file;
         }));
 
-        const configFiles = componentFiles.filter(app.get('components.config.filter')).sortBy('basename');
+        const configFiles = componentFiles.filter(app.get('configs.filter')).sortBy('basename');
         const data = configFiles.mapToArray(file => {
           const data = app.loader.requireFromString(file.contents.toString(), file.path);
           return (typeof data === 'function') ? data(app, files) : data;
         });
 
+        const config = Object.assign({}, ...data);
+
         return Component.from({
-          config: Object.assign({}, ...data),
+          config: defaultsDeep(config, app.get('configs.defaults', {})),
           path: dir.path,
           relative: dir.relative,
           src: dir,

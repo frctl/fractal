@@ -15,5 +15,8 @@
     "extract-stack": "^1.0.0",
     "indent-string": "^3.1.0",
     "strip-indent": "^2.0.0"
+  },
+  "devDependencies": {
+    "proxyquire": "^1.8.0"
   }
 }

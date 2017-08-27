@@ -2,6 +2,8 @@ module.exports = {
 
   type: 'object',
 
+  required: ['configs', 'views'],
+
   properties: {
 
     src: {
@@ -29,32 +31,29 @@ module.exports = {
       type: 'object'
     },
 
-    components: {
+    views: {
       type: 'object',
-      required: ['views', 'config'],
+      required: ['filter'],
       properties: {
-        views: {
-          type: 'object',
-          properties: {
-            filter: {
-              anyOf: [
-                {type: 'object'},
-                {typeof: 'function'}
-              ]
-            }
-          }
-        },
-        config: {
-          type: 'object',
-          properties: {
-            defaults: {type: 'object'},
-            filter: {
-              anyOf: [
-                {type: 'object'},
-                {typeof: 'function'}
-              ]
-            }
-          }
+        filter: {
+          anyOf: [
+            {type: 'object'},
+            {typeof: 'function'}
+          ]
+        }
+      }
+    },
+
+    configs: {
+      type: 'object',
+      required: ['filter', 'defaults'],
+      properties: {
+        defaults: {type: 'object'},
+        filter: {
+          anyOf: [
+            {type: 'object'},
+            {typeof: 'function'}
+          ]
         }
       }
     },

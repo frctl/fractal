@@ -13,19 +13,16 @@ module.exports = {
     }
   },
 
-  components: {
+  configs: {
+    defaults: {},
+    filter: {
+      stem: 'config'
+    }
+  },
 
-    config: {
-      defaults: {},
-      filter: {
-        stem: 'config'
-      }
-    },
-
-    views: {
-      filter: {
-        stem: 'view'
-      }
+  views: {
+    filter: {
+      stem: 'view'
     }
   },
 

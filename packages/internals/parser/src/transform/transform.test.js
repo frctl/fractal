@@ -1,7 +1,6 @@
 /* eslint handle-callback-err: off, no-unused-expressions: off */
-const mockRequire = require('mock-require');
 const {EventEmitter2} = require('eventemitter2');
-const {FileCollection, ComponentCollection, File} = require('@frctl/support');
+const {ComponentCollection, Collection, File} = require('@frctl/support');
 const {expect, sinon} = require('../../../../../test/helpers');
 const {
   validPlugin,
@@ -43,6 +42,12 @@ const transformWithInvalidPluginReturnValue = makeTransform(
   validPluginWithInvalidReturnValue,
   true
 );
+const transformWithArrayReturn = {
+  name: 'transform-with-array-return',
+  passthru: true,
+  transform: () => [{}],
+  plugins: validPlugin
+};
 const transformWithInvalidTransform1 = {
   name: 'transform-with-invalid-transform1',
   passthru: true,
@@ -68,8 +73,6 @@ describe('Transform', function () {
       expect(() => new Transform(/* Empty */)).to.throw(TypeError, '[invalid-properties]');
       expect(() => new Transform('Invalid string')).to.throw(TypeError, '[invalid-properties]');
       expect(() => new Transform(invalidTransform)).to.throw(TypeError, '[invalid-properties]');
-      expect(() => new Transform(transformWithInvalidTransform1)).to.throw(TypeError, '[transform-function-invalid]');
-      expect(() => new Transform(transformWithInvalidTransform2)).to.throw(TypeError, '[transform-function-invalid]');
       expect(() => new Transform(transformWithInvalidPlugin)).to.throw(TypeError, '[invalid-properties]');
       expect(() => new Transform(validFileCollectionTransform)).to.not.throw();
       expect(() => new Transform(validTransformWithPlugin)).to.not.throw();
@@ -82,14 +85,12 @@ describe('Transform', function () {
       expect(transform.plugins).to.be.a('PluginStore').and.have.property('items').that.has.property('length').that.equals(0);
       expect(transform.transform).to.equal(toFC);
       expect(transform.passthru).to.equal(true);
-      expect(transform.Collection).to.equal(FileCollection);
     });
   });
 
   describe('.addPlugin()', function () {
     before(function () {
       addSpy = sinon.spy(PluginStore.prototype, 'add');
-      mockRequire.reRequire('./transform');
     });
     beforeEach(function () {
       addSpy.reset();
@@ -201,6 +202,26 @@ describe('Transform', function () {
       }], {}, {}, emitter);
       expect(emittedSpy.callCount).to.equal(4);
     });
+    it('does not throws an error if the transform return is an array of objects', async function () {
+      const result = await (new Transform(transformWithArrayReturn).run([new File(), new File()]));
+      expect(result).to.be.instanceof(Collection);
+    });
+    it('throws an error if the transform return is an array of invalid items', function () {
+      const task = new Transform(transformWithInvalidTransform1)
+        .run([new File(), new File()])
+        .catch(err => {
+          expect(err).to.be.an('Error').with.a.property('message').that.matches(/\[items-invalid\]/);
+        });
+      return task;
+    });
+    it('throws an error if the transform return is invalid', function () {
+      const task = new Transform(transformWithInvalidTransform2)
+        .run([new File(), new File()])
+        .catch(err => {
+          expect(err).to.be.an('Error').with.a.property('message').that.matches(/\[transform-function-invalid\]/);
+        });
+      return task;
+    });
     it('throws an error if plugins return invalid types', function () {
       const task = new Transform(transformWithInvalidPluginReturnValue)
         .run([new File(), new File()])
@@ -222,12 +243,12 @@ describe('Transform', function () {
   describe('.toCollection()', function () {
     it('wraps items in the correct constructor', function () {
       const transform = Transform.from(validTransformWithPluginList);
-      const items = transform.toCollection([]);
+      const items = transform.toCollection([], Collection);
       expect(items).to.be.a('Collection');
     });
     it('returns Collection instances unmodified', function () {
       const transform = Transform.from(validTransformWithPluginList);
-      const items = transform.toCollection(new ComponentCollection());
+      const items = transform.toCollection(new ComponentCollection(), ComponentCollection);
       expect(items).to.be.a('ComponentCollection');
     });
   });
