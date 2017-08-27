@@ -12,15 +12,17 @@ class Pages extends App {
     this.debug('instantiated new Pages instance');
   }
 
-  build() {
-
+  async build() {
+    const library = await this.fractal.parse();
+    const site = await this.parse();
+    return {site, library};
   }
 
   serve() {
 
   }
 
-  render() {
+  serveStatic() {
 
   }
 
@@ -37,7 +39,7 @@ class Pages extends App {
     return this;
   }
 
-  get fractal(){
+  get fractal() {
     return _fractal.get(this);
   }
 

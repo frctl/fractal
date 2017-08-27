@@ -17,7 +17,7 @@ function makePages(customConfig) {
   return new Pages(customConfig || config);
 }
 
-describe.only('Pages', function () {
+describe('Pages', function () {
   describe('constructor()', function () {
     it('wraps configuration data in a ConfigStore instance', () => {
       const pages = makePages();
@@ -33,6 +33,23 @@ describe.only('Pages', function () {
     it('extends App', () => {
       expect(new Pages()).to.be.instanceOf(App);
     });
+  });
+
+  describe('.build()', function () {
+    it('returns an EmittingPromise');
+    it('Performs a full static build of the site');
+  });
+
+  describe('.serve()', function () {
+    it('returns an EmittingPromise');
+    it('Starts a webserver to serve the contents of the `dest` directory');
+    it('Builds the appropriate pages on each request');
+  });
+
+  describe('.serveStatic()', function () {
+    it('returns an EmittingPromise');
+    it('Starts a webserver to serve the contents of the `dest` directory');
+    it('Does not rebuild pages on subsequent requests even if the source files have changed');
   });
 
   describe('.getPages()', function () {
