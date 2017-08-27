@@ -27,5 +27,8 @@
     "locate-path": "^2.0.0",
     "pkg-up": "^2.0.0",
     "update-notifier": "^2.2.0"
+  },
+  "devDependencies": {
+    "proxyquire": "^1.8.0"
   }
 }

@@ -13,5 +13,8 @@
     "lodash": "^4.17.4",
     "import-cwd": "^2.1.0",
     "check-types": "^7.2.0"
+  },
+  "devDependencies": {
+    "proxyquire": "^1.8.0"
   }
 }
