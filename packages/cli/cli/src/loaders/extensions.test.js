@@ -2,7 +2,7 @@ const proxyquire = require('proxyquire');
 const {expect, sinon} = require('../../../../../test/helpers');
 const loader = require('./extensions');
 
-describe.only('CLI extension loader', function () {
+describe('CLI extension loader', function () {
   it('exports a function', function () {
     expect(loader).to.be.a('function');
   });
@@ -20,9 +20,9 @@ describe.only('CLI extension loader', function () {
   it('attempts to load the package directories second', function () {
     const spy = sinon.spy();
     const loader = proxyquire('./extensions', {
-      'import-cwd': function(...args){
+      'import-cwd': function (...args) {
         spy(...args);
-        throw new Error('oops')
+        throw new Error('oops');
       }
     });
     loader({foo: true});
@@ -47,7 +47,7 @@ describe.only('CLI extension loader', function () {
     const opts = {};
     const pkgSpy = sinon.spy(() => extension);
     const loader = proxyquire('./extensions', {
-      'import-cwd': function(){
+      'import-cwd': function () {
         return pkgSpy;
       }
     });
