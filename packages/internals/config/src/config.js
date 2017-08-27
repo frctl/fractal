@@ -22,8 +22,6 @@ class Config {
       _validator.set(this, validator);
     }
 
-    this.validate(data);
-
     _data.set(this, cloneDeep(data));
     _accessors.set(this, []);
     _cache.set(this, []);
@@ -35,6 +33,8 @@ class Config {
     if (opts.defaults) {
       this.addDefaults(opts.defaults);
     }
+
+    this.validate(this.data);
   }
 
   get(path, fallback) {
