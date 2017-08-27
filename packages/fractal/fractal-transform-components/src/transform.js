@@ -20,7 +20,7 @@ module.exports = function (opts = {}) {
           return file;
         }));
 
-        const configFiles = componentFiles.filter(app.get('components.config.filter')).sortBy('basename');
+        const configFiles = componentFiles.filter(app.get('configs.filter')).sortBy('basename');
         const data = configFiles.mapToArray(file => {
           const data = app.loader.requireFromString(file.contents.toString(), file.path);
           return (typeof data === 'function') ? data(app, files) : data;
