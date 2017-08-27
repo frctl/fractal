@@ -24,7 +24,7 @@ class Transform {
     return this;
   }
 
-  async run(data = [], state, context, emitter = {emit: () => {}}) {
+  async run(data = [], state = {}, context, emitter = {emit: () => {}}) {
     const transform = this;
     debug('Transform.run start');
     emitter.emit('transform.start', {transform});
@@ -85,7 +85,7 @@ const getConstructor = func => {
   const errMsg = `Transform methods must return a value that inherits from the 'Collection' base class\n:
   please check the return value of the supplied transform. [transform-function-invalid]`;
 
-  const val = func(new Collection());
+  const val = func(new Collection(), {});
   assert(checkMore.defined(val), errMsg, TypeError);
   const Species = val.constructor[Symbol.species] || val.constructor;
   assert(checkMore.defined(Species), errMsg, TypeError);
