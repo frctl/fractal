@@ -1,6 +1,7 @@
 /* eslint import/no-dynamic-require: off,  no-unused-expressions: off */
 
 const {writeFileSync, mkdirSync} = require('fs');
+const {EventEmitter} = require('events');
 const {tmpdir} = require('os');
 const {join} = require('path');
 const {capitalize} = require('lodash');
@@ -127,6 +128,15 @@ describe('App', function () {
         stub.restore();
       }
       expect(tested).to.equal(true);
+    });
+    it('supports providing a custom emitter via opts.emitter', function (done) {
+      const app = new App();
+      const emitter = new EventEmitter();
+      emitter.on('parse.start', function(){
+        expect(this).to.equal(emitter);
+        done();
+      });
+      app.parse({emitter});
     });
   });
 

@@ -37,22 +37,23 @@ class App {
     _loader.set(this, new Loader(this.get('resolve')));
   }
 
-  parse() {
+  parse(opts = {}) {
     return new EmittingPromise(async (resolve, reject, emitter) => {
+      emitter.emit('parse.start');
       const cached = this.cache.get('collections');
       if (cached) {
         return resolve(cached);
       }
       try {
         const parser = this.getParser();
-        const collections = await parser.run({context: this});
+        const collections = await parser.run({context: this}, emitter);
         this.dirty = false;
         this.cache.set('collections', collections);
         resolve(collections);
       } catch (err) {
         reject(err);
       }
-    });
+    }, opts.emitter);
   }
 
   watch() {
