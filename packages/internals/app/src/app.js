@@ -110,6 +110,14 @@ class App {
     return this;
   }
 
+  getCollections() {
+    return this.parse();
+  }
+
+  getFiles() {
+    return this.parse().then(collections => collections.files);
+  }
+
   getParser() {
     return new Parser({
       src: this.get('src'),

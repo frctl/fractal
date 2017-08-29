@@ -15,10 +15,6 @@ class Fractal extends App {
     return this.parse().then(collections => collections.components);
   }
 
-  getFiles() {
-    return this.parse().then(collections => collections.files);
-  }
-
   addAdapter(adapter) {
     this.debug(`adding adapter %s`, adapter);
     this.dirty = true;

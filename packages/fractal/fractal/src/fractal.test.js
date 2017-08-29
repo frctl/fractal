@@ -174,18 +174,6 @@ describe('Fractal', function () {
     });
   });
 
-  describe('.getFiles()', function () {
-    it('returns an EmittingPromise', function () {
-      const fractal = new Fractal();
-      expect(fractal.getFiles()).to.be.instanceOf(EmittingPromise);
-    });
-    it('resolves to a FileCollection instance', async function () {
-      const fractal = new Fractal();
-      const files = await fractal.getFiles();
-      expect(files).to.be.instanceOf(FileCollection);
-    });
-  });
-
   for (const addOn of ['plugin', 'transform', 'adapter']) {
     const method = `add${capitalize(addOn)}`;
     describe(`.${method}()`, function () {

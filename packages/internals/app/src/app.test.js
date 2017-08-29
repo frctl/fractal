@@ -230,6 +230,27 @@ describe('App', function () {
     });
   });
 
+  describe('.getCollections()', function () {
+    it('is an alias for .parse()', async function () {
+      const app = makeApp();
+      const spy = sinon.spy(app, 'parse');
+      app.getCollections();
+      expect(spy.called).to.equal(true);
+    });
+  });
+
+  describe('.getFiles()', function () {
+    it('returns an EmittingPromise', function () {
+      const app = makeApp();
+      expect(app.getFiles()).to.be.instanceOf(EmittingPromise);
+    });
+    it('resolves to a FileCollection instance', async function () {
+      const app = makeApp();
+      const files = await app.getFiles();
+      expect(files).to.be.instanceOf(FileCollection);
+    });
+  });
+
   describe('.getParser()', function () {
     it('returns a new Parser instance', function () {
       const app = new App();
