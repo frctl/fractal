@@ -1,11 +1,10 @@
 const {sep} = require('path');
 
-module.exports = function(){
-
+module.exports = function () {
   return {
     name: 'hidden',
     transform: 'files',
-    handler(files){
+    handler(files) {
       return files.map(file => {
         file.hidden = false;
         for (const segment of file.relative.split(sep)) {
@@ -17,6 +16,5 @@ module.exports = function(){
         return file;
       });
     }
-  }
-
+  };
 };

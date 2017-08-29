@@ -11,12 +11,15 @@ module.exports = function pagesInfoCommand(opts = {}) {
 
     async handler(argv, app, cli) {
       const site = new Pages(app, opts);
-      const pages = await site.build();
+      const result = await site.build({
+        dest: argv.dest
+      });
 
-      console.log(pages);
+      const pageCount = result.pages.length;
 
       return `
-        <success><reset>Fractal Pages build complete</reset></success>
+        <success><reset>Fractal Pages build complete.</reset></success>
+        <dim>  ${pageCount} page${pageCount === 1 ? '' : 's'} generated into ${result.dest}</dim>
       `;
     }
   };

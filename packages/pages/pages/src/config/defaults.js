@@ -19,12 +19,12 @@ module.exports = {
   routes: {
     pages: {
       collection: 'site.templates',
-      filter: {hidden: false},
+      filter: {hidden: false}
     },
     assets: {
       collection: 'site.assets',
       filter: {hidden: false}
-    },
+    }
   },
 
   plugins: [

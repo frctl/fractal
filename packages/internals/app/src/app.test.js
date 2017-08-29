@@ -132,7 +132,7 @@ describe('App', function () {
     it('supports providing a custom emitter via opts.emitter', function (done) {
       const app = new App();
       const emitter = new EventEmitter();
-      emitter.on('parse.start', function(){
+      emitter.on('parse.start', function () {
         expect(this).to.equal(emitter);
         done();
       });

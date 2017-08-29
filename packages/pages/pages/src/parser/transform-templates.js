@@ -1,5 +1,3 @@
-const {FileCollection} = require('@frctl/support');
-
 module.exports = function (opts = {}) {
   return {
 

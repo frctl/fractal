@@ -2,9 +2,10 @@ const {join} = require('path');
 const App = require('@frctl/app');
 const {Fractal} = require('@frctl/fractal');
 const {defaultsDeep} = require('@frctl/utils');
-const {FileCollection, EmittingPromise} = require('@frctl/support');
+const {EmittingPromise} = require('@frctl/support');
 const {expect} = require('../../../../test/helpers');
 const pkg = require('../package.json');
+const PageCollection = require('./support/page-collection');
 const ConfigStore = require('./config/store');
 const defaults = require('./config/defaults');
 const Pages = require('./pages');
@@ -62,7 +63,11 @@ describe('Pages', function () {
       const pages = makePages();
       expect(pages.getPages()).to.be.instanceOf(EmittingPromise);
     });
-    it('resolves to a PageCollection instance');
+    it('resolves to a PageCollection instance', async function () {
+      const pages = makePages();
+      const result = await pages.getPages();
+      expect(result).to.be.instanceOf(PageCollection);
+    });
   });
 
   describe('.toString()', function () {

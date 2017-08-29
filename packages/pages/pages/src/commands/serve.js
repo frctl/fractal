@@ -1,4 +1,4 @@
-const Pages = require('../pages');
+// const Pages = require('../pages');
 
 module.exports = function pagesInfoCommand(opts = {}) {
   return {
@@ -10,7 +10,7 @@ module.exports = function pagesInfoCommand(opts = {}) {
     description: 'Start the Pages server',
 
     handler(argv, app, cli) {
-      const pages = new Pages(opts);
+      // const pages = new Pages(opts);
 
       return `
         <success><reset>Fractal Pages dev server started</reset></success>
