@@ -34,6 +34,14 @@ describe('EmittingPromise', function () {
 
       return eProm;
     });
+    it('supports passing a custom emitter instance', function () {
+      const customEmitter = new EventEmitter2();
+      const eProm = new EmittingPromise((resolve, reject, emitter) => {
+        expect(emitter).to.equal(customEmitter);
+        resolve('value');
+      }, customEmitter);
+      return eProm;
+    });
     it('proxies to its emitter properly', function () {
       const eventEmitter = new EventEmitter2({
         wildcard: true
