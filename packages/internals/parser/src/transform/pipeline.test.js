@@ -91,7 +91,7 @@ describe('Pipeline', function () {
       })];
       const context = {};
 
-      const noPassThru = Object.assign(fileTransform, {passthru: false});
+      const noPassThru = Object.assign({}, fileTransform, {passthru: false});
       const pipelineNoPass = makePipeline([noPassThru, noOpTransform]);
       const result = await pipelineNoPass.process(data, context, emitter);
 
@@ -106,11 +106,25 @@ describe('Pipeline', function () {
       })];
       const context = {};
 
-      const passThru = Object.assign(fileTransform, {passthru: true});
+      const passThru = Object.assign({}, fileTransform, {passthru: true});
       const pipelineWithPass = makePipeline([passThru, noOpTransform]);
       const result = await pipelineWithPass.process(data, context, emitter);
 
       expect(result).to.be.an('object').with.a.property('no-op').that.is.a('FileCollection').with.a.property('_items').that.eqls(data);
+    });
+    it(`clones data before passing on to next transform`, async function () {
+      const emitter = new EventEmitter2();
+      const data = [new File({
+        path: '/components/button/button.hbs'
+      })];
+      const context = {};
+
+      const passThru = Object.assign({}, fileTransform, {passthru: true});
+      const pipelineWithPass = makePipeline([passThru, noOpTransform]);
+      const result = await pipelineWithPass.process(data, context, emitter);
+
+      expect(result.files).to.eql(result['no-op']);
+      expect(result.files).to.not.equal(result['no-op']);
     });
   });
 });
