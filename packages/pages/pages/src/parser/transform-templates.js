@@ -1,4 +1,4 @@
-const {Collection} = require('@frctl/support');
+const {FileCollection} = require('@frctl/support');
 
 module.exports = function (opts = {}) {
   return {
@@ -6,8 +6,10 @@ module.exports = function (opts = {}) {
     name: 'templates',
 
     transform(files, state, app) {
-
-      return Collection.from([]);
+      return files.filter(file => file.isDirectory() !== true).filter(app.get('templates.filter')).map(file => {
+        file.type = 'template';
+        return file;
+      });
     }
   };
 };

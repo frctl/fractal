@@ -14,7 +14,10 @@
     "@frctl/config": "^2.0.0-beta.0",
     "@frctl/support": "^2.0.0-beta.0",
     "@frctl/fractal": "^2.0.0-beta.0",
+    "check-types": "^7.2.0",
+    "gray-matter": "^3.0.3",
     "debug": "^3.0.0",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "pupa": "^1.0.0"
   }
 }

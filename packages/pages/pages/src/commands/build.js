@@ -10,11 +10,10 @@ module.exports = function pagesInfoCommand(opts = {}) {
     description: 'Run a full Pages site build',
 
     async handler(argv, app, cli) {
-      const pages = new Pages(app, opts);
+      const site = new Pages(app, opts);
+      const pages = await site.build();
 
-      const collections = await pages.build();
-
-      console.log(collections.site.pages.toArray());
+      console.log(pages);
 
       return `
         <success><reset>Fractal Pages build complete</reset></success>
