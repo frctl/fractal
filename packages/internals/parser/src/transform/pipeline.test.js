@@ -112,7 +112,7 @@ describe('Pipeline', function () {
 
       expect(result).to.be.an('object').with.a.property('no-op').that.is.a('FileCollection').with.a.property('_items').that.eqls(data);
     });
-    it.only(`clones data before passing on to next transform`, async function () {
+    it(`clones data before passing on to next transform`, async function () {
       const emitter = new EventEmitter2();
       const data = [new File({
         path: '/components/button/button.hbs'
