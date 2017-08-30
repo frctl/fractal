@@ -275,7 +275,7 @@ describe('Utils', function () {
       expect(utils.cloneDeep(testObj)).to.eql(testObj);
       expect(utils.cloneDeep(testObj)).to.not.equal(testObj);
     });
-    it.only('correctly calls .clone() methods on nested objects', function () {
+    it('correctly calls .clone() methods on nested objects', function () {
       const spy = sinon.spy();
       const testObj = {
         foo: {
