@@ -1,5 +1,5 @@
 const {assert} = require('check-types');
-const {isPlainObject, mapValues, pickBy, get, set, unset} = require('lodash');
+const {mapValues, pickBy, get, set, unset} = require('lodash');
 const {cloneDeep, hash} = require('@frctl/utils');
 
 const _config = new WeakMap();
@@ -105,27 +105,9 @@ class Entity {
   }
 
   clone() {
-    function generate(object) {
-      const cloned = {};
-      Object.keys(object).forEach(key => {
-        if (object[key] && typeof object[key].clone === 'function') {
-          cloned[key] = object[key].clone();
-          return;
-        }
-        if (isPlainObject(object[key])) {
-          cloned[key] = cloneDeep(object[key]);
-          return;
-        }
-        cloned[key] = object[key];
-      });
-      return cloned;
-    }
-
-    const data = generate(_data.get(this));
-    const config = generate(_config.get(this));
-
-    const cloned = new this.constructor(config);
-    for (let [key, value] of Object.entries(data)) {
+    const cloned = new this.constructor(this._config);
+    for (let [key, value] of Object.entries(this._data)) {
+      console.log(key);
       cloned.set(key, value);
     }
     return cloned;
@@ -146,6 +128,14 @@ class Entity {
 
   _validateOrThrow(props) {
     assert.maybe.object(props, `Entity.constructor: The properties provided to Entity must be in object form [properties-invalid]`);
+  }
+
+  get _data() {
+    return cloneDeep(_data.get(this));
+  }
+
+  get _config() {
+    return cloneDeep(_config.get(this));
   }
 
   get [Symbol.toStringTag]() {
