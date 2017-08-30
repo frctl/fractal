@@ -2,7 +2,7 @@
 
 const {join} = require('path');
 const {capitalize} = require('lodash');
-const {File, ComponentCollection, FileCollection, EmittingPromise, Component, Variant, Collection} = require('@frctl/support');
+const {File, ComponentCollection, FileCollection, EmittingPromise, Component, Variant} = require('@frctl/support');
 const {defaultsDeep} = require('@frctl/utils');
 const {Renderer} = require('@frctl/renderer');
 const App = require('@frctl/app');
@@ -36,21 +36,23 @@ const files = new FileCollection([
 
 const components = new ComponentCollection([
   new Component({
-    name: 'test-component',
-    src: files.find({stem: '@test-component'}),
-    files: new FileCollection([
-      files.find({stem: 'view'})
-    ]),
-    variants: new Collection([
-      new Variant({
+    src: files.find({
+      stem: '@test-component'
+    }),
+    files: FileCollection.from([files.find({
+      stem: 'view'
+    })]),
+    config: {
+      name: 'test-component',
+      variants: [{
         name: 'default',
         default: true,
         component: 'test-component',
         context: {
           foo: 'bar'
         }
-      })
-    ])
+      }]
+    }
   })
 ]);
 
@@ -121,8 +123,8 @@ describe('Fractal', function () {
       const fractal = makeFractal();
       const renderer = new Renderer(fractal.get('adapters'));
       const spy = sinon.spy(renderer, 'render');
-      const variant = parserOutput.components.first().variants.first();
-      const view = parserOutput.components.first().files.find({stem: 'view'});
+      const variant = parserOutput.components.first().getVariants().first();
+      const view = parserOutput.components.first().getFiles().find({stem: 'view'});
       const opts = {
         renderer,
         collections: parserOutput

@@ -121,7 +121,7 @@ describe('Transform', function () {
 
     it('it returns the expected result of its transform methods', async function () {
       const transform = new Transform(validFileCollectionTransform);
-      const result = await transform.run([new File(), new File()]);
+      const result = await transform.run([new File({path: 'foo.js'}), new File({path: 'bar.js'})]);
       expect(result).to.be.a('FileCollection').that.has.a.property('length').that.equals(2);
     });
 
@@ -160,7 +160,7 @@ describe('Transform', function () {
       });
       const emittedSpy = sinon.spy(emitter, 'emit');
 
-      await _transform.run([new File(), new File(), new File()], {}, {}, emitter);
+      await _transform.run([new File({path: 'foo.js'}), new File({path: 'bar.js'}), new File({path: 'baz.js'})], {}, {}, emitter);
       expect(emittedSpy.callCount).to.equal(2);
     });
 
@@ -203,12 +203,12 @@ describe('Transform', function () {
       expect(emittedSpy.callCount).to.equal(4);
     });
     it('does not throws an error if the transform return is an array of objects', async function () {
-      const result = await (new Transform(transformWithArrayReturn).run([new File(), new File()]));
+      const result = await (new Transform(transformWithArrayReturn).run([new File({path: 'foo.js'}), new File({path: 'bar.js'})]));
       expect(result).to.be.instanceof(Collection);
     });
     it('throws an error if the transform return is an array of invalid items', function () {
       const task = new Transform(transformWithInvalidTransform1)
-        .run([new File(), new File()])
+        .run([new File({path: 'foo.js'}), new File({path: 'bar.js'})])
         .catch(err => {
           expect(err).to.be.an('Error').with.a.property('message').that.matches(/\[items-invalid\]/);
         });
@@ -216,7 +216,7 @@ describe('Transform', function () {
     });
     it('throws an error if the transform return is invalid', function () {
       const task = new Transform(transformWithInvalidTransform2)
-        .run([new File(), new File()])
+        .run([new File({path: 'foo.js'}), new File({path: 'bar.js'})])
         .catch(err => {
           expect(err).to.be.an('Error').with.a.property('message').that.matches(/\[transform-function-invalid\]/);
         });
@@ -224,7 +224,7 @@ describe('Transform', function () {
     });
     it('throws an error if plugins return invalid types', function () {
       const task = new Transform(transformWithInvalidPluginReturnValue)
-        .run([new File(), new File()])
+        .run([new File({path: 'foo.js'}), new File({path: 'bar.js'})])
         .catch(err => {
           expect(err).to.be.an('Error').with.a.property('message').that.matches(/\[plugin-return-invalid\]/);
         });

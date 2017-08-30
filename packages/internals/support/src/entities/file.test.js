@@ -83,7 +83,7 @@ describe('File', function () {
         expect(file.toString()).to.equal(fileContents);
       });
       it('has empty contents', function () {
-        const file = makeFile({});
+        const file = makeFile({path: 'foo.js'});
         expect(file.toString()).to.equal('');
       });
     });

@@ -1,6 +1,5 @@
 /* eslint no-unused-expressions: "off" */
 const {expect} = require('../../../../../test/helpers');
-const Collection = require('../collections/collection');
 const FileCollection = require('../collections/file-collection');
 const File = require('./file');
 
@@ -11,11 +10,13 @@ const basicComponent = {
 };
 
 const fullComponent = {
-  name: 'component-name-set',
-  config: {refresh: true},
   src: new File({path: '/src/component', cwd: '/'}),
-  variants: new Collection([{name: 'component--v1'}, {name: 'component--v2'}]),
-  files: new FileCollection([new File({path: '/src/component/component.js'}), new File({path: '/src/component/component.hbs'})])
+  files: new FileCollection([new File({path: '/src/component/component.js'}), new File({path: '/src/component/component.hbs'})]),
+  config: {
+    name: 'component-name-set',
+    variants: [{name: 'component--v1'}, {name: 'component--v2'}],
+    refresh: true
+  }
 };
 
 describe('Component', function () {
@@ -32,58 +33,71 @@ describe('Component', function () {
     it(`derives 'name' from path correctly if not set directly`, function () {
       const component = new Component(basicComponent);
       expect(component.name).to.equal('component');
+      expect(component.get('name')).to.equal('component');
     });
     it(`assigns 'name' correctly if set directly`, function () {
       const component = new Component(fullComponent);
       expect(component.name).to.equal('component-name-set');
+      expect(component.get('name')).to.equal('component-name-set');
     });
-    it(`creates default 'config', 'variants', and 'files' properties if not set`, function () {
+    it(`creates default 'variants', and 'files' properties if not set`, function () {
       const component = new Component(basicComponent);
-      expect(component).to.have.a.property('config').that.is.an('object');
-      expect(component).to.have.a.property('variants').that.is.a('Collection');
-      expect(component).to.have.a.property('files').that.is.a('FileCollection');
+      expect(component.getVariants()).to.be.a('VariantCollection').that.has.a.property('length').that.equals(1);
+      expect(component.getFiles()).to.be.a('FileCollection').that.has.a.property('length').that.equals(0);
     });
-    it(`creates default 'config', 'variants', and 'files' properties if not provided`, function () {
-      const component = new Component(basicComponent);
-      expect(component).to.have.a.property('config').that.is.an('object').and.deep.equals({});
-      expect(component).to.have.a.property('variants').that.is.a('Collection').and.has.a.property('length').that.equals(0);
-      expect(component).to.have.a.property('files').that.is.a('FileCollection').and.has.a.property('length').that.equals(0);
-    });
-    it(`assigns 'config', 'variants', and 'files' properties correctly if provided`, function () {
+    it(`assigns 'variants', and 'files' properties correctly if provided`, function () {
       const component = new Component(fullComponent);
-      expect(component).to.have.a.property('config').that.is.an('object').and.deep.equals({refresh: true});
-      expect(component).to.have.a.property('variants').that.is.a('Collection').and.has.a.property('length').that.equals(2);
-      expect(component).to.have.a.property('files').that.is.a('FileCollection').and.has.a.property('length').that.equals(2);
-    });
-    it(`proxies access to its 'src.path' and 'src.relative' properties`, function () {
-      const component = new Component(basicComponent);
-      expect(component).to.have.a.property('path').that.is.an('string').and.equals('/src/component');
-      expect(component).to.have.a.property('relative').that.is.a('string').and.equals('src/component');
+      expect(component.getVariants()).to.be.a('VariantCollection').that.has.a.property('length').that.equals(2);
+      expect(component.getFiles()).to.be.a('FileCollection').that.has.a.property('length').that.equals(2);
     });
     it('throws an error if incorrect properties provided', function () {
       expect(() => new Component()).to.throw(TypeError, '[properties-invalid]');
     });
   });
-  describe('.files', function () {
-    it('sets files correctly', function () {
+  describe('.getFiles()', function () {
+    it('gets files correctly', function () {
       const component = new Component(basicComponent);
-      expect(component.files.length).to.equal(0);
-      expect(component.files = FileCollection.from(fullComponent.files)).to.not.throw;
-      expect(component.files.length).to.equal(2);
+      expect(component.getFiles().length).to.equal(0);
+      for (let file of fullComponent.files.items) {
+        component.addFile(file);
+      }
+      expect(component.getFiles().length).to.equal(2);
       expect(() => {
-        component.files = [];
-      }).to.throw(TypeError, `[files-invalid]`);
+        component.addFile([]);
+      }).to.throw(TypeError, `[properties-invalid]`);
     });
   });
-  describe('.variants', function () {
-    it('sets variants correctly', function () {
+  describe('.getVariants()', function () {
+    it('gets variants correctly', function () {
       const component = new Component(basicComponent);
-      expect(component.variants.length).to.equal(0);
-      expect(component.variants = Collection.from(fullComponent.variants)).to.not.throw;
-      expect(component.variants.length).to.equal(2);
+      expect(component.getVariants().length).to.equal(1);
+      for (let variant of fullComponent.config.variants) {
+        component.addVariant(variant);
+      }
+      expect(component.getVariants().length).to.equal(3);
       expect(() => {
-        component.variants = [];
-      }).to.throw(TypeError, `[variants-invalid]`);
+        component.addVariant(['dd']);
+      }).to.throw(TypeError, `[properties-invalid]`);
+    });
+  });
+  describe('.getVariant()', function () {
+    it('gets named variant correctly when only default exists', function () {
+      const component = new Component(basicComponent);
+      expect(component.getVariant('default'))
+      .to.be.a('Variant')
+      .with.property('name')
+      .that.equals('default');
+    });
+    it('gets named variant correctly', function () {
+      const component = new Component(fullComponent);
+      expect(component.getVariant('component--v1'))
+      .to.be.a('Variant')
+      .with.property('name')
+      .that.equals('component--v1');
+    });
+    it('returns undefined for nonexistant variant', function () {
+      const component = new Component(fullComponent);
+      expect(component.getVariant('component--v0')).to.be.undefined;
     });
   });
   describe('.isComponent()', function () {
@@ -92,6 +106,16 @@ describe('Component', function () {
     });
     it('returns false if an instance is not a Component', function () {
       expect(Component.isComponent([])).to.equal(false);
+    });
+  });
+  describe('.get()', function () {
+    it('falls back to config data if a value does not exist on the store', function () {
+      const component = new Component(fullComponent);
+      expect(component.get('refresh')).to.equal(true);
+    });
+    it(`falls back to the 'fallback' argument if neither 'data' nor 'config' return a value`, function () {
+      const component = new Component(fullComponent);
+      expect(component.get('fabulous', 'hair')).to.equal('hair');
     });
   });
   describe('[Symbol.toStringTag]', function () {

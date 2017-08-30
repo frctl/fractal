@@ -1,73 +1,114 @@
-const assert = require('check-types').assert;
-const check = require('check-more-types');
-const {omit} = require('lodash');
-const Collection = require('../collections/collection');
+const {normalizeName, uniqueName} = require('@frctl/utils');
+const Validator = require('../validator');
+const schema = require('../../schema');
+const VariantCollection = require('../collections/variant-collection');
 const FileCollection = require('../collections/file-collection');
 const Entity = require('./entity');
-const File = require('./file');
-
-const isFile = value => value instanceof File;
-check.mixin(isFile, 'file');
-const isCollection = value => value instanceof Collection;
-check.mixin(isCollection, 'collection');
-const isFileCollection = value => value instanceof FileCollection;
-check.mixin(isFileCollection, 'fileCollection');
-
-const componentSchema = {
-  path: check.maybe.unemptyString,
-  relative: check.maybe.unemptyString,
-  src: check.file,
-  name: check.maybe.unemptyString,
-  config: check.maybe.object,
-  variants: check.maybe.collection,
-  files: check.maybe.fileCollection
-};
+const Variant = require('./variant');
 
 const _src = new WeakMap();
 const _files = new WeakMap();
 const _variants = new WeakMap();
 
-const privateProps = ['src', 'files', 'variants'];
-
 class Component extends Entity {
-  constructor(props = {}) {
-    assert(check.schema(componentSchema, props), `Component.constructor: The properties provided do not match the schema of a component [properties-invalid]`, TypeError);
+  constructor(props) {
+    if (Component.isComponent(props)) {
+      return props;
+    }
+    Component.validate(props);
 
-    props.name = props.name || props.src.stem;
-    props.config = props.config || {};
+    const config = Object.assign({
+      name: normalizeName(props.src.stem)
+    }, props.config);
 
-    super(omit(props, privateProps));
+    super(config);
 
-    _src.set(this, props.src);
-    _files.set(this, props.files || new FileCollection());
-    _variants.set(this, props.variants || new Collection());
+    this._setSrc(props.src);
+    this._setFiles(props.files);
+    this._buildVariants(config.variants);
+  }
 
-    // TODO: Revisit if memory impacted
-    Object.defineProperty(this, 'path', {
-      enumerable: true,
-      get: pathGet
+  getSrc() {
+    return _src.get(this).clone();
+  }
+
+  getFiles() {
+    return _files.get(this).clone();
+  }
+
+  addFile(file) {
+    _files.set(this, _files.get(this).push(file));
+  }
+
+  getVariants() {
+    return _variants.get(this);
+  }
+
+  getVariant(name) {
+    return _variants.get(this).find(name);
+  }
+
+  addVariant(variant) {
+    _variants.set(this, _variants.get(this).push(variant));
+  }
+
+  getViews() {
+    // TODO
+  }
+
+  getView(name) {
+    // TODO
+  }
+
+  _setSrc(src, files) {
+    _src.set(this, src);
+  }
+
+  _setFiles(files) {
+    _files.set(this, FileCollection.from(files));
+  }
+
+  _validateOrThrow(/* props */) {
+    return true;
+  }
+
+  _buildVariants(variants = []) {
+    let pos = 0;
+    let variantList = [];
+    const variantNames = [];
+
+    variantList = variants.map(v => {
+      const props = Object.assign({}, v, {
+        component: this.get('name'),
+        name: uniqueName(v.name || `${this.name}-${pos}`, variantNames)
+      });
+      pos++;
+      return Variant.from(props);
     });
 
-    Object.defineProperty(this, 'relative', {
-      enumerable: true,
-      get: relativeGet
-    });
+    let variantCollection = VariantCollection.from(variantList);
 
-    Object.defineProperty(this, 'files', {
-      enumerable: true,
-      get: filesGet,
-      set: filesSet
-    });
+    if (!variantCollection.hasDefault()) {
+      variantCollection = variantCollection.push(Variant.from({
+        name: 'default',
+        default: true,
+        component: this.get('name')
+      }));
+    }
 
-    Object.defineProperty(this, 'variants', {
-      enumerable: true,
-      get: variantsGet,
-      set: variantsSet
-    });
+    _variants.set(this, variantCollection);
+  }
+
+  get relative() {
+    return _src.get(this).relative;
   }
 
   get [Symbol.toStringTag]() {
     return 'Component';
+  }
+
+  static validate(props) {
+    Validator.assertValid(props, schema.component, `Component.constructor: The properties provided do not match the schema of a component [properties-invalid]`);
   }
 
   static isComponent(item) {
@@ -75,27 +116,5 @@ class Component extends Entity {
   }
 
 }
-
-// Reduce memory load by sharing function references
-const pathGet = function () {
-  return _src.get(this).path;
-};
-const relativeGet = function () {
-  return _src.get(this).relative;
-};
-const filesGet = function () {
-  return _files.get(this);
-};
-const filesSet = function (files) {
-  assert(check.fileCollection(files), `Component.files: The 'files' setter argument must be a FileCollection [files-invalid]`, TypeError);
-  _files.set(this, files);
-};
-const variantsGet = function () {
-  return _variants.get(this);
-};
-const variantsSet = function (variants) {
-  assert(check.collection(variants), `Component.variants: The 'variants' setter argument must be a Collection [variants-invalid]`, TypeError);
-  _variants.set(this, variants);
-};
 
 module.exports = Component;

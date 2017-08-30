@@ -59,13 +59,12 @@ let items = [{
 
 const makeComponent = input => new Component({
   src: new File({path: input.path, cwd: '/'}),
-  config: input.config,
-  name: input.name
-});
+  config: Object.assign({}, {name: input.name}, input.config)});
 
 items = items.map(makeComponent);
 
 const makeCollection = input => new ComponentCollection(input || items.slice(0));
+const makeCollectionFrom = input => ComponentCollection.from(input || items.slice(0));
 
 describe('ComponentCollection', function () {
   describe('constructor', function () {
@@ -76,29 +75,32 @@ describe('ComponentCollection', function () {
       expect(collection.length).to.equal(0);
     });
   });
+  describe('.from()', function () {
+    it('successfully creates a FileCollection when valid input is supplied', function () {
+      expect(() => makeCollectionFrom('text')).to.throw(TypeError, '[properties-invalid]');
+      expect(() => makeCollectionFrom({invalid: 'object'})).to.throw(TypeError, '[properties-invalid]');
+      expect(() => makeCollectionFrom({src: new File({path: 'valid-file-props/', cwd: '/'})})).to.not.throw();
+      expect(() => makeCollectionFrom(new Component({src: new File({path: 'path', cwd: '/'})}))).to.not.throw();
+      expect(() => makeCollectionFrom([Component.from({invalid: 'object'}), Component.from({anotherInvalid: 'object'})])).to.throw(TypeError, '[properties-invalid]');
+      expect(() => makeCollectionFrom([Component.from({src: new File({path: 'valid-file-props1/', cwd: '/'})}), Component.from({src: new File({path: 'valid-file-props2/', cwd: '/'})})])).to.not.throw();
+    });
+  });
 
   describe('.find()', function () {
     it(`can be called with a single string argument to find the 'name'`, function () {
       const collection = makeCollection();
       expect(collection.find('mickey')).to.equal(items[0]);
     });
-    it.skip(`can be called with a single string argument to find the 'component/path'`, function () {
-      const collection = makeCollection();
-      expect(collection.find('dogs/jerry')).to.equal(items[5]);
-    });
     it(`defers to its superclass for all other 'find' arguments`, function () {
       const collection = makeCollection();
       expect(collection.find('name', 'odie')).to.equal(items[4]);
       expect(collection.find({
-        config: {
-          type: 'dog'
-        }
+        type: 'dog'
       })).to.equal(items[3]);
+
       expect(collection.find({
         name: 'mickey',
-        config: {
-          disney: false
-        }
+        disney: false
       })).to.equal(undefined);
       expect(collection.find(i => i.name === 'mickey')).to.equal(items[0]);
     });

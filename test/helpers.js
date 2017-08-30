@@ -20,7 +20,6 @@ function validateSchema(testSchema) {
 
 module.exports.expect = chai.expect;
 module.exports.sinon = require('sinon');
-module.exports.mockRequire = require('mock-require');
 
 module.exports.validate = validate;
 module.exports.validateSchema = validateSchema;
