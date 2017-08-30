@@ -44,7 +44,6 @@ class Router {
 
       if (route.template) {
         assert.instance(route.template, File, `Router.validatePage - page.template must be a File instance [template-invalid]`);
-
         const tpl = route.template;
         const config = tpl.config || {};
         page = defaultsDeep(config, route); // Use template frontmatter data with route data as a fallback
@@ -54,13 +53,18 @@ class Router {
         page.render = false;
       }
 
-      page.target = Router.resolveTarget(page.target);
-      page.data = Router.resolveData(page.data, page.target);
-      page.permalink = Router.resolvePermalink(page.permalink, page.target, parent, app.config.pick('indexes', 'ext'));
-      page.contents = Router.resolveContents(page.template, page.contents, page.target);
+      const target = Router.resolveTarget(page.target);
+      page.target = target.entity;
+      page[target.name] = target.entity;
+      page.data = Router.resolveData(page.data, target);
+      page.permalink = Router.resolvePermalink(page.permalink, target, parent, app.config.pick('indexes', 'ext'));
+      page.contents = Router.resolveContents(page.template, page.contents, target);
+
+      page.label = Router.resolveLabel(page.label, target, parent, page.target.label || page.target.name || page.target.stem);
+      page.title = Router.resolveTitle(page.title, target, parent, page.label);
 
       const fallbackName = trim(page.permalink, '/').replace(/[/.]/g, '-');
-      page.name = Router.resolveName(page.name || fallbackName, page.target, parent);
+      page.name = Router.resolveName(page.name || fallbackName, target, parent);
 
       page.parent = parent ? parent.name : undefined;
       page.children = [];
@@ -70,7 +74,7 @@ class Router {
       /*
        * Build out child pages, if specified in route
        */
-      const children = Router.resolveChildren(subRoutes, collections, app, page);
+      const children = Router.resolveChildren(subRoutes, target, collections, app, page);
       page.children = children.map(child => child.name);
       pages = pages.concat(page, ...children);
     }
@@ -143,13 +147,37 @@ class Router {
     };
   }
 
-  static resolveChildren(subRoutes, collections, app, parent) {
+  static resolveChildren(subRoutes, target, collections, app, parent) {
     let children = [];
     forEach(subRoutes, builder => {
-      const childCollections = Object.assign({}, collections, {[parent.target.name]: parent.target.entity, parent});
+      const childCollections = Object.assign({}, collections, {[target.name]: target.entity, parent});
       children = children.concat(...Router.buildPages(builder, childCollections, app, parent));
     });
     return children;
+  }
+
+  static resolveTitle(title, target, parent, fallback) {
+    if (isFunction(title)) {
+      title = title(target.entity, parent);
+    } else if (isString(title)) {
+      const props = {[target.name]: target.entity, parent};
+      return pupa(title, props);
+    }
+    title = title || fallback;
+    assert.string(title, `Router.resolveTitle - page.title must resolve to a string [title-invalid]`);
+    return title;
+  }
+
+  static resolveLabel(label, target, parent, fallback) {
+    if (isFunction(label)) {
+      label = title(target.entity, parent);
+    } else if (isString(label)) {
+      const props = {[target.name]: target.entity, parent};
+      return pupa(label, props);
+    }
+    label = label || fallback;
+    assert.string(label, `Router.resolveLabel - page.label must resolve to a string [label-invalid]`);
+    return label;
   }
 
   static resolveName(name, target, parent) {
@@ -205,8 +233,8 @@ class Router {
     if (template) {
       return template.contents;
     }
-    if (File.isFile(target)) {
-      return target.contents;
+    if (File.isFile(target.entity)) {
+      return target.entity.contents;
     }
     throw new Error(`Router.resolveContents - no valid route content found [contents-invalid]`);
   }

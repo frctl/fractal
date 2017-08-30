@@ -27,6 +27,18 @@ module.exports = {
     }
   },
 
+  site: {},
+
+  nunjucks: {
+    globals: {},
+    filters: {},
+    extensions: {},
+    opts: {
+      filters: {},
+      extensions: {}
+    }
+  },
+
   plugins: [
     require('../parser/plugin-hidden'),
     require('../parser/plugin-frontmatter'),

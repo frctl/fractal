@@ -22,10 +22,12 @@ module.exports = function (fractal, opts = {}) {
   }
 
   for (const name of filters) {
-    const filterOpts = _.get(opts, `filters.${name}`, {});
+    const filterOpts = _.get(opts, `opts.filters.${name}`, {});
     const filter = require(`./filters/${name}`)(filterOpts);
     env.addFilter(filter.name, filter.filter, filter.async);
   }
+
+  _.forEach(opts.globals || {}, (value, key) => env.addGlobal(key, value));
 
   return env;
 };
