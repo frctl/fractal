@@ -97,7 +97,7 @@ class Entity {
       if (Buffer.isBuffer(item)) {
         return item.toString();
       }
-      if (typeof item.toJSON === 'function') {
+      if (item && typeof item.toJSON === 'function') {
         return item.toJSON();
       }
       return item;
@@ -133,9 +133,8 @@ class Entity {
 
   hash() {
     const merged = this.getComputedProps();
-
     const hashProps = mapValues(merged, (item, key) => {
-      return (typeof item.hash === 'function') ? item.hash() : item;
+      return (item && typeof item.hash === 'function') ? item.hash() : item;
     });
     return hash(JSON.stringify(hashProps));
   }

@@ -15,7 +15,7 @@ const basicEntity = {
 
 const makeEntity = input => new Entity(input || basicEntity);
 
-describe.only('Entity', function () {
+describe('Entity', function () {
   describe('constructor', function () {
     it('returns a new instance', function () {
       const entity = new Entity();
