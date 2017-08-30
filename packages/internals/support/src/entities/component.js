@@ -33,7 +33,7 @@ class Component extends Entity {
   }
 
   getFiles() {
-    return _files.get(this).clone();
+    return _files.get(this);
   }
 
   addFile(file) {
