@@ -2,14 +2,24 @@ const fs = require('fs');
 const {mapValues, pick, pickBy, assign} = require('lodash');
 const Vinyl = require('vinyl');
 const {promisify} = require('@frctl/utils');
+const schema = require('../../schema');
+const Validator = require('../validator');
 
 const pfs = promisify(fs);
 const getters = ['relative', 'path', 'extname', 'base', 'basename', 'contents', 'dirname', 'stem', 'cwd'];
 
 class File extends Vinyl {
 
+  constructor(options = {}) {
+    if (File.isFile(options)) {
+      return options;
+    }
+    Validator.assertValid(options, schema.file, `File.constructor: The properties provided do not match the schema of a File [properties-invalid]`);
+    super(options);
+  }
+
   clone() {
-    return super.clone(true);
+    return super.clone({deep: true, path: this.path});
   }
 
   toJSON() {
