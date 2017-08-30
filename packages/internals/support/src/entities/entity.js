@@ -1,5 +1,5 @@
-const {cloneDeep, isPlainObject, mapValues, pickBy} = require('lodash');
-const {hash} = require('@frctl/utils');
+const {isPlainObject, mapValues, pickBy, get, set, unset} = require('lodash');
+const {cloneDeep, hash} = require('@frctl/utils');
 
 class Entity {
 

@@ -55,6 +55,13 @@ const utils = module.exports = {
     throw new Error('Can only resolve objects or functions/promises that return an object');
   },
 
+  cloneDeep(target) {
+    if (!target || !_.isObject(target) || _.isFunction(target)) {
+      return target;
+    }
+    return (typeof target.clone === 'function') ? target.clone() : _.cloneDeep(target);
+  },
+
   /*
    * Strings
    */
@@ -166,6 +173,12 @@ const utils = module.exports = {
 
   isWin() {
     return process.platform === 'win32';
+  },
+
+  concatIfArrays(targetValue, defaultValue) {
+    if (Array.isArray(defaultValue) && Array.isArray(targetValue)) {
+      return targetValue.concat(defaultValue);
+    }
   }
 
 };
