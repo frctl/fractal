@@ -59,7 +59,11 @@ const utils = module.exports = {
     if (!target || !_.isObject(target) || _.isFunction(target)) {
       return target;
     }
-    return (typeof target.clone === 'function') ? target.clone() : _.cloneDeep(target);
+    return _.cloneDeepWith(target, value => {
+      if (value && typeof value.clone === 'function') {
+        return value.clone();
+      }
+    });
   },
 
   /*
