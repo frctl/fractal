@@ -1,8 +1,8 @@
-const {forEach, isPlainObject, isString, isObjectLike, get, isFunction, trim, cloneDeep, uniqBy} = require('lodash');
+const {forEach, isPlainObject, isString, isObjectLike, get, isFunction, trim, uniqBy} = require('lodash');
 const {assert} = require('check-types');
 const pupa = require('pupa');
 const {File} = require('@frctl/support');
-const {defaultsDeep, removeExt, permalinkify} = require('@frctl/utils');
+const {defaultsDeep, removeExt, permalinkify, cloneDeep} = require('@frctl/utils');
 const {Collection} = require('@frctl/support');
 const Page = require('./support/page');
 const PageCollection = require('./support/page-collection');
@@ -55,6 +55,7 @@ class Router {
 
       const target = Router.resolveTarget(page.target);
       page.target = target.entity;
+
       page[target.name] = target.entity;
       page.data = Router.resolveData(page.data, target);
       page.permalink = Router.resolvePermalink(page.permalink, target, parent, app.config.pick('indexes', 'ext'));
@@ -112,7 +113,10 @@ class Router {
           }
         } else if (Collection.isCollection(config.collection)) {
           collection = config.collection;
+        } else if (isFunction(config.collection)) {
+          collection = Collection.from(config.collection(parent));
         }
+
         if (config.filter) {
           collection = collection.filter(config.filter);
         }
@@ -149,8 +153,8 @@ class Router {
 
   static resolveChildren(subRoutes, target, collections, app, parent) {
     let children = [];
+    const childCollections = Object.assign({}, collections, {[target.name]: target.entity, parent});
     forEach(subRoutes, builder => {
-      const childCollections = Object.assign({}, collections, {[target.name]: target.entity, parent});
       children = children.concat(...Router.buildPages(builder, childCollections, app, parent));
     });
     return children;

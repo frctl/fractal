@@ -37,11 +37,13 @@
             pages,
             components: collections.library.components,
             config: this.config,
-            fractal: this.fractal
+            fractal: this.fractal,
+            site: this.get('site')
           });
 
           const renderer = funjucks(this.fractal, renderOpts);
-          const files = await pages.mapToArrayAsync(async page => {
+          const filter = opts.filter || (() => true);
+          const files = await pages.filter(filter).mapToArrayAsync(async page => {
             const file = page.toFile({base: dest});
             if (page.render) {
               const contents = await renderer.renderString(page.contents.toString(), {page});
