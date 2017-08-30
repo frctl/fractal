@@ -2,11 +2,11 @@ const multimatch = require('multimatch');
 const check = require('check-types');
 const slash = require('slash');
 const File = require('../entities/file');
-const Collection = require('./collection');
+const EntityCollection = require('./entity-collection');
 
 const assert = check.assert;
 
-class FileCollection extends Collection {
+class FileCollection extends EntityCollection {
 
   filterByPath(...args) {
     let paths = [].concat(...args);
@@ -32,23 +32,22 @@ class FileCollection extends Collection {
     return new FileCollection(items);
   }
 
-  toJSON() {
-    return this._items.map(file => file.toJSON());
-  }
-
-  validateOrThrow(items) {
+  _validateOrThrow(items) {
     const isValid = FileCollection.validate(items);
     assert(isValid, `FileCollection.constructor: The 'items' argument is optional but must be an array of Files [items-invalid]`, TypeError);
     return isValid;
   }
 
-  static validate(items) {
-    return check.maybe.array.of.instance(items, File);
+  _castItems(items) {
+    return items.map(i => File.from(i));
   }
 
   get [Symbol.toStringTag]() {
     return 'FileCollection';
   }
 
+  static validate(items) {
+    return check.maybe.array.of.instance(items, File);
+  }
 }
 module.exports = FileCollection;
