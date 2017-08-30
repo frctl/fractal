@@ -11,9 +11,9 @@ class Page extends Entity {
 
   toFile(opts = {}) {
     return new File({
-      path: join(opts.base || '', this.permalink),
+      path: join(opts.base || '', this.get('permalink')),
       base: opts.base,
-      contents: this.contents
+      contents: this.get('contents')
     });
   }
 
