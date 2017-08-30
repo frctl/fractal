@@ -7,6 +7,7 @@ const Entity = require('./entity');
 const basicEntity = {
   path: 'factory/truck/shop/home',
   name: 'chocolate',
+  empty: undefined,
   config: {
     sugar: '30%'
   }
@@ -14,7 +15,7 @@ const basicEntity = {
 
 const makeEntity = input => new Entity(input || basicEntity);
 
-describe('Entity', function () {
+describe.only('Entity', function () {
   describe('constructor', function () {
     it('returns a new instance', function () {
       const entity = new Entity();
