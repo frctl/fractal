@@ -1,5 +1,5 @@
-const {normalizeName, addTrailingSeparator, defaultsDeep} = require('@frctl/utils');
-const {Component, Collection, ComponentCollection, FileCollection} = require('@frctl/support');
+const {addTrailingSeparator, defaultsDeep} = require('@frctl/utils');
+const {Component, ComponentCollection, FileCollection} = require('@frctl/support');
 
 module.exports = function (opts = {}) {
   const marker = opts.marker || '@';
@@ -29,13 +29,9 @@ module.exports = function (opts = {}) {
         const config = Object.assign({}, ...data);
 
         return Component.from({
-          config: defaultsDeep(config, app.get('configs.defaults', {})),
-          path: dir.path,
-          relative: dir.relative,
           src: dir,
-          name: normalizeName(dir.stem),
-          variants: new Collection(),
-          files: componentFiles
+          files: componentFiles,
+          config: defaultsDeep(config, app.get('configs.defaults', {}))
         });
       }));
     }

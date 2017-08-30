@@ -37,6 +37,7 @@ const makeFile = input => new File(input || baseFileData);
 items = items.map(makeFile);
 
 const makeCollection = input => new FileCollection(input || items.slice(0));
+const makeCollectionFrom = input => FileCollection.from(input || items.slice(0));
 
 describe('FileCollection', function () {
   describe('constructor', function () {
@@ -45,6 +46,16 @@ describe('FileCollection', function () {
       expect(collection).to.exist;
       expect(FileCollection.isCollection(collection)).to.equal(true);
       expect(collection.length).to.equal(0);
+    });
+  });
+  describe('.from()', function () {
+    it('successfully creates a FileCollection when valid input is supplied', function () {
+      expect(() => makeCollectionFrom('text')).to.throw(TypeError, '[properties-invalid]');
+      expect(() => makeCollectionFrom({single: 'object'})).to.throw(TypeError, '[properties-invalid]');
+      expect(() => makeCollectionFrom({path: 'valid-file-object-definition/'})).to.not.throw();
+      expect(() => makeCollectionFrom(new File({path: 'valid-file-object-definition/'}))).to.not.throw();
+      expect(() => makeCollectionFrom([File.from({single: 'object'}), File.from({another: 'object'})])).to.throw(TypeError, '[properties-invalid]');
+      expect(() => makeCollectionFrom([File.from({path: 'object'}), File.from({path: 'object'})])).to.not.throw();
     });
   });
 

@@ -263,6 +263,19 @@ describe('Utils', function () {
       expect(x).to.eql({data: 'value!'});
     });
   });
+
+  describe('.cloneDeep()', function () {
+    it('checks if value is object before calling lodash cloneDeep on it', function () {
+      const testFn = () => {};
+      const testObj = {
+        name: 'test'
+      };
+      expect(utils.cloneDeep('test')).to.equal('test');
+      expect(utils.cloneDeep(testFn)).to.equal(testFn);
+      expect(utils.cloneDeep(testObj)).to.eql(testObj);
+      expect(utils.cloneDeep(testObj)).to.not.equal(testObj);
+    });
+  });
   /*
    * Strings
    */
@@ -488,6 +501,12 @@ describe('Utils', function () {
       }
       var pf = utils.promisify(callback);
       expect(pf('value')).to.respondTo('then');
+    });
+  });
+
+  describe('.concatIfArrays()', function () {
+    it('concats two values if both are arrays', function () {
+      expect(utils.concatIfArrays(['value1'], ['value2'])).to.eql(['value1', 'value2']);
     });
   });
 });

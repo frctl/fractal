@@ -6,13 +6,11 @@ const assert = check.assert;
 class Collection {
 
   constructor(items = []) {
-    if (Collection.isCollection(items)) {
-      items = items.toArray();
+    items = this._normaliseItems(items);
+    if (items) {
+      items = this._castItems(items);
     }
-    if (isArray(items)) {
-      items = compact(items);
-    }
-    this.validateOrThrow(items);
+    this._validateOrThrow(items);
     this._items = items;
 
     /*
@@ -199,7 +197,7 @@ class Collection {
     return new this.constructor(items);
   }
 
-  validateOrThrow(items) {
+  _validateOrThrow(items) {
     const isValid = Collection.validate(items);
     assert(isValid, `Collection.constructor: The 'items' argument is optional but must be an array of objects [items-invalid]`, TypeError);
     return isValid;
@@ -207,6 +205,22 @@ class Collection {
 
   _new(items) {
     return new this.constructor(items);
+  }
+
+  _normaliseItems(items) {
+    if (Collection.isCollection(items)) {
+      items = items.toArray();
+    }
+    if (isArray(items)) {
+      items = compact(items);
+    } else if (items) {
+      items = [].concat(items);
+    }
+    return items;
+  }
+
+  _castItems(items) {
+    return items;
   }
 
   [Symbol.iterator]() {
@@ -231,7 +245,7 @@ class Collection {
 
   static validate(items) {
     if (items) {
-      return isArray(items) && items.reduce((acc, i) => (acc && isObjectLike(i)), true);
+      return isArray(items) && items.reduce((acc, i) => (acc && isObjectLike(i) && !isArray(i)), true);
     }
     return true;
   }

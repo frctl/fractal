@@ -50,7 +50,7 @@ class Fractal extends App {
         let view;
         if (Component.isComponent(target)) {
           // reduce to a variant
-          const variant = target.variants.find(variant => {
+          const variant = target.getVariants().find(variant => {
             return opts.variant ? variant.name === opts.variant : variant.default;
           });
           if (!variant) {
@@ -65,7 +65,7 @@ class Fractal extends App {
           if (!component) {
             throw new Error(`Component '${target.component}' not found [component-not-found]`);
           }
-          const views = component.files.filter(this.get('components.views.filter'));
+          const views = component.getFiles().filter(this.get('components.views.filter'));
           view = views.find(v => adapter.match(v));
           if (!view) {
             throw new Error(`Could not find view for component '${component.name}' (using adapter '${adapter.name}') [view-not-found]`);

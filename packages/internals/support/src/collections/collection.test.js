@@ -85,7 +85,7 @@ describe('Collection', function () {
     it(`returns an instance that iterates correctly over 'for...of'`, function () {
       let i = 0;
       const collection = makeCollection();
-      for (const item of collection) {
+      for (let item of collection) {
         expect(item).to.equal(items[i]);
         i++;
       }
@@ -112,17 +112,18 @@ describe('Collection', function () {
     it('throws an error if invalid input is supplied', function () {
       const makeList = [
         () => makeCollection('Invalid string input'),
-        () => makeCollection({invalid: 'object'}),
-        () => makeCollection([1, 2, 3])
+        () => makeCollection([1, 2, 3]),
+        () => makeCollection([[1]])
       ];
       for (let make of makeList) {
         expect(make).to.throw(TypeError, '[items-invalid]');
       }
     });
     it(`doesn't throw an error if valid input is supplied`, function () {
+      expect(() => makeCollection({single: 'object-is-ok'})).to.not.throw();
       expect(() => makeCollection(items)).to.not.throw();
       expect(() => makeCollection([])).to.not.throw();
-      expect(() => makeCollection([new Variant(), new Variant()])).to.not.throw();
+      expect(() => makeCollection([new Variant({name: 'default'}), new Variant({name: 'large'})])).to.not.throw();
     });
     it('automatically compacts input with a mixture of valid and falsey values', function () {
       expect(makeCollection([{valid: 'object'}, null, null, {other: 'valid-object'}]).length).to.equal(2);
@@ -278,6 +279,10 @@ describe('Collection', function () {
     it('returns a collection instance', function () {
       const collection = makeCollectionFrom();
       expect(collection.count()).to.equal(items.length);
+    });
+    it('accepts single item', function () {
+      const collection = makeCollectionFrom({name: 'item'});
+      expect(collection.count()).to.equal(1);
     });
   });
 
