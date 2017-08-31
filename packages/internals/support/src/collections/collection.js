@@ -25,7 +25,11 @@ class Collection {
         if (typeof name !== 'symbol' && Number.isInteger(parseInt(name.toString(), 10))) {
           return target._items[name];
         }
-        return target[name];
+        const originalProp = Reflect.get(target, name);
+        if ((typeof originalProp === 'function') && (name !== 'constructor')) {
+          return originalProp.bind(target);
+        }
+        return originalProp;
       }
     });
   }
@@ -142,12 +146,12 @@ class Collection {
   }
 
   map(...args) {
-    return new this.constructor(this._items.map(...args));
+    return this._new(this._items.map(...args));
   }
 
   mapAsync(...args) {
     const results = this._items.map(...args);
-    return Promise.all(results).then(items => new this.constructor(items));
+    return Promise.all(results).then(items => this._new(items));
   }
 
   mapToArray(...args) {
@@ -160,7 +164,7 @@ class Collection {
 
   groupBy(grouper) {
     const groups = groupBy(this.toArray(), grouper);
-    return mapValues(groups, items => new this.constructor(items));
+    return mapValues(groups, items => this._new(items));
   }
 
   reduce(...args) {
@@ -197,7 +201,7 @@ class Collection {
       }
       return cloneDeep(item);
     });
-    return new this.constructor(items);
+    return this._new(items);
   }
 
   _validateOrThrow(items) {

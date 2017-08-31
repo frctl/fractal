@@ -51,6 +51,10 @@ class Component extends Entity {
     _variants.set(this, _variants.get(this).push(variant));
   }
 
+  getDefaultVariant() {
+    return _variants.get(this).getDefault();
+  }
+
   getViews() {
     // TODO
   }

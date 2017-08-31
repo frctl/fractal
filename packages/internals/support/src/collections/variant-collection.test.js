@@ -64,10 +64,10 @@ describe('VariantCollection', function () {
       const defaultItem = collection.getDefault();
       expect(defaultItem.name).to.equal('baz');
     });
-    it('returns the first item with an explicit default if more than one is set', function () {
+    it('returns the last item with an explicit default if more than one is set', function () {
       const collection = makeCollectionFrom(itemsWithMultipleDefault);
       const defaultItem = collection.getDefault();
-      expect(defaultItem.name).to.equal('bar');
+      expect(defaultItem.name).to.equal('baz');
     });
   });
 
@@ -122,7 +122,6 @@ describe('VariantCollection', function () {
       expect(variants[2]).to.be.a('Variant')
       .that.includes(expected(3));
     });
-
     it('increments name correctly if duplicate name values provided', function () {
       const collection = new VariantCollection([], 'duplicates');
       const variants = [...Array(3)].map(() => collection.createVariant({name: 'blue'}));
@@ -140,10 +139,14 @@ describe('VariantCollection', function () {
       expect(variants[2]).to.be.a('Variant')
       .that.includes(expected(3));
     });
+    it('throws an error if invalid props supplied', function () {
+      const collection = new VariantCollection([], 'plain-object');
+      expect(() => collection.createVariant('invalid-string')).to.throw(TypeError, '[props-invalid]');
+    });
   });
 
   describe('.push()', function () {
-    it('returns a new EntityCollection instance', function () {
+    it('returns a new VariantCollection instance', function () {
       const collection = makeCollection();
       const newCollection = collection.push(newItem);
 
@@ -166,8 +169,20 @@ describe('VariantCollection', function () {
       expect(newCollection.length).to.equal(items.length + 1);
       expect(newCollection[newCollection.length - 1].getComputedProps()).to.eql(variantNewItem.getComputedProps());
     });
-    describe('assigns name correctly', function () {
-
+    it('assigns name correctly when duplicates added on new collections', function () {
+      const collection1 = makeCollection([]);
+      const collection2 = collection1.push(newItem);
+      const collection3 = collection2.push(newItem);
+      expect(collection1[0]).to.not.exist;
+      expect(collection2[0]).to.be.a('Variant').that.includes({name: 'wobble'});
+      expect(collection3[0]).to.be.a('Variant').that.includes({name: 'wobble'});
+    });
+    it('assigns name correctly when duplicates added on same collections', function () {
+      let collection = makeCollection([]);
+      collection = collection.push(newItem);
+      collection = collection.push(newItem);
+      expect(collection[0]).to.be.a('Variant').that.includes({name: 'wobble'});
+      expect(collection[1]).to.be.a('Variant').that.includes({name: 'wobble-2'});
     });
   });
 
@@ -206,7 +221,19 @@ describe('VariantCollection', function () {
   });
 
   describe('.clone()', function () {
-    it('clones successfully');
+    it('clones successfully', function () {
+      const collection = makeCollection();
+      const newCollection = collection.clone();
+      expect(newCollection).to.be.a('VariantCollection')
+      .that.nested.includes({componentId: 'default-component', '[2].name': 'baz', length: 3});
+    });
+  });
+
+  describe('.componentId', function () {
+    it('returns the expected value', function () {
+      const collection = makeCollection();
+      expect(collection.componentId).to.equal('default-component');
+    });
   });
 
   describe('[Symbol.toStringTag]', function () {
