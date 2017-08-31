@@ -54,6 +54,7 @@ describe('Component', function () {
       expect(() => new Component()).to.throw(TypeError, '[properties-invalid]');
     });
   });
+
   describe('.getFiles()', function () {
     it('gets files correctly', function () {
       const component = new Component(basicComponent);
@@ -67,6 +68,24 @@ describe('Component', function () {
       }).to.throw(TypeError, `[properties-invalid]`);
     });
   });
+
+  describe('.addVariant()', function () {
+    it('adds variants correctly', function () {
+      const component = new Component(basicComponent);
+      expect(component.getVariants().length).to.equal(1);
+      for (let variant of fullComponent.config.variants) {
+        component.addVariant(variant);
+      }
+      expect(component.getVariants().length).to.equal(3);
+    });
+    it('throws an error if invalid variant properties added', function () {
+      const component = new Component(basicComponent);
+      expect(() => {
+        component.addVariant(['dd']);
+      }).to.throw(TypeError, `[items-invalid]`);
+    });
+  });
+
   describe('.getVariants()', function () {
     it('gets variants correctly', function () {
       const component = new Component(basicComponent);
@@ -75,11 +94,9 @@ describe('Component', function () {
         component.addVariant(variant);
       }
       expect(component.getVariants().length).to.equal(3);
-      expect(() => {
-        component.addVariant(['dd']);
-      }).to.throw(TypeError, `[properties-invalid]`);
     });
   });
+
   describe('.getVariant()', function () {
     it('gets named variant correctly when only default exists', function () {
       const component = new Component(basicComponent);
@@ -100,6 +117,7 @@ describe('Component', function () {
       expect(component.getVariant('component--v0')).to.be.undefined;
     });
   });
+
   describe('.isComponent()', function () {
     it('returns true if an instance is a Component', function () {
       expect(Component.isComponent(new Component(basicComponent))).to.equal(true);
@@ -108,6 +126,7 @@ describe('Component', function () {
       expect(Component.isComponent([])).to.equal(false);
     });
   });
+
   describe('.get()', function () {
     it('falls back to config data if a value does not exist on the store', function () {
       const component = new Component(fullComponent);
@@ -118,6 +137,7 @@ describe('Component', function () {
       expect(component.get('fabulous', 'hair')).to.equal('hair');
     });
   });
+
   describe('.clone()', function () {
     it('creates a new instance', function () {
       const component = new Component(basicComponent);
@@ -126,6 +146,7 @@ describe('Component', function () {
       expect(newComponent).to.not.equal(component);
     });
   });
+
   describe('[Symbol.toStringTag]', function () {
     it('should resolve correctly', function () {
       const component = new Component(basicComponent);

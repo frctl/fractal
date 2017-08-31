@@ -1,10 +1,9 @@
-const {normalizeName, uniqueName} = require('@frctl/utils');
+const {normalizeName} = require('@frctl/utils');
 const Validator = require('../validator');
 const schema = require('../../schema');
 const VariantCollection = require('../collections/variant-collection');
 const FileCollection = require('../collections/file-collection');
 const Entity = require('./entity');
-const Variant = require('./variant');
 
 const _src = new WeakMap();
 const _files = new WeakMap();
@@ -73,27 +72,13 @@ class Component extends Entity {
   }
 
   _buildVariants(variants = []) {
-    let pos = 0;
-    let variantList = [];
-    const variantNames = [];
-
-    variantList = variants.map(v => {
-      const props = Object.assign({}, v, {
-        component: this.get('name'),
-        name: uniqueName(v.name || `${this.name}-${pos}`, variantNames)
-      });
-      pos++;
-      return Variant.from(props);
-    });
-
-    let variantCollection = VariantCollection.from(variantList);
+    let variantCollection = new VariantCollection(variants, this.get('name'));
 
     if (!variantCollection.hasDefault()) {
-      variantCollection = variantCollection.push(Variant.from({
+      variantCollection = variantCollection.push({
         name: 'default',
-        default: true,
-        component: this.get('name')
-      }));
+        default: true
+      });
     }
 
     _variants.set(this, variantCollection);
