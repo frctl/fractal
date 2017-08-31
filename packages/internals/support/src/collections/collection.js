@@ -1,4 +1,7 @@
-const {compact, find, filter, reject, iteratee, sortBy, orderBy, groupBy, uniq, uniqBy, mapValues, cloneDeep, isArray, isObjectLike} = require('lodash');
+const {
+  compact, find, filter, reject, iteratee, sortBy, orderBy, groupBy, uniq,
+  uniqBy, mapValues, cloneDeep, isArray, isObjectLike
+} = require('lodash');
 const check = require('check-types');
 
 const assert = check.assert;
@@ -20,7 +23,7 @@ class Collection {
     return new Proxy(this, {
       get(target, name) {
         if (typeof name !== 'symbol' && Number.isInteger(parseInt(name.toString(), 10))) {
-          return items[name];
+          return target._items[name];
         }
         return target[name];
       }
@@ -203,8 +206,8 @@ class Collection {
     return isValid;
   }
 
-  _new(items) {
-    return new this.constructor(items);
+  _new(...args) {
+    return new this.constructor(...args);
   }
 
   _normaliseItems(items) {
@@ -239,8 +242,8 @@ class Collection {
     return item instanceof Collection;
   }
 
-  static from(items) {
-    return new this(items);
+  static from(...args) {
+    return new this(...args);
   }
 
   static validate(items) {
