@@ -1,16 +1,31 @@
 const Pages = require('../pages');
 
 module.exports = function(opts = {}) {
+
+  opts = [].concat(opts);
+
   return {
 
     name: 'pages-build',
 
-    command: 'build',
+    command: 'build [site]',
 
     description: 'Run a full Pages site build',
 
+    builder: {
+      dest: {
+        describe: 'Build destination path',
+        alias: 'd'
+      }
+    },
+
     async handler(argv, app, cli) {
-      const site = new Pages(app, opts);
+      const options = argv.site ? opts.find(conf => conf.name === argv.site) : opts[0];
+      if (!options) {
+        throw new Error(`Could not find configuration for site '${argv.site}'`);
+      }
+
+      const site = new Pages(app, options);
       const result = await site.build({
         dest: argv.dest
       });

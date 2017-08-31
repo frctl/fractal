@@ -55,8 +55,7 @@ class Router {
 
       const target = Router.resolveTarget(page.target);
       page.target = target.entity;
-
-      page[target.name] = target.entity;
+      page.targetAlias = target.name;
       page.data = Router.resolveData(page.data, target, parent, collections);
       page.permalink = Router.resolvePermalink(page.permalink, target, parent, app.config.pick('indexes', 'ext'));
       page.contents = Router.resolveContents(page.template, page.contents, target);
@@ -164,7 +163,7 @@ class Router {
     if (isFunction(title)) {
       title = title(target.entity, parent);
     } else if (isString(title)) {
-      const props = {[target.name]: target.entity, parent};
+      const props = {target: target.entity, [target.name]: target.entity, parent};
       return pupa(title, props);
     }
     title = title || fallback;
@@ -176,7 +175,7 @@ class Router {
     if (isFunction(label)) {
       label = title(target.entity, parent);
     } else if (isString(label)) {
-      const props = {[target.name]: target.entity, parent};
+      const props = {target: target.entity, [target.name]: target.entity, parent};
       return pupa(label, props);
     }
     label = label || fallback;
@@ -188,7 +187,7 @@ class Router {
     if (isFunction(name)) {
       name = name(target.entity, parent);
     } else if (isString(name)) {
-      const props = {[target.name]: target.entity, parent};
+      const props = {target: target.entity, [target.name]: target.entity, parent};
       return pupa(parent ? `${parent.name}-${name}` : name, props);
     }
     assert.string(name, `Router.resolveName - page.name must resolve to a string [name-invalid]`);
@@ -203,7 +202,7 @@ class Router {
     if (isFunction(permalink)) {
       permalink = permalink(target.entity, parent);
     } else if (isString(permalink)) {
-      const props = {[target.name]: target.entity, parent};
+      const props = {target: target.entity, [target.name]: target.entity, parent};
       if (!parent || permalink.startsWith('/')) {
         permalink = pupa(permalink, props);
       } else {

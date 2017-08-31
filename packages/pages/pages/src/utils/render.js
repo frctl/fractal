@@ -12,7 +12,7 @@ module.exports = async function(pages, globals = {}, opts = {}, fractal){
       if (page.engine) {
         contents = await fractal.renderString(page.contents.toString(), page.data, {adapter: page.engine});
       } else {
-        contents = await env.renderString(page.contents.toString(), {page});
+        contents = await env.renderString(page.contents.toString(), {page, target: page.target, [page.targetAlias]: page.target});
       }
       page.contents = Buffer.from(contents);
     }

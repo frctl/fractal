@@ -3,17 +3,39 @@ const ip = require('ip');
 const Pages = require('../pages');
 
 module.exports = function(opts = {}) {
+
+  opts = [].concat(opts);
+
   return {
 
     name: 'pages-author',
 
-    command: 'author',
+    command: 'author [site]',
 
-    description: 'Start a development server for you Pages sites',
+    description: 'Start a development server for your Pages site(s)',
+
+    builder: {
+      dest: {
+        describe: 'Build destination path',
+        alias: 'd'
+      },
+      port: {
+        describe: 'Port to start the server on',
+        alias: 'p'
+      }
+    },
 
     async handler(argv, app, cli) {
-      const site = new Pages(app, opts);
-      const server = await site.serve({dir: argv.dir});
+      const options = argv.site ? opts.find(conf => conf.name === argv.site) : opts[0];
+      if (!options) {
+        throw new Error(`Could not find configuration for site '${argv.site}'`);
+      }
+
+      const site = new Pages(app, options);
+      const server = await site.serve({
+        dest: argv.dest,
+        port: argv.port
+      });
 
       app.watch();
       site.watch();

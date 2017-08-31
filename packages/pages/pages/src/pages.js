@@ -40,11 +40,11 @@ class Pages extends App {
 
         const filtered = pages.filter(opts.filter || (() => true));
         const rendered = await render(filtered, globals, this.get('nunjucks'), this.fractal);
-        const files = pages.mapToArray(page => page.toFile({base: dest}));
+        const files = rendered.mapToArray(page => page.toFile({base: dest}));
 
         await write(dest, files);
 
-        resolve({dest, pages});
+        resolve({dest, pages, files});
       } catch (err) {
         reject(err);
       }
@@ -55,7 +55,13 @@ class Pages extends App {
     const dest = opts.dir || this.get('dest');
     assert.string(dest, `You must specify the directory to serve files from [dir-not-found]`);
     opts = Object.assign({}, this.get('serve'), opts);
-    const server = new Server({static: [dest]});
+    const server = new Server(this, {
+      static: [dest],
+      urls: {
+        ext: this.get('pages.ext'),
+        indexes: this.get('pages.indexes')
+      }
+    });
     const result = await this.build({dest});
     await server.start({port: opts.port});
     return server;

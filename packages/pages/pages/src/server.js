@@ -1,7 +1,8 @@
+const {relative} = require('path');
 const Koa = require('koa');
 const serve = require('koa-static');
 const getPort = require('get-port');
-const {normalizePaths, toArray} = require('@frctl/utils');
+const {normalizePaths, toArray, permalinkify} = require('@frctl/utils');
 
 const _port = new WeakMap();
 const _koa = new WeakMap();
@@ -9,9 +10,17 @@ const _server = new WeakMap();
 
 class Server {
 
-  constructor(opts = {}) {
+  constructor(site, opts = {}) {
     const koa = new Koa();
     _koa.set(this, koa);
+
+    koa.use(async (ctx, next) => {
+      // TODO: debounce requests?
+      // TODO: exclude assets from rebuild?
+      await site.build({filter: page => page.permalink === permalinkify(ctx.request.path)});
+      await next();
+    });
+
     this.addStaticPath(opts.static);
   }
 
