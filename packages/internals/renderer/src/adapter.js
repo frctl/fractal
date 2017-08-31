@@ -1,4 +1,4 @@
-const {isFunction} = require('lodash');
+const {isFunction, isString} = require('lodash');
 const {toArray, normalizeExt} = require('@frctl/utils');
 const debug = require('debug')('fractal:support');
 const {Validator, File} = require('@frctl/support');
@@ -31,6 +31,16 @@ class Adapter {
       throw new TypeError(`Adapter.render - file argument must be an instance of File [file-invalid]`);
     }
     return Promise.resolve(_props.get(this).render(file, ...args));
+  }
+
+  async renderString(str, ...args) {
+    if (!isFunction(_props.get(this).renderString)) {
+      throw new Error(`Adapter.renderString - the '${this.name}' adapter does not support rendering strings [render-string-unsupported]`);
+    }
+    if (!isString(str)) {
+      throw new TypeError(`Adapter.renderString - str argument must be a string [str-invalid]`);
+    }
+    return Promise.resolve(_props.get(this).renderString(str, ...args));
   }
 
   get name() {

@@ -59,9 +59,9 @@ class Renderer {
       throw new Error(`view must be a File instance [file-invalid]`);
     }
 
-    assert.object(context, 'Renderer.renderView - context data must be an object [context-invalid]');
-    assert.object(collections, 'Renderer.renderView - collections must be an object [collections-invalid]');
-    assert.object(opts, 'Renderer.renderView - options data must be an object [opts-invalid]');
+    assert.object(context, 'Renderer.render - context data must be an object [context-invalid]');
+    assert.object(collections, 'Renderer.render - collections must be an object [collections-invalid]');
+    assert.object(opts, 'Renderer.render - options data must be an object [opts-invalid]');
 
     debug('rendering view %s', view.relative);
 
@@ -72,6 +72,24 @@ class Renderer {
     emitter.emit('render.start', {view, context, adapter, opts});
     const result = adapter.render(view, context, collections, opts);
     emitter.emit('render.complete', {result, view, context, adapter, opts});
+    return result;
+  }
+
+  async renderString(str, context = {}, collections = {}, opts = {}, emitter = new EventEmitter()) {
+      assert.string(str, 'Renderer.renderString - context data must be an object [context-invalid]');
+    assert.object(context, 'Renderer.renderString - context data must be an object [context-invalid]');
+    assert.object(collections, 'Renderer.renderString - collections must be an object [collections-invalid]');
+    assert.object(opts, 'Renderer.renderString - options data must be an object [opts-invalid]');
+
+    debug('rendering string');
+
+    const adapter = this.getAdapter(opts.adapter);
+    if (!adapter) {
+      throw new Error(`Could not find '${opts.adapter}' adapter [adapter-not-found]`);
+    }
+    emitter.emit('renderString.start', {str, context, adapter, opts});
+    const result = adapter.renderString(str, context, collections, opts);
+    emitter.emit('renderString.complete', {result, str, context, adapter, opts});
     return result;
   }
 

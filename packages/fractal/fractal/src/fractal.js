@@ -27,26 +27,17 @@ class Fractal extends App {
   }
 
   render(target, context = {}, opts = {}) {
-    const renderer = opts.renderer || this.getRenderer();
-    const reject = message => EmittingPromise.reject(new Error(message));
-
-    if (renderer.adapters.length === 0) {
-      return reject(`Fractal.render - You must register one or more adapters before you can render views [no-adapters]`);
-    }
-
-    const adapter = opts.adapter ? renderer.getAdapter(opts.adapter) : renderer.getDefaultAdapter();
-    if (!adapter) {
-      return reject(`Fractal.render - The adapter '${opts.adapter}' could not be found [adapter-not-found]`);
-    }
-
-    if (!(Component.isComponent(target) || Variant.isVariant(target) || File.isFile(target))) {
-      return reject(`Fractal.render - Only components, variants or views can be rendered [target-invalid]`);
-    }
-
     return new EmittingPromise(async (resolve, reject, emitter) => {
-      const collections = opts.collections ? opts.collections : await this.parse();
-
       try {
+        const renderer = opts.renderer || this.getRenderer();
+        const adapter = getAdapterFromRenderer(renderer, opts.adapter);
+
+        if (!(Component.isComponent(target) || Variant.isVariant(target) || File.isFile(target))) {
+          throw new Error(`Fractal.render - Only components, variants or views can be rendered [target-invalid]`);
+        }
+
+        const collections = opts.collections ? opts.collections : await this.parse();
+
         let view;
         if (Component.isComponent(target)) {
           // reduce to a variant
@@ -78,7 +69,21 @@ class Fractal extends App {
       } catch (err) {
         reject(err);
       }
-    });
+    }, opts.emitter);
+  }
+
+  renderString(str, context, opts = {}){
+    return new EmittingPromise(async (resolve, reject, emitter) => {
+      try {
+        const renderer = opts.renderer || this.getRenderer();
+        const adapter = getAdapterFromRenderer(renderer, opts.adapter);
+        const collections = opts.collections ? opts.collections : await this.parse();
+        const result = await renderer.renderString(str, context, collections, opts, emitter);
+        resolve(result);
+      } catch (err) {
+        reject(err);
+      }
+    }, opts.emitter);
   }
 
   debug(...args) {
@@ -94,6 +99,17 @@ class Fractal extends App {
     return 'Fractal';
   }
 
+}
+
+function getAdapterFromRenderer(renderer, adapterName){
+  if (renderer.adapters.length === 0) {
+    throw new Error(`You must register one or more adapters before you can render views [no-adapters]`);
+  }
+  const adapter = adapterName ? renderer.getAdapter(adapterName) : renderer.getDefaultAdapter();
+  if (!adapter) {
+    throw new Error(`The adapter '${adapterName}' could not be found [adapter-not-found]`);
+  }
+  return adapter;
 }
 
 module.exports = Fractal;
