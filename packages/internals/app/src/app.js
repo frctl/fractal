@@ -155,7 +155,7 @@ class App {
   }
 
   set dirty(isDirty) {
-    debug(`setting dirty flag to '%s'`, isDirty ? 'true' : 'false');
+    this.debug(`setting dirty flag to '%s'`, isDirty ? 'true' : 'false');
     _dirty.set(this, isDirty);
     if (isDirty) {
       this.cache.del('collections');
