@@ -7,6 +7,7 @@ const Entity = require('./entity');
 const basicEntity = {
   path: 'factory/truck/shop/home',
   name: 'chocolate',
+  empty: undefined,
   config: {
     sugar: '30%'
   }

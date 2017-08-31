@@ -33,7 +33,7 @@ class Component extends Entity {
   }
 
   getFiles() {
-    return _files.get(this).clone();
+    return _files.get(this);
   }
 
   addFile(file) {
@@ -97,6 +97,18 @@ class Component extends Entity {
     }
 
     _variants.set(this, variantCollection);
+  }
+
+  clone() {
+    const cloned = new this.constructor({
+      src: this.getSrc(),
+      files: this.getFiles(),
+      config: this._config
+    });
+    for (let [key, value] of Object.entries(this._data)) {
+      cloned.set(key, value);
+    }
+    return cloned;
   }
 
   get relative() {

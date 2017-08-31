@@ -118,6 +118,14 @@ describe('Component', function () {
       expect(component.get('fabulous', 'hair')).to.equal('hair');
     });
   });
+  describe('.clone()', function () {
+    it('creates a new instance', function () {
+      const component = new Component(basicComponent);
+      const newComponent = component.clone();
+      expect(Component.isComponent(newComponent)).to.equal(true);
+      expect(newComponent).to.not.equal(component);
+    });
+  });
   describe('[Symbol.toStringTag]', function () {
     it('should resolve correctly', function () {
       const component = new Component(basicComponent);
