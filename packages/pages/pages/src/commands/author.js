@@ -37,9 +37,6 @@ module.exports = function(opts = {}) {
         port: argv.port
       });
 
-      app.watch().on('all', () => app.parse());
-      site.watch().on('all', () => site.parse());
-
       const localUrl = `http://localhost:${server.port}`;
       const networkUrl = `http://${ip.address()}:${server.port}`;
 

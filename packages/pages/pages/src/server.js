@@ -7,18 +7,29 @@ const {normalizePaths, toArray, permalinkify} = require('@frctl/utils');
 const _port = new WeakMap();
 const _koa = new WeakMap();
 const _server = new WeakMap();
+const _built = new WeakMap();
 
 class Server {
 
   constructor(site, opts = {}) {
     const koa = new Koa();
+
     _koa.set(this, koa);
+    _built.set(this, []);
+
+    // TODO: debounce requests?
+    // TODO: exclude assets from rebuild?
 
     koa.use(async (ctx, next) => {
+      const built = _built.get(this);
+      const path = ctx.request.path;
+
+      if (!built.includes(path)) {
+        built.push(path);
+        await site.build({filter: page => page.permalink === permalinkify(ctx.request.path)});
+      }
+
       await next();
-      // TODO: debounce requests?
-      // TODO: exclude assets from rebuild?
-      await site.build({filter: page => page.permalink === permalinkify(ctx.request.path)});
     });
 
     koa.use(async (ctx, next) => {
@@ -32,7 +43,7 @@ class Server {
           <p>${err.stack}</p>
         `;
       }
-    })
+    });
 
     this.addStaticPath(opts.static);
   }
@@ -49,6 +60,11 @@ class Server {
         resolve({port});
       });
     });
+  }
+
+  clearBuildCache() {
+    _built.set(this, []);
+    return this;
   }
 
   stop() {

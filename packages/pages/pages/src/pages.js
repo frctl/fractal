@@ -62,6 +62,17 @@ class Pages extends App {
         indexes: this.get('pages.indexes')
       }
     });
+
+    this.fractal.watch().on('all', () => {
+      server.clearBuildCache();
+      this.fractal.parse();
+    });
+
+    this.watch().on('all', () => {
+      server.clearBuildCache();
+      this.parse();
+    });
+
     const result = await this.build({dest});
     await server.start({port: opts.port});
     return server;
