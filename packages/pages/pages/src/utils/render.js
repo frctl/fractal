@@ -1,7 +1,10 @@
+const debug = require('debug')('frctl:pages');
 const {forEach, get} = require('lodash');
 const funjucks = require('@frctl/funjucks');
 
-module.exports = async function(pages, globals = {}, opts = {}, fractal){
+module.exports = async function(pages, globals = {}, opts = {}, fractal) {
+
+  debug('initialising renderer');
 
   const templates = get(globals, 'collections.site.templates', []);
 
@@ -22,8 +25,9 @@ module.exports = async function(pages, globals = {}, opts = {}, fractal){
   const env = funjucks(fractal, opts);
   forEach(globals, (value, key) => env.addGlobal(key, value));
 
-  return pages.mapAsync(async page => {
+  const rendered = pages.mapAsync(async page => {
     if (page.render) {
+      debug('rendering page %s', page.permalink);
       let contents;
       if (page.engine) {
         contents = await fractal.renderString(page.contents.toString(), page.data, {adapter: page.engine});
@@ -35,4 +39,7 @@ module.exports = async function(pages, globals = {}, opts = {}, fractal){
     return page;
   });
 
+  debug('rendering complete');
+
+  return rendered;
 };

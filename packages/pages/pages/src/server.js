@@ -1,4 +1,5 @@
 const {relative} = require('path');
+const debug = require('debug')('frctl:pages');
 const Koa = require('koa');
 const serve = require('koa-static');
 const getPort = require('get-port');
@@ -23,10 +24,14 @@ class Server {
     koa.use(async (ctx, next) => {
       const built = _built.get(this);
       const path = ctx.request.path;
+      const permalink = permalinkify(ctx.request.path);
 
       if (!built.includes(path)) {
         built.push(path);
-        await site.build({filter: page => page.permalink === permalinkify(ctx.request.path)});
+        debug('%s - rebuilding page on request', permalink);
+        await site.build({filter: page => page.permalink === permalink});
+      } else {
+        debug('%s - no rebuild required', permalink);
       }
 
       await next();
@@ -57,12 +62,13 @@ class Server {
         }
         _port.set(this, port);
         _server.set(this, httpServer);
-        resolve({port});
+        resolve(this);
       });
     });
   }
 
   clearBuildCache() {
+    debug('build cache cleared');
     _built.set(this, []);
     return this;
   }
@@ -78,6 +84,7 @@ class Server {
   addStaticPath(paths) {
     paths = toArray(paths || []);
     for (const dir of normalizePaths(paths)) {
+      debug('added static path %s to server', dir);
       this.koa.use(serve(dir));
     }
     return this;

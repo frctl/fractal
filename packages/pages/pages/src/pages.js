@@ -26,6 +26,7 @@ class Pages extends App {
     assert.string(dest, `You must provide a destination path [dest-not-found]`);
     return new EmittingPromise(async (resolve, reject, emitter) => {
       try {
+        this.debug('building pages');
         const collections = await this.getCombinedCollections({emitter});
         const pages = await this.getPages({collections, emitter});
         collections.site.pages = pages;
@@ -44,6 +45,8 @@ class Pages extends App {
 
         await write(dest, files);
 
+        this.debug('pages build complete');
+
         resolve({dest, pages, files});
       } catch (err) {
         reject(err);
@@ -52,9 +55,13 @@ class Pages extends App {
   }
 
   async serve(opts = {}) {
+
     const dest = opts.dir || this.get('dest');
     assert.string(dest, `You must specify the directory to serve files from [dir-not-found]`);
     opts = Object.assign({}, this.get('serve'), opts);
+
+    this.debug('creating new server instance');
+
     const server = new Server(this, {
       static: [dest],
       urls: {
@@ -73,12 +80,12 @@ class Pages extends App {
       this.parse();
     });
 
-    const result = await this.build({dest});
-    await server.start({port: opts.port});
-    return server;
+    await this.build({dest});
+    return server.start({port: opts.port});
   }
 
   getCombinedCollections(opts = {}) {
+    this.debug('parsing component library and pages');
     return new EmittingPromise(async (resolve, reject, emitter) => {
       try {
         const [library, site] = await Promise.all([
