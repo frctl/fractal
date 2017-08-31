@@ -15,11 +15,24 @@ class Server {
     _koa.set(this, koa);
 
     koa.use(async (ctx, next) => {
+      await next();
       // TODO: debounce requests?
       // TODO: exclude assets from rebuild?
       await site.build({filter: page => page.permalink === permalinkify(ctx.request.path)});
-      await next();
     });
+
+    koa.use(async (ctx, next) => {
+      // TODO: proper error page
+      try {
+        await next();
+      } catch (err) {
+        ctx.status = err.statusCode || err.status || 500;
+        ctx.body = `
+          <h1>${err.message}</h1>
+          <p>${err.stack}</p>
+        `;
+      }
+    })
 
     this.addStaticPath(opts.static);
   }
