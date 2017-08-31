@@ -1,7 +1,23 @@
-const {forEach} = require('lodash');
+const {forEach, get} = require('lodash');
 const funjucks = require('@frctl/funjucks');
 
 module.exports = async function(pages, globals = {}, opts = {}, fractal){
+
+  const templates = get(globals, 'collections.site.templates', []);
+
+  opts.loaders = opts.loaders || [];
+  opts.loaders.push({
+    getSource: function(path) {
+      const file = templates.find(file => file.relative === path);
+      if (file) {
+        return {
+          src: file.contents.toString(),
+          path: file.permalink,
+          noCache: true
+        };
+      }
+    }
+  });
 
   const env = funjucks(fractal, opts);
   forEach(globals, (value, key) => env.addGlobal(key, value));
