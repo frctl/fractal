@@ -6,6 +6,7 @@ const debug = require('debug')('frctl:app');
 const {Config} = require('@frctl/config');
 const {Parser} = require('@frctl/parser');
 const {Loader} = require('@frctl/loader');
+const {cloneDeep} = require('@frctl/utils');
 const {EmittingPromise} = require('@frctl/support');
 
 const _dirty = new WeakMap();
@@ -30,7 +31,7 @@ class App {
     _cache.set(this, new Cache({
       stdTTL: this.get('cache.ttl'),
       checkperiod: this.get('cache.check'),
-      useClones: true
+      useClones: false
     }));
 
     _dirty.set(this, true);
@@ -42,7 +43,7 @@ class App {
       emitter.emit('parse.start');
       const cached = this.cache.get('collections');
       if (cached) {
-        return resolve(cached);
+        return resolve(cloneDeep(cached));
       }
       try {
         const parser = this.getParser();
