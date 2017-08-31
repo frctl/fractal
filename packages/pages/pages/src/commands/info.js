@@ -1,6 +1,6 @@
 const Pages = require('../pages');
 
-module.exports = function pagesInfoCommand(opts = {}) {
+module.exports = function(opts = {}) {
   return {
 
     name: 'pages-info',

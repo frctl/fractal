@@ -5,7 +5,7 @@ module.exports = function (opts = {}) {
 
     commands: [
       require('./src/commands/info')(opts),
-      require('./src/commands/serve')(opts),
+      require('./src/commands/author')(opts),
       require('./src/commands/build')(opts)
     ]
 

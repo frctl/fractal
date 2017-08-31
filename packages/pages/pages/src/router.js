@@ -57,7 +57,7 @@ class Router {
       page.target = target.entity;
 
       page[target.name] = target.entity;
-      page.data = Router.resolveData(page.data, target);
+      page.data = Router.resolveData(page.data, target, parent, collections);
       page.permalink = Router.resolvePermalink(page.permalink, target, parent, app.config.pick('indexes', 'ext'));
       page.contents = Router.resolveContents(page.template, page.contents, target);
 
@@ -243,10 +243,11 @@ class Router {
     throw new Error(`Router.resolveContents - no valid route content found [contents-invalid]`);
   }
 
-  static resolveData(data = {}, target) {
-    assert.maybe.object(data, `Router.resolveData - data must be an object [data-invalid]`);
-    data = data || {};
-    data[target.name] = target.entity;
+  static resolveData(data = {}, target, parent, collections) {
+    if (isFunction(data)) {
+      data = data(target, parent, collections);
+    }
+    assert.object(data, `Router.resolveData - data must be an object [data-invalid]`);
     return data;
   }
 

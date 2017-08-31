@@ -2,12 +2,13 @@ module.exports = {
 
   src: null,
 
-  assets: {
-    filter: file => !['.njk', '.html'].includes(file.extname)
+  templates: {
+    match: ['.njk', '.html'],
+    filter: null
   },
 
-  templates: {
-    filter: file => ['.njk', '.html'].includes(file.extname)
+  assets: {
+
   },
 
   pages: {
@@ -39,16 +40,24 @@ module.exports = {
     }
   },
 
+  serve: {
+    port: 4444
+  },
+
+  build: {
+    port: 4444
+  },
+
   plugins: [
     require('../parser/plugin-hidden'),
     require('../parser/plugin-frontmatter'),
-    require('../parser/plugin-permalink-assets'),
-    require('../parser/plugin-permalink-templates')
+    require('../parser/plugin-permalink-templates'),
+    require('../parser/plugin-permalink-assets')
   ],
 
   transforms: [
     require('../parser/transform-templates'),
-    require('../parser/transform-assets')
+    require('../parser/transform-assets'),
   ]
 
 };
