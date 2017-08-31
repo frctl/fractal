@@ -12,6 +12,7 @@ const {EmittingPromise} = require('@frctl/support');
 const _dirty = new WeakMap();
 const _cache = new WeakMap();
 const _config = new WeakMap();
+const _parsing = new WeakMap();
 const _watcher = new WeakMap();
 const _loader = new WeakMap();
 
@@ -39,7 +40,11 @@ class App {
   }
 
   parse(opts = {}) {
-    return new EmittingPromise(async (resolve, reject, emitter) => {
+    if (_parsing.get(this)) {
+      return _parsing.get(this);
+    }
+
+    const result = new EmittingPromise(async (resolve, reject, emitter) => {
       emitter.emit('parse.start');
       const cached = this.cache.get('collections');
       if (cached) {
@@ -55,6 +60,13 @@ class App {
         reject(err);
       }
     }, opts.emitter);
+
+    _parsing.set(this, result);
+
+    return result.then(collections => {
+      _parsing.set(this, null);
+      return collections;
+    });
   }
 
   watch() {
