@@ -15,8 +15,8 @@ class Router {
     _pages.set(this, []);
   }
 
-  addRoute(builder, collections, app) {
-    const newPages = Router.buildPages(builder, collections, app);
+  addRoute(routeName, builder, collections, app) {
+    const newPages = Router.buildPages(routeName, builder, collections, app);
     const pages = uniqBy(_pages.get(this).concat(newPages), 'permalink');
     _pages.set(this, pages);
     return this;
@@ -26,56 +26,58 @@ class Router {
     return PageCollection.from(_pages.get(this));
   }
 
-  static buildPages(builder, collections, app, parent) {
+  static buildPages(routeName, builder, collections, app, parent) {
     if (!builder) {
       return [];
     }
 
     let pages = [];
     const routeBuilder = isFunction(builder) ? builder : Router.createBuilder(builder);
-    const routes = routeBuilder(collections, parent, app);
+    const routes = routeBuilder(collections, app, parent);
 
     for (const route of routes) {
-      let page = {};
+      let props = {};
       const subRoutes = route.children || {};
 
       delete route.collection;
       delete route.filter;
 
       if (route.template) {
-        assert.instance(route.template, File, `Router.validatePage - page.template must be a File instance [template-invalid]`);
+        assert.instance(route.template, File, `Router.validatePage - props.template must be a File instance [template-invalid]`);
         const tpl = route.template;
         const config = tpl.config || {};
-        page = defaultsDeep(config, route); // Use template frontmatter data with route data as a fallback
-        page.render = route.render !== false;
+        props = defaultsDeep(config, route); // Use template frontmatter data with route data as a fallback
+        props.render = route.render !== false;
       } else {
-        Object.assign(page, route);
-        page.render = false;
+        Object.assign(props, route);
+        props.render = false;
       }
 
-      const target = Router.resolveTarget(page.target);
-      page.target = target.entity;
-      page.targetAlias = target.name;
-      page.data = Router.resolveData(page.data, target, parent, collections);
-      page.permalink = Router.resolvePermalink(page.permalink, target, parent, app.config.pick('indexes', 'ext'));
-      page.contents = Router.resolveContents(page.template, page.contents, target);
+      props.route = parent ? `${parent.route}.${routeName}` : routeName;
 
-      page.label = Router.resolveLabel(page.label, target, parent, page.target.label || page.target.name || page.target.stem);
-      page.title = Router.resolveTitle(page.title, target, parent, page.label);
+      const target = Router.resolveTarget(props.target);
+      props.target = target.entity;
+      props.targetAlias = target.name;
+      props.data = Router.resolveData(props.data, target, parent, collections);
+      props.permalink = Router.resolvePermalink(props.permalink, target, parent, app.config.pick('indexes', 'ext'));
+      props.contents = Router.resolveContents(props.template, props.contents, target);
+      props.tags = props.tags || [];
+      props.label = Router.resolveLabel(props.label, target, parent, props.target.label || props.target.name || props.target.stem);
+      props.title = Router.resolveTitle(props.title, target, parent, props.label);
 
-      const fallbackName = trim(page.permalink, '/').replace(/[/.]/g, '-');
-      page.name = Router.resolveName(page.name || fallbackName, target, parent);
+      const fallbackId = trim(props.permalink, '/').replace(/[/.]/g, '-');
+      props.id = Router.resolveId(props.id || fallbackId, target, parent);
 
-      page.parent = parent ? parent.name : undefined;
-      page.children = [];
+      props.parent = parent ? parent.id : undefined;
+      props.children = [];
 
-      page = Page.from(page);
+      const page = Page.from(props);
 
       /*
        * Build out child pages, if specified in route
        */
-      const children = Router.resolveChildren(subRoutes, target, collections, app, page);
-      page.children = children.map(child => child.name);
+      const children = Router.resolveChildren(routeName, subRoutes, target, collections, app, page);
+      page.children = children.map(child => child.id);
       pages = pages.concat(page, ...children);
     }
 
@@ -91,7 +93,7 @@ class Router {
 
     assert.object(config, `Router.createBuilder - route config must be object, string or function [builder-invalid]`);
 
-    return function (collections, parent, app) {
+    return function (collections, app, parent) {
       config = cloneDeep(config);
 
       if (config.template) {
@@ -150,11 +152,11 @@ class Router {
     };
   }
 
-  static resolveChildren(subRoutes, target, collections, app, parent) {
+  static resolveChildren(routeName, subRoutes, target, collections, app, parent) {
     let children = [];
     const childCollections = Object.assign({}, collections, {[target.name]: target.entity, parent});
     forEach(subRoutes, builder => {
-      children = children.concat(...Router.buildPages(builder, childCollections, app, parent));
+      children = children.concat(...Router.buildPages(routeName, builder, childCollections, app, parent));
     });
     return children;
   }
@@ -183,15 +185,15 @@ class Router {
     return label;
   }
 
-  static resolveName(name, target, parent) {
-    if (isFunction(name)) {
-      name = name(target.entity, parent);
-    } else if (isString(name)) {
+  static resolveId(id, target, parent) {
+    if (isFunction(id)) {
+      id = id(target.entity, parent);
+    } else if (isString(id)) {
       const props = {target: target.entity, [target.name]: target.entity, parent};
-      return pupa(parent ? `${parent.name}-${name}` : name, props);
+      return pupa(parent ? `${parent.id}-${id}` : id, props);
     }
-    assert.string(name, `Router.resolveName - page.name must resolve to a string [name-invalid]`);
-    return name;
+    assert.string(id, `Router.resolveId - page.id must resolve to a string [id-invalid]`);
+    return id;
   }
 
   static resolvePermalink(permalink, target, parent, opts = {}) {

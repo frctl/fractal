@@ -2,7 +2,7 @@ module.exports = {
 
   properties: {
 
-    name: {
+    id: {
       type: 'string'
     },
 
@@ -38,6 +38,6 @@ module.exports = {
     }
   },
 
-  required: ['name', 'permalink', 'contents']
+  required: ['id', 'permalink', 'contents']
 
 };

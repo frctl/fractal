@@ -86,8 +86,8 @@ class Pages extends App {
       const collections = opts.collections || await this.getCombinedCollections();
       try {
         const router = new Router();
-        forEach(this.get('routes', {}), builder => {
-          router.addRoute(builder, collections, this);
+        forEach(this.get('routes', {}), (builder, name) => {
+          router.addRoute(name, builder, collections, this);
         });
         resolve(router.getPages());
       } catch (err) {
