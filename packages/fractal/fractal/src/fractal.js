@@ -27,6 +27,7 @@ class Fractal extends App {
   }
 
   render(target, context = {}, opts = {}) {
+    opts = Object.assign({}, opts);
     return new EmittingPromise(async (resolve, reject, emitter) => {
       try {
         const renderer = opts.renderer || this.getRenderer();
@@ -72,12 +73,13 @@ class Fractal extends App {
     }, opts.emitter);
   }
 
-  renderString(str, context, opts = {}){
+  renderString(str, context, opts = {}) {
+    opts = Object.assign({}, opts);
     return new EmittingPromise(async (resolve, reject, emitter) => {
       try {
         const renderer = opts.renderer || this.getRenderer();
-        const adapter = getAdapterFromRenderer(renderer, opts.adapter);
         const collections = opts.collections ? opts.collections : await this.parse();
+        opts.adapter = getAdapterFromRenderer(renderer, opts.adapter);
         const result = await renderer.renderString(str, context, collections, opts, emitter);
         resolve(result);
       } catch (err) {
@@ -92,7 +94,7 @@ class Fractal extends App {
   }
 
   get version() {
-    return require('../package.json').version;
+    return Fractal.version;
   }
 
   get [Symbol.toStringTag]() {
@@ -101,7 +103,9 @@ class Fractal extends App {
 
 }
 
-function getAdapterFromRenderer(renderer, adapterName){
+Fractal.version = require('../package.json').version;
+
+function getAdapterFromRenderer(renderer, adapterName) {
   if (renderer.adapters.length === 0) {
     throw new Error(`You must register one or more adapters before you can render views [no-adapters]`);
   }

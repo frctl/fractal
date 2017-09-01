@@ -1,7 +1,7 @@
 /* eslint max-params: off */
 
 const EventEmitter = require('events');
-const {remove} = require('lodash');
+const {remove, isString} = require('lodash');
 const {File} = require('@frctl/support');
 const {toArray} = require('@frctl/utils');
 const debug = require('debug')('fractal:renderer');
@@ -76,14 +76,14 @@ class Renderer {
   }
 
   async renderString(str, context = {}, collections = {}, opts = {}, emitter = new EventEmitter()) {
-      assert.string(str, 'Renderer.renderString - context data must be an object [context-invalid]');
+    assert.string(str, 'Renderer.renderString - context data must be an object [context-invalid]');
     assert.object(context, 'Renderer.renderString - context data must be an object [context-invalid]');
     assert.object(collections, 'Renderer.renderString - collections must be an object [collections-invalid]');
     assert.object(opts, 'Renderer.renderString - options data must be an object [opts-invalid]');
 
     debug('rendering string');
 
-    const adapter = this.getAdapter(opts.adapter);
+    const adapter = isString(opts.adapter) ? this.getAdapter(opts.adapter) : opts.adapter;
     if (!adapter) {
       throw new Error(`Could not find '${opts.adapter}' adapter [adapter-not-found]`);
     }

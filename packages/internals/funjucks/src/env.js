@@ -7,7 +7,6 @@ const {promisify} = require('@frctl/utils');
 const filters = ['await', 'beautify', 'highlight', 'stringify', 'render'];
 
 module.exports = function (fractal, opts = {}) {
-
   const loaders = (opts.loaders || []).map(loader => {
     if (loader instanceof nunjucks.Loader) {
       return loader;
@@ -16,11 +15,10 @@ module.exports = function (fractal, opts = {}) {
       return new nunjucks.FileSystemLoader(loader);
     }
     if (_.isPlainObject(loader)) {
-      return new (nunjucks.Loader.extend(loader));
+      return new (nunjucks.Loader.extend(loader))();
     }
     throw new Error(`Funjucks - Unknown loader type`);
   });
-
 
   let env = opts.env || new nunjucks.Environment(loaders);
 
