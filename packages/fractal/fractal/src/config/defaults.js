@@ -13,6 +13,10 @@ module.exports = {
     }
   },
 
+  components: {
+    filter: file => file.stem.startsWith('@')
+  },
+
   configs: {
     defaults: {},
     filter: {

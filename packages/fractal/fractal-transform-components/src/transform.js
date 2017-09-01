@@ -2,28 +2,34 @@ const {addTrailingSeparator, defaultsDeep} = require('@frctl/utils');
 const {Component, ComponentCollection, FileCollection} = require('@frctl/support');
 
 module.exports = function (opts = {}) {
-  const marker = opts.marker || '@';
 
   return {
 
     name: 'components',
 
-    transform(files, state, app) {
-      const components = files.toArray().filter(file => {
-        return file.isDirectory() && file.stem.startsWith(marker);
-      });
+    async transform(files, state, app) {
 
-      return ComponentCollection.from(components.map(dir => {
-        const componentFiles = FileCollection.from(matchComponentFiles(dir, files, marker).map(file => {
+      let remainingFiles = files;
+      const componentDirs = files.filter(file => file.isDirectory()).filter(app.get('components.filter')).sortBy('path.length', 'desc');
+
+      return ComponentCollection.from(await componentDirs.mapToArrayAsync(async dir => {
+
+        const rootPath = addTrailingSeparator(dir.path);
+
+        let componentFiles = remainingFiles.filter(file => !file.isDirectory() && file.path.startsWith(rootPath));
+        componentFiles = componentFiles.map(file => {
           file = file.clone();
           file.base = dir.path;
           return file;
-        }));
+        });
 
-        const configFiles = componentFiles.filter(app.get('configs.filter')).sortBy('basename');
-        const data = configFiles.mapToArray(file => {
+        remainingFiles = remainingFiles.reject(file => componentFiles.find(f => f.path === file.path));
+
+        const configFiles = componentFiles.filter(file => !file.isDirectory()).filter(app.get('configs.filter')).sortBy('basename', 'asc');
+
+        const data = await configFiles.mapToArrayAsync(file => {
           const data = app.loader.requireFromString(file.contents.toString(), file.path);
-          return (typeof data === 'function') ? data(app, files) : data;
+          return (typeof data === 'function') ? Promise.resolve(data(files, app)) : Promise.resolve(data);
         });
 
         const config = Object.assign({}, ...data);
@@ -37,12 +43,3 @@ module.exports = function (opts = {}) {
     }
   };
 };
-
-function matchComponentFiles(dir, files, marker) {
-  const rootPath = addTrailingSeparator(dir.path);
-  return files.filter(file => {
-    return !file.isDirectory() && // is not a directory
-      file.path.startsWith(rootPath) && // within the component directory
-      file.path.replace(rootPath, '').indexOf(marker) === -1; // and does not contain @ (a subcomponent)
-  });
-}
