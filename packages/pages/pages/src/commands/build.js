@@ -1,7 +1,6 @@
 const Pages = require('../pages');
 
-module.exports = function(opts = {}) {
-
+module.exports = function (opts = {}) {
   opts = [].concat(opts);
 
   return {

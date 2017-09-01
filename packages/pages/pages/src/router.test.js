@@ -31,9 +31,9 @@ describe('Router', function () {
     });
   });
 
-  describe('Router.buildPages()', function () {
-    it('throws an error if an invalid builder is provided', function () {
-      expect(() => Router.buildPages(123)).to.throw('[builder-invalid]');
-    });
-  });
+  // describe('Router.buildPages()', function () {
+  //   it('throws an error if an invalid builder is provided', function () {
+  //     expect(() => Router.buildPages(123)).to.throw('[builder-invalid]');
+  //   });
+  // });
 });

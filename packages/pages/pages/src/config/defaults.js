@@ -57,7 +57,7 @@ module.exports = {
 
   transforms: [
     require('../parser/transform-templates'),
-    require('../parser/transform-assets'),
+    require('../parser/transform-assets')
   ]
 
 };

@@ -1,4 +1,4 @@
-const {forEach, cloneDeep} = require('lodash');
+const {forEach} = require('lodash');
 const App = require('@frctl/app');
 const {EmittingPromise} = require('@frctl/support');
 const {Fractal} = require('@frctl/fractal');
@@ -55,7 +55,6 @@ class Pages extends App {
   }
 
   async serve(opts = {}) {
-
     const dest = opts.dir || this.get('dest');
     assert.string(dest, `You must specify the directory to serve files from [dir-not-found]`);
     opts = Object.assign({}, this.get('serve'), opts);
@@ -93,7 +92,7 @@ class Pages extends App {
           this.parse({emitter})
         ]);
         resolve({library, site});
-      } catch(err) {
+      } catch (err) {
         reject(err);
       }
     }, opts.emitter);

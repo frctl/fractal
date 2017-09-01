@@ -1,3 +1,5 @@
+/* eslint max-params: "off" */
+
 const {forEach, isPlainObject, isString, isObjectLike, get, isFunction, trim, uniqBy} = require('lodash');
 const {assert} = require('check-types');
 const pupa = require('pupa');
@@ -175,7 +177,7 @@ class Router {
 
   static resolveLabel(label, target, parent, fallback) {
     if (isFunction(label)) {
-      label = title(target.entity, parent);
+      label = label(target.entity, parent);
     } else if (isString(label)) {
       const props = {target: target.entity, [target.name]: target.entity, parent};
       return pupa(label, props);

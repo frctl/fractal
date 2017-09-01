@@ -2,15 +2,14 @@ const debug = require('debug')('frctl:pages');
 const {forEach, get} = require('lodash');
 const funjucks = require('@frctl/funjucks');
 
-module.exports = async function(pages, globals = {}, opts = {}, fractal) {
-
+module.exports = async function (pages, globals = {}, opts = {}, fractal) {
   debug('initialising renderer');
 
   const templates = get(globals, 'collections.site.templates', []);
 
   opts.loaders = opts.loaders || [];
   opts.loaders.push({
-    getSource: function(path) {
+    getSource: function (path) {
       const file = templates.find(file => file.relative === path);
       if (file) {
         return {

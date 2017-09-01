@@ -1,4 +1,3 @@
-const {relative} = require('path');
 const debug = require('debug')('frctl:pages');
 const Koa = require('koa');
 const serve = require('koa-static');
@@ -26,12 +25,12 @@ class Server {
       const path = ctx.request.path;
       const permalink = permalinkify(ctx.request.path);
 
-      if (!built.includes(path)) {
+      if (built.includes(path)) {
+        debug('%s - no rebuild required', permalink);
+      } else {
         built.push(path);
         debug('%s - rebuilding page on request', permalink);
         await site.build({filter: page => page.permalink === permalink});
-      } else {
-        debug('%s - no rebuild required', permalink);
       }
 
       await next();
@@ -101,7 +100,7 @@ class Server {
     return null;
   }
 
-  get koa(){
+  get koa() {
     return _koa.get(this);
   }
 

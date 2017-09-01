@@ -10,7 +10,7 @@ class PageCollection extends Collection {
     return super.find(...args);
   }
 
-  findByRoute(routeName, target){
+  findByRoute(routeName, target) {
     return this._items.find(page => {
       return page.route === routeName && matches(page.target, target);
     });

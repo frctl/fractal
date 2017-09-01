@@ -1,7 +1,4 @@
-const Pages = require('../pages');
-
-module.exports = function(opts = {}) {
-
+module.exports = function (opts = {}) {
   return {
 
     name: 'pages-info',
@@ -11,9 +8,6 @@ module.exports = function(opts = {}) {
     description: 'Get information about your Pages site(s)',
 
     handler(argv, app, cli) {
-
-      // const pages = new Pages(opts);
-
       return `
         <green>Fractal Pages</green>
       `;
