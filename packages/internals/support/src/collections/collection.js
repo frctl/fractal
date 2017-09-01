@@ -1,7 +1,8 @@
 const {
   compact, find, filter, reject, iteratee, sortBy, orderBy, groupBy, uniq,
-  uniqBy, mapValues, cloneDeep, isArray, isObjectLike
+  uniqBy, mapValues, isArray, isObjectLike
 } = require('lodash');
+const {cloneDeep} = require('@frctl/utils');
 const check = require('check-types');
 
 const assert = check.assert;
