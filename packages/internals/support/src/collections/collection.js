@@ -15,6 +15,7 @@ class Collection {
       items = this._castItems(items);
     }
     this._validateOrThrow(items);
+
     this._items = items;
 
     /*

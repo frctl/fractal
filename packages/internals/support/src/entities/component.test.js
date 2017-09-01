@@ -86,11 +86,12 @@ describe('Component', function () {
     });
     it('overrides default variant if used after initial default created', function () {
       const component = new Component(basicComponent);
-      expect(component.getDefaultVariant()).to.be.a('Variant').that.includes({default: true, name: 'default'});
+      expect(component.getDefaultVariant()).to.be.a('Variant').that.includes({component: 'component', name: 'default'});
       component.addVariant({name: 'new-default', default: true});
-      expect(component.getDefaultVariant()).to.be.a('Variant').that.includes({default: true, name: 'new-default'});
+      expect(component.getDefaultVariant()).to.be.a('Variant').that.includes({component: 'component', name: 'new-default'});
       component.addVariant({name: 'new-default-2', default: true});
-      expect(component.getDefaultVariant()).to.be.a('Variant').that.includes({default: true, name: 'new-default-2'});
+      expect(component.getDefaultVariant()).to.be.a('Variant').that.includes({component: 'component', name: 'new-default-2'});
+      console.log(component.getVariants());
     });
   });
 

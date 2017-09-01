@@ -7,6 +7,7 @@ const assert = check.assert;
 
 const _variantNames = new WeakMap();
 const _componentId = new WeakMap();
+const _default = new WeakMap();
 
 class VariantCollection extends EntityCollection {
 
@@ -18,35 +19,45 @@ class VariantCollection extends EntityCollection {
   }
 
   getDefault() {
+    return _default.get(this);
+  }
+
+  _getDefault(variants) {
     let defaultItem;
-    let variants = this._items;
     if (variants.length > 0) {
-      const defaultDefined = variants.filter(v => v.default === true).reduce((acc, current) => current, undefined);
+      const defaultDefined = variants.filter(v => v.default === true).reduceRight((acc, current) => current, undefined);
       defaultItem = defaultDefined ? defaultDefined : variants[0];
     }
     return defaultItem;
   }
 
   hasDefault() {
-    if (this._items.length > 0) {
-      return true;
-    }
-    return false;
+    return Boolean(_default.get(this));
   }
 
-  createVariant(props = {}) {
+  createVariant(props = {}, isDefault=false) {
     const isValidVariant = check.maybe.instance(props, Variant);
     const isValidProp = check.maybe.object(props);
+    let variant;
     assert(
       (isValidProp || isValidVariant),
       `VariantCollection.createVariant: The 'props' argument is optional but must be an object [props-invalid]`,
       TypeError
     );
-    props = Object.assign({}, props, {
-      component: _componentId.get(this),
-      name: uniqueName(props.name || 'variant', _variantNames.get(this))
-    });
-    return Variant.from(props);
+
+    if (isValidVariant) {
+      variant = props;
+    } else {
+      variant = Object.assign({}, props);
+    }
+
+    variant.name = uniqueName(props.name || 'variant', _variantNames.get(this));
+    variant.component = _componentId.get(this);
+
+    variant = Variant.from(variant);
+    if (isDefault) _default.set(this, variant);
+    console.log(1, props, variant);
+    return variant;
   }
 
   //
@@ -75,7 +86,18 @@ class VariantCollection extends EntityCollection {
   }
 
   _castItems(items) {
-    return items.map(i => this.createVariant(i));
+    if (items.length === 0) return items;
+    const defaultItemMap = new WeakMap();
+    const defaultItem = this._getDefault(items);
+
+    items = items.map(i => {
+      delete i.default;
+      defaultItemMap.set(i, i === defaultItem);
+      return i;
+    });
+    items = items.map(i => this.createVariant(i, defaultItemMap.get(i)));
+
+    return items;
   }
 
   _validateOrThrow(items) {
@@ -91,6 +113,7 @@ class VariantCollection extends EntityCollection {
   _configure(componentId, variantNames) {
     _componentId.set(this, componentId);
     _variantNames.set(this, variantNames);
+    _default.set(this, undefined);
   }
 
   _setItems(items) {
@@ -102,7 +125,7 @@ class VariantCollection extends EntityCollection {
         if (err instanceof TypeError) {
           assert(
             false,
-            `VariantCollection.constructor: The 'items' argument is optional but must be an array of Variants or pre-Variant objects [items-invalid]`,
+            `VariantCollection.constructor: The 'items' argument is optional but must be an array of Variants or pre-Variant objects [items-invalid]: ${err.message}`,
             TypeError
           );
         } else {
