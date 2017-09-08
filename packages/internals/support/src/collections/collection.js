@@ -6,6 +6,7 @@ const {cloneDeep} = require('@frctl/utils');
 const check = require('check-types');
 
 const assert = check.assert;
+const entityMap = new Map();
 
 class Collection {
 
@@ -148,7 +149,13 @@ class Collection {
   }
 
   map(...args) {
-    return this._new(this._items.map(...args));
+    let [fn,] = args;
+    const item = fn(this._items[0], 0, this._items);
+    const Constr = entityMap.get(item.constructor);
+    if (Constr) {
+      return new Constr(this._items.map(...args))
+    } 
+    return new Collection(this._items.map(...args));
   }
 
   mapAsync(...args) {
@@ -259,6 +266,15 @@ class Collection {
     return true;
   }
 
+  static addEntityDefinition(key, value) {
+    entityMap.set(key, value);
+  }
+  static getEntityMap() {
+    return entityMap;
+  }
+  static clearEntityMap() {
+    entityMap.clear();
+  }
 }
 
 function iter(...args) {
