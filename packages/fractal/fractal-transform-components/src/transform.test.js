@@ -5,56 +5,79 @@ const {expect, sinon} = require('../../../../test/helpers');
 const componentTransform = require('./transform');
 
 const items = [{
-  cwd: '/',
-  path: 'path/to/fake/@a-component',
-  stat: {
-    isNull: () => true,
-    isDirectory: () => true
+    cwd: '/',
+    path: 'path/to/fake/@a-component',
+    stat: {
+      isNull: () => true,
+      isDirectory: () => true
+    }
+  },
+  {
+    cwd: '/',
+    path: 'path/to/fake/@a-component/view.hbs',
+    contents: new Buffer('VIEW')
+  },
+  {
+    cwd: '/',
+    path: 'path/to/fake/@a-component/preview.hbs',
+    contents: new Buffer('PREVIEW')
+  },
+  {
+    cwd: '/',
+    path: 'path/to/fake/@b-component/@nested-component',
+    stat: {
+      isNull: () => true,
+      isDirectory: () => true
+    }
+  },
+  {
+    cwd: '/',
+    path: 'path/to/fake/@b-component/@nested-component/view.hbs',
+    contents: new Buffer('VIEW')
+  },
+  {
+    cwd: '/',
+    path: 'path/to/fake/@b-component/@nested-component/preview.hbs',
+    contents: new Buffer('PREVIEW')
+  },
+  {
+    cwd: '/',
+    path: 'path/to/fake/@b-component/@nested-component/config.js',
+    contents: new Buffer(`module.exports = {name: 'config.js', foo: 'bar'}`)
+  },
+  {
+    cwd: '/',
+    path: 'path/to/fake/@b-component/',
+    stat: {
+      isNull: () => true,
+      isDirectory: () => true
+    }
+  },
+  {
+    cwd: '/',
+    path: 'path/to/fake/@b-component/view.hbs',
+    contents: new Buffer('VIEW')
+  },
+  {
+    cwd: '/',
+    path: 'path/to/fake/@b-component/preview.hbs',
+    contents: new Buffer('PREVIEW')
+  },
+  {
+    cwd: '/',
+    path: 'path/to/fake/@b-component/config.js',
+    contents: new Buffer(`module.exports = {name: 'config.js', foo: 'bar'}`)
+  },
+  {
+    cwd: '/',
+    path: 'path/to/fake/@b-component/config.json',
+    contents: new Buffer(`{name: 'config.json', bar: 'baz'}`)
+  },
+  {
+    cwd: '/',
+    path: 'path/to/fake/some.png',
+    contents: new Buffer([8, 6, 7, 5, 3, 0, 9])
   }
-},
-{
-  cwd: '/',
-  path: 'path/to/fake/@a-component/view.hbs',
-  contents: new Buffer('VIEW')
-},
-{
-  cwd: '/',
-  path: 'path/to/fake/@a-component/preview.hbs',
-  contents: new Buffer('PREVIEW')
-},
-{
-  cwd: '/',
-  path: 'path/to/fake/@b-component/',
-  stat: {
-    isNull: () => true,
-    isDirectory: () => true
-  }
-},
-{
-  cwd: '/',
-  path: 'path/to/fake/@b-component/view.hbs',
-  contents: new Buffer('VIEW')
-},
-{
-  cwd: '/',
-  path: 'path/to/fake/@b-component/preview.hbs',
-  contents: new Buffer('PREVIEW')
-},
-{
-  cwd: '/',
-  path: 'path/to/fake/@b-component/config.js',
-  contents: new Buffer(`module.exports = {name: 'config.js', foo: 'bar'}`)
-},
-{
-  cwd: '/',
-  path: 'path/to/fake/@b-component/config.json',
-  contents: new Buffer(`{name: 'config.json', bar: 'baz'}`)
-},
-{
-  cwd: '/',
-  path: 'path/to/fake/some.png',
-  contents: new Buffer([8, 6, 7, 5, 3, 0, 9])
-}
 ];
 
 const getFileCollection = () => {
@@ -63,7 +86,7 @@ const getFileCollection = () => {
 
 const app = fractal();
 
-describe('Component Transform', function () {
+describe.only('Component Transform', function () {
   describe('factory', function () {
     it('is exported as a function', function () {
       expect(componentTransform).to.be.a('function');
@@ -77,19 +100,19 @@ describe('Component Transform', function () {
     });
   });
   describe('.transform()', function () {
-    it('transforms a FileCollection into a ComponentCollection', function () {
+    it('transforms a FileCollection into a ComponentCollection', async function () {
       const fileCollection = getFileCollection();
-      const transform = componentTransform().transform;
-      const output = transform(fileCollection, {}, app);
+      const transform =  componentTransform().transform;
+      const output = await transform(fileCollection, {}, app);
       expect(output).to.be.a('ComponentCollection');
-      expect(output).to.have.property('length').that.equals(2);
+      expect(output).to.have.property('length').that.equals(3);
     });
-    it('instantiates the component with config merged from config files', function () {
+    it('instantiates the component with config merged from config files', async function () {
       const spy = sinon.spy(Component, 'from');
       const fileCollection = FileCollection.from(items.slice(1).map(item => File.from(item)));
       const transform = componentTransform().transform;
-      transform(fileCollection, {}, app);
-      expect(spy.args[0][0].config).to.eql({name: 'config.json', bar: 'baz', foo: 'bar'});
+      await transform(fileCollection, {}, app);
+      expect(spy.args[1][0].config).to.eql({name: 'config.json', bar: 'baz', foo: 'bar'});
       spy.restore();
     });
   });
