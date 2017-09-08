@@ -22,42 +22,8 @@ class VariantCollection extends EntityCollection {
     return _default.get(this);
   }
 
-  _getDefault(variants) {
-    let defaultItem;
-    if (variants.length > 0) {
-      const defaultDefined = variants.filter(v => v.default === true).reduceRight((acc, current) => current, undefined);
-      defaultItem = defaultDefined ? defaultDefined : variants[0];
-    }
-    return defaultItem;
-  }
-
   hasDefault() {
     return Boolean(_default.get(this));
-  }
-
-  createVariant(props = {}, isDefault=false) {
-    const isValidVariant = check.maybe.instance(props, Variant);
-    const isValidProp = check.maybe.object(props);
-    let variant;
-    assert(
-      (isValidProp || isValidVariant),
-      `VariantCollection.createVariant: The 'props' argument is optional but must be an object [props-invalid]`,
-      TypeError
-    );
-
-    if (isValidVariant) {
-      variant = props;
-    } else {
-      variant = Object.assign({}, props);
-    }
-
-    variant.name = uniqueName(props.name || 'variant', _variantNames.get(this));
-    variant.component = _componentId.get(this);
-
-    variant = Variant.from(variant);
-    if (isDefault) _default.set(this, variant);
-    console.log(1, props, variant);
-    return variant;
   }
 
   //
@@ -86,18 +52,19 @@ class VariantCollection extends EntityCollection {
   }
 
   _castItems(items) {
-    if (items.length === 0) return items;
-    const defaultItemMap = new WeakMap();
-    const defaultItem = this._getDefault(items);
+    if (items.length === 0) {
+      return items;
+    }
+    const defaultItem = getDefault(items);
 
-    items = items.map(i => {
+    return items.map(i => {
       delete i.default;
-      defaultItemMap.set(i, i === defaultItem);
-      return i;
+      const variant = createVariant(this, i);
+      if (i === defaultItem) {
+        setDefault(this, variant);
+      }
+      return variant;
     });
-    items = items.map(i => this.createVariant(i, defaultItemMap.get(i)));
-
-    return items;
   }
 
   _validateOrThrow(items) {
@@ -148,6 +115,42 @@ class VariantCollection extends EntityCollection {
   static validate(items) {
     return check.maybe.array.of.instance(items, Variant);
   }
+}
+
+function setDefault(target, variant) {
+  _default.set(target, variant);
+}
+
+function getDefault(variants) {
+  let defaultItem;
+  if (variants.length > 0) {
+    const defaultDefined = variants.filter(v => v.default === true).reduceRight((acc, current) => current, undefined);
+    defaultItem = defaultDefined ? defaultDefined : variants[0];
+  }
+  return defaultItem;
+}
+
+function createVariant(target, props = {}) {
+  const isValidVariant = check.maybe.instance(props, Variant);
+  const isValidProp = check.maybe.object(props);
+  let variant;
+  assert(
+    (isValidProp || isValidVariant),
+    `VariantCollection.createVariant: The 'props' argument is optional but must be an object [props-invalid]`,
+    TypeError
+  );
+
+  if (isValidVariant) {
+    variant = props;
+  } else {
+    variant = Object.assign({}, props);
+  }
+
+  variant.name = uniqueName(props.name || 'variant', _variantNames.get(target));
+  variant.component = _componentId.get(target);
+
+  variant = Variant.from(variant);
+  return variant;
 }
 
 module.exports = VariantCollection;

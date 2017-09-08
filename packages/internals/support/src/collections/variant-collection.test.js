@@ -35,6 +35,59 @@ describe('VariantCollection', function () {
       expect(VariantCollection.isCollection(collection)).to.equal(true);
       expect(collection.length).to.equal(0);
     });
+    it('creates a valid Variant', function () {
+      const collection = new VariantCollection([{}], 'valid');
+      const variant = collection.getDefault();
+      expect(variant).to.be.a('Variant')
+      .that.includes({name: 'variant', component: 'valid'});
+    });
+    it('creates a valid Variant from a plain Object', function () {
+      const collection = new VariantCollection([{other: 'properties'}], 'plain-object');
+      const variant = collection.getDefault();
+      expect(variant).to.be.a('Variant')
+      .that.includes({name: 'variant', component: 'plain-object', other: 'properties'});
+    });
+    it('assigns name if provided', function () {
+      const collection = new VariantCollection([{name: 'blue'}], 'valid-name');
+      const variant = collection.getDefault();
+      expect(variant).to.be.a('Variant')
+      .that.includes({name: 'blue', component: 'valid-name'});
+    });
+    it('increments name correctly if empty name values provided', function () {
+      const collection = new VariantCollection([{}, {}, {}], 'empties');
+      const expected = index => {
+        const name = index === undefined ? 'variant' : `variant-${index}`;
+        return {name: name, component: 'empties'};
+      };
+
+      expect(collection[0]).to.be.a('Variant')
+      .that.includes(expected());
+
+      expect(collection[1]).to.be.a('Variant')
+      .that.includes(expected(2));
+
+      expect(collection[2]).to.be.a('Variant')
+      .that.includes(expected(3));
+    });
+    it('increments name correctly if duplicate name values provided', function () {
+      const collection = new VariantCollection([{name: 'blue'}, {name: 'blue'}, {name: 'blue'}], 'duplicates');
+      const expected = index => {
+        const name = index === undefined ? 'blue' : `blue-${index}`;
+        return {name: name, component: 'duplicates'};
+      };
+
+      expect(collection[0]).to.be.a('Variant')
+      .that.includes(expected());
+
+      expect(collection[1]).to.be.a('Variant')
+      .that.includes(expected(2));
+
+      expect(collection[2]).to.be.a('Variant')
+      .that.includes(expected(3));
+    });
+    it('throws an error if invalid props supplied', function () {
+      expect(() => new VariantCollection(['invalid-string'])).to.throw(TypeError, '[props-invalid]');
+    });
   });
 
   describe('.from()', function () {
@@ -64,10 +117,10 @@ describe('VariantCollection', function () {
       const defaultItem = collection.getDefault();
       expect(defaultItem.name).to.equal('baz');
     });
-    it('returns the last item with an explicit default if more than one is set', function () {
+    it('returns the first item with an explicit default if more than one is set', function () {
       const collection = makeCollectionFrom(itemsWithMultipleDefault);
       const defaultItem = collection.getDefault();
-      expect(defaultItem.name).to.equal('baz');
+      expect(defaultItem.name).to.equal('bar');
     });
   });
 
@@ -83,65 +136,6 @@ describe('VariantCollection', function () {
     it(`return 'true' if collection has item with explicit default`, function () {
       const collection = makeCollectionFrom(itemsWithDefault);
       expect(collection.hasDefault()).to.equal(true);
-    });
-  });
-
-  describe('.createVariant()', function () {
-    it('creates a valid Variant', function () {
-      const collection = new VariantCollection([], 'valid');
-      const variant = collection.createVariant();
-      expect(variant).to.be.a('Variant')
-      .that.includes({name: 'variant', component: 'valid'});
-    });
-    it('creates a valid Variant from a plain Object', function () {
-      const collection = new VariantCollection([], 'plain-object');
-      const variant = collection.createVariant({other: 'properties'});
-      expect(variant).to.be.a('Variant')
-      .that.includes({name: 'variant', component: 'plain-object', other: 'properties'});
-    });
-    it('assigns name if provided', function () {
-      const collection = new VariantCollection([], 'valid-name');
-      const variant = collection.createVariant({name: 'blue'});
-      expect(variant).to.be.a('Variant')
-      .that.includes({name: 'blue', component: 'valid-name'});
-    });
-    it('increments name correctly if empty name values provided', function () {
-      const collection = new VariantCollection([], 'empties');
-      const variants = [...Array(3)].map(() => collection.createVariant());
-      const expected = index => {
-        const name = index === undefined ? 'variant' : `variant-${index}`;
-        return {name: name, component: 'empties'};
-      };
-
-      expect(variants[0]).to.be.a('Variant')
-      .that.includes(expected());
-
-      expect(variants[1]).to.be.a('Variant')
-      .that.includes(expected(2));
-
-      expect(variants[2]).to.be.a('Variant')
-      .that.includes(expected(3));
-    });
-    it('increments name correctly if duplicate name values provided', function () {
-      const collection = new VariantCollection([], 'duplicates');
-      const variants = [...Array(3)].map(() => collection.createVariant({name: 'blue'}));
-      const expected = index => {
-        const name = index === undefined ? 'blue' : `blue-${index}`;
-        return {name: name, component: 'duplicates'};
-      };
-
-      expect(variants[0]).to.be.a('Variant')
-      .that.includes(expected());
-
-      expect(variants[1]).to.be.a('Variant')
-      .that.includes(expected(2));
-
-      expect(variants[2]).to.be.a('Variant')
-      .that.includes(expected(3));
-    });
-    it('throws an error if invalid props supplied', function () {
-      const collection = new VariantCollection([], 'plain-object');
-      expect(() => collection.createVariant('invalid-string')).to.throw(TypeError, '[props-invalid]');
     });
   });
 
@@ -202,7 +196,7 @@ describe('VariantCollection', function () {
       .that.equals('bar');
 
       expect(collection.find({
-        default: true
+        name: 'baz'
       })).to.be.a('Variant')
       .with.property('name')
       .that.equals('baz');

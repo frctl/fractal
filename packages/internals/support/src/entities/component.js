@@ -47,6 +47,11 @@ class Component extends Entity {
     return _variants.get(this).find(name);
   }
 
+  getVariantOrDefault(name) {
+    const variants = _variants.get(this);
+    return variants.find(name) || variants.getDefault();
+  }
+
   addVariant(variant) {
     _variants.set(this, _variants.get(this).push(variant));
   }

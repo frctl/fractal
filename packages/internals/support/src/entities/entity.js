@@ -107,7 +107,6 @@ class Entity {
   clone() {
     const cloned = new this.constructor(this._config);
     for (let [key, value] of Object.entries(this._data)) {
-      console.log(key);
       cloned.set(key, value);
     }
     return cloned;
