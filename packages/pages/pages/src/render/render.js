@@ -2,6 +2,8 @@ const debug = require('debug')('frctl:pages');
 const {forEach, get} = require('lodash');
 const funjucks = require('@frctl/funjucks');
 
+const helpers  = ['permalink'];
+
 module.exports = async function (pages, globals = {}, opts = {}, fractal) {
   debug('initialising renderer');
 
@@ -23,6 +25,10 @@ module.exports = async function (pages, globals = {}, opts = {}, fractal) {
 
   const env = funjucks(fractal, opts);
   forEach(globals, (value, key) => env.addGlobal(key, value));
+
+  helpers.forach(name => {
+    const helper = require(`./helper-${helper}`)
+  })
 
   const rendered = pages.mapAsync(async page => {
     if (page.render) {
