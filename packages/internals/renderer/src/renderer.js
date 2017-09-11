@@ -25,13 +25,14 @@ class Renderer {
     return this.adapters[0];
   }
 
-  getAdapterFor(file) {
-    if (!File.isFile(file)) {
-      throw new Error('Can only retrieve adapters for File objects [file-invalid]');
+  getAdapterFor(matcher) {
+    const path = File.isFile(matcher) ? matcher.path : matcher;
+    if (isString(path)) {
+      throw new Error('Can only match adapters against File objects or paths [matcher-invalid]');
     }
-    debug('Finding adapter for file %s: ', file.path);
+    debug('Finding adapter for file %s: ', path);
     for (const adapter of _adapters.get(this)) {
-      if (adapter.match(file)) {
+      if (adapter.match(path)) {
         return adapter;
       }
     }
@@ -54,42 +55,21 @@ class Renderer {
     return this;
   }
 
-  async render(view, context = {}, collections = {}, opts = {}, emitter = new EventEmitter()) {
-    if (!File.isFile(view)) {
-      throw new Error(`view must be a File instance [file-invalid]`);
+  async render(adapter, tpl, context = {}, collections = {}, opts = {}, emitter = new EventEmitter()) {
+    adapter = isString(adapter) ? this.getAdapter(adapter) : adapter;
+
+    if (!adapter) {
+      throw new Error('Renderer.render - No valid adapter found [adapter-not-found]');
     }
 
+    assert.string(tpl, 'Renderer.render - tpl must be a string [template-invalid]');
     assert.object(context, 'Renderer.render - context data must be an object [context-invalid]');
     assert.object(collections, 'Renderer.render - collections must be an object [collections-invalid]');
     assert.object(opts, 'Renderer.render - options data must be an object [opts-invalid]');
 
-    debug('rendering view %s', view.relative);
-
-    const adapter = this.getAdapterFor(view);
-    if (!adapter) {
-      throw new Error(`No adapter found to render view ${view.relative} [adapter-not-found]`);
-    }
-    emitter.emit('render.start', {view, context, adapter, opts});
-    const result = adapter.render(view, context, collections, opts);
-    emitter.emit('render.complete', {result, view, context, adapter, opts});
-    return result;
-  }
-
-  async renderString(str, context = {}, collections = {}, opts = {}, emitter = new EventEmitter()) {
-    assert.string(str, 'Renderer.renderString - context data must be an object [context-invalid]');
-    assert.object(context, 'Renderer.renderString - context data must be an object [context-invalid]');
-    assert.object(collections, 'Renderer.renderString - collections must be an object [collections-invalid]');
-    assert.object(opts, 'Renderer.renderString - options data must be an object [opts-invalid]');
-
-    debug('rendering string');
-
-    const adapter = isString(opts.adapter) ? this.getAdapter(opts.adapter) : opts.adapter;
-    if (!adapter) {
-      throw new Error(`Could not find '${opts.adapter}' adapter [adapter-not-found]`);
-    }
-    emitter.emit('renderString.start', {str, context, adapter, opts});
-    const result = adapter.renderString(str, context, collections, opts);
-    emitter.emit('renderString.complete', {result, str, context, adapter, opts});
+    emitter.emit('render.start', {tpl, context, adapter, collections, opts});
+    const result = adapter.render(tpl, context, collections, opts);
+    emitter.emit('render.complete', {result, tpl, context, adapter, collections, opts});
     return result;
   }
 

@@ -62,7 +62,7 @@ function makeFractal(customConfig) {
   return new Fractal(customConfig || config);
 }
 
-describe('Fractal', function () {
+describe.only('Fractal', function () {
   describe('constructor()', function () {
     it('wraps configuration data in a ConfigStore instance', () => {
       const fractal = makeFractal();
@@ -97,13 +97,13 @@ describe('Fractal', function () {
       expect(result).to.be.instanceOf(EmittingPromise);
       return expect(result).to.be.rejectedWith(Error, '[no-adapters]');
     });
-    it('rejects the specified adapter cannot be found', function () {
+    it('rejects if the specified adapter cannot be found', function () {
       const fractal = makeFractal();
       return expect(fractal.render(view, {}, {
         adapter: 'foo'
       })).to.eventually.be.rejectedWith(Error, '[adapter-not-found]');
     });
-    it('rejects the target is not a view, component or variant', function () {
+    it('rejects if the target is not a view, component or variant', function () {
       const fractal = makeFractal();
       return expect(fractal.render('foo')).to.be.rejectedWith(Error, '[target-invalid]');
     });

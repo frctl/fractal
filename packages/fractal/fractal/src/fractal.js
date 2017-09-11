@@ -1,4 +1,4 @@
-const {defaultsDeep} = require('@frctl/utils');
+const {defaultsDeep, cloneDeep} = require('@frctl/utils');
 const App = require('@frctl/app');
 const {Component, Variant, File, EmittingPromise} = require('@frctl/support');
 const {Renderer} = require('@frctl/renderer');
@@ -27,59 +27,63 @@ class Fractal extends App {
   }
 
   render(target, context = {}, opts = {}) {
-    opts = Object.assign({}, opts);
     return new EmittingPromise(async (resolve, reject, emitter) => {
       try {
-        const renderer = opts.renderer || this.getRenderer();
-        const adapter = getAdapterFromRenderer(renderer, opts.adapter);
-
-        if (!(Component.isComponent(target) || Variant.isVariant(target) || File.isFile(target))) {
-          throw new Error(`Fractal.render - Only components, variants or views can be rendered [target-invalid]`);
-        }
-
         const collections = opts.collections ? opts.collections : await this.parse();
+        const renderer = opts.renderer || this.getRenderer();
+        let adapter;
+        let template;
+        let context;
 
-        let view;
-        if (Component.isComponent(target)) {
-          // reduce to a variant
-          const variant = target.getVariant(opts.variant);
-          if (!variant) {
-            throw new Error(`Could not find variant '${opts.variant}' for component '${target.name}' [variant-not-found]`);
-          }
-          target = variant;
+        context = cloneDeep(context);
+        opts = cloneDeep(opts);
+
+        if (renderer.adapters.length === 0) {
+          throw new Error(`You must register one or more adapters before you can render views [no-adapters]`);
         }
 
-        if (Variant.isVariant(target)) {
-          // reduce to a view
-          const component = collections.components.find(c => c.name === target.component);
+        if (typeof target === 'string') {
+          adapter = opts.adapter || renderer.getDefaultAdapter();
+          template = target;
+        } else if (File.isFile(target)) {
+          adapter = opts.adapter || renderer.getAdapterFor(target);
+          template = target.contents.toString();
+        } else if (Component.isComponent(target) || Variant.isVariant(target)) {
+          adapter = opts.adapter || renderer.getDefaultAdapter();
+
+          let component;
+          let variant;
+
+          if (Component.isComponent(target)) {
+            variant = opts.variant ? target.getVariant(opts.variant) : target.getDefaultVariant();
+            if (!variant) {
+              throw new Error(`Could not find variant '${opts.variant}' for component '${target.name}' [variant-not-found]`);
+            }
+            component = target;
+          } else {
+            variant = target;
+          }
+
+          component = component || collections.components.find(c => c.name === variant.component);
           if (!component) {
             throw new Error(`Component '${target.component}' not found [component-not-found]`);
           }
+
           const views = component.getFiles().filter(this.get('components.views.filter'));
-          view = views.find(v => adapter.match(v));
+          const view = views.find(v => adapter.match(v));
           if (!view) {
             throw new Error(`Could not find view for component '${component.name}' (using adapter '${adapter.name}') [view-not-found]`);
           }
+
           context = defaultsDeep(context, target.context);
-          target = view;
+          template = view.contents.toString();
         }
 
-        resolve(await renderer.render(target, context, collections, opts, emitter));
-      } catch (err) {
-        reject(err);
-      }
-    }, opts.emitter);
-  }
+        if (!template) {
+          throw new Error(`Fractal.render - Only components, variants or views or strings can be rendered [target-invalid]`);
+        }
 
-  renderString(str, context, opts = {}) {
-    opts = Object.assign({}, opts);
-    return new EmittingPromise(async (resolve, reject, emitter) => {
-      try {
-        const renderer = opts.renderer || this.getRenderer();
-        const collections = opts.collections ? opts.collections : await this.parse();
-        opts.adapter = getAdapterFromRenderer(renderer, opts.adapter);
-        const result = await renderer.renderString(str, context, collections, opts, emitter);
-        resolve(result);
+        resolve(await renderer.render(adapter, template, context, collections, opts, emitter));
       } catch (err) {
         reject(err);
       }
@@ -102,16 +106,5 @@ class Fractal extends App {
 }
 
 Fractal.version = require('../package.json').version;
-
-function getAdapterFromRenderer(renderer, adapterName) {
-  if (renderer.adapters.length === 0) {
-    throw new Error(`You must register one or more adapters before you can render views [no-adapters]`);
-  }
-  const adapter = adapterName ? renderer.getAdapter(adapterName) : renderer.getDefaultAdapter();
-  if (!adapter) {
-    throw new Error(`The adapter '${adapterName}' could not be found [adapter-not-found]`);
-  }
-  return adapter;
-}
 
 module.exports = Fractal;

@@ -55,9 +55,9 @@ describe('Adapter', function () {
       return result;
     });
 
-    it('rejects if the file argument is not a File instance', function () {
+    it('rejects if the tpl argument is not a string', function () {
       const adapter = new Adapter(validAdapter);
-      return expect(adapter.render('bar')).to.be.rejectedWith(TypeError, '[file-invalid]');
+      return expect(adapter.render({foo: 'bar'})).to.be.rejectedWith(TypeError, '[tpl-invalid]');
     });
   });
 });

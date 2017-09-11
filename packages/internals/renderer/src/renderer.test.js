@@ -154,7 +154,7 @@ describe('Renderer', function () {
     it('rejects if no matching adapter can be found', function () {
       return expect(makeRenderer().render(funjucksFile)).to.be.rejectedWith('[adapter-not-found]');
     });
-    it('rejects if the file is not a File instance', function () {
+    it('rejects if the template is not a string', function () {
       return expect(makeRenderer(adapters).render({foo: 'bar'})).to.be.rejectedWith('[file-invalid]');
     });
     it('rejects if no file is provided', function () {
