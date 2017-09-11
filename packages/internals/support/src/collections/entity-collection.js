@@ -29,4 +29,7 @@ class EntityCollection extends Collection {
   }
 
 }
+
+Collection.addEntityDefinition(Entity, EntityCollection);
+
 module.exports = EntityCollection;

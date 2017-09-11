@@ -2,19 +2,8 @@
 
 // const path = require('path');
 const {expect, sinon} = require('../../../../../test/helpers');
-const Collection = require('./collection');
-
-const EntityCollection = require('./entity-collection');
-const Entity = require('../entities/entity');
-
-const FileCollection = require('./file-collection');
-const File = require('../entities/file');
-
-const ComponentCollection = require('./component-collection');
-const Component = require('../entities/component');
-
-const VariantCollection = require('./variant-collection');
 const Variant = require('../entities/variant');
+const Collection = require('./collection');
 
 const items = [{
   name: 'mickey',
@@ -74,7 +63,7 @@ function testInstance(newCollection, oldCollection, lItems = items) {
   expect(Collection.isCollection(newCollection)).to.be.true;
 }
 
-describe.only('Collection', function () {
+describe('Collection', function () {
   describe('constructor', function () {
     it('returns an instance from an array that proxies access correctly', function () {
       const collection = makeCollection();
@@ -504,13 +493,6 @@ describe.only('Collection', function () {
   });
 
   describe('.map()', function () {
-    before(function(){
-      Collection.clearEntityMap();
-      Collection.addEntityDefinition(Entity, EntityCollection);
-      Collection.addEntityDefinition(Variant, VariantCollection);
-      Collection.addEntityDefinition(File, FileCollection);
-      Collection.addEntityDefinition(Component, ComponentCollection);
-    });
     it('returns an new Collection', function () {
       const collection = makeCollection();
       let newCollection = collection.map(() => ({src: 'path'}));
@@ -526,45 +508,6 @@ describe.only('Collection', function () {
       expect(function () {
         collection.map(isDogBool).toArray();
       }).to.throw(TypeError, '[items-invalid]');
-    });
-    describe(`Collection`, function(){
-      it(`converts to a ComponentCollection when the map fn returns a Component`, function(){
-        const collection = makeCollection([{src: File.from({ path: '/component/a'})}, {src: File.from({ path: '/component/b'})}, {src: File.from({ path: '/component/c'})}]);
-        let newCollection = collection.map(i => new Component(i));
-        expect(newCollection instanceof ComponentCollection).to.equal(true);
-      });
-      it(`converts to a FileCollection when the map fn returns a File`, function(){
-        const collection = makeCollection([{ path: '/component/a'}, { path: '/component/b'}, { path: '/component/c'}]);
-        let newCollection = collection.map(i => new File(i));
-        expect(newCollection instanceof FileCollection).to.equal(true);
-      });
-      it(`converts to a EntityCollection when the map fn returns a Entity`, function(){
-        const collection = makeCollection([{ path: '/component/a'}, { path: '/component/b'}, { path: '/component/c'}]);
-        let newCollection = collection.map(i => new Entity(i));
-        expect(newCollection instanceof EntityCollection).to.equal(true);
-      });
-      it(`converts to a VariantCollection when the map fn returns a Variant`, function(){
-        const collection = makeCollection([{
-          name: 'variant-1',
-          component: 'parent-component'
-        }, {
-          name: 'variant-2',
-          component: 'parent-component'
-        }, {
-          name: 'variant-3',
-          component: 'parent-component'
-        }]);
-        let newCollection = collection.map(i => new Variant(i));
-        expect(newCollection instanceof VariantCollection).to.equal(true);
-      });
-    });
-    describe(`ComponentCollection`, function(){
-      it(`converts to a Collection when the map fn returns an Object`, function(){
-        const collection = new ComponentCollection([{src: File.from({ path: '/component/a'})}, {src: File.from({ path: '/component/b'})}, {src: File.from({ path: '/component/c'})}]);
-        let newCollection = collection.map(i => ({ src: i.src, foo: 'bar'}));
-        expect(newCollection instanceof ComponentCollection).to.equal(false);
-        expect(newCollection instanceof Collection).to.equal(true);
-      });
     });
   });
 
@@ -705,16 +648,11 @@ describe.only('Collection', function () {
   });
 
   describe('.addEntityDefinition()', function () {
-    before(function(){
-      Collection.clearEntityMap();
-    });
     it('adds specified values to the Entity map', function () {
       const entityMap = Collection.getEntityMap();
-      expect(entityMap.size).to.equal(0);
+      expect(entityMap.size).to.equal(4);
       Collection.addEntityDefinition(Object, Collection);
-      expect(entityMap.size).to.equal(1);
-      Collection.addEntityDefinition(Entity, EntityCollection);
-      expect(entityMap.size).to.equal(2);
+      expect(entityMap.size).to.equal(5);
     });
   });
 

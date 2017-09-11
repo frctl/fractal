@@ -149,18 +149,16 @@ class Collection {
   }
 
   map(...args) {
-    let [fn,] = args;
-    const item = fn(this._items[0], 0, this._items);
-    const Constr = entityMap.get(item.constructor);
-    if (Constr) {
-      return new Constr(this._items.map(...args))
-    } 
-    return new Collection(this._items.map(...args));
+    let [fn] = args;
+    let Constr = this._getConstr(this._items, fn);
+    return new Constr(this._items.map(...args));
   }
 
   mapAsync(...args) {
+    let [fn] = args;
     const results = this._items.map(...args);
-    return Promise.all(results).then(items => this._new(items));
+    let Constr = this._getConstr(this._items, fn);
+    return Promise.all(results).then(items => new Constr(items));
   }
 
   mapToArray(...args) {
@@ -239,6 +237,14 @@ class Collection {
     return items;
   }
 
+  _getConstr(items, fn) {
+    const item = fn(items[0], 0, items);
+    assert((check.not.null(item) || check.not.undefined(item)),
+      `The mapping funtion supplied returned a 'null' value, please ensure values are filtered before attempting to 'map' a Collection [map-returned-null]`, ReferenceError);
+    const Constr = entityMap.get(item.constructor);
+    return Constr || Collection;
+  }
+
   [Symbol.iterator]() {
     return this._items[Symbol.iterator]();
   }
@@ -269,11 +275,9 @@ class Collection {
   static addEntityDefinition(key, value) {
     entityMap.set(key, value);
   }
+
   static getEntityMap() {
     return entityMap;
-  }
-  static clearEntityMap() {
-    entityMap.clear();
   }
 }
 
