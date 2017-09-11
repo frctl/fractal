@@ -59,10 +59,10 @@ const filesToComponentsTransform = {
     name: 'plugin-status',
     transform: 'files',
     handler: items => items.map(i => {
-        i = i || {};
-        i.ready = true;
-        return i;
-      })
+      i = i || {};
+      i.ready = true;
+      return i;
+    })
   }
 };
 

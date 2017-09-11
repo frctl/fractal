@@ -51,53 +51,24 @@ const entityMap = i => new Entity(i);
 const variantMap = i => new Variant(i);
 const objectMap = i => Object.assign({}, i);
 
-const entityFromVariantMap = i => new Entity({
-  src: i.name
-});
-const fileFromVariantMap = i => new File({path: i.name});
-const compFromVariantMap = i => new Component({src: new File({path: i.name})});
-
-const entityFromCompMap = i => new Entity({
-  src: i.getSrc()
-});
-const fileFromCompMap = i => i.getSrc();
-const variantFromCompMap = i => new Variant({
-  name: i.getSrc().stem,
-  component: 'parent-component'
-});
-
-const entityFromFileMap = i => new Entity({
-  src: i.stem
-});
-const compFromFileMap = i => new Component({
-  src: i
-});
-const variantFromFileMap = i => new Variant({
-  name: i.stem,
-  component: 'parent-component'
-});
-
-const compFromEntityMap = i => new Component({
-  src: new File(i)
-});
-const variantFromEntityMap = i => new Variant({
-  name: i.path,
-  component: 'parent-component'
-});
-
 describe('Collection Mapping', function () {
   describe(`ComponentCollection`, function () {
     it(`syncronously converts to a ComponentCollection when map returns a Component`, function () {
       testAtoACollection(makeComponentCollection(validComponentDefs), componentMap, ComponentCollection, ComponentCollection);
     });
     it(`syncronously converts to a FileCollection when map returns a File`, function () {
-      testCtoCCollection(makeComponentCollection(validComponentDefs), fileFromCompMap, ComponentCollection, FileCollection);
+      testCtoCCollection(makeComponentCollection(validComponentDefs), i => i.getSrc(), ComponentCollection, FileCollection);
     });
     it(`syncronously converts to a EntityCollection when map returns an Entity`, function () {
-      testCtoACollection(makeComponentCollection(validComponentDefs), entityFromCompMap, ComponentCollection, EntityCollection);
+      testCtoACollection(makeComponentCollection(validComponentDefs), i => new Entity({
+        src: i.getSrc()
+      }), ComponentCollection, EntityCollection);
     });
     it(`syncronously converts to a VariantCollection when map returns a Variant`, function () {
-      testCtoCCollection(makeComponentCollection(validComponentDefs), variantFromCompMap, ComponentCollection, VariantCollection);
+      testCtoCCollection(makeComponentCollection(validComponentDefs), i => new Variant({
+        name: i.getSrc().stem,
+        component: 'parent-component'
+      }), ComponentCollection, VariantCollection);
     });
     it(`syncronously converts to a Collection when map returns an Object`, function () {
       testCtoACollection(makeComponentCollection(validComponentDefs), objectMap, ComponentCollection, Collection);
@@ -107,13 +78,18 @@ describe('Collection Mapping', function () {
       await asyncTestAtoACollection(makeComponentCollection(validComponentDefs), componentMap, ComponentCollection, ComponentCollection);
     });
     it(`asyncronously converts to a FileCollection when mapAsync returns a File`, async function () {
-      await asyncTestCtoCCollection(makeComponentCollection(validComponentDefs), fileFromCompMap, ComponentCollection, FileCollection);
+      await asyncTestCtoCCollection(makeComponentCollection(validComponentDefs), async i => await Promise.resolve(i.getSrc()), ComponentCollection, FileCollection);
     });
     it(`asyncronously converts to a EntityCollection when mapAsync returns an Entity`, async function () {
-      await asyncTestCtoACollection(makeComponentCollection(validComponentDefs), entityFromCompMap, ComponentCollection, EntityCollection);
+      await asyncTestCtoACollection(makeComponentCollection(validComponentDefs), async i => await Promise.resolve(new Entity({
+        src: i.getSrc()
+      })), ComponentCollection, EntityCollection);
     });
     it(`asyncronously converts to a VariantCollection when mapAsync returns a Variant`, async function () {
-      await asyncTestCtoCCollection(makeComponentCollection(validComponentDefs), variantFromCompMap, ComponentCollection, VariantCollection);
+      await asyncTestCtoCCollection(makeComponentCollection(validComponentDefs), async i => await Promise.resolve(new Variant({
+        name: i.getSrc().stem,
+        component: 'parent-component'
+      })), ComponentCollection, VariantCollection);
     });
     it(`asyncronously converts to a Collection when mapAsync returns an Object`, async function () {
       await asyncTestCtoACollection(makeComponentCollection(validComponentDefs), objectMap, ComponentCollection, Collection);
@@ -122,32 +98,46 @@ describe('Collection Mapping', function () {
 
   describe(`FileCollection`, function () {
     it(`syncronously converts to a ComponentCollection when map returns a Component`, function () {
-      testCtoCCollection(makeFileCollection(validFileDefs), compFromFileMap, FileCollection, ComponentCollection);
+      testCtoCCollection(makeFileCollection(validFileDefs), i => new Component({
+        src: i
+      }), FileCollection, ComponentCollection);
     });
     it(`syncronously converts to a FileCollection when map returns a File`, function () {
       testAtoACollection(makeFileCollection(validFileDefs), fileMap, FileCollection, FileCollection);
     });
     it(`syncronously converts to a EntityCollection when map returns an Entity`, function () {
-      testCtoACollection(makeFileCollection(validFileDefs), entityFromFileMap, FileCollection, EntityCollection);
+      testCtoACollection(makeFileCollection(validFileDefs), i => new Entity({
+        src: i.stem
+      }), FileCollection, EntityCollection);
     });
     it(`syncronously converts to a VariantCollection when map returns a Variant`, function () {
-      testCtoCCollection(makeFileCollection(validFileDefs), variantFromFileMap, FileCollection, VariantCollection);
+      testCtoCCollection(makeFileCollection(validFileDefs), i => new Variant({
+        name: i.stem,
+        component: 'parent-component'
+      }), FileCollection, VariantCollection);
     });
     it(`syncronously converts to a Collection when map returns an Object`, function () {
       testCtoACollection(makeFileCollection(validFileDefs), objectMap, FileCollection, Collection);
     });
 
     it(`asyncronously converts to a ComponentCollection when map returns a Component`, async function () {
-      await asyncTestCtoCCollection(makeFileCollection(validFileDefs), compFromFileMap, FileCollection, ComponentCollection);
+      await asyncTestCtoCCollection(makeFileCollection(validFileDefs), async i => await new Component({
+        src: i
+      }), FileCollection, ComponentCollection);
     });
     it(`asyncronously converts to a FileCollection when map returns a File`, async function () {
       await asyncTestAtoACollection(makeFileCollection(validFileDefs), fileMap, FileCollection, FileCollection);
     });
     it(`asyncronously converts to a EntityCollection when map returns an Entity`, async function () {
-      await asyncTestCtoACollection(makeFileCollection(validFileDefs), entityFromFileMap, FileCollection, EntityCollection);
+      await asyncTestCtoACollection(makeFileCollection(validFileDefs), async i => await Promise.resolve(new Entity({
+        src: i.stem
+      })), FileCollection, EntityCollection);
     });
     it(`asyncronously converts to a VariantCollection when map returns a Variant`, async function () {
-      await asyncTestCtoCCollection(makeFileCollection(validFileDefs), variantFromFileMap, FileCollection, VariantCollection);
+      await asyncTestCtoCCollection(makeFileCollection(validFileDefs), async i => await Promise.resolve(new Variant({
+        name: i.stem,
+        component: 'parent-component'
+      })), FileCollection, VariantCollection);
     });
     it(`asyncronously converts to a Collection when map returns an Object`, async function () {
       await asyncTestCtoACollection(makeFileCollection(validFileDefs), objectMap, FileCollection, Collection);
@@ -156,7 +146,9 @@ describe('Collection Mapping', function () {
 
   describe(`EntityCollection`, function () {
     it(`syncronously converts to a ComponentCollection when map returns a Component`, function () {
-      testAtoCCollection(makeEntityCollection(validEntityDefs), compFromEntityMap, EntityCollection, ComponentCollection);
+      testAtoCCollection(makeEntityCollection(validEntityDefs), i => new Component({
+        src: new File(i)
+      }), EntityCollection, ComponentCollection);
     });
     it(`syncronously converts to a FileCollection when map returns a File`, function () {
       testAtoCCollection(makeEntityCollection(validEntityDefs), fileMap, EntityCollection, FileCollection);
@@ -165,14 +157,19 @@ describe('Collection Mapping', function () {
       testAtoACollection(makeEntityCollection(validEntityDefs), entityMap, EntityCollection, EntityCollection);
     });
     it(`syncronously converts to a VariantCollection when map returns a Variant`, function () {
-      testAtoCCollection(makeEntityCollection(validEntityDefs), variantFromEntityMap, EntityCollection, VariantCollection);
+      testAtoCCollection(makeEntityCollection(validEntityDefs), i => new Variant({
+        name: i.path,
+        component: 'parent-component'
+      }), EntityCollection, VariantCollection);
     });
     it(`syncronously converts to a Collection when map returns an Object`, function () {
       testCtoACollection(makeEntityCollection(validEntityDefs), objectMap, EntityCollection, Collection);
     });
 
     it(`asyncronously converts to a ComponentCollection when map returns a Component`, async function () {
-      await asyncTestAtoCCollection(makeEntityCollection(validEntityDefs), compFromEntityMap, EntityCollection, ComponentCollection);
+      await asyncTestAtoCCollection(makeEntityCollection(validEntityDefs), async i => await Promise.resolve(new Component({
+        src: new File(i)
+      })), EntityCollection, ComponentCollection);
     });
     it(`asyncronously converts to a FileCollection when map returns a File`, async function () {
       await asyncTestAtoCCollection(makeEntityCollection(validEntityDefs), fileMap, EntityCollection, FileCollection);
@@ -181,7 +178,10 @@ describe('Collection Mapping', function () {
       await asyncTestAtoACollection(makeEntityCollection(validEntityDefs), entityMap, EntityCollection, EntityCollection);
     });
     it(`asyncronously converts to a VariantCollection when map returns a Variant`, async function () {
-      await asyncTestAtoCCollection(makeEntityCollection(validEntityDefs), variantFromEntityMap, EntityCollection, VariantCollection);
+      await asyncTestAtoCCollection(makeEntityCollection(validEntityDefs), async i => await Promise.resolve(new Variant({
+        name: i.path,
+        component: 'parent-component'
+      })), EntityCollection, VariantCollection);
     });
     it(`asyncronously converts to a Collection when map returns an Object`, async function () {
       await asyncTestCtoACollection(makeEntityCollection(validEntityDefs), objectMap, EntityCollection, Collection);
@@ -190,13 +190,15 @@ describe('Collection Mapping', function () {
 
   describe(`VariantCollection`, function () {
     it(`syncronously converts to a ComponentCollection when map returns a Component`, function () {
-      testCtoCCollection(makeVariantCollection(validVariantDefs), compFromVariantMap, VariantCollection, ComponentCollection);
+      testCtoCCollection(makeVariantCollection(validVariantDefs), i => new Component({src: new File({path: i.name})}), VariantCollection, ComponentCollection);
     });
     it(`syncronously converts to a FileCollection when map returns a File`, function () {
-      testCtoCCollection(makeVariantCollection(validVariantDefs), fileFromVariantMap, VariantCollection, FileCollection);
+      testCtoCCollection(makeVariantCollection(validVariantDefs), i => new File({path: i.name}), VariantCollection, FileCollection);
     });
     it(`syncronously converts to a EntityCollection when map returns an Entity`, function () {
-      testCtoACollection(makeVariantCollection(validVariantDefs), entityFromVariantMap, VariantCollection, EntityCollection);
+      testCtoACollection(makeVariantCollection(validVariantDefs), i => new Entity({
+        src: i.name
+      }), VariantCollection, EntityCollection);
     });
     it(`syncronously converts to a VariantCollection when map returns a Variant`, function () {
       testAtoACollection(makeVariantCollection(validVariantDefs), variantMap, VariantCollection, VariantCollection);
@@ -206,13 +208,15 @@ describe('Collection Mapping', function () {
     });
 
     it(`asyncronously converts to a ComponentCollection when map returns a Component`, async function () {
-      await asyncTestCtoCCollection(makeVariantCollection(validVariantDefs), compFromVariantMap, VariantCollection, ComponentCollection);
+      await asyncTestCtoCCollection(makeVariantCollection(validVariantDefs), async i => await Promise.resolve(new Component({src: new File({path: i.name})})), VariantCollection, ComponentCollection);
     });
     it(`asyncronously converts to a FileCollection when map returns a File`, async function () {
-      await asyncTestCtoCCollection(makeVariantCollection(validVariantDefs), fileFromVariantMap, VariantCollection, FileCollection);
+      await asyncTestCtoCCollection(makeVariantCollection(validVariantDefs), async i => await Promise.resolve(new File({path: i.name})), VariantCollection, FileCollection);
     });
     it(`asyncronously converts to a EntityCollection when map returns an Entity`, async function () {
-      await asyncTestCtoACollection(makeVariantCollection(validVariantDefs), entityFromVariantMap, VariantCollection, EntityCollection);
+      await asyncTestCtoACollection(makeVariantCollection(validVariantDefs), async i => await Promise.resolve(new Entity({
+        src: i.name
+      })), VariantCollection, EntityCollection);
     });
     it(`asyncronously converts to a VariantCollection when map returns a Variant`, async function () {
       await asyncTestAtoACollection(makeVariantCollection(validVariantDefs), variantMap, VariantCollection, VariantCollection);
