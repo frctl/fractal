@@ -1,8 +1,7 @@
-module.exports = function(){
-
+module.exports = function () {
   return {
     name: 'permalink',
-    helper:  function(...args){
+    helper: function (...args) {
       const site = args.pop();
       const page = site.find(...args);
       if (!page || !page.permalink) {
@@ -10,6 +9,5 @@ module.exports = function(){
       }
       return page.permalink;
     }
-  }
-
+  };
 };

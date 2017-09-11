@@ -8,7 +8,7 @@ const Router = require('./router');
 const Server = require('./server');
 const Config = require('./config/store');
 const write = require('./utils/write');
-const render = require('./utils/render');
+const render = require('./render/render');
 
 const _fractal = new WeakMap();
 

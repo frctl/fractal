@@ -1,19 +1,16 @@
 const {addTrailingSeparator, defaultsDeep} = require('@frctl/utils');
-const {Component, ComponentCollection, FileCollection} = require('@frctl/support');
+const {Component, ComponentCollection} = require('@frctl/support');
 
 module.exports = function (opts = {}) {
-
   return {
 
     name: 'components',
 
     async transform(files, state, app) {
-
       let remainingFiles = files;
       const componentDirs = files.filter(file => file.isDirectory()).filter(app.get('components.filter')).sortBy('path.length', 'desc');
 
       return ComponentCollection.from(await componentDirs.mapToArrayAsync(async dir => {
-
         const rootPath = addTrailingSeparator(dir.path);
 
         let componentFiles = remainingFiles.filter(file => !file.isDirectory() && file.path.startsWith(rootPath));
