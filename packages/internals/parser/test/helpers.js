@@ -58,9 +58,11 @@ const filesToComponentsTransform = {
   plugins: {
     name: 'plugin-status',
     transform: 'files',
-    handler: items => items.map(i => Object.assign(i, {
-      ready: true
-    }))
+    handler: items => items.map(i => {
+        i = i || {};
+        i.ready = true;
+        return i;
+      })
   }
 };
 

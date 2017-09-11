@@ -239,6 +239,7 @@ class Collection {
 
   _getConstr(items, fn) {
     const item = fn(items[0], 0, items);
+    console.log(item);
     assert((check.not.null(item) || check.not.undefined(item)),
       `The mapping funtion supplied returned a 'null' value, please ensure values are filtered before attempting to 'map' a Collection [map-returned-null]`, ReferenceError);
     const Constr = entityMap.get(item.constructor);
