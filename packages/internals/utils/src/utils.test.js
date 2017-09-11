@@ -346,10 +346,10 @@ describe('Utils', function () {
       let name = 'name02';
       let used = ['name00', 'name01', 'name02'];
       let uniqueName = utils.uniqueName(name, used);
-      expect(uniqueName).to.equal('name02-1');
+      expect(uniqueName).to.equal('name02-2');
       let uniqueName2 = utils.uniqueName(name, used);
-      expect(uniqueName2).to.equal('name02-2');
-      expect(used).to.eql(['name00', 'name01', 'name02', 'name02-1', 'name02-2']);
+      expect(uniqueName2).to.equal('name02-3');
+      expect(used).to.eql(['name00', 'name01', 'name02', 'name02-2', 'name02-3']);
     });
   });
 

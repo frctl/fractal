@@ -87,7 +87,7 @@ const utils = module.exports = {
     let id = name;
     if (used.includes(id)) {
       // id already exists, add a suffix to make it unique
-      let suffix = 0;
+      let suffix = 1;
       while (used.includes(id)) {
         suffix++;
         id = `${name}-${suffix}`;

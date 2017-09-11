@@ -2,6 +2,7 @@
 
 const {expect} = require('../../../../../test/helpers');
 const Entity = require('../entities/entity');
+const Collection = require('./collection');
 const EntityCollection = require('./entity-collection');
 
 let items = [{
@@ -26,6 +27,12 @@ let items = [{
 }
 ];
 
+const newItem = {
+  cwd: '/',
+  path: '/mice/mickey2.js',
+  contents: new Buffer('Mickey Mouse2')
+};
+
 const entityContents = 'var x = 123';
 const baseEntity = {
   cwd: '/',
@@ -48,12 +55,37 @@ describe('EntityCollection', function () {
       expect(collection.length).to.equal(0);
     });
   });
+
   describe('.from()', function () {
     it('successfully creates an EntityCollection when valid input is supplied', function () {
       expect(() => makeCollectionFrom('text')).to.throw(TypeError, '[properties-invalid]');
       expect(() => makeCollectionFrom({single: 'object'})).to.not.throw();
       expect(() => makeCollectionFrom(new Entity({single: 'object'}))).to.not.throw();
       expect(() => makeCollectionFrom([Entity.from({single: 'object'}), Entity.from({another: 'object'})])).to.not.throw();
+    });
+  });
+
+  describe('.push()', function () {
+    it('returns a new EntityCollection instance', function () {
+      const collection = makeCollection();
+      const newCollection = collection.push(newItem);
+
+      expect(newCollection).to.not.equal(collection);
+      expect(collection.length).to.equal(items.length);
+      expect(Collection.isCollection(newCollection)).to.be.true;
+      expect(newCollection).to.be.an('EntityCollection');
+    });
+    it('adds the item to the end of the collection if item is Entity props', function () {
+      const collection = makeCollection();
+      const newCollection = collection.push(newItem);
+      expect(newCollection.length).to.equal(items.length + 1);
+      expect(newCollection[newCollection.length - 1].getComputedProps()).to.eql(newItem);
+    });
+    it('adds the item to the end of the collection if item is Entity instance', function () {
+      const collection = makeCollection();
+      const newCollection = collection.push(Entity.from(newItem));
+      expect(newCollection.length).to.equal(items.length + 1);
+      expect(newCollection[newCollection.length - 1].getComputedProps()).to.eql(newItem);
     });
   });
 

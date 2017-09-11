@@ -7,7 +7,10 @@ module.exports = {
     },
     default: {
       type: 'boolean'
+    },
+    component: {
+      type: 'string'
     }
   },
-  required: ['name']
+  required: ['name', 'component']
 };

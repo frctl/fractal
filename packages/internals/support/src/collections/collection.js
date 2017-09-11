@@ -1,4 +1,8 @@
-const {compact, find, filter, reject, iteratee, sortBy, orderBy, groupBy, uniq, uniqBy, mapValues, cloneDeep, isArray, isObjectLike} = require('lodash');
+const {
+  compact, find, filter, reject, iteratee, sortBy, orderBy, groupBy, uniq,
+  uniqBy, mapValues, isArray, isObjectLike
+} = require('lodash');
+const {cloneDeep} = require('@frctl/utils');
 const check = require('check-types');
 
 const assert = check.assert;
@@ -11,6 +15,7 @@ class Collection {
       items = this._castItems(items);
     }
     this._validateOrThrow(items);
+
     this._items = items;
 
     /*
@@ -20,9 +25,13 @@ class Collection {
     return new Proxy(this, {
       get(target, name) {
         if (typeof name !== 'symbol' && Number.isInteger(parseInt(name.toString(), 10))) {
-          return items[name];
+          return target._items[name];
         }
-        return target[name];
+        const originalProp = Reflect.get(target, name);
+        if ((typeof originalProp === 'function') && (name !== 'constructor')) {
+          return originalProp.bind(target);
+        }
+        return originalProp;
       }
     });
   }
@@ -139,12 +148,12 @@ class Collection {
   }
 
   map(...args) {
-    return new this.constructor(this._items.map(...args));
+    return this._new(this._items.map(...args));
   }
 
   mapAsync(...args) {
     const results = this._items.map(...args);
-    return Promise.all(results).then(items => new this.constructor(items));
+    return Promise.all(results).then(items => this._new(items));
   }
 
   mapToArray(...args) {
@@ -157,7 +166,7 @@ class Collection {
 
   groupBy(grouper) {
     const groups = groupBy(this.toArray(), grouper);
-    return mapValues(groups, items => new this.constructor(items));
+    return mapValues(groups, items => this._new(items));
   }
 
   reduce(...args) {
@@ -194,7 +203,7 @@ class Collection {
       }
       return cloneDeep(item);
     });
-    return new this.constructor(items);
+    return this._new(items);
   }
 
   _validateOrThrow(items) {
@@ -203,8 +212,8 @@ class Collection {
     return isValid;
   }
 
-  _new(items) {
-    return new this.constructor(items);
+  _new(...args) {
+    return new this.constructor(...args);
   }
 
   _normaliseItems(items) {
@@ -239,8 +248,8 @@ class Collection {
     return item instanceof Collection;
   }
 
-  static from(items) {
-    return new this(items);
+  static from(...args) {
+    return new this(...args);
   }
 
   static validate(items) {

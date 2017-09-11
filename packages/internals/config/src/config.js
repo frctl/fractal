@@ -1,9 +1,9 @@
 /* eslint import/no-dynamic-require: off */
 
 const {assert} = require('check-types');
-const {toArray, defaultsDeep} = require('@frctl/utils');
+const {toArray, defaultsDeep, cloneDeep} = require('@frctl/utils');
 const {Validator} = require('@frctl/support');
-const {get, set, remove, cloneDeep, isObjectLike, mapValues, flatten} = require('lodash');
+const {get, set, remove, isObjectLike, mapValues, flatten} = require('lodash');
 
 const _data = new WeakMap();
 const _accessors = new WeakMap();

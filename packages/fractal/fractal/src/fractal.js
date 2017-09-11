@@ -42,9 +42,7 @@ class Fractal extends App {
         let view;
         if (Component.isComponent(target)) {
           // reduce to a variant
-          const variant = target.getVariants().find(variant => {
-            return opts.variant ? variant.name === opts.variant : variant.default;
-          });
+          const variant = target.getVariant(opts.variant);
           if (!variant) {
             throw new Error(`Could not find variant '${opts.variant}' for component '${target.name}' [variant-not-found]`);
           }
