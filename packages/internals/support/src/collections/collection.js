@@ -7,6 +7,7 @@ const check = require('check-types');
 
 const assert = check.assert;
 const entityMap = new Map();
+const tagMap = new Map();
 
 class Collection {
 
@@ -148,10 +149,30 @@ class Collection {
     return this._new(items);
   }
 
+  _getConstrFromType(type) {
+    return tagMap.get(type);
+  }
+
   map(...args) {
-    let [fn] = args;
-    let Constr = this._getConstr(this._items, fn);
-    return new Constr(this._items.map(...args));
+    let [fn, thisOrType, maybeType] = args;
+    let thisArg;
+    let type;
+    let Constr;
+
+    if (check.string(thisOrType)) {
+      type = thisOrType;
+    } else if (thisOrType) {
+      thisArg = thisOrType;
+      type = maybeType;
+    }
+
+    if (type) {
+      Constr = this._getConstrFromType(type);
+    } else {
+      Constr = this._getConstr(this._items, fn, thisArg);
+    }
+
+    return new Constr(this._items.map(fn, thisArg));
   }
 
   mapAsync(...args) {
@@ -238,20 +259,22 @@ class Collection {
     return items;
   }
 
-  _getConstr(items, fn) {
+  _getConstr(items, fn, thisArg) {
     if (!items[0]) {
       return this.constructor;
     }
+    fn = thisArg ? fn.bind(thisArg) : fn;
     const item = fn(items[0], 0, items);
     assert((check.not.null(item) || check.not.undefined(item)),
       `The mapping funtion supplied returned a 'null' value, please ensure values are filtered before attempting to 'map' a Collection [map-returned-null]`, ReferenceError);
     return entityMap.get(item.constructor) || Collection;
   }
 
-  _getConstrAsync(items, fn) {
+  _getConstrAsync(items, fn, thisArg) {
     if (!items[0]) {
       return this.constructor;
     }
+    fn = thisArg ? fn.bind(thisArg) : fn;
     return Promise.resolve(fn(items[0], 0, items)).then(item => {
       assert((check.not.null(item) || check.not.undefined(item)),
         `The mapping funtion supplied returned a 'null' value, please ensure values are filtered before attempting to 'map' a Collection [map-returned-null]`, ReferenceError);
@@ -292,6 +315,14 @@ class Collection {
 
   static getEntityMap() {
     return entityMap;
+  }
+
+  static addTagDefinition(key, value) {
+    tagMap.set(key, value);
+  }
+
+  static getTagMap() {
+    return tagMap;
   }
 }
 

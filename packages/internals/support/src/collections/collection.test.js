@@ -513,6 +513,18 @@ describe('Collection', function () {
       const collection = makeCollection([]);
       expect(collection.map(isDogBool)).to.be.a('Collection').and.to.include({length: 0});
     });
+    it(`accepts 'this' arg as second param`, function () {
+      const collection = makeCollection();
+      const newCollection = collection.map(function (i) {
+        return {isDog: i.type === 'dog', color: this.color};
+      }, {color: 'purple'});
+      expect(newCollection).to.be.a('Collection').that.deep.includes({_items:
+      [{isDog: false, color: 'purple'},
+          {isDog: false, color: 'purple'},
+          {isDog: false, color: 'purple'},
+          {isDog: true, color: 'purple'},
+          {isDog: true, color: 'purple'}]});
+    });
   });
 
   describe('.mapAsync()', function () {
@@ -659,6 +671,18 @@ describe('Collection', function () {
       expect(entityMap.size).to.equal(4);
       Collection.addEntityDefinition(Object, Collection);
       expect(entityMap.size).to.equal(5);
+      entityMap.delete(Object);
+    });
+  });
+
+  describe('.addCollectionTag()', function () {
+    it('adds specified values to the Entity map', function () {
+      const tagMap = Collection.getTagMap();
+      const tag = 'Collection';
+      expect(tagMap.size).to.equal(0);
+      Collection.addTagDefinition(tag, Collection);
+      expect(tagMap.size).to.equal(1);
+      tagMap.delete(tag);
     });
   });
 
