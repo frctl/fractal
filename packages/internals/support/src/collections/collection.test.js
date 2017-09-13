@@ -493,7 +493,7 @@ describe('Collection', function () {
   });
 
   describe('.map()', function () {
-    it('returns an new Collection', function () {
+    it('returns a new Collection', function () {
       const collection = makeCollection();
       let newCollection = collection.map(() => ({src: 'path'}));
       expect(Array.isArray(newCollection)).to.be.false;
@@ -516,7 +516,7 @@ describe('Collection', function () {
   });
 
   describe('.mapAsync()', function () {
-    it('returns an new Collection', async function () {
+    it('returns a new Collection', async function () {
       const collection = makeCollection();
       const resultCollection = await collection.mapAsync(async i => await Promise.resolve(i));
       expect(Array.isArray(resultCollection)).to.be.false;
@@ -543,7 +543,7 @@ describe('Collection', function () {
   });
 
   describe('.mapToArray()', function () {
-    it('returns an new Array from a mapped Collection', function () {
+    it('returns a new Array from a mapped Collection', function () {
       const collection = makeCollection();
       let newArray = collection.mapToArray(i => i);
       expect(Array.isArray(newArray)).to.be.true;
@@ -557,7 +557,7 @@ describe('Collection', function () {
   });
 
   describe('.mapToArrayAsync()', function () {
-    it('returns an new Collection', function () {
+    it('returns a new Collection', function () {
       const collection = makeCollection();
       return collection.mapToArrayAsync(() => ({})).then(function (resultArray) {
         expect(Array.isArray(resultArray)).to.be.true;

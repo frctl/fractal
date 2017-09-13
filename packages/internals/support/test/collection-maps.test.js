@@ -73,6 +73,9 @@ describe('Collection Mapping', function () {
     it(`syncronously converts to a Collection when map returns an Object`, function () {
       testCtoACollection(makeComponentCollection(validComponentDefs), objectMap, ComponentCollection, Collection);
     });
+    it(`syncronously returns a ComponentCollection if an empty ComponentCollection is supplied`, function () {
+      testAtoACollection(makeComponentCollection([]), objectMap, ComponentCollection, ComponentCollection);
+    });
 
     it(`asyncronously converts to a ComponentCollection when mapAsync returns a Component`, async function () {
       await asyncTestAtoACollection(makeComponentCollection(validComponentDefs), componentMap, ComponentCollection, ComponentCollection);
@@ -93,6 +96,12 @@ describe('Collection Mapping', function () {
     });
     it(`asyncronously converts to a Collection when mapAsync returns an Object`, async function () {
       await asyncTestCtoACollection(makeComponentCollection(validComponentDefs), objectMap, ComponentCollection, Collection);
+    });
+    it(`asyncronously returns a ComponentCollection if an empty ComponentCollection is supplied`, async function () {
+      await asyncTestAtoACollection(makeComponentCollection([]), async i => await Promise.resolve(new Variant({
+        name: i.getSrc().stem,
+        component: 'parent-component'
+      })), ComponentCollection, ComponentCollection);
     });
   });
 
@@ -119,6 +128,9 @@ describe('Collection Mapping', function () {
     it(`syncronously converts to a Collection when map returns an Object`, function () {
       testCtoACollection(makeFileCollection(validFileDefs), objectMap, FileCollection, Collection);
     });
+    it(`syncronously returns a FileCollection if an empty FileCollection is supplied`, function () {
+      testAtoACollection(makeFileCollection([]), objectMap, FileCollection, Collection);
+    });
 
     it(`asyncronously converts to a ComponentCollection when mapAsync returns a Component`, async function () {
       await asyncTestCtoCCollection(makeFileCollection(validFileDefs), async i => await new Component({
@@ -141,6 +153,12 @@ describe('Collection Mapping', function () {
     });
     it(`asyncronously converts to a Collection when mapAsync returns an Object`, async function () {
       await asyncTestCtoACollection(makeFileCollection(validFileDefs), objectMap, FileCollection, Collection);
+    });
+    it(`asyncronously returns a FileCollection if an empty FileCollection is supplied`, async function () {
+      await asyncTestAtoACollection(makeFileCollection([]), async i => await Promise.resolve(new Variant({
+        name: i.stem,
+        component: 'parent-component'
+      })), FileCollection, FileCollection);
     });
   });
 
@@ -165,6 +183,9 @@ describe('Collection Mapping', function () {
     it(`syncronously converts to a Collection when map returns an Object`, function () {
       testCtoACollection(makeEntityCollection(validEntityDefs), objectMap, EntityCollection, Collection);
     });
+    it(`syncronously returns an EntityCollection when an empty EntityCollection is provided`, function () {
+      testAtoACollection(makeEntityCollection([]), objectMap, EntityCollection, EntityCollection);
+    });
 
     it(`asyncronously converts to a ComponentCollection when mapAsync returns a Component`, async function () {
       await asyncTestAtoCCollection(makeEntityCollection(validEntityDefs), async i => await Promise.resolve(new Component({
@@ -186,6 +207,11 @@ describe('Collection Mapping', function () {
     it(`asyncronously converts to a Collection when mapAsync returns an Object`, async function () {
       await asyncTestCtoACollection(makeEntityCollection(validEntityDefs), objectMap, EntityCollection, Collection);
     });
+    it(`asyncronously returns an EntityCollection when an empty EntityCollection is provided`, async function () {
+      await asyncTestAtoACollection(makeEntityCollection([]), async i => await Promise.resolve(new Component({
+        src: new File(i)
+      })), EntityCollection, EntityCollection);
+    });
   });
 
   describe(`VariantCollection`, function () {
@@ -206,6 +232,9 @@ describe('Collection Mapping', function () {
     it(`syncronously converts to a Collection when map returns an Object`, function () {
       testCtoACollection(makeVariantCollection(validVariantDefs), objectMap, VariantCollection, Collection);
     });
+    it(`asyncronously returns a VariantCollection when an empty VariantCollection is provided`, function () {
+      testAtoACollection(makeVariantCollection([]), objectMap, VariantCollection, VariantCollection);
+    });
 
     it(`asyncronously converts to a ComponentCollection when mapAsync returns a Component`, async function () {
       await asyncTestCtoCCollection(makeVariantCollection(validVariantDefs), async i => await Promise.resolve(new Component({src: new File({path: i.name})})), VariantCollection, ComponentCollection);
@@ -223,6 +252,9 @@ describe('Collection Mapping', function () {
     });
     it(`asyncronously converts to a Collection when mapAsync returns an Object`, async function () {
       await asyncTestCtoACollection(makeVariantCollection(validVariantDefs), objectMap, VariantCollection, Collection);
+    });
+    it(`asyncronously returns a VariantCollection when an empty VariantCollection is provided`, async function () {
+      await asyncTestAtoACollection(makeVariantCollection([]), async i => await Promise.resolve(new Component({src: new File({path: i.name})})), VariantCollection, VariantCollection);
     });
   });
 
@@ -242,6 +274,9 @@ describe('Collection Mapping', function () {
     it(`syncronously converts to a Collection when map returns an Object`, function () {
       testAtoACollection(makeCollection(validComponentDefs), objectMap, Collection, Collection);
     });
+    it(`syncronously returns a Collection when an empty Collection is supplied`, function () {
+      testAtoACollection(makeCollection([]), objectMap, Collection, Collection);
+    });
 
     it(`asyncronously converts to a ComponentCollection when mapAsync returns a Component`, async function () {
       await asyncTestAtoCCollection(makeCollection(validComponentDefs), componentMap, Collection, ComponentCollection);
@@ -256,7 +291,10 @@ describe('Collection Mapping', function () {
       await asyncTestAtoCCollection(makeCollection(validVariantDefs), variantMap, Collection, VariantCollection);
     });
     it(`asyncronously converts to a Collection when mapAsync returns an Object`, async function () {
-      await asyncTestAtoACollection(makeCollection(validComponentDefs), objectMap, Collection, Collection);
+      await asyncTestAtoACollection(makeCollection(validComponentDefs), async i => await Promise.resolve(Object.assign({}, i)), Collection, Collection);
+    });
+    it(`asyncronously returns a Collection when an empty Collection is supplied`, async function () {
+      await asyncTestAtoACollection(makeCollection(validComponentDefs), async i => await Promise.resolve(Object.assign({}, i)), Collection, Collection);
     });
   });
 });
