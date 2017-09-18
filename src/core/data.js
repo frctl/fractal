@@ -74,7 +74,7 @@ module.exports = {
 
     writeFile(filePath, data) {
         const pathInfo = Path.parse(Path.resolve(filePath));
-        const format = utils.lang(filePath, true).mode;
+        const format = utils.lang(filePath, true).ace_mode;
         return fs.writeFileAsync(filePath, this.stringify(data, format));
     },
 
