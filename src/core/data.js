@@ -47,7 +47,7 @@ module.exports = {
     },
 
     readFile(filePath) {
-        const format = utils.lang(filePath, true).mode;
+        const format = utils.lang(filePath, true).ace_mode;
         if (format === 'js' || format === 'javascript') {
             try {
                 filePath = Path.relative(__dirname, filePath);
