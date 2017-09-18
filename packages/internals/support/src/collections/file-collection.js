@@ -53,5 +53,6 @@ class FileCollection extends EntityCollection {
 }
 
 Collection.addEntityDefinition(File, FileCollection);
+Collection.addTagDefinition('FileCollection', FileCollection);
 
 module.exports = FileCollection;
