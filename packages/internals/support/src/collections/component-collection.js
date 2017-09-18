@@ -3,6 +3,7 @@ const check = require('check-types');
 const slash = require('slash');
 const Component = require('../entities/component');
 const EntityCollection = require('./entity-collection');
+const Collection = require('./collection');
 
 const assert = check.assert;
 
@@ -63,4 +64,7 @@ class ComponentCollection extends EntityCollection {
   }
 
 }
+
+Collection.addEntityDefinition(Component, ComponentCollection);
+
 module.exports = ComponentCollection;

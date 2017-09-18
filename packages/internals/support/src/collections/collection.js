@@ -6,6 +6,7 @@ const {cloneDeep} = require('@frctl/utils');
 const check = require('check-types');
 
 const assert = check.assert;
+const entityMap = new Map();
 
 class Collection {
 
@@ -148,12 +149,17 @@ class Collection {
   }
 
   map(...args) {
-    return this._new(this._items.map(...args));
+    let [fn] = args;
+    let Constr = this._getConstr(this._items, fn);
+    return new Constr(this._items.map(...args));
   }
 
   mapAsync(...args) {
+    let [fn] = args;
     const results = this._items.map(...args);
-    return Promise.all(results).then(items => this._new(items));
+    return Promise.resolve(this._getConstrAsync(this._items, fn)).then(Constr => {
+      return Promise.all(results).then(items => new Constr(items));
+    });
   }
 
   mapToArray(...args) {
@@ -232,6 +238,27 @@ class Collection {
     return items;
   }
 
+  _getConstr(items, fn) {
+    if (!items[0]) {
+      return this.constructor;
+    }
+    const item = fn(items[0], 0, items);
+    assert((check.not.null(item) || check.not.undefined(item)),
+      `The mapping funtion supplied returned a 'null' value, please ensure values are filtered before attempting to 'map' a Collection [map-returned-null]`, ReferenceError);
+    return entityMap.get(item.constructor) || Collection;
+  }
+
+  _getConstrAsync(items, fn) {
+    if (!items[0]) {
+      return this.constructor;
+    }
+    return Promise.resolve(fn(items[0], 0, items)).then(item => {
+      assert((check.not.null(item) || check.not.undefined(item)),
+        `The mapping funtion supplied returned a 'null' value, please ensure values are filtered before attempting to 'map' a Collection [map-returned-null]`, ReferenceError);
+      return entityMap.get(item.constructor) || Collection;
+    });
+  }
+
   [Symbol.iterator]() {
     return this._items[Symbol.iterator]();
   }
@@ -259,6 +286,13 @@ class Collection {
     return true;
   }
 
+  static addEntityDefinition(key, value) {
+    entityMap.set(key, value);
+  }
+
+  static getEntityMap() {
+    return entityMap;
+  }
 }
 
 function iter(...args) {

@@ -2,6 +2,7 @@ const {uniqueName} = require('@frctl/utils');
 const check = require('check-types');
 const Variant = require('../entities/variant');
 const EntityCollection = require('./entity-collection');
+const Collection = require('./collection');
 
 const assert = check.assert;
 
@@ -152,5 +153,7 @@ function createVariant(target, props = {}) {
   variant = Variant.from(variant);
   return variant;
 }
+
+Collection.addEntityDefinition(Variant, VariantCollection);
 
 module.exports = VariantCollection;
