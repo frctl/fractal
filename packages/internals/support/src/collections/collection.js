@@ -4,6 +4,7 @@ const {
 } = require('lodash');
 const {cloneDeep} = require('@frctl/utils');
 const check = require('check-types');
+const checkMore = require('check-more-types');
 
 const assert = check.assert;
 const entityMap = new Map();
@@ -149,36 +150,20 @@ class Collection {
     return this._new(items);
   }
 
-  _getConstrFromType(type) {
-    return tagMap.get(type);
-  }
-
   map(...args) {
     let [fn, thisOrType, maybeType] = args;
-    let thisArg;
-    let type;
-    let Constr;
-
-    if (check.string(thisOrType)) {
-      type = thisOrType;
-    } else if (thisOrType) {
-      thisArg = thisOrType;
-      type = maybeType;
-    }
-
-    if (type) {
-      Constr = this._getConstrFromType(type);
-    } else {
-      Constr = this._getConstr(this._items, fn, thisArg);
-    }
+    let [thisArg, type] = this._getThisAndType(thisOrType, maybeType);
+    let Constr = this._getConstr(type, this._items, fn, thisArg);
 
     return new Constr(this._items.map(fn, thisArg));
   }
 
   mapAsync(...args) {
-    let [fn] = args;
-    const results = this._items.map(...args);
-    return Promise.resolve(this._getConstrAsync(this._items, fn)).then(Constr => {
+    let [fn, thisOrType, maybeType] = args;
+    let [thisArg, type] = this._getThisAndType(thisOrType, maybeType);
+
+    const results = this._items.map(fn, thisArg);
+    return Promise.resolve(this._getConstrAsync(type, this._items, fn, thisArg)).then(Constr => {
       return Promise.all(results).then(items => new Constr(items));
     });
   }
@@ -259,20 +244,47 @@ class Collection {
     return items;
   }
 
-  _getConstr(items, fn, thisArg) {
+  _getConstrFromType(type) {
+    assert(tagMap.has(type), `Collection.map: type '${type}' not found. Valid types are ${[...tagMap.keys()].join(', ')} [type-not-found]`, ReferenceError);
+    return tagMap.get(type);
+  }
+
+  _getThisAndType(thisOrType, maybeType) {
+    let thisArg;
+    let type;
+
+    if (check.string(thisOrType)) {
+      type = thisOrType;
+    } else if (thisOrType) {
+      thisArg = thisOrType;
+      type = maybeType;
+    }
+
+    return [thisArg, type];
+  }
+
+  _getConstr(type, items, fn, thisArg) {
+    if (type) {
+      return this._getConstrFromType(type);
+    }
     if (!items[0]) {
       return this.constructor;
     }
     fn = thisArg ? fn.bind(thisArg) : fn;
     const item = fn(items[0], 0, items);
+    assert(checkMore.not.promise(item),
+      `The mapping function supplied returned a Promise - please use 'mapAsync' for asynchronous mapping of a Collection [map-returned-promise]`, ReferenceError);
     assert((check.not.null(item) || check.not.undefined(item)),
-      `The mapping funtion supplied returned a 'null' value, please ensure values are filtered before attempting to 'map' a Collection [map-returned-null]`, ReferenceError);
+      `The mapping function supplied returned a 'null' value, please ensure values are filtered before attempting to 'map' a Collection [map-returned-null]`, ReferenceError);
     return entityMap.get(item.constructor) || Collection;
   }
 
-  _getConstrAsync(items, fn, thisArg) {
+  _getConstrAsync(type, items, fn, thisArg) {
+    if (type) {
+      return Promise.resolve(this._getConstrFromType(type));
+    }
     if (!items[0]) {
-      return this.constructor;
+      return Promise.resolve(this.constructor);
     }
     fn = thisArg ? fn.bind(thisArg) : fn;
     return Promise.resolve(fn(items[0], 0, items)).then(item => {
@@ -325,6 +337,8 @@ class Collection {
     return tagMap;
   }
 }
+
+Collection.addTagDefinition('Collection', Collection);
 
 function iter(...args) {
   return iteratee(args.length === 2 ? [...args] : args[0]);

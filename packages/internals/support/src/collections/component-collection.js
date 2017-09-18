@@ -66,5 +66,6 @@ class ComponentCollection extends EntityCollection {
 }
 
 Collection.addEntityDefinition(Component, ComponentCollection);
+Collection.addTagDefinition('ComponentCollection', ComponentCollection);
 
 module.exports = ComponentCollection;

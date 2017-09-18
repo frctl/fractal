@@ -155,5 +155,6 @@ function createVariant(target, props = {}) {
 }
 
 Collection.addEntityDefinition(Variant, VariantCollection);
+Collection.addTagDefinition('VariantCollection', VariantCollection);
 
 module.exports = VariantCollection;
