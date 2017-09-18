@@ -3,6 +3,7 @@
 // const path = require('path');
 const {expect, sinon} = require('../../../../../test/helpers');
 const Variant = require('../entities/variant');
+const Entity = require('../entities/entity');
 const Collection = require('./collection');
 
 const items = [{
@@ -56,6 +57,25 @@ const itemsCopy = () => items.slice(0);
 
 const isDogObj = i => ({isDog: i.type === 'dog'});
 const isDogBool = i => i.type === 'dog';
+
+function isDogObjThis(i) {
+  return {isDog: i.type === 'dog', color: this.color};
+}
+
+const isDogObjAsync = i => new Promise((resolve, reject) => {
+  setTimeout(() => {
+    resolve({isDog: i.type === 'dog'});
+  }, 200);
+});
+const isDogBoolAsync = async i => await Promise.resolve(i.type === 'dog');
+function isDogObjThisAsync(i) {
+  const that = this;
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve({isDog: i.type === 'dog', color: that.color});
+    }, 200);
+  });
+}
 
 function testInstance(newCollection, oldCollection, lItems = items) {
   expect(newCollection).to.not.equal(oldCollection);
@@ -493,51 +513,175 @@ describe('Collection', function () {
   });
 
   describe('.map()', function () {
-    it('returns an new Collection', function () {
+    it('returns a new Collection', function () {
       const collection = makeCollection();
       let newCollection = collection.map(() => ({src: 'path'}));
       expect(Array.isArray(newCollection)).to.be.false;
       testInstance(newCollection, collection);
     });
+
     it('returns a collection where each item has been run through the provided mapper', function () {
       const collection = makeCollection();
       expect(collection.map(isDogObj).toArray()).to.eql(items.map(isDogObj));
     });
+
     it(`errors if the mapper doesn't return an Object`, function () {
       const collection = makeCollection();
       expect(function () {
         collection.map(isDogBool).toArray();
       }).to.throw(TypeError, '[items-invalid]');
     });
+
+    it(`errors if a Promise is returned from the map fn`, async function () {
+      const collection = makeCollection();
+      expect(() => {
+        collection.map(isDogObjThisAsync);
+      }).to.throw(ReferenceError, '[map-returned-promise]');
+    });
+
+    it(`outputs an empty Collection if an empty Collection is input`, function () {
+      const collection = makeCollection([]);
+      expect(collection.map(isDogObj)).to.be.a('Collection').and.to.include({length: 0});
+    });
+
+    it(`accepts 'this' arg as second param`, function () {
+      const collection = makeCollection();
+      const thisArg = {color: 'purple'};
+      const newCollection = collection.map(isDogObjThis, thisArg);
+      expect(newCollection).to.be.a('Collection').that.deep.includes({
+        _items: items.map(isDogObjThis, thisArg)});
+    });
+
+    it(`accepts 'type' arg as second param`, function () {
+      const collection = makeCollection();
+      const newCollection = collection.map(isDogObj, 'EntityCollection');
+      expect(newCollection).to.be.an('EntityCollection').that.deep.includes({
+        _items: items.map(i => new Entity(isDogObj(i)))});
+    });
+
+    it(`accepts 'this' arg as second param and 'type' as third param`, function () {
+      const collection = makeCollection();
+      const thisArg = {color: 'purple'};
+      const newCollection = collection.map(isDogObjThis, thisArg, 'EntityCollection');
+      expect(newCollection).to.be.an('EntityCollection').that.deep.includes({
+        _items: items.map(i => new Entity(isDogObjThis(i)))});
+    });
+
+    it(`ignores second param if invalid and non-string`, function () {
+      const collection = makeCollection();
+      const newCollection = collection.map(isDogObjThis, 22);
+      expect(newCollection).to.be.a('Collection').that.deep.includes({
+        _items: items.map(isDogObjThis, 22)});
+    });
+
+    it(`throws an error if second param is string and invalid type`, function () {
+      const collection = makeCollection();
+      expect(() => {
+        collection.map(isDogObjThis, 'not-valid-type');
+      }).to.throw(ReferenceError, '[type-not-found]');
+    });
+
+    it(`throws an error if third param is set and invalid`, function () {
+      const collection = makeCollection();
+      expect(() => {
+        collection.map(isDogObjThis, {color: 'purple'}, 'EntiCollection');
+      }).to.throw(ReferenceError, '[type-not-found]');
+
+      expect(() => {
+        collection.map(isDogObjThis, {color: 'purple'}, 2);
+      }).to.throw(ReferenceError, '[type-not-found]');
+
+      expect(() => {
+        collection.map(isDogObjThis, 22, 2);
+      }).to.throw(ReferenceError, '[type-not-found]');
+    });
   });
 
   describe('.mapAsync()', function () {
-    it('returns an new Collection', function () {
+    it('returns a new Collection', async function () {
       const collection = makeCollection();
-      return collection.mapAsync(i => i).then(function (resultCollection) {
-        expect(Array.isArray(resultCollection)).to.be.false;
-        testInstance(resultCollection, collection);
-      });
+      const resultCollection = await collection.mapAsync(async i => await Promise.resolve(i));
+      expect(Array.isArray(resultCollection)).to.be.false;
+      testInstance(resultCollection, collection);
     });
-    it('returns a collection where each item has been run through the provided mapper', function () {
+
+    it('returns a collection where each item has been run through the provided mapper', async function () {
       const collection = makeCollection();
-      return collection.mapAsync(isDogObj).then(function (resultCollection) {
-        expect(resultCollection.toArray()).to.eql(items.map(isDogObj));
-      });
+      const resultCollection = await collection.mapAsync(isDogObjAsync);
+      expect(resultCollection.toArray()).to.eql(items.map(isDogObj));
     });
-    it(`errors if the mapper doesn't return an Object`, function () {
+
+    it(`errors if the mapper doesn't return an Object`, async function () {
       const collection = makeCollection();
-      return collection.mapAsync(isDogBool).then(
-        function (resultCollection) {},
-        function (error) {
-          expect(error instanceof TypeError).to.be.true;
-          expect(error.message).to.match(/\[items-invalid\]/);
-        });
+      try {
+        await collection.mapAsync(isDogBoolAsync);
+
+      } catch (err) {
+        expect(err instanceof TypeError).to.be.true;
+        expect(err.message).to.match(/\[items-invalid\]/);
+      }
+    });
+
+    it(`outputs an empty Collection if an empty Collection is input`, async function () {
+      const collection = makeCollection([]);
+      expect(await collection.mapAsync(isDogObjAsync)).to.be.a('Collection').and.to.include({length: 0});
+    });
+
+    it(`accepts 'this' arg as second param`, async function () {
+      const collection = makeCollection();
+      const thisArg = {color: 'purple'};
+      const newCollection = await collection.mapAsync(isDogObjThisAsync, thisArg);
+      expect(newCollection).to.be.a('Collection').that.deep.includes({
+        _items: items.map(isDogObjThis, thisArg)});
+    });
+
+    it(`accepts 'type' arg as second param`, async function () {
+      const collection = makeCollection();
+      const newCollection = await collection.mapAsync(isDogObjThisAsync, 'EntityCollection');
+      expect(newCollection).to.be.an('EntityCollection').that.deep.includes({
+        _items: items.map(i => new Entity(isDogObj(i)))});
+    });
+
+    it(`accepts 'this' arg as second param and 'type' as third param`, async function () {
+      const collection = makeCollection();
+      const thisArg = {color: 'purple'};
+      const newCollection = await collection.mapAsync(isDogObjThisAsync, thisArg, 'EntityCollection');
+      expect(newCollection).to.be.an('EntityCollection').that.deep.includes({
+        _items: items.map(i => new Entity(isDogObjThis(i)))});
+    });
+
+    it(`ignores second param if invalid and non-string`, async function () {
+      const collection = makeCollection();
+      const newCollection = await collection.mapAsync(isDogObjThisAsync, 22);
+      expect(newCollection).to.be.a('Collection').that.deep.includes({
+        _items: items.map(isDogObjThis, 22)});
+    });
+
+    it(`throws an error if second param is string and invalid type`, function () {
+      const collection = makeCollection();
+      expect(() =>
+        collection.mapAsync(isDogObjThisAsync, 'not-valid-type')
+      ).to.throw(ReferenceError, '[type-not-found]');
+    });
+
+    it(`throws an error if third param is set and invalid`, async function () {
+      const collection = makeCollection();
+      expect(() =>
+        collection.mapAsync(isDogObjThisAsync, {color: 'purple'}, 'EntiCollection')
+      ).to.throw(ReferenceError, '[type-not-found]');
+
+      expect(() =>
+        collection.mapAsync(isDogObjThisAsync, {color: 'purple'}, 2)
+      ).to.throw(ReferenceError, '[type-not-found]');
+
+      expect(() =>
+         collection.mapAsync(isDogObjThisAsync, 22, 2)
+      ).to.throw(ReferenceError, '[type-not-found]');
     });
   });
 
   describe('.mapToArray()', function () {
-    it('returns an new Array from a mapped Collection', function () {
+    it('returns a new Array from a mapped Collection', function () {
       const collection = makeCollection();
       let newArray = collection.mapToArray(i => i);
       expect(Array.isArray(newArray)).to.be.true;
@@ -551,7 +695,7 @@ describe('Collection', function () {
   });
 
   describe('.mapToArrayAsync()', function () {
-    it('returns an new Collection', function () {
+    it('returns a new Collection', function () {
       const collection = makeCollection();
       return collection.mapToArrayAsync(() => ({})).then(function (resultArray) {
         expect(Array.isArray(resultArray)).to.be.true;
@@ -644,6 +788,27 @@ describe('Collection', function () {
       const collection = makeCollection([item]);
       collection.clone();
       expect(cloneSpy.called).to.equal(true);
+    });
+  });
+
+  describe('.addEntityDefinition()', function () {
+    it('adds specified values to the Entity map', function () {
+      const entityMap = Collection.getEntityMap();
+      expect(entityMap.size).to.equal(4);
+      Collection.addEntityDefinition(Object, Collection);
+      expect(entityMap.size).to.equal(5);
+      entityMap.delete(Object);
+    });
+  });
+
+  describe('.addTagDefinition()', function () {
+    it('adds specified values to the Entity map', function () {
+      const tagMap = Collection.getTagMap();
+      const tag = 'Object';
+      expect(tagMap.size).to.equal(5);
+      Collection.addTagDefinition(tag, {});
+      expect(tagMap.size).to.equal(6);
+      tagMap.delete(tag);
     });
   });
 

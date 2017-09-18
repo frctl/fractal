@@ -26,7 +26,7 @@ class Entity {
           return target.get(propKey);
         }
         const originalProp = Reflect.get(target, propKey);
-        if (typeof originalProp === 'function') {
+        if ((typeof originalProp === 'function') && (propKey !== 'constructor')) {
           return originalProp.bind(target);
         }
         return originalProp;

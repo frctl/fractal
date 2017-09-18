@@ -3,6 +3,7 @@ const check = require('check-types');
 const slash = require('slash');
 const File = require('../entities/file');
 const EntityCollection = require('./entity-collection');
+const Collection = require('./collection');
 
 const assert = check.assert;
 
@@ -57,4 +58,8 @@ class FileCollection extends EntityCollection {
     return check.maybe.array.of.instance(items, File);
   }
 }
+
+Collection.addEntityDefinition(File, FileCollection);
+Collection.addTagDefinition('FileCollection', FileCollection);
+
 module.exports = FileCollection;
