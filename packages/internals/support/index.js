@@ -1,4 +1,5 @@
 module.exports.Collection = require('./src/collections/collection');
+module.exports.EntityCollection = require('./src/collections/entity-collection');
 module.exports.FileCollection = require('./src/collections/file-collection');
 module.exports.ComponentCollection = require('./src/collections/component-collection');
 module.exports.Entity = require('./src/entities/entity');
