@@ -62,7 +62,7 @@ function makeFractal(customConfig) {
   return new Fractal(customConfig || config);
 }
 
-describe.only('Fractal', function () {
+describe('Fractal', function () {
   describe('constructor()', function () {
     it('wraps configuration data in a ConfigStore instance', () => {
       const fractal = makeFractal();
@@ -103,9 +103,9 @@ describe.only('Fractal', function () {
         adapter: 'foo'
       })).to.eventually.be.rejectedWith(Error, '[adapter-not-found]');
     });
-    it('rejects if the target is not a view, component or variant', function () {
+    it('rejects if the target is not a view, component, variant or string', function () {
       const fractal = makeFractal();
-      return expect(fractal.render('foo')).to.be.rejectedWith(Error, '[target-invalid]');
+      return expect(fractal.render({})).to.be.rejectedWith(Error, '[target-invalid]');
     });
     it('returns an EmittingPromise', function () {
       const fractal = makeFractal();
@@ -121,7 +121,7 @@ describe.only('Fractal', function () {
       const fractal = makeFractal();
       const renderer = new Renderer(fractal.get('adapters'));
       const spy = sinon.spy(renderer, 'render');
-      const variant = parserOutput.components.first().getVariants().first();
+      const variant = parserOutput.components.first().getDefaultVariant();
       const view = parserOutput.components.first().getFiles().find({stem: 'view'});
       const opts = {
         renderer,
@@ -129,7 +129,8 @@ describe.only('Fractal', function () {
       };
       const result = await fractal.render(variant, {}, opts);
       expect(result).to.equal('component!');
-      expect(spy.calledWith(view, variant.context)).to.equal(true);
+      expect(spy.args[0][0]).to.equal(view.contents.toString());
+      expect(spy.args[0][1]).to.eql(variant.context);
       spy.restore();
     });
     it('rejects if a specified variant cannot be found', function () {

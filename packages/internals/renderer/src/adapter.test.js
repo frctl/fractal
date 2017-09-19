@@ -1,3 +1,4 @@
+const {extname} = require('path');
 const {File} = require('@frctl/support');
 const {expect, sinon} = require('../../../../test/helpers');
 const Adapter = require('./adapter');
@@ -11,7 +12,8 @@ const validAdapter = {
 };
 
 const funjucksFile = new File({
-  path: 'path/to/file.fjk'
+  path: 'path/to/file.fjk',
+  contents: new Buffer('asdasd')
 });
 
 const otherFile = new File({
@@ -28,16 +30,16 @@ describe('Adapter', function () {
 
   describe('.match()', function () {
     it('tests if the file provided can be handled by the adapter', function () {
-      ['.fjk', ['.fjk'], (file => file.extname === '.fjk')].forEach(match => {
+      ['.fjk', ['.fjk'], (path => extname(path) === '.fjk')].forEach(match => {
         const adapter = new Adapter(Object.assign({}, validAdapter, {match}));
-        expect(adapter.match(funjucksFile)).to.equal(true);
-        expect(adapter.match(otherFile)).to.equal(false);
+        expect(adapter.match(funjucksFile.path)).to.equal(true);
+        expect(adapter.match(otherFile.path)).to.equal(false);
       });
     });
 
-    it('throws an error if the file argument is not a File instance', function () {
+    it('throws an error if the file argument is not a path', function () {
       const adapter = new Adapter(validAdapter);
-      expect(() => adapter.match('bar')).to.throw(TypeError, '[file-invalid]');
+      expect(() => adapter.match(funjucksFile)).to.throw(TypeError, '[path-invalid]');
     });
   });
 
@@ -49,7 +51,7 @@ describe('Adapter', function () {
         match: '.fjk',
         render: renderSpy
       });
-      const result = await adapter.render(funjucksFile);
+      const result = await adapter.render(funjucksFile.contents.toString());
       expect(renderSpy.called).to.equal(true);
       expect(result).to.equal('foobar');
       return result;

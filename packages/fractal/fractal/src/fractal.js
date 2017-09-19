@@ -47,6 +47,7 @@ class Fractal extends App {
           template = target;
         } else if (File.isFile(target)) {
           adapter = opts.adapter || renderer.getAdapterFor(target);
+          opts.view = target;
           template = target.contents.toString();
         } else if (Component.isComponent(target) || Variant.isVariant(target)) {
           adapter = opts.adapter || renderer.getDefaultAdapter();
@@ -70,20 +71,34 @@ class Fractal extends App {
           }
 
           const views = component.getFiles().filter(this.get('components.views.filter'));
-          const view = views.find(v => adapter.match(v));
+          const view = views.find(v => adapter.match(v.path));
           if (!view) {
             throw new Error(`Could not find view for component '${component.name}' (using adapter '${adapter.name}') [view-not-found]`);
           }
 
-          context = defaultsDeep(context, target.context);
+          context = defaultsDeep(context, variant.context);
           template = view.contents.toString();
+          opts.view = view;
+          opts.component = component;
+          opts.variant = variant;
         }
 
         if (!template) {
           throw new Error(`Fractal.render - Only components, variants or views or strings can be rendered [target-invalid]`);
         }
 
-        resolve(await renderer.render(adapter, template, context, collections, opts, emitter));
+        if (typeof adapter === 'string') {
+          adapter = renderer.getAdapter(adapter);
+        }
+
+        if (!adapter) {
+          throw new Error('Fractal.render - no valid adapter could be found to render the template [adapter-not-found]');
+        }
+
+        opts.adapter = adapter;
+        opts.collections = collections;
+
+        resolve(await renderer.render(template, context, opts, emitter));
       } catch (err) {
         reject(err);
       }

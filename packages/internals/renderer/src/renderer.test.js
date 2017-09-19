@@ -16,7 +16,8 @@ const adapters = [{
 }];
 
 const funjucksFile = new File({
-  path: 'path/to/file.fjk'
+  path: 'path/to/file.fjk',
+  contents: Buffer.from('asdasd')
 });
 
 function makeRenderer(adapter = []) {
@@ -73,7 +74,7 @@ describe('Renderer', function () {
       });
       expect(renderer.adapters.length).to.equal(adapters.length);
       const adapter = renderer.adapters.find(adapter => adapter.name === 'funjucks');
-      expect(await adapter.render(funjucksFile)).to.equal('override');
+      expect(await adapter.render(funjucksFile.contents.toString())).to.equal('override');
     });
     it('returns the renderer instance', function () {
       const renderer = makeRenderer();
@@ -110,30 +111,31 @@ describe('Renderer', function () {
       const renderer = makeRenderer(adapters);
       expect(renderer.getAdapterFor(new File({path: 'foo.bar'}))).to.equal(undefined);
     });
-    it('throws an error if a File instance is no provided', function () {
+    it('throws an error if a File instance or path is not provided', function () {
       const renderer = makeRenderer(adapters);
-      expect(() => renderer.getAdapterFor('foo')).to.throw('[file-invalid]');
-      expect(() => renderer.getAdapterFor()).to.throw('[file-invalid]');
+      expect(() => renderer.getAdapterFor({})).to.throw('[matcher-invalid]');
+      expect(() => renderer.getAdapterFor()).to.throw('[matcher-invalid]');
     });
   });
 
   describe('.render()', function () {
     it('returns a promise that resolves to a string', async function () {
       const renderer = makeRenderer(adapters);
-      const result = renderer.render(funjucksFile);
+      const result = renderer.render('foo');
       expect(result).to.be.instanceOf(Promise);
       expect(await result).to.be.a('string');
     });
     it('calls the adapter render method with the expected arguments', async function () {
       const renderSpy = sinon.spy(adapters[0], 'render');
       const renderer = new Renderer();
-      const opts = {};
       const context = {};
-      const collections = {};
+      const opts = {
+        collections: {}
+      };
       renderer.addAdapter(adapters);
-      const result = await renderer.render(funjucksFile, context, collections, opts);
-      expect(renderSpy.calledWith(funjucksFile, context, collections, opts)).to.equal(true);
-      expect(result).to.equal(await adapters[0].render(funjucksFile, context, collections, opts));
+      const result = await renderer.render('foo', context, opts);
+      expect(renderSpy.calledWith('foo', context, opts)).to.equal(true);
+      expect(result).to.equal(await adapters[0].render('foo', context, opts));
       renderSpy.restore();
     });
     it('calls start and end events on an emitter if provided', function () {
@@ -141,33 +143,30 @@ describe('Renderer', function () {
       const emitter = new EventEmitter();
       emitter.on('render.start', props => {
         counter++;
-        expect(props).to.have.all.keys(['view', 'adapter', 'opts', 'context']);
+        expect(props).to.have.all.keys(['tpl', 'adapter', 'opts', 'context']);
       });
       emitter.on('render.complete', props => {
         counter++;
-        expect(props).to.have.all.keys(['result', 'view', 'adapter', 'opts', 'context']);
+        expect(props).to.have.all.keys(['result', 'tpl', 'adapter', 'opts', 'context']);
       });
-      return makeRenderer(adapters).render(funjucksFile, {}, {}, {}, emitter).then(() => {
+      return makeRenderer(adapters).render('foo', {}, {adapter: 'funjucks'}, emitter).then(() => {
         expect(counter).to.equal(2);
       });
     });
     it('rejects if no matching adapter can be found', function () {
-      return expect(makeRenderer().render(funjucksFile)).to.be.rejectedWith('[adapter-not-found]');
+      return expect(makeRenderer().render('foo')).to.be.rejectedWith('[adapter-not-found]');
     });
     it('rejects if the template is not a string', function () {
-      return expect(makeRenderer(adapters).render({foo: 'bar'})).to.be.rejectedWith('[file-invalid]');
+      return expect(makeRenderer(adapters).render({foo: 'bar'})).to.be.rejectedWith('[template-invalid]');
     });
-    it('rejects if no file is provided', function () {
-      return expect(makeRenderer(adapters).render()).to.be.rejectedWith('[file-invalid]');
+    it('rejects if no template is provided', function () {
+      return expect(makeRenderer(adapters).render(undefined)).to.be.rejectedWith('[template-invalid]');
     });
     it('rejects if invalid context is supplied', function () {
-      return expect(makeRenderer(adapters).render(funjucksFile, 'foo')).to.be.rejectedWith('[context-invalid]');
-    });
-    it('rejects if and invalid collections object is supplied', function () {
-      return expect(makeRenderer(adapters).render(funjucksFile, {}, 'foo')).to.be.rejectedWith('[collections-invalid]');
+      return expect(makeRenderer(adapters).render('foo', 'not an object')).to.be.rejectedWith('[context-invalid]');
     });
     it('rejects if invalid options are supplied', function () {
-      return expect(makeRenderer(adapters).render(funjucksFile, {}, {}, 'foo')).to.be.rejectedWith('[opts-invalid]');
+      return expect(makeRenderer(adapters).render('foo', {}, 'not an options object')).to.be.rejectedWith('[opts-invalid]');
     });
   });
 
