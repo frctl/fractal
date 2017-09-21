@@ -6,11 +6,13 @@ const debug = require('debug')('frctl:app');
 const {Config} = require('@frctl/config');
 const {Parser} = require('@frctl/parser');
 const {Loader} = require('@frctl/loader');
+const {cloneDeep} = require('@frctl/utils');
 const {EmittingPromise} = require('@frctl/support');
 
 const _dirty = new WeakMap();
 const _cache = new WeakMap();
 const _config = new WeakMap();
+const _parsing = new WeakMap();
 const _watcher = new WeakMap();
 const _loader = new WeakMap();
 
@@ -30,30 +32,40 @@ class App {
     _cache.set(this, new Cache({
       stdTTL: this.get('cache.ttl'),
       checkperiod: this.get('cache.check'),
-      useClones: true
+      useClones: false
     }));
 
     _dirty.set(this, true);
     _loader.set(this, new Loader(this.get('resolve')));
-
-    this.debug('instantiated new %s instance', this.constructor.name);
   }
 
-  parse() {
-    return new EmittingPromise(async (resolve, reject, emitter) => {
+  parse(opts = {}) {
+    if (_parsing.get(this)) {
+      return _parsing.get(this);
+    }
+
+    const result = new EmittingPromise(async (resolve, reject, emitter) => {
+      emitter.emit('parse.start');
       const cached = this.cache.get('collections');
       if (cached) {
-        return resolve(cached);
+        return resolve(cloneDeep(cached));
       }
       try {
         const parser = this.getParser();
-        const collections = await parser.run({context: this});
+        const collections = await parser.run({context: this}, emitter);
         this.dirty = false;
         this.cache.set('collections', collections);
         resolve(collections);
       } catch (err) {
         reject(err);
       }
+    }, opts.emitter);
+
+    _parsing.set(this, result);
+
+    return result.then(collections => {
+      _parsing.set(this, null);
+      return collections;
     });
   }
 
@@ -112,6 +124,14 @@ class App {
     return this;
   }
 
+  getCollections() {
+    return this.parse();
+  }
+
+  getFiles() {
+    return this.parse().then(collections => collections.files);
+  }
+
   getParser() {
     return new Parser({
       src: this.get('src'),
@@ -135,7 +155,7 @@ class App {
   }
 
   set dirty(isDirty) {
-    debug(`setting dirty flag to '%s'`, isDirty ? 'true' : 'false');
+    this.debug(`setting dirty flag to '%s'`, isDirty ? 'true' : 'false');
     _dirty.set(this, isDirty);
     if (isDirty) {
       this.cache.del('collections');

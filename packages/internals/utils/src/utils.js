@@ -143,6 +143,11 @@ const utils = module.exports = {
     return `.${ext.toLowerCase().replace(/^\./, '')}`;
   },
 
+  removeExt(str) {
+    const parts = path.parse(str);
+    return path.join(parts.dir, parts.name);
+  },
+
   getExt(filePath) {
     return path.extname(filePath);
   },
@@ -161,6 +166,17 @@ const utils = module.exports = {
   normalizePaths(paths, cwd) {
     paths = utils.toArray(paths);
     return paths.map(filePath => utils.normalizePath(filePath, cwd));
+  },
+
+  permalinkify(str, opts = {}) {
+    const fallbackExt = utils.normalizeExt(opts.ext || '.html');
+    const indexes = opts.indexes || false;
+    let permalink = _.trim(slash(str), '/');
+    permalink = permalink === '' ? 'index' + fallbackExt : permalink;
+    if (!path.extname(permalink)) {
+      permalink += (indexes && !/\/?index$/.test(permalink) ? '/index' : '') + fallbackExt;
+    }
+    return '/' + permalink;
   },
 
   /*

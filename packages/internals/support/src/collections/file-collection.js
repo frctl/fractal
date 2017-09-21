@@ -9,6 +9,13 @@ const assert = check.assert;
 
 class FileCollection extends EntityCollection {
 
+  find(...args) {
+    if (args.length === 1 && typeof args[0] === 'string') {
+      return super.find('relative', args[0]);
+    }
+    return super.find(...args);
+  }
+
   filter(...args) {
     if (args.length === 1 && (typeof args[0] === 'string' || Array.isArray(args[0]))) {
       return this.filterByPath(...args);

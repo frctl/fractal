@@ -3,9 +3,9 @@ const {EventEmitter2} = require('eventemitter2');
 const assert = require('check-types').assert;
 
 class EmittingPromise extends Promise {
-  constructor(resolver) {
+  constructor(resolver, customEmitter) {
     assert.function(resolver, `EmittingPromise constructor requires a resolver with params 'resolve, reject [, emit]' [invalid-resolver]`);
-    const emitter = new EventEmitter2({
+    const emitter = customEmitter || new EventEmitter2({
       wildcard: true
     });
 

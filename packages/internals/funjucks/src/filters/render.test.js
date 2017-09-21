@@ -22,7 +22,7 @@ describe('render', function () {
         './test/fixtures/add-ons/adapter'
       ]
     });
-    const render = filter.filter.bind({fractal});
+    const render = filter.filter.bind({env: {fractal}});
     const target = new File({
       path: 'path/to/view.fjk',
       contents: Buffer.from('the contents')
