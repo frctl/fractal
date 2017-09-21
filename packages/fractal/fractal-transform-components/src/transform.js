@@ -1,4 +1,5 @@
-const {addTrailingSeparator, defaultsDeep} = require('@frctl/utils');
+const {defaultsDeep} = require('@frctl/utils');
+const {addTrailingSeparator} = require('@frctl/utils');
 const {Component, ComponentCollection} = require('@frctl/support');
 
 module.exports = function (opts = {}) {
@@ -7,13 +8,14 @@ module.exports = function (opts = {}) {
     name: 'components',
 
     async transform(files, state, app) {
-      let remainingFiles = files;
-      const componentDirs = files.filter(file => file.isDirectory()).filter(app.get('components.filter')).sortBy('path.length', 'desc');
+      let remainingFiles = files.filter(file => !file.isDirectory());
+      const componentMatcher = app.get('components.match');
+      const componentDirs = files.filter(file => file.isDirectory()).filter(componentMatcher).sortBy('path.length', 'desc');
 
       return ComponentCollection.from(await componentDirs.mapToArrayAsync(async dir => {
         const rootPath = addTrailingSeparator(dir.path);
 
-        let componentFiles = remainingFiles.filter(file => !file.isDirectory() && file.path.startsWith(rootPath));
+        let componentFiles = remainingFiles.filter(file => file.path.startsWith(rootPath));
         componentFiles = componentFiles.map(file => {
           file = file.clone();
           file.base = dir.path;
@@ -22,7 +24,9 @@ module.exports = function (opts = {}) {
 
         remainingFiles = remainingFiles.reject(file => componentFiles.find(f => f.path === file.path));
 
-        const configFiles = componentFiles.filter(file => !file.isDirectory()).filter(app.get('configs.filter')).sortBy('basename', 'asc');
+        const configMatcher = app.get('components.config.match');
+        const configDefaults = app.get('components.config.defaults', {});
+        const configFiles = componentFiles.filter(configMatcher).sortBy('basename', 'asc');
 
         const data = await configFiles.mapToArrayAsync(file => {
           const data = app.loader.requireFromString(file.contents.toString(), file.path);
@@ -34,7 +38,7 @@ module.exports = function (opts = {}) {
         return Component.from({
           src: dir,
           files: componentFiles,
-          config: defaultsDeep(config, app.get('configs.defaults', {}))
+          config: defaultsDeep(config, configDefaults)
         });
       }));
     }
