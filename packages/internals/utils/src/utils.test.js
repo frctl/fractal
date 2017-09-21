@@ -130,6 +130,18 @@ describe('Utils', function () {
       expect(utils.defaultsDeep(target, defaults).items).to.eql(target.items);
     });
 
+    it('Does not merge functions as objects', function () {
+      let target = {
+        match: {
+          prop: 'foo'
+        }
+      };
+      let defaults = {
+        match: function doThis() {}
+      };
+      expect(utils.defaultsDeep(target, defaults).match).to.be.an('object');
+    });
+
     it('accepts a customizer as the last argument to customize the merging behaviour', function () {
       let target = {
         items: ['one', 'two']

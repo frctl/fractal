@@ -26,6 +26,9 @@ const utils = module.exports = {
            // don't merge arrays - the target array overrides the default value
           return targetValue;
         }
+        if (_.isFunction(defaultValue) && _.isObject(targetValue)) {
+          return targetValue;
+        }
       };
     }
     const items = args.reverse().map(item => _.cloneDeep(item));
