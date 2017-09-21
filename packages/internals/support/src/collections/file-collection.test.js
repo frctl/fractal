@@ -80,6 +80,27 @@ describe('FileCollection', function () {
     });
   });
 
+  describe(`.reject()`, function () {
+    it('reject by path if a single string argument is supplied', function () {
+      const collection = makeCollection();
+      const spy = sinon.spy(collection, 'rejectByPath');
+      const newCollection = collection.rejectByPath('dogs/*');
+      expect(spy.called).to.equal(true);
+      expect(newCollection.count()).to.equal(2);
+    });
+    it('reject by path if a single array argument is supplied', function () {
+      const collection = makeCollection();
+      const spy = sinon.spy(collection, 'rejectByPath');
+      const newCollection = collection.rejectByPath(['**/*', '!**/*.js']);
+      expect(spy.called).to.equal(true);
+      expect(newCollection.count()).to.equal(3);
+    });
+    it(`defers to its superclass for all other 'reject' arguments`, function () {
+      const collection = makeCollection();
+      expect(collection.reject('path', '/dogs/odie.js').count()).to.equal(3);
+    });
+  });
+
   describe(`.filterByPath()`, function () {
     it('returns a collection instance', function () {
       const collection = makeCollection();
