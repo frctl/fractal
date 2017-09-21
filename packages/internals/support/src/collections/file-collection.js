@@ -9,6 +9,13 @@ const assert = check.assert;
 
 class FileCollection extends EntityCollection {
 
+  filter(...args) {
+    if (args.length === 1 && (typeof args[0] === 'string' || Array.isArray(args[0]))) {
+      return this.filterByPath(...args[0]);
+    }
+    return new FileCollection(super.filter(...args).toArray());
+  }
+
   filterByPath(...args) {
     let paths = [].concat(...args);
     assert.array.of.string(paths, `FileCollection.filterByPath: path argument must be a string or array of strings [paths-invalid]`);

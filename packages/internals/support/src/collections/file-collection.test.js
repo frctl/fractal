@@ -1,6 +1,6 @@
 /* eslint no-unused-expressions: "off" */
 
-const {expect} = require('../../../../../test/helpers');
+const {expect, sinon} = require('../../../../../test/helpers');
 const File = require('../entities/file');
 const FileCollection = require('./file-collection');
 
@@ -56,6 +56,27 @@ describe('FileCollection', function () {
       expect(() => makeCollectionFrom(new File({path: 'valid-file-object-definition/'}))).to.not.throw();
       expect(() => makeCollectionFrom([File.from({single: 'object'}), File.from({another: 'object'})])).to.throw(TypeError, '[properties-invalid]');
       expect(() => makeCollectionFrom([File.from({path: 'object'}), File.from({path: 'object'})])).to.not.throw();
+    });
+  });
+
+  describe(`.filter()`, function () {
+    it('filters by path if a single string argument is supplied', function () {
+      const collection = makeCollection();
+      const spy = sinon.spy(collection, 'filterByPath');
+      const newCollection = collection.filterByPath('dogs/*');
+      expect(spy.called).to.equal(true);
+      expect(newCollection.count()).to.equal(2);
+    });
+    it('filters by path if a single array argument is supplied', function () {
+      const collection = makeCollection();
+      const spy = sinon.spy(collection, 'filterByPath');
+      const newCollection = collection.filterByPath(['**/*', '!**/*.js']);
+      expect(spy.called).to.equal(true);
+      expect(newCollection.count()).to.equal(1);
+    });
+    it(`defers to its superclass for all other 'filter' arguments`, function () {
+      const collection = makeCollection();
+      expect(collection.filter('path', '/dogs/odie.js').count()).to.equal(1);
     });
   });
 
