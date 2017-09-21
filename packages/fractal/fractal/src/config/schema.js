@@ -2,7 +2,7 @@ module.exports = {
 
   type: 'object',
 
-  required: ['configs', 'views'],
+  required: ['components'],
 
   properties: {
 
@@ -31,29 +31,45 @@ module.exports = {
       type: 'object'
     },
 
-    views: {
+    components: {
       type: 'object',
-      required: ['filter'],
+      required: ['config', 'match'],
       properties: {
-        filter: {
+        match: {
           anyOf: [
             {type: 'object'},
             {typeof: 'function'}
           ]
-        }
-      }
-    },
-
-    configs: {
-      type: 'object',
-      required: ['filter', 'defaults'],
-      properties: {
-        defaults: {type: 'object'},
-        filter: {
-          anyOf: [
-            {type: 'object'},
-            {typeof: 'function'}
-          ]
+        },
+        config: {
+          type: 'object',
+          required: ['match', 'defaults'],
+          properties: {
+            defaults: {
+              type: 'object',
+              required: ['views'],
+              properties: {
+                views: {
+                  type: 'object',
+                  required: ['match'],
+                  properties: {
+                    match: {
+                      anyOf: [
+                        {type: 'object'},
+                        {typeof: 'function'}
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            match: {
+              anyOf: [
+                {type: 'object'},
+                {typeof: 'function'}
+              ]
+            }
+          }
         }
       }
     },
