@@ -11,14 +11,14 @@ class FileCollection extends EntityCollection {
 
   filter(...args) {
     if (args.length === 1 && (typeof args[0] === 'string' || Array.isArray(args[0]))) {
-      return this.filterByPath(...args[0]);
+      return this.filterByPath(...args);
     }
     return new FileCollection(super.filter(...args).toArray());
   }
 
   reject(...args) {
     if (args.length === 1 && (typeof args[0] === 'string' || Array.isArray(args[0]))) {
-      return this.rejectByPath(...args[0]);
+      return this.rejectByPath(...args);
     }
     return new FileCollection(super.reject(...args).toArray());
   }

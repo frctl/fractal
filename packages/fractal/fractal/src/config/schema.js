@@ -37,6 +37,7 @@ module.exports = {
       properties: {
         match: {
           anyOf: [
+            {type: 'string'},
             {type: 'object'},
             {typeof: 'function'}
           ]
@@ -55,6 +56,7 @@ module.exports = {
                   properties: {
                     match: {
                       anyOf: [
+                        {type: 'string'},
                         {type: 'object'},
                         {typeof: 'function'}
                       ]
@@ -66,6 +68,7 @@ module.exports = {
             match: {
               anyOf: [
                 {type: 'object'},
+                {type: 'string'},
                 {typeof: 'function'}
               ]
             }

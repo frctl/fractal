@@ -18,10 +18,10 @@ module.exports = {
     config: {
       defaults: {
         views: {
-          match: file => file.stem === 'view'
+          match: 'view.*'
         }
       },
-      match: file => file.stem === 'config'
+      match: 'config.*'
     }
   },
 
