@@ -113,23 +113,20 @@ describe('Fractal', function () {
     });
     it('Can render components', async function () {
       const fractal = makeFractal();
+      sinon.stub(fractal, 'parse').callsFake(() => Promise.resolve(parserOutput));
       const component = parserOutput.components.first();
-      const opts = {collections: parserOutput};
-      expect(await fractal.render(component, {}, opts)).to.equal('component!');
+      expect(await fractal.render(component, {})).to.equal('component!');
     });
     it('Can render variants', async function () {
       const fractal = makeFractal();
       const renderer = new Renderer(fractal.get('adapters'));
+      sinon.stub(fractal, 'parse').callsFake(() => Promise.resolve(parserOutput));
+      sinon.stub(fractal, 'getRenderer').callsFake(() => renderer);
       const spy = sinon.spy(renderer, 'render');
       const variant = parserOutput.components.first().getDefaultVariant();
-      const view = parserOutput.components.first().getFiles().find({stem: 'view'});
-      const opts = {
-        renderer,
-        collections: parserOutput
-      };
-      const result = await fractal.render(variant, {}, opts);
+      const result = await fractal.render(variant);
       expect(result).to.equal('component!');
-      expect(spy.args[0][0]).to.equal(view.contents.toString());
+      expect(spy.args[0][0]).to.equal('component!');
       expect(spy.args[0][1]).to.eql(variant.context);
       spy.restore();
     });
@@ -142,25 +139,24 @@ describe('Fractal', function () {
     });
     it('rejects if a variants\' component cannot be found', function () {
       const fractal = makeFractal();
+      sinon.stub(fractal, 'parse').callsFake(() => Promise.resolve(parserOutput));
       const variant = new Variant({
         name: 'default',
         default: true,
         component: 'foo-component'
       });
-      return expect(fractal.render(variant, {}, {
-        collections: parserOutput
-      })).to.be.rejectedWith(Error, '[component-not-found]');
+      return expect(fractal.render(variant, {})).to.be.rejectedWith(Error, '[component-not-found]');
     });
     it('rejects if a suitable view cannot be found', function () {
       const fractal = makeFractal();
+      sinon.stub(fractal, 'parse').callsFake(() => Promise.resolve(parserOutput));
       fractal.addAdapter({
         name: 'fwig',
         match: '.fwig',
         render: () => {}
       });
       return expect(fractal.render(parserOutput.components.first(), {}, {
-        adapter: 'fwig',
-        collections: parserOutput
+        adapter: 'fwig'
       })).to.be.rejectedWith(Error, '[view-not-found]');
     });
   });
