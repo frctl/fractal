@@ -421,6 +421,14 @@ describe('Utils', function () {
     });
   });
 
+  describe('.removeExt()', function () {
+    it('Removes the file extension from a path', function () {
+      expect(utils.removeExt('foo/bar/file.js')).to.equal('foo/bar/file');
+      expect(utils.removeExt('foo/bar/file')).to.equal('foo/bar/file');
+      expect(utils.removeExt('foo/bar/file.html.twig')).to.equal('foo/bar/file.html');
+    });
+  });
+
   describe('.getExt()', function () {
     it('Correctly returns extension of filepath', function () {
       expect(utils.getExt('index.js')).to.equal('.js');
@@ -451,6 +459,32 @@ describe('Utils', function () {
       var spy = sinon.spy(utils, 'normalizePath');
       utils.normalizePaths(['path/one', 'path/two', 'path/three']);
       expect(spy.callCount).to.equal(3);
+    });
+  });
+
+  describe('.permalinkify()', function () {
+    it(`adds a .html file extension if the path doesn't have an extension`, function () {
+      expect(utils.permalinkify('/the/path')).to.equal('/the/path.html');
+    });
+    it(`does not change the file extension if it exists`, function () {
+      expect(utils.permalinkify('/the/path.html')).to.equal('/the/path.html');
+      expect(utils.permalinkify('/the/path.njk')).to.equal('/the/path.njk');
+      expect(utils.permalinkify('/the/path.css')).to.equal('/the/path.css');
+    });
+    it(`supports supplying a different default extension via opts`, function () {
+      expect(utils.permalinkify('/the/path', {ext: '.php'})).to.equal('/the/path.php');
+    });
+    it(`always returns a path with a single leading slash`, function () {
+      expect(utils.permalinkify('/the/path.html')).to.equal('/the/path.html');
+      expect(utils.permalinkify('the/path.html')).to.equal('/the/path.html');
+    });
+    it(`adds indexes where required if enabled in config`, function () {
+      expect(utils.permalinkify('/the/path', {indexes: true})).to.equal('/the/path/index.html');
+      expect(utils.permalinkify('/the/path.html', {indexes: true})).to.equal('/the/path.html');
+      expect(utils.permalinkify('/the/path/index.html', {indexes: true})).to.equal('/the/path/index.html');
+      expect(utils.permalinkify('/the/path/index', {indexes: true})).to.equal('/the/path/index.html');
+      expect(utils.permalinkify('/', {indexes: true})).to.equal('/index.html');
+      expect(utils.permalinkify('/', {indexes: false})).to.equal('/index.html');
     });
   });
 

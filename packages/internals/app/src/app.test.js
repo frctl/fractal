@@ -1,6 +1,7 @@
 /* eslint import/no-dynamic-require: off,  no-unused-expressions: off */
 
 const {writeFileSync, mkdirSync} = require('fs');
+const {EventEmitter} = require('events');
 const {tmpdir} = require('os');
 const {join} = require('path');
 const {capitalize} = require('lodash');
@@ -128,6 +129,15 @@ describe('App', function () {
       }
       expect(tested).to.equal(true);
     });
+    it('supports providing a custom emitter via opts.emitter', function (done) {
+      const app = new App();
+      const emitter = new EventEmitter();
+      emitter.on('parse.start', function () {
+        expect(this).to.equal(emitter);
+        done();
+      });
+      app.parse({emitter});
+    });
   });
 
   describe('.watch()', function () {
@@ -227,6 +237,27 @@ describe('App', function () {
     it('throws an error if the file is not found', () => {
       const app = makeApp();
       expect(() => app.require('~/parent')).to.throw('[resolver-error]');
+    });
+  });
+
+  describe('.getCollections()', function () {
+    it('is an alias for .parse()', async function () {
+      const app = makeApp();
+      const spy = sinon.spy(app, 'parse');
+      app.getCollections();
+      expect(spy.called).to.equal(true);
+    });
+  });
+
+  describe('.getFiles()', function () {
+    it('returns an EmittingPromise', function () {
+      const app = makeApp();
+      expect(app.getFiles()).to.be.instanceOf(EmittingPromise);
+    });
+    it('resolves to a FileCollection instance', async function () {
+      const app = makeApp();
+      const files = await app.getFiles();
+      expect(files).to.be.instanceOf(FileCollection);
     });
   });
 

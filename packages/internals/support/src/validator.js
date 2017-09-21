@@ -6,6 +6,11 @@ class Validator extends Ajv {
   constructor(...args) {
     super(...args);
     ajvKeywords(this, ['instanceof', 'typeof', 'regexp']);
+    const definition = require('ajv-keywords').get('instanceof').definition;
+    definition.CONSTRUCTORS.File = require('./entities/file');
+    definition.CONSTRUCTORS.Variant = require('./entities/variant');
+    definition.CONSTRUCTORS.Component = require('./entities/component');
+    definition.CONSTRUCTORS.Entity = require('./entities/entity');
   }
 
   static assertValid(data, schema, errorMessage) {

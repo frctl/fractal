@@ -59,6 +59,13 @@ describe('FileCollection', function () {
     });
   });
 
+  describe('.find()', function () {
+    it(`can be called with a single string argument to find by 'relative' path`, function () {
+      const collection = makeCollection();
+      expect(collection.find('dogs/odie.js')).to.equal(items[3]);
+    });
+  });
+
   describe(`.filterByPath()`, function () {
     it('returns a collection instance', function () {
       const collection = makeCollection();

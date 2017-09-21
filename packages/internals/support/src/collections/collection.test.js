@@ -615,7 +615,6 @@ describe('Collection', function () {
       const collection = makeCollection();
       try {
         await collection.mapAsync(isDogBoolAsync);
-
       } catch (err) {
         expect(err instanceof TypeError).to.be.true;
         expect(err.message).to.match(/\[items-invalid\]/);
