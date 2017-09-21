@@ -29,8 +29,8 @@ class Fractal extends App {
   render(target, context = {}, opts = {}) {
     return new EmittingPromise(async (resolve, reject, emitter) => {
       try {
-        const collections = opts.collections ? opts.collections : await this.parse();
-        const renderer = opts.renderer || this.getRenderer();
+        const collections = await this.parse();
+        const renderer = this.getRenderer();
         let adapter;
         let template;
         let context;
@@ -97,8 +97,7 @@ class Fractal extends App {
 
         opts.adapter = adapter;
         opts.collections = collections;
-
-        resolve(await renderer.render(template, context, opts, emitter));
+        resolve(renderer.render(template, context, opts, emitter));
       } catch (err) {
         reject(err);
       }
