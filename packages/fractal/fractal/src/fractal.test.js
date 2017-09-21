@@ -45,7 +45,7 @@ const components = new ComponentCollection([
     config: {
       name: 'test-component',
       variants: [{
-        name: 'default',
+        id: 'default',
         default: true,
         component: 'test-component',
         context: {
@@ -141,7 +141,7 @@ describe('Fractal', function () {
       const fractal = makeFractal();
       sinon.stub(fractal, 'parse').callsFake(() => Promise.resolve(parserOutput));
       const variant = new Variant({
-        name: 'default',
+        id: 'default',
         default: true,
         component: 'foo-component'
       });

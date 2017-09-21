@@ -10,14 +10,14 @@ const assert = check.assert;
 class ComponentCollection extends EntityCollection {
 
   /*
-   * find('name')
+   * find('id')
    * find('prop', value)
    * find({prop: value})
    * find(fn)
    */
   find(...args) {
     if (args.length === 1 && typeof args[0] === 'string') {
-      return super.find('name', args[0]);
+      return super.find('id', args[0]);
     }
     return super.find(...args);
   }

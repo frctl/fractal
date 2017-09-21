@@ -2,7 +2,7 @@ module.exports = {
   $schema: 'http://json-schema.org/draft-06/schema#',
   type: 'object',
   properties: {
-    name: {
+    id: {
       type: 'string'
     },
     default: {
@@ -12,5 +12,5 @@ module.exports = {
       type: 'string'
     }
   },
-  required: ['name', 'component']
+  required: ['id', 'component']
 };

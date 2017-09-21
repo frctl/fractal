@@ -1,4 +1,4 @@
-const {uniqueName} = require('@frctl/utils');
+const {uniqueId} = require('@frctl/utils');
 const check = require('check-types');
 const Variant = require('../entities/variant');
 const EntityCollection = require('./entity-collection');
@@ -40,14 +40,14 @@ class VariantCollection extends EntityCollection {
   //
 
   /*
-   * find('name')
+   * find('id')
    * find('prop', value)
    * find({prop: value})
    * find(fn)
    */
   find(...args) {
     if (args.length === 1 && typeof args[0] === 'string') {
-      return super.find('name', args[0]);
+      return super.find('id', args[0]);
     }
     return super.find(...args);
   }
@@ -147,7 +147,7 @@ function createVariant(target, props = {}) {
     variant = Object.assign({}, props);
   }
 
-  variant.name = uniqueName(props.name || 'variant', _variantNames.get(target));
+  variant.id = uniqueId(props.id || 'variant', _variantNames.get(target));
   variant.component = _componentId.get(target);
 
   variant = Variant.from(variant);

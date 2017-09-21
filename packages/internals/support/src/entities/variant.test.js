@@ -4,7 +4,7 @@ const Variant = require('./variant');
 const Entity = require('./entity');
 
 const defaultProps = {
-  name: 'variant',
+  id: 'variant',
   component: 'parent-component'
 };
 
@@ -22,7 +22,7 @@ describe('Variant', function () {
       expect(() => makeVariant(['invalid', 'array'])).to.throw(TypeError, '[properties-invalid]');
       expect(() => makeVariant('invalid string')).to.throw(TypeError, '[properties-invalid]');
       expect(() => makeVariant({src: 'invalid props'})).to.throw(TypeError, '[properties-invalid]');
-      expect(() => makeVariant({name: 'missing-props'})).to.throw(TypeError, '[properties-invalid]');
+      expect(() => makeVariant({id: 'missing-props'})).to.throw(TypeError, '[properties-invalid]');
     });
   });
   describe('.isVariant()', function () {
