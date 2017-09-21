@@ -14,19 +14,14 @@ module.exports = {
   },
 
   components: {
-    filter: file => file.stem.startsWith('@')
-  },
-
-  configs: {
-    defaults: {},
-    filter: {
-      stem: 'config'
-    }
-  },
-
-  views: {
-    filter: {
-      stem: 'view'
+    match: file => file.stem.startsWith('@'),
+    config: {
+      defaults: {
+        views: {
+          match: 'view.*'
+        }
+      },
+      match: 'config.*'
     }
   },
 

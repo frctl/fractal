@@ -1,6 +1,6 @@
 /* eslint no-unused-expressions: "off" */
 
-const {expect} = require('../../../../../test/helpers');
+const {expect, sinon} = require('../../../../../test/helpers');
 const File = require('../entities/file');
 const FileCollection = require('./file-collection');
 
@@ -63,6 +63,48 @@ describe('FileCollection', function () {
     it(`can be called with a single string argument to find by 'relative' path`, function () {
       const collection = makeCollection();
       expect(collection.find('dogs/odie.js')).to.equal(items[3]);
+    });
+  });
+
+  describe(`.filter()`, function () {
+    it('filters by path if a single string argument is supplied', function () {
+      const collection = makeCollection();
+      const spy = sinon.spy(collection, 'filterByPath');
+      const newCollection = collection.filterByPath('dogs/*');
+      expect(spy.called).to.equal(true);
+      expect(newCollection.count()).to.equal(2);
+    });
+    it('filters by path if a single array argument is supplied', function () {
+      const collection = makeCollection();
+      const spy = sinon.spy(collection, 'filterByPath');
+      const newCollection = collection.filterByPath(['**/*', '!**/*.js']);
+      expect(spy.called).to.equal(true);
+      expect(newCollection.count()).to.equal(1);
+    });
+    it(`defers to its superclass for all other 'filter' arguments`, function () {
+      const collection = makeCollection();
+      expect(collection.filter('path', '/dogs/odie.js').count()).to.equal(1);
+    });
+  });
+
+  describe(`.reject()`, function () {
+    it('reject by path if a single string argument is supplied', function () {
+      const collection = makeCollection();
+      const spy = sinon.spy(collection, 'rejectByPath');
+      const newCollection = collection.rejectByPath('dogs/*');
+      expect(spy.called).to.equal(true);
+      expect(newCollection.count()).to.equal(2);
+    });
+    it('reject by path if a single array argument is supplied', function () {
+      const collection = makeCollection();
+      const spy = sinon.spy(collection, 'rejectByPath');
+      const newCollection = collection.rejectByPath(['**/*', '!**/*.js']);
+      expect(spy.called).to.equal(true);
+      expect(newCollection.count()).to.equal(3);
+    });
+    it(`defers to its superclass for all other 'reject' arguments`, function () {
+      const collection = makeCollection();
+      expect(collection.reject('path', '/dogs/odie.js').count()).to.equal(3);
     });
   });
 

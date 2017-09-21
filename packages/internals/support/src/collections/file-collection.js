@@ -16,6 +16,20 @@ class FileCollection extends EntityCollection {
     return super.find(...args);
   }
 
+  filter(...args) {
+    if (args.length === 1 && (typeof args[0] === 'string' || Array.isArray(args[0]))) {
+      return this.filterByPath(...args);
+    }
+    return new FileCollection(super.filter(...args).toArray());
+  }
+
+  reject(...args) {
+    if (args.length === 1 && (typeof args[0] === 'string' || Array.isArray(args[0]))) {
+      return this.rejectByPath(...args);
+    }
+    return new FileCollection(super.reject(...args).toArray());
+  }
+
   filterByPath(...args) {
     let paths = [].concat(...args);
     assert.array.of.string(paths, `FileCollection.filterByPath: path argument must be a string or array of strings [paths-invalid]`);
