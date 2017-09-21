@@ -67,17 +67,22 @@ describe('FileCollection', function () {
   });
 
   describe(`.filter()`, function () {
+    it('returns a FileCollection instance', function () {
+      const collection = makeCollection();
+      const newCollection = collection.filter('type', 'dog');
+      expect(newCollection instanceof FileCollection).to.equal(true);
+    });
     it('filters by path if a single string argument is supplied', function () {
       const collection = makeCollection();
       const spy = sinon.spy(collection, 'filterByPath');
-      const newCollection = collection.filterByPath('dogs/*');
+      const newCollection = collection.filter('dogs/*');
       expect(spy.called).to.equal(true);
       expect(newCollection.count()).to.equal(2);
     });
     it('filters by path if a single array argument is supplied', function () {
       const collection = makeCollection();
       const spy = sinon.spy(collection, 'filterByPath');
-      const newCollection = collection.filterByPath(['**/*', '!**/*.js']);
+      const newCollection = collection.filter(['**/*', '!**/*.js']);
       expect(spy.called).to.equal(true);
       expect(newCollection.count()).to.equal(1);
     });
