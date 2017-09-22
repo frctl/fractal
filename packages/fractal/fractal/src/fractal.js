@@ -70,8 +70,7 @@ class Fractal extends App {
             throw new Error(`Component '${target.component}' not found [component-not-found]`);
           }
 
-          const views = component.getFiles().filter(this.get('components.views.filter'));
-          const view = views.find(v => adapter.match(v.path));
+          const view = component.getView(v => adapter.match(v.path));
           if (!view) {
             throw new Error(`Could not find view for component '${component.name}' (using adapter '${adapter.name}') [view-not-found]`);
           }

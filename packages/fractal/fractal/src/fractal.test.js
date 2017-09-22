@@ -39,11 +39,19 @@ const components = new ComponentCollection([
     src: files.find({
       stem: '@test-component'
     }),
-    files: FileCollection.from([files.find({
-      stem: 'view'
-    })]),
+    files: FileCollection.from([
+      new File({
+        name: 'view',
+        base: 'components/@test-component',
+        path: 'components/@test-component/view.fjk',
+        contents: Buffer.from('component!')
+      })
+    ]),
     config: {
       name: 'test-component',
+      views: {
+        match: 'view.*'
+      },
       variants: [{
         name: 'default',
         default: true,
