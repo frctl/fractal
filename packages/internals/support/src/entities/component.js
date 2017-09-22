@@ -61,11 +61,16 @@ class Component extends Entity {
   }
 
   getViews() {
-    // TODO
+    let views = new FileCollection();
+    const viewMatcher = this.get('views.match');
+    if ((viewMatcher)) {
+      views = this.getFiles().filter(viewMatcher);
+    }
+    return views;
   }
 
-  getView(name) {
-    // TODO
+  getView(...args) {
+    return this.getViews().find(...args);
   }
 
   _setSrc(src, files) {
