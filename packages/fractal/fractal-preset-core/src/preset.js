@@ -4,11 +4,6 @@ module.exports = function (opts = {}) {
     name: 'fractal-preset-core',
 
     config: {
-
-      transforms: [
-        require('@frctl/fractal-transform-components')
-      ],
-
       plugins: [
         require('@frctl/fractal-plugin-files-name')
       ]
