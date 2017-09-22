@@ -62,8 +62,7 @@ class Component extends Entity {
 
   getViews() {
     let views = new FileCollection();
-    const viewConfig = this.getConfig().views;
-    const viewMatcher = viewConfig && viewConfig.match;
+    const viewMatcher = this.get('views.match');
     if ((viewMatcher)) {
       views = this.getFiles().filter(viewMatcher);
     }

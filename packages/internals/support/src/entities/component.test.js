@@ -157,15 +157,15 @@ describe('Component', function () {
     });
   });
 
-  describe('.getViews()', function(){
-    it('returns an empty FileCollection if no view filter has been defined', function(){
+  describe('.getViews()', function () {
+    it('returns an empty FileCollection if no view filter has been defined', function () {
       const component = new Component(basicComponent);
       const views = component.getViews();
       expect(views).to.be.a('FileCollection');
       expect(views.length).to.equal(0);
     });
 
-    it('returns an empty FileCollection if no matching views are found', function(){
+    it('returns an empty FileCollection if no matching views are found', function () {
       const viewConfigComponent = Object.assign({}, fullComponent);
       viewConfigComponent.config.views = {
         match: {
@@ -178,7 +178,7 @@ describe('Component', function () {
       expect(views.length).to.equal(0);
     });
 
-    it('returns a filtered list of files as a FileCollection if matching views are found', function(){
+    it('returns a filtered list of files as a FileCollection if matching views are found', function () {
       const viewConfigComponent = Object.assign({}, fullComponent);
       viewConfigComponent.config.views = {
         match: {
@@ -192,14 +192,14 @@ describe('Component', function () {
     });
   });
 
-  describe('.getView()', function(){
-    it('returns undefined if no view filter has been defined', function(){
+  describe('.getView()', function () {
+    it('returns undefined if no view filter has been defined', function () {
       const component = new Component(basicComponent);
       const view = component.getView('extname', '.hbs');
       expect(view).to.be.undefined;
     });
 
-    it('returns undefined if no matching views are found', function(){
+    it('returns undefined if no matching views are found', function () {
       const viewConfigComponent = Object.assign({}, fullComponent);
       viewConfigComponent.config.views = {
         match: {
@@ -211,7 +211,7 @@ describe('Component', function () {
       expect(view).to.be.undefined;
     });
 
-    it('returns the correct File if a matching view is found', function(){
+    it('returns the correct File if a matching view is found', function () {
       const viewConfigComponent = Object.assign({}, fullComponent);
       viewConfigComponent.config.views = {
         match: {
