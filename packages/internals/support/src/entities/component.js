@@ -63,7 +63,7 @@ class Component extends Entity {
   getViews() {
     let views = new FileCollection();
     const viewMatcher = this.get('views.match');
-    if ((viewMatcher)) {
+    if (viewMatcher) {
       views = this.getFiles().filter(viewMatcher);
     }
     return views;
@@ -71,6 +71,15 @@ class Component extends Entity {
 
   getView(...args) {
     return this.getViews().find(...args);
+  }
+
+  getAssets() {
+    let assets = new FileCollection();
+    const assetMatcher = this.get('assets.match');
+    if (assetMatcher) {
+      assets = this.getFiles().filter(assetMatcher);
+    }
+    return assets;
   }
 
   _setSrc(src, files) {

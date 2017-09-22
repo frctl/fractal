@@ -224,6 +224,43 @@ describe('Component', function () {
     });
   });
 
+  describe('.getAssets()', function () {
+    it('returns an empty FileCollection if no asset filter has been defined', function () {
+      const component = new Component(basicComponent);
+      const assets = component.getAssets();
+      expect(assets).to.be.a('FileCollection');
+      expect(assets.length).to.equal(0);
+    });
+
+    it('returns an empty FileCollection if no matching views are found', function () {
+      const assetsConfigComp = Object.assign({}, fullComponent);
+      assetsConfigComp.config.assets = {
+        match: {
+          stem: 'view'
+        }
+      };
+      const component = new Component(assetsConfigComp);
+      const assets = component.getAssets();
+      expect(assets).to.be.a('FileCollection');
+      expect(assets.length).to.equal(0);
+    });
+
+    it('returns a filtered list of files as a FileCollection if matching views are found', function () {
+      const assetsConfigComp = Object.assign({}, fullComponent);
+      assetsConfigComp.config.assets = {
+        match: {
+          extname: '.js'
+        }
+      };
+      const component = new Component(assetsConfigComp);
+      const assets = component.getAssets();
+      expect(assets).to.be.a('FileCollection');
+      expect(assets.length).to.equal(1);
+    });
+
+    it('defers to the default app config matcher');
+  });
+
   describe('.isComponent()', function () {
     it('returns true if an instance is a Component', function () {
       expect(Component.isComponent(new Component(basicComponent))).to.equal(true);

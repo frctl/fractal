@@ -19,6 +19,9 @@ module.exports = {
       defaults: {
         views: {
           match: 'view.*'
+        },
+        assets: {
+          match: '*.js'
         }
       },
       match: 'config.*'

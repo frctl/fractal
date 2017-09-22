@@ -1,0 +1,26 @@
+{
+  "name": "@frctl/bundler",
+  "description": "Asset bundler for Fractal",
+  "version": "2.0.0-beta.0",
+  "homepage": "http://fractal.build",
+  "repository": "https://github.com/frctl/fractal/tree/v2/packages/bundler",
+  "bugs": "https://github.com/frctl/fractal/issues",
+  "contributors": [
+    "Mark Perkins <mark@allmarkedup.com> (http://allmarkedup.com)",
+    "Danielle Huntrods <danielle.huntrods@clearleft.com> (http://clearleft.com)"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@frctl/fractal": "^2.0.0-beta.0",
+    "@frctl/parser": "^2.0.0-beta.0",
+    "@frctl/support": "^2.0.0-beta.0",
+    "@frctl/config": "^2.0.0-beta.0",
+    "@frctl/utils": "^2.0.0-beta.0",
+    "check-types": "^7.2.0",
+    "debug": "^3.0.0",
+    "lodash": "^4.17.4"
+  },
+  "devDependencies": {
+    "mock-fs": "^4.4.1"
+  }
+}
