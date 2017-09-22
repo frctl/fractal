@@ -1,7 +1,7 @@
 const {defaultsDeep, cloneDeep} = require('@frctl/utils');
 const App = require('@frctl/app');
 const {Component, Variant, File, EmittingPromise} = require('@frctl/support');
-const {Renderer} = require('@frctl/renderer');
+const {EngineStore} = require('@frctl/renderer');
 const debug = require('debug')('frctl:fractal');
 const Config = require('./config/store');
 
@@ -15,42 +15,38 @@ class Fractal extends App {
     return this.parse().then(collections => collections.components);
   }
 
-  addAdapter(adapter) {
-    this.debug(`adding adapter %s`, adapter);
+  addEngine(engine) {
+    this.debug(`adding engine %s`, engine);
     this.dirty = true;
-    this.config.push('adapters', adapter);
+    this.config.push('engines', engine);
     return this;
   }
 
-  getRenderer() {
-    return new Renderer(this.config.get('adapters'));
-  }
-
   render(target, context = {}, opts = {}) {
+    const engineStore = new EngineStore(this.config.get('engines'));
     return new EmittingPromise(async (resolve, reject, emitter) => {
       try {
         const collections = await this.parse();
-        const renderer = this.getRenderer();
-        let adapter;
+        let engine;
         let template;
         let context;
 
         context = cloneDeep(context);
         opts = cloneDeep(opts);
 
-        if (renderer.adapters.length === 0) {
-          throw new Error(`You must register one or more adapters before you can render views [no-adapters]`);
+        if (engineStore.engines.length === 0) {
+          throw new Error(`You must register one or more engines before you can render views [no-engines]`);
         }
 
         if (typeof target === 'string') {
-          adapter = opts.adapter || renderer.getDefaultAdapter();
+          engine = opts.engine || engineStore.getDefault();
           template = target;
         } else if (File.isFile(target)) {
-          adapter = opts.adapter || renderer.getAdapterFor(target);
+          engine = opts.engine || engineStore.getEngineFor(target);
           opts.view = target;
           template = target.contents.toString();
         } else if (Component.isComponent(target) || Variant.isVariant(target)) {
-          adapter = opts.adapter || renderer.getDefaultAdapter();
+          engine = opts.engine || engineStore.getDefault();
 
           let component;
           let variant;
@@ -70,9 +66,9 @@ class Fractal extends App {
             throw new Error(`Component '${target.component}' not found [component-not-found]`);
           }
 
-          const view = component.getView(v => adapter.match(v.path));
+          const view = component.getView(v => engine.match(v.path));
           if (!view) {
-            throw new Error(`Could not find view for component '${component.name}' (using adapter '${adapter.name}') [view-not-found]`);
+            throw new Error(`Could not find view for component '${component.name}' (using engine '${engine.name}') [view-not-found]`);
           }
 
           context = defaultsDeep(context, variant.context);
@@ -86,17 +82,24 @@ class Fractal extends App {
           throw new Error(`Fractal.render - Only components, variants or views or strings can be rendered [target-invalid]`);
         }
 
-        if (typeof adapter === 'string') {
-          adapter = renderer.getAdapter(adapter);
+        if (typeof engine === 'string') {
+          engine = engineStore.getEngine(engine);
         }
 
-        if (!adapter) {
-          throw new Error('Fractal.render - no valid adapter could be found to render the template [adapter-not-found]');
+        if (!engine) {
+          throw new Error('Fractal.render - no valid engine could be found to render the template [engine-not-found]');
         }
 
-        opts.adapter = adapter;
+        opts.engine = engine;
         opts.collections = collections;
-        resolve(renderer.render(template, context, opts, emitter));
+
+        emitter.emit('render.start', {template, context, engine, opts});
+
+        const result = engine.render(template, context, opts);
+
+        emitter.emit('render.complete', {result, template, context, engine, opts});
+
+        resolve(result);
       } catch (err) {
         reject(err);
       }

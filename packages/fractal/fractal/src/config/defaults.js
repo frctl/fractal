@@ -18,7 +18,8 @@ module.exports = {
     config: {
       defaults: {
         views: {
-          match: 'view.*'
+          match: 'view.*',
+          default: null
         }
       },
       match: 'config.*'
@@ -27,7 +28,7 @@ module.exports = {
 
   presets: [],
 
-  adapters: [],
+  engines: [],
 
   plugins: [],
 

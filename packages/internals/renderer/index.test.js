@@ -1,15 +1,15 @@
 const {expect} = require('../../../test/helpers');
-const Renderer = require('./src/renderer');
+const EngineStore = require('./src/engine-store');
 const factory = require('.');
 
 describe('Renderer', () => {
   describe('main export', () => {
-    it('exports a factory function that instantiates a Renderer instance', () => {
-      expect(factory()).to.be.instanceOf(Renderer);
+    it('exports a factory function that instantiates a EngineStore instance', () => {
+      expect(factory()).to.be.instanceOf(EngineStore);
     });
 
-    it('provides a reference to the Renderer class', () => {
-      expect(factory.Renderer).to.equal(Renderer);
+    it('provides a reference to the EngineStore class', () => {
+      expect(factory.EngineStore).to.equal(EngineStore);
     });
   });
 });

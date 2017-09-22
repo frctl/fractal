@@ -15,7 +15,7 @@ class ConfigStore extends ExtendedConfig {
     }
 
     const accessors = [{
-      path: ['plugins', 'adapters', 'transforms'],
+      path: ['plugins', 'engines', 'transforms'],
       handler: 'packages-loader'
     }];
 

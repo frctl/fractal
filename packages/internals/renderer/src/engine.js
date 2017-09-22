@@ -4,20 +4,21 @@ const {toArray, normalizeExt} = require('@frctl/utils');
 const debug = require('debug')('fractal:support');
 const {Validator} = require('@frctl/support');
 const schema = require('@frctl/support/schema');
+const {assert} = require('check-types');
 
 const _props = new WeakMap();
 
-class Adapter {
+class Engine {
 
   constructor(props) {
-    Validator.assertValid(props, schema.adapter, 'Adapter schema invalid [adapter-invalid]');
+    Validator.assertValid(props, schema.engine, 'Engine schema invalid [engine-invalid]');
     _props.set(this, props);
-    debug('intialised adapter %s', props.name);
+    debug('intialised engine %s', props.name);
   }
 
   match(path) {
     if (!isString(path)) {
-      throw new TypeError(`Adapter.match - path to match must be a string [path-invalid]`);
+      throw new TypeError(`Engine.match - path to match must be a string [path-invalid]`);
     }
     const props = _props.get(this);
     const match = isFunction(props.match) ? props.match : toArray(props.match).map(ext => normalizeExt(ext));
@@ -27,11 +28,12 @@ class Adapter {
     return match.includes(extname(path));
   }
 
-  async render(tpl, ...args) {
-    if (!isString(tpl)) {
-      throw new TypeError(`Adapter.render - template must be a string [tpl-invalid]`);
-    }
-    return Promise.resolve(_props.get(this).render(tpl, ...args));
+  async render(tpl, context = {}, opts = {}) {
+    assert.string(tpl, 'Engine.render - template must be a string [template-invalid]');
+    assert.object(context, 'Engine.render - context data must be an object [context-invalid]');
+    assert.object(opts, 'Engine.render - options data must be an object [opts-invalid]');
+
+    return Promise.resolve(_props.get(this).render(tpl, context, opts));
   }
 
   get name() {
@@ -40,4 +42,4 @@ class Adapter {
 
 }
 
-module.exports = Adapter;
+module.exports = Engine;

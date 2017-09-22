@@ -18,8 +18,8 @@ describe('render', function () {
   describe('.filter()', function () {
     const filter = factory();
     const fractal = new Fractal({
-      adapters: [
-        './test/fixtures/add-ons/adapter'
+      engines: [
+        './test/fixtures/add-ons/engine'
       ]
     });
     const render = filter.filter.bind({env: {fractal}});

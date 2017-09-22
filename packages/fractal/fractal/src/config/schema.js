@@ -85,7 +85,7 @@ module.exports = {
       ]
     },
 
-    adapters: {
+    engines: {
       type: 'array'
     },
 
