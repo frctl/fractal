@@ -179,9 +179,10 @@ describe('Fractal', function () {
     describe(`.${method}()`, function () {
       it(`adds a ${addOn} to the ${addOn}s config array`, function () {
         const app = new Fractal({presets: null});
-        expect(app.get(`${addOn}s`)).to.be.an('array').and.have.property('length').which.equals(0);
+        expect(app.get(`${addOn}s`)).to.be.an('array');
+        const count = app.get(`${addOn}s`).length;
         app[method](`./test/fixtures/add-ons/${addOn}`);
-        expect(app.get(`${addOn}s`).length).equal(1);
+        expect(app.get(`${addOn}s`).length).equal(count + 1);
       });
       it(`marks the app instance as dirty`, function () {
         const app = new Fractal({presets: null});

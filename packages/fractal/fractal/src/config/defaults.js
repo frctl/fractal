@@ -32,6 +32,8 @@ module.exports = {
 
   plugins: [],
 
-  transforms: []
+  transforms: [
+    require('@frctl/fractal-transform-components')
+  ]
 
 };
