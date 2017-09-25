@@ -324,42 +324,42 @@ describe('Utils', function () {
     });
   });
 
-  describe('.normalizeName()', function () {
+  describe('.normalizeId()', function () {
     it('Removes leading non-alphanumeric characters from string', function () {
-      expect(utils.normalizeName('_string')).to.equal('string');
-      expect(utils.normalizeName('_01_string')).to.equal('string');
-      expect(utils.normalizeName('01_string')).to.equal('string');
-      expect(utils.normalizeName('__01_02_string')).to.equal('string');
-      expect(utils.normalizeName('_01-string')).to.equal('string');
-      expect(utils.normalizeName('01string')).to.equal('string');
+      expect(utils.normalizeId('_string')).to.equal('string');
+      expect(utils.normalizeId('_01_string')).to.equal('string');
+      expect(utils.normalizeId('01_string')).to.equal('string');
+      expect(utils.normalizeId('__01_02_string')).to.equal('string');
+      expect(utils.normalizeId('_01-string')).to.equal('string');
+      expect(utils.normalizeId('01string')).to.equal('string');
     });
 
     it('Converts a string to kebab case', function () {
-      expect(utils.normalizeName('thisIsAString')).to.equal('this-is-a-string');
-      expect(utils.normalizeName('this.Is.A.String')).to.equal('this-is-a-string');
-      expect(utils.normalizeName('this.is.a.string')).to.equal('this-is-a-string');
+      expect(utils.normalizeId('thisIsAString')).to.equal('this-is-a-string');
+      expect(utils.normalizeId('this.Is.A.String')).to.equal('this-is-a-string');
+      expect(utils.normalizeId('this.is.a.string')).to.equal('this-is-a-string');
     });
   });
 
-  describe('.uniqueName()', function () {
+  describe('.uniqueId()', function () {
     it('Checks that an array of existing values is provided', function () {
       expect(function () {
-        utils.uniqueName('name');
+        utils.uniqueId('name');
       }).to.throw(TypeError, '[no-used-array]');
     });
     it('Returns original name and adds it to used array, if unique', function () {
       let name = 'name03';
       let used = ['name00', 'name01', 'name02'];
-      let uniqueName = utils.uniqueName(name, used);
-      expect(uniqueName).to.equal(name);
+      let uniqueId = utils.uniqueId(name, used);
+      expect(uniqueId).to.equal(name);
       expect(used).to.eql(['name00', 'name01', 'name02', 'name03']);
     });
     it('Returns modified unique name and adds it to used array, if not unique', function () {
       let name = 'name02';
       let used = ['name00', 'name01', 'name02'];
-      let uniqueName = utils.uniqueName(name, used);
-      expect(uniqueName).to.equal('name02-2');
-      let uniqueName2 = utils.uniqueName(name, used);
+      let uniqueId = utils.uniqueId(name, used);
+      expect(uniqueId).to.equal('name02-2');
+      let uniqueName2 = utils.uniqueId(name, used);
       expect(uniqueName2).to.equal('name02-3');
       expect(used).to.eql(['name00', 'name01', 'name02', 'name02-2', 'name02-3']);
     });

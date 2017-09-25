@@ -1,4 +1,4 @@
-const {normalizeName} = require('@frctl/utils');
+const {normalizeId} = require('@frctl/utils');
 const Validator = require('../validator');
 const schema = require('../../schema');
 const VariantCollection = require('../collections/variant-collection');
@@ -17,7 +17,7 @@ class Component extends Entity {
     Component.validate(props);
 
     const config = Object.assign({
-      name: normalizeName(props.src.stem)
+      id: normalizeId(props.src.stem)
     }, props.config);
 
     super(config);
@@ -43,13 +43,13 @@ class Component extends Entity {
     return _variants.get(this);
   }
 
-  getVariant(name) {
-    return _variants.get(this).find(name);
+  getVariant(id) {
+    return _variants.get(this).find(id);
   }
 
-  getVariantOrDefault(name) {
+  getVariantOrDefault(id) {
     const variants = _variants.get(this);
-    return variants.find(name) || variants.getDefault();
+    return variants.find(id) || variants.getDefault();
   }
 
   addVariant(variant) {
@@ -86,11 +86,11 @@ class Component extends Entity {
   }
 
   _buildVariants(variants = []) {
-    let variantCollection = new VariantCollection(variants, this.get('name'));
+    let variantCollection = new VariantCollection(variants, this.get('id'));
 
     if (!variantCollection.hasDefault()) {
       variantCollection = variantCollection.push({
-        name: 'default',
+        id: 'default',
         default: true
       });
     }

@@ -81,23 +81,23 @@ const utils = module.exports = {
     return require('titlecase')(str.replace(/[-_]/g, ' '));
   },
 
-  normalizeName(str) {
+  normalizeId(str) {
     return _.kebabCase(str.replace(/^[^a-zA-Z]*/, ''));
   },
 
-  uniqueName(name, used) {
+  uniqueId(id, used) {
     assert.array(used, 'You must provide an array to use when checking names for uniqueness [no-used-array]');
-    let id = name;
-    if (used.includes(id)) {
+    let result = id;
+    if (used.includes(result)) {
       // id already exists, add a suffix to make it unique
       let suffix = 1;
-      while (used.includes(id)) {
+      while (used.includes(result)) {
         suffix++;
-        id = `${name}-${suffix}`;
+        result = `${id}-${suffix}`;
       }
     }
-    used.push(id);
-    return id;
+    used.push(result);
+    return result;
   },
 
   hash(content) {

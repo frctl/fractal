@@ -1,4 +1,4 @@
-module.exports.adapter = require('./src/schema/adapter.schema');
+module.exports.engine = require('./src/schema/engine.schema');
 module.exports.command = require('./src/schema/command.schema');
 module.exports.plugin = require('./src/schema/plugin.schema');
 module.exports.transform = require('./src/schema/transform.schema');

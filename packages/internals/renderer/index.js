@@ -1,7 +1,7 @@
-const Renderer = require('./src/renderer');
+const EngineStore = require('./src/engine-store');
 
-module.exports = function (adapters = []) {
-  return new Renderer(adapters);
+module.exports = function (engines = []) {
+  return new EngineStore(engines);
 };
 
-module.exports.Renderer = Renderer;
+module.exports.EngineStore = EngineStore;

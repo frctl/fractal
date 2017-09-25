@@ -13,8 +13,8 @@ const fullComponent = {
   src: new File({path: '/src/component', cwd: '/'}),
   files: new FileCollection([new File({path: '/src/component/component.js'}), new File({path: '/src/component/component.hbs'})]),
   config: {
-    name: 'component-name-set',
-    variants: [{name: 'component--v1'}, {name: 'component--v2'}],
+    id: 'component-id-set',
+    variants: [{id: 'component--v1'}, {id: 'component--v2'}],
     refresh: true
   }
 };
@@ -30,15 +30,15 @@ describe('Component', function () {
       expect(componentF).to.exist;
       expect(componentF instanceof Component).to.be.true;
     });
-    it(`derives 'name' from path correctly if not set directly`, function () {
+    it(`derives 'id' from path correctly if not set directly`, function () {
       const component = new Component(basicComponent);
-      expect(component.name).to.equal('component');
-      expect(component.get('name')).to.equal('component');
+      expect(component.id).to.equal('component');
+      expect(component.get('id')).to.equal('component');
     });
-    it(`assigns 'name' correctly if set directly`, function () {
+    it(`assigns 'id' correctly if set directly`, function () {
       const component = new Component(fullComponent);
-      expect(component.name).to.equal('component-name-set');
-      expect(component.get('name')).to.equal('component-name-set');
+      expect(component.id).to.equal('component-id-set');
+      expect(component.get('id')).to.equal('component-id-set');
     });
     it(`creates default 'variants', and 'files' properties if not set`, function () {
       const component = new Component(basicComponent);
@@ -86,11 +86,11 @@ describe('Component', function () {
     });
     it('overrides default variant if used after initial default created', function () {
       const component = new Component(basicComponent);
-      expect(component.getDefaultVariant()).to.be.a('Variant').that.includes({component: 'component', name: 'default'});
-      component.addVariant({name: 'new-default', default: true});
-      expect(component.getDefaultVariant()).to.be.a('Variant').that.includes({component: 'component', name: 'new-default'});
-      component.addVariant({name: 'new-default-2', default: true});
-      expect(component.getDefaultVariant()).to.be.a('Variant').that.includes({component: 'component', name: 'new-default-2'});
+      expect(component.getDefaultVariant()).to.be.a('Variant').that.includes({component: 'component', id: 'default'});
+      component.addVariant({id: 'new-default', default: true});
+      expect(component.getDefaultVariant()).to.be.a('Variant').that.includes({component: 'component', id: 'new-default'});
+      component.addVariant({id: 'new-default-2', default: true});
+      expect(component.getDefaultVariant()).to.be.a('Variant').that.includes({component: 'component', id: 'new-default-2'});
     });
   });
 
@@ -110,14 +110,14 @@ describe('Component', function () {
       const component = new Component(basicComponent);
       expect(component.getVariant('default'))
       .to.be.a('Variant')
-      .with.property('name')
+      .with.property('id')
       .that.equals('default');
     });
     it('gets named variant correctly', function () {
       const component = new Component(fullComponent);
       expect(component.getVariant('component--v1'))
       .to.be.a('Variant')
-      .with.property('name')
+      .with.property('id')
       .that.equals('component--v1');
     });
     it('returns undefined for nonexistant variant', function () {
@@ -131,28 +131,28 @@ describe('Component', function () {
       const component = new Component(basicComponent);
       expect(component.getVariantOrDefault('default'))
       .to.be.a('Variant')
-      .with.property('name')
+      .with.property('id')
       .that.equals('default');
     });
     it('gets named variant correctly', function () {
       const component = new Component(fullComponent);
       expect(component.getVariantOrDefault('component--v1'))
       .to.be.a('Variant')
-      .with.property('name')
+      .with.property('id')
       .that.equals('component--v1');
     });
-    it('returns default variant for nonexistant variant name', function () {
+    it('returns default variant for nonexistant variant id', function () {
       const component = new Component(fullComponent);
       expect(component.getVariantOrDefault('does-not-exist'))
       .to.be.a('Variant')
-      .with.property('name')
+      .with.property('id')
       .that.equals('component--v1');
     });
     it('returns default variant for undefined search values', function () {
       const component = new Component(fullComponent);
       expect(component.getVariantOrDefault())
       .to.be.a('Variant')
-      .with.property('name')
+      .with.property('id')
       .that.equals('component--v1');
     });
   });
