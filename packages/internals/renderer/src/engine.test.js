@@ -46,7 +46,7 @@ describe('Engine', function () {
         render: renderSpy
       });
       const result = await engine.render(funjucksTemplate);
-      expect(renderSpy.called).to.equal(true);
+      expect(renderSpy.calledWith(funjucksTemplate.stringify())).to.equal(true);
       expect(result).to.equal('foobar');
       return result;
     });

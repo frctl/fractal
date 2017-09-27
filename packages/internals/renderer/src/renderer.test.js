@@ -29,7 +29,7 @@ describe('Renderer', function () {
       const cloneSpy = sinon.spy(funjucksTemplate, 'clone');
       const result = await renderer.render(funjucksTemplate, context, opts);
       expect(result).to.equal('the rendered string');
-      expect(renderSpy.calledWith(funjucksTemplate, context, opts)).to.equal(true);
+      expect(renderSpy.calledWith(funjucksTemplate.stringify(), context, Object.assign({}, opts, {template: funjucksTemplate}))).to.equal(true);
       expect(cloneSpy.called).to.equal(true);
       cloneSpy.restore();
       renderSpy.restore();
