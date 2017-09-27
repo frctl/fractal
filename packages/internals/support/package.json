@@ -22,7 +22,9 @@
     "multimatch": "^2.1.0",
     "slash": "^1.0.0",
     "debug": "^3.0.0",
-    "vinyl": "^2.1.0"
+    "vinyl": "^2.1.0",
+    "reshape-parser": "^0.2.1",
+    "reshape-code-gen": "^0.2.1"
   },
   "devDependencies": {
     "proxyquire": "^1.8.0"

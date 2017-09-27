@@ -2,6 +2,8 @@
 
 const {expect} = require('../../../../../test/helpers');
 const Variant = require('../entities/variant');
+const File = require('../entities/file');
+const Component = require('../entities/component');
 const Collection = require('./collection');
 const VariantCollection = require('./variant-collection');
 
@@ -21,11 +23,13 @@ const newItem = {
   id: 'wobble'
 };
 
+const parentComponent = new Component({src: new File({path: '/path/@comp'}), config: {id: 'default-component'}});
+
 const itemsWithDefault = items.map(i => i.id === 'baz' ? {id: i.id, default: true} : i);
 const itemsWithMultipleDefault = items.map(i => i.id === 'foo' ? i : {id: i.id, default: true});
 
-const makeCollection = input => new VariantCollection(input || items.slice(0), 'default-component');
-const makeCollectionFrom = input => VariantCollection.from(input || items.slice(0), 'default-component');
+const makeCollection = input => new VariantCollection(input || items.slice(0), parentComponent);
+const makeCollectionFrom = input => VariantCollection.from(input || items.slice(0), parentComponent);
 
 describe('VariantCollection', function () {
   describe('constructor', function () {
@@ -36,28 +40,28 @@ describe('VariantCollection', function () {
       expect(collection.length).to.equal(0);
     });
     it('creates a valid Variant', function () {
-      const collection = new VariantCollection([{}], 'valid');
+      const collection = new VariantCollection([{}], parentComponent);
       const variant = collection.getDefault();
       expect(variant).to.be.a('Variant')
-      .that.includes({id: 'variant', component: 'valid'});
+      .that.includes({id: 'variant', component: 'default-component'});
     });
     it('creates a valid Variant from a plain Object', function () {
-      const collection = new VariantCollection([{other: 'properties'}], 'plain-object');
+      const collection = new VariantCollection([{other: 'properties'}], parentComponent);
       const variant = collection.getDefault();
       expect(variant).to.be.a('Variant')
-      .that.includes({id: 'variant', component: 'plain-object', other: 'properties'});
+      .that.includes({id: 'variant', component: 'default-component', other: 'properties'});
     });
     it('assigns id if provided', function () {
-      const collection = new VariantCollection([{id: 'blue'}], 'valid-id');
+      const collection = new VariantCollection([{id: 'blue'}], parentComponent);
       const variant = collection.getDefault();
       expect(variant).to.be.a('Variant')
-      .that.includes({id: 'blue', component: 'valid-id'});
+      .that.includes({id: 'blue', component: 'default-component'});
     });
     it('increments id correctly if empty id values provided', function () {
-      const collection = new VariantCollection([{}, {}, {}], 'empties');
+      const collection = new VariantCollection([{}, {}, {}], parentComponent);
       const expected = index => {
         const id = index === undefined ? 'variant' : `variant-${index}`;
-        return {id: id, component: 'empties'};
+        return {id: id, component: 'default-component'};
       };
 
       expect(collection[0]).to.be.a('Variant')
@@ -70,10 +74,10 @@ describe('VariantCollection', function () {
       .that.includes(expected(3));
     });
     it('increments id correctly if duplicate id values provided', function () {
-      const collection = new VariantCollection([{id: 'blue'}, {id: 'blue'}, {id: 'blue'}], 'duplicates');
+      const collection = new VariantCollection([{id: 'blue'}, {id: 'blue'}, {id: 'blue'}], parentComponent);
       const expected = index => {
         const id = index === undefined ? 'blue' : `blue-${index}`;
-        return {id: id, component: 'duplicates'};
+        return {id: id, component: 'default-component'};
       };
 
       expect(collection[0]).to.be.a('Variant')

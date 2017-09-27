@@ -61,16 +61,18 @@ class Component extends Entity {
   }
 
   getViews() {
-    let views = new FileCollection();
-    const viewMatcher = this.get('views.match');
-    if ((viewMatcher)) {
-      views = this.getFiles().filter(viewMatcher);
-    }
-    return views;
+    const viewMatcher = this.get('views.match', () => false); // default to no matches
+    const viewSorter = view => {
+      if (view.extname === this.get('views.default')) {
+        return 0;
+      }
+      return 1;
+    };
+    return this.getFiles().filter(viewMatcher).sortBy(viewSorter);
   }
 
   getView(...args) {
-    return this.getViews().find(...args);
+    return args ? this.getViews().find(...args) : this.getViews().first();
   }
 
   _setSrc(src, files) {
@@ -86,7 +88,7 @@ class Component extends Entity {
   }
 
   _buildVariants(variants = []) {
-    let variantCollection = new VariantCollection(variants, this.get('id'));
+    let variantCollection = new VariantCollection(variants, this._proxy);
 
     if (!variantCollection.hasDefault()) {
       variantCollection = variantCollection.push({

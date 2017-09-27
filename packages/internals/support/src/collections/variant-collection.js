@@ -1,21 +1,21 @@
 const {uniqueId} = require('@frctl/utils');
 const check = require('check-types');
 const Variant = require('../entities/variant');
+const Template = require('../entities/template');
 const EntityCollection = require('./entity-collection');
 const Collection = require('./collection');
 
 const assert = check.assert;
 
 const _variantNames = new WeakMap();
-const _componentId = new WeakMap();
+const _component = new WeakMap();
 const _default = new WeakMap();
 
 class VariantCollection extends EntityCollection {
 
-  constructor(items = [], componentId = '') {
+  constructor(items = [], component) {
     super([]);
-
-    this._configure(componentId, []);
+    this._configure(component, []);
     this._setItems(items);
   }
 
@@ -32,7 +32,7 @@ class VariantCollection extends EntityCollection {
   //
 
   _new(items) {
-    return new this.constructor(items, _componentId.get(this));
+    return new this.constructor(items, _component.get(this));
   }
 
   //
@@ -78,8 +78,8 @@ class VariantCollection extends EntityCollection {
     return isValid;
   }
 
-  _configure(componentId, variantNames) {
-    _componentId.set(this, componentId);
+  _configure(component, variantNames) {
+    _component.set(this, component);
     _variantNames.set(this, variantNames);
     _default.set(this, undefined);
   }
@@ -105,8 +105,8 @@ class VariantCollection extends EntityCollection {
     this._items = items;
   }
 
-  get componentId() {
-    return _componentId.get(this);
+  get component() {
+    return _component.get(this);
   }
 
   get [Symbol.toStringTag]() {
@@ -134,7 +134,9 @@ function getDefault(variants) {
 function createVariant(target, props = {}) {
   const isValidVariant = check.maybe.instance(props, Variant);
   const isValidProp = check.maybe.object(props);
-  let variant;
+  const component = target.component;
+  let config;
+
   assert(
     (isValidProp || isValidVariant),
     `VariantCollection.createVariant: The 'props' argument is optional but must be an object [props-invalid]`,
@@ -142,16 +144,17 @@ function createVariant(target, props = {}) {
   );
 
   if (isValidVariant) {
-    variant = props;
+    config = props;
   } else {
-    variant = Object.assign({}, props);
+    config = Object.assign({}, props);
   }
 
-  variant.id = uniqueId(props.id || 'variant', _variantNames.get(target));
-  variant.component = _componentId.get(target);
+  config.id = uniqueId(props.id || 'variant', _variantNames.get(target));
+  config.component = component.id;
 
-  variant = Variant.from(variant);
-  return variant;
+  const templates = component.getViews().map(view => new Template(view.contents.toString(), view.relative));
+
+  return Variant.from({templates, config});
 }
 
 Collection.addEntityDefinition(Variant, VariantCollection);

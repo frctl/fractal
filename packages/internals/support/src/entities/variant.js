@@ -1,12 +1,46 @@
 const Validator = require('../validator');
 const schema = require('../../schema');
-
+const Collection = require('../collections/collection');
 const Entity = require('./entity');
+
+const _templates = new WeakMap();
 
 class Variant extends Entity {
 
+  constructor(props) {
+    super(props.config);
+    this._setTemplates(Collection.from(props.templates || []));
+  }
+
+  getTemplate(finder) {
+    if (!finder) {
+      finder = this.get('');
+    }
+    finder = (typeof finder === 'string') ? {extname: finder} : finder;
+    return this.getTemplates().find(finder);
+  }
+
+  getTemplates() {
+    return _templates.get(this);
+  }
+
+  _setTemplates(templates) {
+    _templates.set(this, templates);
+  }
+
   _validateOrThrow(props) {
     Validator.assertValid(props, schema.variant, `Variant.constructor: The properties provided do not match the schema of a variant [properties-invalid]`);
+  }
+
+  clone() {
+    const cloned = new this.constructor({
+      templates: this.getTemplates(),
+      config: this._config
+    });
+    for (let [key, value] of Object.entries(this._data)) {
+      cloned.set(key, value);
+    }
+    return cloned;
   }
 
   static isVariant(item) {

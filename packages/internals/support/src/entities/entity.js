@@ -20,7 +20,7 @@ class Entity {
     _setters.set(this, []);
     _getters.set(this, []);
 
-    return new Proxy(this, {
+    const proxy = new Proxy(this, {
       get(target, propKey, receiver) {
         if (!Reflect.has(target, propKey)) {
           return target.get(propKey);
@@ -46,6 +46,10 @@ class Entity {
         );
       }
     });
+
+    this._proxy = proxy;
+
+    return proxy;
   }
 
   get(path, fallback) {
