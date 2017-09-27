@@ -1,8 +1,8 @@
 const {relative} = require('path');
 const tildify = require('tildify');
 
-module.exports = function infoCommand(opts = {}) {
-  const defaults = {
+module.exports = function infoCommand() {
+  return {
 
     name: 'fractal-info',
 
@@ -33,6 +33,4 @@ module.exports = function infoCommand(opts = {}) {
       `;
     }
   };
-
-  return Object.assign({}, defaults, opts);
 };
