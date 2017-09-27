@@ -1,7 +1,6 @@
-const {defaultsDeep, cloneDeep} = require('@frctl/utils');
 const App = require('@frctl/app');
-const {Component, Variant, File, EmittingPromise} = require('@frctl/support');
-const {EngineStore} = require('@frctl/renderer');
+const {Component, Variant, EmittingPromise} = require('@frctl/support');
+const Renderer = require('@frctl/renderer');
 const debug = require('debug')('frctl:fractal');
 const Config = require('./config/store');
 
@@ -23,87 +22,55 @@ class Fractal extends App {
   }
 
   render(target, context = {}, opts = {}) {
-    const engineStore = new EngineStore(this.config.get('engines'));
+    const renderer = this.getRenderer();
     return new EmittingPromise(async (resolve, reject, emitter) => {
       try {
+        let component;
+        let variant;
+
         const collections = await this.parse();
-        let engine;
-        let template;
-        let context;
 
-        context = cloneDeep(context);
-        opts = cloneDeep(opts);
-
-        if (engineStore.engines.length === 0) {
-          throw new Error(`You must register one or more engines before you can render views [no-engines]`);
+        if (!Component.isComponent(target) && !Variant.isVariant(target)) {
+          throw new Error(`Fractal.render - only components or variants can be rendered [target-invalid]`);
         }
 
-        if (typeof target === 'string') {
-          engine = opts.engine || engineStore.getDefault();
-          template = target;
-        } else if (File.isFile(target)) {
-          engine = opts.engine || engineStore.getEngineFor(target);
-          opts.view = target;
-          template = target.contents.toString();
-        } else if (Component.isComponent(target) || Variant.isVariant(target)) {
-          engine = opts.engine || engineStore.getDefault();
-
-          let component;
-          let variant;
-
-          if (Component.isComponent(target)) {
-            variant = opts.variant ? target.getVariant(opts.variant) : target.getDefaultVariant();
-            if (!variant) {
-              throw new Error(`Could not find variant '${opts.variant}' for component '${target.id}' [variant-not-found]`);
-            }
-            component = target;
-          } else {
-            variant = target;
+        if (Component.isComponent(target)) {
+          variant = opts.variant ? target.getVariant(opts.variant) : target.getDefaultVariant();
+          if (!variant) {
+            throw new Error(`Could not find variant '${opts.variant}' for component '${target.id}' [variant-not-found]`);
           }
-
-          component = component || collections.components.find(c => c.name === variant.component);
-          if (!component) {
-            throw new Error(`Component '${target.component}' not found [component-not-found]`);
-          }
-
-          const view = component.getView(v => engine.match(v.path));
-          if (!view) {
-            throw new Error(`Could not find view for component '${component.name}' (using engine '${engine.name}') [view-not-found]`);
-          }
-
-          context = defaultsDeep(context, variant.context);
-          template = view.contents.toString();
-          opts.view = view;
-          opts.component = component;
-          opts.variant = variant;
+          component = target;
+        } else {
+          variant = target;
         }
 
+        component = component || collections.components.find(c => c.name === variant.component);
+        if (!component) {
+          throw new Error(`Component '${target.component}' not found [component-not-found]`);
+        }
+
+        let template = variant.getTemplate(opts.ext);
         if (!template) {
-          throw new Error(`Fractal.render - Only components, variants or views or strings can be rendered [target-invalid]`);
+          throw new Error(`Could not find template for variant '${variant.id}' of component '${component.id}' [template-not-found]`);
         }
 
-        if (typeof engine === 'string') {
-          engine = engineStore.getEngine(engine);
-        }
+        const renderOpts = {variant, component, collections};
 
-        if (!engine) {
-          throw new Error('Fractal.render - no valid engine could be found to render the template [engine-not-found]');
-        }
+        emitter.emit('render.start', {template, context, renderOpts});
 
-        opts.engine = engine;
-        opts.collections = collections;
+        const result = renderer.render(template, context, renderOpts);
 
-        emitter.emit('render.start', {template, context, engine, opts});
-
-        const result = engine.render(template, context, opts);
-
-        emitter.emit('render.complete', {result, template, context, engine, opts});
+        emitter.emit('render.complete', {result, template, context, renderOpts});
 
         resolve(result);
       } catch (err) {
         reject(err);
       }
     }, opts.emitter);
+  }
+
+  getRenderer() {
+    return new Renderer(this.config.get('engines'));
   }
 
   debug(...args) {
