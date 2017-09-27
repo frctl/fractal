@@ -39,10 +39,10 @@ module.exports = function newProjectCommand() {
       }
 
       shell.cd(argv.directoryPath);
-      // const result = shell.exec(`npm install`);
-      // if (result.code > 0) {
-      //   throw new Error(`Failed to install NPM dependencies in the new project`);
-      // }
+      const result = shell.exec(`npm install`);
+      if (result.code > 0) {
+        throw new Error(`Failed to install NPM dependencies in the new project`);
+      }
 
       try {
         await fs.removeSync(join(dirPath, '.git'));
