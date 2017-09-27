@@ -15,11 +15,10 @@ module.exports = function(opts = {}){
 
       components.forEach(component => {
         component.getVariants().forEach(variant => {
-          const resolveIncludes = includeTemplates({components});
-          pending = pending.concat(...variant.getTemplates().mapToArray(async template => {
-            template.tree = await resolveIncludes(template.tree, {template});
-            return template;
-          }));
+          const results = variant.getTemplates().mapToArray(template => {
+            return includeTemplates(template.tree, {template, components});
+          });
+          pending = pending.concat(results);
         });
       });
 

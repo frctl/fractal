@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const evalAttrs = require('./eval-attrs');
+const evalAttrs = require('./tree-eval-attrs');
 
 module.exports = function(opts = {}){
 
@@ -16,11 +16,12 @@ module.exports = function(opts = {}){
 
       components.forEach(component => {
         component.getVariants().forEach(variant => {
-          const attrParser = evalAttrs(Object.assign({}, {variant, component}, locals));
-          pending = pending.concat(...variant.getTemplates().mapToArray(async template => {
-            template.tree = await attrParser(template.tree, {template});
-            return template;
-          }));
+          const env = Object.assign({}, {variant, component}, locals);
+          const results = variant.getTemplates().mapToArray(template => {
+            const tplEnv = Object.assign({template}, env);
+            return evalAttrs(template.tree, tplEnv);
+          });
+          pending = pending.concat(results);
         });
       });
 
