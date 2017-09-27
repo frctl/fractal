@@ -2,7 +2,7 @@ const {extname} = require('path');
 const {isFunction, isString} = require('lodash');
 const {toArray, normalizeExt} = require('@frctl/utils');
 const debug = require('debug')('fractal:support');
-const {Validator} = require('@frctl/support');
+const {Validator, Template} = require('@frctl/support');
 const schema = require('@frctl/support/schema');
 const {assert} = require('check-types');
 
@@ -11,6 +11,9 @@ const _props = new WeakMap();
 class Engine {
 
   constructor(props) {
+    if (props instanceof Engine) {
+      return props;
+    }
     Validator.assertValid(props, schema.engine, 'Engine schema invalid [engine-invalid]');
     _props.set(this, props);
     debug('intialised engine %s', props.name);
@@ -29,7 +32,7 @@ class Engine {
   }
 
   async render(tpl, context = {}, opts = {}) {
-    assert.string(tpl, 'Engine.render - template must be a string [template-invalid]');
+    assert.instance(tpl, Template, 'Engine.render - template must be a template [template-invalid]');
     assert.object(context, 'Engine.render - context data must be an object [context-invalid]');
     assert.object(opts, 'Engine.render - options data must be an object [opts-invalid]');
 

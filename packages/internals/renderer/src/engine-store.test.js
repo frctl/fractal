@@ -1,4 +1,4 @@
-const {File} = require('@frctl/support');
+const {Template} = require('@frctl/support');
 const {toArray} = require('@frctl/utils');
 const {expect} = require('../../../../test/helpers');
 const Engine = require('./engine');
@@ -13,11 +13,6 @@ const engines = [{
   match: '.fig',
   render: () => Promise.resolve('the rendered string')
 }];
-
-const funjucksFile = new File({
-  path: 'path/to/file.fjk',
-  contents: Buffer.from('asdasd')
-});
 
 function makeEngineStore(engine = []) {
   return new EngineStore(toArray(engine));
@@ -73,18 +68,11 @@ describe('EngineStore', function () {
       });
       expect(store.engines.length).to.equal(engines.length);
       const engine = store.engines.find(engine => engine.name === 'funjucks');
-      expect(await engine.render(funjucksFile.contents.toString())).to.equal('override');
+      expect(await engine.render(new Template('foo', 'foo.fjk'))).to.equal('override');
     });
     it('returns the store instance', function () {
       const store = makeEngineStore();
       expect(store.addEngine(engines)).to.equal(store);
-    });
-  });
-
-  describe('.getDefault()', function () {
-    it('returns the first engine', function () {
-      const store = makeEngineStore(engines);
-      expect(store.getDefault().name).to.equal(engines[0].name);
     });
   });
 
@@ -104,11 +92,11 @@ describe('EngineStore', function () {
         match: '.fjk',
         render: () => Promise.resolve('take 2')
       });
-      expect(store.getEngineFor(funjucksFile).name).to.equal(engines[0].name);
+      expect(store.getEngineFor('foo.fjk').name).to.equal(engines[0].name);
     });
     it('returns undefined if no matching engine can be found', function () {
       const store = makeEngineStore(engines);
-      expect(store.getEngineFor(new File({path: 'foo.bar'}))).to.equal(undefined);
+      expect(store.getEngineFor('foo.bar')).to.equal(undefined);
     });
     it('throws an error if a File instance or path is not provided', function () {
       const store = makeEngineStore(engines);
