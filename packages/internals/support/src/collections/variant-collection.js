@@ -152,7 +152,7 @@ function createVariant(target, props = {}) {
   config.id = uniqueId(props.id || 'variant', _variantNames.get(target));
   config.component = component.id;
 
-  const templates = component.getViews().map(view => new Template(view.contents.toString(), view.relative));
+  const templates = component.getViews().filter(view => view.contents).map(view => new Template(view.contents.toString(), view.relative));
 
   return Variant.from({templates, config});
 }

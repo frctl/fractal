@@ -223,14 +223,14 @@ describe('VariantCollection', function () {
       const collection = makeCollection();
       const newCollection = collection.clone();
       expect(newCollection).to.be.a('VariantCollection')
-      .that.nested.includes({componentId: 'default-component', '[2].id': 'baz', length: 3});
+      .that.nested.includes({component: 'default-component', '[2].id': 'baz', length: 3});
     });
   });
 
-  describe('.componentId', function () {
+  describe('.component', function () {
     it('returns the expected value', function () {
       const collection = makeCollection();
-      expect(collection.componentId).to.equal('default-component');
+      expect(collection.component).to.equal('default-component');
     });
   });
 
