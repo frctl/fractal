@@ -150,11 +150,10 @@ function createVariant(target, props = {}) {
   }
 
   config.id = uniqueId(props.id || 'variant', _variantNames.get(target));
-  config.component = component.id;
 
   const templates = component.getViews().filter(view => view.contents).map(view => new Template(view.contents.toString(), view.relative));
 
-  return Variant.from({templates, config});
+  return Variant.from({templates, config, component: component.id});
 }
 
 Collection.addEntityDefinition(Variant, VariantCollection);

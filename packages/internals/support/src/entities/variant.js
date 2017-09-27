@@ -4,12 +4,18 @@ const Collection = require('../collections/collection');
 const Entity = require('./entity');
 
 const _templates = new WeakMap();
+const _componentId = new WeakMap();
 
 class Variant extends Entity {
 
   constructor(props) {
     super(props.config);
     this._setTemplates(Collection.from(props.templates || []));
+    this._setComponentId(props.component);
+  }
+
+  getComponentId(){
+    return _componentId.get(this);
   }
 
   getTemplate(finder) {
@@ -26,6 +32,10 @@ class Variant extends Entity {
 
   _setTemplates(templates) {
     _templates.set(this, templates);
+  }
+
+  _setComponentId(componentId) {
+    _componentId.set(this, componentId);
   }
 
   _validateOrThrow(props) {

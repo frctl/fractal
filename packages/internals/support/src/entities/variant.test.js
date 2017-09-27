@@ -5,10 +5,12 @@ const Entity = require('./entity');
 
 const defaultProps = {
   id: 'variant',
-  component: 'parent-component'
 };
 
-const makeVariant = props => new Variant(props || defaultProps);
+const makeVariant = props => new Variant({
+  config: props || defaultProps,
+  component: 'parent-component'
+});
 
 describe('Variant', function () {
   describe('constructor', function () {
