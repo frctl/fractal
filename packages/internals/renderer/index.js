@@ -1,1 +1,1 @@
-module.exports.Renderer = require('./src/renderer');
+module.exports = require('./src/renderer');

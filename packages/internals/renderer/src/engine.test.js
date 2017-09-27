@@ -14,7 +14,7 @@ const validEngine = {
 const funjucksTemplate = new Template('asdasd', 'path/to/file.fjk');
 const otherTemplate = new Template('asdasd', 'path/to/file.foo');
 
-describe.only('Engine', function () {
+describe('Engine', function () {
   describe('constructor()', function () {
     it('throws an error on invalid props', function () {
       expect(() => new Engine({invalid: 'engine'})).to.throw(TypeError, '[engine-invalid]');

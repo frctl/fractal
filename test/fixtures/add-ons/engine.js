@@ -6,8 +6,8 @@ module.exports = function(opts = {}){
 
       match: '.fjk',
 
-      render(str, context, opts = {}, collections, app){
-        return Promise.resolve(str);
+      render(tpl, context, opts = {}, collections, app){
+        return Promise.resolve(tpl.stringify());
       },
 
     }
