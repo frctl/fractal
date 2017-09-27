@@ -44,7 +44,7 @@ class Fractal extends App {
           variant = target;
         }
 
-        component = component || collections.components.find(c => c.name === variant.component);
+        component = component || collections.components.find(c => c.id === variant.getComponentId());
         if (!component) {
           throw new Error(`Component '${target.component}' not found [component-not-found]`);
         }
