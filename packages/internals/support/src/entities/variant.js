@@ -20,9 +20,11 @@ class Variant extends Entity {
 
   getTemplate(finder) {
     if (!finder) {
-      finder = this.get('');
+      return this.getTemplates().first();
     }
-    finder = (typeof finder === 'string') ? {extname: finder} : finder;
+    if (typeof finder === 'string') {
+      return this.getTemplates().find(tpl => tpl.extname === finder);
+    }
     return this.getTemplates().find(finder);
   }
 

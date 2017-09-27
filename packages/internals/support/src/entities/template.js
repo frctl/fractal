@@ -1,3 +1,4 @@
+const {extname} = require('path');
 const {cloneDeep} = require('lodash');
 const parser = require('reshape-parser');
 const generator = require('reshape-code-gen');
@@ -30,6 +31,10 @@ class Template {
 
   set tree(ast) {
     return _ast.set(this, ast);
+  }
+
+  get extname(){
+    return extname(this.filename);
   }
 
   stringify(locals = {}) {
