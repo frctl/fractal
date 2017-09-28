@@ -22,7 +22,7 @@ module.exports = function infoCommand() {
       return `
         <green>Fractal CLI <dim>v${cli.version}</dim></green>
 
-        <dim>CWD:</dim> ${tildify(cli.cwd)}
+        <dim>CWD: ${tildify(cli.cwd)}</dim>
         ${cli.configPath ? `<dim>Using config from</dim> ${configPath}` : '<dim>No config file found</dim>'}
         ${commandList}
         <dim>Run <reset><cyan>${argv.$0} --help</cyan></reset> for full details on available commands and options.</dim>
