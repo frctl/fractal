@@ -19,6 +19,7 @@
     "@frctl/cli-command-default": "^2.0.0-beta.0",
     "@frctl/cli-command-new-project": "^2.0.0-beta.0",
     "@frctl/cli-command-add-component": "^2.0.0-beta.0",
+    "@frctl/cli-command-project-info": "^2.0.0-beta.0",
     "check-types": "^7.2.0",
     "debug": "^3.0.0",
     "import-cwd": "^2.1.0",
