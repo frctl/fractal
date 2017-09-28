@@ -7,7 +7,6 @@ const shell = require('shelljs');
 const defaultStarterUrl = 'https://github.com/frctl/fractal-starter-default';
 
 module.exports = function newProjectCommand() {
-
   return {
 
     name: 'fractal-new-project',
@@ -17,7 +16,6 @@ module.exports = function newProjectCommand() {
     description: 'Create a new starter project',
 
     async handler(argv, app, cli) {
-
       if (!shell.which('git')) {
         shell.echo('The Fractal new project command requires Git to be installed on your machine');
         shell.exit(1);
@@ -34,7 +32,7 @@ module.exports = function newProjectCommand() {
 
       try {
         await git.clone(defaultStarterUrl, dirPath);
-      } catch(err) {
+      } catch (err) {
         throw new Error(`Failed to clone starter project Git repository [${err.message}]`);
       }
 

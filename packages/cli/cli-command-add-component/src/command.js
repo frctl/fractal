@@ -1,10 +1,8 @@
 const {join, relative} = require('path');
 const fs = require('fs-extra');
-const shell = require('shelljs');
 const {normalizeId, normalizePath} = require('@frctl/utils');
 
 module.exports = function addComponentCommand() {
-
   return {
 
     name: 'fractal-add-component',
@@ -21,7 +19,6 @@ module.exports = function addComponentCommand() {
     },
 
     async handler(argv, app, cli) {
-
       const skelPath = join(__dirname, '../skel/@component');
 
       if (!cli.config) {
@@ -38,7 +35,7 @@ module.exports = function addComponentCommand() {
 
       const relPath = relative(cli.cwd, dirPath);
 
-      const id = normalizeId(argv.componentId).replace(/^@/,'');
+      const id = normalizeId(argv.componentId).replace(/^@/, '');
       const name = `@${id}`;
 
       const componentDir = join(dirPath, name);
