@@ -21,16 +21,12 @@ module.exports = function addComponentCommand() {
     async handler(argv, app, cli) {
       const skelPath = join(__dirname, '../skel/@component');
 
-      if (!cli.config) {
-        throw new Error(`The add component command can only be run within an existing Fractal project`);
-      }
-
       const sources = app.getParser().sources;
       const src = sources.length ? sources[0].base : undefined;
 
       const dirPath = argv.dir ? normalizePath(argv.dir, cli.cwd) : src;
       if (!dirPath) {
-        throw new Error(`No src directory found`);
+        return(`<error>Could not create component - no project src directory found.</error>`);
       }
 
       const relPath = relative(cli.cwd, dirPath);
@@ -41,7 +37,7 @@ module.exports = function addComponentCommand() {
       const componentDir = join(dirPath, name);
 
       if (fs.existsSync(componentDir)) {
-        throw new Error(`The directory ${componentDir} already exists. Please choose another component name or location.`);
+        return(`<error>The directory '${relative(cli.cwd, componentDir)}' already exists.</error>`);
       }
 
       fs.copySync(skelPath, componentDir);
