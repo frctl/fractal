@@ -6,7 +6,8 @@ module.exports = function (opts = {}) {
     config: {
       commands: [
         require('@frctl/cli-command-info'),
-        require('@frctl/cli-command-new-project')
+        require('@frctl/cli-command-new-project'),
+        require('@frctl/cli-command-add-component')
       ]
     }
 
