@@ -39,7 +39,7 @@ module.exports = function newProjectCommand() {
       }
 
       shell.cd(argv.directoryPath);
-      const result = shell.exec(`npm install`);
+      const result = shell.exec(`npm install --only=prod`);
       if (result.code > 0) {
         throw new Error(`Failed to install NPM dependencies in the new project`);
       }
