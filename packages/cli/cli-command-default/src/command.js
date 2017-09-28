@@ -1,5 +1,3 @@
-const {relative} = require('path');
-const tildify = require('tildify');
 
 module.exports = function infoCommand() {
   return {

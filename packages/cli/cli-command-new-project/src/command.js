@@ -25,7 +25,7 @@ module.exports = function newProjectCommand() {
       const tildeDir = tildify(dirPath);
 
       if (fs.existsSync(dirPath)) {
-        return(`<error>The directory '${argv.directoryPath}' already exists.</error>`);
+        return (`<error>The directory '${argv.directoryPath}' already exists.</error>`);
       }
 
       const git = simpleGit(cli.cwd);

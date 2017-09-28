@@ -26,7 +26,7 @@ module.exports = function addComponentCommand() {
 
       const dirPath = argv.dir ? normalizePath(argv.dir, cli.cwd) : src;
       if (!dirPath) {
-        return(`<error>Could not create component - no project src directory found.</error>`);
+        return (`<error>Could not create component - no project src directory found.</error>`);
       }
 
       const relPath = relative(cli.cwd, dirPath);
@@ -37,7 +37,7 @@ module.exports = function addComponentCommand() {
       const componentDir = join(dirPath, name);
 
       if (fs.existsSync(componentDir)) {
-        return(`<error>The directory '${relative(cli.cwd, componentDir)}' already exists.</error>`);
+        return (`<error>The directory '${relative(cli.cwd, componentDir)}' already exists.</error>`);
       }
 
       fs.copySync(skelPath, componentDir);

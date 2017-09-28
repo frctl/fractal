@@ -1,5 +1,4 @@
 const {relative} = require('path');
-const tildify = require('tildify');
 
 module.exports = function infoCommand() {
   return {
@@ -9,20 +8,19 @@ module.exports = function infoCommand() {
     command: 'info',
 
     async handler(argv, app, cli) {
-
       const configPath = cli.configPath ? relative(cli.cwd, cli.configPath) : null;
 
       if (!configPath) {
-        return(`<error>No project config file found.</error>`);
+        return (`<error>No project config file found.</error>`);
       }
 
       const sources = app.getParser().sources;
 
       if (sources.length === 0) {
-        return(`<error>No src directory defined</error>`);
+        return (`<error>No src directory defined</error>`);
       }
 
-      const {components, files} = await app.parse();
+      const components = await app.getComponents();
 
       const componentList = components.sortBy('id').mapToArray(c => {
         const numV = c.getVariants().length;
