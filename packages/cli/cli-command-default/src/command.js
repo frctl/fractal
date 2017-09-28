@@ -4,7 +4,7 @@ const tildify = require('tildify');
 module.exports = function infoCommand() {
   return {
 
-    name: 'cli-default',
+    name: 'default',
 
     command: '*',
 
