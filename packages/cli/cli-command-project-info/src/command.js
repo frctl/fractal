@@ -13,13 +13,13 @@ module.exports = function infoCommand() {
       const configPath = cli.configPath ? relative(cli.cwd, cli.configPath) : null;
 
       if (!configPath) {
-        throw new Error(`No project config file found.`);
+        return(`<error>No project config file found.</error>`);
       }
 
       const sources = app.getParser().sources;
 
       if (sources.length === 0) {
-        throw new Error(`No source directories defined.`);
+        return(`<error>No src directory defined</error>`);
       }
 
       const {components, files} = await app.parse();
