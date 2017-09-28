@@ -51,7 +51,7 @@ module.exports = function newProjectCommand() {
       }
 
       return `
-        <success>New Fractal starter project created</green>
+        <success>New Fractal starter project created</success>
 
         Project path: <gray>${tildeDir}</gray>
       `;
