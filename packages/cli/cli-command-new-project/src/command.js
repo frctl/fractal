@@ -9,7 +9,7 @@ const defaultStarterUrl = 'https://github.com/frctl/fractal-starter-default';
 module.exports = function newProjectCommand() {
   return {
 
-    name: 'fractal-new-project',
+    name: 'new-project',
 
     command: 'new <directory-path>',
 

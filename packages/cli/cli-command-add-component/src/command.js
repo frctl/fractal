@@ -5,7 +5,7 @@ const {normalizeId, normalizePath} = require('@frctl/utils');
 module.exports = function addComponentCommand() {
   return {
 
-    name: 'fractal-add-component',
+    name: 'add-component',
 
     command: 'add <component-id>',
 

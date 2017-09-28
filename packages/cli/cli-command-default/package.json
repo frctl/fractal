@@ -1,9 +1,9 @@
 {
-  "name": "@frctl/cli-command-info",
-  "description": "Fractal CLI info command",
+  "name": "@frctl/cli-command-default",
+  "description": "Default Fractal CLI command",
   "version": "2.0.0-beta.0",
   "homepage": "http://fractal.build",
-  "repository": "https://github.com/frctl/fractal/tree/v2/packages/add-ons/cli-command-info",
+  "repository": "https://github.com/frctl/fractal/tree/v2/packages/add-ons/cli-command-default",
   "bugs": "https://github.com/frctl/fractal/issues",
   "author": "Mark Perkins <mark@allmarkedup.com> (http://allmarkedup.com)",
   "license": "MIT",
