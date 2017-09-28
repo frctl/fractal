@@ -13,8 +13,8 @@ module.exports = function infoCommand() {
 
       let commandList = '';
       if (commands.length > 0) {
-        commandList = `<dim>Available commands:</dim><br><br>`;
-        commandList += `${commands.map(cmd => `<cyan> ${argv.$0} ${cmd.command}</cyan> - ${cmd.description}`).join('<br>')}`;
+        commandList = `<br><dim>Available commands:</dim><br><br>`;
+        commandList += `${commands.map(cmd => `<cyan> ${argv.$0} ${cmd.command}</cyan> - ${cmd.description}`).join('<br>')}<br>`;
       }
 
       const configPath = cli.configPath ? relative(cli.cwd, cli.configPath) : null;
@@ -24,11 +24,7 @@ module.exports = function infoCommand() {
 
         <dim>CWD:</dim> ${tildify(cli.cwd)}
         ${cli.configPath ? `<dim>Using config from</dim> ${configPath}` : '<dim>No config file found</dim>'}
-        &nbsp;
-
         ${commandList}
-
-        &nbsp;
         <dim>Run <reset><cyan>${argv.$0} --help</cyan></reset> for full details on available commands and options.</dim>
       `;
     }
