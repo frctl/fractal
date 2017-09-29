@@ -4,7 +4,7 @@ const {writeFileSync, mkdirSync} = require('fs');
 const {EventEmitter} = require('events');
 const {tmpdir} = require('os');
 const {join} = require('path');
-const {capitalize} = require('lodash');
+const {capitalize, omit} = require('lodash');
 const {FileCollection, Collection, EmittingPromise} = require('@frctl/support');
 const {Config} = require('@frctl/config');
 const {Parser} = require('@frctl/parser');
@@ -221,22 +221,91 @@ describe('App', function () {
     });
   }
 
-  describe('.require()', function () {
-    it('calls the loader with the expected args', () => {
-      const app = makeApp({
+  describe('.getLoader()', function () {
+    it('returns a Loader instance', function () {
+      const app = makeApp();
+      expect(app.getLoader()).to.be.instanceOf(Loader);
+    });
+    it('passes the resolve config object to the loader', function () {
+      const App = proxyquire('./app', {
+        '@frctl/loader': {
+          Loader: function (opts = {}) {
+            this.opts = opts;
+          }
+        }
+      });
+      const config = {
         resolve: {
           alias: {
             '~': join(__dirname, '../test/fixtures')
           }
         }
-      });
-      const spy = sinon.spy(app.loader, 'require');
-      app.require('~/parent');
-      expect(spy.calledWith('~/parent', __dirname)).to.equal(true);
+      };
+      const app = new App(config);
+      const loader = app.getLoader();
+      expect(omit(loader.opts, ['fileSystem'])).to.eql(config.resolve);
     });
+    it('passes the fileSystem argument to the loader in opts', function () {
+      const App = proxyquire('./app', {
+        '@frctl/loader': {
+          Loader: function (opts = {}) {
+            this.opts = opts;
+          }
+        }
+      });
+      const app = new App();
+      const fileSystem = {};
+      const loader = app.getLoader(fileSystem);
+      expect(loader.opts.fileSystem).to.equal(fileSystem);
+    });
+    it('converts a FileCollections instance argument to a MemoryFS instance before insantiating the loader', function () {
+      const App = proxyquire('./app', {
+        '@frctl/loader': {
+          Loader: function (opts = {}) {
+            this.opts = opts;
+          }
+        }
+      });
+      const app = new App();
+      const fileSystem = new FileCollection();
+      const memFs = fileSystem.toMemoryFS();
+      const loader = app.getLoader(fileSystem);
+      expect(loader.opts.fileSystem).to.eql(memFs);
+    });
+  });
+
+  describe('.require()', function () {
+    it('returns an Promise', function () {
+      const app = makeApp();
+      expect(app.require('../package.json', __dirname)).to.be.instanceOf(Promise);
+    });
+    it('instantiates a loader with the current FileCollection', async () => {
+      const app = makeApp();
+      const files = new FileCollection();
+      sinon.stub(app, 'getFiles').callsFake(() => files);
+      const spy = sinon.spy(app, 'getLoader');
+      await app.require('../package.json', __dirname);
+      expect(spy.calledWith(files)).to.equal(true);
+    });
+
     it('throws an error if the file is not found', () => {
       const app = makeApp();
-      expect(() => app.require('~/parent')).to.throw('[resolver-error]');
+      expect(app.require('~/parent')).to.be.rejectedWith('[resolver-error]');
+    });
+    it('calls the loader.require method with the expect args', async () => {
+      let passedArgs = [];
+      class Loader {
+        require(...args) {
+          passedArgs = args;
+        }
+      }
+      const App = proxyquire('./app', {
+        '@frctl/loader': {Loader}
+      });
+      const app = new App();
+      await app.require('../package.json', __dirname);
+      expect(passedArgs[0]).to.equal('../package.json');
+      expect(passedArgs[1]).to.equal(__dirname);
     });
   });
 
@@ -318,13 +387,6 @@ describe('App', function () {
     it('returns the application cache instance', function () {
       const app = new App();
       expect(app.cache).to.be.instanceof(Cache);
-    });
-  });
-
-  describe('.loader', function () {
-    it('returns the loader instance', function () {
-      const app = new App();
-      expect(app.loader).to.be.instanceof(Loader);
     });
   });
 
