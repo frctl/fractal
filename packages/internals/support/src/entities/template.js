@@ -1,7 +1,12 @@
 const {extname} = require('path');
 const {cloneDeep} = require('lodash');
-const parser = require('reshape-parser');
-const generator = require('reshape-code-gen');
+const parse = require('rehype-parse');
+const stringify = require('rehype-stringify');
+const unified = require('unified');
+
+const processor = unified().use(parse, {
+  fragment: true
+}).use(stringify);
 
 const _ast = new WeakMap();
 const _contents = new WeakMap();
@@ -24,7 +29,7 @@ class Template {
 
   get tree() {
     if (!_ast.get(this)) {
-      _ast.set(this, parser(_contents.get(this)));
+      _ast.set(this, processor.parse(_contents.get(this)));
     }
     return _ast.get(this);
   }
@@ -37,9 +42,9 @@ class Template {
     return extname(this.filename);
   }
 
-  stringify(locals = {}) {
+  stringify() {
     // TODO: cache stringification
-    return generator(this.tree)(locals);
+    return processor.stringify(this.tree);
   }
 
   clone() {

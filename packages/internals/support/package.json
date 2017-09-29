@@ -23,8 +23,9 @@
     "slash": "^1.0.0",
     "debug": "^3.0.0",
     "vinyl": "^2.1.0",
-    "reshape-parser": "^0.2.1",
-    "reshape-code-gen": "^0.2.1"
+    "rehype-parse": "^4.0.0",
+    "rehype-stringify": "^3.0.0",
+    "unified": "^6.1.5"
   },
   "devDependencies": {
     "proxyquire": "^1.8.0"
