@@ -8,6 +8,8 @@ module.exports = function (opts = {}) {
 
     async transform(files, state, app) {
       let remainingFiles = files.sortBy('path.length', 'desc').filter(file => !file.isDirectory());
+      const configMatcher = app.get('components.config.match');
+      const configDefaults = app.get('components.config.defaults', {});
       const componentMatcher = app.get('components.match');
       const componentDirs = files.filter(file => file.isDirectory()).filter(componentMatcher);
 
@@ -23,8 +25,6 @@ module.exports = function (opts = {}) {
 
         remainingFiles = remainingFiles.reject(file => componentFiles.find(f => f.path === file.path));
 
-        const configMatcher = app.get('components.config.match');
-        const configDefaults = app.get('components.config.defaults', {});
         const configFiles = componentFiles.filter(configMatcher).sortBy('basename', 'asc');
 
         let dataObjs = await configFiles.mapToArrayAsync(file => app.requireFromString(file.contents.toString(), file.path));
@@ -38,7 +38,7 @@ module.exports = function (opts = {}) {
         return Component.from({
           src: dir,
           files: componentFiles,
-          config: config
+          config: defaultsDeep(config, configDefaults)
         });
       }));
     }

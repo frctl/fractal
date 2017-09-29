@@ -1,8 +1,9 @@
 /* eslint no-unused-expressions: "off" */
 const fractal = require('@frctl/fractal');
-const {FileCollection, Component} = require('@frctl/support');
-const {defaultsDeep} = require('@frctl/utils');
-const {expect, sinon} = require('../../../../test/helpers');
+const {FileCollection} = require('@frctl/support');
+// const {FileCollection, Component} = require('@frctl/support');
+// const {defaultsDeep} = require('@frctl/utils');
+const {expect} = require('../../../../test/helpers');
 const componentTransform = require('./transform');
 
 const items = [{

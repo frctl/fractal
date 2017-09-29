@@ -21,18 +21,17 @@ const makeFS = throwErr => {
     called: null
   };
   for (const method of fsSyncMethods) {
-    fs[method] = function() {
+    fs[method] = function () {
       this.called = method;
       if (throwErr) {
         throw new Error('oops');
       }
-    }
+    };
   }
   return fs;
-}
+};
 
 describe('SyncFileSystemStack', function () {
-
   for (const fsMethod of fsSyncMethods) {
     describe(`.${fsMethod}()`, function () {
       it('calls the methods on each obj in the stack until one does not throw an error', function () {
@@ -40,7 +39,7 @@ describe('SyncFileSystemStack', function () {
         const fs2 = makeFS(true);
         const fs3 = makeFS(false);
         const fs4 = makeFS(false);
-        const stack = new SyncFileSystemStack([fs1,fs2,fs3,fs4]);
+        const stack = new SyncFileSystemStack([fs1, fs2, fs3, fs4]);
         stack[fsMethod]();
         expect(fs1.called).to.equal(fsMethod);
         expect(fs2.called).to.equal(fsMethod);
@@ -49,5 +48,4 @@ describe('SyncFileSystemStack', function () {
       });
     });
   }
-
 });
