@@ -1,5 +1,4 @@
-const {defaultsDeep} = require('@frctl/utils');
-const {addTrailingSeparator} = require('@frctl/utils');
+const {defaultsDeep, addTrailingSeparator} = require('@frctl/utils');
 const {Component, ComponentCollection} = require('@frctl/support');
 
 module.exports = function (opts = {}) {
@@ -8,9 +7,9 @@ module.exports = function (opts = {}) {
     name: 'components',
 
     async transform(files, state, app) {
-      let remainingFiles = files.filter(file => !file.isDirectory());
+      let remainingFiles = files.sortBy('path.length', 'desc').filter(file => !file.isDirectory());
       const componentMatcher = app.get('components.match');
-      const componentDirs = files.filter(file => file.isDirectory()).filter(componentMatcher).sortBy('path.length', 'desc');
+      const componentDirs = files.filter(file => file.isDirectory()).filter(componentMatcher);
 
       return ComponentCollection.from(await componentDirs.mapToArrayAsync(async dir => {
         const rootPath = addTrailingSeparator(dir.path);
@@ -28,17 +27,18 @@ module.exports = function (opts = {}) {
         const configDefaults = app.get('components.config.defaults', {});
         const configFiles = componentFiles.filter(configMatcher).sortBy('basename', 'asc');
 
-        const data = await configFiles.mapToArrayAsync(file => {
-          const data = app.loader.requireFromString(file.contents.toString(), file.path);
-          return (typeof data === 'function') ? Promise.resolve(data(files, app)) : Promise.resolve(data);
-        });
+        let dataObjs = await configFiles.mapToArrayAsync(file => app.requireFromString(file.contents.toString(), file.path));
 
-        const config = Object.assign({}, ...data);
+        dataObjs = await Promise.all(dataObjs.map(data => {
+          return (typeof data === 'function') ? Promise.resolve(data(files, app)) : Promise.resolve(data);
+        }));
+
+        const config = Object.assign({}, ...dataObjs);
 
         return Component.from({
           src: dir,
           files: componentFiles,
-          config: defaultsDeep(config, configDefaults)
+          config: config
         });
       }));
     }
