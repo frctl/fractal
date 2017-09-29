@@ -4,10 +4,11 @@ const Module = require('module');
 const {readFileSync} = require('fs');
 const {extname, dirname, join} = require('path');
 const parentModule = require('parent-module');
-const {create} = require('enhanced-resolve');
+const {NodeJsInputFileSystem, create} = require('enhanced-resolve');
 const requireFromString = require('require-from-string');
 const {toArray} = require('@frctl/utils');
 const debug = require('debug')('frctl:loader');
+const SyncFileSystemStack = require('./sync-fs-stack');
 
 const moduleLoad = Module._load;
 
@@ -17,8 +18,12 @@ const _transforms = new WeakMap();
 class Loader {
 
   constructor(opts = {}) {
+    const fallbackFS = new NodeJsInputFileSystem();
+    const fsStack = toArray(opts.fileSystem || []).concat(fallbackFS);
+    const fileSystem = new SyncFileSystemStack(fsStack);
+    const resolverOpts = Object.assign({}, opts, {fileSystem});
     _transforms.set(this, []);
-    _resolve.set(this, create.sync(opts));
+    _resolve.set(this, create.sync(resolverOpts));
 
     this.addTransform(require('./transforms/yaml'));
     this.addTransform(require('./transforms/json'));
