@@ -61,10 +61,8 @@ const makeComponent = input => new Component({
   src: new File({path: input.path, cwd: '/'}),
   config: Object.assign({}, {id: input.id}, input.config)});
 
-items = items.map(makeComponent);
-
-const makeCollection = input => new ComponentCollection(input || items.slice(0));
-const makeCollectionFrom = input => ComponentCollection.from(input || items.slice(0));
+const makeCollection = input => new ComponentCollection(input || items.map(makeComponent));
+const makeCollectionFrom = input => ComponentCollection.from(input || items.map(makeComponent));
 
 describe('ComponentCollection', function () {
   describe('constructor', function () {

@@ -11,63 +11,63 @@ const ConfigStore = require('./config/store');
 const defaults = require('./config/defaults');
 const Fractal = require('./fractal');
 
-const config = {
-  src: join(__dirname, '../../../../test/fixtures/components'),
-  presets: null,
-  engines: [
-    './test/fixtures/add-ons/engine'
-  ]
-};
-
-const view = new File({
-  path: 'path/to/view.fjk',
-  contents: Buffer.from('file contents')
-});
-
-const files = new FileCollection([
-  new File({path: 'components/@test-component'}),
-  new File({
-    name: 'view',
-    path: 'components/@test-component/view.fjk',
-    contents: Buffer.from('component!')
-  })
-]);
-
-const components = new ComponentCollection([
-  new Component({
-    src: files.find({
-      stem: '@test-component'
-    }),
-    files: FileCollection.from([
-      new File({
-        name: 'view',
-        base: 'components/@test-component',
-        path: 'components/@test-component/view.fjk',
-        contents: Buffer.from('component!')
-      })
-    ]),
-    config: {
-      name: 'test-component',
-      views: {
-        match: 'view.*'
-      },
-      variants: [{
-        id: 'default',
-        default: true,
-        component: 'test-component',
-        context: {
-          foo: 'bar'
-        }
-      }]
-    }
-  })
-]);
-
-const parserOutput = {components, files};
-
-function makeFractal(customConfig) {
-  return new Fractal(customConfig || config);
-}
+// const config = {
+//   src: join(__dirname, '../../../../test/fixtures/components'),
+//   presets: null,
+//   engines: [
+//     './test/fixtures/add-ons/engine'
+//   ]
+// };
+//
+// const view = new File({
+//   path: 'path/to/view.fjk',
+//   contents: Buffer.from('file contents')
+// });
+//
+// const files = new FileCollection([
+//   new File({path: 'components/@test-component'}),
+//   new File({
+//     name: 'view',
+//     path: 'components/@test-component/view.fjk',
+//     contents: Buffer.from('component!')
+//   })
+// ]);
+//
+// const components = new ComponentCollection([
+//   new Component({
+//     src: files.find({
+//       stem: '@test-component'
+//     }),
+//     files: FileCollection.from([
+//       new File({
+//         name: 'view',
+//         base: 'components/@test-component',
+//         path: 'components/@test-component/view.fjk',
+//         contents: Buffer.from('component!')
+//       })
+//     ]),
+//     config: {
+//       name: 'test-component',
+//       views: {
+//         match: 'view.*'
+//       },
+//       variants: [{
+//         id: 'default',
+//         default: true,
+//         component: 'test-component',
+//         context: {
+//           foo: 'bar'
+//         }
+//       }]
+//     }
+//   })
+// ]);
+//
+// const parserOutput = {components, files};
+//
+// function makeFractal(customConfig) {
+//   return new Fractal(customConfig || config);
+// }
 
 describe('Fractal', function () {
   describe('constructor()', function () {

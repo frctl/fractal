@@ -16,6 +16,6 @@ module.exports = {
   anyOf: [{
     required: ['path']
   }, {
-    required: ['cwd', 'base']
+    required: ['history']
   }]
 };
