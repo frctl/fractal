@@ -1,5 +1,5 @@
 {
-  "name": "@frctl/fractal-plugin-template-includes",
+  "name": "@frctl/fractal-plugin-template-components",
   "description": "Include sub-templates in component views",
   "version": "2.0.0-beta.0",
   "homepage": "http://fractal.build",

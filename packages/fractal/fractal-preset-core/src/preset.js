@@ -10,7 +10,7 @@ module.exports = function (opts = {}) {
       plugins: [
         require('@frctl/fractal-plugin-files-name'),
         require('@frctl/fractal-plugin-template-attrs'),
-        require('@frctl/fractal-plugin-template-includes'),
+        require('@frctl/fractal-plugin-template-components'),
       ]
     }
 

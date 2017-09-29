@@ -1,11 +1,11 @@
 const _ = require('lodash');
-const includeTemplates = require('./include-templates');
+const includeTemplates = require('./include-components');
 
 module.exports = function(opts = {}){
 
   return {
 
-    name: 'template-include',
+    name: 'include-components',
 
     transform: 'components',
 
@@ -16,7 +16,7 @@ module.exports = function(opts = {}){
       components.forEach(component => {
         component.getVariants().forEach(variant => {
           const results = variant.getTemplates().mapToArray(template => {
-            return includeTemplates(template.tree, {template, components});
+            return includeTemplates(template.tree, {template, component, variant, components});
           });
           pending = pending.concat(results);
         });
