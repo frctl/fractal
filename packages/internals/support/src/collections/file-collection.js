@@ -1,11 +1,24 @@
 const multimatch = require('multimatch');
 const check = require('check-types');
 const slash = require('slash');
+const MemoryFS = require('memory-fs');
 const File = require('../entities/file');
 const EntityCollection = require('./entity-collection');
 const Collection = require('./collection');
 
 const assert = check.assert;
+const fsReadMethods = [
+  'existsSync',
+  'statSync',
+  'readFileSync',
+  'readdirSync',
+  'readlinkSync',
+  'stat',
+  'readdir',
+  'readlink',
+  'readFile',
+  'exists'
+];
 
 class FileCollection extends EntityCollection {
 
@@ -54,6 +67,24 @@ class FileCollection extends EntityCollection {
     return new FileCollection(items);
   }
 
+  toMemoryFS() {
+    // TODO: can we cache this MemoryFs instance creation somehow?
+    const memFs = new MemoryFS();
+    const errors = [];
+    this.sortBy(file => file.path.length).forEach(file => {
+      try {
+        memFs.mkdirpSync(file.dirname);
+        memFs.writeFileSync(file.path, file.contents);
+      } catch (err) {
+        errors.push(err);
+      }
+    });
+    if (errors.length > 0) {
+      throw new Error(`Could not create MemoryFS instance [memfs-error]`);
+    }
+    return memFs;
+  }
+
   _validateOrThrow(items) {
     const isValid = FileCollection.validate(items);
     assert(isValid, `FileCollection.constructor: The 'items' argument is optional but must be an array of Files [items-invalid]`, TypeError);
@@ -71,6 +102,13 @@ class FileCollection extends EntityCollection {
   static validate(items) {
     return check.maybe.array.of.instance(items, File);
   }
+}
+
+for (const fsMethod of fsReadMethods) {
+  FileCollection.prototype[fsMethod] = function (...args) {
+    const fs = this.toMemoryFS();
+    return fs[fsMethod].bind(fs)(...args);
+  };
 }
 
 Collection.addEntityDefinition(File, FileCollection);
