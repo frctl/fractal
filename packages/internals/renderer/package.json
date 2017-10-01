@@ -15,11 +15,9 @@
     "@frctl/support": "^2.0.0-beta.0",
     "@frctl/config": "^2.0.0-beta.0",
     "@frctl/utils": "^2.0.0-beta.0",
-    "reshape-code-gen": "^0.2.1",
-    "reshape-parser": "^0.2.1",
-    "reshape-plugin-util": "^0.2.1",
     "check-types": "^7.2.0",
     "debug": "^3.0.0",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "hast-util-to-html": "^3.1.0"
   }
 }

@@ -31,23 +31,19 @@ class Engine {
     return match.includes(extname(path));
   }
 
-  async preprocess(tpl, context = {}, opts = {}){
-    const props = _props.get(this);
-    if (isFunction(props.preprocess)) {
-      tpl = props.preprocess.bind(this)(tpl, context, opts);
-    }
-    return tpl;
-  }
-
   async render(tpl, context = {}, opts = {}) {
-    assert.instance(tpl, Template, 'Engine.render - template must be a template [template-invalid]');
+    assert.string(tpl, 'Engine.render - template must be a string [template-invalid]');
     assert.object(context, 'Engine.render - context data must be an object [context-invalid]');
     assert.object(opts, 'Engine.render - options data must be an object [opts-invalid]');
     const props = _props.get(this);
-    tpl = await this.preprocess(tpl, context, opts);
-    opts = Object.assign({}, opts, {template: tpl});
-    const stringTemplate = tpl.stringify(Object.assign({}, opts, {context}));
-    return Promise.resolve(props.render.bind(this)(stringTemplate, context, opts));
+    return Promise.resolve(props.render.bind(this)(tpl, context, opts));
+  }
+
+  get preprocessors(){
+    if (Array.isArray(_props.get(this).preprocessors)) {
+      return _props.get(this).preprocessors;
+    }
+    return [];
   }
 
   get name() {
