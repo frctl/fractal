@@ -1,6 +1,5 @@
 const {extname} = require('path');
 const visit = require('unist-util-visit');
-const has = require('hast-util-has-property');
 const {ComponentCollection} = require('@frctl/support');
 const safeEval = require('./eval');
 
