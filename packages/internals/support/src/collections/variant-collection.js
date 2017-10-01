@@ -149,6 +149,7 @@ function createVariant(target, props = {}) {
   }
 
   config.id = uniqueId(props.id || 'variant', _variantNames.get(target));
+  config.component = component.id;
 
   if (!config.templates) {
     config.templates = {};
@@ -157,7 +158,7 @@ function createVariant(target, props = {}) {
     });
   }
 
-  return Variant.from({config, component: component.id});
+  return Variant.from(config);
 }
 
 Collection.addEntityDefinition(Variant, VariantCollection);

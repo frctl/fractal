@@ -1,4 +1,4 @@
-const vm = require('vm')
+const vm = require('vm');
 
 module.exports = function evalInVM(code, context = {}, opts = {}) {
   const resultKey = `evalInVM_${Math.floor(Math.random() * 1000000)}`;
@@ -6,6 +6,6 @@ module.exports = function evalInVM(code, context = {}, opts = {}) {
     [resultKey]: {}
   };
   Object.assign(sandbox, context);
-  vm.runInNewContext(`${resultKey}=${code}`, sandbox, opts)
-  return sandbox[resultKey]
+  vm.runInNewContext(`${resultKey}=${code}`, sandbox, opts);
+  return sandbox[resultKey];
 };

@@ -1,16 +1,13 @@
-const _ = require('lodash');
 const includeTemplates = require('./include-components');
 
-module.exports = function(opts = {}){
-
+module.exports = function (opts = {}) {
   return {
 
     name: 'include-components',
 
     transform: 'components',
 
-    async handler(components, state, app){
-
+    async handler(components, state, app) {
       components.forEach(component => {
         component.getVariants().forEach(variant => {
           variant.getTemplates().forEach(template => {
@@ -22,6 +19,5 @@ module.exports = function(opts = {}){
       return components;
     }
 
-  }
-
+  };
 };

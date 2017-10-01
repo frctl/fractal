@@ -1,5 +1,5 @@
 /* eslint no-unused-expressions: "off" */
-const {expect, sinon} = require('../../../../test/helpers');
+const {expect} = require('../../../../test/helpers');
 const engine = require('./engine');
 
 describe('HTML engine', function () {
@@ -11,7 +11,7 @@ describe('HTML engine', function () {
       const eng = engine();
       expect(eng).to.be.an('object');
       expect(eng.name).to.equal('html');
-      expect(eng.matches).to.have.members(['.html','.xhtml','.html5']);
+      expect(eng.match).to.have.members(['.html', '.xhtml', '.html5']);
       expect(eng).to.have.a.property('render').that.is.a('function');
     });
   });

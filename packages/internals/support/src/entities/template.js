@@ -19,7 +19,7 @@ class Template {
     return _ast.get(this);
   }
 
-  get extname(){
+  get extname() {
     return extname(this.filename);
   }
 

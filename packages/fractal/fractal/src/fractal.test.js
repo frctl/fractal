@@ -2,7 +2,7 @@
 
 const {join} = require('path');
 const {capitalize} = require('lodash');
-const {File, Template, ComponentCollection, FileCollection, EmittingPromise, Component, Variant} = require('@frctl/support');
+const {File, ComponentCollection, FileCollection, EmittingPromise, Component, Variant} = require('@frctl/support');
 const {defaultsDeep} = require('@frctl/utils');
 const App = require('@frctl/app');
 const Renderer = require('@frctl/renderer');
@@ -19,8 +19,6 @@ const config = {
     './test/fixtures/add-ons/engine'
   ]
 };
-
-const template = new Template('file contents', 'view.fjk');
 
 const files = new FileCollection([
   new File({path: 'components/@test-component'}),
@@ -130,7 +128,7 @@ describe('Fractal', function () {
       sinon.stub(fractal, 'parse').callsFake(() => Promise.resolve(parserOutput));
       const variant = new Variant({
         id: 'default',
-        default: true,
+        default: true
         component: 'foo-component'
       });
       return expect(fractal.render(variant, {})).to.be.rejectedWith(Error, '[component-not-found]');

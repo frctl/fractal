@@ -2,7 +2,7 @@ const {extname} = require('path');
 const {isFunction, isString} = require('lodash');
 const {toArray, normalizeExt} = require('@frctl/utils');
 const debug = require('debug')('fractal:support');
-const {Validator, Template} = require('@frctl/support');
+const {Validator} = require('@frctl/support');
 const schema = require('@frctl/support/schema');
 const {assert} = require('check-types');
 
@@ -39,7 +39,7 @@ class Engine {
     return Promise.resolve(props.render.bind(this)(tpl, context, opts));
   }
 
-  get preprocessors(){
+  get preprocessors() {
     if (Array.isArray(_props.get(this).preprocessors)) {
       return _props.get(this).preprocessors;
     }

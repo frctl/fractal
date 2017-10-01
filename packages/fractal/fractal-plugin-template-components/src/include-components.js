@@ -2,16 +2,13 @@ const {extname} = require('path');
 const visit = require('unist-util-visit');
 const is = require('hast-util-is-element');
 const removePosition = require('unist-util-remove-position');
-const {ComponentCollection} = require('@frctl/support');
 
-module.exports = function(tree, env){
-
+module.exports = function (tree, env) {
   const componentIds = env.components.mapToArray(c => c.id);
   const parent = env.component;
 
   visit(tree, 'element', function (node, index, parentNode) {
     if (is(node, componentIds)) {
-
       const subComponent = env.components.find(node.tagName);
       if (subComponent.id === parent.id) {
         throw new Error(`Recursive component include detected! Ignoring component.`);
@@ -22,7 +19,7 @@ module.exports = function(tree, env){
       const template = subComponentVariant.getTemplate(templateExt);
 
       if (!template) {
-        throw new Error(`Could not find '${templateExt}' template for component ${componentId}`);
+        throw new Error(`Could not find '${templateExt}' template for component ${subComponent.ifd}`);
       }
 
       const componentNodes = removePosition(template.clone().tree).children;
@@ -30,5 +27,4 @@ module.exports = function(tree, env){
       parentNode.children.splice(index, 1, ...componentNodes);
     }
   });
-
-}
+};

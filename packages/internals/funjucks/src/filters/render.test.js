@@ -1,4 +1,3 @@
-const {File} = require('@frctl/support');
 const {Fractal} = require('@frctl/fractal');
 const {expect, sinon} = require('../../../../../test/helpers');
 const factory = require('./render');

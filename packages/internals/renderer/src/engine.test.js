@@ -1,5 +1,4 @@
 const {extname} = require('path');
-const {Template} = require('@frctl/support');
 const {expect, sinon} = require('../../../../test/helpers');
 const Engine = require('./engine');
 
@@ -10,9 +9,6 @@ const validEngine = {
     return Promise.resolve('the rendered string');
   }
 };
-
-const funjucksTemplate = new Template('asdasd', 'path/to/file.fjk');
-const otherTemplate = new Template('asdasd', 'path/to/file.foo');
 
 describe('Engine', function () {
   describe('constructor()', function () {
@@ -26,14 +22,14 @@ describe('Engine', function () {
     it('tests if the file provided can be handled by the engine', function () {
       ['.fjk', ['.fjk'], (path => extname(path) === '.fjk')].forEach(match => {
         const engine = new Engine(Object.assign({}, validEngine, {match}));
-        expect(engine.match(funjucksTemplate.filename)).to.equal(true);
-        expect(engine.match(otherTemplate.filename)).to.equal(false);
+        expect(engine.match('file.fjk')).to.equal(true);
+        expect(engine.match('file.foo')).to.equal(false);
       });
     });
 
     it('throws an error if the file argument is not a path', function () {
       const engine = new Engine(validEngine);
-      expect(() => engine.match({asd:'asd'})).to.throw(TypeError, '[path-invalid]');
+      expect(() => engine.match({asd: 'asd'})).to.throw(TypeError, '[path-invalid]');
     });
   });
 
@@ -45,13 +41,13 @@ describe('Engine', function () {
         match: '.fjk',
         render: renderSpy
       });
-      const result = await engine.render(funjucksTemplate);
-      expect(renderSpy.calledWith(funjucksTemplate.stringify())).to.equal(true);
+      const result = await engine.render('foobar');
+      expect(renderSpy.calledWith('foobar')).to.equal(true);
       expect(result).to.equal('foobar');
       return result;
     });
 
-    it('rejects if the tpl argument is not a Template', function () {
+    it('rejects if the tpl argument is not a string', function () {
       const engine = new Engine(validEngine);
       return expect(engine.render({foo: 'bar'})).to.be.rejectedWith(TypeError, '[template-invalid]');
     });

@@ -14,12 +14,12 @@ const _componentId = new WeakMap();
 class Variant extends Entity {
 
   constructor(props) {
-    super(props.config);
-    this._setTemplates(props.config.templates);
+    super(props);
+    this._setTemplates(props.templates);
     this._setComponentId(props.component);
   }
 
-  getComponentId(){
+  getComponentId() {
     return _componentId.get(this);
   }
 
@@ -47,7 +47,7 @@ class Variant extends Entity {
     return this;
   }
 
-  addTemplates(templates) {
+  addTemplates(templates = {}) {
     for (const filename of Object.keys(templates)) {
       this.addTemplate(templates[filename], filename);
     }
@@ -69,7 +69,7 @@ class Variant extends Entity {
 
   clone() {
     const cloned = new this.constructor({
-      templates: this.getTemplates(),
+      component: this.getComponentId(),
       config: this._config
     });
     for (let [key, value] of Object.entries(this._data)) {

@@ -4,7 +4,7 @@ const Variant = require('./variant');
 const Entity = require('./entity');
 
 const defaultProps = {
-  id: 'variant',
+  id: 'variant'
 };
 
 const makeVariant = props => new Variant({

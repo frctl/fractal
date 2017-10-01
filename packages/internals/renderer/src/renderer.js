@@ -10,14 +10,6 @@ class Renderer {
     _engineStore.set(this, new EngineStore(engines));
   }
 
-  async preprocess(tpl, context = {}, opts = {}){
-    const props = _props.get(this);
-    if (isFunction(props.preprocess)) {
-      tpl = props.preprocess.bind(this)(tpl, context, opts);
-    }
-    return tpl;
-  }
-
   async render(template, context = {}, opts = {}) {
     if (!Template.isTemplate(template)) {
       throw new Error(`Renderer.render - template must be a template instance [template-invalid]`);

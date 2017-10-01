@@ -1,4 +1,3 @@
-const {Template} = require('@frctl/support');
 const {toArray} = require('@frctl/utils');
 const {expect} = require('../../../../test/helpers');
 const Engine = require('./engine');
@@ -68,7 +67,7 @@ describe('EngineStore', function () {
       });
       expect(store.engines.length).to.equal(engines.length);
       const engine = store.engines.find(engine => engine.name === 'funjucks');
-      expect(await engine.render(new Template('foo', 'foo.fjk'))).to.equal('override');
+      expect(await engine.render('foo')).to.equal('override');
     });
     it('returns the store instance', function () {
       const store = makeEngineStore();
