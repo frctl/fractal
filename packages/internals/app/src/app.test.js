@@ -309,6 +309,37 @@ describe('App', function () {
     });
   });
 
+  describe('.requireFromString()', function () {
+    it('returns an Promise', function () {
+      const app = makeApp();
+      expect(app.requireFromString('module.exports = {}', 'foo.js')).to.be.instanceOf(Promise);
+    });
+    it('instantiates a loader with the current FileCollection', async () => {
+      const app = makeApp();
+      const files = new FileCollection();
+      sinon.stub(app, 'getFiles').callsFake(() => files);
+      const spy = sinon.spy(app, 'getLoader');
+      await app.requireFromString('module.exports = {}', 'foo.js');
+      expect(spy.calledWith(files)).to.equal(true);
+    });
+
+    it('calls the loader.requireFromString method with the expect args', async () => {
+      let passedArgs = [];
+      class Loader {
+        requireFromString(...args) {
+          passedArgs = args;
+        }
+      }
+      const App = proxyquire('./app', {
+        '@frctl/loader': {Loader}
+      });
+      const app = new App();
+      await app.requireFromString('module.exports = {}', 'foo.js');
+      expect(passedArgs[0]).to.equal('module.exports = {}');
+      expect(passedArgs[1]).to.equal('foo.js');
+    });
+  });
+
   describe('.getCollections()', function () {
     it('is an alias for .parse()', async function () {
       const app = makeApp();
