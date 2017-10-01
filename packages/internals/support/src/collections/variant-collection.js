@@ -1,7 +1,6 @@
 const {uniqueId} = require('@frctl/utils');
 const check = require('check-types');
 const Variant = require('../entities/variant');
-const Template = require('../entities/template');
 const EntityCollection = require('./entity-collection');
 const Collection = require('./collection');
 
@@ -151,9 +150,14 @@ function createVariant(target, props = {}) {
 
   config.id = uniqueId(props.id || 'variant', _variantNames.get(target));
 
-  const templates = component.getViews().filter(view => view.contents).map(view => new Template(view.contents.toString(), view.relative));
+  if (!config.templates) {
+    config.templates = {};
+    component.getViews().filter(view => view.contents).forEach(view => {
+      config.templates[view.basename] = view.contents.toString();
+    });
+  }
 
-  return Variant.from({templates, config, component: component.id});
+  return Variant.from({config, component: component.id});
 }
 
 Collection.addEntityDefinition(Variant, VariantCollection);

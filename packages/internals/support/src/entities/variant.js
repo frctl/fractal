@@ -1,7 +1,12 @@
+const fromParse5 = require('hast-util-from-parse5');
+const Parser5 = require('parse5/lib/parser');
 const Validator = require('../validator');
 const schema = require('../../schema');
 const Collection = require('../collections/collection');
 const Entity = require('./entity');
+const Template = require('./template');
+
+const parser = new Parser5({locationInfo: true});
 
 const _templates = new WeakMap();
 const _componentId = new WeakMap();
@@ -10,7 +15,7 @@ class Variant extends Entity {
 
   constructor(props) {
     super(props.config);
-    this._setTemplates(Collection.from(props.templates || []));
+    this._setTemplates(props.config.templates);
     this._setComponentId(props.component);
   }
 
@@ -29,15 +34,33 @@ class Variant extends Entity {
   }
 
   getTemplates() {
-    return _templates.get(this);
+    return new Collection(_templates.get(this));
   }
 
-  _setTemplates(templates) {
-    _templates.set(this, templates);
+  addTemplate(contents, filename) {
+    // TODO: cache template parsing
+    const tree = fromParse5(parser.parseFragment(contents), {
+      file: contents
+    });
+    const template = new Template(tree, filename);
+    _templates.get(this).push(template);
+    return this;
+  }
+
+  addTemplates(templates) {
+    for (const filename of Object.keys(templates)) {
+      this.addTemplate(templates[filename], filename);
+    }
+    return this;
   }
 
   _setComponentId(componentId) {
     _componentId.set(this, componentId);
+  }
+
+  _setTemplates(templates) {
+    _templates.set(this, []);
+    this.addTemplates(templates);
   }
 
   _validateOrThrow(props) {

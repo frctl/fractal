@@ -1,25 +1,13 @@
 const {extname} = require('path');
 const {cloneDeep} = require('lodash');
-const parse = require('rehype-parse');
-const stringify = require('rehype-stringify');
-const unified = require('unified');
-
-const processor = unified().use(parse, {
-  fragment: true
-}).use(stringify);
 
 const _ast = new WeakMap();
-const _contents = new WeakMap();
 const _filename = new WeakMap();
 
 class Template {
 
-  constructor(contents, filename) {
-    if (typeof contents === 'string') {
-      _contents.set(this, contents);
-    } else {
-      _ast.set(this, contents);
-    }
+  constructor(tree, filename) {
+    _ast.set(this, tree);
     _filename.set(this, filename);
   }
 
@@ -28,23 +16,11 @@ class Template {
   }
 
   get tree() {
-    if (!_ast.get(this)) {
-      _ast.set(this, processor.parse(_contents.get(this)));
-    }
     return _ast.get(this);
-  }
-
-  set tree(ast) {
-    return _ast.set(this, ast);
   }
 
   get extname(){
     return extname(this.filename);
-  }
-
-  stringify() {
-    // TODO: cache stringification
-    return processor.stringify(this.tree);
   }
 
   clone() {
