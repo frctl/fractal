@@ -12,14 +12,11 @@ module.exports = function(opts = {}){
     async handler(components, state, app){
 
       let pending = [];
-      const locals = opts.locals || {};
 
       components.forEach(component => {
         component.getVariants().forEach(variant => {
-          const env = Object.assign({}, {variant, component}, locals);
           const results = variant.getTemplates().mapToArray(template => {
-            const tplEnv = Object.assign({template}, env);
-            return evalAttrs(template.tree, tplEnv);
+            return evalAttrs(template.tree, {template, component, variant, components});
           });
           pending = pending.concat(results);
         });

@@ -1,49 +1,39 @@
-const {modifyNodes} = require('reshape-plugin-util');
+const {extname} = require('path');
+const visit = require('unist-util-visit');
+const has = require('hast-util-has-property');
+const {ComponentCollection} = require('@frctl/support');
 const safeEval = require('./eval');
 
 module.exports = function(tree, env){
 
-  return modifyNodes(tree, (node) => node.type === 'tag', async (node) => {
+  const componentIds = env.components.mapToArray(c => c.id);
+  const parent = env.component;
 
-    if (node.attrs) {
-      for (const key of Object.keys(node.attrs)) {
+  visit(tree, 'element', function (node, index, parentNode) {
+    if (node.properties) {
+      for (const key of Object.keys(node.properties)) {
         if (key[0] === ':') {
-          const attrs = node.attrs[key];
-          delete node.attrs[key];
-          const modifiedAttrs = [];
 
-          for (const attr of attrs) {
-            if (attr.type === 'text') {
-              attr.content = safeEval(attr.content, env);
-              if (!attr.content) {
-                continue;
-              }
-              if (Array.isArray(attr.content)) {
-                attr.content = attr.content.join(' ');
-              }
-              if (typeof attr.content !== 'string') {
-                throw new Error(`attribute '${key}' must resolve to a string`);
-              }
-              modifiedAttrs.push(attr);
-            } else {
-              modifiedAttrs.push(attr);
-            }
+          const propRealName = key.slice(1);
+          const result = safeEval(node.properties[key], env);
+
+          if (Array.isArray(result)) {
+            result = attr.content.join(' ');
           }
-          const attrName = key.slice(1);
+          if (typeof result !== 'string') {
+            throw new Error(`attribute '${key}' must resolve to a string`);
+          }
 
-          if (node.attrs[attrName] && modifiedAttrs.length > 0) {
-            node.attrs[attrName] = node.attrs[attrName].concat({
-              type: 'text',
-              content: ' ',
-              location: node.location
-            }, ...modifiedAttrs);
+          delete node.properties[key];
+
+          if (node.properties[propRealName] && node.properties[propRealName].trim() !== '') {
+            node.properties[propRealName] += ` ${result}`;
           } else {
-            node.attrs[attrName] = modifiedAttrs;
+            node.properties[propRealName] = result;
           }
         }
       }
     }
-
-    return node;
   });
+
 }
