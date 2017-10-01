@@ -20,6 +20,10 @@ class SyncFileSystemStack {
     _stack.set(this, toArray(fileSystemStack));
   }
 
+  get stack() {
+    return _stack.get(this);
+  }
+
 }
 
 fsSyncMethods.forEach(method => {
