@@ -21,11 +21,29 @@ describe('Template', function () {
     });
   });
 
+  describe('.extname', function () {
+    it('gets the file extension', function () {
+      const template = makeTemplate();
+      expect(template.extname).to.equal('.html');
+    });
+  });
+
   describe('.tree', function () {
     it('returns the template AST', function () {
       const template = makeTemplate(defaultContent);
       expect(template.tree).to.be.an('object');
       expect(template.tree).to.eql(defaultContent);
+    });
+  });
+
+  describe('.clone', function () {
+    it('clones the template including the DOM tree', function () {
+      const template = makeTemplate(defaultContent);
+      const cloned = template.clone();
+      expect(template).to.eql(cloned);
+      expect(template).to.not.equal(cloned);
+      expect(template.tree).to.eql(cloned.tree);
+      expect(template.tree).to.not.equal(cloned.tree);
     });
   });
 
