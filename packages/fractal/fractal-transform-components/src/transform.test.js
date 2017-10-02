@@ -88,7 +88,7 @@ const getFileCollection = () => {
 
 const app = fractal();
 
-describe.only('Component Transform', function () {
+describe('Component Transform', function () {
   describe('factory', function () {
     it('is exported as a function', function () {
       expect(componentTransform).to.be.a('function');
