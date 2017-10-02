@@ -85,7 +85,7 @@ class Loader {
         const contents = fs.readFileSync(resolvedPath, 'utf-8');
         return loader.transform(contents, resolvedPath);
       }
-      if (fs.stack[0].existsSync(resolvedPath)) {
+      if (fs.stack.length > 1 && fs.stack[0].existsSync(resolvedPath)) {
         return requireFromString(fs.stack[0].readFileSync(resolvedPath, 'utf-8'), resolvedPath);
       }
       return moduleLoad(resolvedPath, parent, ...args);

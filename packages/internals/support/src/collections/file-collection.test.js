@@ -179,7 +179,7 @@ describe('FileCollection', function () {
     it('adds all files to the MemoryFS instance', function () {
       const collection = makeCollection();
       const memFs = collection.toMemoryFS();
-      expect(memFs.readFileSync(items[0].path)).to.equal(items[0].contents);
+      expect(memFs.readFileSync(items[0].path).toString()).to.equal(items[0].contents.toString());
     });
     it('throws an error if the MemoryFS instance cannot be created', function () {
       const dodgyFile = items[0].clone();
@@ -192,7 +192,7 @@ describe('FileCollection', function () {
   describe('MemoryFS proxing', function () {
     it(`adds MemoryFS 'read' methods onto the main collection instance`, function () {
       const collection = makeCollection();
-      expect(collection.readFileSync(items[0].path)).to.eql(items[0].contents);
+      expect(collection.readFileSync(items[0].path).toString()).to.eql(items[0].contents.toString());
       expect(collection.existsSync(items[0].path)).to.eql(true);
       for (const method of fsReadMethods) {
         expect(collection[method]).to.be.a('function');
