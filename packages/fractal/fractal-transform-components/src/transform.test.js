@@ -109,6 +109,10 @@ describe('Component Transform', function () {
       expect(output).to.be.a('ComponentCollection');
       expect(output).to.have.property('length').that.equals(3);
     });
+    it('loads config via a loader instance');
+    it('passes the current file collection through when creating a new loader');
+    it('uses the first config file found when sorting all matches by filename');
+    it('correctly transforms nested components');
     // it('instantiates the component with config merged from the config files and the default components config', async function () {
     //   const spy = sinon.spy(Component, 'from');
     //   const fileCollection = FileCollection.from(items.slice(1));

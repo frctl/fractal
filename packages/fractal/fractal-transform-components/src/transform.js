@@ -12,6 +12,7 @@ module.exports = function (opts = {}) {
       const configDefaults = app.get('components.config.defaults', {});
       const componentMatcher = app.get('components.match');
       const componentDirs = files.filter(file => file.isDirectory()).filter(componentMatcher);
+      const loader = app.getLoader(files);
 
       return ComponentCollection.from(await componentDirs.mapToArrayAsync(async dir => {
         const rootPath = addTrailingSeparator(dir.path);
@@ -25,15 +26,9 @@ module.exports = function (opts = {}) {
 
         remainingFiles = remainingFiles.reject(file => componentFiles.find(f => f.path === file.path));
 
-        const configFiles = componentFiles.filter(configMatcher).sortBy('basename', 'asc');
-
-        let dataObjs = await configFiles.mapToArrayAsync(file => app.requireFromString(file.contents.toString(), file.path));
-
-        dataObjs = await Promise.all(dataObjs.map(data => {
-          return (typeof data === 'function') ? Promise.resolve(data(files, app)) : Promise.resolve(data);
-        }));
-
-        const config = Object.assign({}, ...dataObjs);
+        const configFile = componentFiles.filter(configMatcher).sortBy('basename', 'asc').first();
+        const configData = loader.requireFromString(configFile.contents.toString(), configFile.path);
+        const config = await Promise.resolve(typeof configData === 'function' ? configData(files, app) : configData);
 
         return Component.from({
           src: dir,
