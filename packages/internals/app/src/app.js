@@ -7,14 +7,13 @@ const {Config} = require('@frctl/config');
 const {Parser} = require('@frctl/parser');
 const {Loader} = require('@frctl/loader');
 const {cloneDeep} = require('@frctl/utils');
-const {EmittingPromise} = require('@frctl/support');
+const {EmittingPromise, FileCollection} = require('@frctl/support');
 
 const _dirty = new WeakMap();
 const _cache = new WeakMap();
 const _config = new WeakMap();
 const _parsing = new WeakMap();
 const _watcher = new WeakMap();
-const _loader = new WeakMap();
 
 class App {
 
@@ -36,7 +35,6 @@ class App {
     }));
 
     _dirty.set(this, true);
-    _loader.set(this, new Loader(this.get('resolve')));
   }
 
   parse(opts = {}) {
@@ -140,9 +138,23 @@ class App {
     });
   }
 
-  require(path, startPath) {
+  getLoader(fileSystem) {
+    if (FileCollection.isCollection(fileSystem)) {
+      fileSystem = fileSystem.toMemoryFS();
+    }
+    const opts = Object.assign({}, this.get('resolve'), {fileSystem});
+    return new Loader(opts);
+  }
+
+  async require(path, startPath) {
     startPath = startPath || dirname(parentModule());
-    return _loader.get(this).require(path, startPath);
+    const files = await this.getFiles();
+    return this.getLoader(files).require(path, startPath);
+  }
+
+  async requireFromString(contents, path) {
+    const files = await this.getFiles();
+    return this.getLoader(files).requireFromString(contents, path);
   }
 
   debug(...args) {
@@ -169,10 +181,6 @@ class App {
 
   get config() {
     return _config.get(this);
-  }
-
-  get loader() {
-    return _loader.get(this);
   }
 
 }

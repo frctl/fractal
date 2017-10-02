@@ -2,6 +2,7 @@
 
 const Module = require('module');
 const {join} = require('path');
+const {FileCollection} = require('@frctl/support');
 const {expect} = require('../../../../test/helpers');
 const Loader = require('./loader');
 
@@ -94,6 +95,23 @@ describe('Loader', function () {
       expect(loader.require('~/config.js')).to.eql({foo: 'bar'});
       delete require.cache['@frctl/utils'];
       expect(() => require('@frctl/utils')).to.not.throw();
+    });
+    it('can require the contents of virtual files', function () {
+      const files = new FileCollection([{
+        path: '/config.js',
+        contents: Buffer.from(`module.exports = {foo: 'bar'}`)
+      }, {
+        path: '/foo/bar.js',
+        contents: Buffer.from(`module.exports = {foo: 'bar'}`)
+      }]);
+      const loader = new Loader({
+        alias: {
+          '!': '/foo'
+        },
+        fileSystem: files.toMemoryFS()
+      });
+      expect(loader.require('/config.js')).to.eql({foo: 'bar'});
+      expect(loader.require('!/bar.js')).to.eql({foo: 'bar'});
     });
   });
 
