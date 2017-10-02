@@ -1,9 +1,13 @@
-const {normalizeId} = require('@frctl/utils');
+const {normalizeId, uniqueId} = require('@frctl/utils');
+const check = require('check-types');
 const Validator = require('../validator');
 const schema = require('../../schema');
 const VariantCollection = require('../collections/variant-collection');
 const FileCollection = require('../collections/file-collection');
 const Entity = require('./entity');
+const Variant = require('./variant');
+
+const assert = check.assert;
 
 const _src = new WeakMap();
 const _files = new WeakMap();
@@ -49,28 +53,60 @@ class Component extends Entity {
 
   getVariantOrDefault(id) {
     const variants = _variants.get(this);
-    return variants.find(id) || variants.getDefault();
+    return variants.find(id) || this.getDefaultVariant();
   }
 
-  addVariant(variant) {
+  addVariant(props) {
+    const isVariantInstance = check.maybe.instance(props, Variant);
+    const isValidProp = check.maybe.object(props);
+    const variantIds = this.getVariants().mapToArray(v => v.id);
+
+    let config;
+
+    assert(
+      (isValidProp || isVariantInstance),
+      `Component.addVariant: The 'props' argument must be a variant properties object or Variant instance [props-invalid]`,
+      TypeError
+    );
+
+    if (isVariantInstance) {
+      config = props;
+    } else {
+      config = Object.assign({}, props);
+    }
+
+    config.id = uniqueId(props.id || 'variant', variantIds);
+    config.component = this.get('id');
+
+    if (!config.templates) {
+      config.templates = {};
+      this.getViews().filter(view => view.contents).forEach(view => {
+        config.templates[view.basename] = view.contents.toString();
+      });
+    }
+
+    const variant = Variant.from(config);
     _variants.set(this, _variants.get(this).push(variant));
+    return this;
   }
 
   getDefaultVariant() {
-    return _variants.get(this).getDefault();
+    return this.get('default') ? this.getVariants().find(this.get('default')) : this.getVariants().first();
   }
 
   getViews() {
-    let views = new FileCollection();
-    const viewMatcher = this.get('views.match');
-    if ((viewMatcher)) {
-      views = this.getFiles().filter(viewMatcher);
-    }
-    return views;
+    const viewMatcher = this.get('views.match', () => false); // default to no matches
+    const viewSorter = view => {
+      if (view.extname === this.get('views.default')) {
+        return 0;
+      }
+      return 1;
+    };
+    return this.getFiles().filter(viewMatcher).sortBy(viewSorter);
   }
 
   getView(...args) {
-    return this.getViews().find(...args);
+    return args ? this.getViews().find(...args) : this.getViews().first();
   }
 
   _setSrc(src, files) {
@@ -86,16 +122,18 @@ class Component extends Entity {
   }
 
   _buildVariants(variants = []) {
-    let variantCollection = new VariantCollection(variants, this.get('id'));
+    _variants.set(this, new VariantCollection());
 
-    if (!variantCollection.hasDefault()) {
-      variantCollection = variantCollection.push({
+    if (variants.length === 0) {
+      variants.push({
         id: 'default',
-        default: true
+        component: this.get('id')
       });
     }
 
-    _variants.set(this, variantCollection);
+    for (const variant of variants) {
+      this.addVariant(variant);
+    }
   }
 
   clone() {

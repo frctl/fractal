@@ -5,6 +5,7 @@ const {capitalize} = require('lodash');
 const {File, ComponentCollection, FileCollection, EmittingPromise, Component, Variant} = require('@frctl/support');
 const {defaultsDeep} = require('@frctl/utils');
 const App = require('@frctl/app');
+const Renderer = require('@frctl/renderer');
 const {expect, sinon} = require('../../../../test/helpers');
 const pkg = require('../package.json');
 const ConfigStore = require('./config/store');
@@ -18,11 +19,6 @@ const config = {
     './test/fixtures/add-ons/engine'
   ]
 };
-
-const view = new File({
-  path: 'path/to/view.fjk',
-  contents: Buffer.from('file contents')
-});
 
 const files = new FileCollection([
   new File({path: 'components/@test-component'}),
@@ -53,8 +49,6 @@ const components = new ComponentCollection([
       },
       variants: [{
         id: 'default',
-        default: true,
-        component: 'test-component',
         context: {
           foo: 'bar'
         }
@@ -90,33 +84,23 @@ describe('Fractal', function () {
   describe('.render()', function () {
     it('returns an EmittingPromise', function () {
       const fractal = makeFractal();
-      expect(fractal.render(view)).to.be.instanceOf(EmittingPromise);
+      expect(fractal.render(components.first())).to.be.instanceOf(EmittingPromise);
     });
     it('resolves to a string', async function () {
       const fractal = makeFractal();
-      expect(await fractal.render(view)).to.be.a('string');
+      expect(await fractal.render(components.first())).to.be.a('string');
     });
     it('rejects if no engines have been added', function () {
       const fractal = makeFractal({
         extends: null
       });
-      const result = fractal.render(view);
+      const result = fractal.render(components.first());
       expect(result).to.be.instanceOf(EmittingPromise);
-      return expect(result).to.be.rejectedWith(Error, '[no-engines]');
+      return expect(result).to.be.rejectedWith(Error, '[engine-not-found]');
     });
-    it('rejects if the specified engine cannot be found', function () {
-      const fractal = makeFractal();
-      return expect(fractal.render(view, {}, {
-        engine: 'foo'
-      })).to.eventually.be.rejectedWith(Error, '[engine-not-found]');
-    });
-    it('rejects if the target is not a view, component, variant or string', function () {
+    it('rejects if the target is not a component or variant', function () {
       const fractal = makeFractal();
       return expect(fractal.render({})).to.be.rejectedWith(Error, '[target-invalid]');
-    });
-    it('returns an EmittingPromise', function () {
-      const fractal = makeFractal();
-      expect(fractal.render(view)).to.be.instanceOf(EmittingPromise);
     });
     it('Can render components', async function () {
       const fractal = makeFractal();
@@ -134,7 +118,6 @@ describe('Fractal', function () {
     it('rejects if a specified variant cannot be found', function () {
       const fractal = makeFractal();
       return expect(fractal.render(parserOutput.components.first(), {}, {
-        collections: parserOutput,
         variant: 'foo'
       })).to.be.rejectedWith(Error, '[variant-not-found]');
     });
@@ -143,12 +126,11 @@ describe('Fractal', function () {
       sinon.stub(fractal, 'parse').callsFake(() => Promise.resolve(parserOutput));
       const variant = new Variant({
         id: 'default',
-        default: true,
         component: 'foo-component'
       });
       return expect(fractal.render(variant, {})).to.be.rejectedWith(Error, '[component-not-found]');
     });
-    it('rejects if a suitable view cannot be found', function () {
+    it('rejects if a suitable template cannot be found', function () {
       const fractal = makeFractal();
       sinon.stub(fractal, 'parse').callsFake(() => Promise.resolve(parserOutput));
       fractal.addEngine({
@@ -157,8 +139,8 @@ describe('Fractal', function () {
         render: () => {}
       });
       return expect(fractal.render(parserOutput.components.first(), {}, {
-        engine: 'fwig'
-      })).to.be.rejectedWith(Error, '[view-not-found]');
+        ext: '.fwig'
+      })).to.be.rejectedWith(Error, '[template-not-found]');
     });
   });
 
@@ -221,6 +203,13 @@ describe('Fractal', function () {
       });
     });
   }
+
+  describe('.getRenderer()', function () {
+    it('returns a configured Renderer instance', function () {
+      const fractal = new Fractal();
+      expect(fractal.getRenderer()).to.be.instanceof(Renderer);
+    });
+  });
 
   describe('.toString()', function () {
     it('property describes the Fractal instance', function () {
