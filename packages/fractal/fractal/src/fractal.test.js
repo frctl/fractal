@@ -49,8 +49,6 @@ const components = new ComponentCollection([
       },
       variants: [{
         id: 'default',
-        default: true,
-        component: 'test-component',
         context: {
           foo: 'bar'
         }
@@ -128,7 +126,6 @@ describe('Fractal', function () {
       sinon.stub(fractal, 'parse').callsFake(() => Promise.resolve(parserOutput));
       const variant = new Variant({
         id: 'default',
-        default: true
         component: 'foo-component'
       });
       return expect(fractal.render(variant, {})).to.be.rejectedWith(Error, '[component-not-found]');
