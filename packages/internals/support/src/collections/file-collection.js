@@ -71,7 +71,7 @@ class FileCollection extends EntityCollection {
     // TODO: can we cache this MemoryFs instance creation somehow?
     const memFs = new MemoryFS();
     const errors = [];
-    this.filter(file => !file.isDirectory()).sortBy(file => file.path.length).forEach(file => {
+    this.clone().filter(file => !file.isDirectory()).sortBy(file => file.path.length).forEach(file => {
       try {
         memFs.mkdirpSync(file.dirname);
         memFs.writeFileSync(file.path, file.contents);
@@ -80,7 +80,7 @@ class FileCollection extends EntityCollection {
       }
     });
     if (errors.length > 0) {
-      throw new Error(`Could not create MemoryFS instance [memfs-error]`);
+      throw new Error(`Could not create MemoryFS instance [memfs-error]\n  ${errors.join('\n')}`);
     }
     return memFs;
   }

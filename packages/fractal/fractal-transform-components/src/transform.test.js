@@ -8,7 +8,7 @@ const componentTransform = require('./transform');
 
 const items = [{
   cwd: '/',
-  path: 'path/to/fake/@a-component',
+  path: '/path/to/fake/@a-component',
   stat: {
     isNull: () => true,
     isDirectory: () => true
@@ -16,17 +16,17 @@ const items = [{
 },
 {
   cwd: '/',
-  path: 'path/to/fake/@a-component/view.hbs',
+  path: '/path/to/fake/@a-component/view.hbs',
   contents: new Buffer('VIEW')
 },
 {
   cwd: '/',
-  path: 'path/to/fake/@a-component/preview.hbs',
+  path: '/path/to/fake/@a-component/preview.hbs',
   contents: new Buffer('PREVIEW')
 },
 {
   cwd: '/',
-  path: 'path/to/fake/@b-component/@nested-component',
+  path: '/path/to/fake/@b-component/@nested-component',
   stat: {
     isNull: () => true,
     isDirectory: () => true
@@ -34,22 +34,22 @@ const items = [{
 },
 {
   cwd: '/',
-  path: 'path/to/fake/@b-component/@nested-component/view.hbs',
+  path: '/path/to/fake/@b-component/@nested-component/view.hbs',
   contents: new Buffer('VIEW')
 },
 {
   cwd: '/',
-  path: 'path/to/fake/@b-component/@nested-component/preview.hbs',
+  path: '/path/to/fake/@b-component/@nested-component/preview.hbs',
   contents: new Buffer('PREVIEW')
 },
 {
   cwd: '/',
-  path: 'path/to/fake/@b-component/@nested-component/config.js',
+  path: '/path/to/fake/@b-component/@nested-component/config.js',
   contents: new Buffer(`module.exports = {name: 'config.js', foo: 'bar'}`)
 },
 {
   cwd: '/',
-  path: 'path/to/fake/@b-component/',
+  path: '/path/to/fake/@b-component/',
   stat: {
     isNull: () => true,
     isDirectory: () => true
@@ -57,27 +57,27 @@ const items = [{
 },
 {
   cwd: '/',
-  path: 'path/to/fake/@b-component/view.hbs',
+  path: '/path/to/fake/@b-component/view.hbs',
   contents: new Buffer('VIEW')
 },
 {
   cwd: '/',
-  path: 'path/to/fake/@b-component/preview.hbs',
+  path: '/path/to/fake/@b-component/preview.hbs',
   contents: new Buffer('PREVIEW')
 },
 {
   cwd: '/',
-  path: 'path/to/fake/@b-component/config.js',
+  path: '/path/to/fake/@b-component/config.js',
   contents: new Buffer(`module.exports = {name: 'config.js', foo: 'bar'}`)
 },
 {
   cwd: '/',
-  path: 'path/to/fake/@b-component/config.json',
+  path: '/path/to/fake/@b-component/config.json',
   contents: new Buffer(`{name: 'config.json', bar: 'baz'}`)
 },
 {
   cwd: '/',
-  path: 'path/to/fake/some.png',
+  path: '/path/to/fake/some.png',
   contents: new Buffer([8, 6, 7, 5, 3, 0, 9])
 }
 ];
@@ -88,7 +88,7 @@ const getFileCollection = () => {
 
 const app = fractal();
 
-describe('Component Transform', function () {
+describe.only('Component Transform', function () {
   describe('factory', function () {
     it('is exported as a function', function () {
       expect(componentTransform).to.be.a('function');

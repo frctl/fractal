@@ -26,9 +26,12 @@ module.exports = function (opts = {}) {
 
         remainingFiles = remainingFiles.reject(file => componentFiles.find(f => f.path === file.path));
 
+        let config = {};
         const configFile = componentFiles.filter(configMatcher).sortBy('basename', 'asc').first();
-        const configData = loader.requireFromString(configFile.contents.toString(), configFile.path);
-        const config = await Promise.resolve(typeof configData === 'function' ? configData(files, app) : configData);
+        if (configFile) {
+          const configData = loader.requireFromString(configFile.contents.toString(), configFile.path);
+          config = await Promise.resolve(typeof configData === 'function' ? configData(files, app) : configData);
+        }
 
         return Component.from({
           src: dir,
