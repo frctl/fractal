@@ -16,13 +16,13 @@ module.exports = {
   components: {
     match: file => file.stem.startsWith('@'),
     config: {
+      match: 'config.*',
       defaults: {
         views: {
           match: 'view.*',
-          default: null
+          default: '.html'
         }
-      },
-      match: 'config.*'
+      }
     }
   },
 

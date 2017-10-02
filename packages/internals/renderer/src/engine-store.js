@@ -1,7 +1,6 @@
 /* eslint max-params: off */
 
 const {remove, isString} = require('lodash');
-const {File} = require('@frctl/support');
 const {toArray} = require('@frctl/utils');
 const debug = require('debug')('fractal:renderer');
 const {assert} = require('check-types');
@@ -15,30 +14,31 @@ class EngineStore {
     assert.maybe.array(engines, `EngineStore.constructor: engines must be an array if provided [engines-invalid]`);
 
     _engines.set(this, []);
+
     this.addEngine(engines);
 
     debug('Initialising renderer with %i engine(s) %o', this.engines.length, this.engines.map(engine => engine.name));
   }
 
-  getDefault() {
-    return this.engines[0];
-  }
-
-  getEngineFor(matcher) {
-    const path = File.isFile(matcher) ? matcher.path : matcher;
-    if (!isString(path)) {
-      throw new Error('Can only match engines against File objects or paths [matcher-invalid]');
+  getEngineFor(filepath) {
+    if (!isString(filepath)) {
+      throw new Error('Can only match engines against paths [matcher-invalid]');
     }
-    debug('Finding engine for file %s: ', path);
+    debug('Finding engine for file %s: ', filepath);
     for (const engine of _engines.get(this)) {
-      if (engine.match(path)) {
+      if (engine.match(filepath)) {
         return engine;
       }
     }
   }
 
   getEngine(name) {
-    return _engines.get(this).find(engine => engine.name === name);
+    assert.string(name, `EngineStore.getEngine: name must be a string [name-invalid]`);
+    const engine = _engines.get(this).find(engine => engine.name === name);
+    if (!engine) {
+      throw new Error(`No template engine called '${name}' has been registered [engine-not-found]`);
+    }
+    return engine;
   }
 
   addEngine(items) {

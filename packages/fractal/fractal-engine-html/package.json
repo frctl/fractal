@@ -1,9 +1,9 @@
 {
-  "name": "@frctl/fractal-plugin-files-name",
-  "description": "Adds a name property to Fractal File objects.",
+  "name": "@frctl/fractal-engine-html",
+  "description": "No-op HTML template engine renderer for Fractal",
   "version": "2.0.0-beta.0",
   "homepage": "http://fractal.build",
-  "repository": "https://github.com/frctl/fractal/tree/v2/packages/internals/parser",
+  "repository": "https://github.com/frctl/fractal/tree/v2/packages/fractal/fractal-engine-html",
   "bugs": "https://github.com/frctl/fractal/issues",
   "author": "Mark Perkins <mark@allmarkedup.com> (http://allmarkedup.com)",
   "contributors": [
@@ -11,7 +11,6 @@
     "Danielle Huntrods <danielle.huntrods@clearleft.com> (http://clearleft.com)"
   ],
   "license": "MIT",
-  "dependencies": {},
   "devDependencies": {
     "@frctl/support": "^2.0.0-beta.0"
   }

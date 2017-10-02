@@ -11,6 +11,9 @@ const _props = new WeakMap();
 class Engine {
 
   constructor(props) {
+    if (props instanceof Engine) {
+      return props;
+    }
     Validator.assertValid(props, schema.engine, 'Engine schema invalid [engine-invalid]');
     _props.set(this, props);
     debug('intialised engine %s', props.name);
@@ -32,8 +35,15 @@ class Engine {
     assert.string(tpl, 'Engine.render - template must be a string [template-invalid]');
     assert.object(context, 'Engine.render - context data must be an object [context-invalid]');
     assert.object(opts, 'Engine.render - options data must be an object [opts-invalid]');
+    const props = _props.get(this);
+    return Promise.resolve(props.render.bind(this)(tpl, context, opts));
+  }
 
-    return Promise.resolve(_props.get(this).render(tpl, context, opts));
+  get preprocessors() {
+    if (Array.isArray(_props.get(this).preprocessors)) {
+      return _props.get(this).preprocessors;
+    }
+    return [];
   }
 
   get name() {
