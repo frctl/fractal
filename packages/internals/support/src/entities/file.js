@@ -1,4 +1,9 @@
 const fs = require('fs');
+const path = require('path');
+const isBuffer = require('buffer').Buffer.isBuffer;
+const replaceExt = require('replace-ext');
+const cloneStats = require('clone-stats');
+const cloneBuffer = require('clone-buffer');
 const {assert} = require('check-types');
 const {mapValues, omit, pick, pickBy, assign} = require('lodash');
 const Vinyl = require('vinyl');
@@ -16,18 +21,11 @@ const getters = [
   'base',
   'stem',
   'relative',
+  'history',
+  'stat',
   'cwd',
   'path'];
 
-const protectedProps = [
-  'cwd',
-  'base',
-  'contents',
-  'history'
-];
-
-const _cwds = new WeakMap();
-const _bases = new WeakMap();
 
 class File extends Entity {
 
@@ -37,28 +35,122 @@ class File extends Entity {
     }
     File.validate(props);
     props = Object.assign({}, props, {
-      stat: props.stat || null
+      stat: props.stat || null,
+      contents: props.contents || null,
+      cwd: normalizePath((props.cwd !== undefined && props.cwd !== null) ? props.cwd : process.cwd())
     });
-    super(omit(props, protectedProps));
+    super(props);
     this._defineGettersAndSetters(props);
+  }
+
+  isDirectory() {
+    if (!(this.get('contents') === null)) {
+      return false;
+    }
+    const stat = this.get('stat');
+    if (stat && typeof stat.isDirectory === 'function') {
+      return stat.isDirectory();
+    }
+
+    return false;
+  }
+
+  toString() {
+    return this.get('contents') ? this.get('contents').toString() : '';
+  }
+
+  toVinyl() {
+    return new Vinyl(Object.assign({}, this.getComputedProps(), {
+      cwd: this.get('cwd'),
+      path: this.get('path'),
+      base: this.get('base'),
+      stat: (this.get('stat') ? cloneStats(this.get('stat')) : null),
+      history: this.get('history').slice(),
+      contents: this.get('contents') ? cloneBuffer(this.get('contents')) : null
+    }));
+  }
+
+  clone() {
+    const config = Object.assign({}, this._config, {
+      cwd: this.get('cwd'),
+      path: this.get('path'),
+      base: this.get('base'),
+      stat: (this.get('stat') ? cloneStats(this.get('stat')) : null),
+      history: this.get('history').slice(),
+      contents: this.get('contents') ? cloneBuffer(this.get('contents')) : null
+    });
+    const file = new this.constructor(config);
+    for (let [key, value] of Object.entries(this._data)) {
+      if (!getters.includes(key)) {
+        file.set(key, value);
+      }
+    }
+    return file;
   }
 
   _defineGettersAndSetters(props) {
 
     this._initHistory(props.history, props.path);
-    this._setContents(props.contents || null);
-    this._setCwd(props.cwd || process.cwd());
-    this._setBase(props.base);
 
     this.defineGetter('path', (value, entity) => {
       return this._getPath();
     });
+    this.defineSetter('path', (value, entity) => {
+      return this._setPath(value);
+    });
+
     this.defineGetter('base', (value, entity) => {
-      return _bases.get(this) || _cwds.get(this);
+      return value || this.get('cwd');
     });
-    this.defineGetter('cwd', (value, entity) => {
-      return _cwds.get(this);
+
+    this.defineSetter('base', (value, entity) => {
+      return this._setBase(value);
     });
+
+    this.defineSetter('cwd', (value, entity) => {
+      assert(false, 'File.cwd is read-only after initialisation [invalid-set-cwd]', TypeError);
+    });
+
+    this.defineSetter('contents', (value, entity) => {
+      return this._setContents(value);
+    });
+
+    this.defineGetter('relative', (value, entity) => {
+      return path.relative(this.get('base'), this.get('path'));
+    });
+    this.defineSetter('relative', (value, entity) => {
+      assert(false, 'File.relative is generated from the base and path attributes. Do not modify it [invalid-set-relative]', TypeError);
+    });
+
+    this.defineGetter('basename', (value, entity) => {
+      return path.basename(this._getPath());
+    });
+    this.defineSetter('basename', (value, entity) => {
+      return this._setPath(path.join(this.get('dirname'), value));
+    });
+
+    this.defineGetter('dirname', (value, entity) => {
+      return path.dirname(this._getPath());
+    });
+    this.defineSetter('dirname', (value, entity) => {
+      this._setPath(path.join(value, this.get('basename')));
+    });
+
+    this.defineGetter('extname', (value, entity) => {
+      return path.extname(this._getPath());
+    });
+    this.defineSetter('extname', (value, entity) => {
+      this._setPath(replaceExt(this._getPath(), value));
+    });
+
+    this.defineGetter('stem', (value, entity) => {
+      return path.basename(this._getPath(), this.get('extname'));
+    });
+    this.defineSetter('stem', (value, entity) => {
+      this._setPath(path.join(this.get('dirname'), value + this.get('extname')));
+    });
+
+    this.set('base', props.base);
   }
 
   _getPath() {
@@ -66,31 +158,25 @@ class File extends Entity {
     return history[history.length - 1];
   }
   _setPath(path) {
-    assert.string(path, `File.path - 'path' argument must be a string [path-invalid]`)
+    assert.nonEmptyString(path, `File.path - 'path' argument must be a string [path-invalid]`)
+    if (!path) return;
     path = normalizePath(path);
-
-    if (path && path !== this._getPath()) {
+    if (path && (path !== this._getPath())) {
       this._addHistory(path);
     }
+    return path;
   }
 
   _setBase(base) {
     if (base === null || base === undefined) {
-      _bases.delete(this);
-      return;
+      return null;
     }
-    assert.maybe.string(base, `File.base - 'base' argument must be a string [base-invalid]`);
+    assert.maybe.nonEmptyString(base, `File.base - 'base' argument must be a non-empty string, or null/undefined [base-invalid]`);
     base = normalizePath(base);
-    if (base !== _cwds.get(this)) {
-      _bases.set(this, base);
-    } else {
-      _bases.delete(this);
+    if (base !== this.get('cwd')) {
+      return base;
     }
-  }
-
-  _setCwd(cwd) {
-    assert.string(cwd, `File.cwd - 'cwd' argument must be a string [cwd-invalid]`);
-    _cwds.set(this, normalizePath(cwd));
+    return null;
   }
 
   _initHistory(history, path) {
@@ -107,32 +193,39 @@ class File extends Entity {
     history.push(path);
     this.set('history', history);
   }
+
   _setContents(contents) {
-    this.set('contents', contents);
+    if (!isBuffer(contents) && (contents !== null)) {
+      throw new TypeError('File.contents can only be a Buffer or null [invalid-contents]');
+    }
+    return contents;
   }
 
 
+  toJSON() {
+    const vinylProps = pick(this.getComputedProps(), getters);
+    const customProps = pickBy(this.getComputedProps(), (value, key) => {
+      return !key.startsWith('_') && typeof value !== 'function' && !(value instanceof fs.Stats);
+    });
+    const vals = mapValues(assign(vinylProps, customProps), (val, key, obj) => {
+      if (Buffer.isBuffer(val)) {
+        return val.toString();
+      }
+      if (val && typeof val.toJSON === 'function') {
+        return val.toJSON();
+      }
+      return val;
+    });
+    return Object.assign({}, vals, {
+      basename: this.get('basename'),
+      dirname: this.get('dirname'),
+      extname: this.get('extname'),
+      relative: this.get('relative'),
+      stem: this.get('stem')
+    });
+  }
 
-  // clone() {
-  //   return super.clone({deep: true, path: this.path});
-  // }
-  //
-  // toJSON() {
-  //   const vinylProps = pick(this, getters);
-  //   const customProps = pickBy(this, (value, key) => {
-  //     return !key.startsWith('_') && typeof value !== 'function' && !(value instanceof fs.Stats);
-  //   });
-  //   return mapValues(assign(vinylProps, customProps), (val, key, obj) => {
-  //     if (Buffer.isBuffer(val)) {
-  //       return val.toString();
-  //     }
-  //     return val;
-  //   });
-  // }
-  //
-  // toString() {
-  //   return this.contents ? this.contents.toString() : '';
-  // }
+
 
   get[Symbol.toStringTag]() {
     return 'File';
@@ -146,17 +239,17 @@ class File extends Entity {
     Validator.assertValid(props, schema.file, `File.constructor: The properties provided do not match the schema of a File [properties-invalid]`);
   }
 
-  // static from(props) {
-  //   return new this(props);
-  // }
+  static from(props) {
+    return new this(props);
+  }
 
-  // static async fromPath(path, opts = {}) {
-  //   const stat = await pfs.stat(path);
-  //   const contents = await pfs.readFile(path);
-  //   const cwd = opts.cwd || process.cwd();
-  //   const base = opts.base || cwd;
-  //   return new File({path, cwd, stat, base, contents});
-  // }
+  static async fromPath(path, opts = {}) {
+    const stat = await pfs.stat(path);
+    const contents = await pfs.readFile(path);
+    const cwd = opts.cwd || process.cwd();
+    const base = opts.base || cwd;
+    return new File({path, cwd, stat, base, contents});
+  }
 
 }
 
