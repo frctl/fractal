@@ -1,24 +1,31 @@
 /* eslint import/no-dynamic-require: off */
 
 const Module = require('module');
-const {readFileSync} = require('fs');
+const fs = require('fs');
 const {extname, dirname, join} = require('path');
 const parentModule = require('parent-module');
 const {create} = require('enhanced-resolve');
 const requireFromString = require('require-from-string');
 const {toArray} = require('@frctl/utils');
 const debug = require('debug')('frctl:loader');
+const SyncFileSystemStack = require('./sync-fs-stack');
 
 const moduleLoad = Module._load;
 
 const _resolve = new WeakMap();
+const _fileSystem = new WeakMap();
 const _transforms = new WeakMap();
 
 class Loader {
 
   constructor(opts = {}) {
+    const fsStack = toArray(opts.fileSystem || []).concat(fs);
+    const fileSystem = new SyncFileSystemStack(fsStack);
+    const resolverOpts = Object.assign({}, opts, {fileSystem});
     _transforms.set(this, []);
-    _resolve.set(this, create.sync(opts));
+    _fileSystem.set(this, fileSystem);
+
+    _resolve.set(this, create.sync(resolverOpts));
 
     this.addTransform(require('./transforms/yaml'));
     this.addTransform(require('./transforms/json'));
@@ -71,11 +78,15 @@ class Loader {
 
   hook() {
     const loader = this;
+    const fs = _fileSystem.get(this);
     Module._load = function (request, parent, ...args) {
       const resolvedPath = loader.resolve(request);
       if (loader.hasTransformerForPath(resolvedPath)) {
-        const contents = readFileSync(resolvedPath, 'utf-8');
+        const contents = fs.readFileSync(resolvedPath, 'utf-8');
         return loader.transform(contents, resolvedPath);
+      }
+      if (fs.stack.length > 1 && fs.stack[0].existsSync(resolvedPath)) {
+        return requireFromString(fs.stack[0].readFileSync(resolvedPath, 'utf-8'), resolvedPath);
       }
       return moduleLoad(resolvedPath, parent, ...args);
     };
