@@ -61,10 +61,8 @@ const makeComponent = input => new Component({
   src: new File({path: input.path, cwd: '/'}),
   config: Object.assign({}, {id: input.id}, input.config)});
 
-items = items.map(makeComponent);
-
-const makeCollection = input => new ComponentCollection(input || items.slice(0));
-const makeCollectionFrom = input => ComponentCollection.from(input || items.slice(0));
+const makeCollection = input => new ComponentCollection(input || items.map(makeComponent));
+const makeCollectionFrom = input => ComponentCollection.from(input || items.map(makeComponent));
 
 describe('ComponentCollection', function () {
   describe('constructor', function () {
@@ -89,16 +87,16 @@ describe('ComponentCollection', function () {
   describe('.find()', function () {
     it(`can be called with a single string argument to find the 'id'`, function () {
       const collection = makeCollection();
-      expect(collection.find('mickey')).to.equal(items[0]);
+      expect(collection.find('mickey')).to.equal(collection[0]);
     });
     it(`defers to its superclass for all other 'find' arguments`, function () {
       const collection = makeCollection();
-      expect(collection.find('id', 'odie')).to.equal(items[4]);
+      expect(collection.find('id', 'odie')).to.equal(collection[4]);
       expect(collection.find({
         id: 'mickey',
         disney: false
       })).to.equal(undefined);
-      expect(collection.find(i => i.id === 'mickey')).to.equal(items[0]);
+      expect(collection.find(i => i.id === 'mickey')).to.equal(collection[0]);
     });
   });
 
@@ -133,13 +131,13 @@ describe('ComponentCollection', function () {
   describe(`.toJSON()`, function () {
     it(`calls to the 'toJSON' method of each item in the collection`, function () {
       const collection = makeCollection();
-      expect(collection.toJSON()).to.eql(items.map(item => item.toJSON()));
+      expect(collection.toJSON()).to.eql(items.map(makeComponent).map(item => item.toJSON()));
     });
   });
 
   describe('.from()', function () {
     it('returns a ComponentCollection instance', function () {
-      const collection = ComponentCollection.from(items);
+      const collection = ComponentCollection.from(items.map(makeComponent));
       expect(collection instanceof ComponentCollection).to.equal(true);
     });
   });

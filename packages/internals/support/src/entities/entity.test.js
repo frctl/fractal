@@ -123,6 +123,7 @@ describe('Entity', function () {
       const jsonEntity = entity.toJSON();
       expect(jsonEntity.contents).to.equal('this is a tést');
     });
+    it('correctly output the value of defined getters');
   });
 
   describe('.from()', function () {
