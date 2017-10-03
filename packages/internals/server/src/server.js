@@ -1,4 +1,5 @@
 const Koa = require('koa');
+const {Fractal} = require('@frctl/fractal');
 
 const _app = new WeakMap();
 const _port = new WeakMap();
@@ -8,8 +9,12 @@ const _server = new WeakMap();
 class Server {
 
   constructor(fractal, opts = {}) {
+    if (!Fractal.isFractal(fractal)) {
+      throw new TypeError(`Server.constructor - first argument must be an instance of Fractal [fractal-missing]`);
+    }
+
     const app = new Koa();
-    const router = require('./router')(fractal, opts);
+    const router = require('./router')(fractal, opts.router);
 
     app.use(router.routes()).use(router.allowedMethods());
 

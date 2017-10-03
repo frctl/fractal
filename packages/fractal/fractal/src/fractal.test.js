@@ -224,4 +224,12 @@ describe('Fractal', function () {
       expect(fractal.version).to.equal(pkg.version);
     });
   });
+
+  describe('.isFractal', function () {
+    it('returns true if the argument supplied is a Fractal instance', function () {
+      const fractal = new Fractal();
+      expect(Fractal.isFractal(fractal)).to.equal(true);
+      expect(Fractal.isFractal({})).to.equal(false);
+    });
+  });
 });
