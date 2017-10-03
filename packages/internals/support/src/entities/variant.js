@@ -1,4 +1,4 @@
-const {normalizeId, defaultsDeep} = require('@frctl/utils');
+const {defaultsDeep} = require('@frctl/utils');
 const fromParse5 = require('hast-util-from-parse5');
 const Parser5 = require('parse5/lib/parser');
 const Validator = require('../validator');
@@ -90,6 +90,7 @@ class Variant extends Entity {
   toJSON() {
     return {
       id: this.get('id'),
+      componentId: this.getComponentId(),
       props: super.toJSON(),
       templates: this.getTemplates().toJSON()
     };

@@ -1,5 +1,5 @@
 const {get} = require('lodash');
-const {normalizeId, uniqueId, defaultsDeep, cloneDeep} = require('@frctl/utils');
+const {normalizeId, uniqueId, cloneDeep} = require('@frctl/utils');
 const check = require('check-types');
 const Validator = require('../validator');
 const schema = require('../../schema');
@@ -156,8 +156,8 @@ class Component extends Entity {
     return {
       id: this.get('id'),
       props: super.toJSON(),
-      src: this.getSrc(),
-      files: this.getFiles(),
+      src: this.getSrc().toJSON(),
+      files: this.getFiles().toJSON(),
       variants: this.getVariants().toJSON()
     };
   }

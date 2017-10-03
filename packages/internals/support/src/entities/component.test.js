@@ -109,7 +109,6 @@ describe('Component', function () {
     });
     it('gets named variant correctly', function () {
       const component = new Component(fullComponent);
-      const variants = component.getVariants();
       expect(component.getVariant('component--v1'))
       .to.be.a('Variant')
       .with.property('id')

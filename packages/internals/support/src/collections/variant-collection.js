@@ -28,7 +28,7 @@ class VariantCollection extends EntityCollection {
     const ids = [];
     let variants = items.map(i => {
       if (!Variant.isVariant(i)) {
-        assert.object(i, 'Variant config object must be an object [properties-invalid]')
+        assert.object(i, 'Variant config object must be an object [properties-invalid]');
       }
       const variant = Variant.from(i);
       variant.id = uniqueId(variant.id || 'variant', ids);
