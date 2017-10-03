@@ -10,6 +10,9 @@ module.exports = {
     },
     component: {
       type: 'string'
+    },
+    props: {
+      type: 'object'
     }
   }
 };

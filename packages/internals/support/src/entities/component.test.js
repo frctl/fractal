@@ -109,6 +109,7 @@ describe('Component', function () {
     });
     it('gets named variant correctly', function () {
       const component = new Component(fullComponent);
+      const variants = component.getVariants();
       expect(component.getVariant('component--v1'))
       .to.be.a('Variant')
       .with.property('id')
@@ -241,11 +242,7 @@ describe('Component', function () {
   });
 
   describe('.get()', function () {
-    it('falls back to config data if a value does not exist on the store', function () {
-      const component = new Component(fullComponent);
-      expect(component.get('refresh')).to.equal(true);
-    });
-    it(`falls back to the 'fallback' argument if neither 'data' nor 'config' return a value`, function () {
+    it(`falls back to the 'fallback' argument if the value is not found in the data store`, function () {
       const component = new Component(fullComponent);
       expect(component.get('fabulous', 'hair')).to.equal('hair');
     });

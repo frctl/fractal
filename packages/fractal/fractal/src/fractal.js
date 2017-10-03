@@ -46,7 +46,7 @@ class Fractal extends App {
 
         component = component || collections.components.find(c => c.id === variant.getComponentId());
         if (!component) {
-          throw new Error(`Component '${target.component}' not found [component-not-found]`);
+          throw new Error(`Component '${target.getComponentId()}' not found [component-not-found]`);
         }
 
         let template = variant.getTemplate(opts.ext);

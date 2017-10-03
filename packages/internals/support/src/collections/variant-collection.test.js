@@ -22,10 +22,13 @@ const items = [
 
 const newItem = {
   id: 'wobble',
-  component: 'foo'
+  component: 'foo',
+  props: {
+    foo: 'bar'
+  }
 };
 
-const itemsWithDefault = items.map(i => i.id === 'baz' ? {id: i.id, default: true} : i);
+const itemsWithDefault = items.map(i => i.id === 'baz' ? {id: i.id} : i);
 
 const makeCollection = input => new VariantCollection(input || items.slice(0));
 const makeCollectionFrom = input => VariantCollection.from(input || items.slice(0));
@@ -43,8 +46,8 @@ describe('VariantCollection', function () {
       const variant = collection.first();
       expect(variant).to.be.a('Variant').that.includes({id: 'variant'});
     });
-    it('creates a valid Variant from a plain Object', function () {
-      const collection = new VariantCollection([{other: 'properties'}]);
+    it('creates a valid Variant from a plain Object with props', function () {
+      const collection = new VariantCollection([{props: {other: 'properties'}}]);
       const variant = collection.first();
       expect(variant).to.be.a('Variant')
       .that.includes({id: 'variant', other: 'properties'});
@@ -117,14 +120,14 @@ describe('VariantCollection', function () {
       const collection = makeCollection();
       const newCollection = collection.push(newItem);
       expect(newCollection.length).to.equal(items.length + 1);
-      expect(newCollection[newCollection.length - 1].getComputedProps()).to.eql(newItem);
+      expect(newCollection[newCollection.length - 1].getData()).to.eql({id: 'wobble', foo: 'bar'});
     });
     it('adds the item to the end of the collection if items is Variant instance', function () {
       const variantNewItem = Variant.from({id: 'end'});
       const collection = makeCollection();
       const newCollection = collection.push(variantNewItem);
       expect(newCollection.length).to.equal(items.length + 1);
-      expect(newCollection[newCollection.length - 1].getComputedProps()).to.eql(variantNewItem.getComputedProps());
+      expect(newCollection[newCollection.length - 1].getData()).to.eql(variantNewItem.getData());
     });
     it('assigns id correctly when duplicates added on new collections', function () {
       const collection1 = makeCollection([]);

@@ -95,10 +95,6 @@ describe('ComponentCollection', function () {
       const collection = makeCollection();
       expect(collection.find('id', 'odie')).to.equal(items[4]);
       expect(collection.find({
-        type: 'dog'
-      })).to.equal(items[3]);
-
-      expect(collection.find({
         id: 'mickey',
         disney: false
       })).to.equal(undefined);

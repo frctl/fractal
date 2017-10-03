@@ -1,3 +1,4 @@
+const {normalizeId, defaultsDeep} = require('@frctl/utils');
 const fromParse5 = require('hast-util-from-parse5');
 const Parser5 = require('parse5/lib/parser');
 const Validator = require('../validator');
@@ -13,10 +14,16 @@ const _componentId = new WeakMap();
 
 class Variant extends Entity {
 
-  constructor(props) {
-    super(props);
-    this._setTemplates(props.templates);
-    this._setComponentId(props.component);
+  constructor(config) {
+    if (Variant.isVariant(config)) {
+      return config;
+    }
+    const configProps = defaultsDeep(config.props || {}, {id: config.id});
+    super(configProps);
+    this._validateOrThrow(config);
+
+    this._setTemplates(config.templates);
+    this._setComponentId(config.component);
   }
 
   getComponentId() {
@@ -59,8 +66,12 @@ class Variant extends Entity {
   }
 
   _setTemplates(templates) {
-    _templates.set(this, []);
-    this.addTemplates(templates);
+    if (Collection.isCollection(templates)) {
+      _templates.set(this, templates.toArray());
+    } else {
+      _templates.set(this, []);
+      this.addTemplates(templates);
+    }
   }
 
   _validateOrThrow(props) {
@@ -68,14 +79,12 @@ class Variant extends Entity {
   }
 
   clone() {
-    const cloned = new this.constructor({
+    return new this.constructor({
+      id: this.get('id'),
       component: this.getComponentId(),
-      config: this._config
+      props: this.getData(),
+      templates: this.getTemplates().clone()
     });
-    for (let [key, value] of Object.entries(this._data)) {
-      cloned.set(key, value);
-    }
-    return cloned;
   }
 
   static isVariant(item) {

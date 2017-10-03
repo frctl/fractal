@@ -26,11 +26,16 @@ class VariantCollection extends EntityCollection {
       return items;
     }
     const ids = [];
-    return items.map(i => {
+    let variants = items.map(i => {
+      if (!Variant.isVariant(i)) {
+        assert.object(i, 'Variant config object must be an object [properties-invalid]')
+      }
       const variant = Variant.from(i);
       variant.id = uniqueId(variant.id || 'variant', ids);
       return variant;
     });
+    this._validateOrThrow(variants);
+    return variants;
   }
 
   _validateOrThrow(items) {

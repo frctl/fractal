@@ -43,7 +43,7 @@ const components = new ComponentCollection([
       })
     ]),
     config: {
-      name: 'test-component',
+      id: 'test-component',
       views: {
         match: 'view.*'
       },
