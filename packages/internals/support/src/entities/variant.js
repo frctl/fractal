@@ -13,6 +13,7 @@ const _templates = new WeakMap();
 const _componentId = new WeakMap();
 
 const reservedConfigProps = [
+  'component',
   'opts',
   'files',
   'views',
