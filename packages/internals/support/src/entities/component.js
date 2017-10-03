@@ -92,7 +92,6 @@ class Component extends Entity {
     }
 
     config.id = uniqueId(config.id || 'variant', variantIds);
-    config.component = this.get('id');
 
     if (!config.templates) {
       config.templates = {};

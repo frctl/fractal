@@ -16,8 +16,7 @@ const reservedConfigProps = [
 ];
 
 const defaultProps = {
-  id: 'variant',
-  component: 'foo'
+  id: 'variant'
 };
 
 const makeVariant = props => new Variant(props || defaultProps);

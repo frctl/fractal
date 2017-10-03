@@ -10,7 +10,6 @@ const Template = require('./template');
 const parser = new Parser5({locationInfo: true});
 
 const _templates = new WeakMap();
-const _componentId = new WeakMap();
 
 const reservedConfigProps = [
   'component',
@@ -34,17 +33,12 @@ class Variant extends Entity {
     this._validateOrThrow(props);
 
     this._setTemplates(props.templates);
-    this._setComponentId(props.component);
 
     for (const prop of reservedConfigProps) {
       this.defineSetter(prop, () => {
         throw new Error(`The ${prop} property is a reserved property and cannot be written to directly [reserved-prop]`);
       });
     }
-  }
-
-  getComponentId() {
-    return _componentId.get(this);
   }
 
   getTemplate(finder) {
@@ -78,10 +72,6 @@ class Variant extends Entity {
     return this;
   }
 
-  _setComponentId(componentId) {
-    _componentId.set(this, componentId);
-  }
-
   _setTemplates(templates) {
     if (Collection.isCollection(templates)) {
       _templates.set(this, templates.toArray());
@@ -98,7 +88,6 @@ class Variant extends Entity {
   clone() {
     return new this.constructor({
       id: this.get('id'),
-      component: this.getComponentId(),
       props: this.getData(),
       templates: this.getTemplates().clone()
     });
@@ -107,7 +96,6 @@ class Variant extends Entity {
   toJSON() {
     return {
       id: this.get('id'),
-      componentId: this.getComponentId(),
       props: super.toJSON(),
       templates: this.getTemplates().toJSON()
     };
