@@ -184,6 +184,8 @@ describe('FileCollection', function () {
     it('throws an error if the MemoryFS instance cannot be created', function () {
       const dodgyFile = items[0].clone();
       dodgyFile.path = '~';
+      sinon.stub(dodgyFile, 'path').get(() => '~');
+      sinon.stub(dodgyFile, 'clone').callsFake(() => dodgyFile);
       const collection = makeCollection([dodgyFile]);
       expect(() => collection.toMemoryFS()).to.throw('[memfs-error]');
     });
