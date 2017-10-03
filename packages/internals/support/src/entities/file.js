@@ -5,7 +5,7 @@ const replaceExt = require('replace-ext');
 const cloneStats = require('clone-stats');
 const cloneBuffer = require('clone-buffer');
 const {assert} = require('check-types');
-const {mapValues, omit, pick, pickBy, assign} = require('lodash');
+const {mapValues, pick, pickBy, assign} = require('lodash');
 const Vinyl = require('vinyl');
 const {promisify, normalizePath} = require('@frctl/utils');
 const schema = require('../../schema');
@@ -25,7 +25,6 @@ const getters = [
   'stat',
   'cwd',
   'path'];
-
 
 class File extends Entity {
 
@@ -89,7 +88,6 @@ class File extends Entity {
   }
 
   _defineGettersAndSetters(props) {
-
     this._initHistory(props.history, props.path);
 
     this.defineGetter('path', (value, entity) => {
@@ -158,8 +156,10 @@ class File extends Entity {
     return history[history.length - 1];
   }
   _setPath(path) {
-    assert.nonEmptyString(path, `File.path - 'path' argument must be a string [path-invalid]`)
-    if (!path) return;
+    assert.nonEmptyString(path, `File.path - 'path' argument must be a string [path-invalid]`);
+    if (!path) {
+      return;
+    }
     path = normalizePath(path);
     if (path && (path !== this._getPath())) {
       this._addHistory(path);
@@ -188,7 +188,7 @@ class File extends Entity {
     history.forEach(path => this._setPath(path));
   }
 
-  _addHistory(path, init=false) {
+  _addHistory(path, init = false) {
     let history = this.get('history');
     history.push(path);
     this.set('history', history);
@@ -200,7 +200,6 @@ class File extends Entity {
     }
     return contents;
   }
-
 
   toJSON() {
     const vinylProps = pick(this.getComputedProps(), getters);
@@ -225,9 +224,7 @@ class File extends Entity {
     });
   }
 
-
-
-  get[Symbol.toStringTag]() {
+  get [Symbol.toStringTag]() {
     return 'File';
   }
 
