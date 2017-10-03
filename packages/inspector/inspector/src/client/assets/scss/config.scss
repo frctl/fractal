@@ -1,0 +1,15 @@
+$color-bg-light: #fff;
+$color-bg-dark: #f5f5f5;
+$color-bg-dark-darkened: darken($color-bg-dark, 3%);
+
+$color-brand: #8E3581;
+$color-brand-alt: #00D494;
+$color-brand-darkened: darken($color-brand, 5%);
+$color-brand-alt-darkened: darken($color-brand-alt, 5%);
+
+$color-divider: #d5d5d5;
+$color-text: #333;
+$color-link: $color-brand;
+
+$font-family-sans: 'Source Sans Pro', sans-serif;
+$font-family-mono: Inconsolata, monospace;
