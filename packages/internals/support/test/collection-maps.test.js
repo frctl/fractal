@@ -165,7 +165,7 @@ describe('Collection Mapping', function () {
   describe(`EntityCollection`, function () {
     it(`syncronously converts to a ComponentCollection when map returns a Component`, function () {
       testAtoCCollection(makeEntityCollection(validEntityDefs), i => new Component({
-        src: new File(i)
+        src: new File({path:i.path})
       }), EntityCollection, ComponentCollection);
     });
     it(`syncronously converts to a FileCollection when map returns a File`, function () {
@@ -189,7 +189,7 @@ describe('Collection Mapping', function () {
 
     it(`asyncronously converts to a ComponentCollection when mapAsync returns a Component`, async function () {
       await asyncTestAtoCCollection(makeEntityCollection(validEntityDefs), async i => await Promise.resolve(new Component({
-        src: new File(i)
+        src: new File({path:i.path})
       })), EntityCollection, ComponentCollection);
     });
     it(`asyncronously converts to a FileCollection when mapAsync returns a File`, async function () {
