@@ -1,4 +1,5 @@
-const {normalizeId, uniqueId} = require('@frctl/utils');
+const {get, omit} = require('lodash');
+const {normalizeId, uniqueId, cloneDeep} = require('@frctl/utils');
 const check = require('check-types');
 const Validator = require('../validator');
 const schema = require('../../schema');
@@ -9,9 +10,21 @@ const Variant = require('./variant');
 
 const assert = check.assert;
 
+const _config = new WeakMap();
 const _src = new WeakMap();
 const _files = new WeakMap();
 const _variants = new WeakMap();
+
+const reservedConfigProps = [
+  'opts',
+  'src',
+  'files',
+  'views',
+  'variants',
+  'previews',
+  'scenarios',
+  'templates'
+];
 
 class Component extends Entity {
   constructor(props) {
@@ -20,15 +33,22 @@ class Component extends Entity {
     }
     Component.validate(props);
 
-    const config = Object.assign({
-      id: normalizeId(props.src.stem)
-    }, props.config);
+    const entityProps = omit(props.config || {}, reservedConfigProps);
 
-    super(config);
+    entityProps.id = normalizeId(entityProps.id || props.src.stem);
 
+    super(entityProps);
+
+    this._setConfig(props.config || {});
     this._setSrc(props.src);
     this._setFiles(props.files);
-    this._buildVariants(config.variants);
+    this._buildVariants(this.getConfig('variants'));
+
+    for (const prop of reservedConfigProps) {
+      this.defineSetter(prop, () => {
+        throw new Error(`The ${prop} property is a reserved property and cannot be written to directly [reserved-prop]`);
+      });
+    }
   }
 
   getSrc() {
@@ -56,26 +76,22 @@ class Component extends Entity {
     return variants.find(id) || this.getDefaultVariant();
   }
 
-  addVariant(props) {
-    const isVariantInstance = check.maybe.instance(props, Variant);
-    const isValidProp = check.maybe.object(props);
+  addVariant(config) {
+    const isVariantInstance = check.maybe.instance(config, Variant);
+    const isValidProp = check.maybe.object(config);
     const variantIds = this.getVariants().mapToArray(v => v.id);
-
-    let config;
 
     assert(
       (isValidProp || isVariantInstance),
-      `Component.addVariant: The 'props' argument must be a variant properties object or Variant instance [props-invalid]`,
+      `Component.addVariant: The 'props' argument must be a variant config object or Variant instance [props-invalid]`,
       TypeError
     );
 
-    if (isVariantInstance) {
-      config = props;
-    } else {
-      config = Object.assign({}, props);
+    if (!isVariantInstance) {
+      config = cloneDeep(config);
     }
 
-    config.id = uniqueId(props.id || 'variant', variantIds);
+    config.id = uniqueId(config.id || 'variant', variantIds);
     config.component = this.get('id');
 
     if (!config.templates) {
@@ -91,17 +107,12 @@ class Component extends Entity {
   }
 
   getDefaultVariant() {
-    return this.get('default') ? this.getVariants().find(this.get('default')) : this.getVariants().first();
+    return this.getConfig('default') ? this.getVariants().find(this.getConfig('default')) : this.getVariants().first();
   }
 
   getViews() {
-    const viewMatcher = this.get('views.match', () => false); // default to no matches
-    const viewSorter = view => {
-      if (view.extname === this.get('views.default')) {
-        return 0;
-      }
-      return 1;
-    };
+    const viewMatcher = this.getConfig('views.match', () => false); // default to no matches
+    const viewSorter = view => (view.extname === this.getConfig('views.default')) ? 0 : 1;
     return this.getFiles().filter(viewMatcher).sortBy(viewSorter);
   }
 
@@ -109,7 +120,18 @@ class Component extends Entity {
     return args ? this.getViews().find(...args) : this.getViews().first();
   }
 
-  _setSrc(src, files) {
+  getConfig(path, fallback) {
+    if (path) {
+      return cloneDeep(get(_config.get(this), path, fallback));
+    }
+    return cloneDeep(_config.get(this));
+  }
+
+  _setConfig(config) {
+    _config.set(this, config);
+  }
+
+  _setSrc(src) {
     _src.set(this, src);
   }
 
@@ -137,15 +159,20 @@ class Component extends Entity {
   }
 
   clone() {
-    const cloned = new this.constructor({
+    const props = Object.assign({}, this.getConfig(), this.getData(), {
       src: this.getSrc(),
       files: this.getFiles(),
-      config: this._config
+      config: this.getConfig()
     });
-    for (let [key, value] of Object.entries(this._data)) {
-      cloned.set(key, value);
-    }
-    return cloned;
+    return new this.constructor(props);
+  }
+
+  toJSON() {
+    return Object.assign(super.toJSON(), {
+      src: this.getSrc().toJSON(),
+      files: this.getFiles().toJSON(),
+      variants: this.getVariants().toJSON()
+    });
   }
 
   get relative() {

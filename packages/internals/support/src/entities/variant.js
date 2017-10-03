@@ -1,3 +1,4 @@
+const {omit} = require('lodash');
 const fromParse5 = require('hast-util-from-parse5');
 const Parser5 = require('parse5/lib/parser');
 const Validator = require('../validator');
@@ -11,12 +12,35 @@ const parser = new Parser5({locationInfo: true});
 const _templates = new WeakMap();
 const _componentId = new WeakMap();
 
+const reservedConfigProps = [
+  'component',
+  'opts',
+  'files',
+  'views',
+  'previews',
+  'scenarios',
+  'templates'
+];
+
 class Variant extends Entity {
 
   constructor(props) {
-    super(props);
+    if (Variant.isVariant(props)) {
+      return props;
+    }
+    const entityProps = omit(props, reservedConfigProps);
+
+    super(entityProps);
+    this._validateOrThrow(props);
+
     this._setTemplates(props.templates);
     this._setComponentId(props.component);
+
+    for (const prop of reservedConfigProps) {
+      this.defineSetter(prop, () => {
+        throw new Error(`The ${prop} property is a reserved property and cannot be written to directly [reserved-prop]`);
+      });
+    }
   }
 
   getComponentId() {
@@ -59,8 +83,12 @@ class Variant extends Entity {
   }
 
   _setTemplates(templates) {
-    _templates.set(this, []);
-    this.addTemplates(templates);
+    if (Collection.isCollection(templates)) {
+      _templates.set(this, templates.toArray());
+    } else {
+      _templates.set(this, []);
+      this.addTemplates(templates);
+    }
   }
 
   _validateOrThrow(props) {
@@ -68,14 +96,21 @@ class Variant extends Entity {
   }
 
   clone() {
-    const cloned = new this.constructor({
+    return new this.constructor({
+      id: this.get('id'),
       component: this.getComponentId(),
-      config: this._config
+      props: this.getData(),
+      templates: this.getTemplates().clone()
     });
-    for (let [key, value] of Object.entries(this._data)) {
-      cloned.set(key, value);
-    }
-    return cloned;
+  }
+
+  toJSON() {
+    return {
+      id: this.get('id'),
+      componentId: this.getComponentId(),
+      props: super.toJSON(),
+      templates: this.getTemplates().toJSON()
+    };
   }
 
   static isVariant(item) {

@@ -27,6 +27,13 @@ class Template {
     return new this.constructor(cloneDeep(this.tree), this.filename);
   }
 
+  toJSON() {
+    return {
+      filename: this.filename,
+      tree: this.tree
+    };
+  }
+
   static isTemplate(item) {
     return item instanceof Template;
   }

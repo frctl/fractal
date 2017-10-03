@@ -204,14 +204,6 @@ describe('Entity', function () {
       expect(entity.set('foo', 'bar')).to.equal('bar');
       expect(entity.foo = 'bar').to.equal('bar');
     });
-    it('shadows config data of the same name', function () {
-      const entity = makeEntity();
-      expect(entity.name).to.equal('chocolate');
-      entity.set('name', 'coffee');
-      expect(entity.name).to.equal('coffee');
-      expect(entity.unset('name')).to.equal(true);
-      expect(entity.name).to.equal('chocolate');
-    });
   });
 
   describe('.get()', function () {
@@ -263,41 +255,19 @@ describe('Entity', function () {
     });
   });
 
-  describe('.getConfig()', function () {
-    it('retrieves initialization data', function () {
-      const entity = makeEntity();
-      expect(entity.getConfig()).to.eql(basicEntity);
-      expect(entity.getConfig()).to.not.equal(basicEntity);
-    });
-  });
-
   describe('.getData()', function () {
     it('retrieves store data', function () {
-      const entity = makeEntity();
+      const entity = makeEntity({});
       expect(entity.getData()).to.eql({});
       entity.name = 'coffee';
       expect(entity.getData()).to.eql({name: 'coffee'});
     });
   });
 
-  describe('.getComputedProps()', function () {
-    it(`returns a flattened representation of the Entity's props`, function () {
-      const entity = makeEntity();
-      entity.name = 'coffee';
-      entity.foo = 'bar';
-      const entityProps = entity.getComputedProps();
-      const expectedProps = Object.assign({}, basicEntity, {
-        name: 'coffee',
-        foo: 'bar'
-      });
-      expect(entityProps).to.deep.equal(expectedProps);
-    });
-  });
-
   describe('.inspect()', function () {
     it('returns a loggable representation of the Entity', function () {
       const entity = makeEntity();
-      expect(entity.inspect()).to.equal(`Entity ${JSON.stringify(entity.getComputedProps())}`);
+      expect(entity.inspect()).to.equal(`Entity ${JSON.stringify(entity.getData())}`);
     });
   });
 

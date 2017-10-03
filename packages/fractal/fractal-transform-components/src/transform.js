@@ -33,10 +33,14 @@ module.exports = function (opts = {}) {
           config = await Promise.resolve(typeof configData === 'function' ? configData(files, app) : configData);
         }
 
+        config = defaultsDeep(config, configDefaults, {
+          id: dir.stem
+        });
+
         return Component.from({
+          config,
           src: dir,
-          files: componentFiles,
-          config: defaultsDeep(config, configDefaults)
+          files: componentFiles
         });
       }));
     }

@@ -6,6 +6,15 @@ const Variant = require('./variant');
 const Entity = require('./entity');
 const Template = require('./template');
 
+const reservedConfigProps = [
+  'opts',
+  'files',
+  'views',
+  'previews',
+  'scenarios',
+  'templates'
+];
+
 const defaultProps = {
   id: 'variant',
   component: 'foo'
@@ -24,6 +33,29 @@ describe('Variant', function () {
     it(`throws an error when invalid props supplied`, function () {
       expect(() => makeVariant(['invalid', 'array'])).to.throw(TypeError, '[properties-invalid]');
       expect(() => makeVariant('invalid string')).to.throw(TypeError, '[properties-invalid]');
+    });
+    it('sets properties that are not in the reserved words list', function () {
+      const variant = makeVariant({
+        id: 'foo',
+        foo: 'bar',
+        previews: [],
+        views: {},
+        scenarios: [],
+        templates: {}
+      });
+      for (const prop of reservedConfigProps) {
+        expect(variant[prop]).to.equal(undefined);
+      }
+      expect(variant.id).to.equal('foo');
+      expect(variant.foo).to.equal('bar');
+    });
+    it('defines getters that throw an error for all reserved properties', function () {
+      const variant = makeVariant({id: 'asdasd'});
+      for (const prop of reservedConfigProps) {
+        expect(() => {
+          variant[prop] = 'foo';
+        }).to.throw('[reserved-prop]');
+      }
     });
   });
   describe('.getTemplates()', function () {

@@ -21,6 +21,9 @@ module.exports = {
       }, {
         type: 'null'
       }]
+    },
+    props: {
+      type: 'object'
     }
   },
   required: ['src']

@@ -79,13 +79,13 @@ describe('EntityCollection', function () {
       const collection = makeCollection();
       const newCollection = collection.push(newItem);
       expect(newCollection.length).to.equal(items.length + 1);
-      expect(newCollection[newCollection.length - 1].getComputedProps()).to.eql(newItem);
+      expect(newCollection[newCollection.length - 1].getData()).to.eql(newItem);
     });
     it('adds the item to the end of the collection if item is Entity instance', function () {
       const collection = makeCollection();
       const newCollection = collection.push(Entity.from(newItem));
       expect(newCollection.length).to.equal(items.length + 1);
-      expect(newCollection[newCollection.length - 1].getComputedProps()).to.eql(newItem);
+      expect(newCollection[newCollection.length - 1].getData()).to.eql(newItem);
     });
   });
 

@@ -3,6 +3,15 @@ const {expect} = require('../../../../../test/helpers');
 const FileCollection = require('../collections/file-collection');
 const File = require('./file');
 
+const reservedConfigProps = [
+  'opts',
+  'files',
+  'views',
+  'previews',
+  'scenarios',
+  'templates'
+];
+
 const Component = require('./component');
 
 const basicComponent = {
@@ -52,6 +61,36 @@ describe('Component', function () {
     });
     it('throws an error if incorrect properties provided', function () {
       expect(() => new Component()).to.throw(TypeError, '[properties-invalid]');
+    });
+    it('sets properties for config items that are not in the reserved words list', function () {
+      const component = new Component({
+        src: new File({path: '/src/component', cwd: '/'}),
+        config: {
+          id: 'foo',
+          variants: [
+            {
+              id: 'first'
+            }
+          ],
+          foo: 'bar',
+          previews: [],
+          views: {},
+          scenarios: []
+        }
+      });
+      for (const prop of reservedConfigProps) {
+        expect(component[prop]).to.equal(undefined);
+      }
+      expect(component.id).to.equal('foo');
+      expect(component.foo).to.equal('bar');
+    });
+    it('defines getters that throw an error for all reserved properties', function () {
+      const component = new Component(basicComponent);
+      for (const prop of reservedConfigProps) {
+        expect(() => {
+          component[prop] = 'foo';
+        }).to.throw('[reserved-prop]');
+      }
     });
   });
 
@@ -241,11 +280,7 @@ describe('Component', function () {
   });
 
   describe('.get()', function () {
-    it('falls back to config data if a value does not exist on the store', function () {
-      const component = new Component(fullComponent);
-      expect(component.get('refresh')).to.equal(true);
-    });
-    it(`falls back to the 'fallback' argument if neither 'data' nor 'config' return a value`, function () {
+    it(`falls back to the 'fallback' argument if the value is not found in the data store`, function () {
       const component = new Component(fullComponent);
       expect(component.get('fabulous', 'hair')).to.equal('hair');
     });
