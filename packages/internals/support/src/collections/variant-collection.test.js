@@ -7,25 +7,28 @@ const VariantCollection = require('./variant-collection');
 
 const items = [
   {
-    id: 'foo'
+    id: 'foo',
+    component: 'foo'
   },
   {
-    id: 'bar'
+    id: 'bar',
+    component: 'foo'
   },
   {
-    id: 'baz'
+    id: 'baz',
+    component: 'foo'
   }
 ];
 
 const newItem = {
-  id: 'wobble'
+  id: 'wobble',
+  component: 'foo'
 };
 
 const itemsWithDefault = items.map(i => i.id === 'baz' ? {id: i.id, default: true} : i);
-const itemsWithMultipleDefault = items.map(i => i.id === 'foo' ? i : {id: i.id, default: true});
 
-const makeCollection = input => new VariantCollection(input || items.slice(0), 'default-component');
-const makeCollectionFrom = input => VariantCollection.from(input || items.slice(0), 'default-component');
+const makeCollection = input => new VariantCollection(input || items.slice(0));
+const makeCollectionFrom = input => VariantCollection.from(input || items.slice(0));
 
 describe('VariantCollection', function () {
   describe('constructor', function () {
@@ -36,28 +39,27 @@ describe('VariantCollection', function () {
       expect(collection.length).to.equal(0);
     });
     it('creates a valid Variant', function () {
-      const collection = new VariantCollection([{}], 'valid');
-      const variant = collection.getDefault();
-      expect(variant).to.be.a('Variant')
-      .that.includes({id: 'variant', component: 'valid'});
+      const collection = new VariantCollection([{}]);
+      const variant = collection.first();
+      expect(variant).to.be.a('Variant').that.includes({id: 'variant'});
     });
     it('creates a valid Variant from a plain Object', function () {
-      const collection = new VariantCollection([{other: 'properties'}], 'plain-object');
-      const variant = collection.getDefault();
+      const collection = new VariantCollection([{other: 'properties'}]);
+      const variant = collection.first();
       expect(variant).to.be.a('Variant')
-      .that.includes({id: 'variant', component: 'plain-object', other: 'properties'});
+      .that.includes({id: 'variant', other: 'properties'});
     });
     it('assigns id if provided', function () {
-      const collection = new VariantCollection([{id: 'blue'}], 'valid-id');
-      const variant = collection.getDefault();
+      const collection = new VariantCollection([{id: 'blue'}]);
+      const variant = collection.first();
       expect(variant).to.be.a('Variant')
-      .that.includes({id: 'blue', component: 'valid-id'});
+      .that.includes({id: 'blue'});
     });
     it('increments id correctly if empty id values provided', function () {
-      const collection = new VariantCollection([{}, {}, {}], 'empties');
+      const collection = new VariantCollection([{}, {}, {}]);
       const expected = index => {
         const id = index === undefined ? 'variant' : `variant-${index}`;
-        return {id: id, component: 'empties'};
+        return {id: id};
       };
 
       expect(collection[0]).to.be.a('Variant')
@@ -70,10 +72,10 @@ describe('VariantCollection', function () {
       .that.includes(expected(3));
     });
     it('increments id correctly if duplicate id values provided', function () {
-      const collection = new VariantCollection([{id: 'blue'}, {id: 'blue'}, {id: 'blue'}], 'duplicates');
+      const collection = new VariantCollection([{id: 'blue'}, {id: 'blue'}, {id: 'blue'}]);
       const expected = index => {
         const id = index === undefined ? 'blue' : `blue-${index}`;
-        return {id: id, component: 'duplicates'};
+        return {id: id};
       };
 
       expect(collection[0]).to.be.a('Variant')
@@ -86,56 +88,18 @@ describe('VariantCollection', function () {
       .that.includes(expected(3));
     });
     it('throws an error if invalid props supplied', function () {
-      expect(() => new VariantCollection(['invalid-string'])).to.throw(TypeError, '[props-invalid]');
+      expect(() => new VariantCollection(['invalid-string'])).to.throw(TypeError, '[properties-invalid]');
     });
   });
 
   describe('.from()', function () {
     it('successfully creates a VariantCollection when valid input is supplied', function () {
-      expect(() => makeCollectionFrom('text')).to.throw(TypeError, '[items-invalid]');
-      expect(() => makeCollectionFrom('text1', 'text2')).to.throw(TypeError, '[items-invalid]');
+      expect(() => makeCollectionFrom('text')).to.throw(TypeError, '[properties-invalid]');
+      expect(() => makeCollectionFrom('text1', 'text2')).to.throw(TypeError, '[properties-invalid]');
       expect(() => makeCollectionFrom({noName: 'id-assigned-by-collection'})).to.not.throw();
       expect(() => makeCollectionFrom({id: 'component-assigned-by-collection/'})).to.not.throw();
-      expect(() => makeCollectionFrom(new Variant({id: 'valid-variant-props/', component: 'default-component'}))).to.not.throw();
-      expect(() => makeCollectionFrom([Variant.from({invalid: 'object'}), Variant.from({anotherInvalid: 'object'})])).to.throw(TypeError, '[properties-invalid]');
-      expect(() => makeCollectionFrom([Variant.from({id: 'valid-variant-props1/', component: 'default-component'}), Variant.from({id: 'valid-variant-props2/', component: 'default-component'})])).to.not.throw();
-    });
-  });
-
-  describe('.getDefault()', function () {
-    it('returns undefined if the collection is empty', function () {
-      const collection = new VariantCollection();
-      expect(collection.getDefault()).to.be.undefined;
-    });
-    it('returns the first item if no explicit default has been set on any item', function () {
-      const collection = makeCollectionFrom();
-      const defaultItem = collection.getDefault();
-      expect(defaultItem.id).to.equal('foo');
-    });
-    it('returns the item with an explicit default', function () {
-      const collection = makeCollectionFrom(itemsWithDefault);
-      const defaultItem = collection.getDefault();
-      expect(defaultItem.id).to.equal('baz');
-    });
-    it('returns the first item with an explicit default if more than one is set', function () {
-      const collection = makeCollectionFrom(itemsWithMultipleDefault);
-      const defaultItem = collection.getDefault();
-      expect(defaultItem.id).to.equal('bar');
-    });
-  });
-
-  describe('.hasDefault()', function () {
-    it(`returns 'false' if the collection is empty`, function () {
-      const collection = new VariantCollection();
-      expect(collection.hasDefault()).to.equal(false);
-    });
-    it(`return 'true' if collection has more than one item`, function () {
-      const collection = makeCollectionFrom();
-      expect(collection.hasDefault()).to.equal(true);
-    });
-    it(`return 'true' if collection has item with explicit default`, function () {
-      const collection = makeCollectionFrom(itemsWithDefault);
-      expect(collection.hasDefault()).to.equal(true);
+      expect(() => makeCollectionFrom(new Variant({id: 'valid-variant-props/'}))).to.not.throw();
+      expect(() => makeCollectionFrom([Variant.from({id: 'valid-variant-props1/'}), Variant.from({id: 'valid-variant-props2/'})])).to.not.throw();
     });
   });
 
@@ -151,13 +115,12 @@ describe('VariantCollection', function () {
     });
     it('adds the item to the end of the collection if item is Variant props', function () {
       const collection = makeCollection();
-      const newNewItem = Object.assign({}, newItem, {component: 'default-component'});
       const newCollection = collection.push(newItem);
       expect(newCollection.length).to.equal(items.length + 1);
-      expect(newCollection[newCollection.length - 1].getComputedProps()).to.eql(newNewItem);
+      expect(newCollection[newCollection.length - 1].getComputedProps()).to.eql(newItem);
     });
     it('adds the item to the end of the collection if items is Variant instance', function () {
-      const variantNewItem = Variant.from({id: 'end', component: 'default-component'});
+      const variantNewItem = Variant.from({id: 'end'});
       const collection = makeCollection();
       const newCollection = collection.push(variantNewItem);
       expect(newCollection.length).to.equal(items.length + 1);
@@ -202,8 +165,7 @@ describe('VariantCollection', function () {
       .that.equals('baz');
 
       expect(collection.find({
-        id: 'foo',
-        default: true
+        id: 'dfsdfsdf'
       })).to.be.undefined;
 
       expect(collection.find(
@@ -219,14 +181,7 @@ describe('VariantCollection', function () {
       const collection = makeCollection();
       const newCollection = collection.clone();
       expect(newCollection).to.be.a('VariantCollection')
-      .that.nested.includes({componentId: 'default-component', '[2].id': 'baz', length: 3});
-    });
-  });
-
-  describe('.componentId', function () {
-    it('returns the expected value', function () {
-      const collection = makeCollection();
-      expect(collection.componentId).to.equal('default-component');
+      .that.nested.includes({'[2].id': 'baz', length: 3});
     });
   });
 

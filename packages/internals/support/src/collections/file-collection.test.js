@@ -1,8 +1,22 @@
 /* eslint no-unused-expressions: "off" */
 
+const MemoryFS = require('memory-fs');
 const {expect, sinon} = require('../../../../../test/helpers');
 const File = require('../entities/file');
 const FileCollection = require('./file-collection');
+
+const fsReadMethods = [
+  'existsSync',
+  'statSync',
+  'readFileSync',
+  'readdirSync',
+  'readlinkSync',
+  'stat',
+  'readdir',
+  'readlink',
+  'readFile',
+  'exists'
+];
 
 let items = [{
   cwd: '/',
@@ -153,6 +167,36 @@ describe('FileCollection', function () {
     it('should resolve correctly', function () {
       const collection = makeCollection();
       expect(collection[Symbol.toStringTag]).to.equal('FileCollection');
+    });
+  });
+
+  describe(`.toMemoryFS()`, function () {
+    it('returns a MemoryFS instance', function () {
+      const collection = makeCollection();
+      const memFs = collection.toMemoryFS();
+      expect(memFs instanceof MemoryFS).to.equal(true);
+    });
+    it('adds all files to the MemoryFS instance', function () {
+      const collection = makeCollection();
+      const memFs = collection.toMemoryFS();
+      expect(memFs.readFileSync(items[0].path).toString()).to.equal(items[0].contents.toString());
+    });
+    it('throws an error if the MemoryFS instance cannot be created', function () {
+      const dodgyFile = items[0].clone();
+      dodgyFile.path = '~';
+      const collection = makeCollection([dodgyFile]);
+      expect(() => collection.toMemoryFS()).to.throw('[memfs-error]');
+    });
+  });
+
+  describe('MemoryFS proxing', function () {
+    it(`adds MemoryFS 'read' methods onto the main collection instance`, function () {
+      const collection = makeCollection();
+      expect(collection.readFileSync(items[0].path).toString()).to.eql(items[0].contents.toString());
+      expect(collection.existsSync(items[0].path)).to.eql(true);
+      for (const method of fsReadMethods) {
+        expect(collection[method]).to.be.a('function');
+      }
     });
   });
 });

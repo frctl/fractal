@@ -5,12 +5,11 @@ module.exports = {
     id: {
       type: 'string'
     },
-    default: {
-      type: 'boolean'
+    templates: {
+      type: 'object'
     },
     component: {
       type: 'string'
     }
-  },
-  required: ['id', 'component']
+  }
 };

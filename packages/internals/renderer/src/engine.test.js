@@ -1,5 +1,4 @@
 const {extname} = require('path');
-const {File} = require('@frctl/support');
 const {expect, sinon} = require('../../../../test/helpers');
 const Engine = require('./engine');
 
@@ -10,15 +9,6 @@ const validEngine = {
     return Promise.resolve('the rendered string');
   }
 };
-
-const funjucksFile = new File({
-  path: 'path/to/file.fjk',
-  contents: new Buffer('asdasd')
-});
-
-const otherFile = new File({
-  path: 'path/to/file.foo'
-});
 
 describe('Engine', function () {
   describe('constructor()', function () {
@@ -32,14 +22,14 @@ describe('Engine', function () {
     it('tests if the file provided can be handled by the engine', function () {
       ['.fjk', ['.fjk'], (path => extname(path) === '.fjk')].forEach(match => {
         const engine = new Engine(Object.assign({}, validEngine, {match}));
-        expect(engine.match(funjucksFile.path)).to.equal(true);
-        expect(engine.match(otherFile.path)).to.equal(false);
+        expect(engine.match('file.fjk')).to.equal(true);
+        expect(engine.match('file.foo')).to.equal(false);
       });
     });
 
     it('throws an error if the file argument is not a path', function () {
       const engine = new Engine(validEngine);
-      expect(() => engine.match(funjucksFile)).to.throw(TypeError, '[path-invalid]');
+      expect(() => engine.match({asd: 'asd'})).to.throw(TypeError, '[path-invalid]');
     });
   });
 
@@ -51,8 +41,8 @@ describe('Engine', function () {
         match: '.fjk',
         render: renderSpy
       });
-      const result = await engine.render(funjucksFile.contents.toString());
-      expect(renderSpy.called).to.equal(true);
+      const result = await engine.render('foobar');
+      expect(renderSpy.calledWith('foobar')).to.equal(true);
       expect(result).to.equal('foobar');
       return result;
     });

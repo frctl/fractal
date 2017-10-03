@@ -20,6 +20,10 @@ module.exports = {
       ]
     },
 
+    preprocessors: {
+      type: 'array'
+    },
+
     render: {
       typeof: 'function'
     }

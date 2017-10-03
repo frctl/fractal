@@ -82,16 +82,10 @@ describe('Component', function () {
       const component = new Component(basicComponent);
       expect(() => {
         component.addVariant(['dd']);
-      }).to.throw(TypeError, `[items-invalid]`);
+      }).to.throw(TypeError, `[props-invalid]`);
     });
-    it('overrides default variant if used after initial default created', function () {
-      const component = new Component(basicComponent);
-      expect(component.getDefaultVariant()).to.be.a('Variant').that.includes({component: 'component', id: 'default'});
-      component.addVariant({id: 'new-default', default: true});
-      expect(component.getDefaultVariant()).to.be.a('Variant').that.includes({component: 'component', id: 'new-default'});
-      component.addVariant({id: 'new-default-2', default: true});
-      expect(component.getDefaultVariant()).to.be.a('Variant').that.includes({component: 'component', id: 'new-default-2'});
-    });
+    it('adds the component ID to all variants added');
+    it('generates templates for each variant from the component views');
   });
 
   describe('.getVariants()', function () {
@@ -123,6 +117,19 @@ describe('Component', function () {
     it('returns undefined for nonexistant variant', function () {
       const component = new Component(fullComponent);
       expect(component.getVariant('does-not-exist')).to.be.undefined;
+    });
+  });
+
+  describe('.getDefaultVariant()', function () {
+    it('returns the first variant if no default config prop is set ', function () {
+      const component = new Component(basicComponent);
+      expect(component.getDefaultVariant()).to.equal(component.getVariants().first());
+    });
+    it('allows specifying a default variant via the `default` config property', function () {
+      const comp = Object.assign({}, fullComponent);
+      comp.config = Object.assign({}, comp.config, {default: 'component--v2'});
+      const component = new Component(comp);
+      expect(component.getDefaultVariant()).to.equal(component.getVariants().find('component--v2'));
     });
   });
 
