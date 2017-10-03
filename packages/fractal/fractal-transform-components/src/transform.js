@@ -40,8 +40,7 @@ module.exports = function (opts = {}) {
         return Component.from({
           config,
           src: dir,
-          files: componentFiles,
-          props: config.props || {}
+          files: componentFiles
         });
       }));
     }

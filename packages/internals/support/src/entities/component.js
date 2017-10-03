@@ -1,4 +1,4 @@
-const {get} = require('lodash');
+const {get, omit} = require('lodash');
 const {normalizeId, uniqueId, cloneDeep} = require('@frctl/utils');
 const check = require('check-types');
 const Validator = require('../validator');
@@ -15,6 +15,17 @@ const _src = new WeakMap();
 const _files = new WeakMap();
 const _variants = new WeakMap();
 
+const reservedConfigProps = [
+  'opts',
+  'src',
+  'files',
+  'views',
+  'variants',
+  'previews',
+  'scenarios',
+  'templates'
+];
+
 class Component extends Entity {
   constructor(props) {
     if (Component.isComponent(props)) {
@@ -22,18 +33,22 @@ class Component extends Entity {
     }
     Component.validate(props);
 
-    const entityProps = Object.assign({
-      id: get(props, 'config.id', props.src.stem)
-    }, props.props || {});
+    const entityProps = omit(props.config || {}, reservedConfigProps);
 
-    entityProps.id = normalizeId(entityProps.id);
+    entityProps.id = normalizeId(entityProps.id || props.src.stem);
 
     super(entityProps);
 
     this._setConfig(props.config || {});
     this._setSrc(props.src);
     this._setFiles(props.files);
-    this._buildVariants(this.getConfig('variants', []));
+    this._buildVariants(this.getConfig('variants'));
+
+    for (const prop of reservedConfigProps) {
+      this.defineSetter(prop, () => {
+        throw new Error(`The ${prop} property is a reserved property and cannot be written to directly [reserved-prop]`);
+      });
+    }
   }
 
   getSrc() {
@@ -144,22 +159,20 @@ class Component extends Entity {
   }
 
   clone() {
-    return new this.constructor({
+    const props = Object.assign({}, this.getConfig(), this.getData(), {
       src: this.getSrc(),
       files: this.getFiles(),
-      config: this.getConfig(),
-      props: this.getData()
+      config: this.getConfig()
     });
+    return new this.constructor(props);
   }
 
   toJSON() {
-    return {
-      id: this.get('id'),
-      props: super.toJSON(),
+    return Object.assign(super.toJSON(), {
       src: this.getSrc().toJSON(),
       files: this.getFiles().toJSON(),
       variants: this.getVariants().toJSON()
-    };
+    });
   }
 
   get relative() {

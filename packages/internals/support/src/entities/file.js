@@ -70,7 +70,7 @@ class File extends Entity {
   }
 
   clone() {
-    const config = Object.assign({}, this._config, {
+    const config = Object.assign({}, this.getData(), {
       cwd: this.get('cwd'),
       path: this.get('path'),
       base: this.get('base'),
@@ -78,13 +78,7 @@ class File extends Entity {
       history: this.get('history').slice(),
       contents: this.get('contents') ? cloneBuffer(this.get('contents')) : null
     });
-    const file = new this.constructor(config);
-    for (let [key, value] of Object.entries(this._data)) {
-      if (!getters.includes(key)) {
-        file.set(key, value);
-      }
-    }
-    return file;
+    return new this.constructor(config);
   }
 
   _defineGettersAndSetters(props) {

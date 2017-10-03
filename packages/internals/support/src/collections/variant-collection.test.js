@@ -22,10 +22,7 @@ const items = [
 
 const newItem = {
   id: 'wobble',
-  component: 'foo',
-  props: {
-    foo: 'bar'
-  }
+  foo: 'bar'
 };
 
 const itemsWithDefault = items.map(i => i.id === 'baz' ? {id: i.id} : i);
@@ -47,7 +44,7 @@ describe('VariantCollection', function () {
       expect(variant).to.be.a('Variant').that.includes({id: 'variant'});
     });
     it('creates a valid Variant from a plain Object with props', function () {
-      const collection = new VariantCollection([{props: {other: 'properties'}}]);
+      const collection = new VariantCollection([{other: 'properties'}]);
       const variant = collection.first();
       expect(variant).to.be.a('Variant')
       .that.includes({id: 'variant', other: 'properties'});
