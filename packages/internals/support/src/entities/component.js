@@ -105,7 +105,7 @@ class Component extends Entity {
     return args ? this.getViews().find(...args) : this.getViews().first();
   }
 
-  getConfig(path, fallback){
+  getConfig(path, fallback) {
     if (path) {
       return cloneDeep(get(_config.get(this), path, fallback));
     }
@@ -150,6 +150,16 @@ class Component extends Entity {
       config: this.getConfig(),
       props: this.getData()
     });
+  }
+
+  toJSON() {
+    return {
+      id: this.get('id'),
+      props: super.toJSON(),
+      src: this.getSrc(),
+      files: this.getFiles(),
+      variants: this.getVariants().toJSON()
+    };
   }
 
   get relative() {

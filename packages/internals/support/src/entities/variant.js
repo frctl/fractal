@@ -87,6 +87,14 @@ class Variant extends Entity {
     });
   }
 
+  toJSON() {
+    return {
+      id: this.get('id'),
+      props: super.toJSON(),
+      templates: this.getTemplates().toJSON()
+    };
+  }
+
   static isVariant(item) {
     return item instanceof Variant;
   }
