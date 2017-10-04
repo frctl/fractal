@@ -15,6 +15,7 @@
     "test": "yarn run lint:fix && nyc yarn run test:unit",
     "test:ci": "yarn run bootstrap && nyc yarn run test:unit && nyc report --reporter=text-lcov | coveralls",
     "test:unit": "mocha $(find ./packages -name '*.test.js' ! -ipath '*node_modules*') --require test/support/env",
+    "test:integration": "mocha $(find ./test/integration -name '*.test.js' ! -ipath '*node_modules*') --require test/support/env",
     "test:watch": "yarn run test:unit -- --watch",
     "lint": "xo",
     "lint:fix": "xo --fix",
