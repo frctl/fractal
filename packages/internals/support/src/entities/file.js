@@ -5,7 +5,7 @@ const replaceExt = require('replace-ext');
 const cloneStats = require('clone-stats');
 const cloneBuffer = require('clone-buffer');
 const {assert} = require('check-types');
-const {mapValues, pick, pickBy, assign} = require('lodash');
+const {mapValues, pick, pickBy, omit, assign} = require('lodash');
 const Vinyl = require('vinyl');
 const {promisify, normalizePath} = require('@frctl/utils');
 const schema = require('../../schema');
@@ -216,6 +216,11 @@ class File extends Entity {
       relative: this.get('relative'),
       stem: this.get('stem')
     });
+  }
+
+  inspect(depth, opts) {
+    let data = omit(this.toJSON(), ['stat', 'history'])
+    return `${this[Symbol.toStringTag]} ${JSON.stringify(data)}`;
   }
 
   get [Symbol.toStringTag]() {
