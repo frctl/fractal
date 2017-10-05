@@ -20,10 +20,7 @@ module.exports = async function(app, opts = {}){
   const socket = new Socket('socket');
   socket.attach(server.app);
 
-  watcher.on('all', event => {
-    console.log('server - change detected');
-    socket.broadcast('changed', event)
-  });
+  watcher.on('all', (event, path) => socket.broadcast('changed', {event, path}));
 
   /*
    * If in dev mode use webpack dev middleware

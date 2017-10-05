@@ -48,8 +48,7 @@ const store = new Vuex.Store({
       state.socketConnected = true;
     },
 
-    SOCKET_CHANGED: (state) => {
-      console.log('client - change detected');
+    SOCKET_CHANGED: (state, details) => {
       state.dirty = true;
     },
 

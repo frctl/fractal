@@ -13985,8 +13985,7 @@ const store = new __WEBPACK_IMPORTED_MODULE_3_vuex__["a" /* default */].Store({
       state.socketConnected = true;
     },
 
-    SOCKET_CHANGED: state => {
-      console.log('client - change detected');
+    SOCKET_CHANGED: (state, details) => {
       state.dirty = true;
     },
 
