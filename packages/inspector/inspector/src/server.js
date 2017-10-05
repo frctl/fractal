@@ -3,16 +3,26 @@ const {readFileSync} = require('fs');
 const Server = require('@frctl/server');
 const mount = require('koa-mount');
 const serveStatic = require('koa-static');
+const Socket = require('koa-socket');
 
 const skel = readFileSync(join(__dirname, '../views/app.html'), 'utf-8');
 const buildDir = join(__dirname, '../dist');
 
 module.exports = async function(app, opts = {}){
 
+  const watcher = app.watch();
   const server = new Server(app, {
     router: {
-      prefix: '/api'
+      prefix: '/_api'
     }
+  });
+
+  const socket = new Socket('socket');
+  socket.attach(server.app);
+
+  watcher.on('all', event => {
+    console.log('server - change detected');
+    socket.broadcast('changed', event)
   });
 
   /*
@@ -44,5 +54,4 @@ module.exports = async function(app, opts = {}){
   });
 
   return server;
-
 };

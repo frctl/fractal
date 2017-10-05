@@ -35,18 +35,20 @@
     "koa-router": "^7.2.1",
     "koa-static": "^3.0.0",
     "koa-mount": "3.0.0",
+    "koa-socket": "4.4.0",
     "koa-webpack": "^1.0.0",
     "livereload": "^0.6.2",
     "lodash": "^4.17.4",
     "node-sass": "^4.5.3",
     "sass-loader": "^6.0.5",
     "style-loader": "^0.18.2",
+    "socket.io": "^2.0.3",
     "vue": "^2.3.3",
     "vue-loader": "^12.2.1",
     "vue-router": "^2.5.3",
+    "vue-socket.io": "^2.1.1-a",
     "vue-template-compiler": "^2.3.3",
     "vuex": "^2.3.1",
-    "webpack": "^2.6.1",
-    "webpack-glob-entry": "^2.1.1"
+    "webpack": "^3.6.0"
   }
 }
