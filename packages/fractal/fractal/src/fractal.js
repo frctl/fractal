@@ -78,7 +78,7 @@ class Fractal extends App {
     return this;
   }
 
-  static isFractal(obj){
+  static isFractal(obj) {
     return obj instanceof Fractal;
   }
 

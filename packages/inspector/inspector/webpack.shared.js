@@ -1,8 +1,8 @@
-const {join, resolve} = require('path');
+const {join} = require('path');
 
 module.exports = {
   entry: [
-    join(__dirname, 'src/client/app/main.js'),
+    join(__dirname, 'src/client/app/main.js')
   ],
   output: {
     path: join(__dirname, 'dist'),
@@ -16,13 +16,13 @@ module.exports = {
         loader: 'vue-loader',
         options: {
           loaders: {
-            'scss': 'vue-style-loader!css-loader!sass-loader',
+            scss: 'vue-style-loader!css-loader!sass-loader'
           }
         }
       },
       {
         test: /\.css$/,
-        use: [ 'style-loader', 'css-loader' ]
+        use: ['style-loader', 'css-loader']
       },
       {
         test: /\.js$/,
@@ -34,8 +34,8 @@ module.exports = {
   plugins: [],
   resolve: {
     alias: {
-      'vue$': 'vue/dist/vue.esm.js',
-      'styles': join(__dirname, 'src/client/assets/scss')
+      vue$: 'vue/dist/vue.esm.js',
+      styles: join(__dirname, 'src/client/assets/scss')
     }
-  },
-}
+  }
+};

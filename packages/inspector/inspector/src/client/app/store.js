@@ -17,13 +17,13 @@ const store = new Vuex.Store({
 
   actions: {
 
-    async initialise({ commit, dispatch }) {
+    async initialise({commit, dispatch}) {
       const response = await dispatch('fetchComponentList');
       commit('initialised', true);
       return response;
     },
 
-    async fetchComponentList({ commit }) {
+    async fetchComponentList({commit}) {
       commit('loading', true);
       const response = await axios.get('/_api/components');
       commit('setComponents', response.data || []);
@@ -32,18 +32,18 @@ const store = new Vuex.Store({
       return response;
     },
 
-    async fetchComponentDetail({ commit }, id) {
+    async fetchComponentDetail({commit}, id) {
       commit('loading', true);
       const response = await axios.get(`/_api/components/${id}`);
       commit('setComponent', response.data);
       commit('loading', false);
       return response;
-    },
+    }
   },
 
   mutations: {
 
-    SOCKET_CONNECT: (state) => {
+    SOCKET_CONNECT: state => {
       console.log('socket connected!');
       state.socketConnected = true;
     },
@@ -71,7 +71,7 @@ const store = new Vuex.Store({
     setComponent(state, component) {
       remove(state.components, item => item.id === component.id);
       state.components.push(component);
-    },
+    }
 
   },
 
@@ -83,7 +83,7 @@ const store = new Vuex.Store({
 
     getComponent: state => id => {
       return state.components.find(component => component.id === id);
-    },
+    }
   }
 
 });

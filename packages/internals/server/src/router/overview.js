@@ -7,7 +7,7 @@ module.exports = function () {
 
     async handler(ctx, next) {
       ctx.body = {
-        message: "Fractal component API server",
+        message: 'Fractal component API server',
         fractal: {
           version: ctx.fractal.version
         }

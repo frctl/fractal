@@ -8,8 +8,7 @@ const Socket = require('koa-socket');
 const skel = readFileSync(join(__dirname, '../views/app.html'), 'utf-8');
 const buildDir = join(__dirname, '../dist');
 
-module.exports = async function(app, opts = {}){
-
+module.exports = async function (app, opts = {}) {
   const watcher = app.watch();
   const server = new Server(app, {
     router: {

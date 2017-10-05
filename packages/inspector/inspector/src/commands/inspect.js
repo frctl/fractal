@@ -18,7 +18,6 @@ module.exports = function (config = {}) {
     },
 
     async handler(argv, app, cli, {log}) {
-
       if (argv.dev) {
         log(`
           <br><cyan>Running in dev mode.</cyan>
@@ -47,7 +46,6 @@ module.exports = function (config = {}) {
           <underline>${localUrl}</underline> <gray>(URL copied to clipboard)</gray>
           <cyan>Use ^c to quit</cyan>
       `;
-
     }
 
   };
