@@ -1,5 +1,5 @@
 const {get, omit} = require('lodash');
-const {normalizeId, uniqueId, cloneDeep} = require('@frctl/utils');
+const {normalizeId, uniqueId, cloneDeep, titlize} = require('@frctl/utils');
 const check = require('check-types');
 const Validator = require('../validator');
 const schema = require('../../schema');
@@ -23,11 +23,16 @@ const reservedConfigProps = [
   'variants',
   'previews',
   'scenarios',
-  'templates'
+  'templates',
+  'inspector',
+  'pages',
+  'cli',
+  'component'
 ];
 
 class Component extends Entity {
   constructor(props) {
+
     if (Component.isComponent(props)) {
       return props;
     }
@@ -49,6 +54,8 @@ class Component extends Entity {
         throw new Error(`The ${prop} property is a reserved property and cannot be written to directly [reserved-prop]`);
       });
     }
+
+    this.defineGetter('label', value => value || titlize(this.get('id')));
   }
 
   getSrc() {
@@ -158,12 +165,11 @@ class Component extends Entity {
   }
 
   clone() {
-    const props = Object.assign({}, this.getConfig(), this.getData(), {
+    return new this.constructor({
       src: this.getSrc(),
       files: this.getFiles(),
-      config: this.getConfig()
+      config: Object.assign({}, this.getConfig(), this.getData())
     });
-    return new this.constructor(props);
   }
 
   toJSON() {

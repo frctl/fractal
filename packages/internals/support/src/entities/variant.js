@@ -1,4 +1,5 @@
 const {omit} = require('lodash');
+const {titlize} = require('@frctl/utils');
 const fromParse5 = require('hast-util-from-parse5');
 const Parser5 = require('parse5/lib/parser');
 const Validator = require('../validator');
@@ -12,13 +13,18 @@ const parser = new Parser5({locationInfo: true});
 const _templates = new WeakMap();
 
 const reservedConfigProps = [
-  'component',
   'opts',
+  'src',
   'files',
   'views',
+  'variants',
   'previews',
   'scenarios',
-  'templates'
+  'templates',
+  'inspector',
+  'pages',
+  'cli',
+  'component'
 ];
 
 class Variant extends Entity {
@@ -39,6 +45,8 @@ class Variant extends Entity {
         throw new Error(`The ${prop} property is a reserved property and cannot be written to directly [reserved-prop]`);
       });
     }
+
+    this.defineGetter('label', value => value || titlize(this.get('id')));
   }
 
   getTemplate(finder) {
@@ -86,19 +94,15 @@ class Variant extends Entity {
   }
 
   clone() {
-    return new this.constructor({
-      id: this.get('id'),
-      props: this.getData(),
+    return new this.constructor(Object.assign(this.getData(), {
       templates: this.getTemplates().clone()
-    });
+    }));
   }
 
   toJSON() {
-    return {
-      id: this.get('id'),
-      props: super.toJSON(),
+    return Object.assign(super.toJSON(), {
       templates: this.getTemplates().toJSON()
-    };
+    });
   }
 
   static isVariant(item) {
