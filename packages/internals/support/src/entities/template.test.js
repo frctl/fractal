@@ -3,7 +3,7 @@ const {expect} = require('../../../../../test/helpers');
 const Template = require('./template');
 
 const defaultContent = {};
-const makeTemplate = (content, filename) => new Template(content || defaultContent, filename || 'foo.html');
+const makeTemplate = (content, filename) => new Template({tree: content || defaultContent, filename: filename || 'foo.html'});
 
 describe('Template', function () {
   describe('constructor', function () {

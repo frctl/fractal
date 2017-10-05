@@ -1,37 +1,13 @@
 const {extname} = require('path');
-const {cloneDeep} = require('lodash');
+const Validator = require('../validator');
+const schema = require('../../schema');
+const Entity = require('./entity');
 
-const _ast = new WeakMap();
-const _filename = new WeakMap();
+class Template extends Entity {
 
-class Template {
-
-  constructor(tree, filename) {
-    _ast.set(this, tree);
-    _filename.set(this, filename);
-  }
-
-  get filename() {
-    return _filename.get(this);
-  }
-
-  get tree() {
-    return _ast.get(this);
-  }
-
-  get extname() {
-    return extname(this.filename);
-  }
-
-  clone() {
-    return new this.constructor(cloneDeep(this.tree), this.filename);
-  }
-
-  toJSON() {
-    return {
-      filename: this.filename,
-      tree: this.tree
-    };
+  constructor(props) {
+    super(props);
+    this.defineGetter('extname', () => extname(this.get('filename')));
   }
 
   static isTemplate(item) {
@@ -40,6 +16,10 @@ class Template {
 
   get [Symbol.toStringTag]() {
     return 'Template';
+  }
+
+  _validateOrThrow(props) {
+    Validator.assertValid(props, schema.template, `Template.constructor: The properties provided do not match the schema of a template [properties-invalid]`);
   }
 
 }

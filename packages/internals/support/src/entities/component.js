@@ -32,7 +32,6 @@ const reservedConfigProps = [
 
 class Component extends Entity {
   constructor(props) {
-
     if (Component.isComponent(props)) {
       return props;
     }

@@ -84,8 +84,9 @@ describe('Variant', function () {
       const variant = new Variant(defaultProps);
       variant.addTemplate('<span></span>', 'file.html');
       expect(passedArgs[0]).to.be.an('object');
-      expect(passedArgs[0].type).to.equal('root');
-      expect(passedArgs[1]).to.equal('file.html');
+      expect(passedArgs[0].tree).be.an('object');
+      expect(passedArgs[0].tree.type).to.equal('root');
+      expect(passedArgs[0].filename).to.equal('file.html');
     });
   });
 
