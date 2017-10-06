@@ -3636,6 +3636,12 @@ path-parse@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/path-parse/-/path-parse-1.0.5.tgz#3c1adf871ea9cd6c9431b6ea2bd74a0ff055c4c1"
 
+path-reader@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/path-reader/-/path-reader-1.0.4.tgz#d67da88d7b11e9db817abdb2517d1adeeee9b32b"
+  dependencies:
+    minimatch "^3.0.4"
+
 path-to-regexp@^1.1.1, path-to-regexp@^1.7.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/path-to-regexp/-/path-to-regexp-1.7.0.tgz#59fde0f435badacba103a84e9d3bc64e96b9937d"
@@ -4160,8 +4166,8 @@ signal-exit@^3.0.0, signal-exit@^3.0.1, signal-exit@^3.0.2:
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
 
 simple-git@^1.77.0:
-  version "1.77.0"
-  resolved "https://registry.yarnpkg.com/simple-git/-/simple-git-1.77.0.tgz#526537470b946e5f6f93d103ef54b46949600939"
+  version "1.79.0"
+  resolved "https://registry.yarnpkg.com/simple-git/-/simple-git-1.79.0.tgz#5d4402dbae48d1f91b3c1862f080abada33ef130"
   dependencies:
     debug "^2.6.7"
 

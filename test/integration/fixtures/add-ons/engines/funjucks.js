@@ -1,5 +1,4 @@
-module.exports = function(opts = {}) {
-
+module.exports = function (opts = {}) {
   return {
 
     name: 'funjucks',
@@ -8,8 +7,7 @@ module.exports = function(opts = {}) {
 
     render(str, context, opts = {}, collections, app) {
       return Promise.resolve(str);
-    },
+    }
 
-  }
-
+  };
 };

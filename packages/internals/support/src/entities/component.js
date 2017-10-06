@@ -175,6 +175,16 @@ class Component extends Entity {
     });
   }
 
+  inspect(depth, opts) {
+    return `${this[Symbol.toStringTag]} ${JSON.stringify(
+      Object.assign(super.toJSON(), {
+        src: this.getSrc().inspect(),
+        files: this.getFiles().inspect(),
+        variants: this.getVariants().inspect()
+      })
+      )}`;
+  }
+
   get relative() {
     return _src.get(this).relative;
   }
