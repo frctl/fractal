@@ -25,6 +25,8 @@ class Variant extends Entity {
     this._validateOrThrow(props);
 
     this._setTemplates(props.templates);
+
+    this.defineGetter('label', value => value || titlize(this.get('id')));
   }
 
   getTemplate(finder) {

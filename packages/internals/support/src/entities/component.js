@@ -33,6 +33,8 @@ class Component extends Entity {
     this._setSrc(props.src);
     this._setFiles(props.files);
     this._buildVariants(this.getConfig('variants'));
+
+    this.defineGetter('label', value => value || titlize(this.get('id')));
   }
 
   getSrc() {
