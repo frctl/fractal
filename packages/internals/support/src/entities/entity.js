@@ -1,6 +1,7 @@
 const {assert} = require('check-types');
 const {mapValues, pickBy, get, set, unset} = require('lodash');
 const {cloneDeep, hash} = require('@frctl/utils');
+const reservedWords = require('../../reserved-words');
 
 const _data = new WeakMap();
 const _setters = new WeakMap();
@@ -45,6 +46,12 @@ class Entity {
     });
 
     this._proxy = proxy;
+
+    for (const prop of reservedWords) {
+      this.defineSetter(prop, () => {
+        throw new Error(`The ${prop} property is a reserved property name and cannot be written to directly [reserved-prop]`);
+      });
+    }
 
     return proxy;
   }

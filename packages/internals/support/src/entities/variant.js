@@ -5,28 +5,13 @@ const {assert} = require('check-types');
 const Parser5 = require('parse5/lib/parser');
 const Validator = require('../validator');
 const schema = require('../../schema');
+const reservedWords = require('../../reserved-words');
 const Collection = require('../collections/collection');
 const Entity = require('./entity');
 const Template = require('./template');
 
 const parser = new Parser5({locationInfo: true});
-
 const _templates = new WeakMap();
-
-const reservedConfigProps = [
-  'opts',
-  'src',
-  'files',
-  'views',
-  'variants',
-  'previews',
-  'scenarios',
-  'templates',
-  'inspector',
-  'pages',
-  'cli',
-  'component'
-];
 
 class Variant extends Entity {
 
@@ -34,20 +19,12 @@ class Variant extends Entity {
     if (Variant.isVariant(props)) {
       return props;
     }
-    const entityProps = omit(props, reservedConfigProps);
+    const entityProps = omit(props, reservedWords);
 
     super(entityProps);
     this._validateOrThrow(props);
 
     this._setTemplates(props.templates);
-
-    for (const prop of reservedConfigProps) {
-      this.defineSetter(prop, () => {
-        throw new Error(`The ${prop} property is a reserved property and cannot be written to directly [reserved-prop]`);
-      });
-    }
-
-    this.defineGetter('label', value => value || titlize(this.get('id')));
   }
 
   getTemplate(finder) {

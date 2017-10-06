@@ -3,6 +3,7 @@ const {normalizeId, uniqueId, cloneDeep, titlize} = require('@frctl/utils');
 const check = require('check-types');
 const Validator = require('../validator');
 const schema = require('../../schema');
+const reservedWords = require('../../reserved-words');
 const VariantCollection = require('../collections/variant-collection');
 const FileCollection = require('../collections/file-collection');
 const Entity = require('./entity');
@@ -15,21 +16,6 @@ const _src = new WeakMap();
 const _files = new WeakMap();
 const _variants = new WeakMap();
 
-const reservedConfigProps = [
-  'opts',
-  'src',
-  'files',
-  'views',
-  'variants',
-  'previews',
-  'scenarios',
-  'templates',
-  'inspector',
-  'pages',
-  'cli',
-  'component'
-];
-
 class Component extends Entity {
   constructor(props) {
     if (Component.isComponent(props)) {
@@ -37,7 +23,7 @@ class Component extends Entity {
     }
     Component.validate(props);
 
-    const entityProps = omit(props.config || {}, reservedConfigProps);
+    const entityProps = omit(props.config || {}, reservedWords);
 
     entityProps.id = normalizeId(entityProps.id || props.src.stem);
 
@@ -47,14 +33,6 @@ class Component extends Entity {
     this._setSrc(props.src);
     this._setFiles(props.files);
     this._buildVariants(this.getConfig('variants'));
-
-    for (const prop of reservedConfigProps) {
-      this.defineSetter(prop, () => {
-        throw new Error(`The ${prop} property is a reserved property and cannot be written to directly [reserved-prop]`);
-      });
-    }
-
-    this.defineGetter('label', value => value || titlize(this.get('id')));
   }
 
   getSrc() {
