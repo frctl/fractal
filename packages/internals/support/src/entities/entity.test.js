@@ -2,6 +2,7 @@
 
 const {hash} = require('@frctl/utils');
 const {expect} = require('../../../../../test/helpers');
+const reservedWords = require('../../reserved-words');
 const Entity = require('./entity');
 
 const basicEntity = {
@@ -25,6 +26,14 @@ describe('Entity', function () {
       const entity = makeEntity();
       expect(entity.name).to.equal('chocolate');
       expect(entity.config.sugar).to.equal('30%');
+    });
+    it('defines getters that throw an error for all reserved properties', function () {
+      const entity = makeEntity();
+      for (const prop of reservedWords) {
+        expect(() => {
+          entity[prop] = 'foo';
+        }).to.throw('[reserved-prop]');
+      }
     });
   });
 
