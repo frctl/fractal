@@ -40,6 +40,8 @@
   },
   "xo": {
     "extends": "@frctl/eslint-config-frctl",
-    "ignores": ["**/dist/*"]
+    "ignores": [
+      "**/dist/*"
+    ]
   }
 }

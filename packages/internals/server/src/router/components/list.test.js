@@ -6,7 +6,7 @@ const route = require('./list')();
 function makeContext() {
   return {
     fractal: new Fractal({
-      src: join(__dirname, '/../../../../../../test/fixtures/components')
+      src: join(__dirname, '/../../../test/fixtures/components')
     }),
     body: {}
   };

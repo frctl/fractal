@@ -5,7 +5,8 @@ const Router = require('koa-router');
 const routes = [
   'overview',
   'components/list',
-  'components/detail'
+  'components/detail',
+  'components/render'
 ];
 
 module.exports = function (fractal, opts = {}) {
@@ -18,7 +19,12 @@ module.exports = function (fractal, opts = {}) {
 
   for (const path of routes) {
     const route = require(`./${path}`)();
-    router[route.method](route.path, route.handler.bind(router));
+    const method = router[route.method].bind(router);
+    if (typeof route.middleware === 'function') {
+      method(route.path, route.middleware, route.handler.bind(router));
+    } else {
+      method(route.path, route.handler.bind(router));
+    }
   }
 
   return router;
