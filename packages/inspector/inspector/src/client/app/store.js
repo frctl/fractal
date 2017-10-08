@@ -12,6 +12,7 @@ const store = new Vuex.Store({
     initialised: false,
     loading: true,
     components: [],
+    previews: [],
     dirty: false
   },
 
@@ -36,6 +37,14 @@ const store = new Vuex.Store({
       commit('loading', true);
       const response = await axios.get(`/_api/components/${id}`);
       commit('setComponent', response.data);
+      commit('loading', false);
+      return response;
+    },
+
+    async fetchComponentPreview({commit}, id) {
+      commit('loading', true);
+      const response = await axios.post(`/_api/components/${id}/render`);
+      commit('setComponentPreview', {id, html: response.data});
       commit('loading', false);
       return response;
     }
@@ -71,6 +80,11 @@ const store = new Vuex.Store({
     setComponent(state, component) {
       remove(state.components, item => item.id === component.id);
       state.components.push(component);
+    },
+
+    setComponentPreview(state, data) {
+      remove(state.previews, preview => preview.id === data.id);
+      state.previews.push(data);
     }
 
   },
@@ -83,6 +97,14 @@ const store = new Vuex.Store({
 
     getComponent: state => id => {
       return state.components.find(component => component.id === id);
+    },
+
+    getComponentPreview: state => id => {
+      const preview = state.previews.find(preview => preview.id === id);
+      if (preview) {
+        return preview.html;
+      }
+      return '';
     }
   }
 

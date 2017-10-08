@@ -7,7 +7,7 @@
       </pane>
       <pane slot="second">
         <splash message="select a component from the left to get started" v-if="!component" />
-        <pre v-else>{{ JSON.stringify(component, null, 2) }}</pre>
+        <preview :code="preview" v-else />
       </pane>
     </split-pane>
   </div>
@@ -17,13 +17,14 @@
 
 import Splash from './components/Splash.vue';
 import Pane from './components/Pane.vue';
+import Preview from './components/Preview.vue';
 import SplitPane from './components/SplitPane.vue';
 import ComponentList from './components/ComponentList.vue';
 
 export default {
 
   components: {
-    Splash, SplitPane, ComponentList, Pane
+    Splash, SplitPane, ComponentList, Pane, Preview
   },
 
   data(){
@@ -37,6 +38,13 @@ export default {
     component(){
       if (this.$route.params.component) {
         return this.$store.getters.getComponent(this.$route.params.component);
+      }
+      return null;
+    },
+
+    preview(){
+      if (this.$route.params.component) {
+        return this.$store.getters.getComponentPreview(this.$route.params.component);
       }
       return null;
     },
@@ -58,7 +66,10 @@ export default {
   methods: {
     async loadComponent(){
       if (this.component) {
-        await this.$store.dispatch('fetchComponentDetail', this.component.id);
+        await Promise.all([
+          this.$store.dispatch('fetchComponentDetail', this.component.id),
+          this.$store.dispatch('fetchComponentPreview', this.component.id)
+        ]);
       }
     }
   },
@@ -71,8 +82,12 @@ export default {
 
     '$store.state.dirty': async function(isDirty){
       if (isDirty) {
-        await this.$store.dispatch('fetchComponentList');
-        await this.$store.dispatch('fetchComponentDetail', this.component.id);
+        console.log('dirty');
+        await Promise.all([
+          this.$store.dispatch('fetchComponentList'),
+          this.$store.dispatch('fetchComponentDetail', this.component.id),
+          this.$store.dispatch('fetchComponentPreview', this.component.id)
+        ]);
       }
     },
 
