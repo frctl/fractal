@@ -6,7 +6,7 @@ const serveStatic = require('koa-static');
 const Socket = require('koa-socket');
 
 const skel = readFileSync(join(__dirname, '../views/app.html'), 'utf-8');
-const buildDir = join(__dirname, '../dist');
+const distDir = join(__dirname, '../dist');
 
 module.exports = async function (app, opts = {}) {
   const watcher = app.watch();
@@ -18,7 +18,6 @@ module.exports = async function (app, opts = {}) {
 
   const socket = new Socket('socket');
   socket.attach(server.app);
-
   watcher.on('all', (event, path) => socket.broadcast('changed', {event, path}));
 
   /*
@@ -36,7 +35,7 @@ module.exports = async function (app, opts = {}) {
     server.app.use(webpackMiddleware);
     await new Promise(resolve => webpackMiddleware.dev.waitUntilValid(resolve));
   } else {
-    server.app.use(mount('/_inspector', serveStatic(buildDir)));
+    server.app.use(mount('/_inspector', serveStatic(distDir)));
   }
 
   /*
