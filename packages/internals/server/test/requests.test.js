@@ -1,4 +1,4 @@
-/* eslint no-unused-expressions: off */
+/* eslint no-unused-expressions: off, handle-callback-err: off */
 
 const {join} = require('path');
 const {Fractal} = require('@frctl/fractal');
@@ -78,7 +78,7 @@ describe('Server requests', function () {
       request(httpServer)
         .post('/components/foo/render')
         .send({text: 'foo'})
-        .end(function(err, res) {
+        .end(function (err, res) {
           expect(res).to.have.status(404);
           done();
         });
