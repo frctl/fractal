@@ -1,8 +1,8 @@
 const {assert} = require('check-types');
 const {mapValues, pickBy, get, set, unset} = require('lodash');
 const {cloneDeep, hash} = require('@frctl/utils');
+const reservedWords = require('../../reserved-words');
 
-const _config = new WeakMap();
 const _data = new WeakMap();
 const _setters = new WeakMap();
 const _getters = new WeakMap();
@@ -15,12 +15,11 @@ class Entity {
     }
     this._validateOrThrow(props);
 
-    _data.set(this, {});
-    _config.set(this, (props || {}));
+    _data.set(this, cloneDeep(props));
     _setters.set(this, []);
     _getters.set(this, []);
 
-    return new Proxy(this, {
+    const proxy = new Proxy(this, {
       get(target, propKey, receiver) {
         if (!Reflect.has(target, propKey)) {
           return target.get(propKey);
@@ -41,15 +40,23 @@ class Entity {
       has(target, propKey) {
         return (
           Reflect.has(target, propKey) ||
-          Reflect.has(_data.get(target), propKey) ||
-          Reflect.has(_config.get(target), propKey)
+          Reflect.has(_data.get(target), propKey)
         );
       }
     });
+
+    this._proxy = proxy;
+
+    for (const prop of reservedWords) {
+      this.defineSetter(prop, () => {
+        throw new Error(`The ${prop} property is a reserved property name and cannot be written to directly [reserved-prop]`);
+      });
+    }
+
+    return proxy;
   }
 
   get(path, fallback) {
-    fallback = get(_config.get(this), path, fallback);
     const initial = cloneDeep(get(_data.get(this), path, fallback));
     return computeFinal(_getters.get(this), path, initial, this);
   }
@@ -68,16 +75,8 @@ class Entity {
     return unset(_data.get(this), path);
   }
 
-  getConfig() {
-    return cloneDeep(_config.get(this));
-  }
-
   getData() {
     return cloneDeep(_data.get(this));
-  }
-
-  getComputedProps() {
-    return Object.assign({}, _config.get(this), _data.get(this));
   }
 
   defineGetter(path, getter) {
@@ -89,7 +88,7 @@ class Entity {
   }
 
   toJSON() {
-    let props = this.getComputedProps();
+    let props = this.getData();
     props = pickBy(props, (item, key) => {
       return !key.startsWith('_');
     });
@@ -105,15 +104,12 @@ class Entity {
   }
 
   clone() {
-    const cloned = new this.constructor(this._config);
-    for (let [key, value] of Object.entries(this._data)) {
-      cloned.set(key, value);
-    }
+    const cloned = new this.constructor(this._data);
     return cloned;
   }
 
   hash() {
-    const merged = this.getComputedProps();
+    const merged = this.getData();
     const hashProps = mapValues(merged, (item, key) => {
       return (item && typeof item.hash === 'function') ? item.hash() : item;
     });
@@ -122,7 +118,7 @@ class Entity {
 
   // TODO: Improve formatting: use logging class?
   inspect(depth, opts) {
-    return `${this[Symbol.toStringTag]} ${JSON.stringify(this.getComputedProps())}`;
+    return `${this[Symbol.toStringTag]} ${JSON.stringify(this.getData())}`;
   }
 
   _validateOrThrow(props) {
@@ -131,10 +127,6 @@ class Entity {
 
   get _data() {
     return cloneDeep(_data.get(this));
-  }
-
-  get _config() {
-    return cloneDeep(_config.get(this));
   }
 
   get [Symbol.toStringTag]() {

@@ -10,6 +10,7 @@ const srcExports = {
   File: require('./src/entities/file'),
   Component: require('./src/entities/component'),
   Variant: require('./src/entities/variant'),
+  Template: require('./src/entities/template'),
   Emitter: require('./src/emitter'),
   EmittingPromise: require('./src/emitting-promise'),
   Validator: require('./src/validator')

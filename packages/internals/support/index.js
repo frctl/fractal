@@ -4,6 +4,7 @@ module.exports.FileCollection = require('./src/collections/file-collection');
 module.exports.ComponentCollection = require('./src/collections/component-collection');
 module.exports.Entity = require('./src/entities/entity');
 module.exports.File = require('./src/entities/file');
+module.exports.Template = require('./src/entities/template');
 module.exports.Component = require('./src/entities/component');
 module.exports.Variant = require('./src/entities/variant');
 module.exports.Emitter = require('./src/emitter');

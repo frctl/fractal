@@ -16,21 +16,24 @@ module.exports = {
   components: {
     match: file => file.stem.startsWith('@'),
     config: {
+      match: 'config.*',
       defaults: {
         views: {
-          match: 'view.*'
+          match: 'view.*',
+          default: '.html'
         }
-      },
-      match: 'config.*'
+      }
     }
   },
 
   presets: [],
 
-  adapters: [],
+  engines: [],
 
   plugins: [],
 
-  transforms: []
+  transforms: [
+    require('@frctl/fractal-transform-components')
+  ]
 
 };

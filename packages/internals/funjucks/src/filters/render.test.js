@@ -1,4 +1,3 @@
-const {File} = require('@frctl/support');
 const {Fractal} = require('@frctl/fractal');
 const {expect, sinon} = require('../../../../../test/helpers');
 const factory = require('./render');
@@ -18,16 +17,13 @@ describe('render', function () {
   describe('.filter()', function () {
     const filter = factory();
     const fractal = new Fractal({
-      adapters: [
-        './test/fixtures/add-ons/adapter'
+      engines: [
+        './test/fixtures/add-ons/engine'
       ]
     });
     const render = filter.filter.bind({env: {fractal}});
-    const target = new File({
-      path: 'path/to/view.fjk',
-      contents: Buffer.from('the contents')
-    });
-    const spy = sinon.spy(fractal, 'render');
+    const target = 'test';
+    const spy = sinon.stub(fractal, 'render').callsFake(() => Promise.resolve('result'));
 
     afterEach(function () {
       spy.restore();
@@ -37,17 +33,13 @@ describe('render', function () {
       render(target, function (err, result) {
         expect(spy.calledWith(target)).to.equal(true);
         expect(err).to.equal(null);
-        expect(result).to.equal('the contents');
+        expect(result).to.equal('result');
         done();
       });
     });
     it('supplies an error argument to the callback if the rendering fails', function (done) {
       const render = filter.filter.bind({fractal});
-      const target = new File({
-        path: 'path/to/view.hbs',
-        contents: Buffer.from('the contents')
-      });
-      render(target, function (err, result) {
+      render('foo', function (err, result) {
         expect(err).to.be.instanceOf(Error);
         done();
       });

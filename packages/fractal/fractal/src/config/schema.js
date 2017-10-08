@@ -2,7 +2,7 @@ module.exports = {
 
   type: 'object',
 
-  required: ['components'],
+  required: ['components', 'presets', 'engines', 'plugins', 'transforms'],
 
   properties: {
 
@@ -85,7 +85,7 @@ module.exports = {
       ]
     },
 
-    adapters: {
+    engines: {
       type: 'array'
     },
 

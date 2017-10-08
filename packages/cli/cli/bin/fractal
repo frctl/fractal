@@ -14,7 +14,6 @@ const loudRejection = require('loud-rejection');
 const pkgUp = require('pkg-up');
 const debug = require('debug')('frctl:cli');
 const logger = require('@frctl/console');
-const corePreset = require('@frctl/cli-preset-core');
 const Cli = require('../src/cli');
 const loadConfig = require('../src/loaders/config');
 const loadFractal = require('../src/loaders/fractal');
@@ -22,6 +21,13 @@ const loadExtensions = require('../src/loaders/extensions');
 const settings = require('../src/settings');
 const cliPkg = require('../package.json');
 const {log, error, warning} = logger;
+
+const coreCommands = [
+  require('@frctl/cli-command-default'),
+  require('@frctl/cli-command-new-project'),
+  require('@frctl/cli-command-add-component'),
+  require('@frctl/cli-command-project-info')
+];
 
 loudRejection();
 updateNotifier({pkg: cliPkg}).notify();
@@ -67,7 +73,7 @@ try {
    */
 
   const cliConfig = config.cli || {};
-  cliConfig.presets = [corePreset].concat(cliConfig.presets || []);
+  cliConfig.commands = coreCommands.concat(cliConfig.commands || []);
 
   const cli = new Cli({
     configPath,

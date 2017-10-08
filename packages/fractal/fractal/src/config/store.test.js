@@ -3,7 +3,7 @@ const {expect, validateSchema} = require('../../../../../test/helpers');
 const ConfigStore = require('./store');
 const configSchema = require('./schema');
 
-const addOns = ['plugins', 'adapters', 'transforms'];
+const addOns = ['plugins', 'engines', 'transforms'];
 
 const plugins = {
   parent: {

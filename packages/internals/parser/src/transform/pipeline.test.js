@@ -123,8 +123,8 @@ describe('Pipeline', function () {
       const pipelineWithPass = makePipeline([passThru, noOpTransform]);
       const result = await pipelineWithPass.process(data, context, emitter);
 
-      expect(result.files).to.eql(result['no-op']);
-      expect(result.files).to.not.equal(result['no-op']);
+      expect(result.files.toArray()).to.eql(result['no-op'].toArray());
+      expect(result.files.toArray()).to.not.equal(result['no-op'].toArray());
     });
   });
 });

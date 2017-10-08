@@ -4,13 +4,13 @@ module.exports = function (opts = {}) {
     name: 'fractal-preset-core',
 
     config: {
-
-      transforms: [
-        require('@frctl/fractal-transform-components')
+      engines: [
+        require('@frctl/fractal-engine-html')
       ],
-
       plugins: [
-        require('@frctl/fractal-plugin-files-name')
+        require('@frctl/fractal-plugin-files-name'),
+        require('@frctl/fractal-plugin-template-attrs'),
+        require('@frctl/fractal-plugin-template-components')
       ]
     }
 

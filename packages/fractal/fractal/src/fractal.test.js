@@ -4,8 +4,8 @@ const {join} = require('path');
 const {capitalize} = require('lodash');
 const {File, ComponentCollection, FileCollection, EmittingPromise, Component, Variant} = require('@frctl/support');
 const {defaultsDeep} = require('@frctl/utils');
-const {Renderer} = require('@frctl/renderer');
 const App = require('@frctl/app');
+const Renderer = require('@frctl/renderer');
 const {expect, sinon} = require('../../../../test/helpers');
 const pkg = require('../package.json');
 const ConfigStore = require('./config/store');
@@ -15,15 +15,10 @@ const Fractal = require('./fractal');
 const config = {
   src: join(__dirname, '../../../../test/fixtures/components'),
   presets: null,
-  adapters: [
-    './test/fixtures/add-ons/adapter.js'
+  engines: [
+    './test/fixtures/add-ons/engine'
   ]
 };
-
-const view = new File({
-  path: 'path/to/view.fjk',
-  contents: Buffer.from('file contents')
-});
 
 const files = new FileCollection([
   new File({path: 'components/@test-component'}),
@@ -39,15 +34,21 @@ const components = new ComponentCollection([
     src: files.find({
       stem: '@test-component'
     }),
-    files: FileCollection.from([files.find({
-      stem: 'view'
-    })]),
+    files: FileCollection.from([
+      new File({
+        name: 'view',
+        base: 'components/@test-component',
+        path: 'components/@test-component/view.fjk',
+        contents: Buffer.from('component!')
+      })
+    ]),
     config: {
-      name: 'test-component',
+      id: 'test-component',
+      views: {
+        match: 'view.*'
+      },
       variants: [{
-        name: 'default',
-        default: true,
-        component: 'test-component',
+        id: 'default',
         context: {
           foo: 'bar'
         }
@@ -70,7 +71,7 @@ describe('Fractal', function () {
       expect(fractal.config).to.be.instanceOf(ConfigStore);
     });
     it('throws an error if invalid config data is provided', () => {
-      expect(() => new Fractal({adapters: 'foo'})).to.throw('[config-invalid]');
+      expect(() => new Fractal({engines: 'foo'})).to.throw('[config-invalid]');
     });
     it('does not throw an error if no config data is provided', () => {
       expect(() => new Fractal()).to.not.throw();
@@ -83,33 +84,23 @@ describe('Fractal', function () {
   describe('.render()', function () {
     it('returns an EmittingPromise', function () {
       const fractal = makeFractal();
-      expect(fractal.render(view)).to.be.instanceOf(EmittingPromise);
+      expect(fractal.render(components.first())).to.be.instanceOf(EmittingPromise);
     });
     it('resolves to a string', async function () {
       const fractal = makeFractal();
-      expect(await fractal.render(view)).to.be.a('string');
+      expect(await fractal.render(components.first())).to.be.a('string');
     });
-    it('rejects if no adapters have been added', function () {
+    it('rejects if no engines have been added', function () {
       const fractal = makeFractal({
         extends: null
       });
-      const result = fractal.render(view);
+      const result = fractal.render(components.first());
       expect(result).to.be.instanceOf(EmittingPromise);
-      return expect(result).to.be.rejectedWith(Error, '[no-adapters]');
+      return expect(result).to.be.rejectedWith(Error, '[engine-not-found]');
     });
-    it('rejects if the specified adapter cannot be found', function () {
-      const fractal = makeFractal();
-      return expect(fractal.render(view, {}, {
-        adapter: 'foo'
-      })).to.eventually.be.rejectedWith(Error, '[adapter-not-found]');
-    });
-    it('rejects if the target is not a view, component, variant or string', function () {
+    it('rejects if the target is not a component or variant', function () {
       const fractal = makeFractal();
       return expect(fractal.render({})).to.be.rejectedWith(Error, '[target-invalid]');
-    });
-    it('returns an EmittingPromise', function () {
-      const fractal = makeFractal();
-      expect(fractal.render(view)).to.be.instanceOf(EmittingPromise);
     });
     it('Can render components', async function () {
       const fractal = makeFractal();
@@ -119,21 +110,14 @@ describe('Fractal', function () {
     });
     it('Can render variants', async function () {
       const fractal = makeFractal();
-      const renderer = new Renderer(fractal.get('adapters'));
       sinon.stub(fractal, 'parse').callsFake(() => Promise.resolve(parserOutput));
-      sinon.stub(fractal, 'getRenderer').callsFake(() => renderer);
-      const spy = sinon.spy(renderer, 'render');
       const variant = parserOutput.components.first().getDefaultVariant();
       const result = await fractal.render(variant);
       expect(result).to.equal('component!');
-      expect(spy.args[0][0]).to.equal('component!');
-      expect(spy.args[0][1]).to.eql(variant.context);
-      spy.restore();
     });
     it('rejects if a specified variant cannot be found', function () {
       const fractal = makeFractal();
       return expect(fractal.render(parserOutput.components.first(), {}, {
-        collections: parserOutput,
         variant: 'foo'
       })).to.be.rejectedWith(Error, '[variant-not-found]');
     });
@@ -141,23 +125,22 @@ describe('Fractal', function () {
       const fractal = makeFractal();
       sinon.stub(fractal, 'parse').callsFake(() => Promise.resolve(parserOutput));
       const variant = new Variant({
-        name: 'default',
-        default: true,
+        id: 'default',
         component: 'foo-component'
       });
       return expect(fractal.render(variant, {})).to.be.rejectedWith(Error, '[component-not-found]');
     });
-    it('rejects if a suitable view cannot be found', function () {
+    it('rejects if a suitable template cannot be found', function () {
       const fractal = makeFractal();
       sinon.stub(fractal, 'parse').callsFake(() => Promise.resolve(parserOutput));
-      fractal.addAdapter({
+      fractal.addEngine({
         name: 'fwig',
         match: '.fwig',
         render: () => {}
       });
       return expect(fractal.render(parserOutput.components.first(), {}, {
-        adapter: 'fwig'
-      })).to.be.rejectedWith(Error, '[view-not-found]');
+        ext: '.fwig'
+      })).to.be.rejectedWith(Error, '[template-not-found]');
     });
   });
 
@@ -173,14 +156,15 @@ describe('Fractal', function () {
     });
   });
 
-  for (const addOn of ['plugin', 'transform', 'adapter']) {
+  for (const addOn of ['plugin', 'transform', 'engine']) {
     const method = `add${capitalize(addOn)}`;
     describe(`.${method}()`, function () {
       it(`adds a ${addOn} to the ${addOn}s config array`, function () {
         const app = new Fractal({presets: null});
-        expect(app.get(`${addOn}s`)).to.be.an('array').and.have.property('length').which.equals(0);
+        expect(app.get(`${addOn}s`)).to.be.an('array');
+        const count = app.get(`${addOn}s`).length;
         app[method](`./test/fixtures/add-ons/${addOn}`);
-        expect(app.get(`${addOn}s`).length).equal(1);
+        expect(app.get(`${addOn}s`).length).equal(count + 1);
       });
       it(`marks the app instance as dirty`, function () {
         const app = new Fractal({presets: null});
@@ -221,19 +205,9 @@ describe('Fractal', function () {
   }
 
   describe('.getRenderer()', function () {
-    it('returns a new Renderer instance', function () {
+    it('returns a configured Renderer instance', function () {
       const fractal = new Fractal();
-      const renderer = fractal.getRenderer();
-      expect(renderer).to.be.instanceOf(Renderer);
-      expect(fractal.getRenderer()).to.not.equal(renderer);
-    });
-    it('initialises the renderer with adapters from the config', function () {
-      const fractal = new Fractal();
-      const renderer = fractal.getRenderer();
-      expect(renderer.adapters.length).to.equal(0);
-      fractal.addAdapter('./test/fixtures/add-ons/adapter');
-      const renderer2 = fractal.getRenderer();
-      expect(renderer2.adapters.length).to.equal(1);
+      expect(fractal.getRenderer()).to.be.instanceof(Renderer);
     });
   });
 

@@ -1,5 +1,4 @@
-const {defaultsDeep} = require('@frctl/utils');
-const {addTrailingSeparator} = require('@frctl/utils');
+const {defaultsDeep, addTrailingSeparator} = require('@frctl/utils');
 const {Component, ComponentCollection} = require('@frctl/support');
 
 module.exports = function (opts = {}) {
@@ -8,9 +7,12 @@ module.exports = function (opts = {}) {
     name: 'components',
 
     async transform(files, state, app) {
-      let remainingFiles = files.filter(file => !file.isDirectory());
+      let remainingFiles = files.sortBy('path.length', 'desc').filter(file => !file.isDirectory());
+      const configMatcher = app.get('components.config.match');
+      const configDefaults = app.get('components.config.defaults', {});
       const componentMatcher = app.get('components.match');
-      const componentDirs = files.filter(file => file.isDirectory()).filter(componentMatcher).sortBy('path.length', 'desc');
+      const componentDirs = files.filter(file => file.isDirectory()).filter(componentMatcher);
+      const loader = app.getLoader(files);
 
       return ComponentCollection.from(await componentDirs.mapToArrayAsync(async dir => {
         const rootPath = addTrailingSeparator(dir.path);
@@ -24,21 +26,21 @@ module.exports = function (opts = {}) {
 
         remainingFiles = remainingFiles.reject(file => componentFiles.find(f => f.path === file.path));
 
-        const configMatcher = app.get('components.config.match');
-        const configDefaults = app.get('components.config.defaults', {});
-        const configFiles = componentFiles.filter(configMatcher).sortBy('basename', 'asc');
+        let config = {};
+        const configFile = componentFiles.filter(configMatcher).sortBy('basename', 'asc').first();
+        if (configFile) {
+          const configData = loader.requireFromString(configFile.contents.toString(), configFile.path);
+          config = await Promise.resolve(typeof configData === 'function' ? configData(files, app) : configData);
+        }
 
-        const data = await configFiles.mapToArrayAsync(file => {
-          const data = app.loader.requireFromString(file.contents.toString(), file.path);
-          return (typeof data === 'function') ? Promise.resolve(data(files, app)) : Promise.resolve(data);
+        config = defaultsDeep(config, configDefaults, {
+          id: dir.stem
         });
 
-        const config = Object.assign({}, ...data);
-
         return Component.from({
+          config,
           src: dir,
-          files: componentFiles,
-          config: defaultsDeep(config, configDefaults)
+          files: componentFiles
         });
       }));
     }

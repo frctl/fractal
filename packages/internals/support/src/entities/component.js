@@ -1,10 +1,17 @@
-const {normalizeName} = require('@frctl/utils');
+const {get, omit} = require('lodash');
+const {normalizeId, uniqueId, cloneDeep} = require('@frctl/utils');
+const check = require('check-types');
 const Validator = require('../validator');
 const schema = require('../../schema');
+const reservedWords = require('../../reserved-words');
 const VariantCollection = require('../collections/variant-collection');
 const FileCollection = require('../collections/file-collection');
 const Entity = require('./entity');
+const Variant = require('./variant');
 
+const assert = check.assert;
+
+const _config = new WeakMap();
 const _src = new WeakMap();
 const _files = new WeakMap();
 const _variants = new WeakMap();
@@ -16,15 +23,16 @@ class Component extends Entity {
     }
     Component.validate(props);
 
-    const config = Object.assign({
-      name: normalizeName(props.src.stem)
-    }, props.config);
+    const entityProps = omit(props.config || {}, reservedWords);
 
-    super(config);
+    entityProps.id = normalizeId(entityProps.id || props.src.stem);
 
+    super(entityProps);
+
+    this._setConfig(props.config || {});
     this._setSrc(props.src);
     this._setFiles(props.files);
-    this._buildVariants(config.variants);
+    this._buildVariants(this.getConfig('variants'));
   }
 
   getSrc() {
@@ -43,32 +51,70 @@ class Component extends Entity {
     return _variants.get(this);
   }
 
-  getVariant(name) {
-    return _variants.get(this).find(name);
+  getVariant(id) {
+    return _variants.get(this).find(id);
   }
 
-  getVariantOrDefault(name) {
+  getVariantOrDefault(id) {
     const variants = _variants.get(this);
-    return variants.find(name) || variants.getDefault();
+    return variants.find(id) || this.getDefaultVariant();
   }
 
-  addVariant(variant) {
+  addVariant(config) {
+    const isVariantInstance = check.maybe.instance(config, Variant);
+    const isValidProp = check.maybe.object(config);
+    const variantIds = this.getVariants().mapToArray(v => v.id);
+
+    assert(
+      (isValidProp || isVariantInstance),
+      `Component.addVariant: The 'props' argument must be a variant config object or Variant instance [props-invalid]`,
+      TypeError
+    );
+
+    if (!isVariantInstance) {
+      config = cloneDeep(config);
+    }
+
+    config.id = uniqueId(config.id || 'variant', variantIds);
+
+    if (!config.templates) {
+      config.templates = {};
+      this.getViews().filter(view => view.contents).forEach(view => {
+        config.templates[view.basename] = view.contents.toString();
+      });
+    }
+
+    const variant = Variant.from(config);
     _variants.set(this, _variants.get(this).push(variant));
+    return this;
   }
 
   getDefaultVariant() {
-    return _variants.get(this).getDefault();
+    return this.getConfig('default') ? this.getVariants().find(this.getConfig('default')) : this.getVariants().first();
   }
 
   getViews() {
-    // TODO
+    const viewMatcher = this.getConfig('views.match', () => false); // default to no matches
+    const viewSorter = view => (view.extname === this.getConfig('views.default')) ? 0 : 1;
+    return this.getFiles().filter(viewMatcher).sortBy(viewSorter);
   }
 
-  getView(name) {
-    // TODO
+  getView(...args) {
+    return args ? this.getViews().find(...args) : this.getViews().first();
   }
 
-  _setSrc(src, files) {
+  getConfig(path, fallback) {
+    if (path) {
+      return cloneDeep(get(_config.get(this), path, fallback));
+    }
+    return cloneDeep(_config.get(this));
+  }
+
+  _setConfig(config) {
+    _config.set(this, config);
+  }
+
+  _setSrc(src) {
     _src.set(this, src);
   }
 
@@ -81,28 +127,35 @@ class Component extends Entity {
   }
 
   _buildVariants(variants = []) {
-    let variantCollection = new VariantCollection(variants, this.get('name'));
+    _variants.set(this, new VariantCollection());
 
-    if (!variantCollection.hasDefault()) {
-      variantCollection = variantCollection.push({
-        name: 'default',
-        default: true
+    if (variants.length === 0) {
+      variants.push({
+        id: 'default',
+        component: this.get('id')
       });
     }
 
-    _variants.set(this, variantCollection);
+    for (const variant of variants) {
+      this.addVariant(variant);
+    }
   }
 
   clone() {
-    const cloned = new this.constructor({
+    const props = Object.assign({}, this.getConfig(), this.getData(), {
       src: this.getSrc(),
       files: this.getFiles(),
-      config: this._config
+      config: this.getConfig()
     });
-    for (let [key, value] of Object.entries(this._data)) {
-      cloned.set(key, value);
-    }
-    return cloned;
+    return new this.constructor(props);
+  }
+
+  toJSON() {
+    return Object.assign(super.toJSON(), {
+      src: this.getSrc().toJSON(),
+      files: this.getFiles().toJSON(),
+      variants: this.getVariants().toJSON()
+    });
   }
 
   get relative() {
