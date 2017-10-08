@@ -27,4 +27,5 @@ module.exports = function (tree, env) {
       parentNode.children.splice(index, 1, ...componentNodes);
     }
   });
+  return tree;
 };
