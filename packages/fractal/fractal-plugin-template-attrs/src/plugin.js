@@ -11,7 +11,7 @@ module.exports = function (opts = {}) {
       components.forEach(component => {
         component.getVariants().forEach(variant => {
           variant.getTemplates().forEach(template => {
-            evalAttrs(template.tree, {template, component, variant, components});
+            template.tree = evalAttrs(template.tree, {template, component, variant, components});
           });
         });
       });
