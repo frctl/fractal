@@ -37,7 +37,7 @@ class Template {
     return new this.constructor(cloneDeep(this.tree), this.filename);
   }
 
-  toString(){
+  toString() {
     return toHTML(this.tree);
   }
 

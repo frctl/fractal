@@ -1,6 +1,4 @@
 const {omit} = require('lodash');
-const fromParse5 = require('hast-util-from-parse5');
-const Parser5 = require('parse5/lib/parser');
 const Validator = require('../validator');
 const schema = require('../../schema');
 const reservedWords = require('../../reserved-words');
@@ -8,7 +6,6 @@ const Collection = require('../collections/collection');
 const Entity = require('./entity');
 const Template = require('./template');
 
-const parser = new Parser5({locationInfo: true});
 const _templates = new WeakMap();
 
 class Variant extends Entity {
