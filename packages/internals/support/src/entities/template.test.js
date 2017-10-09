@@ -5,7 +5,7 @@ const Template = require('./template');
 const defaultContent = {};
 const makeTemplate = (content, filename) => new Template(content || defaultContent, filename || 'foo.html');
 
-describe.only('Template', function () {
+describe('Template', function () {
   describe('constructor', function () {
     it(`creates a new instance of a Template`, function () {
       const template = makeTemplate();

@@ -8,7 +8,9 @@ const Config = require('./config/store');
 class Fractal extends App {
 
   constructor(config = {}) {
-    super(new Config(config));
+    const conf = new Config(config);
+    conf.addAccessor('plugins', (plugins, store) => plugins.concat(processTpl(store.get('templates.helpers'))));
+    super(conf);
   }
 
   getComponents() {
@@ -72,17 +74,6 @@ class Fractal extends App {
 
   getRenderer() {
     return new Renderer(this.config.get('engines'));
-  }
-
-  getParser() {
-    return new Parser({
-      src: this.get('src'),
-      plugins: [
-        ...this.get('plugins', []),
-        processTpl(this.get('components.templates'))
-      ],
-      transforms: this.get('transforms', [])
-    });
   }
 
   debug(...args) {
