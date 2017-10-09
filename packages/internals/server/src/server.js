@@ -2,19 +2,12 @@ const Koa = require('koa');
 
 const _app = new WeakMap();
 const _port = new WeakMap();
-const _router = new WeakMap();
 const _server = new WeakMap();
 
 class Server {
 
-  constructor(fractal, opts = {}) {
-    const app = new Koa();
-    const router = require('./router')(fractal, opts);
-
-    app.use(router.routes()).use(router.allowedMethods());
-
-    _app.set(this, app);
-    _router.set(this, router);
+  constructor(opts = {}) {
+    _app.set(this, new Koa());
   }
 
   start(port) {
@@ -57,12 +50,8 @@ class Server {
     return _app.get(this);
   }
 
-  get router() {
-    return _router.get(this);
-  }
-
   get httpServer() {
-    return _app.get(this);
+    return _server.get(this);
   }
 
 }

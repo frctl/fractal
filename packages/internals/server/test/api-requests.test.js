@@ -3,7 +3,7 @@
 const {join} = require('path');
 const {Fractal} = require('@frctl/fractal');
 const {expect, request} = require('../../../../test/helpers');
-const Server = require('../src/server');
+const Server = require('../src/api-server');
 
 const app = new Fractal({
   src: join(__dirname, '/../../../../test/fixtures/components')
