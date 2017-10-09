@@ -1,5 +1,4 @@
 /* eslint no-unused-expressions: "off" */
-const proxyquire = require('proxyquire');
 const {expect} = require('../../../../../test/helpers');
 const reservedWords = require('../../reserved-words');
 const Collection = require('../collections/collection');
@@ -54,23 +53,6 @@ describe('Variant', function () {
       variant.addTemplate('<span></span>', 'file.html');
       expect(variant.getTemplates().length).to.equal(1);
       expect(variant.getTemplate()).to.be.instanceOf(Template);
-    });
-    it('instantiates the new template with a DOM tree and the filename', function () {
-      let passedArgs;
-      class Template {
-        constructor(...args) {
-          passedArgs = args;
-        }
-      }
-      const Variant = proxyquire('./variant', {
-        './template': Template
-      });
-      const variant = new Variant(defaultProps);
-      variant.addTemplate('<span></span>', 'file.html');
-      expect(passedArgs[0]).to.be.an('object');
-      expect(passedArgs[0].tree).be.an('object');
-      expect(passedArgs[0].tree.type).to.equal('root');
-      expect(passedArgs[0].filename).to.equal('file.html');
     });
   });
 

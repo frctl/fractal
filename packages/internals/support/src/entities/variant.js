@@ -1,16 +1,13 @@
 const {omit} = require('lodash');
 const {titlize} = require('@frctl/utils');
-const fromParse5 = require('hast-util-from-parse5');
 const {assert} = require('check-types');
-const Parser5 = require('parse5/lib/parser');
-const Validator = require('../validator');
 const schema = require('../../schema');
 const reservedWords = require('../../reserved-words');
 const Collection = require('../collections/collection');
+const Validator = require('../validator');
 const Entity = require('./entity');
 const Template = require('./template');
 
-const parser = new Parser5({locationInfo: true});
 const _templates = new WeakMap();
 
 class Variant extends Entity {
@@ -46,9 +43,7 @@ class Variant extends Entity {
   addTemplate(contents, filename) {
     // TODO: cache template parsing
     assert.string(contents, `Variant.addTemplate - template contents must be a string [template-invalid]`);
-    const tree = fromParse5(parser.parseFragment(contents), {file: contents});
-    const template = new Template({tree, filename});
-    _templates.get(this).push(template);
+    _templates.get(this).push(new Template({contents, filename}));
     return this;
   }
 

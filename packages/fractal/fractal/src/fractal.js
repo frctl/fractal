@@ -2,12 +2,15 @@ const App = require('@frctl/app');
 const {Component, Variant, EmittingPromise} = require('@frctl/support');
 const Renderer = require('@frctl/renderer');
 const debug = require('debug')('frctl:fractal');
+const processTpl = require('@frctl/fractal-plugin-preprocess-templates');
 const Config = require('./config/store');
 
 class Fractal extends App {
 
   constructor(config = {}) {
-    super(new Config(config));
+    const conf = new Config(config);
+    conf.addAccessor('plugins', (plugins, store) => plugins.concat(processTpl(store.get('templates.helpers'))));
+    super(conf);
   }
 
   getComponents() {
