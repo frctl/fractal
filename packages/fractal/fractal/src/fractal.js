@@ -2,6 +2,7 @@ const App = require('@frctl/app');
 const {Component, Variant, EmittingPromise} = require('@frctl/support');
 const Renderer = require('@frctl/renderer');
 const debug = require('debug')('frctl:fractal');
+const processTpl = require('@frctl/fractal-plugin-preprocess-templates');
 const Config = require('./config/store');
 
 class Fractal extends App {
@@ -71,6 +72,17 @@ class Fractal extends App {
 
   getRenderer() {
     return new Renderer(this.config.get('engines'));
+  }
+
+  getParser() {
+    return new Parser({
+      src: this.get('src'),
+      plugins: [
+        ...this.get('plugins', []),
+        processTpl(this.get('components.templates'))
+      ],
+      transforms: this.get('transforms', [])
+    });
   }
 
   debug(...args) {
