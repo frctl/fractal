@@ -7,9 +7,6 @@ const Server = require('../src/api-server');
 
 const app = new Fractal({
   src: join(__dirname, '/fixtures/components'),
-  plugins: [
-    require('@frctl/fractal-plugin-template-attrs')
-  ],
   engines: [
     require('@frctl/fractal-engine-html')
   ]

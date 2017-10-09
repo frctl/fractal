@@ -2,7 +2,7 @@
 
 const {Fractal} = require('@frctl/fractal');
 const {ApiServer} = require('@frctl/server');
-const {expect, request} = require('../../../../test/helpers');
+const {expect} = require('../../../../test/helpers');
 const serverFactory = require('./server');
 
 const app = new Fractal();

@@ -3,7 +3,7 @@ const {expect} = require('../../../../../test/helpers');
 const Template = require('./template');
 
 const defaultContent = {};
-const makeTemplate = (content, filename) => new Template({tree: content || defaultContent, filename: filename || 'foo.html'});
+const makeTemplate = (content, filename) => new Template({contents: content || defaultContent, filename: filename || 'foo.html'});
 
 describe('Template', function () {
   describe('constructor', function () {
@@ -30,11 +30,11 @@ describe('Template', function () {
     });
   });
 
-  describe('.tree', function () {
+  describe('.contents', function () {
     it('returns the template AST', function () {
       const template = makeTemplate(defaultContent);
-      expect(template.tree).to.be.an('object');
-      expect(template.tree).to.eql(defaultContent);
+      expect(template.contents).to.be.an('object');
+      expect(template.contents).to.eql(defaultContent);
     });
   });
 
@@ -44,8 +44,8 @@ describe('Template', function () {
       const cloned = template.clone();
       expect(template).to.eql(cloned);
       expect(template).to.not.equal(cloned);
-      expect(template.tree).to.eql(cloned.tree);
-      expect(template.tree).to.not.equal(cloned.tree);
+      expect(template.contents).to.eql(cloned.contents);
+      expect(template.contents).to.not.equal(cloned.contents);
     });
   });
 

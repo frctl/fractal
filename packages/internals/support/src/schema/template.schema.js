@@ -2,12 +2,16 @@ module.exports = {
   $schema: 'http://json-schema.org/draft-06/schema#',
   type: 'object',
   properties: {
-    tree: {
-      type: 'object'
+    contents: {
+      oneOf: [{
+        type: 'string'
+      }, {
+        type: 'object'
+      }]
     },
     filename: {
       type: 'string'
     }
   },
-  required: ['tree', 'filename']
+  required: ['contents', 'filename']
 };

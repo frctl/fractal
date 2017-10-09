@@ -18,7 +18,6 @@
     "lodash": "^4.17.4"
   },
   "devDependencies": {
-    "@frctl/fractal-engine-html": "^2.0.0-beta.0",
-    "@frctl/fractal-plugin-template-attrs": "^2.0.0-beta.0"
+    "@frctl/fractal-engine-html": "^2.0.0-beta.0"
   }
 }

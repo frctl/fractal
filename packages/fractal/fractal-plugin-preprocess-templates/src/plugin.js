@@ -1,4 +1,4 @@
-const evalAttrs = require('./tree-eval-attrs');
+const evalAttrs = require('./eval-attrs');
 // const includeComponents = require('./include-components');
 
 module.exports = function (opts = {}) {
@@ -13,10 +13,10 @@ module.exports = function (opts = {}) {
         component.getVariants().forEach(variant => {
           variant.getTemplates().forEach(template => {
             const env = {template, component, variant, components};
-            const tree = template.tree;
+            const tree = template.contents;
             evalAttrs(tree, env);
             // includeComponents(tree, env);
-            template.tree = tree;
+            template.contents = tree;
           });
         });
       });

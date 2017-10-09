@@ -8,8 +8,8 @@ const engines = [{
   render: () => Promise.resolve('the rendered string')
 }];
 
-const funjucksTemplate = new Template({tree: {type: 'element', tagName: 'div'}, filename: 'path/to/file.fjk'});
-const otherTemplate = new Template({tree: {type: 'element', tagName: 'div'}, filename: 'path/to/file.foo'});
+const funjucksTemplate = new Template({contents: {type: 'element', tagName: 'div'}, filename: 'path/to/file.fjk'});
+const otherTemplate = new Template({contents: {type: 'element', tagName: 'div'}, filename: 'path/to/file.foo'});
 
 describe('Renderer', function () {
   describe('.render()', function () {
