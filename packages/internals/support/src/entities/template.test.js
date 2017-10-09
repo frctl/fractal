@@ -5,13 +5,15 @@ const Template = require('./template');
 const defaultContent = {};
 const makeTemplate = (content, filename) => new Template(content || defaultContent, filename || 'foo.html');
 
-describe('Template', function () {
+describe.only('Template', function () {
   describe('constructor', function () {
     it(`creates a new instance of a Template`, function () {
       const template = makeTemplate();
       expect(template).to.exist;
       expect(template instanceof Template).to.be.true;
     });
+    it('accepts a DOM tree as contents');
+    it('accepts a string as contents');
   });
 
   describe('.filename', function () {
@@ -44,6 +46,13 @@ describe('Template', function () {
       expect(template).to.not.equal(cloned);
       expect(template.tree).to.eql(cloned.tree);
       expect(template.tree).to.not.equal(cloned.tree);
+    });
+  });
+
+  describe('.toString()', function () {
+    it('stringifies the template', function () {
+      const template = makeTemplate('<span></span>');
+      expect(template.toString()).to.equal('<span></span>');
     });
   });
 

@@ -40,11 +40,7 @@ class Variant extends Entity {
   }
 
   addTemplate(contents, filename) {
-    // TODO: cache template parsing
-    const tree = fromParse5(parser.parseFragment(contents), {
-      file: contents
-    });
-    const template = new Template(tree, filename);
+    const template = new Template(contents, filename);
     _templates.get(this).push(template);
     return this;
   }
