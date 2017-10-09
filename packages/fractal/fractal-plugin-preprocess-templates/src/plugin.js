@@ -1,9 +1,10 @@
-const includeTemplates = require('./include-components');
+const evalAttrs = require('./tree-eval-attrs');
+const includeComponents = require('./include-components');
 
 module.exports = function (opts = {}) {
   return {
 
-    name: 'include-components',
+    name: 'template-attrs',
 
     transform: 'components',
 
@@ -11,7 +12,11 @@ module.exports = function (opts = {}) {
       components.forEach(component => {
         component.getVariants().forEach(variant => {
           variant.getTemplates().forEach(template => {
-            template.tree = includeTemplates(template.tree, {template, component, variant, components});
+            const env = {template, component, variant, components};
+            const tree = template.tree;
+            evalAttrs(tree, env);
+            includeComponents(tree, env);
+            template.tree = tree;
           });
         });
       });

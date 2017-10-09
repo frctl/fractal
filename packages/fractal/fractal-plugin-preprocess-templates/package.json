@@ -1,9 +1,9 @@
 {
-  "name": "@frctl/fractal-plugin-template-components",
-  "description": "Include sub-templates in component views",
+  "name": "@frctl/fractal-plugin-preprocess-templates",
+  "description": "Variant template preprocessor for Fractal",
   "version": "2.0.0-beta.0",
   "homepage": "http://fractal.build",
-  "repository": "https://github.com/frctl/fractal/tree/v2/packages/fractal/fractal-plugin-template-includes",
+  "repository": "https://github.com/frctl/fractal/tree/v2/packages/fractal/fractal-plugin-preprocess-templates",
   "bugs": "https://github.com/frctl/fractal/issues",
   "author": "Mark Perkins <mark@allmarkedup.com> (http://allmarkedup.com)",
   "contributors": [
