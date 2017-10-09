@@ -4,7 +4,7 @@ module.exports = function (opts = {}) {
     name: 'pages',
 
     commands: [
-      require('./src/commands/info')(opts)
+      require('./src/commands/author')(opts)
     ]
 
   };

@@ -1,11 +1,11 @@
 module.exports = function (opts = {}) {
   return {
 
-    name: 'pages-info',
+    name: 'pages-author',
 
-    command: 'pages',
+    command: 'author',
 
-    description: 'Get information about your Pages site(s)',
+    description: 'Author a Fractal pages site',
 
     handler(argv) {
       return `

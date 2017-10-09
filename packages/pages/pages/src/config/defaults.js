@@ -38,26 +38,6 @@ module.exports = {
       filters: {},
       extensions: {}
     }
-  },
-
-  serve: {
-    port: 4444
-  },
-
-  build: {
-    port: 4444
   }
-
-  // plugins: [
-  //   require('../parser/plugin-hidden'),
-  //   require('../parser/plugin-frontmatter'),
-  //   require('../parser/plugin-permalink-templates'),
-  //   require('../parser/plugin-permalink-assets')
-  // ],
-  //
-  // transforms: [
-  //   require('../parser/transform-templates'),
-  //   require('../parser/transform-assets')
-  // ]
 
 };
