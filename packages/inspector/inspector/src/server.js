@@ -1,6 +1,6 @@
 const {join, extname} = require('path');
 const {readFileSync} = require('fs');
-const Server = require('@frctl/server');
+const {ApiServer} = require('@frctl/server');
 const mount = require('koa-mount');
 const serveStatic = require('koa-static');
 const Socket = require('koa-socket');
@@ -10,8 +10,8 @@ const distDir = join(__dirname, '../dist');
 
 module.exports = async function (app, opts = {}) {
   const watcher = app.watch();
-  const server = new Server(app, {
-    router: {
+  const server = new ApiServer(app, {
+    api: {
       prefix: '/_api'
     }
   });
