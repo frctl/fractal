@@ -11,6 +11,9 @@
     "Danielle Huntrods <danielle.huntrods@clearleft.com> (http://clearleft.com)"
   ],
   "license": "MIT",
+  "dependencies": {
+    "pupa": "^1.0.0"
+  },
   "devDependencies": {
     "@frctl/support": "^2.0.0-beta.0"
   }
