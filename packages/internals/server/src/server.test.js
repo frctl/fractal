@@ -6,7 +6,7 @@ const Server = require('./server');
 
 const app = new Fractal();
 
-describe.only('Server', function () {
+describe('Server', function () {
   describe('.start()', function () {
     it('starts a server and returns a promise when ready', function (done) {
       const server = new Server(app);

@@ -14,7 +14,7 @@ describe('Server requests', function () {
   let httpServer;
 
   before(async function () {
-    httpServer = await server.start(4444);
+    httpServer = await server.start(4445);
   });
 
   after(function () {
