@@ -9,6 +9,7 @@ const Entity = require('./entity');
 const Template = require('./template');
 
 const _templates = new WeakMap();
+const _scenarios = new WeakMap();
 
 class Variant extends Entity {
 
@@ -22,18 +23,19 @@ class Variant extends Entity {
     this._validateOrThrow(props);
 
     this._setTemplates(props.templates);
+    this._setScenarios(props.scenarios);
 
     this.defineGetter('label', value => value || titlize(this.get('id')));
   }
 
-  getTemplate(finder) {
-    if (!finder) {
+  getTemplate(...args) {
+    if (args.length === 0) {
       return this.getTemplates().first();
     }
-    if (typeof finder === 'string') {
-      return this.getTemplates().find(tpl => tpl.extname === finder);
+    if (args.length === 1 && typeof args[0] === 'string') {
+      return this.getTemplates().find('extname', args[0]);
     }
-    return this.getTemplates().find(finder);
+    return this.getTemplates().find(...args);
   }
 
   getTemplates() {
@@ -54,12 +56,43 @@ class Variant extends Entity {
     return this;
   }
 
+  createScenario(){
+    return {}; // TODO: generate scenario data from schema, if present
+  }
+
+  getScenarios(){
+    return new Collection(_scenarios.get(this) || []);
+  }
+
+  getScenario(...args) {
+    if (args.length === 0) {
+      return this.getScenarios().first();
+    }
+    if (args.length === 1 && typeof args[0] === 'string') {
+      return this.getScenarios().find('id', args[0]);
+    }
+    return this.getScenarios().find(...args);
+  }
+
+  addScenario(props) {
+    _scenarios.get(this).push(props);
+    return this;
+  }
+
   _setTemplates(templates) {
     if (Collection.isCollection(templates)) {
       _templates.set(this, templates.toArray());
     } else {
       _templates.set(this, []);
       this.addTemplates(templates);
+    }
+  }
+
+  _setScenarios(scenarios = []) {
+    if (Collection.isCollection(scenarios)) {
+      _scenarios.set(this, scenarios.toArray());
+    } else {
+      _scenarios.set(this, scenarios);
     }
   }
 
@@ -75,7 +108,8 @@ class Variant extends Entity {
 
   toJSON() {
     return Object.assign(super.toJSON(), {
-      templates: this.getTemplates().toJSON()
+      templates: this.getTemplates().toJSON(),
+      scenarios: this.getScenarios().toJSON(),
     });
   }
 
