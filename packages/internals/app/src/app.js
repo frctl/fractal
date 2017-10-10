@@ -46,7 +46,7 @@ class App {
       emitter.emit('parse.start');
       const cached = this.cache.get('collections');
       if (cached) {
-        return resolve(cloneDeep(cached));
+        return resolve(Object.assign({}, cached));
       }
       try {
         const parser = this.getParser();
