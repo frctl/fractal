@@ -22,11 +22,7 @@ module.exports = function () {
       }
 
       const pending = [];
-      console.log('-----');
-
       for (const request of payload) {
-
-        console.log(request);
         const component = components.find(request.component);
         if (!component) {
           ctx.status = 400;
