@@ -9,7 +9,7 @@ module.exports = function () {
       const components = await ctx.fractal.getComponents();
       ctx.body = components.mapToArray(component => {
         const componentData = component.getProps();
-        componentData.variants = component.getVariants().mapToArray(variant => variant.getProps());
+        componentData.variants = component.getVariants().toJSON();
         return componentData;
       });
     }
