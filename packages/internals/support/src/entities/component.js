@@ -152,10 +152,16 @@ class Component extends Entity {
   }
 
   toJSON() {
+    const defaultVariant = this.getDefaultVariant();
     return Object.assign(super.toJSON(), {
       src: this.getSrc().toJSON(),
       files: this.getFiles().toJSON(),
-      variants: this.getVariants().toJSON()
+      variants: this.getVariants().toJSON().map(variant => {
+        if (variant.id === defaultVariant.id) {
+          variant.default = true;
+        }
+        return variant;
+      })
     });
   }
 
