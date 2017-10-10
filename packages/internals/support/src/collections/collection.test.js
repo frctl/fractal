@@ -532,6 +532,13 @@ describe('Collection', function () {
       }).to.throw(TypeError, '[items-invalid]');
     });
 
+    it(`errors if the mapper returns null or undefined`, function () {
+      const collection = makeCollection();
+      expect(function () {
+        collection.map(c=>undefined);
+      }).to.throw(ReferenceError, '[map-returned-null-or-undefined]');
+    });
+
     it(`errors if a Promise is returned from the map fn`, async function () {
       const collection = makeCollection();
       expect(() => {
@@ -618,6 +625,16 @@ describe('Collection', function () {
       } catch (err) {
         expect(err instanceof TypeError).to.be.true;
         expect(err.message).to.match(/\[items-invalid\]/);
+      }
+    });
+
+    it(`errors if the mapper returns undefined`, async function () {
+      const collection = makeCollection([new Entity({id:'yesterday'})]);
+      try {
+        await collection.mapAsync(async (entity) => Promise.resolve(undefined) );
+      } catch (err) {
+        expect(err instanceof ReferenceError).to.be.true;
+        expect(err.message).to.match(/\[map-returned-null-or-undefined]/);
       }
     });
 

@@ -218,6 +218,10 @@ class Collection {
     return this._new(items);
   }
 
+  inspect(depth, opts) {
+    return `${this[Symbol.toStringTag]} [${this._items.map(i => ((i && i.inspect && i.inspect()) || i))}]`;
+  }
+
   _validateOrThrow(items) {
     const isValid = Collection.validate(items);
     assert(isValid, `Collection.constructor: The 'items' argument is optional but must be an array of objects [items-invalid]`, TypeError);
@@ -274,8 +278,8 @@ class Collection {
     const item = fn(items[0], 0, items);
     assert(checkMore.not.promise(item),
       `The mapping function supplied returned a Promise - please use 'mapAsync' for asynchronous mapping of a Collection [map-returned-promise]`, ReferenceError);
-    assert((check.not.null(item) || check.not.undefined(item)),
-      `The mapping function supplied returned a 'null' value, please ensure values are filtered before attempting to 'map' a Collection [map-returned-null]`, ReferenceError);
+    assert((check.not.null(item) && check.not.undefined(item)),
+      `The mapping function supplied returned a 'null' or 'undefined' value, please ensure values are filtered before attempting to 'map' a Collection [map-returned-null-or-undefined]`, ReferenceError);
     return entityMap.get(item.constructor) || Collection;
   }
 
@@ -288,8 +292,8 @@ class Collection {
     }
     fn = thisArg ? fn.bind(thisArg) : fn;
     return Promise.resolve(fn(items[0], 0, items)).then(item => {
-      assert((check.not.null(item) || check.not.undefined(item)),
-        `The mapping funtion supplied returned a 'null' value, please ensure values are filtered before attempting to 'map' a Collection [map-returned-null]`, ReferenceError);
+      assert((check.not.null(item) && check.not.undefined(item)),
+        `The mapping funtion supplied returned a 'null' or 'undefined' value, please ensure values are filtered before attempting to 'map' a Collection [map-returned-null-or-undefined]`, ReferenceError);
       return entityMap.get(item.constructor) || Collection;
     });
   }

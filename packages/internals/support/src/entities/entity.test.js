@@ -186,14 +186,14 @@ describe('Entity', function () {
       expect(entity.get('foo.bar[0]')).to.equal('one');
       expect(entity.get('foo')).to.eql({bar: ['one']});
     });
-    it('create a copy of the original value', function () {
+    it('does not create a copy of the original value', function () {
       const entity = makeEntity();
       const status = {
         tag: 'wip',
         label: 'Work in progress'
       };
       entity.set('status', status);
-      expect(entity.get('status')).to.not.equal(status);
+      expect(entity.get('status')).to.equal(status);
       expect(entity.get('status')).to.deep.eql(status);
     });
   });

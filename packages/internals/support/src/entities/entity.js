@@ -57,15 +57,14 @@ class Entity {
   }
 
   get(path, fallback) {
-    const initial = cloneDeep(get(_data.get(this), path, fallback));
+    const initial = get(_data.get(this), path, fallback);
     return computeFinal(_getters.get(this), path, initial, this);
   }
 
   set(path, value) {
     assert.string(path, `${this[Symbol.toStringTag]}.set - 'path' argument must be a string [path-invalid]`);
     // TODO: extract shared caching code with config // this.removeFromCache(path);
-    const initial = cloneDeep(value);
-    const final = computeFinal(_setters.get(this), path, initial, this);
+    const final = computeFinal(_setters.get(this), path, value, this);
     set(_data.get(this), path, final);
     return final;
   }
