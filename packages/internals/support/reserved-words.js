@@ -13,5 +13,6 @@ module.exports = [
   'src',
   'templates',
   'variants',
-  'views'
+  'views',
+  'default'
 ];
