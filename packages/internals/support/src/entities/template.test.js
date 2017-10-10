@@ -12,6 +12,8 @@ describe('Template', function () {
       expect(template).to.exist;
       expect(template instanceof Template).to.be.true;
     });
+    it('accepts a DOM tree as contents');
+    it('accepts a string as contents');
   });
 
   describe('.filename', function () {
@@ -44,6 +46,13 @@ describe('Template', function () {
       expect(template).to.not.equal(cloned);
       expect(template.tree).to.eql(cloned.tree);
       expect(template.tree).to.not.equal(cloned.tree);
+    });
+  });
+
+  describe('.toString()', function () {
+    it('stringifies the template', function () {
+      const template = makeTemplate('<span></span>');
+      expect(template.toString()).to.equal('<span></span>');
     });
   });
 

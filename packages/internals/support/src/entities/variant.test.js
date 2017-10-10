@@ -1,23 +1,13 @@
 /* eslint no-unused-expressions: "off" */
-const proxyquire = require('proxyquire');
 const {expect} = require('../../../../../test/helpers');
+const reservedWords = require('../../reserved-words');
 const Collection = require('../collections/collection');
 const Variant = require('./variant');
 const Entity = require('./entity');
 const Template = require('./template');
 
-const reservedConfigProps = [
-  'opts',
-  'files',
-  'views',
-  'previews',
-  'scenarios',
-  'templates'
-];
-
 const defaultProps = {
-  id: 'variant',
-  component: 'foo'
+  id: 'variant'
 };
 
 const makeVariant = props => new Variant(props || defaultProps);
@@ -43,19 +33,11 @@ describe('Variant', function () {
         scenarios: [],
         templates: {}
       });
-      for (const prop of reservedConfigProps) {
+      for (const prop of reservedWords) {
         expect(variant[prop]).to.equal(undefined);
       }
       expect(variant.id).to.equal('foo');
       expect(variant.foo).to.equal('bar');
-    });
-    it('defines getters that throw an error for all reserved properties', function () {
-      const variant = makeVariant({id: 'asdasd'});
-      for (const prop of reservedConfigProps) {
-        expect(() => {
-          variant[prop] = 'foo';
-        }).to.throw('[reserved-prop]');
-      }
     });
   });
   describe('.getTemplates()', function () {
@@ -71,22 +53,6 @@ describe('Variant', function () {
       variant.addTemplate('<span></span>', 'file.html');
       expect(variant.getTemplates().length).to.equal(1);
       expect(variant.getTemplate()).to.be.instanceOf(Template);
-    });
-    it('instantiates the new template with a DOM tree and the filename', function () {
-      let passedArgs;
-      class Template {
-        constructor(...args) {
-          passedArgs = args;
-        }
-      }
-      const Variant = proxyquire('./variant', {
-        './template': Template
-      });
-      const variant = new Variant(defaultProps);
-      variant.addTemplate('<span></span>', 'file.html');
-      expect(passedArgs[0]).to.be.an('object');
-      expect(passedArgs[0].type).to.equal('root');
-      expect(passedArgs[1]).to.equal('file.html');
     });
   });
 

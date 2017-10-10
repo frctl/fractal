@@ -1,4 +1,3 @@
-const toHTML = require('hast-util-to-html');
 const {Template} = require('@frctl/support');
 const EngineStore = require('./engine-store');
 
@@ -21,10 +20,9 @@ class Renderer {
     }
     opts = Object.assign({}, opts, {template: tpl});
     for (const preprocess of engine.preprocessors) {
-      preprocess(tpl.tree, context, opts);
+      tpl.tree = preprocess(tpl.tree, context, opts);
     }
-    const stringTemplate = toHTML(tpl.tree, opts.compiler);
-    return engine.render(stringTemplate, context, opts);
+    return engine.render(tpl.toString(), context, opts);
   }
 
 }

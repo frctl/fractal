@@ -1,16 +1,8 @@
 /* eslint no-unused-expressions: "off" */
 const {expect} = require('../../../../../test/helpers');
+const reservedWords = require('../../reserved-words');
 const FileCollection = require('../collections/file-collection');
 const File = require('./file');
-
-const reservedConfigProps = [
-  'opts',
-  'files',
-  'views',
-  'previews',
-  'scenarios',
-  'templates'
-];
 
 const Component = require('./component');
 
@@ -78,19 +70,11 @@ describe('Component', function () {
           scenarios: []
         }
       });
-      for (const prop of reservedConfigProps) {
+      for (const prop of reservedWords) {
         expect(component[prop]).to.equal(undefined);
       }
       expect(component.id).to.equal('foo');
       expect(component.foo).to.equal('bar');
-    });
-    it('defines getters that throw an error for all reserved properties', function () {
-      const component = new Component(basicComponent);
-      for (const prop of reservedConfigProps) {
-        expect(() => {
-          component[prop] = 'foo';
-        }).to.throw('[reserved-prop]');
-      }
     });
   });
 

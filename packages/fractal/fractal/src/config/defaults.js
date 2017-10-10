@@ -23,6 +23,9 @@ module.exports = {
           default: '.html'
         }
       }
+    },
+    templates: {
+      helpers: {}
     }
   },
 

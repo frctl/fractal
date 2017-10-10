@@ -27,4 +27,5 @@ module.exports = function (tree, env) {
       }
     }
   });
+  return tree;
 };
