@@ -12,8 +12,8 @@ export default new Router({
       props: true,
       children: [
         {
-          path: ':preview',
-          name: 'preview',
+          path: ':variant',
+          name: 'variant',
           props: true
         }
       ]

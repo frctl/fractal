@@ -55,6 +55,8 @@ export default {
     wrapperClasses(){
       return {
         'is-dragging': this.dragging,
+        'fixed-first': this.pane === 'first',
+        'fixed-second': this.pane === 'second',
         'split-pane--horizontal': this.direction === 'horizontal',
         'split-pane--vertical': this.direction === 'vertical'
       }
@@ -214,7 +216,7 @@ export default {
     width: 10px;
     cursor: ew-resize;
     &:after {
-      left: 5px;
+      left: 4px;
       height: 100%;
       top: 0;
       bottom: 0;

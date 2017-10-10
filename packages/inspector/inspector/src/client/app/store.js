@@ -12,7 +12,12 @@ const store = new Vuex.Store({
     initialised: false,
     loading: true,
     components: [],
+    variants: [],
     previews: [],
+    selected: {
+      variants: [],
+      previews: []
+    },
     dirty: false
   },
 
@@ -24,10 +29,10 @@ const store = new Vuex.Store({
       return response;
     },
 
-    async fetchComponentList({commit}) {
+    async fetchComponentList({commit, state}) {
       commit('loading', true);
       const response = await axios.get('/_api/components');
-      commit('setComponents', response.data || []);
+      commit('setEntities', {components: response.data || [], initialised: state.initialised});
       commit('loading', false);
       commit('dirty', false);
       return response;
@@ -37,14 +42,6 @@ const store = new Vuex.Store({
       commit('loading', true);
       const response = await axios.get(`/_api/components/${id}`);
       commit('setComponent', response.data);
-      commit('loading', false);
-      return response;
-    },
-
-    async fetchComponentPreview({commit}, id) {
-      commit('loading', true);
-      const response = await axios.post(`/_api/components/${id}/render`);
-      commit('setComponentPreview', {id, html: response.data});
       commit('loading', false);
       return response;
     }
@@ -73,18 +70,83 @@ const store = new Vuex.Store({
       state.initialised = init;
     },
 
-    setComponents(state, components) {
+    setEntities(state, {components, initialised}) {
+      // TODO: split this up a bit
       state.components = components;
+      const previews = [];
+      const variants = [];
+      for (const component of components) {
+        for (const variant of component.variants) {
+          const variantId = `${component.id}.${variant.id}`;
+          variants.push(Object.assign({}, variant, {
+            id: variantId,
+            component: component.id,
+          }));
+          if (variant.scenarios.length === 0) {
+            const id = `${variantId}.default`;
+            previews.push({
+              id,
+              component: component.id,
+              variant: variantId,
+              originalVariantId: variant.id,
+              label: 'default',
+              default: true,
+              context: {}
+            });
+          } else {
+            for (const scenario of variant.scenarios) {
+              const id = `${variantId}.${scenario.id}`;
+              previews.push({
+                id,
+                component: component.id,
+                variant: variantId,
+                originalVariantId: variant.id,
+                label: scenario.label || scenario.id,
+                context: scenario.context || {}
+              });
+            }
+          }
+        }
+      }
+      if (!initialised) {
+        state.selected.variants = variants.map(v => v.id);
+        state.selected.previews = previews.map(p => p.id);
+      } else {
+
+        // remove any selections that are no longer valid
+        state.selected.variants = state.selected.variants.filter(id => variants.find(v => v.id === id));
+        state.selected.previews = state.selected.previews.filter(id => previews.find(p => p.id === id));
+
+        // new variants default to being selected in the UI
+        variants.forEach(v => {
+          if (!state.variants.find(existing => existing.id === v.id)) {
+            state.selected.variants.push(v.id);
+          }
+        });
+
+        // new previews default to being selected if their variant is selected
+        previews.forEach(p => {
+          if (!state.previews.find(existing => existing.id === p.id) && state.selected.variants.includes(p.variant)) {
+            state.selected.previews.push(p.id);
+          }
+        });
+
+        // if any variants have all previews unselected, then unselect them
+        variants.forEach(v => {
+          const previewIds = previews.filter(p => p.variant === v.id).map(p => p.id);
+          const hasSelectedPreviews = state.selected.previews.find(id => previewIds.includes(id));
+          if (!hasSelectedPreviews) {
+            state.selected.variants = state.selected.variants.filter(id => v.id !== id);
+          }
+        })
+      }
+      state.previews = previews;
+      state.variants = variants;
     },
 
     setComponent(state, component) {
       remove(state.components, item => item.id === component.id);
       state.components.push(component);
-    },
-
-    setComponentPreview(state, data) {
-      remove(state.previews, preview => preview.id === data.id);
-      state.previews.push(data);
     }
 
   },
@@ -99,13 +161,20 @@ const store = new Vuex.Store({
       return state.components.find(component => component.id === id);
     },
 
-    getComponentPreview: state => id => {
-      const preview = state.previews.find(preview => preview.id === id);
-      if (preview) {
-        return preview.html;
-      }
-      return '';
+    getVariantsForComponent: state => componentId => {
+      return state.variants.filter(v => v.component === componentId);
+    },
+
+    getPreviewsForComponent: state => componentId => {
+      return state.previews.filter(p => p.component === componentId);
+    },
+
+    getSelectedPreviewsForComponent: state => componentId => {
+      return state.previews.filter(p => p.component === componentId).filter(p => {
+        return state.selected.previews.includes(p.id);
+      });
     }
+
   }
 
 });

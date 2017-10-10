@@ -12,23 +12,21 @@
     </div>
 
     <ul class="components__list">
-      <component-list-item
-        v-for="(item, index) in filteredComponents"
-        :key="item.id"
-        :component="item"
-        :active="item === component" />
+      <li class="components__component" :class="{ 'is-selected': item === component }" v-for="(item, index) in filteredComponents" :key="item.id">
+        <h3 class="components__label">
+          <router-link :to="{ name: 'component', params: {component: item.id} }">{{ item.label }}</router-link>
+        </h3>
+      </li>
     </ul>
 
   </div>
 </template>
 
 <script>
-import ComponentListItem from './ComponentListItem.vue';
+
 import fuzzy from 'fuzzysearch';
 
 export default {
-
-  components: { ComponentListItem  },
 
   props: ['component', 'components'],
 
@@ -107,9 +105,6 @@ export default {
   height: 100%;
   display: flex;
   flex: auto;
-  background: $color-bg-dark;
-
-  // overflow: hidden;
 
   a {
     text-decoration: none;
@@ -145,6 +140,32 @@ export default {
     overflow: auto;
   }
 
+  &__component {
+
+    position: relative;
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+
+    &.is-selected {
+      position: relative;
+      z-index: 2;
+      background-color: #eee;
+    }
+
+  }
+
+  &__label {
+    font-size: 1rem;
+    a {
+      color: #333;
+      display: block;
+      padding: 8px 1rem 6px 1rem;
+    }
+  }
+
+  &__component.is-selected &__label {
+    font-weight: bold;
+  }
 }
 
 </style>
