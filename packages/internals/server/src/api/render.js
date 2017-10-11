@@ -6,7 +6,7 @@ module.exports = function () {
 
     method: 'post',
 
-    path: '/components/render',
+    path: '/render',
 
     middleware: koaBody(),
 

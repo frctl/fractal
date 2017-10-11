@@ -5,9 +5,10 @@ const Server = require('./server');
 
 const routes = [
   'overview',
+  'render',
   'components/list',
   'components/detail',
-  'components/render'
+  'components/assets'
 ];
 
 class ApiServer extends Server {
