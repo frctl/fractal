@@ -1,9 +1,9 @@
 <template lang="html">
   <div id="app">
     <splash message="loading components..." v-if="initialising" />
-    <split-pane direction="vertical" :opts="{size: 300, min: 200, max: 400, closed: false}" v-else>
+    <split-pane direction="vertical" :opts="{size: 300, min: 200, max: 400}" v-else>
       <pane slot="first" class="sidebar">
-        <split-pane direction="horizontal" :opts="{pane: 'second', size: 400, min: 100, closed: false}">
+        <split-pane direction="horizontal" :opts="{pane: 'second', size: appHeight/2, min: appHeight * 0.25, max: appHeight * 0.75}">
           <pane slot="first">
             <component-list :components="components" :component="component" />
           </pane>
@@ -43,6 +43,10 @@ export default {
   },
 
   computed: {
+
+    appHeight() {
+      return window.innerHeight;
+    },
 
     component(){
       if (this.$route.params.component) {

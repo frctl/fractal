@@ -87,6 +87,12 @@ export default {
 
 .previewSelector {
 
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  flex: auto;
+  overflow: auto;
+
   &__title {
     background-color: #fff;
     border-top: 1px solid $color-divider;

@@ -117,6 +117,7 @@ export default {
   },
 
   mounted() {
+    this.size = this.opts.size || this.size;
     this.pane = this.opts.pane || this.pane;
     this.min = this.opts.min || this.min;
     this.max = this.opts.max || this.max;
