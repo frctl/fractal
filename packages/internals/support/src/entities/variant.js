@@ -18,6 +18,7 @@ class Variant extends Entity {
     if (Variant.isVariant(props)) {
       return props;
     }
+    assert.object(props, 'Variant.constructor - props must be an object [properties-invalid]');
     if (!props.id && props.label) {
       props.id = props.label;
     }
@@ -62,7 +63,7 @@ class Variant extends Entity {
     return this;
   }
 
-  getScenarios(){
+  getScenarios() {
     return new Collection(_scenarios.get(this) || []);
   }
 
@@ -106,14 +107,14 @@ class Variant extends Entity {
   clone() {
     return new this.constructor(Object.assign(this.getData(), {
       templates: this.getTemplates().clone(),
-      scenarios: this.getScenarios().clone(),
+      scenarios: this.getScenarios().clone()
     }));
   }
 
   toJSON() {
     return Object.assign(super.toJSON(), {
       templates: this.getTemplates().toJSON(),
-      scenarios: this.getScenarios().toJSON(),
+      scenarios: this.getScenarios().toJSON()
     });
   }
 

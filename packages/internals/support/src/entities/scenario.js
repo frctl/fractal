@@ -12,11 +12,12 @@ class Scenario extends Entity {
     if (Scenario.isScenario(props)) {
       return props;
     }
-
+    assert.object(props, 'Variant.constructor - props must be an object [properties-invalid]');
     if (!props.id && props.label) {
       props.id = props.label;
     }
     props.id = props.id ? slugify(props.id) : undefined;
+    props.context = props.context || {};
 
     const entityProps = omit(props, reservedWords);
 
@@ -27,7 +28,7 @@ class Scenario extends Entity {
   }
 
   _validateOrThrow(props) {
-    return true;
+    Validator.assertValid(props, schema.scenario, `Scenario.constructor: The properties provided do not match the schema of a scenario [properties-invalid]`);
   }
 
   static isScenario(item) {

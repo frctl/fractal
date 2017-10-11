@@ -535,7 +535,7 @@ describe('Collection', function () {
     it(`errors if the mapper returns null or undefined`, function () {
       const collection = makeCollection();
       expect(function () {
-        collection.map(c=>undefined);
+        collection.map(c => undefined);
       }).to.throw(ReferenceError, '[map-returned-null-or-undefined]');
     });
 
@@ -629,9 +629,9 @@ describe('Collection', function () {
     });
 
     it(`errors if the mapper returns undefined`, async function () {
-      const collection = makeCollection([new Entity({id:'yesterday'})]);
+      const collection = makeCollection([new Entity({id: 'yesterday'})]);
       try {
-        await collection.mapAsync(async (entity) => Promise.resolve(undefined) );
+        await collection.mapAsync(async entity => Promise.resolve(undefined));
       } catch (err) {
         expect(err instanceof ReferenceError).to.be.true;
         expect(err.message).to.match(/\[map-returned-null-or-undefined]/);

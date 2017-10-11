@@ -1,4 +1,3 @@
-const {defaultsDeep} = require('@frctl/utils');
 const koaBody = require('koa-body');
 
 module.exports = function () {
@@ -44,7 +43,7 @@ module.exports = function () {
             variant: variant.toJSON(),
             context,
             output
-          }
+          };
         });
         pending.push(result);
       }

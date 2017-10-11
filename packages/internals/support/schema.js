@@ -7,5 +7,6 @@ module.exports.pluginStore = require('./src/schema/plugin-store.schema');
 module.exports.component = require('./src/schema/component.schema');
 module.exports.variant = require('./src/schema/variant.schema');
 module.exports.template = require('./src/schema/template.schema');
+module.exports.scenario = require('./src/schema/scenario.schema');
 module.exports.file = require('./src/schema/file.schema');
 module.exports.fileCollection = require('./src/schema/file-collection.schema');

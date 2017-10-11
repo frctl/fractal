@@ -80,7 +80,7 @@ const store = new Vuex.Store({
           const variantId = `${component.id}.${variant.id}`;
           variants.push(Object.assign({}, variant, {
             id: variantId,
-            component: component.id,
+            component: component.id
           }));
           if (variant.scenarios.length === 0) {
             const id = `${variantId}.default`;
@@ -108,11 +108,7 @@ const store = new Vuex.Store({
           }
         }
       }
-      if (!initialised) {
-        state.selected.variants = variants.map(v => v.id);
-        state.selected.previews = previews.map(p => p.id);
-      } else {
-
+      if (initialised) {
         // remove any selections that are no longer valid
         state.selected.variants = state.selected.variants.filter(id => variants.find(v => v.id === id));
         state.selected.previews = state.selected.previews.filter(id => previews.find(p => p.id === id));
@@ -138,7 +134,10 @@ const store = new Vuex.Store({
           if (!hasSelectedPreviews) {
             state.selected.variants = state.selected.variants.filter(id => v.id !== id);
           }
-        })
+        });
+      } else {
+        state.selected.variants = variants.map(v => v.id);
+        state.selected.previews = previews.map(p => p.id);
       }
       state.previews = previews;
       state.variants = variants;

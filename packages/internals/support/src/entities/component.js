@@ -1,5 +1,5 @@
 const {get, omit} = require('lodash');
-const {normalizeId, uniqueId, cloneDeep, titlize} = require('@frctl/utils');
+const {normalizeId, uniqueId, cloneDeep, titlize, slugify} = require('@frctl/utils');
 const check = require('check-types');
 const Validator = require('../validator');
 const schema = require('../../schema');
@@ -77,7 +77,7 @@ class Component extends Entity {
       config = cloneDeep(config);
     }
 
-    config.id = uniqueId(config.id || 'variant', variantIds);
+    config.id = uniqueId(slugify(config.id || config.label || 'variant'), variantIds);
 
     if (!config.templates) {
       config.templates = {};

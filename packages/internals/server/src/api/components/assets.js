@@ -15,10 +15,10 @@ module.exports = function () {
 
       // TODO: proper asset build step
       const output = {};
-      for (const ext of ['.js','.css']) {
-        const type = ext.replace('.','');
+      for (const ext of ['.js', '.css']) {
+        const type = ext.replace('.', '');
         const files = component.getFiles().filter('extname', ext);
-        if (files.length) {
+        if (files.length > 0) {
           output[type] = files.mapToArray(f => f.contents).join('\n');
         } else {
           output[type] = null;

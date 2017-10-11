@@ -37,7 +37,7 @@ function resolveValue(existing, additional, propInfo) {
     if (typeof additional === 'string' && propInfo.spaceSeparated) {
       additional = spaceSep.parse(additional);
     } else if (typeof additional === 'string' && propInfo.commaSeparated) {
-      additional = commaSeparated.parse(additional);
+      additional = commaSep.parse(additional);
     }
     return toArray(existing).concat(toArray(additional));
   }
