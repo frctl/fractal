@@ -12,7 +12,7 @@ const app = new Fractal({
   ]
 });
 
-describe.only('Server requests', function () {
+describe('Server requests', function () {
   let server = new Server(app);
   let httpServer;
 
@@ -68,7 +68,7 @@ describe.only('Server requests', function () {
       const res = await request(httpServer)
                           .post('/render')
                           .send([{
-                            component: 'button',
+                            component: 'button'
                           }]);
       expect(res).to.have.status(200);
       expect(res).to.be.json;
@@ -77,7 +77,7 @@ describe.only('Server requests', function () {
       request(httpServer)
         .post('/render')
         .send([{
-          component: 'foo',
+          component: 'foo'
         }])
         .end(function (err, res) {
           expect(res).to.have.status(400);
