@@ -199,6 +199,9 @@ class Collection {
 
   toJSON() {
     return this.toArray().map(item => {
+      if (item && typeof item.toJSON === 'function') {
+        return item.toJSON();
+      }
       return mapValues(item, prop => {
         if (prop && typeof prop.toJSON === 'function') {
           return prop.toJSON();
