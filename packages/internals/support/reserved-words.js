@@ -1,7 +1,6 @@
 module.exports = [
   'cli',
   'component',
-  'context',
   'data',
   'files',
   'inspector',

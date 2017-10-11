@@ -1,5 +1,5 @@
 const {omit} = require('lodash');
-const {titlize} = require('@frctl/utils');
+const {titlize, slugify} = require('@frctl/utils');
 const {assert} = require('check-types');
 const schema = require('../../schema');
 const reservedWords = require('../../reserved-words');
@@ -7,6 +7,7 @@ const Collection = require('../collections/collection');
 const Validator = require('../validator');
 const Entity = require('./entity');
 const Template = require('./template');
+const Scenario = require('./scenario');
 
 const _templates = new WeakMap();
 const _scenarios = new WeakMap();
@@ -17,6 +18,11 @@ class Variant extends Entity {
     if (Variant.isVariant(props)) {
       return props;
     }
+    if (!props.id && props.label) {
+      props.id = props.label;
+    }
+    props.id = props.id ? slugify(props.id) : undefined;
+
     const entityProps = omit(props, reservedWords);
 
     super(entityProps);
@@ -56,10 +62,6 @@ class Variant extends Entity {
     return this;
   }
 
-  createScenario(){
-    return {}; // TODO: generate scenario data from schema, if present
-  }
-
   getScenarios(){
     return new Collection(_scenarios.get(this) || []);
   }
@@ -75,7 +77,7 @@ class Variant extends Entity {
   }
 
   addScenario(props) {
-    _scenarios.get(this).push(props);
+    _scenarios.get(this).push((new Scenario(props)));
     return this;
   }
 
@@ -92,7 +94,8 @@ class Variant extends Entity {
     if (Collection.isCollection(scenarios)) {
       _scenarios.set(this, scenarios.toArray());
     } else {
-      _scenarios.set(this, scenarios);
+      _scenarios.set(this, []);
+      scenarios.forEach(props => this.addScenario(props));
     }
   }
 
@@ -102,7 +105,8 @@ class Variant extends Entity {
 
   clone() {
     return new this.constructor(Object.assign(this.getData(), {
-      templates: this.getTemplates().clone()
+      templates: this.getTemplates().clone(),
+      scenarios: this.getScenarios().clone(),
     }));
   }
 
