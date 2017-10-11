@@ -12,8 +12,7 @@
       </pane>
       <pane slot="second">
         <error-message :error="error"  v-if="error" />
-        <preview :code="preview" v-else-if="preview" />
-        <splash message="use the options panel to select one or more previews" v-else-if="component" />
+        <preview :component="component" v-else-if="component" />
         <splash message="select a component from the left to get started" v-else />
       </pane>
     </split-pane>
@@ -22,7 +21,7 @@
 
 <script>
 
-import axios from 'axios';
+import eventBus from './app/events.js';
 import Splash from './components/Splash.vue';
 import Pane from './components/Pane.vue';
 import Preview from './components/Preview.vue';
@@ -30,8 +29,6 @@ import SplitPane from './components/SplitPane.vue';
 import ComponentList from './components/ComponentList.vue';
 import PreviewSelector from './components/PreviewSelector.vue';
 import ErrorMessage from './components/Error.vue';
-
-let previewIds = [];
 
 export default {
 
@@ -41,8 +38,7 @@ export default {
 
   data(){
     return {
-      error: null,
-      preview: null
+      error: null
     }
   },
 
@@ -65,17 +61,6 @@ export default {
 
     loading() {
       return this.$store.state.loading;
-    },
-
-    previews() {
-      if (this.component) {
-        return this.$store.getters.getSelectedPreviewsForComponent(this.component.id);
-      }
-      return [];
-    },
-
-    previewIds() {
-      return this.previews.map(p => p.id);
     }
   },
 
@@ -83,30 +68,6 @@ export default {
     async loadComponent(){
       if (this.component) {
         await this.$store.dispatch('fetchComponentDetail', this.component.id);
-      }
-    },
-
-    async renderPreview(){
-      if (this.previews.length) {
-        try {
-          const response = await axios({
-            method: 'post',
-            url: `/_api/components/render`,
-            data: this.previews.map(preview => {
-              return {
-                component: this.component.id,
-                variant: preview.originalVariantId,
-                context: preview.context
-              }
-            })
-          });
-          this.preview = response.data.map(result => result.output).join('<br>');
-        } catch(err) {
-          this.error = err;
-          this.render = null;
-        }
-      } else {
-        this.preview = null;
       }
     }
   },
@@ -123,16 +84,9 @@ export default {
           this.$store.dispatch('fetchComponentList'),
           this.$store.dispatch('fetchComponentDetail', this.component.id),
         ]);
+        eventBus.$emit('updated');
       }
     },
-
-    previewIds(ids){
-      if (JSON.stringify(previewIds) !== JSON.stringify(ids)) {
-        this.renderPreview();
-        previewIds = ids;
-      }
-    }
-
   },
 
   mounted(){
