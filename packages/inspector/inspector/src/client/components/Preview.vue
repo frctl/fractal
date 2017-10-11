@@ -93,6 +93,7 @@ export default {
             })
           })
         ]);
+        this.error = null;
         this.chunks = chunks.data.map(result => result.output);
         this.assets = assets.data;
       } catch(err) {
