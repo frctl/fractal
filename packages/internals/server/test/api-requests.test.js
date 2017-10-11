@@ -12,7 +12,7 @@ const app = new Fractal({
   ]
 });
 
-describe('Server requests', function () {
+describe.only('Server requests', function () {
   let server = new Server(app);
   let httpServer;
 
@@ -63,35 +63,39 @@ describe('Server requests', function () {
     });
   });
 
-  // describe('POST /components/:id/render', function () {
-  //   it('responds with HTML', async function () {
-  //     const res = await request(httpServer)
-  //                         .post('/components/button/render')
-  //                         .send({text: 'foo'});
-  //     expect(res).to.have.status(200);
-  //     expect(res).to.be.html;
-  //   });
-  //   it('throws a 404 if the component is not found', function (done) {
-  //     request(httpServer)
-  //       .post('/components/foo/render')
-  //       .send({text: 'foo'})
-  //       .end(function (err, res) {
-  //         expect(res).to.have.status(404);
-  //         done();
-  //       });
-  //   });
-  //   it('returns the default rendered variant of the component', async function () {
-  //     const res = await request(httpServer)
-  //                         .post('/components/button/render')
-  //                         .send({context: {text: 'foo'}});
-  //     expect(res.text.includes('button')).to.be.true;
-  //     expect(res.text.includes('class="primary"')).to.be.true;
-  //   });
-  //   it('allows specifying an alternative variant via a query param', async function () {
-  //     const res = await request(httpServer)
-  //                         .post('/components/button/render?variant=secondary')
-  //                         .send({text: 'foo'});
-  //     expect(res.text.includes('class="secondary"')).to.be.true;
-  //   });
-  // });
+  describe('POST /render', function () {
+    it('responds with JSON', async function () {
+      const res = await request(httpServer)
+                          .post('/render')
+                          .send([{
+                            component: 'button',
+                          }]);
+      expect(res).to.have.status(200);
+      expect(res).to.be.json;
+    });
+    it('throws a 400 if the component is not found', function (done) {
+      request(httpServer)
+        .post('/render')
+        .send([{
+          component: 'foo',
+        }])
+        .end(function (err, res) {
+          expect(res).to.have.status(400);
+          done();
+        });
+    });
+    // it('returns the default rendered variant of the component', async function () {
+    //   const res = await request(httpServer)
+    //                       .post('/components/button/render')
+    //                       .send({context: {text: 'foo'}});
+    //   expect(res.text.includes('button')).to.be.true;
+    //   expect(res.text.includes('class="primary"')).to.be.true;
+    // });
+    // it('allows specifying an alternative variant via a query param', async function () {
+    //   const res = await request(httpServer)
+    //                       .post('/components/button/render?variant=secondary')
+    //                       .send({text: 'foo'});
+    //   expect(res.text.includes('class="secondary"')).to.be.true;
+    // });
+  });
 });

@@ -10,6 +10,7 @@ module.exports = function () {
     middleware: koaBody(),
 
     async handler(ctx, next) {
+      // TODO: better error reporting
       const app = ctx.fractal;
       const components = await app.getComponents();
 
