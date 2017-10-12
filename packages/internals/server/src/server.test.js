@@ -18,9 +18,5 @@ describe('Server', function () {
         });
       });
     });
-    it('rejects the promise if no port is defined', function () {
-      const server = new Server(app);
-      return expect(server.start()).to.eventually.be.rejectedWith('[port-missing]');
-    });
   });
 });

@@ -3292,11 +3292,20 @@ graceful-fs@^4.0.0, graceful-fs@^4.1.11, graceful-fs@^4.1.2, graceful-fs@^4.1.6:
   resolved "https://registry.yarnpkg.com/graceful-readlink/-/graceful-readlink-1.0.1.tgz#4cafad76bc62f02fa039b2f94e9a3dd3a391a725"
 
 gray-matter@^3.0.3:
+<<<<<<< HEAD
   version "3.0.6"
   resolved "https://registry.yarnpkg.com/gray-matter/-/gray-matter-3.0.6.tgz#43480310bca9965009cbd844fa04de6756dd1ccf"
   dependencies:
     js-yaml "^3.8.1"
     kind-of "^5.0.0"
+=======
+  version "3.0.8"
+  resolved "https://registry.yarnpkg.com/gray-matter/-/gray-matter-3.0.8.tgz#44bdaff586ab4e61e3fe2d30d577da0e502afb93"
+  dependencies:
+    extend-shallow "^2.0.1"
+    js-yaml "^3.10.0"
+    kind-of "^5.0.2"
+>>>>>>> v2
     strip-bom-string "^1.0.0"
 
 growl@1.9.2:
@@ -4163,7 +4172,11 @@ js-yaml@3.6.1:
     argparse "^1.0.7"
     esprima "^2.6.0"
 
+<<<<<<< HEAD
 js-yaml@^3.4.3, js-yaml@^3.5.1, js-yaml@^3.8.1, js-yaml@^3.8.4:
+=======
+js-yaml@^3.10.0, js-yaml@^3.4.3, js-yaml@^3.5.1, js-yaml@^3.8.4:
+>>>>>>> v2
   version "3.10.0"
   resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.10.0.tgz#2e78441646bd4682e963f22b6e92823c309c62dc"
   dependencies:
@@ -4284,7 +4297,11 @@ kind-of@^4.0.0:
   dependencies:
     is-buffer "^1.1.5"
 
+<<<<<<< HEAD
 kind-of@^5.0.0:
+=======
+kind-of@^5.0.2:
+>>>>>>> v2
   version "5.0.2"
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-5.0.2.tgz#f57bec933d9a2209ffa96c5c08343607b7035fda"
 
@@ -4347,8 +4364,13 @@ koa-router@^7.2.1:
     path-to-regexp "^1.1.1"
 
 koa-send@^4.1.0:
+<<<<<<< HEAD
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/koa-send/-/koa-send-4.1.0.tgz#07d5a4eaab212679fe99916aae6b1109c08c2361"
+=======
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/koa-send/-/koa-send-4.1.1.tgz#bd3fa116b1f592f5fff23c9670aae69787f6cb57"
+>>>>>>> v2
   dependencies:
     debug "^2.6.3"
     http-errors "^1.6.1"

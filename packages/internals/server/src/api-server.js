@@ -36,7 +36,7 @@ class ApiServer extends Server {
       }
     }
 
-    this.app.use(router.routes()).use(router.allowedMethods());
+    this.use(router.routes()).use(router.allowedMethods());
   }
 
 }
