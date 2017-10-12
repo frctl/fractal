@@ -20,8 +20,26 @@ class Pages extends App {
 
   getPages(opts = {}) {
     return new EmittingPromise(async (resolve, reject, emitter) => {
-      resolve(new PageCollection);
+      resolve(new PageCollection());
     }, opts.emitter);
+  }
+
+  build(opts = {}){
+    return new EmittingPromise(async (resolve, reject, emitter) => {
+      resolve('done!');
+    }, opts.emitter);
+  }
+
+  watch() {
+    this.fractal.watch().on('all', () => {
+      this.dirty = true;
+    });
+    return super.watch();
+  }
+
+  unwatch() {
+    this.fractal.unwatch();
+    return super.unwatch();
   }
 
   debug(...args) {
@@ -34,7 +52,7 @@ class Pages extends App {
   }
 
   get version() {
-    return require('../package.json').version;
+    return Pages.version;
   }
 
   get [Symbol.toStringTag]() {
@@ -42,5 +60,7 @@ class Pages extends App {
   }
 
 }
+
+Pages.version = require('../package.json').version;
 
 module.exports = Pages;
