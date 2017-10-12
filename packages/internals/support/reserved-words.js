@@ -3,7 +3,6 @@ module.exports = [
   'component',
   'data',
   'files',
-  'inspector',
   'opts',
   'pages',
   'previews',
