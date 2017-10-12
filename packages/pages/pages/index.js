@@ -1,4 +1,5 @@
 module.exports = function (opts = {}) {
+
   return {
 
     name: 'pages',

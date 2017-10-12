@@ -20,7 +20,7 @@ function makePages(customConfig) {
   return new Pages(new Fractal(), customConfig || config);
 }
 
-describe.only('Pages', function () {
+describe('Pages', function () {
   describe('constructor()', function () {
     it('wraps configuration data in a ConfigStore instance', () => {
       const pages = makePages();
