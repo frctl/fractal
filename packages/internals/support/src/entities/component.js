@@ -1,5 +1,5 @@
 const {get, omit} = require('lodash');
-const {normalizeId, uniqueId, cloneDeep} = require('@frctl/utils');
+const {normalizeId, uniqueId, cloneDeep, titlize, slugify} = require('@frctl/utils');
 const check = require('check-types');
 const Validator = require('../validator');
 const schema = require('../../schema');
@@ -33,6 +33,8 @@ class Component extends Entity {
     this._setSrc(props.src);
     this._setFiles(props.files);
     this._buildVariants(this.getConfig('variants'));
+
+    this.defineGetter('label', value => value || titlize(this.get('id')));
   }
 
   getSrc() {
@@ -75,7 +77,7 @@ class Component extends Entity {
       config = cloneDeep(config);
     }
 
-    config.id = uniqueId(config.id || 'variant', variantIds);
+    config.id = uniqueId(slugify(config.id || config.label || 'variant'), variantIds);
 
     if (!config.templates) {
       config.templates = {};
@@ -142,19 +144,24 @@ class Component extends Entity {
   }
 
   clone() {
-    const props = Object.assign({}, this.getConfig(), this.getData(), {
+    return new this.constructor({
       src: this.getSrc(),
       files: this.getFiles(),
-      config: this.getConfig()
+      config: Object.assign({}, this.getConfig(), this.getData())
     });
-    return new this.constructor(props);
   }
 
   toJSON() {
+    const defaultVariant = this.getDefaultVariant();
     return Object.assign(super.toJSON(), {
       src: this.getSrc().toJSON(),
       files: this.getFiles().toJSON(),
-      variants: this.getVariants().toJSON()
+      variants: this.getVariants().toJSON().map(variant => {
+        if (variant.id === defaultVariant.id) {
+          variant.default = true;
+        }
+        return variant;
+      })
     });
   }
 

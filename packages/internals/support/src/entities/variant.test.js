@@ -40,6 +40,15 @@ describe('Variant', function () {
       expect(variant.foo).to.equal('bar');
     });
   });
+
+  describe('.id', function () {
+    it('is generated from the label if not set in props');
+  });
+
+  describe('.label', function () {
+    it('is generated from the id if not set in props');
+  });
+
   describe('.getTemplates()', function () {
     it('returns a collection', function () {
       const variant = makeVariant();

@@ -81,6 +81,10 @@ class Fractal extends App {
     return this;
   }
 
+  static isFractal(obj) {
+    return obj instanceof Fractal;
+  }
+
   get version() {
     return Fractal.version;
   }

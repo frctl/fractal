@@ -6,7 +6,7 @@ const route = require('./detail')();
 function makeContext(params = {component: 'button'}) {
   return {
     fractal: new Fractal({
-      src: join(__dirname, '/../../../../../../test/fixtures/components')
+      src: join(__dirname, '/../../../test/fixtures/components')
     }),
     params,
     body: {}

@@ -39,6 +39,9 @@
     "yarn": "^0.28.1"
   },
   "xo": {
-    "extends": "@frctl/eslint-config-frctl"
+    "extends": "@frctl/eslint-config-frctl",
+    "ignores": [
+      "**/dist/*"
+    ]
   }
 }

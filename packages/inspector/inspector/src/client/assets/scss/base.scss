@@ -1,0 +1,103 @@
+@import "~styles/config";
+
+*,
+*::after,
+*:before {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html {
+  width: 100vw;
+  height: 100vh;
+  background-color: #fff;
+}
+
+body {
+  width: 100%;
+  height: 100%;
+  font-size: 16px;
+  color: $color-text;
+  font-family: $font-family-sans;
+  line-height: 1.2;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+}
+
+blockquote,
+dd,
+dl,
+figure,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+pre {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+button {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+iframe {
+  border: 0;
+}
+
+ol,
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+svg:not(:root) {
+  overflow: hidden;
+  // fill: currentColor;
+}
+
+input,
+select,
+textarea {
+  font-size: 1rem;
+  font-family: $font-family-sans;
+}
+
+label[for] {
+  cursor: pointer;
+  user-select: none;
+}
+
+a {
+  color: $color-link;
+}
+
+input[type="text"],
+select,
+textarea {
+  font-size: 16px;
+  line-height: 1.2;
+  display: block;
+  width: 100%;
+  background-image: none;
+  background-clip: padding-box;
+  border-radius: 0;
+
+  &:focus {
+    color: $color-text;
+    outline: 0;
+  }
+}
+
+::placeholder {
+  opacity: 0.6;
+}

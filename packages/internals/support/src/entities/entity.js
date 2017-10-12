@@ -78,6 +78,16 @@ class Entity {
     return cloneDeep(_data.get(this));
   }
 
+  getProps() {
+    const props = this.getData();
+    for (const getter of _getters.get(this)) {
+      if (!get(props, getter.path)) {
+        set(props, getter.path, this.get(getter.path));
+      }
+    }
+    return props;
+  }
+
   defineGetter(path, getter) {
     _getters.get(this).push({path: path, handler: getter});
   }
@@ -87,7 +97,7 @@ class Entity {
   }
 
   toJSON() {
-    let props = this.getData();
+    let props = this.getProps();
     props = pickBy(props, (item, key) => {
       return !key.startsWith('_');
     });

@@ -1,4 +1,4 @@
-/* eslint no-unused-expressions: off */
+/* eslint no-unused-expressions: off, handle-callback-err: off */
 
 const {join} = require('path');
 const {Fractal} = require('@frctl/fractal');
@@ -6,7 +6,10 @@ const {expect, request} = require('../../../../test/helpers');
 const Server = require('../src/api-server');
 
 const app = new Fractal({
-  src: join(__dirname, '/../../../../test/fixtures/components')
+  src: join(__dirname, '/fixtures/components'),
+  engines: [
+    require('@frctl/fractal-engine-html')
+  ]
 });
 
 describe('Server requests', function () {
@@ -58,5 +61,41 @@ describe('Server requests', function () {
       expect(res.body).to.be.an('object');
       expect(res.body).to.have.property('id');
     });
+  });
+
+  describe('POST /render', function () {
+    it('responds with JSON', async function () {
+      const res = await request(httpServer)
+                          .post('/render')
+                          .send([{
+                            component: 'button'
+                          }]);
+      expect(res).to.have.status(200);
+      expect(res).to.be.json;
+    });
+    it('throws a 400 if the component is not found', function (done) {
+      request(httpServer)
+        .post('/render')
+        .send([{
+          component: 'foo'
+        }])
+        .end(function (err, res) {
+          expect(res).to.have.status(400);
+          done();
+        });
+    });
+    // it('returns the default rendered variant of the component', async function () {
+    //   const res = await request(httpServer)
+    //                       .post('/components/button/render')
+    //                       .send({context: {text: 'foo'}});
+    //   expect(res.text.includes('button')).to.be.true;
+    //   expect(res.text.includes('class="primary"')).to.be.true;
+    // });
+    // it('allows specifying an alternative variant via a query param', async function () {
+    //   const res = await request(httpServer)
+    //                       .post('/components/button/render?variant=secondary')
+    //                       .send({text: 'foo'});
+    //   expect(res.text.includes('class="secondary"')).to.be.true;
+    // });
   });
 });

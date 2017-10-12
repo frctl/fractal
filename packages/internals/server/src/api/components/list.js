@@ -8,14 +8,9 @@ module.exports = function () {
     async handler(ctx, next) {
       const components = await ctx.fractal.getComponents();
       ctx.body = components.mapToArray(component => {
-        return {
-          id: component.id,
-          variants: component.getVariants().mapToArray(variant => {
-            return {
-              id: variant.id
-            };
-          })
-        };
+        const componentData = component.getProps();
+        componentData.variants = component.getVariants().toJSON();
+        return componentData;
       });
     }
 

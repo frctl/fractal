@@ -40,7 +40,7 @@ module.exports = function (opts = {}) {
         return Component.from({
           config,
           src: dir,
-          files: componentFiles
+          files: componentFiles.reject(configMatcher)
         });
       }));
     }

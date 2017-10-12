@@ -7,12 +7,6 @@ module.exports = {
     },
     templates: {
       type: 'object'
-    },
-    component: {
-      type: 'string'
-    },
-    props: {
-      type: 'object'
     }
   }
 };
