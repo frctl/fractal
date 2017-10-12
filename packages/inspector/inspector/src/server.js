@@ -1,9 +1,11 @@
+const {get} = require('lodash');
 const {join, extname} = require('path');
 const {readFileSync} = require('fs');
 const {ApiServer} = require('@frctl/server');
 const mount = require('koa-mount');
 const serveStatic = require('koa-static');
 const Socket = require('koa-socket');
+const Router = require('koa-router');
 
 const skel = readFileSync(join(__dirname, '../views/app.html'), 'utf-8');
 const distDir = join(__dirname, '../dist');
@@ -16,6 +18,33 @@ module.exports = async function (app, opts = {}) {
     }
   });
 
+  /*
+   * Add custom inspector API endpoints
+   */
+  const router = new Router({
+    prefix: '/_api/inspector'
+  });
+
+  router.get('/assets/:component', async (ctx, next) => {
+    const components = await app.getComponents();
+    const component = components.find(ctx.params.component);
+    if (!component) {
+      ctx.status = 404;
+      return;
+    }
+
+    let assets = component.get('inspector.assets');
+    if (!assets) {
+      assets = component.getFiles().filter(f => ['.js', '.css'].includes(f.extname));
+    }
+    ctx.body = assets.toJSON();
+  });
+
+  server.use(router.routes()).use(router.allowedMethods());
+
+  /*
+   * Websocket connection for 'change' events
+   */
   const socket = new Socket('socket');
   socket.attach(server.app);
   watcher.on('all', (event, path) => socket.broadcast('changed', {event, path}));

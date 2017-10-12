@@ -3,11 +3,11 @@
     <splash message="loading components..." v-if="initialising" />
     <split-pane direction="vertical" :opts="{size: 300, min: 200, max: 400}" v-else>
       <pane slot="first" class="sidebar">
-        <split-pane direction="horizontal" :opts="{pane: 'second', size: appHeight/2, min: appHeight * 0.25, max: appHeight * 0.75}">
+        <split-pane direction="horizontal" :opts="sidebarOpts">
           <pane slot="first">
             <component-list :components="components" :component="component" />
           </pane>
-          <preview-selector slot="second" :component="component" />
+          <preview-selector slot="second" :component="component" v-if="component" />
         </split-pane>
       </pane>
       <pane slot="second">
@@ -43,6 +43,16 @@ export default {
   },
 
   computed: {
+
+    sidebarOpts(){
+      return {
+        pane: 'second',
+        size: this.appHeight/2,
+        min: this.appHeight * 0.25,
+        max: this.appHeight * 0.75,
+        closed: !this.component
+      };
+    },
 
     appHeight() {
       return window.innerHeight;

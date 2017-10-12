@@ -35,14 +35,17 @@ export default {
   computed : {
 
     css(){
-      return this.assets.css || '';
+      return this.assets.filter(f => f.extname === '.css').map(f => f.contents).join('\n');
     },
 
     js(){
-      return this.assets.js || '';
+      return this.assets.filter(f => f.extname === '.js').map(f => f.contents).join('\n');
     },
 
     html(){
+      if (!this.component) {
+        return '';
+      }
       const markup = this.chunks.join('<br>');
       return `
       <!DOCTYPE html>
@@ -79,7 +82,7 @@ export default {
       try {
         const [assets, chunks] = await Promise.all([
           axios({
-            url: `/_api/components/${this.component.id}/assets`,
+            url: `/_api/inspector/assets/${this.component.id}`,
           }),
           axios({
             method: 'post',

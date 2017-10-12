@@ -11676,6 +11676,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
   computed: {
 
+    sidebarOpts() {
+      return {
+        pane: 'second',
+        size: this.appHeight / 2,
+        min: this.appHeight * 0.25,
+        max: this.appHeight * 0.75,
+        closed: !this.component
+      };
+    },
+
     appHeight() {
       return window.innerHeight;
     },
@@ -12105,14 +12115,17 @@ let previewIds = [];
   computed: {
 
     css() {
-      return this.assets.css || '';
+      return this.assets.filter(f => f.extname === '.css').map(f => f.contents).join('\n');
     },
 
     js() {
-      return this.assets.js || '';
+      return this.assets.filter(f => f.extname === '.js').map(f => f.contents).join('\n');
     },
 
     html() {
+      if (!this.component) {
+        return '';
+      }
       const markup = this.chunks.join('<br>');
       return `
       <!DOCTYPE html>
@@ -12148,7 +12161,7 @@ let previewIds = [];
     async renderPreview() {
       try {
         const [assets, chunks] = await Promise.all([__WEBPACK_IMPORTED_MODULE_0_axios___default()({
-          url: `/_api/components/${this.component.id}/assets`
+          url: `/_api/inspector/assets/${this.component.id}`
         }), __WEBPACK_IMPORTED_MODULE_0_axios___default()({
           method: 'post',
           url: `/_api/render`,
@@ -14252,12 +14265,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('split-pane', {
     attrs: {
       "direction": "horizontal",
-      "opts": {
-        pane: 'second',
-        size: _vm.appHeight / 2,
-        min: _vm.appHeight * 0.25,
-        max: _vm.appHeight * 0.75
-      }
+      "opts": _vm.sidebarOpts
     }
   }, [_c('pane', {
     attrs: {
@@ -14269,13 +14277,13 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "components": _vm.components,
       "component": _vm.component
     }
-  })], 1), _vm._v(" "), _c('preview-selector', {
+  })], 1), _vm._v(" "), (_vm.component) ? _c('preview-selector', {
     attrs: {
       "slot": "second",
       "component": _vm.component
     },
     slot: "second"
-  })], 1)], 1), _vm._v(" "), _c('pane', {
+  }) : _vm._e()], 1)], 1), _vm._v(" "), _c('pane', {
     attrs: {
       "slot": "second"
     },
