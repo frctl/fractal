@@ -13,7 +13,11 @@ module.exports = function (config = {}) {
     builder: {
       dev: {
         boolean: true
-      }
+      },
+      port: {
+        describe: 'The port to start the server on',
+        alias: 'p'
+      },
     },
 
     async handler(argv, app, cli, {log}) {
@@ -33,7 +37,7 @@ module.exports = function (config = {}) {
         process.exit(0);
       });
 
-      await inspector.start(config.port || 8888);
+      await inspector.start(argv.port || config.port || 8888);
 
       const localUrl = `http://localhost:${inspector.port}`;
       clipboardy.writeSync(localUrl);
