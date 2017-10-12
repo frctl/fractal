@@ -26,6 +26,10 @@ class Server {
     });
   }
 
+  use(...args) {
+    return this.app.use(...args);
+  }
+
   stop() {
     if (!this.started) {
       throw new Error('Server has not been started');

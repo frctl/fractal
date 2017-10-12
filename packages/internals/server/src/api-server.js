@@ -7,8 +7,7 @@ const routes = [
   'overview',
   'render',
   'components/list',
-  'components/detail',
-  'components/assets'
+  'components/detail'
 ];
 
 class ApiServer extends Server {
