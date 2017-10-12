@@ -12,7 +12,11 @@ const basicComponent = {
 
 const fullComponent = {
   src: new File({path: '/src/component', cwd: '/'}),
-  files: new FileCollection([new File({path: '/src/component/component.js'}), new File({path: '/src/component/component.hbs'})]),
+  files: new FileCollection([
+    new File({path: '/src/component/component.js'}),
+    new File({path: '/src/component/component.hbs'}),
+    new File({path: '/src/component/component.scss'})
+  ]),
   config: {
     id: 'component-id-set',
     variants: [{id: 'component-v1'}, {id: 'component-v2'}],
@@ -49,7 +53,7 @@ describe('Component', function () {
     it(`assigns 'variants', and 'files' properties correctly if provided`, function () {
       const component = new Component(fullComponent);
       expect(component.getVariants()).to.be.a('VariantCollection').that.has.a.property('length').that.equals(2);
-      expect(component.getFiles()).to.be.a('FileCollection').that.has.a.property('length').that.equals(2);
+      expect(component.getFiles()).to.be.a('FileCollection').that.has.a.property('length').that.equals(3);
     });
     it('throws an error if incorrect properties provided', function () {
       expect(() => new Component()).to.throw(TypeError, '[properties-invalid]');
@@ -85,7 +89,7 @@ describe('Component', function () {
       for (let file of fullComponent.files.items) {
         component.addFile(file);
       }
-      expect(component.getFiles().length).to.equal(2);
+      expect(component.getFiles().length).to.equal(3);
       expect(() => {
         component.addFile([]);
       }).to.throw(TypeError, `[properties-invalid]`);
@@ -214,9 +218,7 @@ describe('Component', function () {
     it('returns an empty FileCollection if no matching views are found', function () {
       const viewConfigComponent = Object.assign({}, fullComponent);
       viewConfigComponent.config.views = {
-        match: {
-          stem: 'view'
-        }
+        match: 'view.*'
       };
       const component = new Component(viewConfigComponent);
       const views = component.getViews();
@@ -227,9 +229,7 @@ describe('Component', function () {
     it('returns a filtered list of files as a FileCollection if matching views are found', function () {
       const viewConfigComponent = Object.assign({}, fullComponent);
       viewConfigComponent.config.views = {
-        match: {
-          extname: '.hbs'
-        }
+        match: '*.hbs'
       };
       const component = new Component(viewConfigComponent);
       const views = component.getViews();
@@ -269,6 +269,61 @@ describe('Component', function () {
       expect(view).to.be.a('File');
     });
   });
+
+  describe('.getAssets()', function () {
+    it('returns an empty FileCollection if no asset filter has been defined', function () {
+      const component = new Component(basicComponent);
+      const assets = component.getAssets();
+      expect(assets).to.be.a('FileCollection');
+      expect(assets.length).to.equal(0);
+    });
+
+    it('returns an empty FileCollection if no matching views are found', function () {
+      const assetsConfigComp = Object.assign({}, fullComponent);
+      assetsConfigComp.config.assets = {
+          styles: {
+            stem: 'view'
+          }
+      };
+      const component = new Component(assetsConfigComp);
+      const assets = component.getAssets();
+      expect(assets).to.be.a('FileCollection');
+      expect(assets.length).to.equal(0);
+    });
+
+    it('returns a filtered list of files as a FileCollection if matching views are found', function () {
+      const assetsConfigComp = Object.assign({}, fullComponent);
+      assetsConfigComp.config.assets = {
+        scripts: {
+          extname: '.js'
+        }
+      };
+      const component = new Component(assetsConfigComp);
+      const assets = component.getAssets();
+      assets.forEach(asset=>console.log(asset.relative));
+      expect(assets).to.be.a('FileCollection');
+      expect(assets.length).to.equal(1);
+    });
+
+    it('returns only the required type of assets when specified', function(){
+      const assetsConfigComp = Object.assign({}, fullComponent);
+      assetsConfigComp.config.assets = {
+        scripts: '*.js',
+        styles: '*.scss'
+      };
+      const component = new Component(assetsConfigComp);
+      const assets = component.getAssets();
+      expect(assets).to.be.a('FileCollection');
+      expect(assets.length).to.equal(2);
+      const jsAssets = component.getAssets('scripts');
+      expect(jsAssets.length).to.equal(1);
+      const styleAssets = component.getAssets('styles');
+      expect(styleAssets.length).to.equal(1);
+    });
+
+    it('combines with the default app config matcher');
+  });
+
 
   describe('.isComponent()', function () {
     it('returns true if an instance is a Component', function () {

@@ -21,6 +21,11 @@ module.exports = {
         views: {
           match: 'view.*',
           default: '.html'
+        },
+        assets: {
+          styles: '**/*.{css,scss,less}',
+          scripts: '**/*.{js,cs,ts,jsx}',
+          images: '**/*.{svg,png,jpg,jpeg,gif}'
         }
       }
     },

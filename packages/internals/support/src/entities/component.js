@@ -108,6 +108,16 @@ class Component extends Entity {
     return args ? this.getViews().find(...args) : this.getViews().first();
   }
 
+  getAssets(type) {
+    // TODO: Assert type === ('string' || null)
+    const types = type ? [].concat(type) : ['scripts', 'styles', 'images'];
+    const assetMatchers = types.map(type => this.getConfig(`assets.${type}`, () => false));
+    return assetMatchers
+      .map(assetMatcher => this.getFiles().filter(assetMatcher))
+      .reduce((coll, files) => coll.concat(files), new FileCollection());
+  }
+
+
   getConfig(path, fallback) {
     if (path) {
       return cloneDeep(get(_config.get(this), path, fallback));
