@@ -2,6 +2,8 @@ module.exports = {
 
   src: null,
 
+  dest: null,
+
   templates: {
     match: ['.njk', '.html'],
     filter: null

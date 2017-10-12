@@ -4,6 +4,10 @@ module.exports = {
 
   properties: {
 
+    dest: {
+      type: 'string'
+    },
+
     src: {
       anyOf: [
         {type: 'string'},
@@ -20,6 +24,8 @@ module.exports = {
       type: 'array'
     }
 
-  }
+  },
+
+  required: ['dest']
 
 };
