@@ -46,7 +46,10 @@ class Component extends Entity {
   }
 
   addFile(file) {
+    file = cloneDeep(file);
+    file.base = this.getSrc().path;
     _files.set(this, _files.get(this).push(file));
+    return this;
   }
 
   getVariants() {
@@ -120,8 +123,9 @@ class Component extends Entity {
     _src.set(this, src);
   }
 
-  _setFiles(files) {
-    _files.set(this, FileCollection.from(files));
+  _setFiles(files = []) {
+    _files.set(this, new FileCollection());
+    files.forEach(file => this.addFile(file));
   }
 
   _validateOrThrow(/* props */) {

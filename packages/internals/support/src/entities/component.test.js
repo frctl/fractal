@@ -92,6 +92,22 @@ describe('Component', function () {
     });
   });
 
+  describe('.addFile()', function () {
+    it('sets the base path of the file to the root path of the component', function () {
+      const component = new Component(basicComponent);
+      component.addFile(new File({path: '/src/component/foo.js'}));
+      expect(component.getFiles().find('stem', 'foo').base).to.equal('/src/component');
+    });
+    it('clones the file before adding', function () {
+      const component = new Component(basicComponent);
+      const file = new File({path: '/src/component/foo.js'});
+      component.addFile(file);
+      const addedFile = component.getFiles().find('stem', 'foo');
+      expect(addedFile).to.eql(file);
+      expect(addedFile).to.not.equal(file);
+    });
+  });
+
   describe('.addVariant()', function () {
     it('adds variants correctly', function () {
       const component = new Component(basicComponent);
