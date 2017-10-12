@@ -1,4 +1,3 @@
-const {get} = require('lodash');
 const {join, extname} = require('path');
 const {readFileSync} = require('fs');
 const {ApiServer} = require('@frctl/server');
