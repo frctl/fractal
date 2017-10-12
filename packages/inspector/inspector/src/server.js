@@ -60,17 +60,17 @@ module.exports = async function (app, opts = {}) {
         noInfo: true
       }
     });
-    server.app.use(webpackMiddleware);
+    server.use(webpackMiddleware);
     await new Promise(resolve => webpackMiddleware.dev.waitUntilValid(resolve));
   } else {
-    server.app.use(mount('/_inspector', serveStatic(distDir)));
+    server.addStatic(distDir, '/_inspector');
   }
 
   /*
    * Catch-all middleware. Serves the app skeleton to all
    * non-asset requests that have not been otherwise fulfilled.
    */
-  server.app.use(ctx => {
+  server.use(ctx => {
     if (!ctx.body && !extname(ctx.request.url)) {
       ctx.body = skel;
     }

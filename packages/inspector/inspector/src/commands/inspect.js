@@ -1,6 +1,5 @@
 const clipboardy = require('clipboardy');
-const getPort = require('get-port');
-const server = require('..//server');
+const server = require('../server');
 
 module.exports = function (config = {}) {
   return {
@@ -26,8 +25,6 @@ module.exports = function (config = {}) {
         config.dev = true;
       }
 
-      const port = await getPort(config.port || 8888);
-
       const inspector = await server(app, config);
 
       process.on('SIGINT', () => {
@@ -36,14 +33,18 @@ module.exports = function (config = {}) {
         process.exit(0);
       });
 
-      await inspector.start(port);
+      await inspector.start(config.port || 8888);
 
-      const localUrl = `http://localhost:${port}`;
+      const localUrl = `http://localhost:${inspector.port}`;
       clipboardy.writeSync(localUrl);
 
       return `
         <success>Component inspector started</success>
-          <underline>${localUrl}</underline> <gray>(URL copied to clipboard)</gray>
+
+          Local URL:   <underline>${localUrl}</underline>
+          Network URL: <underline>${inspector.ip}</underline>
+
+          <gray>Local URL copied to clipboard</gray>
           <cyan>Use ^c to quit</cyan>
       `;
     }
