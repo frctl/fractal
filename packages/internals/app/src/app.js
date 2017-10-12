@@ -6,7 +6,6 @@ const debug = require('debug')('frctl:app');
 const {Config} = require('@frctl/config');
 const {Parser} = require('@frctl/parser');
 const {Loader} = require('@frctl/loader');
-const {cloneDeep} = require('@frctl/utils');
 const {EmittingPromise, FileCollection} = require('@frctl/support');
 
 const _dirty = new WeakMap();
@@ -46,7 +45,7 @@ class App {
       emitter.emit('parse.start');
       const cached = this.cache.get('collections');
       if (cached) {
-        return resolve(cloneDeep(cached));
+        return resolve(Object.assign({}, cached));
       }
       try {
         const parser = this.getParser();

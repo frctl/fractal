@@ -199,6 +199,9 @@ class Collection {
 
   toJSON() {
     return this.toArray().map(item => {
+      if (item && typeof item.toJSON === 'function') {
+        return item.toJSON();
+      }
       return mapValues(item, prop => {
         if (prop && typeof prop.toJSON === 'function') {
           return prop.toJSON();
@@ -216,6 +219,10 @@ class Collection {
       return cloneDeep(item);
     });
     return this._new(items);
+  }
+
+  inspect(depth, opts) {
+    return `${this[Symbol.toStringTag]} [${this._items.map(i => ((i && i.inspect && i.inspect()) || i))}]`;
   }
 
   _validateOrThrow(items) {
@@ -274,8 +281,8 @@ class Collection {
     const item = fn(items[0], 0, items);
     assert(checkMore.not.promise(item),
       `The mapping function supplied returned a Promise - please use 'mapAsync' for asynchronous mapping of a Collection [map-returned-promise]`, ReferenceError);
-    assert((check.not.null(item) || check.not.undefined(item)),
-      `The mapping function supplied returned a 'null' value, please ensure values are filtered before attempting to 'map' a Collection [map-returned-null]`, ReferenceError);
+    assert((check.not.null(item) && check.not.undefined(item)),
+      `The mapping function supplied returned a 'null' or 'undefined' value, please ensure values are filtered before attempting to 'map' a Collection [map-returned-null-or-undefined]`, ReferenceError);
     return entityMap.get(item.constructor) || Collection;
   }
 
@@ -288,8 +295,8 @@ class Collection {
     }
     fn = thisArg ? fn.bind(thisArg) : fn;
     return Promise.resolve(fn(items[0], 0, items)).then(item => {
-      assert((check.not.null(item) || check.not.undefined(item)),
-        `The mapping funtion supplied returned a 'null' value, please ensure values are filtered before attempting to 'map' a Collection [map-returned-null]`, ReferenceError);
+      assert((check.not.null(item) && check.not.undefined(item)),
+        `The mapping funtion supplied returned a 'null' or 'undefined' value, please ensure values are filtered before attempting to 'map' a Collection [map-returned-null-or-undefined]`, ReferenceError);
       return entityMap.get(item.constructor) || Collection;
     });
   }

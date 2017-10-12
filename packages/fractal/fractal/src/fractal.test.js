@@ -3,7 +3,6 @@
 const {join} = require('path');
 const {capitalize} = require('lodash');
 const {File, ComponentCollection, FileCollection, EmittingPromise, Component, Variant} = require('@frctl/support');
-const {defaultsDeep} = require('@frctl/utils');
 const App = require('@frctl/app');
 const Renderer = require('@frctl/renderer');
 const {expect, sinon} = require('../../../../test/helpers');
@@ -67,7 +66,9 @@ describe('Fractal', function () {
   describe('constructor()', function () {
     it('wraps configuration data in a ConfigStore instance', () => {
       const fractal = makeFractal();
-      expect(fractal.config.data).to.eql(defaultsDeep(config, defaults));
+      for (const key of Object.keys(defaults)) {
+        expect(fractal.config.data).to.have.property(key);
+      }
       expect(fractal.config).to.be.instanceOf(ConfigStore);
     });
     it('throws an error if invalid config data is provided', () => {
@@ -222,6 +223,14 @@ describe('Fractal', function () {
     it('returns the version number from the package.json file', function () {
       const fractal = new Fractal();
       expect(fractal.version).to.equal(pkg.version);
+    });
+  });
+
+  describe('.isFractal', function () {
+    it('returns true if the argument supplied is a Fractal instance', function () {
+      const fractal = new Fractal();
+      expect(Fractal.isFractal(fractal)).to.equal(true);
+      expect(Fractal.isFractal({})).to.equal(false);
     });
   });
 });

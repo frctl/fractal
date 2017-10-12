@@ -8,8 +8,8 @@ const engines = [{
   render: () => Promise.resolve('the rendered string')
 }];
 
-const funjucksTemplate = new Template({type: 'element', tagName: 'div'}, 'path/to/file.fjk');
-const otherTemplate = new Template({type: 'element', tagName: 'div'}, 'path/to/file.foo');
+const funjucksTemplate = new Template({contents: {type: 'element', tagName: 'div'}, filename: 'path/to/file.fjk'});
+const otherTemplate = new Template({contents: {type: 'element', tagName: 'div'}, filename: 'path/to/file.foo'});
 
 describe('Renderer', function () {
   describe('.render()', function () {
@@ -29,7 +29,8 @@ describe('Renderer', function () {
       const cloneSpy = sinon.spy(funjucksTemplate, 'clone');
       const result = await renderer.render(funjucksTemplate, context, opts);
       expect(result).to.equal('the rendered string');
-      expect(renderSpy.calledWith('<div></div>', context, Object.assign({}, opts, {template: funjucksTemplate}))).to.equal(true);
+      expect(renderSpy.calledWith('<div></div>', context)).to.equal(true);
+      expect(renderSpy.getCalls()[0].args[2]).to.have.property('template').that.is.instanceof(Template);
       expect(cloneSpy.called).to.equal(true);
       cloneSpy.restore();
       renderSpy.restore();

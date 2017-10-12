@@ -17,13 +17,7 @@ module.exports = function (opts = {}) {
       return ComponentCollection.from(await componentDirs.mapToArrayAsync(async dir => {
         const rootPath = addTrailingSeparator(dir.path);
 
-        let componentFiles = remainingFiles.filter(file => file.path.startsWith(rootPath));
-        componentFiles = componentFiles.map(file => {
-          file = file.clone();
-          file.base = dir.path;
-          return file;
-        });
-
+        const componentFiles = remainingFiles.filter(file => file.path.startsWith(rootPath));
         remainingFiles = remainingFiles.reject(file => componentFiles.find(f => f.path === file.path));
 
         let config = {};
@@ -40,7 +34,7 @@ module.exports = function (opts = {}) {
         return Component.from({
           config,
           src: dir,
-          files: componentFiles
+          files: componentFiles.reject(configMatcher)
         });
       }));
     }

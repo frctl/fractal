@@ -1,7 +1,6 @@
 module.exports = [
   'cli',
   'component',
-  'context',
   'data',
   'files',
   'inspector',
@@ -13,5 +12,6 @@ module.exports = [
   'src',
   'templates',
   'variants',
-  'views'
+  'views',
+  'default'
 ];

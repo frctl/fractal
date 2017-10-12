@@ -1,5 +1,4 @@
 /* eslint no-unused-expressions: "off" */
-const proxyquire = require('proxyquire');
 const {expect} = require('../../../../../test/helpers');
 const reservedWords = require('../../reserved-words');
 const Collection = require('../collections/collection');
@@ -41,6 +40,15 @@ describe('Variant', function () {
       expect(variant.foo).to.equal('bar');
     });
   });
+
+  describe('.id', function () {
+    it('is generated from the label if not set in props');
+  });
+
+  describe('.label', function () {
+    it('is generated from the id if not set in props');
+  });
+
   describe('.getTemplates()', function () {
     it('returns a collection', function () {
       const variant = makeVariant();
@@ -54,22 +62,6 @@ describe('Variant', function () {
       variant.addTemplate('<span></span>', 'file.html');
       expect(variant.getTemplates().length).to.equal(1);
       expect(variant.getTemplate()).to.be.instanceOf(Template);
-    });
-    it('instantiates the new template with a DOM tree and the filename', function () {
-      let passedArgs;
-      class Template {
-        constructor(...args) {
-          passedArgs = args;
-        }
-      }
-      const Variant = proxyquire('./variant', {
-        './template': Template
-      });
-      const variant = new Variant(defaultProps);
-      variant.addTemplate('<span></span>', 'file.html');
-      expect(passedArgs[0]).to.be.an('object');
-      expect(passedArgs[0].type).to.equal('root');
-      expect(passedArgs[1]).to.equal('file.html');
     });
   });
 

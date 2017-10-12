@@ -15,7 +15,7 @@ const fullComponent = {
   files: new FileCollection([new File({path: '/src/component/component.js'}), new File({path: '/src/component/component.hbs'})]),
   config: {
     id: 'component-id-set',
-    variants: [{id: 'component--v1'}, {id: 'component--v2'}],
+    variants: [{id: 'component-v1'}, {id: 'component-v2'}],
     refresh: true
   }
 };
@@ -92,6 +92,22 @@ describe('Component', function () {
     });
   });
 
+  describe('.addFile()', function () {
+    it('sets the base path of the file to the root path of the component', function () {
+      const component = new Component(basicComponent);
+      component.addFile(new File({path: '/src/component/foo.js'}));
+      expect(component.getFiles().find('stem', 'foo').base).to.equal('/src/component');
+    });
+    it('clones the file before adding', function () {
+      const component = new Component(basicComponent);
+      const file = new File({path: '/src/component/foo.js'});
+      component.addFile(file);
+      const addedFile = component.getFiles().find('stem', 'foo');
+      expect(addedFile).to.eql(file);
+      expect(addedFile).to.not.equal(file);
+    });
+  });
+
   describe('.addVariant()', function () {
     it('adds variants correctly', function () {
       const component = new Component(basicComponent);
@@ -132,10 +148,10 @@ describe('Component', function () {
     });
     it('gets named variant correctly', function () {
       const component = new Component(fullComponent);
-      expect(component.getVariant('component--v1'))
+      expect(component.getVariant('component-v1'))
       .to.be.a('Variant')
       .with.property('id')
-      .that.equals('component--v1');
+      .that.equals('component-v1');
     });
     it('returns undefined for nonexistant variant', function () {
       const component = new Component(fullComponent);
@@ -150,9 +166,9 @@ describe('Component', function () {
     });
     it('allows specifying a default variant via the `default` config property', function () {
       const comp = Object.assign({}, fullComponent);
-      comp.config = Object.assign({}, comp.config, {default: 'component--v2'});
+      comp.config = Object.assign({}, comp.config, {default: 'component-v2'});
       const component = new Component(comp);
-      expect(component.getDefaultVariant()).to.equal(component.getVariants().find('component--v2'));
+      expect(component.getDefaultVariant()).to.equal(component.getVariants().find('component-v2'));
     });
   });
 
@@ -166,24 +182,24 @@ describe('Component', function () {
     });
     it('gets named variant correctly', function () {
       const component = new Component(fullComponent);
-      expect(component.getVariantOrDefault('component--v1'))
+      expect(component.getVariantOrDefault('component-v1'))
       .to.be.a('Variant')
       .with.property('id')
-      .that.equals('component--v1');
+      .that.equals('component-v1');
     });
     it('returns default variant for nonexistant variant id', function () {
       const component = new Component(fullComponent);
       expect(component.getVariantOrDefault('does-not-exist'))
       .to.be.a('Variant')
       .with.property('id')
-      .that.equals('component--v1');
+      .that.equals('component-v1');
     });
     it('returns default variant for undefined search values', function () {
       const component = new Component(fullComponent);
       expect(component.getVariantOrDefault())
       .to.be.a('Variant')
       .with.property('id')
-      .that.equals('component--v1');
+      .that.equals('component-v1');
     });
   });
 

@@ -23,12 +23,17 @@ module.exports = {
           default: '.html'
         }
       }
+    },
+    templates: {
+      helpers: {}
     }
   },
 
   presets: [],
 
-  engines: [],
+  engines: [
+    require('@frctl/fractal-engine-html')
+  ],
 
   plugins: [],
 
