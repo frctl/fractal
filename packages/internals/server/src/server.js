@@ -29,7 +29,7 @@ class Server {
     });
   }
 
-  addStatic(path, mountPath = '/'){
+  addStatic(path, mountPath = '/') {
     path = normalizePath(path);
     this.use(mount(mountPath, serve(path)));
     return this;
