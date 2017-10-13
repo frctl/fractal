@@ -8,8 +8,8 @@ const serverFactory = require('./server');
 const app = new Fractal();
 
 describe('server', function () {
-  it('returns a a Server instance', function () {
+  it('returns a promise that resolves to a Server instance', function () {
     const server = serverFactory(app);
-    expect(server).to.be.instanceOf(Server);
+    expect(server).to.eventually.be.instanceOf(Server);
   });
 });

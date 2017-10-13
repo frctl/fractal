@@ -40,6 +40,18 @@ module.exports = {
       filters: {},
       extensions: {}
     }
-  }
+  },
+
+  plugins: [
+    require('../parser/plugin-frontmatter'),
+    require('../parser/plugin-hidden'),
+    require('../parser/plugin-permalink-templates'),
+    require('../parser/plugin-permalink-assets'),
+  ],
+
+  transforms: [
+    require('../parser/transform-templates'),
+    require('../parser/transform-assets'),
+  ]
 
 };

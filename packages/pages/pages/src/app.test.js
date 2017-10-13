@@ -17,7 +17,7 @@ const config = {
 };
 
 function makePages(customConfig) {
-  return new Pages(new Fractal(), customConfig || config);
+  return new Pages(customConfig || config);
 }
 
 describe('Pages', function () {
@@ -27,14 +27,11 @@ describe('Pages', function () {
       expect(pages.config.data).to.eql(defaultsDeep(config, defaults));
       expect(pages.config).to.be.instanceOf(ConfigStore);
     });
-    it('throws an error if no Fractal instance is provided', () => {
-      expect(() => new Pages({})).to.throw('[fractal-required]');
-    });
     it('throws an error if invalid config data is provided', () => {
-      expect(() => new Pages(fractal, {plugins: 'foo'})).to.throw('[config-invalid]');
+      expect(() => new Pages({plugins: 'foo'})).to.throw('[config-invalid]');
     });
     it('does not throw an error if no config data is provided', () => {
-      expect(() => new Pages(fractal)).to.not.throw();
+      expect(() => new Pages()).to.not.throw();
     });
     it('extends App', () => {
       expect(makePages()).to.be.instanceOf(App);
@@ -46,24 +43,18 @@ describe('Pages', function () {
     it('Performs a full static build of the site');
   });
 
-  describe('.serve()', function () {
-    it('returns an EmittingPromise');
-    it('Starts a webserver to serve the contents of the `dest` directory');
-    it('Builds the appropriate pages on each request');
-    it('Accepts an option to prevent rebuilding of pages on subsequent requests');
-  });
-
-  describe('.getPages()', function () {
-    it('returns an EmittingPromise', function () {
-      const pages = makePages();
-      expect(pages.getPages()).to.be.instanceOf(EmittingPromise);
-    });
-    it('resolves to a PageCollection instance', async function () {
-      const pages = makePages();
-      const result = await pages.getPages();
-      expect(result).to.be.instanceOf(PageCollection);
-    });
-  });
+  //
+  // describe('.getPages()', function () {
+  //   it('returns an EmittingPromise', function () {
+  //     const pages = makePages();
+  //     expect(pages.getPages()).to.be.instanceOf(EmittingPromise);
+  //   });
+  //   it('resolves to a PageCollection instance', async function () {
+  //     const pages = makePages();
+  //     const result = await pages.getPages();
+  //     expect(result).to.be.instanceOf(PageCollection);
+  //   });
+  // });
 
   describe('.toString()', function () {
     it('property describes the Pages instance', function () {

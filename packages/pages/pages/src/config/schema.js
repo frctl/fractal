@@ -5,7 +5,10 @@ module.exports = {
   properties: {
 
     dest: {
-      type: 'string'
+      anyOf: [
+        {type: 'string'},
+        {type: 'null'}
+      ]
     },
 
     src: {
@@ -24,8 +27,6 @@ module.exports = {
       type: 'array'
     }
 
-  },
-
-  required: ['dest']
+  }
 
 };

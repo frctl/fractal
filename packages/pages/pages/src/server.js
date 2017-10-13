@@ -1,7 +1,6 @@
 const {Server} = require('@frctl/server');
-const {permalinkify} = require('@frctl/utils');
 
-module.exports = function (pages) {
+module.exports = async function (fractal, pages, opts = {}) {
 
   const server = new Server();
 
@@ -19,17 +18,20 @@ module.exports = function (pages) {
   });
 
   server.use(async (ctx, next) => {
-    const path = ctx.request.path;
-    const permalink = permalinkify(ctx.request.path);
-
-    await pages.build({filter: page => page.permalink === permalink});
-
+    const result = await pages.build(fractal, {
+      pages: [ctx.request.path]
+    });
     await next();
   });
 
   server.addStatic(pages.get('dest'));
 
-  pages.watch();
+  [pages, fractal].forEach(app => {
+    app.parse();
+    app.watch();
+  });
+
+  await server.start(opts.port);
 
   return server;
 };

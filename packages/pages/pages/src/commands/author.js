@@ -1,6 +1,6 @@
 const clipboardy = require('clipboardy');
 const {toArray} = require('@frctl/utils');
-const server = require('../server');
+const serve = require('../server');
 const Pages = require('../app');
 
 module.exports = function (config = {}) {
@@ -34,25 +34,24 @@ module.exports = function (config = {}) {
       config = toArray(config);
 
       const options = argv.site ? config.find(conf => conf.name === argv.site) : config[0];
-      const pages = new Pages(fractal, options);
-      const pagesServer = await server(pages);
+      const port = argv.port || config.port || 7777;
+      const pages = new Pages(options);
+      const server = await serve(fractal, pages, {port});
 
       process.on('SIGINT', () => {
-        pagesServer.stop();
+        server.stop();
         log(`<br><cyan>Pages server stopped.</cyan><br>`);
         process.exit(0);
       });
 
-      await pagesServer.start(argv.port || config.port || 7777);
-
-      const localUrl = `http://localhost:${pagesServer.port}`;
+      const localUrl = `http://localhost:${server.port}`;
       clipboardy.writeSync(localUrl);
 
       return `
         <success>Pages development server started</success>
 
           Local URL:   <underline>${localUrl}</underline>
-          Network URL: <underline>${pagesServer.ip}</underline>
+          Network URL: <underline>${server.ip}</underline>
 
           <gray>Local URL copied to clipboard</gray>
           <cyan>Use ^c to quit</cyan>

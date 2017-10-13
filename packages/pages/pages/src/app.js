@@ -1,54 +1,47 @@
 const {forEach} = require('lodash');
 const App = require('@frctl/app');
 const {EmittingPromise} = require('@frctl/support');
+const {permalinkify} = require('@frctl/utils');
 const {Fractal} = require('@frctl/fractal');
 const debug = require('debug')('frctl:pages');
 const {assert} = require('check-types');
 const Config = require('./config/store');
 const PageCollection = require('./support/page-collection');
 
-const _fractal = new WeakMap();
-
 class Pages extends App {
 
-  constructor(fractal, config = {}) {
-    assert.instance(fractal, Fractal, 'Pages.constructor - first argument must be an instance of Fractal [fractal-required]');
+  constructor(config = {}) {
     super(new Config(config));
-    _fractal.set(this, fractal);
     this.debug('instantiated new Pages instance');
   }
 
-  getPages(opts = {}) {
+  build(fractal, opts = {}){
+    const dest = opts.dest || this.get('dest');
+    assert.instance(fractal, Fractal, `Pages.build - You must provide a Fractal instance [fractal-invalid]`);
+    assert.string(dest, `Pages.build - You must provide a destination path [dest-not-found]`);
+    let filter = () => true;
+    if (Array.isArray(opts.pages)) {
+      const permalinks = opts.pages.map(url => permalinkify(url));
+      filter = page => permalinks.includes(page.permalink);
+    }
+
     return new EmittingPromise(async (resolve, reject, emitter) => {
-      resolve(new PageCollection());
+      try {
+        const [library, site] = await Promise.all([
+          fractal.parse({emitter}),
+          this.parse({emitter})
+        ]);
+        const collections = {library, site};
+        resolve(collections);
+      } catch(err) {
+        reject(err);
+      }
     }, opts.emitter);
-  }
-
-  build(opts = {}){
-    return new EmittingPromise(async (resolve, reject, emitter) => {
-      resolve('done!');
-    }, opts.emitter);
-  }
-
-  watch() {
-    this.fractal.watch().on('all', () => {
-      this.dirty = true;
-    });
-    return super.watch();
-  }
-
-  unwatch() {
-    this.fractal.unwatch();
-    return super.unwatch();
   }
 
   debug(...args) {
     debug(...args);
     return this;
-  }
-
-  get fractal() {
-    return _fractal.get(this);
   }
 
   get version() {
