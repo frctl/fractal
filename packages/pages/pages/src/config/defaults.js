@@ -46,12 +46,12 @@ module.exports = {
     require('../parser/plugin-frontmatter'),
     require('../parser/plugin-hidden'),
     require('../parser/plugin-permalink-templates'),
-    require('../parser/plugin-permalink-assets'),
+    require('../parser/plugin-permalink-assets')
   ],
 
   transforms: [
     require('../parser/transform-templates'),
-    require('../parser/transform-assets'),
+    require('../parser/transform-assets')
   ]
 
 };

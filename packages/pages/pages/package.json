@@ -13,6 +13,7 @@
     "@frctl/utils": "^2.0.0-beta.0",
     "@frctl/config": "^2.0.0-beta.0",
     "@frctl/support": "^2.0.0-beta.0",
+    "@frctl/server": "^2.0.0-beta.0",
     "@frctl/fractal": "^2.0.0-beta.0",
     "check-types": "^7.2.0",
     "gray-matter": "^3.0.3",

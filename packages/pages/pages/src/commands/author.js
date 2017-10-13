@@ -4,7 +4,6 @@ const serve = require('../server');
 const Pages = require('../app');
 
 module.exports = function (config = {}) {
-
   const builder = {
     port: {
       describe: 'The port to start the server on',
@@ -16,7 +15,7 @@ module.exports = function (config = {}) {
     builder.site = {
       describe: 'The target site name',
       alias: 's'
-    }
+    };
   }
 
   return {
@@ -30,7 +29,6 @@ module.exports = function (config = {}) {
     builder,
 
     async handler(argv, fractal, cli, {log}) {
-
       config = toArray(config);
 
       const options = argv.site ? config.find(conf => conf.name === argv.site) : config[0];

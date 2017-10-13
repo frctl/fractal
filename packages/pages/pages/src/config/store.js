@@ -9,7 +9,7 @@ class ConfigStore extends ExtendedConfig {
     const accessors = [{
       path: ['plugins', 'transforms'],
       handler: 'packages-loader'
-    },{
+    }, {
       path: 'dest',
       handler: path => normalizePath(path)
     }];

@@ -32,7 +32,7 @@ class Server {
     });
   }
 
-  addStatic(path, mountPath){
+  addStatic(path, mountPath) {
     path = normalizePath(path);
     const staticServer = serve(path);
     this.use(mountPath ? mount(mountPath, staticServer) : staticServer);

@@ -1,4 +1,4 @@
-const {forEach} = require('lodash');
+// const {forEach} = require('lodash');
 const App = require('@frctl/app');
 const {EmittingPromise} = require('@frctl/support');
 const {permalinkify} = require('@frctl/utils');
@@ -6,7 +6,7 @@ const {Fractal} = require('@frctl/fractal');
 const debug = require('debug')('frctl:pages');
 const {assert} = require('check-types');
 const Config = require('./config/store');
-const PageCollection = require('./support/page-collection');
+// const PageCollection = require('./support/page-collection');
 
 class Pages extends App {
 
@@ -15,7 +15,7 @@ class Pages extends App {
     this.debug('instantiated new Pages instance');
   }
 
-  build(fractal, opts = {}){
+  build(fractal, opts = {}) {
     const dest = opts.dest || this.get('dest');
     assert.instance(fractal, Fractal, `Pages.build - You must provide a Fractal instance [fractal-invalid]`);
     assert.string(dest, `Pages.build - You must provide a destination path [dest-not-found]`);
@@ -33,7 +33,7 @@ class Pages extends App {
         ]);
         const collections = {library, site};
         resolve(collections);
-      } catch(err) {
+      } catch (err) {
         reject(err);
       }
     }, opts.emitter);

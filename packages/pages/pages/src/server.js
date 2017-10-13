@@ -1,7 +1,6 @@
 const {Server} = require('@frctl/server');
 
 module.exports = async function (fractal, pages, opts = {}) {
-
   const server = new Server();
 
   server.use(async (ctx, next) => {
@@ -18,7 +17,7 @@ module.exports = async function (fractal, pages, opts = {}) {
   });
 
   server.use(async (ctx, next) => {
-    const result = await pages.build(fractal, {
+    await pages.build(fractal, {
       pages: [ctx.request.path]
     });
     await next();

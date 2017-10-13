@@ -2,15 +2,15 @@ const {join} = require('path');
 const App = require('@frctl/app');
 const {Fractal} = require('@frctl/fractal');
 const {defaultsDeep} = require('@frctl/utils');
-const {EmittingPromise} = require('@frctl/support');
+// const {EmittingPromise} = require('@frctl/support');
 const {expect} = require('../../../../test/helpers');
 const pkg = require('../package.json');
-const PageCollection = require('./support/page-collection');
+// const PageCollection = require('./support/page-collection');
 const ConfigStore = require('./config/store');
 const defaults = require('./config/defaults');
 const Pages = require('./app');
 
-const fractal = new Fractal();
+// const fractal = new Fractal();
 const config = {
   src: join(__dirname, '../../../../test/fixtures/pages'),
   presets: null
