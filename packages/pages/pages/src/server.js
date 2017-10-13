@@ -17,10 +17,17 @@ module.exports = async function (fractal, pages, opts = {}) {
   });
 
   server.use(async (ctx, next) => {
-    await pages.build(fractal, {
-      pages: [ctx.request.path]
-    });
-    await next();
+    try {
+      const output = await pages.build(fractal, {
+        pages: [ctx.request.path]
+      });
+      if (output.length) {
+        ctx.type = 'html';
+        ctx.body = output.first().contents.toString();
+      }
+    } catch(err) {
+      pages.dirty = true;
+    }
   });
 
   server.addStatic(pages.get('dest'));

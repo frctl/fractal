@@ -9,7 +9,6 @@
   "license": "MIT",
   "dependencies": {
     "@frctl/app": "^2.0.0-beta.0",
-    "@frctl/funjucks": "^2.0.0-beta.0",
     "@frctl/utils": "^2.0.0-beta.0",
     "@frctl/config": "^2.0.0-beta.0",
     "@frctl/support": "^2.0.0-beta.0",
@@ -21,6 +20,9 @@
     "del": "^3.0.0",
     "lodash": "^4.17.4",
     "pupa": "^1.0.0",
+    "highlight.js": "^9.11.0",
+    "js-beautify": "^1.6.14",
+    "nunjucks": "^3.0.1",
     "clipboardy": "^1.1.4",
     "stream-array": "^1.1.2",
     "stream-to-promise": "^2.2.0",

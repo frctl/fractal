@@ -1,4 +1,4 @@
-// const {forEach} = require('lodash');
+const {forEach} = require('lodash');
 const App = require('@frctl/app');
 const {EmittingPromise} = require('@frctl/support');
 const {permalinkify} = require('@frctl/utils');
@@ -6,7 +6,9 @@ const {Fractal} = require('@frctl/fractal');
 const debug = require('debug')('frctl:pages');
 const {assert} = require('check-types');
 const Config = require('./config/store');
-// const PageCollection = require('./support/page-collection');
+const Router = require('./router');
+const nunjucksEnv = require('./render/env');
+const render = require('./utils/render');
 
 class Pages extends App {
 
@@ -27,12 +29,35 @@ class Pages extends App {
 
     return new EmittingPromise(async (resolve, reject, emitter) => {
       try {
-        const [library, site] = await Promise.all([
-          fractal.parse({emitter}),
-          this.parse({emitter})
-        ]);
+        const router = new Router();
+        const output = [fractal, this].map(app => app.parse({emitter}));
+        const [library, site] = await Promise.all(output);
         const collections = {library, site};
-        resolve(collections);
+        const renderOpts = this.get('nunjucks');
+        const routeOpts = this.config.get('pages');
+
+        forEach(this.get('routes', {}), (builder, name) => {
+          router.addRoute(name, builder, collections, routeOpts);
+        });
+
+        const pages = collections.site.pages = router.getPages().clone();
+
+        Object.assign(renderOpts.globals, {
+          collections,
+          pages,
+          components: library.components,
+          config: this.config,
+          site: this.get('site')
+        });
+
+        const env = nunjucksEnv(site.templates, renderOpts);
+        Object.assign(env, {
+          fractal,
+          collections,
+          pages: this
+        })
+
+        resolve(render(pages.filter(filter), env));
       } catch (err) {
         reject(err);
       }
