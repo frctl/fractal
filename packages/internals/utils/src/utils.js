@@ -119,6 +119,10 @@ const utils = module.exports = {
     return str.split(/\r?\n/);
   },
 
+  uuid() {
+    return require('uuid/v4')();
+  },
+
   /*
    * Paths
    */
