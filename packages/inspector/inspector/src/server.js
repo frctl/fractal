@@ -1,8 +1,6 @@
 const {join, extname} = require('path');
 const {readFileSync} = require('fs');
 const {ApiServer} = require('@frctl/server');
-const mount = require('koa-mount');
-const serveStatic = require('koa-static');
 const Socket = require('koa-socket');
 const Router = require('koa-router');
 
