@@ -398,6 +398,13 @@ describe('Utils', function () {
     });
   });
 
+  describe('.uuid()', function () {
+    it('Generates a unique ID string', function () {
+      expect(utils.uuid()).to.be.a('string');
+      expect(utils.uuid()).to.not.equal(utils.uuid());
+    });
+  });
+
 /*
  * Paths
  */

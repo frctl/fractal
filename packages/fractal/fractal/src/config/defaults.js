@@ -16,7 +16,7 @@ module.exports = {
   components: {
     match: file => file.stem.startsWith('@'),
     config: {
-      match: 'config.*',
+      match: '**/config.*',
       defaults: {
         views: {
           match: 'view.*',

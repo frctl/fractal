@@ -1,8 +1,6 @@
 const {join, extname} = require('path');
 const {readFileSync} = require('fs');
 const {ApiServer} = require('@frctl/server');
-const mount = require('koa-mount');
-const serveStatic = require('koa-static');
 const Socket = require('koa-socket');
 const Router = require('koa-router');
 
@@ -60,17 +58,17 @@ module.exports = async function (app, opts = {}) {
         noInfo: true
       }
     });
-    server.app.use(webpackMiddleware);
+    server.use(webpackMiddleware);
     await new Promise(resolve => webpackMiddleware.dev.waitUntilValid(resolve));
   } else {
-    server.app.use(mount('/_inspector', serveStatic(distDir)));
+    server.addStatic(distDir, '/_inspector');
   }
 
   /*
    * Catch-all middleware. Serves the app skeleton to all
    * non-asset requests that have not been otherwise fulfilled.
    */
-  server.app.use(ctx => {
+  server.use(ctx => {
     if (!ctx.body && !extname(ctx.request.url)) {
       ctx.body = skel;
     }

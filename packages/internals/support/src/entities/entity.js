@@ -1,11 +1,12 @@
 const {assert} = require('check-types');
 const {mapValues, pickBy, get, set, unset} = require('lodash');
-const {cloneDeep, hash} = require('@frctl/utils');
+const {cloneDeep, hash, uuid} = require('@frctl/utils');
 const reservedWords = require('../../reserved-words');
 
 const _data = new WeakMap();
 const _setters = new WeakMap();
 const _getters = new WeakMap();
+const _uuid = new WeakMap();
 
 class Entity {
 
@@ -18,6 +19,7 @@ class Entity {
     _data.set(this, cloneDeep(props));
     _setters.set(this, []);
     _getters.set(this, []);
+    _uuid.set(this, uuid());
 
     const proxy = new Proxy(this, {
       get(target, propKey, receiver) {
@@ -86,6 +88,10 @@ class Entity {
       }
     }
     return props;
+  }
+
+  getUUID() {
+    return _uuid.get(this);
   }
 
   defineGetter(path, getter) {
