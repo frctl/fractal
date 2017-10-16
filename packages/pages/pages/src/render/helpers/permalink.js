@@ -7,7 +7,7 @@ module.exports = function () {
       const {site} = this.env.collections;
       const page = site.pages.find(...args);
       if (!page || !page.permalink) {
-        throw new Error(`Could not generate page for permalink`);
+        throw new Error(`Could not generate permalink for page`);
       }
       return page.permalink;
     }

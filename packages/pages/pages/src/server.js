@@ -1,3 +1,4 @@
+const {extname} = require('path');
 const {Server} = require('@frctl/server');
 
 module.exports = async function (fractal, pages, opts = {}) {
@@ -11,24 +12,25 @@ module.exports = async function (fractal, pages, opts = {}) {
     } catch (err) {
       ctx.status = err.status || 500;
       ctx.body = `
-        ${err.message}
+        <h1>${err.message}</h1>
         <pre>${err.stack}</pre>
       `;
     }
   });
 
-  server.use(async (ctx, next)=> {
+  server.use(async (ctx, next) => {
     if (pages.dirty || fractal.dirty) {
       cache = {};
     }
     if (cache[ctx.request.path]) {
+      ctx.type = extname(ctx.request.path);
       ctx.body = cache[ctx.request.path];
       return;
     }
     await next();
   });
 
-  server.use(async ctx => {
+  server.use(async (ctx, next) => {
     const url = ctx.request.path;
     try {
       const output = await pages.build(fractal, {
@@ -36,14 +38,13 @@ module.exports = async function (fractal, pages, opts = {}) {
       });
       const requested = output[0];
       if (requested) {
-        ctx.type = 'html';
+        ctx.type = requested.extname;
         ctx.body = String(requested.contents);
         cache[url] = ctx.body;
       }
     } catch(err) {
-      console.log(err);
       pages.dirty = true;
-      await next();
+      ctx.throw(400, err);
     }
   });
 

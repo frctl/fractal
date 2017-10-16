@@ -44,13 +44,13 @@ describe('factory', function () {
       });
     }
 
-    it('adds all lodash functions as filters', function () {
-      for (const key of Object.keys(_)) {
-        if (_.isFunction(key)) {
-          expect(() => env.getFilter(key)).to.not.throw(Error);
-        }
-      }
-    });
+    // it('adds all lodash functions as filters', function () {
+    //   for (const key of Object.keys(_)) {
+    //     if (_.isFunction(key)) {
+    //       expect(() => env.getFilter(key)).to.not.throw(Error);
+    //     }
+    //   }
+    // });
   });
 });
 

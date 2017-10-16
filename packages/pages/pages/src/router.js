@@ -59,6 +59,7 @@ class Router {
       const target = Router.resolveTarget(props.target);
       props.target = target.entity;
       props.targetAlias = target.name;
+      props.route = routeName;
       props.data = Router.resolveData(props.data, target, parent, collections);
       props.permalink = Router.resolvePermalink(props.permalink, target, parent, opts);
       props.contents = Router.resolveContents(props.template, props.contents, target);
@@ -205,7 +206,8 @@ class Router {
     if (isFunction(permalink)) {
       permalink = permalink(target.entity, parent);
     } else if (isString(permalink)) {
-      const props = {target: target.entity, [target.name]: target.entity, parent};
+      const props = {target: target.entity, parent};
+      props[target.name] = target.entity;
       if (!parent || permalink.startsWith('/')) {
         permalink = pupa(permalink, props);
       } else {

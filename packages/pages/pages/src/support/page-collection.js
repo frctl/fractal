@@ -1,19 +1,35 @@
-const {EntityCollection, Collection} = require('@frctl/support');
-const {isMatch} = require('lodash');
+const {Entity, EntityCollection, Collection} = require('@frctl/support');
+const {isMatch, isString} = require('lodash');
 const Page = require('./page');
 
 class PageCollection extends EntityCollection {
 
   find(...args) {
-    if (args.length === 1 && typeof args[0] === 'string') {
-      return super.find('id', args[0]);
+    let page;
+    if (isString(args[0]) && args.length === 1) {
+      /**
+       * Look up by page ID
+       */
+      page = super.find('id', args[0]);
+    }
+    if (!page && args.length >= 2) {
+      /**
+       * Look up by route
+       */
+      page = this.findByRoute(...args);
+    }
+    if (page) {
+      return page;
     }
     return super.find(...args);
   }
 
   findByRoute(routeName, target) {
-    return this._items.find(page => {
-      return page.route === routeName && isMatch(page.target, target);
+    return this._items.filter(page => page.route === routeName).find(page => {
+      if (Entity.isEntity(target) && Entity.isEntity(page.target)) {
+        return target.getUUID() === page.target.getUUID();
+      }
+      return isMatch(page.target, target);
     });
   }
 

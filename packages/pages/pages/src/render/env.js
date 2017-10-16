@@ -5,6 +5,7 @@ const _ = require('lodash');
 const {promisify} = require('@frctl/utils');
 
 const filters = ['await', 'beautify', 'highlight', 'stringify', 'render'];
+const helpers = ['permalink', 'link-to'];
 
 module.exports = function (templates, opts = {}) {
 
@@ -27,16 +28,16 @@ module.exports = function (templates, opts = {}) {
     include: ['render', 'renderString']
   });
 
-  for (const key of Object.keys(_)) {
-    if (_.isFunction(_[key])) {
-      env.addFilter(key, _[key]);
-    }
-  }
-
   for (const name of filters) {
     const filterOpts = _.get(opts, `opts.filters.${name}`, {});
     const filter = require(`./filters/${name}`)(filterOpts);
     env.addFilter(filter.name, filter.filter, filter.async);
+  }
+
+  for (const name of helpers) {
+    const helpersOpts = _.get(opts, `opts.helpers.${name}`, {});
+    const helper = require(`./helpers/${name}`)(helpersOpts);
+    env.addGlobal(helper.name, helper.helper);
   }
 
   _.forEach(opts.globals || {}, (value, key) => env.addGlobal(key, value));
