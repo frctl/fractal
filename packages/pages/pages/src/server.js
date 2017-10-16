@@ -34,7 +34,7 @@ module.exports = async function (fractal, pages, opts = {}) {
       const output = await pages.build(fractal, {
         pages: [url]
       });
-      const requested = output.find(f => f.permalink === url);
+      const requested = output[0];
       if (requested) {
         ctx.type = 'html';
         ctx.body = String(requested.contents);

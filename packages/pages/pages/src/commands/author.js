@@ -45,6 +45,7 @@ module.exports = function (config = {}) {
       config = toArray(config);
 
       const options = argv.site ? config.find(conf => conf.name === argv.site) : config[0];
+
       const pages = new Pages(options);
 
       if (argv.build) {

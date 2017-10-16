@@ -16,8 +16,8 @@ const write = require('./utils/write');
 class Pages extends App {
 
   constructor(config = {}) {
+    assert.string(config.dest, `You must provide a 'dest' value in your pages configuration to specify the output directory [dest-not-found]`);
     super(new Config(config));
-    assert.string(this.get('dest'), `You must provide a 'dest' path to generate pages into [dest-not-found]`);
     this.debug('instantiated new Pages instance');
   }
 
@@ -26,6 +26,7 @@ class Pages extends App {
 
     let filter = () => true;
     if (Array.isArray(opts.pages)) {
+      this.debug(`Building pages: ${opts.pages.join(',')}`);
       const permalinks = opts.pages.map(url => permalinkify(url));
       filter = page => permalinks.includes(page.permalink);
     }
@@ -62,9 +63,11 @@ class Pages extends App {
         });
 
         const output = await renderToFiles(pages.filter(filter), env);
+        this.debug(`${output.length} files rendered`);
 
         if (opts.write) {
           const dest = opts.dest || this.get('dest');
+          this.debug(`writing pages to ${dest}`);
           await write(dest, output.map(file => {
             file.path = join(dest, file.permalink);
             file.base = dest;
