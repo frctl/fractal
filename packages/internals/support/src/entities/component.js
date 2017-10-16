@@ -1,5 +1,5 @@
 const {get, omit} = require('lodash');
-const {normalizeId, uniqueId, cloneDeep, titlize, slugify, hash} = require('@frctl/utils');
+const {normalizeId, uniqueId, cloneDeep, titlize, slugify} = require('@frctl/utils');
 const check = require('check-types');
 const Validator = require('../validator');
 const schema = require('../../schema');
@@ -26,6 +26,7 @@ class Component extends Entity {
     const entityProps = omit(props.config || {}, reservedWords);
 
     entityProps.id = normalizeId(entityProps.id || props.src.stem);
+    entityProps.uuid = props.uuid;
 
     super(entityProps);
 
@@ -136,7 +137,7 @@ class Component extends Entity {
   }
 
   _buildVariants(variants = []) {
-    if (VariantCollection.isCollection(variants)){
+    if (VariantCollection.isCollection(variants)) {
       _variants.set(this, variants.clone());
     } else {
       _variants.set(this, new VariantCollection());
