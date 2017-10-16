@@ -1,5 +1,5 @@
 const {get, omit} = require('lodash');
-const {normalizeId, uniqueId, cloneDeep, titlize, slugify} = require('@frctl/utils');
+const {normalizeId, uniqueId, cloneDeep, titlize, slugify, hash} = require('@frctl/utils');
 const check = require('check-types');
 const Validator = require('../validator');
 const schema = require('../../schema');
@@ -32,7 +32,7 @@ class Component extends Entity {
     this._setConfig(props.config || {});
     this._setSrc(props.src);
     this._setFiles(props.files);
-    this._buildVariants(this.getConfig('variants'));
+    this._buildVariants(props.variants || this.getConfig('variants'));
 
     this.defineGetter('label', value => value || titlize(this.get('id')));
   }
@@ -69,6 +69,7 @@ class Component extends Entity {
     const isVariantInstance = check.maybe.instance(config, Variant);
     const isValidProp = check.maybe.object(config);
     const variantIds = this.getVariants().mapToArray(v => v.id);
+    let variant;
 
     assert(
       (isValidProp || isVariantInstance),
@@ -76,20 +77,22 @@ class Component extends Entity {
       TypeError
     );
 
-    if (!isVariantInstance) {
+    if (isVariantInstance) {
+      variant = config;
+    } else {
       config = cloneDeep(config);
+      config.id = uniqueId(slugify(config.id || config.label || 'variant'), variantIds);
+
+      if (!config.templates) {
+        config.templates = {};
+        this.getViews().filter(view => view.contents).forEach(view => {
+          config.templates[view.basename] = view.contents.toString();
+        });
+      }
+
+      variant = Variant.from(config);
     }
 
-    config.id = uniqueId(slugify(config.id || config.label || 'variant'), variantIds);
-
-    if (!config.templates) {
-      config.templates = {};
-      this.getViews().filter(view => view.contents).forEach(view => {
-        config.templates[view.basename] = view.contents.toString();
-      });
-    }
-
-    const variant = Variant.from(config);
     _variants.set(this, _variants.get(this).push(variant));
     return this;
   }
@@ -133,7 +136,11 @@ class Component extends Entity {
   }
 
   _buildVariants(variants = []) {
-    _variants.set(this, new VariantCollection());
+    if (VariantCollection.isCollection(variants)){
+      _variants.set(this, variants.clone());
+    } else {
+      _variants.set(this, new VariantCollection());
+    }
 
     if (variants.length === 0) {
       variants.push({
@@ -151,7 +158,9 @@ class Component extends Entity {
     return new this.constructor({
       src: this.getSrc(),
       files: this.getFiles(),
-      config: Object.assign({}, this.getConfig(), this.getData())
+      variants: this.getVariants(),
+      config: Object.assign({}, this.getConfig(), this.getData()),
+      uuid: this.getUUID()
     });
   }
 

@@ -19,7 +19,7 @@ class Entity {
     _data.set(this, cloneDeep(props));
     _setters.set(this, []);
     _getters.set(this, []);
-    _uuid.set(this, uuid());
+    _uuid.set(this, props.uuid || uuid());
 
     const proxy = new Proxy(this, {
       get(target, propKey, receiver) {
@@ -119,7 +119,7 @@ class Entity {
   }
 
   clone() {
-    const cloned = new this.constructor(this._data);
+    const cloned = new this.constructor(Object.assign({}, this._data, {uuid: this.getUUID()}));
     return cloned;
   }
 

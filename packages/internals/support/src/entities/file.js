@@ -76,7 +76,8 @@ class File extends Entity {
       base: this.get('base'),
       stat: (this.get('stat') ? cloneStats(this.get('stat')) : null),
       history: this.get('history').slice(),
-      contents: this.get('contents') ? cloneBuffer(this.get('contents')) : null
+      contents: this.get('contents') ? cloneBuffer(this.get('contents')) : null,
+      uuid: this.getUUID()
     });
     return new this.constructor(config);
   }

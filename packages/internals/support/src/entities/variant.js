@@ -107,7 +107,8 @@ class Variant extends Entity {
   clone() {
     return new this.constructor(Object.assign(this.getData(), {
       templates: this.getTemplates().clone(),
-      scenarios: this.getScenarios().clone()
+      scenarios: this.getScenarios().clone(),
+      uuid: this.getUUID()
     }));
   }
 
