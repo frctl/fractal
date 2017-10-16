@@ -139,9 +139,10 @@ class Component extends Entity {
   _buildVariants(variants = []) {
     if (VariantCollection.isCollection(variants)) {
       _variants.set(this, variants.clone());
-    } else {
-      _variants.set(this, new VariantCollection());
+      return;
     }
+
+    _variants.set(this, new VariantCollection());
 
     if (variants.length === 0) {
       variants.push({
