@@ -65,6 +65,14 @@ describe('Variant', function () {
     });
   });
 
+  describe('.clone()', function () {
+    it(`preserves the UUID of the variant`, function () {
+      const variant = makeVariant();
+      const cloned = variant.clone();
+      expect(variant.getUUID()).to.equal(cloned.getUUID());
+    });
+  });
+
   describe('.isVariant()', function () {
     it('returns true if item is a Variant and false otherwise', function () {
       const variant = makeVariant();
