@@ -4,6 +4,12 @@ module.exports = {
 
   dest: null,
 
+  clean: '**/*',
+
+  server: {
+    port: 7777,
+  },
+
   templates: {
     match: ['.njk', '.html'],
     filter: null

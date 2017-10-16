@@ -13,7 +13,7 @@ class Page extends Entity {
     return new File({
       path: join(opts.base || '', this.get('permalink')),
       base: opts.base,
-      contents: this.get('contents')
+      contents: this.get('contents'),
     });
   }
 

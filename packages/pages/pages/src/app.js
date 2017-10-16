@@ -1,3 +1,4 @@
+const {join} = require('path');
 const {forEach} = require('lodash');
 const App = require('@frctl/app');
 const {EmittingPromise} = require('@frctl/support');
@@ -8,19 +9,21 @@ const {assert} = require('check-types');
 const Config = require('./config/store');
 const Router = require('./router');
 const nunjucksEnv = require('./render/env');
-const render = require('./utils/render');
+const renderToFiles = require('./utils/render');
+const clean = require('./utils/clean');
+const write = require('./utils/write');
 
 class Pages extends App {
 
   constructor(config = {}) {
     super(new Config(config));
+    assert.string(this.get('dest'), `You must provide a 'dest' path to generate pages into [dest-not-found]`);
     this.debug('instantiated new Pages instance');
   }
 
   build(fractal, opts = {}) {
-    const dest = opts.dest || this.get('dest');
     assert.instance(fractal, Fractal, `Pages.build - You must provide a Fractal instance [fractal-invalid]`);
-    assert.string(dest, `Pages.build - You must provide a destination path [dest-not-found]`);
+
     let filter = () => true;
     if (Array.isArray(opts.pages)) {
       const permalinks = opts.pages.map(url => permalinkify(url));
@@ -30,8 +33,8 @@ class Pages extends App {
     return new EmittingPromise(async (resolve, reject, emitter) => {
       try {
         const router = new Router();
-        const output = [fractal, this].map(app => app.parse({emitter}));
-        const [library, site] = await Promise.all(output);
+        const parserOutput = [fractal, this].map(app => app.parse({emitter}));
+        const [library, site] = await Promise.all(parserOutput);
         const collections = {library, site};
         const renderOpts = this.get('nunjucks');
         const routeOpts = this.config.get('pages');
@@ -51,13 +54,25 @@ class Pages extends App {
         });
 
         const env = nunjucksEnv(site.templates, renderOpts);
+
         Object.assign(env, {
           fractal,
           collections,
           pages: this
-        })
+        });
 
-        resolve(render(pages.filter(filter), env));
+        const output = await renderToFiles(pages.filter(filter), env);
+
+        if (opts.write) {
+          const dest = opts.dest || this.get('dest');
+          await write(dest, output.map(file => {
+            file.path = join(dest, file.permalink);
+            file.base = dest;
+            return file;
+          }));
+        }
+
+        resolve(output);
       } catch (err) {
         reject(err);
       }
