@@ -12,7 +12,8 @@ const srcExports = {
   Template: require('./src/entities/template'),
   Emitter: require('./src/emitter'),
   EmittingPromise: require('./src/emitting-promise'),
-  Validator: require('./src/validator')
+  Validator: require('./src/validator'),
+  FsFileReader: require('./src/fs-file-reader')
 };
 
 describe('Support exports', function () {
