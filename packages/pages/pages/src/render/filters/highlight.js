@@ -15,9 +15,7 @@ module.exports = function () {
         const contents = File.isFile(target) ? target.contents.toString() : target.toString();
         const output = lang ? highlight.highlight(lang, contents) : highlight.highlightAuto(contents);
         done(null, `
-          <code class="hljs ${output.language}">
-            <pre>${output.value}</pre>
-          </code>
+          <pre><code class="hljs ${output.language}">${output.value}</code></pre>
         `);
       } catch (err) {
         done(err);

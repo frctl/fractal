@@ -11,9 +11,9 @@ module.exports = function (pages, env) {
       //   contents = await fractal.render(page.contents.toString(), page.data, {adapter: page.engine});
       // } else {
       contents = await env.renderString(page.contents.toString(), {
+        [page.targetAlias]: page.target,
         page,
         target: page.target,
-        [page.targetAlias]: page.target
       });
       // }
       file.contents = Buffer.from(contents);

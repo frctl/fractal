@@ -22,7 +22,7 @@ module.exports = {
   pages: {
     defaults: {},
     ext: '.html',
-    indexes: true
+    indexes: false
   },
 
   routes: {

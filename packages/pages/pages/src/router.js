@@ -3,6 +3,7 @@
 const {forEach, isPlainObject, isString, isObjectLike, get, isFunction, trim, uniqBy} = require('lodash');
 const {assert} = require('check-types');
 const pupa = require('pupa');
+const pluralize = require('pluralize');
 const {File, Collection} = require('@frctl/support');
 const {defaultsDeep, removeExt, permalinkify, cloneDeep, slugify} = require('@frctl/utils');
 const Page = require('./support/page');
@@ -33,7 +34,7 @@ class Router {
     }
 
     let pages = [];
-    const routeBuilder = isFunction(builder) ? builder : Router.createBuilder(builder);
+    const routeBuilder = isFunction(builder) ? builder : Router.createBuilder(routeName, builder);
     const routes = routeBuilder(collections, opts, parent);
 
     for (const route of routes) {
@@ -86,7 +87,7 @@ class Router {
     return pages;
   }
 
-  static createBuilder(config = {}) {
+  static createBuilder(routeName, config = {}) {
     if (isString(config)) {
       config = {
         collection: config
@@ -128,17 +129,10 @@ class Router {
       return collection.mapToArray(target => {
         const props = cloneDeep(config);
 
-        if (isString(props.target)) {
-          props.target = {
-            name: props.target,
-            entity: target
-          };
-        } else {
-          props.target = {
-            name: 'target',
-            entity: target
-          };
-        }
+        props.target = {
+          name: isString(props.target) ? props.target : pluralize.singular(routeName),
+          entity: target
+        };
 
         if (File.isFile(target)) {
           if (!props.template && target.type === 'template') {

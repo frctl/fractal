@@ -1,5 +1,5 @@
 const App = require('@frctl/app');
-const {Component, Variant, EmittingPromise} = require('@frctl/support');
+const {Component, Variant, Scenario, EmittingPromise} = require('@frctl/support');
 const Renderer = require('@frctl/renderer');
 const debug = require('debug')('frctl:fractal');
 const processTpl = require('@frctl/fractal-plugin-preprocess-templates');
@@ -26,6 +26,9 @@ class Fractal extends App {
 
   render(target, context = {}, opts = {}) {
     const renderer = this.getRenderer();
+    if (Scenario.isScenario(context)) {
+      context = context.context;
+    }
     return new EmittingPromise(async (resolve, reject, emitter) => {
       try {
         let component;
