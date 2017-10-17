@@ -1,21 +1,26 @@
 const webpack = require('webpack');
 const {promisify} = require('@frctl/utils');
-const {FileCollection} = require('../../../internals/support');
+const {FileCollection} = require('@frctl/support');
 
-const getConfig = component => ({
-  context: '/',
-  entry: component.getAssets('scripts')
-    .toArray()
-    .reduce((acc, file)=> {acc[file.stem] = `${file.path}`; return acc;}, {}),
-  output: {
-    filename: '[name].js',
-    path: '/'
-  },
-  resolve: {
-    modules: ['/']
+const getConfig = component => {
+  const basePath = component.getSrc().path;
+  return {
+    context: '/',
+    entry: component.getAssets('scripts')
+      .toArray()
+      .reduce((acc, file) => {
+        acc[`${file.stem}${file.extname}`] = `${file.path}`;
+        return acc;
+      }, {}),
+    output: {
+      filename: '[name]',
+      path: `${basePath}`
+    },
+    resolve: {
+      modules: ['/']
+    }
   }
-})
-
+};
 
 module.exports = function (opts = {}) {
   return {
@@ -25,7 +30,7 @@ module.exports = function (opts = {}) {
     transform: 'components',
 
     async handler(components, state, app) {
-      
+
       const promises = {};
 
       components = await components.mapAsync(async component => {
@@ -37,16 +42,16 @@ module.exports = function (opts = {}) {
 
         const config = getConfig(component);
         const compiler = webpack(config);
-        const prun = promisify(compiler.run.bind(compiler));
+        const pRun = promisify(compiler.run.bind(compiler));
 
         compiler.inputFileSystem = jsFs;
         compiler.resolvers.normal.fileSystem = compiler.inputFileSystem;
         compiler.resolvers.context.fileSystem = compiler.inputFileSystem;
         compiler.outputFileSystem = outputFs;
 
-        const result = await prun().catch(e=> {console.log('ERROR::',e); return new FileCollection()});
+        const result = await pRun().catch(e=> {console.log('ERROR::',e); return new FileCollection()});
 
-        component.inspector.assets = outputFs.data;
+        component.inspector.assets = await FileCollection.fromMemoryFS(outputFs); // TODO: should this overwrite, or merge in some way?
         return component;
       });
 
