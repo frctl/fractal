@@ -348,6 +348,11 @@ describe('Component', function () {
       expect(Component.isComponent(newComponent)).to.equal(true);
       expect(newComponent).to.not.equal(component);
     });
+    it(`preserves the UUID of the component`, function () {
+      const component = new Component(basicComponent);
+      const newComponent = component.clone();
+      expect(component.getUUID()).to.equal(newComponent.getUUID());
+    });
   });
 
   describe('[Symbol.toStringTag]', function () {

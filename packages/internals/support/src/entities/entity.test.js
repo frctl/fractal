@@ -93,6 +93,11 @@ describe('Entity', function () {
       const newEntity = entity.clone();
       expect(newEntity.src).to.eql('all gone!');
     });
+    it(`preserves the UUID of the entity`, function () {
+      const entity = makeEntity();
+      const clone = entity.clone();
+      expect(entity.getUUID()).to.equal(clone.getUUID());
+    });
   });
 
   describe('.toJSON()', function () {
