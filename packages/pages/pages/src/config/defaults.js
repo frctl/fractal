@@ -7,7 +7,7 @@ module.exports = {
   clean: '**/*',
 
   server: {
-    port: 7777,
+    port: 7777
   },
 
   templates: {

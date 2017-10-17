@@ -1,8 +1,8 @@
 /* eslint max-nested-callbacks: off, handle-callback-err: off */
 const proxyquire = require('proxyquire');
-const Vinyl = require('vinyl');
+const {File} = require('@frctl/support');
 const {defaultsDeep} = require('@frctl/utils');
-const {expect, sinon} = require('../../../../../test/helpers');
+const {expect, sinon} = require('../../../../../../test/helpers');
 const factory = require('./beautify');
 
 describe('beautify', function () {
@@ -27,9 +27,10 @@ describe('beautify', function () {
       });
     });
 
-    it('beautifies the contents of Vinyl files', function (done) {
+    it('beautifies the contents of File files', function (done) {
       const filter = factory();
-      const file = new Vinyl({
+      const file = new File({
+        path: '/foo.html',
         contents: Buffer.from('<div>test</div>')
       });
       filter.filter(file, function (vinylErr, vinylResult) {

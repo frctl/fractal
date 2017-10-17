@@ -16,7 +16,7 @@ const write = require('./utils/write');
 class Pages extends App {
 
   constructor(config = {}) {
-    assert.string(config.dest, `You must provide a 'dest' value in your pages configuration to specify the output directory [dest-not-found]`);
+    assert.string(config.dest, `You must provide a 'dest' value in your pages configuration to specify the output directory [dest-missing]`);
     super(new Config(config));
     this.debug('instantiated new Pages instance');
   }
@@ -67,6 +67,10 @@ class Pages extends App {
 
         if (opts.write) {
           const dest = opts.dest || this.get('dest');
+          if (this.get('clean')) {
+            this.debug(`cleaning ${dest}`);
+            await clean(dest, this.get('clean'));
+          }
           this.debug(`writing pages to ${dest}`);
           await write(dest, output.map(file => {
             file.path = join(dest, file.permalink);

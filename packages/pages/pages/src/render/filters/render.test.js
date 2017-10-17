@@ -1,5 +1,5 @@
 const {Fractal} = require('@frctl/fractal');
-const {expect, sinon} = require('../../../../../test/helpers');
+const {expect, sinon} = require('../../../../../../test/helpers');
 const factory = require('./render');
 
 describe('render', function () {

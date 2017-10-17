@@ -48,7 +48,6 @@ module.exports = function (config = {}) {
       const pages = new Pages(options);
 
       if (argv.build) {
-
         /*
          * Run a full static build of the site
          */
@@ -73,7 +72,6 @@ module.exports = function (config = {}) {
       const port = argv.port || pages.get('server.port');
 
       if (argv.serve) {
-
         /*
          * Just serve the contents of the dest directory,
          * do not rebuild the site on requests. Useful for testing
@@ -85,9 +83,7 @@ module.exports = function (config = {}) {
         await server.start(argv.port || pages.get('server.port'));
 
         message = `<success>Static server started</success><br>  <dim>Serving files from './${relative(cli.cwd, pages.get('dest'))}'</dim>`;
-
       } else {
-
         /*
          * Dev mode, rebuild each page on request and hold in memory
          * rather than writing to disk

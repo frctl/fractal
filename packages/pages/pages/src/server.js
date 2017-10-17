@@ -42,7 +42,7 @@ module.exports = async function (fractal, pages, opts = {}) {
         ctx.body = String(requested.contents);
         cache[url] = ctx.body;
       }
-    } catch(err) {
+    } catch (err) {
       pages.dirty = true;
       ctx.throw(400, err);
     }

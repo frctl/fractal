@@ -1,4 +1,4 @@
-const {expect} = require('../../../../../test/helpers');
+const {expect} = require('../../../../../../test/helpers');
 const factory = require('./stringify');
 
 describe('stringify', function () {

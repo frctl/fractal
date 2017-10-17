@@ -17,7 +17,7 @@ module.exports = function (config = {}) {
       port: {
         describe: 'The port to start the server on',
         alias: 'p'
-      },
+      }
     },
 
     async handler(argv, app, cli, {log}) {

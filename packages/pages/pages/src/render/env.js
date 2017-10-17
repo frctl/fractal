@@ -8,7 +8,6 @@ const filters = ['await', 'beautify', 'highlight', 'stringify', 'render'];
 const helpers = ['permalink', 'link-to'];
 
 module.exports = function (templates, opts = {}) {
-
   const TemplateLoader = nunjucks.Loader.extend({
     getSource: function (path) {
       const file = templates.find(file => file.relative === path);
@@ -44,7 +43,7 @@ module.exports = function (templates, opts = {}) {
   _.forEach(opts.extensions || {}, (value, key) => env.addExtension(key, value));
 
   if (Array.isArray(opts.filters)) {
-    _.forEach(opts.filters, (filter) => env.addFilter(filter.name, filter.filter, filter.async));
+    _.forEach(opts.filters, filter => env.addFilter(filter.name, filter.filter, filter.async));
   } else {
     _.forEach(opts.filters || {}, (value, key) => env.addFilter(key, value, value.async));
   }

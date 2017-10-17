@@ -1,9 +1,8 @@
 /* eslint handle-callback-err: off, no-unused-expressions: off */
 
 const nunjucks = require('nunjucks');
-const _ = require('lodash');
 const {Fractal} = require('@frctl/fractal');
-const {expect} = require('../../../../test/helpers');
+const {expect} = require('../../../../../test/helpers');
 const factory = require('./env');
 
 const fractal = new Fractal();
@@ -34,23 +33,11 @@ describe('factory', function () {
       expect(env.addFilter('foo', () => {})).to.not.be.instanceOf(Promise);
     });
 
-    it('adds the fractal instance as a property on the environment', function () {
-      expect(env.fractal).to.equal(fractal);
-    });
-
     for (const filter of ['await', 'beautify', 'highlight', 'stringify']) {
       it(`adds the ${filter} filter`, function () {
         expect(() => env.getFilter(filter)).to.not.throw(Error);
       });
     }
-
-    // it('adds all lodash functions as filters', function () {
-    //   for (const key of Object.keys(_)) {
-    //     if (_.isFunction(key)) {
-    //       expect(() => env.getFilter(key)).to.not.throw(Error);
-    //     }
-    //   }
-    // });
   });
 });
 

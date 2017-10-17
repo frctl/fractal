@@ -1,6 +1,6 @@
 const {join} = require('path');
 const App = require('@frctl/app');
-const {Fractal} = require('@frctl/fractal');
+// const {Fractal} = require('@frctl/fractal');
 const {defaultsDeep} = require('@frctl/utils');
 // const {EmittingPromise} = require('@frctl/support');
 const {expect} = require('../../../../test/helpers');
@@ -13,6 +13,7 @@ const Pages = require('./app');
 // const fractal = new Fractal();
 const config = {
   src: join(__dirname, '../../../../test/fixtures/pages'),
+  dest: './foo',
   presets: null
 };
 
@@ -27,11 +28,11 @@ describe('Pages', function () {
       expect(pages.config.data).to.eql(defaultsDeep(config, defaults));
       expect(pages.config).to.be.instanceOf(ConfigStore);
     });
-    it('throws an error if invalid config data is provided', () => {
-      expect(() => new Pages({plugins: 'foo'})).to.throw('[config-invalid]');
+    it('throws an error if no config.dest value is set', () => {
+      expect(() => new Pages({src: './foo'})).to.throw('[dest-missing]');
     });
-    it('does not throw an error if no config data is provided', () => {
-      expect(() => new Pages()).to.not.throw();
+    it('throws an error if invalid config data is provided', () => {
+      expect(() => new Pages({plugins: 'foo', dest: './foo'})).to.throw('[config-invalid]');
     });
     it('extends App', () => {
       expect(makePages()).to.be.instanceOf(App);

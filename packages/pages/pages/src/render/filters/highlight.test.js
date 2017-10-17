@@ -1,8 +1,8 @@
 /* eslint max-nested-callbacks: off, handle-callback-err: off */
 
-const Vinyl = require('vinyl');
+const {File} = require('@frctl/support');
 const highlight = require('highlight.js');
-const {expect, sinon} = require('../../../../../test/helpers');
+const {expect, sinon} = require('../../../../../../test/helpers');
 const factory = require('./highlight');
 
 describe('highlight', function () {
@@ -27,9 +27,10 @@ describe('highlight', function () {
       });
     });
 
-    it('highlights the contents of Vinyl files', function (done) {
+    it('highlights the contents of File files', function (done) {
       const filter = factory();
-      const file = new Vinyl({
+      const file = new File({
+        path: '/foo.html',
         contents: Buffer.from('<div>test</div>')
       });
       filter.filter(file, function (vinylErr, vinylResult) {

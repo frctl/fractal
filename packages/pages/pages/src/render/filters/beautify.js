@@ -1,5 +1,5 @@
 const beautify = require('js-beautify');
-const Vinyl = require('vinyl');
+const {File} = require('@frctl/support');
 const {isPlainObject} = require('lodash');
 const {defaultsDeep} = require('@frctl/utils');
 
@@ -22,7 +22,7 @@ module.exports = function (opts = {}) {
 
       try {
         target = await Promise.resolve(target);
-        const contents = Vinyl.isVinyl(target) ? target.contents.toString() : target.toString();
+        const contents = File.isFile(target) ? target.contents.toString() : target.toString();
         if (!beautify[lang]) {
           throw new Error(`Cannot beautify ${lang} [lang-invalid]`);
         }

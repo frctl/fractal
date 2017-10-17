@@ -1,5 +1,5 @@
 const highlight = require('highlight.js');
-const Vinyl = require('vinyl');
+const {File} = require('@frctl/support');
 
 module.exports = function () {
   return {
@@ -12,7 +12,7 @@ module.exports = function () {
       const [done, lang] = args.reverse();
       try {
         target = await Promise.resolve(target);
-        const contents = Vinyl.isVinyl(target) ? target.contents.toString() : target.toString();
+        const contents = File.isFile(target) ? target.contents.toString() : target.toString();
         const output = lang ? highlight.highlight(lang, contents) : highlight.highlightAuto(contents);
         done(null, `
           <code class="hljs ${output.language}">
