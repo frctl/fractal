@@ -5,7 +5,7 @@ const {expect,sinon} = require('../../../../test/helpers');
 const FsReader = require('./fs-file-reader');
 const MemoryFileSystem = require('memory-fs');
 
-describe('Read Files', function() {
+describe.only('Read Files', function() {
   describe('constructor', function() {
     it(`creates a new FsReader with a readFiles method`, function() {
       const reader = new FsReader();
@@ -20,8 +20,9 @@ describe('Read Files', function() {
       const reader = new FsReader(fs);
       const contentlist = [];
       reader.readFiles('/a/',
-        function(err, content, next) {
+        function(err, content, filename, next) {
           if (err) throw err;
+          console.log(filename);
           contentlist.push(content);
           next();
         },

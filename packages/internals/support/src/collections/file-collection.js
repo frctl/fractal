@@ -3,6 +3,7 @@ const check = require('check-types');
 const slash = require('slash');
 const MemoryFS = require('memory-fs');
 const File = require('../entities/file');
+const FsReader = require('../fs-file-reader');
 const EntityCollection = require('./entity-collection');
 const Collection = require('./collection');
 
@@ -101,6 +102,27 @@ class FileCollection extends EntityCollection {
 
   static validate(items) {
     return check.maybe.array.of.instance(items, File);
+  }
+
+  static fromMemoryFS(memFs) {
+    const reader = new FsReader(memFs);
+    const files = [];
+    const errs = [];
+    return new Promise((resolve, reject) => {
+      reader.readFiles('/',
+        function(err, content, filename, next) {
+          if (err) {
+            errs.push(err);
+          } else {
+            files.push({path: filename, contents: content});
+          }
+          next();
+        },
+        function(err, fls) {
+          if (err || errs.length) return reject(err || errs);
+          resolve(FileCollection.from(files));
+        });
+    });
   }
 }
 
