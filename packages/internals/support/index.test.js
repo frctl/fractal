@@ -11,6 +11,7 @@ const srcExports = {
   Component: require('./src/entities/component'),
   Variant: require('./src/entities/variant'),
   Template: require('./src/entities/template'),
+  Scenario: require('./src/entities/scenario'),
   Emitter: require('./src/emitter'),
   EmittingPromise: require('./src/emitting-promise'),
   Validator: require('./src/validator')
