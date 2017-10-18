@@ -14,15 +14,13 @@ const makeComponent = name => ({
     new File({
       path: `/src/${name}/${name}.js`,
       contents: new Buffer(`
+        var _ = require('lodash');
 var t = ${name};
-console.log(t);
-`, 'utf-8')
+console.log(t);`, 'utf-8')
     }),
     new File({
-      path: `/src/${name}/${name}.hbs`,
-      contents: new Buffer(`
-<button class=${name}>${name}</button>
-`, 'utf-8')
+      path: `/src/${name}/${name}.view.hbs`,
+      contents: new Buffer(`<button class=${name}>${name}</button>`, 'utf-8')
     }),
     new File({
       path: `/src/${name}/${name}.scss`,
@@ -30,8 +28,11 @@ console.log(t);
 $red: #f00;
 .${name}: {
   color: $red;
-}
-`, 'utf-8')
+}`, 'utf-8')
+    }),
+    new File({
+      path: `/src/${name}/${name}-bg.png`,
+      contents: new Buffer([8, 6, 7, 5, 3, 0, 9])
     })
   ]),
   config: {
@@ -43,7 +44,8 @@ $red: #f00;
     }],
     assets: {
       scripts: '**/*.js',
-      styles: '**/*.scss'
+      styles: '**/*.scss',
+      images: '**/*.{png,jpg}'
     }
   }
 });
@@ -56,6 +58,7 @@ tests.addPluginTest({
   test: function(collection) {
     for (const component of collection) {
       expect(component.inspector.assets).to.be.a('FileCollection')
+      console.log(component.inspector.assets.toArray().map(file=>file.contents.toString()));
     }
   }
 });

@@ -35,7 +35,7 @@ function matches(str, match) {
 }
 
 
-class FsReader {
+class FileSystemReader {
   constructor(fs = require('fs')) {
     this._fs = fs;
   }
@@ -130,4 +130,4 @@ class FsReader {
   }
 }
 
-module.exports = FsReader;
+module.exports = FileSystemReader;

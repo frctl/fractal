@@ -9,4 +9,5 @@ module.exports.Variant = require('./src/entities/variant');
 module.exports.Emitter = require('./src/emitter');
 module.exports.EmittingPromise = require('./src/emitting-promise');
 module.exports.Validator = require('./src/validator');
-module.exports.FsReader = require('./src/fs-file-reader');
+module.exports.FileSystemReader = require('./src/fs/fs-file-reader');
+module.exports.FileSystemStack = require('./src/fs/fs-stack');

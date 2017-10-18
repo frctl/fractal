@@ -12,8 +12,14 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@frctl/utils": "^2.0.0-beta.0",
     "@frctl/support": "^2.0.0-beta.0",
+    "@frctl/utils": "^2.0.0-beta.0",
+    "css-loader": "^0.28.7",
+    "extract-text-webpack-plugin": "^3.0.1",
+    "file-loader": "^1.1.5",
+    "memory-fs": "^0.4.1",
+    "node-sass": "^4.5.3",
+    "sass-loader": "^6.0.6",
     "webpack": "^3.6.0"
   }
 }

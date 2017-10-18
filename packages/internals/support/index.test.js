@@ -13,7 +13,8 @@ const srcExports = {
   Emitter: require('./src/emitter'),
   EmittingPromise: require('./src/emitting-promise'),
   Validator: require('./src/validator'),
-  FsFileReader: require('./src/fs-file-reader')
+  FileSystemReader: require('./src/fs/fs-file-reader'),
+  FileSystemStack: require('./src/fs/fs-stack'),
 };
 
 describe('Support exports', function () {

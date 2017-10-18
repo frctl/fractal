@@ -26,6 +26,7 @@
     "lodash": "^4.17.4",
     "memory-fs": "^0.4.1",
     "multimatch": "^2.1.0",
+    "node-dir": "^0.1.17",
     "parse5": "^3.0.2",
     "replace-ext": "^1.0.0",
     "slash": "^1.0.0",
