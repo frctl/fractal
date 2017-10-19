@@ -72,7 +72,7 @@ The `fractal-beta new` command uses the [Fractal default starter project](https:
 fractal-beta new DIRECTORY_NAME
 ```
 
-Replace `DIRECTORY_NAME` with the name of the project folder you want you create and the starter project files will be installed in that location.
+Replace `DIRECTORY_NAME` with the name of the project folder you want to create and the starter project files will be installed in that location.
 
 Once the command has run, you should get a success message telling you that everything has been downloaded and installed correctly.
 
@@ -91,7 +91,7 @@ Tools built on top of the core engine (such as the CLI, Inspector and Pages) can
 
 ### 3. Start the Inspector
 
-The Fractal Inspector is a browser-based tool to help preview and test components during development.
+The **Fractal Inspector** is a browser-based tool to help preview and test components during development.
 
 > The Inspector is currently at a very early stage of development and will likely change significantly during the beta period.
 
@@ -102,11 +102,11 @@ fractal-beta inspect
 ```
 This will start a local server and display the URL you can access it at in the terminal output. Paste this URL into a browser to bring up the Inspector UI.
 
-You should be able to see a list of the components in the starter project in the sidebar on the left. Clicking on a component will give you a preview of all the variants of that component using the 'scenario' data supplied in the component configuration file.
+You should be able to see a list of the components in the starter project in the sidebar on the left. Clicking on a component will give you a preview of all the variants of that component using the 'scenario' data supplied in the component's `config.js` configuration file.
 
 ### 4. Generate a styleguide
 
-Fractal Pages is a 'component aware' static site builder that lets you build styleguides and prototypes using a system that has full access to your component library via the Fractal API.
+**Fractal Pages** is a 'component aware' static site builder that lets you build styleguides and prototypes using a system that has full access to your component library via the Fractal API.
 
 It is intentionally similar to Jekyll, and uses Nunjucks for templating. However its most powerful aspect is a configuration-based routing mechanism to allow you to dynamically generate pages based on items in a collection - for example components in your library.
 
