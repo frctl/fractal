@@ -15,11 +15,14 @@ class Entity {
       return props;
     }
     this._validateOrThrow(props);
+    props = cloneDeep(props);
 
-    _data.set(this, cloneDeep(props));
+    _uuid.set(this, props.uuid || uuid());
+    delete props.uuid;
+
+    _data.set(this, props);
     _setters.set(this, []);
     _getters.set(this, []);
-    _uuid.set(this, props.uuid || uuid());
 
     const proxy = new Proxy(this, {
       get(target, propKey, receiver) {
