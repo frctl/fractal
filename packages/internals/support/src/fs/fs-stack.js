@@ -73,23 +73,27 @@ fsSyncMethods.forEach(method => {
 fsAsyncMethods.forEach(method => {
   FileSystemStack.prototype[method] = function(...args) {
     const stack = _stack.get(this);
-    const tasks = stack.map(fs => fs[method].bind(fs));
+    const callback0 = args.pop();
+    const tasks = stack.map(fs => callback => {
+      fs[method](...args, callback);
+    });
 
-    const callback = args.pop();
-
-    tryEach(tasks, (err, results) => {
-      return callback(err, results);
+    tryEach(tasks, (err, results)=>{
+      // console.log(method, err, results);
+      callback0(err, results);
     });
   };
 });
 
 FileSystemStack.prototype.exists = function(...args) {
   const stack = _stack.get(this);
-  const tasks = stack.map(fs => fs._existsAsync.bind(fs));
-  const callback = args.pop();
-
-  tryEach(tasks, (err, results) => {
-    return callback(results);
+  const callback0 = args.pop();
+  const tasks = stack.map(fs => callback => {
+    fs._existsAsync(...args, callback);
+  });
+  tryEach(tasks, (err, results)=>{
+    // console.log('exists', err, results);
+    callback0(err, results);
   });
 }
 
