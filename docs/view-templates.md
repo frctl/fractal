@@ -1,4 +1,4 @@
-# Component view templates
+# View templates
 
 Component view templates are handled quite differently in Fractal v2. Some of the main features of the v2 template system include:
 
@@ -22,13 +22,13 @@ An example component that has Handlebars and Nunjucks views might therefore look
     └── view.hbs
 ```
 
-## Variants, views and template pre-processing
+## View pre-processing for variants
 
 In Fractal v2, views are much more tightly coupled to the concept of **variants**.
 
 > As in v1, each component is actually a collection of variants. Even if you do not define any variants for a component, Fractal will create a 'default' variant behind the scenes.
 
-Each variant gets it's own copy of each of the view templates added to the component. Rather than storing the contents of each of these components as a string, they are stored as a virtual-dom object (in the [HAST](https://github.com/syntax-tree/hast) format).
+Each variant gets its own copy of each of the view templates added to the component. Rather than storing the contents of each of these components as a string, they are stored as a virtual-dom object (in the [HAST](https://github.com/syntax-tree/hast) format).
 
 This means that the contents of each template can be manipulated by plugins on a per-variant basis, prior to any actual run-time rendering of the template against a set of context data.
 
