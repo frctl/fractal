@@ -42,7 +42,12 @@ Other key features of Fractal v2 include:
 
 ## Getting started with the v2 beta
 
-If you are curious about the v2 beta and want to get up and running with a project to let you experiment with it then please see the [Getting Started guide](docs/getting-started.md).
+If you are curious about the v2 beta and want to get up and running with a sample project then there is some early documentation available in the [docs](/docs/) directory of this repository:
+
+* [Getting started](/docs/getting-started.md)
+* [Components, variants and scenarios](/docs/components-variants-scenarios.md)
+* [View templates](/docs/view-templates.md)
+
 
 **Please be aware that until the beta period is complete major (breaking) changes may still be made.** Where possible we will of course try to avoid this but please do not yet start building your production codebase on these early v2 beta versions unless you are prepared to spend time and effort updating between potentially unstable releases.
 
