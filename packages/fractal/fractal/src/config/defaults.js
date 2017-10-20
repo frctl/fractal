@@ -8,9 +8,7 @@ module.exports = {
   },
 
   resolve: {
-    alias: {
-      '~': process.cwd()
-    }
+    alias: {}
   },
 
   components: {

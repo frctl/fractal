@@ -78,7 +78,7 @@ class App {
       ignoreInitial: true,
       cwd: process.cwd()
     }).on('all', () => {
-      this.debug(`fractal source change detected`);
+      this.debug(`source change detected`);
       this.dirty = true;
     });
 

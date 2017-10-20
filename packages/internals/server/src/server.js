@@ -2,6 +2,7 @@ const ip = require('ip');
 const Koa = require('koa');
 const serve = require('koa-static');
 const mount = require('koa-mount');
+const compress = require('koa-compress');
 const getPort = require('get-port');
 const {normalizePath} = require('@frctl/utils');
 
@@ -12,7 +13,9 @@ const _server = new WeakMap();
 class Server {
 
   constructor(opts = {}) {
-    _app.set(this, new Koa());
+    const app = new Koa();
+    app.use(compress(opts.compress));
+    _app.set(this, app);
   }
 
   async start(port) {
@@ -29,9 +32,10 @@ class Server {
     });
   }
 
-  addStatic(path, mountPath = '/') {
+  addStatic(path, mountPath) {
     path = normalizePath(path);
-    this.use(mount(mountPath, serve(path)));
+    const staticServer = serve(path);
+    this.use(mountPath ? mount(mountPath, staticServer) : staticServer);
     return this;
   }
 

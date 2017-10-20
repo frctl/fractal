@@ -16,9 +16,9 @@ describe('HTML engine', function () {
     });
   });
   describe('.render()', function () {
-    it('is a noop', async function () {
+    it('returns a promise that resolves to a string', async function () {
       const eng = engine();
-      expect(await eng.render('test')).to.equal('test');
+      return expect(eng.render('test')).to.eventually.equal('test');
     });
   });
 });

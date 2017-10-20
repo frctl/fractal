@@ -1,6 +1,6 @@
 {
   "name": "@frctl/fractal-engine-html",
-  "description": "No-op HTML template engine renderer for Fractal",
+  "description": "HTML template engine renderer for Fractal",
   "version": "2.0.0-beta.0",
   "homepage": "http://fractal.build",
   "repository": "https://github.com/frctl/fractal/tree/v2/packages/fractal/fractal-engine-html",

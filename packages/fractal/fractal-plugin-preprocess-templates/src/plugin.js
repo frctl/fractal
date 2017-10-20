@@ -1,9 +1,10 @@
-const evalAttrs = require('./eval-attrs');
+const attrs = require('./attrs');
+const logic = require('./logic');
 
 module.exports = function (opts = {}) {
   return {
 
-    name: 'template-attrs',
+    name: 'preprocess-templates',
 
     transform: 'components',
 
@@ -11,8 +12,9 @@ module.exports = function (opts = {}) {
       components.forEach(component => {
         component.getVariants().forEach(variant => {
           variant.getTemplates().forEach(template => {
-            const env = {template, component, variant, components, this: variant};
-            evalAttrs(template.contents, env);
+            const env = {template, component, variant, components, self: variant};
+            attrs(template.contents, env);
+            logic(template.contents, env);
           });
         });
       });
