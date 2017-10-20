@@ -1,9 +1,9 @@
 {
-  "name": "@frctl/fractal-engine-html",
-  "description": "HTML template engine renderer for Fractal",
+  "name": "@frctl/fractal-engine-nunjucks",
+  "description": "Nunjucks template engine renderer for Fractal",
   "version": "2.0.0-beta.0",
   "homepage": "http://fractal.build",
-  "repository": "https://github.com/frctl/fractal/tree/v2/packages/fractal/fractal-engine-html",
+  "repository": "https://github.com/frctl/fractal/tree/v2/packages/fractal/fractal-engine-nunjucks",
   "bugs": "https://github.com/frctl/fractal/issues",
   "author": "Mark Perkins <mark@allmarkedup.com> (http://allmarkedup.com)",
   "contributors": [
@@ -12,7 +12,7 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "pupa": "^1.0.0"
+    "nunjucks": "^3.0.1"
   },
   "devDependencies": {
     "@frctl/support": "^2.0.0-beta.0"
