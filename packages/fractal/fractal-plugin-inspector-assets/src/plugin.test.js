@@ -5,25 +5,25 @@ const plugin = require('./plugin')();
 
 const makeComponent = name => ({
   src: new File({
-    path: `/src/${name}`,
+    path: `${__dirname}/../components/${name}`,
     stat: {
       isDirectory: () => true
     }
   }),
   files: new FileCollection([
     new File({
-      path: `/src/${name}/${name}.js`,
+      path: `${__dirname}/../components/${name}/${name}.js`,
       contents: new Buffer(`
-        var _ = require('lodash');
-var t = ${name};
+        var padStart = require('lodash/padStart');
+var t = padStart('${name}', 8);
 console.log(t);`, 'utf-8')
     }),
     new File({
-      path: `/src/${name}/${name}.view.hbs`,
+      path: `${__dirname}/../components/${name}/${name}.view.hbs`,
       contents: new Buffer(`<button class=${name}>${name}</button>`, 'utf-8')
     }),
     new File({
-      path: `/src/${name}/${name}.scss`,
+      path: `${__dirname}/../components/${name}/${name}.scss`,
       contents: new Buffer(`
 $red: #f00;
 .${name}: {
@@ -31,7 +31,7 @@ $red: #f00;
 }`, 'utf-8')
     }),
     new File({
-      path: `/src/${name}/${name}-bg.png`,
+      path: `${__dirname}/../components/${name}/${name}-bg.png`,
       contents: new Buffer([8, 6, 7, 5, 3, 0, 9])
     })
   ]),
@@ -58,7 +58,7 @@ tests.addPluginTest({
   test: function(collection) {
     for (const component of collection) {
       expect(component.inspector.assets).to.be.a('FileCollection')
-      console.log(component.inspector.assets.toArray().map(file=>file.contents.toString()));
+      console.log(component.inspector.assets.toArray().map(file=>file.path.toString()));
     }
   }
 });

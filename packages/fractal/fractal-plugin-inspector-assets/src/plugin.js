@@ -5,13 +5,13 @@ const fs = require('fs');
 const {promisify} = require('@frctl/utils');
 const {FileCollection, FileSystemStack} = require('@frctl/support');
 const SyncFileSystemStack = require('../../../internals/loader/src/sync-fs-stack.js')
+const debug = require('debug')('frctl:plugin:inspector-assets');
 
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-const extractSass = new ExtractTextPlugin({
-    filename: '[name].[contenthash].css',
-    disable: process.env.NODE_ENV === 'development'
-});
+const extractCSS = new ExtractTextPlugin('stylesheets/[name]-one.css');
+const extractSASS = new ExtractTextPlugin('stylesheets/[name]-two.css');
+
 
 const getConfig = component => {
   const basePath = component.getSrc().path;
@@ -20,6 +20,7 @@ const getConfig = component => {
     entry: component.getAssets()
       .toArray()
       .reduce((acc, file) => {
+        console.log(`${file.path}`)
         acc[`${file.stem}${file.extname}`] = `${file.path}`;
         return acc;
       }, {}),
@@ -28,39 +29,40 @@ const getConfig = component => {
       path: `${basePath}`
     },
     resolve: {
-      modules: ['/']
+      modules: ['../node_modules']
     },
     module: {
 
     rules: [
       { // regular css files
         test: /\.css$/,
-        loader: ExtractTextPlugin.extract(['css-loader']),
+        use: extractCSS.extract(['css-loader']),
       },
       { // sass / scss loader for webpack
         test: /\.(sass|scss)$/,
-        loader: ExtractTextPlugin.extract(['css-loader', 'sass-loader'])
+        use: extractSASS.extract(['css-loader', 'sass-loader'])
       },
       {
-        test: /\.(jpg|png|svg)$/,
-        loader: 'file-loader',
-        options: {
-          name: '[path][name].[ext]',
-        },
-      },
+      test: /\.(png|jpg|gif)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[path][name].[ext]'
+            }
+          }
+        ]
+      }
     ]
   },
   plugins: [
-    new ExtractTextPlugin({ // define where to save the file
-      filename: `${basePath}/[name].css`,
-      allChunks: true,
-    }),
+    extractCSS,
+    extractSASS
   ],
   }
 };
 
 const memoryFs = new MemoryFS();
-// packagePreloader(inputFileSystem, ['css-loader', 'sass-loader', 'file-loader', 'extract-text-webpack-plugin']);
 const inputFileSystem = new FileSystemStack([memoryFs, fs]);
 
 module.exports = function (opts = {}) {
@@ -77,7 +79,6 @@ module.exports = function (opts = {}) {
         const outputFileSystem = new MemoryFS();
         component.inspector = component.inspector || {};
         const assets = component.getAssets();
-        // console.log(assets);
         if (!assets) return component;
         assets.toMemoryFS(memoryFs);
 
@@ -90,11 +91,14 @@ module.exports = function (opts = {}) {
         compiler.resolvers.context.fileSystem = compiler.inputFileSystem;
         compiler.outputFileSystem = outputFileSystem;
 
-        const result = await pRun().catch(e=> {console.log('ERROR::',e); return new FileCollection()});
-
-        console.log('\n\ncomponent:', util.inspect(outputFileSystem, {showHidden: false, depth:4}));
+        const result = await pRun().catch(e => {debug(`Error running plugin handler: ${e}`); return new FileCollection()});
 
         component.inspector.assets = await FileCollection.fromMemoryFS(outputFileSystem); // TODO: should this overwrite, or merge in some way?
+        debug(`
+
+component: ${util.inspect(component.inspector.assets, {showHidden: false, depth:4})}
+
+`);
         return component;
       });
 

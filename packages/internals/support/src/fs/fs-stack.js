@@ -1,5 +1,6 @@
 const {toArray} = require('@frctl/utils');
 const {tryEach} = require('async');
+const debug = require('debug')('frctl:fs');
 
 const _stack = new WeakMap();
 
@@ -79,7 +80,8 @@ fsAsyncMethods.forEach(method => {
     });
 
     tryEach(tasks, (err, results)=>{
-      // console.log(method, err, results);
+      if (err) debug(`[${method}(${args})]: ${err}`);
+      if (results) debug(`[${method}(${args})]: ${results}`);
       callback0(err, results);
     });
   };
@@ -92,7 +94,8 @@ FileSystemStack.prototype.exists = function(...args) {
     fs._existsAsync(...args, callback);
   });
   tryEach(tasks, (err, results)=>{
-    // console.log('exists', err, results);
+    if (err) debug(`Error [${method}]: ${err}`);
+    if (results) debug(`Results [${method}]: ${results}`);
     callback0(err, results);
   });
 }
