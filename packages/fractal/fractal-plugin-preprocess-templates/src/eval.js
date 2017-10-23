@@ -1,7 +1,6 @@
 const {VM} = require('vm2');
 
 module.exports = function evalInVM(code, context = {}, opts = {}) {
-
   const vm = new VM({
     timeout: 1000,
     sandbox: context
@@ -15,5 +14,4 @@ module.exports = function evalInVM(code, context = {}, opts = {}) {
     }
     throw err;
   }
-
 };

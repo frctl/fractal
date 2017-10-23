@@ -38,7 +38,8 @@ module.exports = function (tree, context, env) {
         ref: `${subComponent.id}.${subComponentVariant.id}${templateExt}`
       };
 
-      if (variant.includes.find(i => i.ref === include.ref)) {
+      const included = variant.includes.find(i => i.ref === include.ref);
+      if (included) {
         included.count++;
       } else {
         variant.includes.push(include);
