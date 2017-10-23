@@ -13,7 +13,7 @@ module.exports = function (pages, env) {
       contents = await env.renderString(page.contents.toString(), {
         [page.targetAlias]: page.target,
         page,
-        target: page.target,
+        target: page.target
       });
       // }
       file.contents = Buffer.from(contents);

@@ -1,5 +1,4 @@
-const attrs = require('./attrs');
-const logic = require('./logic');
+/* eslint import/no-dynamic-require: off */
 
 module.exports = function (opts = {}) {
   return {
@@ -11,10 +10,13 @@ module.exports = function (opts = {}) {
     async handler(components, state, app) {
       components.forEach(component => {
         component.getVariants().forEach(variant => {
+          const context = {component, variant, self: variant};
           variant.getTemplates().forEach(template => {
-            const env = {template, component, variant, components, self: variant};
-            attrs(template.contents, env);
-            logic(template.contents, env);
+            const env = {template, component, variant, components};
+            ['attrs', 'logic', 'include'].forEach(name => {
+              const transform = require(`./${name}`);
+              transform(template.contents, context, env);
+            });
           });
         });
       });
