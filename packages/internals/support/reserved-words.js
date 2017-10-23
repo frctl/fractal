@@ -12,5 +12,6 @@ module.exports = [
   'templates',
   'variants',
   'views',
-  'default'
+  'default',
+  'inspector'
 ];
