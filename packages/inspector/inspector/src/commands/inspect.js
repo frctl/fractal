@@ -29,6 +29,8 @@ module.exports = function (config = {}) {
         config.dev = true;
       }
 
+      config.plugins.forEach(plugin => app.addPlugin(plugin));
+
       const inspector = await server(app, config);
 
       process.on('SIGINT', () => {
