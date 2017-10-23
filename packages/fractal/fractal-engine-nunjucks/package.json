@@ -12,6 +12,7 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "@allmarkedup/nunjucks-with": "^0.1.1",
     "nunjucks": "^3.0.1"
   },
   "devDependencies": {

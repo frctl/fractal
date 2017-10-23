@@ -1,5 +1,5 @@
 const nunjucks = require('nunjucks');
-const WithExtension = require('./with-extension');
+const WithExtension = require('@allmarkedup/nunjucks-with');
 
 module.exports = function (opts = {}) {
   const env = new nunjucks.Environment(opts.loaders || []);
