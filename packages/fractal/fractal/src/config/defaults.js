@@ -23,7 +23,7 @@ module.exports = {
       }
     },
     templates: {
-      helpers: {}
+      globals: {}
     }
   },
 
