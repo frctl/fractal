@@ -10,7 +10,8 @@ module.exports = function (opts = {}) {
     async handler(components, state, app) {
       components.forEach(component => {
         component.getVariants().forEach(variant => {
-          const context = {component, variant, self: variant};
+          const context = variant.toJSON();
+          context.component = component.toJSON();
           variant.getTemplates().forEach(template => {
             const env = {template, component, variant, components};
             ['attrs', 'logic', 'include'].forEach(name => {

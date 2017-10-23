@@ -26,6 +26,8 @@ module.exports = function (tree, context, env) {
         throw new Error(`Could not find '${templateExt}' template for component ${subComponent.ifd}`);
       }
 
+      // Register the include on the parent variant
+
       variant.includes = variant.get('includes', []);
 
       const include = {
