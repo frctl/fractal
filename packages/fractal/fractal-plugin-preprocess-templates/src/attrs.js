@@ -13,7 +13,7 @@ module.exports = function (tree, context, env) {
           const propName = key.slice(1);
           const propInfo = getPropInfo(propName);
           const name = propInfo ? propInfo.propertyName : propName;
-          const result = safeEval(node.properties[key], context);
+          const result = safeEval(node.properties[key], context, env);
 
           delete node.properties[key];
 

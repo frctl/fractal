@@ -4,7 +4,7 @@ const safeEval = require('./eval');
 module.exports = function (tree, context, env) {
   visit(tree, 'element', function (node, index, parentNode) {
     if (node.properties['@if']) {
-      const result = safeEval(node.properties['@if'], context);
+      const result = safeEval(node.properties['@if'], context, env);
       delete node.properties['@if'];
       if (!result) {
         // false, remove the node
