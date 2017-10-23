@@ -810,9 +810,9 @@ describe('Collection', function () {
   describe('.addEntityDefinition()', function () {
     it('adds specified values to the Entity map', function () {
       const entityMap = Collection.getEntityMap();
-      expect(entityMap.size).to.equal(4);
+      const size = entityMap.size;
       Collection.addEntityDefinition(Object, Collection);
-      expect(entityMap.size).to.equal(5);
+      expect(entityMap.size).to.equal(size + 1);
       entityMap.delete(Object);
     });
   });
@@ -821,9 +821,9 @@ describe('Collection', function () {
     it('adds specified values to the Entity map', function () {
       const tagMap = Collection.getTagMap();
       const tag = 'Object';
-      expect(tagMap.size).to.equal(5);
+      const size = tagMap.size;
       Collection.addTagDefinition(tag, {});
-      expect(tagMap.size).to.equal(6);
+      expect(tagMap.size).to.equal(size + 1);
       tagMap.delete(tag);
     });
   });
