@@ -44,4 +44,6 @@ function resolveValue(existing, additional, propInfo) {
   if (propInfo.numeric || propInfo.positiveNumeric) {
     return parseInt(additional, 10);
   }
+
+  return additional;
 }
