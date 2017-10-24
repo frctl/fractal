@@ -43,7 +43,17 @@ module.exports = {
     filters: {},
     extensions: {},
     opts: {
-      filters: {},
+      filters: {
+        beautify: {
+          html: {
+            unformatted: ['code', 'pre', 'em', 'strong', 'span'],
+            indent_inner_html: true,
+            indent_char: ' ',
+            indent_size: 2,
+            sep: '\n'
+          }
+        }
+      },
       extensions: {}
     }
   },

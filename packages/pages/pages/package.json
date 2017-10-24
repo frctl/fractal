@@ -15,6 +15,7 @@
     "@frctl/server": "^2.0.0-beta.0",
     "@frctl/fractal": "^2.0.0-beta.0",
     "check-types": "^7.2.0",
+    "condense-newlines": "^0.2.1",
     "gray-matter": "^3.0.3",
     "debug": "^3.0.0",
     "del": "^3.0.0",

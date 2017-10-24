@@ -1,6 +1,7 @@
 const beautify = require('js-beautify');
 const {File} = require('@frctl/support');
 const {isPlainObject} = require('lodash');
+const condense = require('condense-newlines');
 const {defaultsDeep} = require('@frctl/utils');
 
 module.exports = function (opts = {}) {
@@ -18,7 +19,7 @@ module.exports = function (opts = {}) {
         lang = 'html';
       }
 
-      const options = defaultsDeep(runtimeOpts, opts);
+      const options = defaultsDeep(runtimeOpts, opts[lang] || {});
 
       try {
         target = await Promise.resolve(target);
@@ -26,7 +27,8 @@ module.exports = function (opts = {}) {
         if (!beautify[lang]) {
           throw new Error(`Cannot beautify ${lang} [lang-invalid]`);
         }
-        done(null, beautify[lang](contents, options));
+        const reformatted = beautify[lang](contents, options);
+        done(null, condense(reformatted));
       } catch (err) {
         done(err);
       }
