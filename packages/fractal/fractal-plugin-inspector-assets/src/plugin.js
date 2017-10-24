@@ -66,7 +66,8 @@ module.exports = function (opts = {}) {
         const outputFileSystem = new MemoryFS();
         component.inspector = component.inspector || {};
         const assets = component.getAssets();
-        if (!assets) {
+        if (assets.length === 0) {
+          component.inspector.assets = new FileCollection();
           return component;
         }
         assets.toMemoryFS(memoryFs);
@@ -82,7 +83,6 @@ module.exports = function (opts = {}) {
 
         await pRun().catch(err => {
           debug(`Error running plugin handler: ${err}`);
-          return new FileCollection();
         });
         component.inspector.assets = await FileCollection.fromMemoryFS(outputFileSystem); // TODO: should this overwrite, or merge in some way?
         debug(`

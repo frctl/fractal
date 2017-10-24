@@ -22,7 +22,7 @@ module.exports = {
         },
         assets: {
           styles: '**/*.{css,scss}',
-          scripts: '**/*.{js}',
+          scripts: '**/*.js',
           images: '**/*.{svg,png,jpg,jpeg,gif}',
           media: '**/*.{webm,mp4,ogg}',
           fonts: '**/*.{woff,woff2}'
