@@ -56,6 +56,7 @@ const makeCollection = () => ComponentCollection.from([makeComponent('one'), mak
 tests.addPluginTest({
   description: 'sets an inspector.asset property on each component',
   input: makeCollection(),
+  timeout: 3000,
   test: function (collection) {
     for (const component of collection) {
       expect(component.inspector.assets).to.be.a('FileCollection');

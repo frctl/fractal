@@ -32,11 +32,14 @@ module.exports = function (testPath) {
         return result;
       });
 
-      for (let {description, test, throws, opts = {}, input = Collection.from([]), state, app} of pluginTests) {
+      for (let {description, test, throws, timeout, opts = {}, input = Collection.from([]), state, app} of pluginTests) {
         const plugin = pluginFactory(opts);
         input = Collection.from(input);
 
         it(description, function () {
+          if (timeout) {
+            this.timeout(timeout);
+          }
           try {
             const result = plugin.handler(input, state, app);
             return Promise.resolve(result)
