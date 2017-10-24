@@ -1,72 +1,59 @@
 const util = require('util');
+const path = require('path');
+const fs = require('fs');
 const webpack = require('webpack');
 const MemoryFS = require('memory-fs');
-const fs = require('fs');
 const {promisify} = require('@frctl/utils');
 const {FileCollection, FileSystemStack} = require('@frctl/support');
-const SyncFileSystemStack = require('../../../internals/loader/src/sync-fs-stack.js')
 const debug = require('debug')('frctl:plugin:inspector-assets');
 
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-const extractCSS = new ExtractTextPlugin('stylesheets/[name]-one.css');
-const extractSASS = new ExtractTextPlugin('stylesheets/[name]-two.css');
-
+const styleTest = /\.(sass|scss|css)$/;
+const fileTest = /\.(svg|png|jpg|jpeg|gif|webm|mp4|ogg|woff|woff2)$/;
 
 const getConfig = component => {
   const basePath = component.getSrc().path;
+  const stem = component.getSrc().stem;
+  const extractSASS = new ExtractTextPlugin(`${basePath}/${stem}.css`);
+
   return {
-    context: '/',
-    entry: component.getAssets()
-      .toArray()
-      .reduce((acc, file) => {
-        console.log(`${file.path}`)
-        acc[`${file.stem}${file.extname}`] = `${file.path}`;
-        return acc;
-      }, {}),
+    context: process.cwd(),
+    entry: component.getAssets().toArray().map(file => file.path),
     output: {
-      filename: '[name]',
-      path: `${basePath}`
+      filename: `${stem}.js`,
+      path: `${path.join(basePath)}`
     },
     resolve: {
-      modules: ['../node_modules']
+      modules: [path.join(process.cwd(), 'node_modules')]
     },
     module: {
-
-    rules: [
-      { // regular css files
-        test: /\.css$/,
-        use: extractCSS.extract(['css-loader']),
-      },
-      { // sass / scss loader for webpack
-        test: /\.(sass|scss)$/,
-        use: extractSASS.extract(['css-loader', 'sass-loader'])
-      },
-      {
-      test: /\.(png|jpg|gif)$/,
-        use: [
-          {
+      rules: [
+        { // sass / scss loader for webpack
+          test: styleTest,
+          use: extractSASS.extract(['css-loader', 'sass-loader'])
+        },
+        {
+          test: fileTest,
+          use: [{
             loader: 'file-loader',
             options: {
-              name: '[path][name].[ext]'
+              name: '[name].[ext]'
             }
-          }
-        ]
-      }
+          }]
+        }
+      ]
+    },
+    plugins: [
+      extractSASS
     ]
-  },
-  plugins: [
-    extractCSS,
-    extractSASS
-  ],
-  }
+  };
 };
 
 const memoryFs = new MemoryFS();
 const inputFileSystem = new FileSystemStack([memoryFs, fs]);
 
 module.exports = function (opts = {}) {
-
   return {
 
     name: 'inspector-assets',
@@ -74,12 +61,14 @@ module.exports = function (opts = {}) {
     transform: 'components',
 
     async handler(components, state, app) {
-
+      // FIXME: looping/compiling need to be optimised here
       components = await components.mapAsync(async component => {
         const outputFileSystem = new MemoryFS();
         component.inspector = component.inspector || {};
         const assets = component.getAssets();
-        if (!assets) return component;
+        if (!assets) {
+          return component;
+        }
         assets.toMemoryFS(memoryFs);
 
         const config = getConfig(component);
@@ -91,13 +80,13 @@ module.exports = function (opts = {}) {
         compiler.resolvers.context.fileSystem = compiler.inputFileSystem;
         compiler.outputFileSystem = outputFileSystem;
 
-        const result = await pRun().catch(e => {debug(`Error running plugin handler: ${e}`); return new FileCollection()});
-
+        await pRun().catch(err => {
+          debug(`Error running plugin handler: ${err}`);
+          return new FileCollection();
+        });
         component.inspector.assets = await FileCollection.fromMemoryFS(outputFileSystem); // TODO: should this overwrite, or merge in some way?
         debug(`
-
-component: ${util.inspect(component.inspector.assets, {showHidden: false, depth:4})}
-
+component: ${util.inspect(component.inspector.assets.mapToArray(file => ({path: file.path, contents: file.contents.toString()})), {showHidden: false, depth: 4})}
 `);
         return component;
       });

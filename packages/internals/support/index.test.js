@@ -16,7 +16,7 @@ const srcExports = {
   EmittingPromise: require('./src/emitting-promise'),
   Validator: require('./src/validator'),
   FileSystemReader: require('./src/fs/fs-file-reader'),
-  FileSystemStack: require('./src/fs/fs-stack'),
+  FileSystemStack: require('./src/fs/fs-stack')
 };
 
 describe('Support exports', function () {

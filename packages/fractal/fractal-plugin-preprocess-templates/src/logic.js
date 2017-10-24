@@ -1,4 +1,3 @@
-const {toArray} = require('@frctl/utils');
 const visit = require('unist-util-visit');
 const safeEval = require('./eval');
 

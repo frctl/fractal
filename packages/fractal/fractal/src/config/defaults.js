@@ -21,9 +21,11 @@ module.exports = {
           default: '.html'
         },
         assets: {
-          styles: '**/*.{css,scss,less}',
-          scripts: '**/*.{js,cs,ts,jsx}',
-          images: '**/*.{svg,png,jpg,jpeg,gif}'
+          styles: '**/*.{css,scss}',
+          scripts: '**/*.{js}',
+          images: '**/*.{svg,png,jpg,jpeg,gif}',
+          media: '**/*.{webm,mp4,ogg}',
+          fonts: '**/*.{woff,woff2}'
         }
       }
     },

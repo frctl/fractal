@@ -109,16 +109,18 @@ class FileCollection extends EntityCollection {
     const errors = [];
     return new Promise((resolve, reject) => {
       reader.readFiles('/', '',
-        function(err, content, filename, next) {
+        function (err, content, filename, next) {
           if (err) {
-            errs.push(err);
+            errors.push(err);
           } else {
             files.push({path: filename, contents: content});
           }
           next();
         },
-        function(err, fls) {
-          if (err || errors.length) return reject(err || new Error(`Could not create FileCollection from MemoryFS instance [from-memfs-error]\n  ${errors.join('\n')}`));
+        function (err, fls) {
+          if (err || errors.length > 0) {
+            return reject(err || new Error(`Could not create FileCollection from MemoryFS instance [from-memfs-error]\n  ${errors.join('\n')}`));
+          }
           resolve(FileCollection.from(files));
         });
     });

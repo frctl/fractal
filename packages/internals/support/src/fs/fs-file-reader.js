@@ -14,9 +14,11 @@ const path = require('path');
  */
 function extend(target, source, modify) {
   const result = target ? modify ? target : extend({}, target, true) : {};
-  if (!source) return result;
+  if (!source) {
+    return result;
+  }
   for (let key in source) {
-    if (source.hasOwnProperty(key) && source[key] !== undefined) {
+    if (source.hasOwnProperty(key) && source[key] !== undefined) { // eslint-disable-line no-prototype-builtins
       result[key] = source[key];
     }
   }
@@ -30,10 +32,11 @@ function extend(target, source, modify) {
  * @returns {Boolean} whether there is a match
  */
 function matches(str, match) {
-  if (Array.isArray(match)) return match.indexOf(str) > -1;
+  if (Array.isArray(match)) {
+    return match.indexOf(str) > -1;
+  }
   return match.test(str);
 }
-
 
 class FileSystemReader {
   constructor(fs = require('fs')) {
@@ -53,9 +56,11 @@ class FileSystemReader {
       callback = options;
       options = {};
     }
-    if (typeof options === 'string') options = {
-      encoding: options
-    };
+    if (typeof options === 'string') {
+      options = {
+        encoding: options
+      };
+    }
     options = extend({
       recursive: true,
       encoding: 'utf8',
@@ -64,68 +69,101 @@ class FileSystemReader {
     let files = [];
     const fs = this._fs;
     const that = this;
-    const done = function(err) {
+    const done = function (err) {
       if (typeof complete === 'function') {
-        if (err) return complete(err);
+        if (err) {
+          return complete(err);
+        }
         complete(null, files);
       }
     };
 
-    fs.readdir(dir, function(err, list) {
+    fs.readdir(dir, function (err, list) {
       if (err) {
         if (options.doneOnErr === true) {
-          if (err.code === 'EACCES') return done();
+          if (err.code === 'EACCES') {
+            return done();
+          }
           return done(err);
         }
       }
       let i = 0;
 
       if (options.reverse === true ||
-        (typeof options.sort == 'string' &&
+        (typeof options.sort === 'string' &&
           (/reverse|desc/i).test(options.sort))) {
         list = list.reverse();
-      } else if (options.sort !== false) list = list.sort();
+      } else if (options.sort !== false) {
+        list = list.sort();
+      }
 
       (function next() {
         const filename = list[i++];
-        if (!filename) return done(null, files);
+        if (!filename) {
+          return done(null, files);
+        }
         const file = path.join(dir, filename);
-        fs.stat(file, function(err, stat) {
-          if (err && options.doneOnErr === true) return done(err);
+        fs.stat(file, function (err, stat) {
+          if (err && options.doneOnErr === true) {
+            return done(err);
+          }
           if (stat && stat.isDirectory()) {
             if (options.recursive) {
-              if (options.matchDir && !matches(filename, options.matchDir)) return next();
-              if (options.excludeDir && matches(filename, options.excludeDir)) return next();
-              that.readFiles(file, options, callback, function(err, sfiles) {
-                if (err && options.doneOnErr === true) return done(err);
+              if (options.matchDir && !matches(filename, options.matchDir)) {
+                return next();
+              }
+              if (options.excludeDir && matches(filename, options.excludeDir)) {
+                return next();
+              }
+              that.readFiles(file, options, callback, function (err, sfiles) {
+                if (err && options.doneOnErr === true) {
+                  return done(err);
+                }
                 files = files.concat(sfiles);
                 next();
               });
-            } else next();
+            } else {
+              next();
+            }
           } else if (stat && stat.isFile()) {
-            if (options.match && !matches(filename, options.match)) return next();
-            if (options.exclude && matches(filename, options.exclude)) return next();
-            if (options.filter && !options.filter(filename)) return next();
-            if (options.shortName) files.push(filename);
-            else files.push(file);
-            fs.readFile(file, options.encoding, function(err, data) {
+            if (options.match && !matches(filename, options.match)) {
+              return next();
+            }
+            if (options.exclude && matches(filename, options.exclude)) {
+              return next();
+            }
+            if (options.filter && !options.filter(filename)) {
+              return next();
+            }
+            if (options.shortName) {
+              files.push(filename);
+            } else {
+              files.push(file);
+            }
+            fs.readFile(file, options.encoding, function (err, data) {
               if (err) {
-                if (err.code === 'EACCES') return next();
+                if (err.code === 'EACCES') {
+                  return next();
+                }
                 if (options.doneOnErr === true) {
                   return done(err);
                 }
               }
-              if (callback.length > 3)
-                if (options.shortName) callback(null, data, filename, next);
-                else callback(null, data, file, next);
-              else callback(null, data, next);
+              if (callback.length > 3) {
+                if (options.shortName) {
+                  callback(null, data, filename, next);
+                } else {
+                  callback(null, data, file, next);
+                }
+              } else {
+                callback(null, data, next);
+              }
             });
           } else {
             next();
           }
         });
       })();
-
     });
   }
 }

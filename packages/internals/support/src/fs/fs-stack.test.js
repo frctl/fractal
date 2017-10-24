@@ -11,7 +11,7 @@ const makeFs = throwErr => {
     called: null
   };
   for (const method of fsSyncMethods) {
-    fs[method] = function() {
+    fs[method] = function () {
       this.called = method;
       if (throwErr) {
         throw new Error('oops');
@@ -19,7 +19,7 @@ const makeFs = throwErr => {
     };
   }
   for (const method of fsAsyncMethods) {
-    fs[method] = function(callback) {
+    fs[method] = function (callback) {
       this.called = method;
       if (throwErr) {
         return callback(new Error('oops'));
@@ -30,11 +30,10 @@ const makeFs = throwErr => {
   return fs;
 };
 
-
-describe('FileSystemStack', function() {
+describe('FileSystemStack', function () {
   for (const fsMethod of fsSyncMethods) {
-    describe(`.${fsMethod}()`, function() {
-      it('calls the sync methods on each obj in the stack until one does not throw an error', function() {
+    describe(`.${fsMethod}()`, function () {
+      it('calls the sync methods on each obj in the stack until one does not throw an error', function () {
         const fs1 = makeFs(true);
         const fs2 = makeFs(true);
         const fs3 = makeFs(false);
@@ -49,14 +48,17 @@ describe('FileSystemStack', function() {
     });
   }
   for (const fsMethod of fsAsyncMethods) {
-    describe(`.${fsMethod}()`, function() {
-      it('calls the async methods on each obj in the stack until one does not throw an error', function(done) {
+    describe(`.${fsMethod}()`, function () {
+      it('calls the async methods on each obj in the stack until one does not throw an error', function (done) {
         const fs1 = makeFs(true);
         const fs2 = makeFs(true);
         const fs3 = makeFs(false);
         const fs4 = makeFs(false);
         const stack = new FileSystemStack([fs1, fs2, fs3, fs4]);
         stack[fsMethod]((err, result) => {
+          if (err) {
+            return done(err);
+          }
           expect(fs1.called).to.equal(fsMethod);
           expect(fs2.called).to.equal(fsMethod);
           expect(fs3.called).to.equal(fsMethod);
@@ -66,8 +68,8 @@ describe('FileSystemStack', function() {
       });
     });
   }
-  describe(`.exists()`, function(done) {
-    it('calls the async methods on each obj in the stack until one does not throw an error', function(done) {
+  describe(`.exists()`, function (done) {
+    it('calls the async methods on each obj in the stack until one does not throw an error', function (done) {
       const fs1 = makeFs(true);
       const fs2 = makeFs(true);
       const fs3 = makeFs(false);

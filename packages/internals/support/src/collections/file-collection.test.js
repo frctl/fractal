@@ -191,7 +191,7 @@ describe('FileCollection', function () {
     });
   });
 
-  describe(`.fromMemoryFS`, function(){
+  describe(`.fromMemoryFS`, function () {
     it('converts a memory-fs instance to a FileCollection');
   });
 

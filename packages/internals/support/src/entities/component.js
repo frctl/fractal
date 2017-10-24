@@ -16,6 +16,8 @@ const _src = new WeakMap();
 const _files = new WeakMap();
 const _variants = new WeakMap();
 
+const assetTypes = ['scripts', 'styles', 'images', 'fonts', 'media'];
+
 class Component extends Entity {
   constructor(props) {
     if (Component.isComponent(props)) {
@@ -113,14 +115,13 @@ class Component extends Entity {
   }
 
   getAssets(type) {
-    // TODO: Assert type === ('string' || null)
-    const types = type ? [].concat(type) : ['scripts', 'styles', 'images'];
+    // TODO: Assert type === (someOf(assetTypes) || null)
+    const types = type ? [].concat(type) : assetTypes;
     const assetMatchers = types.map(type => this.getConfig(`assets.${type}`, () => false));
     return assetMatchers
       .map(assetMatcher => this.getFiles().filter(assetMatcher))
       .reduce((coll, files) => coll.concat(files), new FileCollection());
   }
-
 
   getConfig(path, fallback) {
     if (path) {

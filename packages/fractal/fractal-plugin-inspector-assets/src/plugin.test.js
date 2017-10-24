@@ -1,7 +1,6 @@
 const {expect} = require('../../../../test/helpers');
 const tests = require('../../../../test/runners/plugins')(__dirname);
-const {ComponentCollection,FileCollection,File} = require('../../../internals/support');
-const plugin = require('./plugin')();
+const {ComponentCollection, FileCollection, File} = require('../../../internals/support');
 
 const makeComponent = name => ({
   src: new File({
@@ -26,8 +25,15 @@ console.log(t);`, 'utf-8')
       path: `${__dirname}/../components/${name}/${name}.scss`,
       contents: new Buffer(`
 $red: #f00;
-.${name}: {
+.${name} {
   color: $red;
+}`, 'utf-8')
+    }),
+    new File({
+      path: `${__dirname}/../components/${name}/${name}.css`,
+      contents: new Buffer(`
+.blue {
+  color: blue;
 }`, 'utf-8')
     }),
     new File({
@@ -37,30 +43,33 @@ $red: #f00;
   ]),
   config: {
     id: `${name}-id-set`,
-    variants: [{
-      id: `${name}-v1`
-    }, {
-      id: `${name}-v2`
-    }],
     assets: {
       scripts: '**/*.js',
-      styles: '**/*.scss',
+      styles: '**/*.{scss,css}',
       images: '**/*.{png,jpg}'
     }
   }
 });
 
-const makeCollection = () => ComponentCollection.from([makeComponent('one'), makeComponent('two')])
+const makeCollection = () => ComponentCollection.from([makeComponent('one'), makeComponent('two')]);
 
 tests.addPluginTest({
   description: 'sets an inspector.asset property on each component',
   input: makeCollection(),
-  test: function(collection) {
+  test: function (collection) {
     for (const component of collection) {
-      expect(component.inspector.assets).to.be.a('FileCollection')
-      console.log(component.inspector.assets.toArray().map(file=>file.path.toString()));
+      expect(component.inspector.assets).to.be.a('FileCollection');
+      expect(component.inspector.assets.toArray().map(file => file.path).length).to.equal(3);
     }
   }
 });
 
-tests.runOnly();
+// tests.addPluginTest({
+//  description: 'it works as a dependency'
+// })
+
+// tests.addPluginTest({
+//  description: 'it works for media and font assets'
+// })
+
+tests.run();

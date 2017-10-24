@@ -281,9 +281,9 @@ describe('Component', function () {
     it('returns an empty FileCollection if no matching views are found', function () {
       const assetsConfigComp = Object.assign({}, fullComponent);
       assetsConfigComp.config.assets = {
-          styles: {
-            stem: 'view'
-          }
+        styles: {
+          stem: 'view'
+        }
       };
       const component = new Component(assetsConfigComp);
       const assets = component.getAssets();
@@ -300,12 +300,12 @@ describe('Component', function () {
       };
       const component = new Component(assetsConfigComp);
       const assets = component.getAssets();
-      assets.forEach(asset=>console.log(asset.relative));
+      assets.forEach(asset => console.log(asset.relative));
       expect(assets).to.be.a('FileCollection');
       expect(assets.length).to.equal(1);
     });
 
-    it('returns only the required type of assets when specified', function(){
+    it('returns only the required type of assets when specified', function () {
       const assetsConfigComp = Object.assign({}, fullComponent);
       assetsConfigComp.config.assets = {
         scripts: '*.js',
@@ -323,7 +323,6 @@ describe('Component', function () {
 
     it('combines with the default app config matcher');
   });
-
 
   describe('.isComponent()', function () {
     it('returns true if an instance is a Component', function () {
