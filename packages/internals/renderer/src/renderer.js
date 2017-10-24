@@ -19,9 +19,6 @@ class Renderer {
       throw new Error(`No render engine found for template '${template.filename}' [engine-not-found]`);
     }
     opts = Object.assign({}, opts, {template: tpl});
-    for (const preprocess of engine.preprocessors) {
-      tpl.tree = preprocess(tpl.tree, context, opts);
-    }
     return engine.render(tpl.toString(), context, opts);
   }
 
