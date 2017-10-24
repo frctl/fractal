@@ -1,6 +1,8 @@
+const {flatten, uniq} = require('lodash');
 const {join, extname} = require('path');
 const {readFileSync} = require('fs');
 const {ApiServer} = require('@frctl/server');
+const {FileCollection} = require('@frctl/support');
 const Socket = require('koa-socket');
 const Router = require('koa-router');
 
@@ -30,11 +32,26 @@ module.exports = async function (app, opts = {}) {
       return;
     }
 
-    let assets = component.get('inspector.assets');
-    if (!assets) {
-      assets = component.getFiles().filter(f => ['.js', '.css'].includes(f.extname));
+    let assetsList = new FileCollection();
+
+    function getAssets(component) {
+      let assets = component.get('inspector.assets', component.getFiles().filter(f => ['.js', '.css'].includes(f.extname)));
+      assetsList = assetsList.concat(assets);
+      const children = component.getVariants().mapToArray(v => {
+        return v.get('includes', []).map(i => i.component)
+      });
+      const childIds = uniq(flatten(children));
+      childIds.forEach(id => {
+        const component = components.find(id);
+        if (component) {
+          getAssets(component);
+        }
+      });
     }
-    ctx.body = assets.toJSON();
+
+    getAssets(component);
+
+    ctx.body = assetsList.toJSON();
   });
 
   server.use(router.routes()).use(router.allowedMethods());

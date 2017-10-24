@@ -5,7 +5,7 @@ const commaSep = require('comma-separated-tokens');
 const spaceSep = require('space-separated-tokens');
 const safeEval = require('./eval');
 
-module.exports = function (tree, env) {
+module.exports = function (tree, context, env) {
   visit(tree, 'element', function (node, index, parentNode) {
     if (node.properties) {
       for (const key of Object.keys(node.properties)) {
@@ -13,7 +13,7 @@ module.exports = function (tree, env) {
           const propName = key.slice(1);
           const propInfo = getPropInfo(propName);
           const name = propInfo ? propInfo.propertyName : propName;
-          const result = safeEval(node.properties[key], env);
+          const result = safeEval(node.properties[key], context, env);
 
           delete node.properties[key];
 
@@ -44,4 +44,6 @@ function resolveValue(existing, additional, propInfo) {
   if (propInfo.numeric || propInfo.positiveNumeric) {
     return parseInt(additional, 10);
   }
+
+  return additional;
 }
