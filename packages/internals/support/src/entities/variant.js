@@ -1,16 +1,14 @@
-const {omit} = require('lodash');
-const {titlize, slugify} = require('@frctl/utils');
+const {get} = require('lodash');
+const {titlize, slugify, cloneDeep} = require('@frctl/utils');
 const {assert} = require('check-types');
 const schema = require('../../schema');
-const reservedWords = require('../../reserved-words');
-const Collection = require('../collections/collection');
+const EntityCollection = require('../collections/entity-collection');
 const Validator = require('../validator');
 const Entity = require('./entity');
 const Template = require('./template');
 const Scenario = require('./scenario');
 
-const _templates = new WeakMap();
-const _scenarios = new WeakMap();
+const managedProps = ['label', 'templates', 'scenarios', 'config'];
 
 class Variant extends Entity {
 
@@ -19,20 +17,32 @@ class Variant extends Entity {
       return props;
     }
     assert.object(props, 'Variant.constructor - props must be an object [properties-invalid]');
+
     if (!props.id && props.label) {
       props.id = props.label;
     }
-    props.id = props.id ? slugify(props.id) : undefined;
 
-    const entityProps = omit(props, reservedWords);
+    props.id = slugify(props.id);
+    props.props = props.props || {};
+    props.templates = props.templates || new EntityCollection();
+    props.scenarios = props.scenarios || new EntityCollection();
+    props.config = props.config || {};
 
-    super(entityProps);
-    this._validateOrThrow(props);
+    super(props);
 
-    this._setTemplates(props.templates);
-    this._setScenarios(props.scenarios);
+    this.defineGetter('label', value => {
+      return value || this.getConfig('label') || titlize(this.get('id'));
+    });
+    this.defineGetter('config', value => cloneDeep(value || {}));
 
-    this.defineGetter('label', value => value || titlize(this.get('id')));
+    ['templates', 'scenarios'].forEach(prop => {
+      this.defineSetter(prop, value => {
+        if (!EntityCollection.isCollection(value)) {
+          throw new Error(`Variant.${prop} must be a EntityCollection instance`);
+        }
+        return value;
+      });
+    });
   }
 
   getTemplate(...args) {
@@ -46,25 +56,19 @@ class Variant extends Entity {
   }
 
   getTemplates() {
-    return new Collection(_templates.get(this));
+    return this.get('templates');
   }
 
-  addTemplate(contents, filename) {
-    // TODO: cache template parsing
-    assert.string(contents, `Variant.addTemplate - template contents must be a string [template-invalid]`);
-    _templates.get(this).push(new Template({contents, filename}));
-    return this;
-  }
-
-  addTemplates(templates = {}) {
-    for (const filename of Object.keys(templates)) {
-      this.addTemplate(templates[filename], filename);
+  addTemplate(props) {
+    if (!Template.isTemplate(props)) {
+      props = Template.from(props);
     }
+    this.set('templates', this.getTemplates().push(props));
     return this;
   }
 
   getScenarios() {
-    return new Collection(_scenarios.get(this) || []);
+    return this.get('scenarios');
   }
 
   getScenario(...args) {
@@ -78,45 +82,53 @@ class Variant extends Entity {
   }
 
   addScenario(props) {
-    _scenarios.get(this).push((new Scenario(props)));
+    if (!Scenario.isScenario(props)) {
+      props = Scenario.from(props);
+    }
+    this.set('scenarios', this.getScenarios().push(props));
     return this;
   }
 
-  _setTemplates(templates) {
-    if (Collection.isCollection(templates)) {
-      _templates.set(this, templates.toArray());
-    } else {
-      _templates.set(this, []);
-      this.addTemplates(templates);
+  getConfig(path, fallback) {
+    if (path) {
+      return get(this.get('config'), path, fallback);
     }
-  }
-
-  _setScenarios(scenarios = []) {
-    if (Collection.isCollection(scenarios)) {
-      _scenarios.set(this, scenarios.toArray());
-    } else {
-      _scenarios.set(this, []);
-      scenarios.forEach(props => this.addScenario(props));
-    }
+    return this.get('config');
   }
 
   _validateOrThrow(props) {
+    return Variant.validate(props);
+  }
+
+  static validate(props) {
     Validator.assertValid(props, schema.variant, `Variant.constructor: The properties provided do not match the schema of a variant [properties-invalid]`);
   }
 
-  clone() {
-    return new this.constructor(Object.assign(this.getData(), {
-      templates: this.getTemplates().clone(),
-      scenarios: this.getScenarios().clone(),
-      uuid: this.getUUID()
-    }));
+  static from({config = {}, views = []}) {
+    const variant = new Variant({
+      id: config.id,
+      label: config.label,
+      props: config.props,
+      config
+    });
+
+    views.forEach(view => {
+      variant.addTemplate({
+        contents: view.contents.toString(),
+        filename: view.basename
+      });
+    });
+
+    const scenarios = config.scenarios || [];
+    if (Array.isArray(scenarios)) {
+      scenarios.forEach(scenario => variant.addScenario(scenario));
+    }
+
+    return variant;
   }
 
-  toJSON() {
-    return Object.assign(super.toJSON(), {
-      templates: this.getTemplates().toJSON(),
-      scenarios: this.getScenarios().toJSON()
-    });
+  static isCustomProp(name) {
+    return super.isCustomProp(name) && !managedProps.includes(name);
   }
 
   static isVariant(item) {

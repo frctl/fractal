@@ -92,7 +92,7 @@ class FileCollection extends EntityCollection {
   }
 
   _castItems(items) {
-    return items.map(i => File.from(i));
+    return items.map(i => new File(i));
   }
 
   get [Symbol.toStringTag]() {

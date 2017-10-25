@@ -9,8 +9,14 @@ module.exports = {
   },
   type: 'object',
   properties: {
-    src: {
-      $ref: '#/definitions/file'
+    id: {
+      type: 'string'
+    },
+    path: {
+      type: 'string'
+    },
+    base: {
+      type: 'string'
     },
     config: {
       type: 'object'
@@ -19,12 +25,9 @@ module.exports = {
       oneOf: [{
         $ref: '#/definitions/fileCollection'
       }, {
-        type: 'null'
+        type: 'array'
       }]
-    },
-    props: {
-      type: 'object'
     }
   },
-  required: ['src']
+  required: ['path']
 };

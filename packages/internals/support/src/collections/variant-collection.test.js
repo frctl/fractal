@@ -7,16 +7,13 @@ const VariantCollection = require('./variant-collection');
 
 const items = [
   {
-    id: 'foo',
-    component: 'foo'
+    id: 'foo'
   },
   {
-    id: 'bar',
-    component: 'foo'
+    id: 'bar'
   },
   {
-    id: 'baz',
-    component: 'foo'
+    id: 'baz'
   }
 ];
 
@@ -99,7 +96,7 @@ describe('VariantCollection', function () {
       expect(() => makeCollectionFrom({noName: 'id-assigned-by-collection'})).to.not.throw();
       expect(() => makeCollectionFrom({id: 'component-assigned-by-collection/'})).to.not.throw();
       expect(() => makeCollectionFrom(new Variant({id: 'valid-variant-props/'}))).to.not.throw();
-      expect(() => makeCollectionFrom([Variant.from({id: 'valid-variant-props1/'}), Variant.from({id: 'valid-variant-props2/'})])).to.not.throw();
+      expect(() => makeCollectionFrom([Variant.from({config: {id: 'valid-variant-props1/'}}), Variant.from({config: {id: 'valid-variant-props2/'}})])).to.not.throw();
     });
   });
 
@@ -117,10 +114,10 @@ describe('VariantCollection', function () {
       const collection = makeCollection();
       const newCollection = collection.push(newItem);
       expect(newCollection.length).to.equal(items.length + 1);
-      expect(newCollection[newCollection.length - 1].getData()).to.eql({id: 'wobble', foo: 'bar'});
+      expect(newCollection[newCollection.length - 1].id).to.equal('wobble');
     });
     it('adds the item to the end of the collection if items is Variant instance', function () {
-      const variantNewItem = Variant.from({id: 'end'});
+      const variantNewItem = new Variant({id: 'end'});
       const collection = makeCollection();
       const newCollection = collection.push(variantNewItem);
       expect(newCollection.length).to.equal(items.length + 1);

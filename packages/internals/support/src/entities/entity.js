@@ -6,7 +6,8 @@ const {cloneDeep, hash, uuid} = require('@frctl/utils');
 const _data = new WeakMap();
 const _setters = new WeakMap();
 const _getters = new WeakMap();
-const _uuid = new WeakMap();
+
+const managedProps = [];
 
 class Entity {
 
@@ -14,19 +15,14 @@ class Entity {
     if (Entity.isEntity(props)) {
       return props;
     }
+
+    assert.object(props, 'Entity.constructor - props must be an object [properties-invalid]');
+
+    props.uuid = props.uuid || uuid();
+
     this._validateOrThrow(props);
-    props = cloneDeep(props);
 
-    _uuid.set(this, props.uuid || uuid());
-    delete props.uuid;
-
-    // for (const prop of reservedWords) {
-    //   if (props[prop]) {
-    //     throw new Error(`'${prop}' a reserved property name [reserved-prop]`);
-    //   }
-    // }
-
-    _data.set(this, props);
+    _data.set(this, cloneDeep(props));
     _setters.set(this, []);
     _getters.set(this, []);
 
@@ -83,6 +79,11 @@ class Entity {
     return cloneDeep(_data.get(this));
   }
 
+  setData(data) {
+    _data.set(this, cloneDeep(data));
+    return this;
+  }
+
   getProps() {
     const props = this.getData();
     for (const getter of _getters.get(this)) {
@@ -91,10 +92,6 @@ class Entity {
       }
     }
     return props;
-  }
-
-  getUUID() {
-    return _uuid.get(this);
   }
 
   defineGetter(path, getter) {
@@ -122,8 +119,8 @@ class Entity {
   }
 
   clone() {
-    const cloned = new this.constructor(Object.assign({}, this._data, {uuid: this.getUUID()}));
-    return cloned;
+    const cloned = new this.constructor(_data.get(this));
+    return this._assignProps(cloned);
   }
 
   hash() {
@@ -143,12 +140,30 @@ class Entity {
     assert.maybe.object(props, `Entity.constructor: The properties provided to Entity must be in object form [properties-invalid]`);
   }
 
-  get _data() {
-    return cloneDeep(_data.get(this));
+  _assignProps(target) {
+    _getters.get(this).forEach(({path, handler}) => {
+      if (this.constructor.isCustomProp(path)) {
+        target.defineGetter(path, handler);
+      }
+    });
+    _setters.get(this).forEach(({path, handler}) => {
+      if (this.constructor.isCustomProp(path)) {
+        target.defineSetter(path, handler);
+      }
+    });
+    return target;
   }
+
+  // get _data() {
+  //   return cloneDeep(_data.get(this));
+  // }
 
   get [Symbol.toStringTag]() {
     return 'Entity';
+  }
+
+  static isCustomProp(name) {
+    return !managedProps.includes(name);
   }
 
   static from(props) {

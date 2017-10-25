@@ -76,10 +76,11 @@ class File extends Entity {
       base: this.get('base'),
       stat: (this.get('stat') ? cloneStats(this.get('stat')) : null),
       history: this.get('history').slice(),
-      contents: this.get('contents') ? cloneBuffer(this.get('contents')) : null,
-      uuid: this.getUUID()
+      contents: this.get('contents') ? cloneBuffer(this.get('contents')) : null
     });
-    return new this.constructor(config);
+    const cloned = new this.constructor(config);
+    this._assignProps(cloned);
+    return cloned;
   }
 
   _defineGettersAndSetters(props) {
@@ -225,6 +226,10 @@ class File extends Entity {
 
   static isFile(item) {
     return item instanceof File;
+  }
+
+  static isCustomProp(name) {
+    return super.isCustomProp(name) && !getters.includes(name);
   }
 
   static validate(props) {

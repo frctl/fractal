@@ -27,7 +27,7 @@ class PageCollection extends EntityCollection {
   findByRoute(routeName, target) {
     return this._items.filter(page => page.route === routeName).find(page => {
       if (Entity.isEntity(target) && Entity.isEntity(page.target)) {
-        return target.getUUID() === page.target.getUUID();
+        return target.uuid === page.target.uuid;
       }
       return isMatch(page.target, target);
     });

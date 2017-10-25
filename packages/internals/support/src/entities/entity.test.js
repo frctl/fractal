@@ -1,5 +1,6 @@
 /* eslint no-unused-expressions: "off" */
 
+const {omit} = require('lodash');
 const {hash} = require('@frctl/utils');
 const {expect} = require('../../../../../test/helpers');
 // const reservedWords = require('../../reserved-words');
@@ -88,7 +89,7 @@ describe('Entity', function () {
     it(`preserves the UUID of the entity`, function () {
       const entity = makeEntity();
       const clone = entity.clone();
-      expect(entity.getUUID()).to.equal(clone.getUUID());
+      expect(entity.uuid).to.equal(clone.uuid);
     });
   });
 
@@ -106,7 +107,7 @@ describe('Entity', function () {
       };
       const entity = makeEntity(entityWithHidden);
       const jsonEntity = entity.toJSON();
-      expect(jsonEntity).to.eql({});
+      expect(omit(jsonEntity, ['uuid'])).to.eql({});
     });
     it(`defers to a property's 'toJSON' method`, function () {
       const entityWithToJSON = {
@@ -117,7 +118,7 @@ describe('Entity', function () {
       const entity = makeEntity(entityWithToJSON);
       const jsonEntity = entity.toJSON();
       expect(jsonEntity.colour.toJSON).to.not.exist;
-      expect(jsonEntity).to.eql({
+      expect(omit(jsonEntity, ['uuid'])).to.eql({
         colour: 'purple'
       });
     });
@@ -165,7 +166,8 @@ describe('Entity', function () {
       const entity = makeEntity(entityWithHash);
       const hashedEntity = entity.hash();
       expect(hashedEntity).to.equal(hash(JSON.stringify({
-        value: '123456789'
+        value: '123456789',
+        uuid: entity.uuid
       })));
     });
   });
@@ -264,9 +266,9 @@ describe('Entity', function () {
   describe('.getData()', function () {
     it('retrieves store data', function () {
       const entity = makeEntity({});
-      expect(entity.getData()).to.eql({});
+      expect(omit(entity.getData(), ['uuid'])).to.eql({});
       entity.name = 'coffee';
-      expect(entity.getData()).to.eql({name: 'coffee'});
+      expect(omit(entity.getData(), ['uuid'])).to.eql({name: 'coffee'});
     });
   });
 

@@ -57,7 +57,7 @@ let items = [{
 }
 ];
 
-const makeComponent = input => new Component({
+const makeComponent = input => Component.from({
   src: new File({path: input.path, cwd: '/'}),
   config: Object.assign({}, {id: input.id}, input.config)});
 
@@ -74,11 +74,10 @@ describe('ComponentCollection', function () {
     });
   });
   describe('.from()', function () {
-    it('successfully creates a FileCollection when valid input is supplied', function () {
+    it('successfully creates a ComponentCollection when valid input is supplied', function () {
       expect(() => makeCollectionFrom('text')).to.throw(TypeError, '[properties-invalid]');
       expect(() => makeCollectionFrom({invalid: 'object'})).to.throw(TypeError, '[properties-invalid]');
-      expect(() => makeCollectionFrom({src: new File({path: 'valid-file-props/', cwd: '/'})})).to.not.throw();
-      expect(() => makeCollectionFrom(new Component({src: new File({path: 'path', cwd: '/'})}))).to.not.throw();
+      expect(() => makeCollectionFrom(Component.from({src: new File({path: 'path', cwd: '/'})}))).to.not.throw();
       expect(() => makeCollectionFrom([Component.from({invalid: 'object'}), Component.from({anotherInvalid: 'object'})])).to.throw(TypeError, '[properties-invalid]');
       expect(() => makeCollectionFrom([Component.from({src: new File({path: 'valid-file-props1/', cwd: '/'})}), Component.from({src: new File({path: 'valid-file-props2/', cwd: '/'})})])).to.not.throw();
     });
@@ -125,13 +124,6 @@ describe('ComponentCollection', function () {
     it(`rejects based on a glob string argument for the 'component/path'`, function () {
       const collection = makeCollection();
       expect(collection.rejectByPath('*/dogs/jerry').count()).to.equal(items.length - 1);
-    });
-  });
-
-  describe(`.toJSON()`, function () {
-    it(`calls to the 'toJSON' method of each item in the collection`, function () {
-      const collection = makeCollection();
-      expect(collection.toJSON()).to.eql(items.map(makeComponent).map(item => item.toJSON()));
     });
   });
 

@@ -1,4 +1,5 @@
 const {extname} = require('path');
+const {assert} = require('check-types');
 const fromParse5 = require('hast-util-from-parse5');
 const toHTML = require('hast-util-to-html');
 const Parser5 = require('parse5/lib/parser');
@@ -7,10 +8,12 @@ const Validator = require('../validator');
 const Entity = require('./entity');
 
 const parser = new Parser5({locationInfo: true});
+const managedProps = ['extname'];
 
 class Template extends Entity {
 
   constructor(props = {}) {
+    assert.object(props, 'Template.constructor - props must be an object [properties-invalid]');
     if (typeof props.contents === 'string') {
       // TODO: cache template parsing
       props.contents = fromParse5(parser.parseFragment(props.contents), {file: props.contents});
@@ -24,11 +27,9 @@ class Template extends Entity {
   }
 
   toJSON() {
-    return {
-      filename: this.get('filename'),
-      extname: this.get('extname'),
+    return Object.assign(super.toJSON(), {
       contents: this.toString()
-    };
+    });
   }
 
   static isTemplate(item) {
@@ -39,8 +40,20 @@ class Template extends Entity {
     return 'Template';
   }
 
-  _validateOrThrow(props) {
+  static isCustomProp(name) {
+    return super.isCustomProp(name) && !managedProps.includes(name);
+  }
+
+  static validate(props) {
     Validator.assertValid(props, schema.template, `Template.constructor: The properties provided do not match the schema of a template [properties-invalid]`);
+  }
+
+  static from(props = {}) {
+    return new Template(props);
+  }
+
+  _validateOrThrow(props) {
+    Template.validate(props);
   }
 
 }

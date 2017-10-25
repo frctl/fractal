@@ -47,13 +47,13 @@ class ComponentCollection extends EntityCollection {
 
   getComponentForVariant(variant) {
     return super.find(component => {
-      const variantRefs = component.getVariants().mapToArray(v => v.getUUID());
-      return variantRefs.includes(variant.getUUID());
+      const variantRefs = component.getVariants().mapToArray(v => v.uuid);
+      return variantRefs.includes(variant.uuid);
     });
   }
 
   _castItems(items) {
-    return items.map(i => Component.from(i));
+    return items.map(i => new Component(i));
   }
 
   _validateOrThrow(items) {

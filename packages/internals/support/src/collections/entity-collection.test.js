@@ -40,7 +40,7 @@ const baseEntity = {
   path: '/test/file.js',
   contents: new Buffer(entityContents)
 };
-const makeEntity = input => new Entity(input || baseEntity);
+const makeEntity = input => Entity.from(input || baseEntity);
 // items = items.map(makeEntity);
 
 const makeCollection = input => new EntityCollection(input || items.slice(0));

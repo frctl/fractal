@@ -2,6 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 const Vinyl = require('vinyl');
+const {omit} = require('lodash');
 const {normalizePath} = require('@frctl/utils');
 const {expect} = require('../../../../../test/helpers');
 const File = require('./file');
@@ -1056,7 +1057,7 @@ describe('File', function () {
   describe('.toJSON()', function () {
     it(`provides a simple 'JSON.stringify'-able representation of the file`, function () {
       const file = makeFile(baseFileData);
-      const jsonedFile = file.toJSON();
+      const jsonedFile = omit(file.toJSON(), ['uuid']);
       expect(jsonedFile).to.be.an('object');
       expect(jsonedFile).to.eql({
         cwd: '/',

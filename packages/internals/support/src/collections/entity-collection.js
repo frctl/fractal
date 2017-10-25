@@ -17,7 +17,7 @@ class EntityCollection extends Collection {
   }
 
   _castItems(items) {
-    return items.map(i => Entity.from(i));
+    return items.map(i => new Entity(i));
   }
 
   get [Symbol.toStringTag]() {

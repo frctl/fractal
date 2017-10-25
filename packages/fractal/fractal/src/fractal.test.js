@@ -29,7 +29,7 @@ const files = new FileCollection([
 ]);
 
 const components = new ComponentCollection([
-  new Component({
+  Component.from({
     src: files.find({
       stem: '@test-component'
     }),
@@ -126,8 +126,7 @@ describe('Fractal', function () {
       const fractal = makeFractal();
       sinon.stub(fractal, 'parse').callsFake(() => Promise.resolve(parserOutput));
       const variant = new Variant({
-        id: 'default',
-        component: 'foo-component'
+        id: 'default'
       });
       return expect(fractal.render(variant, {})).to.be.rejectedWith(Error, '[component-not-found]');
     });

@@ -14,7 +14,7 @@ module.exports = function (opts = {}) {
         component.getVariants().forEach(variant => {
           const variantJSON = variant.toJSON();
           const componentJSON = component.toJSON();
-          const context = Object.assign({}, variantJSON, {
+          const context = Object.assign({}, variant.props, {
             variant: variantJSON,
             component: componentJSON
           }, globals);

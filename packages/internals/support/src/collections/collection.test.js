@@ -143,7 +143,7 @@ describe('Collection', function () {
       expect(() => makeCollection({single: 'object-is-ok'})).to.not.throw();
       expect(() => makeCollection(items)).to.not.throw();
       expect(() => makeCollection([])).to.not.throw();
-      expect(() => makeCollection([new Variant({config: {id: 'default'}, component: 'comp'}), new Variant({config: {id: 'large'}, component: 'comp'})])).to.not.throw();
+      expect(() => makeCollection([new Variant({id: 'default'}), new Variant({id: 'large'})])).to.not.throw();
     });
     it('automatically compacts input with a mixture of valid and falsey values', function () {
       expect(makeCollection([{valid: 'object'}, null, null, {other: 'valid-object'}]).length).to.equal(2);

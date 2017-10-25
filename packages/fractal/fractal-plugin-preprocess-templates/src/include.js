@@ -19,11 +19,15 @@ module.exports = function (tree, context, env) {
       }
 
       const subComponentVariant = subComponent.getVariant(variantId);
+      if (!subComponentVariant) {
+        throw new Error(`Could not find variant for component ${subComponent.id}`);
+      }
+
       const templateExt = extname(env.template.filename);
       const template = subComponentVariant.getTemplate(templateExt);
 
       if (!template) {
-        throw new Error(`Could not find '${templateExt}' template for component ${subComponent.ifd}`);
+        throw new Error(`Could not find '${templateExt}' template for component ${subComponent.id}`);
       }
 
       // Register the include on the parent variant

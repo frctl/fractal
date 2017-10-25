@@ -1,4 +1,4 @@
-const {uniqueId} = require('@frctl/utils');
+const {uniqueId, cloneDeep} = require('@frctl/utils');
 const check = require('check-types');
 const Variant = require('../entities/variant');
 const EntityCollection = require('./entity-collection');
@@ -26,12 +26,13 @@ class VariantCollection extends EntityCollection {
       return items;
     }
     const ids = [];
+    items = cloneDeep(items);
     let variants = items.map(i => {
       if (!Variant.isVariant(i)) {
         assert.object(i, 'Variant config object must be an object [properties-invalid]');
       }
-      const variant = Variant.from(i);
-      variant.id = uniqueId(variant.id || 'variant', ids);
+      i.id = uniqueId(i.id || 'variant', ids);
+      const variant = new Variant(i);
       return variant;
     });
     this._validateOrThrow(variants);

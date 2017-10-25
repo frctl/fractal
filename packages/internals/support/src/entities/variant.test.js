@@ -1,6 +1,5 @@
 /* eslint no-unused-expressions: "off" */
 const {expect} = require('../../../../../test/helpers');
-const reservedWords = require('../../reserved-words');
 const Collection = require('../collections/collection');
 const Variant = require('./variant');
 const Entity = require('./entity');
@@ -24,21 +23,6 @@ describe('Variant', function () {
       expect(() => makeVariant(['invalid', 'array'])).to.throw(TypeError, '[properties-invalid]');
       expect(() => makeVariant('invalid string')).to.throw(TypeError, '[properties-invalid]');
     });
-    it('sets properties that are not in the reserved words list', function () {
-      const variant = makeVariant({
-        id: 'foo',
-        foo: 'bar',
-        previews: [],
-        views: {},
-        scenarios: [],
-        templates: {}
-      });
-      for (const prop of reservedWords) {
-        expect(variant[prop]).to.equal(undefined);
-      }
-      expect(variant.id).to.equal('foo');
-      expect(variant.foo).to.equal('bar');
-    });
   });
 
   describe('.id', function () {
@@ -59,7 +43,7 @@ describe('Variant', function () {
   describe('.addTemplate()', function () {
     it('creates a new template and adds it to the template set', function () {
       const variant = makeVariant();
-      variant.addTemplate('<span></span>', 'file.html');
+      variant.addTemplate({contents: '<span></span>', filename: 'file.html'});
       expect(variant.getTemplates().length).to.equal(1);
       expect(variant.getTemplate()).to.be.instanceOf(Template);
     });
@@ -69,7 +53,7 @@ describe('Variant', function () {
     it(`preserves the UUID of the variant`, function () {
       const variant = makeVariant();
       const cloned = variant.clone();
-      expect(variant.getUUID()).to.equal(cloned.getUUID());
+      expect(variant.uuid).to.equal(cloned.uuid);
     });
   });
 
