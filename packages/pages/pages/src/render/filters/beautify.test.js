@@ -93,7 +93,7 @@ describe('beautify', function () {
     });
 
     it('accepts an options object which is merged with package options before applying', function (done) {
-      const packageOpts = {foo: 'bar', baz: 'boop'};
+      const packageOpts = {html: {foo: 'bar', baz: 'boop'}};
       const runtimeOpts = {foo: 'nope'};
       const spy = sinon.spy();
       const filter = proxyquire('./beautify', {
@@ -101,7 +101,7 @@ describe('beautify', function () {
       })(packageOpts);
       filter.filter('<span>\ntest</div>', 'html', runtimeOpts, function (err, result) {
         expect(spy.called).to.equal(true);
-        expect(spy.args[0][1]).to.eql(defaultsDeep(runtimeOpts, packageOpts));
+        expect(spy.args[0][1]).to.eql(defaultsDeep(runtimeOpts, packageOpts.html));
         done();
       });
     });

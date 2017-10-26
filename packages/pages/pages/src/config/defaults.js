@@ -1,3 +1,5 @@
+/* eslint camelcase: off */
+
 module.exports = {
 
   src: null,
