@@ -39,13 +39,6 @@ class Engine {
     return Promise.resolve(props.render.bind(this)(tpl, context, opts));
   }
 
-  get preprocessors() {
-    if (Array.isArray(_props.get(this).preprocessors)) {
-      return _props.get(this).preprocessors;
-    }
-    return [];
-  }
-
   get name() {
     return _props.get(this).name;
   }

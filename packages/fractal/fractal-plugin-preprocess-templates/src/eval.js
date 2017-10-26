@@ -1,3 +1,4 @@
+/* eslint max-depth: off */
 const {VM} = require('vm2');
 
 module.exports = function evalInVM(code, context = {}, env = {}) {
@@ -19,14 +20,14 @@ module.exports = function evalInVM(code, context = {}, env = {}) {
     return vm.run(code);
   } catch (err) {
     let lastError = err;
-    if (err.stack.indexOf('ReferenceError') !== -1) {
+    if (err.stack.includes('ReferenceError')) {
       while (lastError) {
         try {
           let uninit = lastError.message.replace(' is not defined', '');
           code = `let ${uninit};\n${code}`;
           return vm.run(code);
         } catch (err) {
-          if (err.stack.indexOf('ReferenceError') !== -1) {
+          if (err.stack.includes('ReferenceError')) {
             lastError = err;
           } else {
             throw err;

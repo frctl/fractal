@@ -1,6 +1,6 @@
-const {flatten, uniq} = require('lodash');
 const {join, extname} = require('path');
 const {readFileSync} = require('fs');
+const {flatten, uniq} = require('lodash');
 const {ApiServer} = require('@frctl/server');
 const {FileCollection} = require('@frctl/support');
 const Socket = require('koa-socket');
