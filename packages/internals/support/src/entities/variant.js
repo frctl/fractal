@@ -1,4 +1,3 @@
-const {get} = require('lodash');
 const {titlize, slugify, cloneDeep} = require('@frctl/utils');
 const {assert} = require('check-types');
 const schema = require('../../schema');

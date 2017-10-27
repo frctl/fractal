@@ -1,5 +1,4 @@
 const {relative} = require('path');
-const {get} = require('lodash');
 const {normalizeId, uniqueId, cloneDeep, titlize, slugify} = require('@frctl/utils');
 const check = require('check-types');
 const Validator = require('../validator');

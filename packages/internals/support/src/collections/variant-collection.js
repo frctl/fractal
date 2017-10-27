@@ -1,4 +1,4 @@
-const {uniqueId, cloneDeep} = require('@frctl/utils');
+const {uniqueId} = require('@frctl/utils');
 const check = require('check-types');
 const Variant = require('../entities/variant');
 const EntityCollection = require('./entity-collection');
