@@ -12,12 +12,7 @@ module.exports = function (opts = {}) {
 
       components.forEach(component => {
         component.getVariants().forEach(variant => {
-          const variantJSON = variant.toJSON();
-          const componentJSON = component.toJSON();
-          const context = Object.assign({}, variant.props, {
-            variant: variantJSON,
-            component: componentJSON
-          }, globals);
+          const context = Object.assign({}, variant.props, globals);
 
           variant.getTemplates().forEach(template => {
             const env = {template, component, variant, components};
