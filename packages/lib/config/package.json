@@ -3,7 +3,7 @@
   "version": "2.0.0-beta.0",
   "description": "Configuration manager for Fractal",
   "homepage": "http://fractal.build",
-  "repository": "https://github.com/frctl/fractal/tree/v2/packages/internals/config",
+  "repository": "https://github.com/frctl/fractal/tree/v2/packages/lib/config",
   "bugs": "https://github.com/frctl/fractal/issues",
   "author": "Mark Perkins <mark@allmarkedup.com> (http://allmarkedup.com)",
   "license": "MIT",

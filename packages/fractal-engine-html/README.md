@@ -1,10 +1,9 @@
-# Fractal component transform
+# Fractal HTML engine
 
-Core component transform for Fractal.
+Simple HTML render engine with placeholder variable support.
 
 Bundled as part of the Fractal core library so you probably don't need to install this directly.
 
 ## Requirements
 
-* Node >= v7.6
-* Fractal >= v2.0
+Requires Node >= v7.6

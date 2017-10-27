@@ -4,7 +4,7 @@
   "author": "Mark Perkins <mark@allmarkedup.com>",
   "version": "2.0.0-beta.0",
   "homepage": "http://fractal.build",
-  "repository": "https://github.com/frctl/fractal/tree/v2/packages/inspector/inspector",
+  "repository": "https://github.com/frctl/fractal/tree/v2/packages/inspector",
   "bugs": "https://github.com/frctl/fractal/issues",
   "license": "MIT",
   "keywords": [

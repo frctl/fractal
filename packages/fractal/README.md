@@ -1,6 +1,6 @@
 # Fractal core
 
-The core Fractal parser/renderer module.
+The core Fractal parser/renderer package.
 
 ## Installation
 

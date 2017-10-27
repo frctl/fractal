@@ -3,7 +3,7 @@
   "description": "Add a new skeleton component via the Fractal CLI",
   "version": "2.0.0-beta.0",
   "homepage": "http://fractal.build",
-  "repository": "https://github.com/frctl/fractal/tree/v2/packages/add-ons/cli-command-add-component",
+  "repository": "https://github.com/frctl/fractal/tree/v2/packages/cli-command-add-component",
   "bugs": "https://github.com/frctl/fractal/issues",
   "author": "Mark Perkins <mark@allmarkedup.com> (http://allmarkedup.com)",
   "license": "MIT",
