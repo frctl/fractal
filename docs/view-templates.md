@@ -7,6 +7,29 @@ Component view templates are handled quite differently in Fractal v2. Some of th
 * Template mutation via plugins
 * Simplified render engine adapter format
 
+Unlike in v1, the rendering of templates is now split over two steps:
+
+1. **Compile-time** pre-processing of templates with access to the `variant.props` object
+2. **Run-time** rendering of the template with the appropriate template engine (such as Nujucks, Handlebars etc) with access to the supplied context data only.
+
+## View engine adapters
+
+View engine adapters can be added by installing into the project via NPM and then adding to the `app.engines` array in the main `fractal.config.js` project configuration file.
+
+```js
+// fractal.config.js
+module.exports = {
+  app: {
+    // ... other config here
+    engines: [
+      '@frctl/fractal-engine-nunjucks'
+    ]
+  }
+}
+```
+
+> **WIP** - there are currently only Nunjucks and 'vanilla' HTML engines available. This list will be expanded during the beta period.
+
 ## Adding views to components
 
 Each component can have one or more view templates, one per template engine that you wish to support.
@@ -21,6 +44,21 @@ An example component that has Handlebars and Nunjucks views might therefore look
     ├── view.njk
     └── view.hbs
 ```
+
+### An example view template
+
+An example Nunjucks template might look like this:
+
+```html
+<button class="button" :class="classNames">
+  <span class="button__text">{{ text }}</span>
+</button>
+```
+
+Some points to note:
+
+* `:class="classNames"` is a pre-processing directive - see below for details
+* `{{ text }}` is a regular Nunjucks variable. All Nunjucks template syntax will be processed at render-time using the supplied context data.
 
 ## View pre-processing for variants
 
@@ -39,6 +77,8 @@ As well opening this process up to plugins, the core Fractal engine itself provi
 Fractal specifies a small set of view pre-processing directives that can be used in templates. These use a concise syntax for applying classes/attributes, importing HTML from other components/variants and conditionally adding or removing markup.
 
 All of these directives can be used by any view templates, regardless of the target engine that will be used to perform the final run-time rendering of the template.
+
+Pre-processing directives have access to the set of properties defined on the `.props` object for each variant.
 
 #### Dynamic attributes
 
@@ -61,7 +101,9 @@ Given the following variant definition:
 ```js
 {
   id: 'primary-button',
-  classNames: ['primary', 'action']
+  props: {
+    classNames: ['primary', 'action']
+  }
 }
 ```
 
@@ -71,7 +113,7 @@ After the preprocessing step the above template will be transformed to look like
 <button id="my-button" class="primary action"></button>
 ```
 
-> Note that the `classNames` property could be called anything you like - classNames is just an example! The property name in the template just needs to match the property name in the variant configuration object.
+> Note that the `classNames` property could be called anything you like - classNames is just an example! The property name in the template just needs to match the property name in the `variant.props` object.
 
 The value of a dynamic attribute is evaluated as JavaScript in a sandbox environment that only has access to the variant object itself. This means that you can use any javascript expressions in attributes too, if you like:
 
@@ -87,10 +129,10 @@ For instance an array of class names is converted into a space-separated string 
 <!-- input template -->
 <button :disabled="isDisabled"></button>
 
-<!-- variant.isDisabled === true -->
+<!-- variant.props.isDisabled === true -->
 <button disabled></button>
 
-<!-- variant.isDisabled === false -->
+<!-- variant.props.isDisabled === false -->
 <button></button>
 ```
 
@@ -99,7 +141,7 @@ For instance an array of class names is converted into a space-separated string 
 Elements within a template can also be conditionally applied using the `@if` directive:
 
 ```html
-<a href="#" @if="continue">Next</a>
+<a href="#" @if="next">Next</a>
 ```
 
 Similar to the dynamic attributes, the value of the `@if` statement is determined by evaluating the statement against the properties of the variant.
@@ -107,8 +149,24 @@ Similar to the dynamic attributes, the value of the `@if` statement is determine
 If the end result of the evaluation is truthy, the element is retained in the template:
 
 ```html
-<!-- variant.next == true -->
+<!-- variant.props.next == true -->
 <a href="#">Next</a>
 ```
 
 Otherwise the element (and any sub-elements in the tree) is removed entirely from the template.
+
+> **WIP** - the conditional statements directives will be expanded to handle `@else` and `@else-if` statements before the beta period is over.
+
+#### Including sub-templates
+
+You can include another variant's template within the parent template using the `include` directive.
+
+This takes the form of a custom tag with a `component` attribute that references the `component:variant` IDs for the variant that you wish to include. For example:
+
+```html
+<include component="button:primary"></include>
+```
+
+The above would be replaced with the contents of the template for the `primary` variant of the `button` component.
+
+> Note that when including templates, no scoping of the child template run-time variables takes place, so that must be handled in the syntax of the template engine responsible for the final rendering.

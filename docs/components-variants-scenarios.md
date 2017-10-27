@@ -62,7 +62,7 @@ module.exports = {
 
 Each variant should have an `id` property that is unique within it's set of sibling variants. This is what is used to reference the variant elsewhere in the system.
 
-You can then set properties on the variant objects to describe the ways in which they vary from each other.
+You can then set properties on the variant (on the `variant.props` object) to describe the ways in which they vary from each other.
 
 These properties can  be referenced in the [template pre-processing step](/docs/view-templates.md#view-pre-processing-for-variants) to generate unique, per-variant view templates which encapsulate the differences between each possible variation of the component.
 
@@ -74,11 +74,15 @@ module.exports = {
   variants: [
     {
       id: 'primary',
-      classNames: ['button--primary']
+      props: {
+        classNames: ['button--primary']
+      }
     },
     {
       id: 'secondary',
-      classNames: ['button--secondary']
+      props: {
+        classNames: ['button--secondary']
+      }
     }
   ]
 };
@@ -136,7 +140,7 @@ Context data can be thought of as runtime data - it can take an infinite set of 
 
 #### The v2 approach
 
-In Fractal v2, a variant can now directly specify it's properties on the variant object itself. These properties can then be used in a template pre-processing step to create unique, per-variant view templates.
+In Fractal v2, a variant can now directly specify it's properties on `variant.props` object. These properties are available in the template pre-processing step to create unique, per-variant view templates.
 
 Variants can also additionally supply a set of 'scenarios', each of which defines an example set of context data that can be used to render the variant view templates to generate some example previews for the variant.
 
@@ -146,7 +150,9 @@ The example above reworked for v2 might look like this:
 // v2 style variant object
 {
   id: 'button-primary',
-  classNames: ['primary'],
+  props: {
+    classNames: ['primary'],
+  },
   scenarios: [
     {
       id: 'french',
@@ -174,7 +180,7 @@ module.exports = {
   variants: [
     {
       id: 'primary',
-      // ...
+      // ... props etc
       scenarios: [
         {
           id: 'english',

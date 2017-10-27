@@ -9,7 +9,7 @@ The following guide outlines how to get you up and running with a fresh v2-based
 You can install the CLI tool globally via NPM:
 
 ```
-npm install --global @frctl/cli
+npm install --global @frctl/cli@beta
 ```
 
 Once that has run, you can use following command to check that it has installed correctly:
