@@ -1,7 +1,7 @@
 /* eslint no-unused-expressions: off */
 const {expect, validate} = require('../helpers');
-const {Collection} = require('../../packages/internals/support');
-const {pluginSchema} = require('../../packages/internals/support/schema');
+const {Collection} = require('../../packages/lib/support');
+const {pluginSchema} = require('../../packages/lib/support/schema');
 const runnerFactory = require('../runner');
 
 module.exports = function (testPath) {

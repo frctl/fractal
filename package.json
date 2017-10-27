@@ -29,13 +29,13 @@
     "chai-http": "^3.0.0",
     "chai-sorted": "^0.1.0",
     "coveralls": "^2.13.1",
-    "lerna": "^2.0.0",
+    "lerna": "^2.4.0",
     "mocha": "^3.2.0",
     "nyc": "^10.1.2",
     "proxyquire": "^1.8.0",
     "sinon": "^4.0.0",
     "xo": "^0.17.1",
-    "yarn": "^0.28.1"
+    "yarn": "^1.2.1"
   },
   "xo": {
     "extends": "@frctl/eslint-config-frctl",
