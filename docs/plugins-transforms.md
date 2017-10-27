@@ -37,12 +37,14 @@ module.exports = function noOpPlugin(opts = {}) {
 
 A more realistic example of a component might be one that parses the `README.md` file within each component and adds a `.readme` property to the component with the resulting HTML.
 
-Using the `marked` Markdown parser, we could implement a simple version of this as follows:
+Using the [marked](https://github.com/chjj/marked) Markdown parser, we could implement a simple version of this as follows:
 
 ```js
+// plugins/readme-parser.js
 const marked = require('marked');
 
 module.exports = function readmeParserPlugin(opts = {}) {
+  marked.setOptions(opts);
   return {
     name: 'readme-parser',
     transform: 'components',
@@ -59,12 +61,44 @@ module.exports = function readmeParserPlugin(opts = {}) {
 }
 ```
 
+Assuming this plugin lived in a `plugins` directory in the root of your project, you could add it to the parser by adding it to the `app.plugins` array in the project config file:
+
+```js
+// fractal.config.js
+module.exports = {
+  app: {
+    //...
+    plugins: [
+      ['./plugins/readme-parser.js', {
+        gfm: false,
+        // other opts here...
+      }]
+    ]
+  }
+}
+```
+
 If we were generating a styleguide using Fractal Pages, we could now use this in our Pages component template to output the rendered README contents like this:
 
-```nunjucks
+```html
+<!-- _component.njk -->
+{% if component.readme %}
 <div class="component__readme">
 {{ component.readme }}
 </div>
+{% endif %}
+```
+
+Or via the API in some custom tool or integration:
+
+```js
+// app.js
+fractal.getComponents().then(components => {
+  for (const component of components) {
+    console.log(component.label);
+    console.log(component.readme || 'No README file provided.')
+  }
+})
 ```
 
 <!-- ## Files, Components and Collections
