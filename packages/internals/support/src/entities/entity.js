@@ -154,10 +154,6 @@ class Entity {
     return target;
   }
 
-  // get _data() {
-  //   return cloneDeep(_data.get(this));
-  // }
-
   get [Symbol.toStringTag]() {
     return 'Entity';
   }
