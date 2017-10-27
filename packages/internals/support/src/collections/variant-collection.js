@@ -26,10 +26,10 @@ class VariantCollection extends EntityCollection {
       return items;
     }
     const ids = [];
-    items = cloneDeep(items);
     let variants = items.map(i => {
       if (!Variant.isVariant(i)) {
         assert.object(i, 'Variant config object must be an object [properties-invalid]');
+        i = Object.assign({}, i);
       }
       i.id = uniqueId(i.id || 'variant', ids);
       const variant = new Variant(i);
