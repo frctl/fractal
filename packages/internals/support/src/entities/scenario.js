@@ -37,7 +37,7 @@ class Scenario extends Entity {
 
   getConfig(path, fallback) {
     if (path) {
-      return get(this.get('config'), path, fallback);
+      return this.get(`config.${path}`, fallback);
     }
     return this.get('config');
   }

@@ -115,15 +115,16 @@ class Component extends Entity {
 
   getConfig(path, fallback) {
     if (path) {
-      return get(this.get('config'), path, fallback);
+      return this.get(`config.${path}`, fallback);
     }
     return this.get('config');
   }
 
   toJSON() {
     const defaultVariant = this.getDefaultVariant();
-    return Object.assign(super.toJSON(), {
-      variants: this.getVariants().toJSON().map(variant => {
+    const json = super.toJSON();
+    return Object.assign(json, {
+      variants: json.variants.map(variant => {
         if (variant.id === defaultVariant.id) {
           variant.default = true;
         }

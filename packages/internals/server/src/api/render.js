@@ -40,8 +40,9 @@ module.exports = function () {
         const result = app.render(variant, context, {ext}).then(output => {
           return {
             requestData: request,
-            component: component.toJSON(),
-            variant: variant.toJSON(),
+            // TODO: Figure out why toJSON methods are so slow and re-instate the props below
+            // component: component.toJSON(),
+            // variant: variant.toJSON(),
             context,
             output
           };
