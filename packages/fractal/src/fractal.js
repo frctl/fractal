@@ -55,9 +55,23 @@ class Fractal extends App {
           throw new Error(`Could not find component for variant [component-not-found]`);
         }
 
-        let template = variant.getTemplate(opts.ext);
-        if (!template) {
-          throw new Error(`Could not find template for variant '${variant.id}' of component '${component.id}' [template-not-found]`);
+        let template;
+        if (opts.engine) {
+          const engine = renderer.getEngine(opts.engine);
+          for (const tpl of variant.getTemplates()) {
+            if (engine.match(tpl.filename)) {
+              template = tpl;
+              break;
+            }
+          }
+          if (!template) {
+            throw new Error(`Could not find '${opts.engine}' template for variant '${variant.id}' of component '${component.id}' [template-not-found]`);
+          }
+        } else {
+          template = variant.getTemplate(opts.ext);
+          if (!template) {
+            throw new Error(`Could not find template for variant '${variant.id}' of component '${component.id}'${opts.ext ? `with extension '${opts.ext}'` : ''} [template-not-found]`);
+          }
         }
 
         const renderOpts = {variant, component, collections};
