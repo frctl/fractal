@@ -10,13 +10,20 @@ const Entity = require('./entity');
 const parser = new Parser5({locationInfo: true});
 const managedProps = ['extname'];
 
+const cache = {};
+
 class Template extends Entity {
 
   constructor(props = {}) {
     assert.object(props, 'Template.constructor - props must be an object [properties-invalid]');
     if (typeof props.contents === 'string') {
-      // TODO: cache template parsing
-      props.contents = fromParse5(parser.parseFragment(props.contents), {file: props.contents});
+      if (cache[props.contents]) {
+        props.contents = cache[props.contents];
+      } else {
+        const dom = fromParse5(parser.parseFragment(props.contents), {file: props.contents});
+        cache[props.contents] = dom;
+        props.contents = dom;
+      }
     }
     super(props);
     this.defineGetter('extname', () => extname(this.get('filename')));
