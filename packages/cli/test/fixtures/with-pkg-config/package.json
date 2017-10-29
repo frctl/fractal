@@ -1,7 +1,0 @@
-{
-  "fractal": {
-    "cli": {
-      "config": "./config.js"
-    }
-  }
-}
