@@ -29,9 +29,7 @@ module.exports = {
 
   presets: [],
 
-  engines: [
-    require('@frctl/fractal-engine-html')
-  ],
+  engines: [],
 
   plugins: [],
 
