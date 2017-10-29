@@ -1,6 +1,8 @@
 module.exports = {
 
   port: 8888,
-  plugins: []
+  plugins: [
+    require('./src/plugins/engines')()
+  ]
 
 };

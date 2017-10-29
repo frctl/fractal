@@ -17,8 +17,7 @@ module.exports = {
       match: '**/config.*',
       defaults: {
         views: {
-          match: 'view.*',
-          default: '.html'
+          match: 'view.*'
         }
       }
     },

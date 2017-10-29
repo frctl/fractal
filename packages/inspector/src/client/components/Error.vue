@@ -29,6 +29,8 @@ export default {
   text-align: left;
   background-color: $color-bg-light;
   padding: 2rem;
+  min-width: 0;
+  overflow: auto;
 
   .message {
     font-size: 1.5rem;

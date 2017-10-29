@@ -1,6 +1,13 @@
 <template lang="html">
   <div class="preview" :class="{ 'is-locked': locked }">
-    <error-message :error="error"  v-if="error" />
+    <div class="toolbar" v-if="engines.length > 1">
+      <select class="tplSelector" v-model="$store.state.selected.engine">
+        <option class="tplSelector__engine" v-for="engine in engines" :key="engines.name" :value="engine.name">
+          {{ engine.label }}
+        </option>
+      </select>
+    </div>
+    <error-message :error="error" v-if="error" />
     <iframe class="preview__window" :srcdoc="html" v-else-if="html"></iframe>
     <splash message="use the options panel to select one or more previews" v-else />
   </div>
@@ -33,6 +40,14 @@ export default {
   },
 
   computed : {
+
+    engines(){
+      return this.$store.state.engines;
+    },
+
+    selectedEngine(){
+      return this.$store.state.selected.engine;
+    },
 
     css(){
       return this.assets.filter(f => f.extname === '.css').map(f => f.contents).join('\n');
@@ -78,7 +93,18 @@ export default {
   },
 
   methods: {
+
     async renderPreview(){
+      const hasMatchingView = this.component.views.find(view => {
+        return view.inspector.engine === this.selectedEngine;
+      });
+      if (!hasMatchingView){
+        const engine = this.engines.find(engine => engine.name === this.selectedEngine);
+        this.error = new Error(`No ${engine.label} view available.`);
+        this.chunks = [];
+        this.assets = [];
+        return;
+      }
       try {
         const [assets, chunks] = await Promise.all([
           axios({
@@ -89,6 +115,7 @@ export default {
             url: `/_api/render`,
             data: this.previews.map(preview => {
               return {
+                engine: this.selectedEngine,
                 component: this.component.id,
                 variant: preview.originalVariantId,
                 context: preview.context
@@ -119,6 +146,10 @@ export default {
         this.renderPreview();
         previewIds = ids;
       }
+    },
+
+    selectedEngine(){
+      this.renderPreview();
     }
   },
 
@@ -132,12 +163,17 @@ export default {
 </script>
 
 <style lang="scss">
+@import "~styles/config";
+
 .preview {
 
   display: flex;
   height: 100%;
+  width: 100%;
+  overflow: hidden;
   background-color: #fff;
   pointer-events: all;
+  flex-direction: column;
 
   &__window {
     flex: none;
@@ -152,4 +188,36 @@ export default {
   }
 
 }
+
+.toolbar {
+  height: 32px;
+  border-bottom: 1px solid $color-divider;
+  background-color: $color-bg-dark;
+  display: flex;
+  flex: none;
+  align-items: center;
+  // width: 100%;
+  position: relative;
+  padding: 0 5px;
+  font-size: 15px;
+}
+
+.tplSelector {
+
+  flex: none;
+  margin-left: auto;
+  width: auto;
+  border: 1px solid #ccc;
+  font-size: 14px;
+
+  &__engine + &__engine {
+    margin-left: 10px;
+  }
+
+  label {
+    cursor: pointer;
+    line-height: 1.0;
+  }
+}
+
 </style>

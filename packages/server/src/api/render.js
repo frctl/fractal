@@ -36,8 +36,9 @@ module.exports = function () {
         }
 
         const ext = request.ext;
+        const engine = request.engine;
         const context = request.context || {};
-        const result = app.render(variant, context, {ext}).then(output => {
+        const result = app.render(variant, context, {ext, engine}).then(output => {
           return {
             requestData: request,
             // TODO: Figure out why toJSON methods are so slow and re-instate the props below

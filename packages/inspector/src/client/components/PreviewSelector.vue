@@ -1,8 +1,15 @@
 <template lang="html">
   <div class="previewSelector">
     <h2 class="previewSelector__title">{{ component.label }}</h2>
+    <!-- <div class="tplSelector previewSelector__options">
+      <h3 class="previewSelector__subTitle">Templates</h3>
+      <label class="tplSelector__engine" v-for="(engine, index) in engines" :key="engines.name">
+        <input type="checkbox" class="tplSelector__input" :value="engine.name" v-model="$store.state.selected.engines">
+        <span class="tplSelector__label">{{ engine.label }}</span>
+      </label>
+    </div> -->
     <div class="previewSelector__options">
-
+      <h3 class="previewSelector__subTitle">Variants/Scenarios</h3>
       <div class="selectorSet" v-for="(variant, index) in variants" :key="variant.id">
         <label class="selectorSet__parent">
           <input type="checkbox" class="selectorSet__input" @change.stop="handleVariantToggle(variant, $event)" :value="variant.id" v-model="$store.state.selected.variants">
@@ -41,6 +48,10 @@ export default {
 
     selectedPreviews() {
       return this.$store.state.selected.previews;
+    },
+
+    selectedEngines() {
+      return this.$store.state.selected.engines;
     }
 
   },
@@ -100,7 +111,48 @@ export default {
     font-weight: bold;
   }
 
+  &__subTitle {
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    padding: 16px 1rem 10px 1rem;
+    opacity: 0.7;
+  }
+
+  &__options + &__options {
+    // margin-top: 0.5rem;
+  }
+
+  label {
+    display: block;
+    cursor: pointer;
+  }
+
 }
+
+// .tplSelector {
+//
+//   border-top: 1px solid $color-divider;
+//
+//   &__engine {
+//     background-color: $color-bg-dark-darkened;
+//     padding: 8px 1rem 8px 1rem;
+//     border-top: 1px solid $color-divider;
+//     &:last-child {
+//       border-bottom: 1px solid $color-divider;
+//     }
+//   }
+//
+//
+//   &__input {
+//     margin-right: 6px;
+//   }
+//
+//   &__label {
+//
+//   }
+//
+// }
 
 .selectorSet {
 
@@ -114,7 +166,6 @@ export default {
     background-color: $color-bg-dark-darkened;
     border-top: 1px solid $color-divider;
     border-bottom: 1px solid $color-divider;
-    display: block;
   }
 
   &__children {
@@ -122,10 +173,8 @@ export default {
   }
 
   &__child {
-    cursor: pointer;
     padding: 0 1rem 0 1.5rem;
     margin: 8px;
-    display: block;
   }
 
 }

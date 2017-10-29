@@ -14,9 +14,11 @@ const store = new Vuex.Store({
     components: [],
     variants: [],
     previews: [],
+    engines: [],
     selected: {
       variants: [],
-      previews: []
+      previews: [],
+      engine: null
     },
     dirty: false
   },
@@ -24,25 +26,32 @@ const store = new Vuex.Store({
   actions: {
 
     async initialise({commit, dispatch}) {
-      const response = await dispatch('fetchComponentList');
+      commit('loading', true);
+      const responses = Promise.all([
+        await dispatch('fetchComponentList'),
+        await dispatch('fetchProjectInfo')
+      ]);
       commit('initialised', true);
-      return response;
+      commit('loading', false);
+      return responses;
     },
 
     async fetchComponentList({commit, state}) {
-      commit('loading', true);
       const response = await axios.get('/_api/components');
       commit('setEntities', {components: response.data || [], initialised: state.initialised});
-      commit('loading', false);
       commit('dirty', false);
       return response;
     },
 
+    async fetchProjectInfo({commit, state}){
+      const response = await axios.get('/_api');
+      commit('setEngines', response.data.fractal.engines || []);
+      return response;
+    },
+
     async fetchComponentDetail({commit}, id) {
-      commit('loading', true);
       const response = await axios.get(`/_api/components/${id}`);
       commit('setComponent', response.data);
-      commit('loading', false);
       return response;
     }
   },
@@ -50,7 +59,7 @@ const store = new Vuex.Store({
   mutations: {
 
     SOCKET_CONNECT: state => {
-      console.log('socket connected!');
+      // console.log('socket connected!');
       state.socketConnected = true;
     },
 
@@ -68,6 +77,13 @@ const store = new Vuex.Store({
 
     initialised(state, init = true) {
       state.initialised = init;
+    },
+
+    setEngines(state, engines){
+      state.engines = engines;
+      if (engines.length) {
+        state.selected.engine = engines[0].name;
+      }
     },
 
     setEntities(state, {components, initialised}) {

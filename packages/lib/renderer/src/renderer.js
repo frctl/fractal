@@ -13,6 +13,10 @@ class Renderer {
     return _engineStore.get(this).getEngine(name);
   }
 
+  getEngines() {
+    return _engineStore.get(this).engines;
+  }
+
   async render(template, context = {}, opts = {}) {
     if (!Template.isTemplate(template)) {
       throw new Error(`Renderer.render - template must be a template instance [template-invalid]`);

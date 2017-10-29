@@ -11,7 +11,7 @@ const File = require('./file');
 const Variant = require('./variant');
 
 const assert = check.assert;
-const managedProps = ['label', 'files', 'variants', 'relative', 'config'];
+const managedProps = ['label', 'files', 'variants', 'relative', 'config', 'views'];
 
 class Component extends Entity {
 
@@ -26,11 +26,19 @@ class Component extends Entity {
     props.variants = props.variants || new VariantCollection();
     props.config = props.config || {};
 
+    delete props.views;
+
     super(props);
 
     this.defineGetter('label', value => {
       return value || this.getConfig('label') || titlize(this.get('id'));
     });
+
+    this.defineSetter('views', value => {
+      throw new TypeError('The views property cannot be set directly')
+    });
+
+    this.defineGetter('views', () => this.getViews());
 
     this.defineGetter('config', value => cloneDeep(value || {}));
 
@@ -104,8 +112,7 @@ class Component extends Entity {
 
   getViews() {
     const viewMatcher = this.getConfig('views.match', () => false); // default to no matches
-    const viewSorter = view => (view.extname === this.getConfig('views.default')) ? 0 : 1;
-    return this.getFiles().filter(viewMatcher).sortBy(viewSorter);
+    return this.getFiles().filter(viewMatcher);
   }
 
   getView(...args) {

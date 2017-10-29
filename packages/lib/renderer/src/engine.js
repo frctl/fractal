@@ -1,6 +1,6 @@
 const {extname} = require('path');
 const {isFunction, isString} = require('lodash');
-const {toArray, normalizeExt} = require('@frctl/utils');
+const {toArray, normalizeExt, titlize} = require('@frctl/utils');
 const debug = require('debug')('fractal:support');
 const {Validator} = require('@frctl/support');
 const schema = require('@frctl/support/schema');
@@ -41,6 +41,10 @@ class Engine {
 
   get name() {
     return _props.get(this).name;
+  }
+
+  get label() {
+    return _props.get(this).label || titlize(this.name);
   }
 
 }
