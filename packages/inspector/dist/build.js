@@ -12871,7 +12871,7 @@ exports = module.exports = __webpack_require__(1)(undefined);
 
 
 // module
-exports.push([module.i, "\n.preview {\n  display: flex;\n  height: 100%;\n  background-color: #fff;\n  pointer-events: all;\n}\n.preview__window {\n    flex: none;\n    border: 0;\n    height: 100%;\n    width: 100%;\n    overflow: auto;\n}\n.preview.is-locked {\n    pointer-events: none;\n}\n", ""]);
+exports.push([module.i, "\n.preview {\n  display: flex;\n  height: 100%;\n  width: 100%;\n  overflow: hidden;\n  background-color: #fff;\n  pointer-events: all;\n  flex-direction: column;\n}\n.preview__window {\n    flex: none;\n    border: 0;\n    height: 100%;\n    width: 100%;\n    overflow: auto;\n}\n.preview.is-locked {\n    pointer-events: none;\n}\n.toolbar {\n  height: 32px;\n  border-bottom: 1px solid #d5d5d5;\n  background-color: #f5f5f5;\n  display: flex;\n  flex: none;\n  align-items: center;\n  position: relative;\n  padding: 0 5px;\n  font-size: 15px;\n}\n.tplSelector {\n  flex: none;\n  margin-left: auto;\n  width: auto;\n  border: 1px solid #ccc;\n  font-size: 14px;\n}\n.tplSelector__engine + .tplSelector__engine {\n    margin-left: 10px;\n}\n.tplSelector label {\n    cursor: pointer;\n    line-height: 1.0;\n}\n", ""]);
 
 // exports
 
@@ -12889,6 +12889,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Splash_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__Splash_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Error_vue__ = __webpack_require__(16);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Error_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__Error_vue__);
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -12924,6 +12931,14 @@ let previewIds = [];
   },
 
   computed: {
+
+    engines() {
+      return this.$store.state.engines;
+    },
+
+    selectedEngine() {
+      return this.$store.state.selected.engine;
+    },
 
     css() {
       return this.assets.filter(f => f.extname === '.css').map(f => f.contents).join('\n');
@@ -12969,7 +12984,18 @@ let previewIds = [];
   },
 
   methods: {
+
     async renderPreview() {
+      const hasMatchingView = this.component.views.find(view => {
+        return view.inspector.engine === this.selectedEngine;
+      });
+      if (!hasMatchingView) {
+        const engine = this.engines.find(engine => engine.name === this.selectedEngine);
+        this.error = new Error(`No ${engine.label} view available.`);
+        this.chunks = [];
+        this.assets = [];
+        return;
+      }
       try {
         const [assets, chunks] = await Promise.all([__WEBPACK_IMPORTED_MODULE_0_axios___default()({
           url: `/_api/inspector/assets/${this.component.id}`
@@ -12978,6 +13004,7 @@ let previewIds = [];
           url: `/_api/render`,
           data: this.previews.map(preview => {
             return {
+              engine: this.selectedEngine,
               component: this.component.id,
               variant: preview.originalVariantId,
               context: preview.context
@@ -13007,6 +13034,10 @@ let previewIds = [];
         this.renderPreview();
         previewIds = ids;
       }
+    },
+
+    selectedEngine() {
+      this.renderPreview();
     }
   },
 
@@ -13921,7 +13952,7 @@ exports = module.exports = __webpack_require__(1)(undefined);
 
 
 // module
-exports.push([module.i, "\n.error[data-v-200d9492] {\n  width: 100%;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n  align-items: flex-start;\n  justify-content: flex-start;\n  text-align: left;\n  background-color: #fff;\n  padding: 2rem;\n}\n.error .message[data-v-200d9492] {\n    font-size: 1.5rem;\n    color: red;\n    max-width: 600px;\n    margin-bottom: 1rem;\n}\n.error .stack[data-v-200d9492] {\n    font-size: 1rem;\n    opacity: 0.5;\n    max-width: 600px;\n}\n", ""]);
+exports.push([module.i, "\n.error[data-v-200d9492] {\n  width: 100%;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n  align-items: flex-start;\n  justify-content: flex-start;\n  text-align: left;\n  background-color: #fff;\n  padding: 2rem;\n  min-width: 0;\n  overflow: auto;\n}\n.error .message[data-v-200d9492] {\n    font-size: 1.5rem;\n    color: red;\n    max-width: 600px;\n    margin-bottom: 1rem;\n}\n.error .stack[data-v-200d9492] {\n    font-size: 1rem;\n    opacity: 0.5;\n    max-width: 600px;\n}\n", ""]);
 
 // exports
 
@@ -13978,7 +14009,36 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     class: {
       'is-locked': _vm.locked
     }
-  }, [(_vm.error) ? _c('error-message', {
+  }, [(_vm.engines.length > 1) ? _c('div', {
+    staticClass: "toolbar"
+  }, [_c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.$store.state.selected.engine),
+      expression: "$store.state.selected.engine"
+    }],
+    staticClass: "tplSelector",
+    on: {
+      "change": function($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        });
+        _vm.$set(_vm.$store.state.selected, "engine", $event.target.multiple ? $$selectedVal : $$selectedVal[0])
+      }
+    }
+  }, _vm._l((_vm.engines), function(engine) {
+    return _c('option', {
+      key: _vm.engines.name,
+      staticClass: "tplSelector__engine",
+      domProps: {
+        "value": engine.name
+      }
+    }, [_vm._v("\n        " + _vm._s(engine.label) + "\n      ")])
+  }))]) : _vm._e(), _vm._v(" "), (_vm.error) ? _c('error-message', {
     attrs: {
       "error": _vm.error
     }
@@ -14645,7 +14705,7 @@ exports = module.exports = __webpack_require__(1)(undefined);
 
 
 // module
-exports.push([module.i, "\n.previewSelector {\n  display: flex;\n  flex-direction: column;\n  height: 100%;\n  flex: auto;\n  overflow: auto;\n}\n.previewSelector__title {\n    background-color: #fff;\n    border-top: 1px solid #d5d5d5;\n    padding: 10px 1rem;\n    font-weight: bold;\n}\n.selectorSet__input {\n  margin-right: 6px;\n}\n.selectorSet__parent {\n  cursor: pointer;\n  padding: 8px 1rem 9px 1rem;\n  background-color: #ededed;\n  border-top: 1px solid #d5d5d5;\n  border-bottom: 1px solid #d5d5d5;\n  display: block;\n}\n.selectorSet__children {\n  background-color: #f5f5f5;\n}\n.selectorSet__child {\n  cursor: pointer;\n  padding: 0 1rem 0 1.5rem;\n  margin: 8px;\n  display: block;\n}\n", ""]);
+exports.push([module.i, "\n.previewSelector {\n  display: flex;\n  flex-direction: column;\n  height: 100%;\n  flex: auto;\n  overflow: auto;\n}\n.previewSelector__title {\n    background-color: #fff;\n    border-top: 1px solid #d5d5d5;\n    padding: 10px 1rem;\n    font-weight: bold;\n}\n.previewSelector__subTitle {\n    text-transform: uppercase;\n    font-size: 0.85rem;\n    letter-spacing: 1px;\n    padding: 16px 1rem 10px 1rem;\n    opacity: 0.7;\n}\n.previewSelector label {\n    display: block;\n    cursor: pointer;\n}\n.selectorSet__input {\n  margin-right: 6px;\n}\n.selectorSet__parent {\n  cursor: pointer;\n  padding: 8px 1rem 9px 1rem;\n  background-color: #ededed;\n  border-top: 1px solid #d5d5d5;\n  border-bottom: 1px solid #d5d5d5;\n}\n.selectorSet__children {\n  background-color: #f5f5f5;\n}\n.selectorSet__child {\n  padding: 0 1rem 0 1.5rem;\n  margin: 8px;\n}\n", ""]);
 
 // exports
 
@@ -14656,6 +14716,13 @@ exports.push([module.i, "\n.previewSelector {\n  display: flex;\n  flex-directio
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -14699,6 +14766,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     selectedPreviews() {
       return this.$store.state.selected.previews;
+    },
+
+    selectedEngines() {
+      return this.$store.state.selected.engines;
     }
 
   },
@@ -14750,7 +14821,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "previewSelector__title"
   }, [_vm._v(_vm._s(_vm.component.label))]), _vm._v(" "), _c('div', {
     staticClass: "previewSelector__options"
-  }, _vm._l((_vm.variants), function(variant, index) {
+  }, [_c('h3', {
+    staticClass: "previewSelector__subTitle"
+  }, [_vm._v("Variants/Scenarios")]), _vm._v(" "), _vm._l((_vm.variants), function(variant, index) {
     return _c('div', {
       key: variant.id,
       staticClass: "selectorSet"
@@ -14843,7 +14916,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         staticClass: "selectorSet__label"
       }, [_vm._v(_vm._s(preview.label))])])
     }))])
-  }))])
+  })], 2)])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
@@ -17612,9 +17685,11 @@ const store = new __WEBPACK_IMPORTED_MODULE_3_vuex__["a" /* default */].Store({
     components: [],
     variants: [],
     previews: [],
+    engines: [],
     selected: {
       variants: [],
-      previews: []
+      previews: [],
+      engine: null
     },
     dirty: false
   },
@@ -17622,25 +17697,29 @@ const store = new __WEBPACK_IMPORTED_MODULE_3_vuex__["a" /* default */].Store({
   actions: {
 
     async initialise({ commit, dispatch }) {
-      const response = await dispatch('fetchComponentList');
+      commit('loading', true);
+      const responses = Promise.all([await dispatch('fetchComponentList'), await dispatch('fetchProjectInfo')]);
       commit('initialised', true);
-      return response;
+      commit('loading', false);
+      return responses;
     },
 
     async fetchComponentList({ commit, state }) {
-      commit('loading', true);
       const response = await __WEBPACK_IMPORTED_MODULE_1_axios___default.a.get('/_api/components');
       commit('setEntities', { components: response.data || [], initialised: state.initialised });
-      commit('loading', false);
       commit('dirty', false);
       return response;
     },
 
+    async fetchProjectInfo({ commit, state }) {
+      const response = await __WEBPACK_IMPORTED_MODULE_1_axios___default.a.get('/_api');
+      commit('setEngines', response.data.fractal.engines || []);
+      return response;
+    },
+
     async fetchComponentDetail({ commit }, id) {
-      commit('loading', true);
       const response = await __WEBPACK_IMPORTED_MODULE_1_axios___default.a.get(`/_api/components/${id}`);
       commit('setComponent', response.data);
-      commit('loading', false);
       return response;
     }
   },
@@ -17648,7 +17727,7 @@ const store = new __WEBPACK_IMPORTED_MODULE_3_vuex__["a" /* default */].Store({
   mutations: {
 
     SOCKET_CONNECT: state => {
-      console.log('socket connected!');
+      // console.log('socket connected!');
       state.socketConnected = true;
     },
 
@@ -17666,6 +17745,13 @@ const store = new __WEBPACK_IMPORTED_MODULE_3_vuex__["a" /* default */].Store({
 
     initialised(state, init = true) {
       state.initialised = init;
+    },
+
+    setEngines(state, engines) {
+      state.engines = engines;
+      if (engines.length > 0) {
+        state.selected.engine = engines[0].name;
+      }
     },
 
     setEntities(state, { components, initialised }) {
