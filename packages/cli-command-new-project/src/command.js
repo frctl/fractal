@@ -15,11 +15,18 @@ module.exports = function newProjectCommand() {
 
     description: 'Create a new starter project',
 
-    async handler(argv, app, cli) {
+    async handler(argv, app, cli, {log}) {
+
+      process.on('SIGINT', () => {
+        shell.exit(0);
+      });
+
       if (!shell.which('git')) {
-        shell.echo('The Fractal new project command requires Git to be installed on your machine');
+        log('The Fractal new project command requires Git to be installed on your machine');
         shell.exit(1);
       }
+
+      log('Creating directory...');
 
       const dirPath = join(cli.cwd, argv.directoryPath);
       const tildeDir = tildify(dirPath);
@@ -27,6 +34,8 @@ module.exports = function newProjectCommand() {
       if (fs.existsSync(dirPath)) {
         return (`<error>The directory '${argv.directoryPath}' already exists.</error>`);
       }
+
+      log('Cloning git repo...');
 
       const git = simpleGit(cli.cwd);
 
@@ -36,6 +45,8 @@ module.exports = function newProjectCommand() {
         throw new Error(`Failed to clone starter project Git repository [${err.message}]`);
       }
 
+      log('Installing NPM dependencies...');
+
       shell.cd(argv.directoryPath);
       const result = shell.exec(`npm install --only=prod`);
       if (result.code > 0) {
@@ -44,8 +55,9 @@ module.exports = function newProjectCommand() {
 
       try {
         await fs.removeSync(join(dirPath, '.git'));
+        shell.exec('git init');
       } catch (err) {
-        throw new Error(`Failed to delete git repo information [${err.message}]`);
+        throw new Error(`Failed to reset git repo information [${err.message}]`);
       }
 
       return `
