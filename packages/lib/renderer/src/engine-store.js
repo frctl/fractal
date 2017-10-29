@@ -34,7 +34,7 @@ class EngineStore {
 
   getEngine(name) {
     assert.string(name, `EngineStore.getEngine: name must be a string [name-invalid]`);
-    const engine = _engines.get(this).find(engine => engine.name === name);
+    const engine = _engines.get(this).find(engine => engine.name.toLowerCase() === name.toLowerCase());
     if (!engine) {
       throw new Error(`No template engine called '${name}' has been registered [engine-not-found]`);
     }
@@ -44,7 +44,7 @@ class EngineStore {
   addEngine(items) {
     const engines = _engines.get(this);
     toArray(items).map(props => new Engine(props)).forEach(engine => {
-      const removed = remove(engines, item => item.name === engine.name);
+      const removed = remove(engines, item => item.name.toLowerCase() === engine.name.toLowerCase());
       if (removed.length > 0) {
         debug('Removed exisiting engine: %s', removed.map(engine => engine.name).join(', '));
       }
