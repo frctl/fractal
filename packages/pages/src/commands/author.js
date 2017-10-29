@@ -37,6 +37,8 @@ module.exports = function (config = {}) {
 
     command: 'author',
 
+    aliases: ['pages'],
+
     description: 'Author a Fractal pages site',
 
     builder,

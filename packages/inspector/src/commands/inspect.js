@@ -8,6 +8,8 @@ module.exports = function (config = {}) {
 
     command: 'inspect',
 
+    aliases: ['inspector'],
+
     description: 'Start the Fractal component inspector',
 
     builder: {
