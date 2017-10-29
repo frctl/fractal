@@ -62,5 +62,6 @@ The pages static site builder is functional but feature-incomplete, and also is 
 
 The CLI should not go through any major changes during the beta period, although improvements to the command output and other small changes are likely. It's not recommended to invest significant time into bespoke commands until the beta period is nearing a close. Some known improvements needed:
 
+* [ ] **'new project' command**: Needs more informative progress information/feedback.
 * [ ] **'add component' command**: Missing any configuration options, currently very 'dumb'.
 * [ ] **output rendering**: Whitespace handling is inconsistent and buggy
