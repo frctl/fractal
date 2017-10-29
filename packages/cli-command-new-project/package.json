@@ -1,7 +1,7 @@
 {
   "name": "@frctl/cli-command-new-project",
   "description": "Create a new starter project via the Fractal CLI",
-  "version": "2.0.0-beta.0",
+  "version": "2.0.0-beta.1",
   "homepage": "http://fractal.build",
   "repository": "https://github.com/frctl/fractal/tree/v2/packages/cli-command-new-project",
   "bugs": "https://github.com/frctl/fractal/issues",
@@ -9,13 +9,13 @@
   "license": "MIT",
   "main": "./src/command.js",
   "dependencies": {
-    "tildify": "^1.2.0",
     "fs-extra": "^4.0.2",
+    "shelljs": "^0.7.8",
     "simple-git": "^1.77.0",
-    "shelljs": "^0.7.8"
+    "tildify": "^1.2.0"
   },
   "devDependencies": {
-    "@frctl/support": "^2.0.0-beta.0",
-    "@frctl/fractal": "^2.0.0-beta.0"
+    "@frctl/fractal": "^2.0.0-beta.1",
+    "@frctl/support": "^2.0.0-beta.1"
   }
 }

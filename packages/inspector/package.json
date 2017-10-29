@@ -2,7 +2,7 @@
   "name": "@frctl/inspector",
   "description": "Preview and inspect components in Fractal component libraries",
   "author": "Mark Perkins <mark@allmarkedup.com>",
-  "version": "2.0.0-beta.0",
+  "version": "2.0.0-beta.1",
   "homepage": "http://fractal.build",
   "repository": "https://github.com/frctl/fractal/tree/v2/packages/inspector",
   "bugs": "https://github.com/frctl/fractal/issues",
@@ -15,9 +15,9 @@
     "build": "webpack"
   },
   "dependencies": {
-    "@frctl/support": "^2.0.0-beta.0",
-    "@frctl/utils": "^2.0.0-beta.0",
-    "@frctl/server": "^2.0.0-beta.0",
+    "@frctl/server": "^2.0.0-beta.1",
+    "@frctl/support": "^2.0.0-beta.1",
+    "@frctl/utils": "^2.0.0-beta.1",
     "axios": "^0.16.2",
     "babel-core": "^6.24.1",
     "babel-loader": "^7.0.0",
@@ -35,8 +35,8 @@
     "lodash": "^4.17.4",
     "node-sass": "^4.5.3",
     "sass-loader": "^6.0.5",
-    "style-loader": "^0.18.2",
     "socket.io": "^2.0.3",
+    "style-loader": "^0.18.2",
     "vue": "^2.3.3",
     "vue-loader": "^12.2.1",
     "vue-router": "^2.5.3",
@@ -46,6 +46,6 @@
     "webpack": "^3.6.0"
   },
   "devDependencies": {
-    "@frctl/fractal": "^2.0.0-beta.0"
+    "@frctl/fractal": "^2.0.0-beta.1"
   }
 }

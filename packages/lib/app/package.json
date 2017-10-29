@@ -1,6 +1,6 @@
 {
   "name": "@frctl/app",
-  "version": "2.0.0-beta.0",
+  "version": "2.0.0-beta.1",
   "description": "Fractal application class",
   "homepage": "http://fractal.build",
   "repository": "https://github.com/frctl/fractal/tree/v2/packages/lib/app",
@@ -8,17 +8,17 @@
   "author": "Mark Perkins <mark@allmarkedup.com> (http://allmarkedup.com)",
   "license": "MIT",
   "dependencies": {
-    "@frctl/parser": "2.0.0-beta.0",
-    "@frctl/loader": "^2.0.0-beta.0",
-    "@frctl/support": "2.0.0-beta.0",
-    "@frctl/config": "2.0.0-beta.0",
-    "@frctl/utils": "2.0.0-beta.0",
+    "@frctl/config": "^2.0.0-beta.1",
+    "@frctl/loader": "^2.0.0-beta.1",
+    "@frctl/parser": "^2.0.0-beta.1",
+    "@frctl/support": "^2.0.0-beta.1",
+    "@frctl/utils": "^2.0.0-beta.1",
     "check-types": "^7.2.0",
-    "lodash": "^4.17.4",
-    "debug": "^3.0.0",
     "chokidar": "^1.7.0",
-    "parent-module": "^0.1.0",
-    "node-cache": "^4.1.1"
+    "debug": "^3.0.0",
+    "lodash": "^4.17.4",
+    "node-cache": "^4.1.1",
+    "parent-module": "^0.1.0"
   },
   "devDependencies": {
     "proxyquire": "^1.8.0"

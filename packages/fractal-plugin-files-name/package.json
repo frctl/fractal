@@ -1,7 +1,7 @@
 {
   "name": "@frctl/fractal-plugin-files-name",
   "description": "Adds a name property to Fractal File objects.",
-  "version": "2.0.0-beta.0",
+  "version": "2.0.0-beta.1",
   "homepage": "http://fractal.build",
   "repository": "https://github.com/frctl/fractal/tree/v2/packages/fractal-plugin-files-name",
   "bugs": "https://github.com/frctl/fractal/issues",
@@ -11,8 +11,7 @@
     "Danielle Huntrods <danielle.huntrods@clearleft.com> (http://clearleft.com)"
   ],
   "license": "MIT",
-  "dependencies": {},
   "devDependencies": {
-    "@frctl/support": "^2.0.0-beta.0"
+    "@frctl/support": "^2.0.0-beta.1"
   }
 }

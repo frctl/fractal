@@ -11,7 +11,8 @@
   ],
   "commands": {
     "publish": {
-      "npm-tag": "beta",
+      "npmTag": "beta",
+      "allowBranch": "v2",
       "ignore": [
         "test/**",
         "cli/test/**"
