@@ -2,10 +2,16 @@ module.exports = {
 
   variants: [
     {
-      id: 'primary'
+      id: 'primary',
+      params: {
+        id: 'primary'
+      }
     },
     {
-      id: 'secondary'
+      id: 'secondary',
+      params: {
+        id: 'primary'
+      }
     }
   ]
 

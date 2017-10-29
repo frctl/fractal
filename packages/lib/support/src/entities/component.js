@@ -35,7 +35,7 @@ class Component extends Entity {
     });
 
     this.defineSetter('views', value => {
-      throw new TypeError('The views property cannot be set directly')
+      throw new TypeError('The views property cannot be set directly');
     });
 
     this.defineGetter('views', () => this.getViews());

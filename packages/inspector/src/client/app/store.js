@@ -43,7 +43,7 @@ const store = new Vuex.Store({
       return response;
     },
 
-    async fetchProjectInfo({commit, state}){
+    async fetchProjectInfo({commit, state}) {
       const response = await axios.get('/_api');
       commit('setEngines', response.data.fractal.engines || []);
       return response;
@@ -79,9 +79,9 @@ const store = new Vuex.Store({
       state.initialised = init;
     },
 
-    setEngines(state, engines){
+    setEngines(state, engines) {
       state.engines = engines;
-      if (engines.length) {
+      if (engines.length > 0) {
         state.selected.engine = engines[0].name;
       }
     },
