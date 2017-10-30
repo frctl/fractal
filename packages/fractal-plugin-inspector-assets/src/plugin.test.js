@@ -156,7 +156,7 @@ tests.addPluginTest({
   test: function (collection) {
     for (const component of collection) {
       expect(component.inspector.assets).to.be.a('FileCollection');
-      expect(component.inspector.assets.length).to.equal(2);
+      expect(component.inspector.assets.length).to.equal(2); // webpack always creates js file, in this case empty
     }
   }
 });
@@ -167,7 +167,7 @@ tests.addPluginTest({
   test: function (collection) {
     for (const component of collection) {
       expect(component.inspector.assets).to.be.a('FileCollection');
-      expect(component.inspector.assets.length).to.equal(2);
+      expect(component.inspector.assets.length).to.equal(2); // webpack always creates js file, in this case empty
     }
   }
 });
@@ -180,4 +180,4 @@ tests.addPluginTest({
 //  description: 'it works for media and font assets'
 // })
 
-tests.runOnly();
+tests.run();
