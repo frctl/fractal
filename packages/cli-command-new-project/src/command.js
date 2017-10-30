@@ -16,7 +16,6 @@ module.exports = function newProjectCommand() {
     description: 'Create a new starter project',
 
     async handler(argv, app, cli, {log}) {
-
       process.on('SIGINT', () => {
         shell.exit(0);
       });

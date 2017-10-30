@@ -250,7 +250,7 @@ describe('Component', function () {
 
   describe('.getAssets()', function () {
     it('returns an empty FileCollection if no asset filter has been defined', function () {
-      const component = new Component(basicComponent);
+      const component = Component.from(basicComponent);
       const assets = component.getAssets();
       expect(assets).to.be.a('FileCollection');
       expect(assets.length).to.equal(0);
@@ -263,7 +263,7 @@ describe('Component', function () {
           stem: 'view'
         }
       };
-      const component = new Component(assetsConfigComp);
+      const component = Component.from(assetsConfigComp);
       const assets = component.getAssets();
       expect(assets).to.be.a('FileCollection');
       expect(assets.length).to.equal(0);
@@ -276,7 +276,7 @@ describe('Component', function () {
           extname: '.js'
         }
       };
-      const component = new Component(assetsConfigComp);
+      const component = Component.from(assetsConfigComp);
       const assets = component.getAssets();
       assets.forEach(asset => console.log(asset.relative));
       expect(assets).to.be.a('FileCollection');
@@ -289,7 +289,7 @@ describe('Component', function () {
         scripts: '*.js',
         styles: '*.scss'
       };
-      const component = new Component(assetsConfigComp);
+      const component = Component.from(assetsConfigComp);
       const assets = component.getAssets();
       expect(assets).to.be.a('FileCollection');
       expect(assets.length).to.equal(2);

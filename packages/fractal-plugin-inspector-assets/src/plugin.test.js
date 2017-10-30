@@ -1,15 +1,15 @@
-const {expect} = require('../../../../test/helpers');
-const tests = require('../../../../test/runners/plugins')(__dirname);
-const {ComponentCollection, FileCollection, File} = require('../../../internals/support');
+const {expect} = require('../../../test/helpers');
+const tests = require('../../../test/runners/plugins')(__dirname);
+const {ComponentCollection, Component, FileCollection, File} = require('../../lib/support');
 
-const makeComponent = name => ({
+const makeComponent = name => Component.from({
   src: new File({
     path: `${__dirname}/../components/${name}`,
     stat: {
       isDirectory: () => true
     }
   }),
-  files: new FileCollection([
+  files: FileCollection.from([
     new File({
       path: `${__dirname}/../components/${name}/${name}.js`,
       contents: new Buffer(`
@@ -50,14 +50,13 @@ $red: #f00;
   }
 });
 
-const makeEmptyComponent = name => ({
+const makeEmptyComponent = name => Component.from({
   src: new File({
     path: `${__dirname}/../components/${name}`,
     stat: {
       isDirectory: () => true
     }
   }),
-  files: new FileCollection(),
   config: {
     id: `${name}-id-set`,
     assets: {
@@ -95,14 +94,14 @@ color: $red;
 
   const chosenFile = files[type] || files.js;
 
-  return {
+  return Component.from({
     src: new File({
       path: `${__dirname}/../components/${name}`,
       stat: {
         isDirectory: () => true
       }
     }),
-    files: new FileCollection([chosenFile]),
+    files: FileCollection.from([chosenFile]),
     config: {
       id: `${name}-id-set`,
       assets: {
@@ -111,7 +110,7 @@ color: $red;
         images: '**/*.{png,jpg}'
       }
     }
-  };
+  });
 };
 const makeCollection = () => ComponentCollection.from([makeComponent('one'), makeComponent('two')]);
 const makeAssetlessCollection = () => ComponentCollection.from([makeEmptyComponent('three'), makeEmptyComponent('four')]);
@@ -181,4 +180,4 @@ tests.addPluginTest({
 //  description: 'it works for media and font assets'
 // })
 
-tests.run();
+tests.runOnly();
