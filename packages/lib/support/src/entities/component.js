@@ -28,7 +28,10 @@ class Component extends Entity {
     if (props.path) {
       props.src = new File({
         path: props.path,
-        base: props.base
+        base: props.base,
+        stat: {
+          isDirectory: () => true
+        }
       });
     }
 
