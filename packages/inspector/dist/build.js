@@ -14475,7 +14475,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return this.components;
       }
       return this.components.filter(component => {
-        return component === this.component || __WEBPACK_IMPORTED_MODULE_0_fuzzysearch___default()(this.filter.toLowerCase(), component.id.toLowerCase());
+        return component === this.component || __WEBPACK_IMPORTED_MODULE_0_fuzzysearch___default()(this.filter.toLowerCase(), component.label.toLowerCase());
       });
     }
 
