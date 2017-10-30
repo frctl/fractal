@@ -47,13 +47,10 @@ class Component extends Entity {
 
     this.defineGetter('src', src => src.clone());
     this.defineGetter('path', () => this.get('src').path);
+    this.defineGetter('relative', ()) => this.get('src').relative);
+
     this.defineGetter('views', () => this.getViews());
     this.defineGetter('config', value => cloneDeep(value || {}));
-
-    this.defineGetter('relative', (value, entity) => {
-      const src = this.getSrc();
-      return src.relative;
-    });
 
     this.defineSetter('relative', (value, entity) => {
       throw new TypeError('Component.relative is generated from the base and path attributes. Do not modify it [invalid-set-relative]');
