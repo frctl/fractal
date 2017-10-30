@@ -27,6 +27,8 @@ To get up and running with a sample project then there is some early documentati
 * [View templates](/docs/view-templates.md)
 * [Plugins and transforms](/docs/plugins-transforms.md)
 
+You may also want to check out the [default starter project repo](https://github.com/frctl/fractal-starter-default) to get a feel for how some of the pieces fit together. (This repo is cloned when creating a new project via the `fractal-beta new` command).
+
 > **Please be aware that until the beta period is complete major (breaking) changes may still be made.** Where possible we will of course try to avoid this but please do not yet start building your production codebase on these early v2 beta versions unless you are prepared to spend time and effort updating between potentially unstable releases.
 
 ## Development and contributing
