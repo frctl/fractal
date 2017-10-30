@@ -52,7 +52,7 @@ The Inspector UI is currently at a very early stage. Many improvements and updat
 
 #### Pages
 
-The pages static site builder is functional but feature-incomplete, and also is by far the least-tested part of the codebase at present. Some pig-pciture items still outstanding include:
+The pages static site builder is functional but feature-incomplete, and also is by far the least-tested part of the codebase at present. Some big-picture items still outstanding include:
 
 * [ ] **theme support**: Ability to use base themes as a starting point for sites.
 * [ ] **performance**: No performance optimisations have yet been made to the dev server or the full static build process.
