@@ -16,7 +16,7 @@ For the current v1.x release codebase please switch to the [master branch](https
 
 ## Getting started with the v2 beta
 
-If you are curious about the v2 beta then please read the [overview](#fractal-v2-overview) first to get a feel for the scope and current status of the current beta release.
+If you are curious about the v2 beta then please read the [overview](/docs/overview.md) first to get a feel for the scope and current status of the current beta release.
 
 To get up and running with a sample project then there is some early documentation available in the [docs](/docs/) directory of this repository:
 
