@@ -2,6 +2,8 @@
 
 const nunjucks = require('nunjucks');
 const _ = require('lodash');
+const slash = require('slash');
+const debug = require('debug')('frctl:pages');
 const {promisify} = require('@frctl/utils');
 
 const filters = ['await', 'beautify', 'highlight', 'stringify', 'render'];
@@ -10,11 +12,13 @@ const helpers = ['permalink', 'link-to'];
 module.exports = function (templates, opts = {}) {
   const TemplateLoader = nunjucks.Loader.extend({
     getSource: function (path) {
-      const file = templates.find(file => file.relative === path);
+      path = slash(path);
+      debug(`Looking for Nunjucks template ${path}`);
+      const file = templates.find(file => slash(file.relative) === path);
       if (file) {
         return {
           src: file.contents.toString(),
-          path: file.permalink,
+          path,
           noCache: true
         };
       }
