@@ -1,5 +1,13 @@
 # History
 
+## 2.0.0-beta.2
+
+[OTHER] Add some basic progress info to `fractal new` command
+
+## 2.0.0-beta.1
+
+Initial release of the v2 beta!
+
 ## 1.1.3
 
 [NEW] Add support for underscore prefixes for 'short' config filenames
