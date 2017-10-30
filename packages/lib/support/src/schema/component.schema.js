@@ -29,5 +29,9 @@ module.exports = {
       }]
     }
   },
-  required: ['path']
+  oneOf: [{
+    required: ['path']
+  }, {
+    required: ['src']
+  }]
 };
