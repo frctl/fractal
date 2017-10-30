@@ -1,16 +1,21 @@
 {
-  "lerna": "2.0.0",
-  "version": "2.0.0-beta.1",
+  "lerna": "2.4.0",
+  "version": "2.0.0-beta.2",
   "npmClient": "yarn",
-  "npmClientArgs": ["--production", "--no-optional"],
+  "npmClientArgs": [
+    "--production",
+    "--no-optional"
+  ],
   "packages": [
     "packages/**/*"
   ],
   "commands": {
     "publish": {
-      "npm-tag": "beta",
+      "npmTag": "beta",
+      "allowBranch": "v2",
       "ignore": [
-        "test/**"
+        "test/**",
+        "cli/test/**"
       ]
     },
     "bootstrap": {

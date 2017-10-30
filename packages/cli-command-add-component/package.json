@@ -1,0 +1,19 @@
+{
+  "name": "@frctl/cli-command-add-component",
+  "description": "Add a new skeleton component via the Fractal CLI",
+  "version": "2.0.0-beta.1",
+  "homepage": "http://fractal.build",
+  "repository": "https://github.com/frctl/fractal/tree/v2/packages/cli-command-add-component",
+  "bugs": "https://github.com/frctl/fractal/issues",
+  "author": "Mark Perkins <mark@allmarkedup.com> (http://allmarkedup.com)",
+  "license": "MIT",
+  "main": "./src/command.js",
+  "dependencies": {
+    "@frctl/support": "^2.0.0-beta.1",
+    "@frctl/utils": "^2.0.0-beta.1",
+    "fs-extra": "^4.0.2"
+  },
+  "devDependencies": {
+    "@frctl/fractal": "^2.0.0-beta.1"
+  }
+}

@@ -1,7 +1,7 @@
 /* eslint import/no-dynamic-require: off */
 const {join} = require('path');
-const {FileCollection, ComponentCollection} = require('../packages/internals/support');
-const appFactory = require('../packages/fractal/fractal');
+const {FileCollection, ComponentCollection} = require('../packages/lib/support');
+const appFactory = require('../packages/fractal');
 const {expect} = require('./helpers');
 
 module.exports = function (testPath) {

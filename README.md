@@ -1,11 +1,12 @@
-# Fractal
+# Fractal v2 [beta]
 
 **A toolkit for working with filesystem-based component libraries.**
 
 ---
 
-This branch is for development of the work-in-progress Fractal version **2.0** release.
-Feel free to play around with it but be warned that breaking changes are likely to happen until we get to a stable release candidate :rocket:
+This branch is for development of the work-in-progress Fractal **v2.0** release. Feel free to play around with it but be warned that breaking changes are likely to happen until we get to a stable release candidate :rocket:
+
+For the current v1.x release codebase please switch to the [master branch](https://github.com/frctl/fractal/tree/master).
 
 ---
 
@@ -13,33 +14,44 @@ Feel free to play around with it but be warned that breaking changes are likely 
 [![Coverage Status](https://img.shields.io/coveralls/frctl/fractal/v2.svg?style=flat-square)](https://coveralls.io/github/frctl/fractal?branch=v2)
 [![NPM Version](https://img.shields.io/npm/v/@frctl/fractal/beta.svg?style=flat-square)](https://www.npmjs.com/package/@frctl/fractal)
 
-### Current status (v2.0)
+## Getting started with the v2 beta
 
-A prototype build of Fractal v2.0, put together as a proof-of-concept, has been up and running for a little while now and has allowed us to explore a few options for the best way to implement some of the features and improvements discussed in [Moving Fractal forwards](https://github.com/frctl/fractal/issues/197). We are now ready to move public development into this `frctl/v2` branch to clean up the prototype code and work towards getting a proper beta release out. To this end we will now start migrating existing prototype code into this branch bit by bit, cleaning it up and adding tests as we go.
+If you are curious about the v2 beta then please read the [overview](/docs/overview.md) first to get a feel for the scope and current status of the current beta release.
 
-As soon as we have a beta release candidate together we will be soliciting feedback from anyone who feels brave enough to have a play with it :-)
+To get up and running with a sample project then there is some early documentation available in the [docs](/docs/) directory of this repository:
 
-### Development and contributing
+* [v2 overview and current beta status](/docs/overview.md)
+* [Getting started](/docs/getting-started.md)
+* [Project configuration](/docs/project-config.md)
+* [Components, variants and scenarios](/docs/components-variants-scenarios.md)
+* [View templates](/docs/view-templates.md)
+* [Plugins and transforms](/docs/plugins-transforms.md)
+
+You may also want to check out the [default starter project repo](https://github.com/frctl/fractal-starter-default) to get a feel for how some of the pieces fit together. (This repo is cloned when creating a new project via the `fractal-beta new` command).
+
+> **Please be aware that until the beta period is complete major (breaking) changes may still be made.** Where possible we will of course try to avoid this but please do not yet start building your production codebase on these early v2 beta versions unless you are prepared to spend time and effort updating between potentially unstable releases.
+
+## Development and contributing
 
 We are moving development of Fractal v2.0 and all first-party add-ons into a 'monorepo' format, using [Lerna](https://github.com/lerna/lerna) to help manage linking and publishing individual packages within the monorepo.
 
-#### Running locally
+### Running locally
 
 1. Clone this repository
 2. Install dependencies - `npm install`
 3. Bootstrap the packages together using Lerna - `npm run bootstrap`
 
-#### Tests
+### Tests
 
 Code is linted via xo/eslint using the [Fractal eslint config](https://github.com/frctl/eslint-config-frctl), and tests are written using Mocha & Chai.
 
 Test can be run with `npm test`. There are also NPM package scripts available for running subsets of the tests if required.
 
-### Requirements
+## Requirements
 
 Fractal requires [Node.js](https://nodejs.org) v7.6.0 or greater.
 
-### Credits
+## Credits
 
 Fractal is developed and maintained by [Danielle Huntrods](http://github.com/dkhuntrods), [Mark Perkins](http://github.com/allmarkedup) and all our other excellent contributors.
 
