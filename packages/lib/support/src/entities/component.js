@@ -47,7 +47,7 @@ class Component extends Entity {
 
     this.defineGetter('src', src => src.clone());
     this.defineGetter('path', () => this.get('src').path);
-    this.defineGetter('relative', ()) => this.get('src').relative);
+    this.defineGetter('relative', () => this.get('src').relative);
 
     this.defineGetter('views', () => this.getViews());
     this.defineGetter('config', value => cloneDeep(value || {}));
