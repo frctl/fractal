@@ -1,4 +1,3 @@
-const {relative} = require('path');
 const {normalizeId, uniqueId, cloneDeep, titlize, slugify} = require('@frctl/utils');
 const check = require('check-types');
 const Validator = require('../validator');
@@ -11,7 +10,7 @@ const File = require('./file');
 const Variant = require('./variant');
 
 const assert = check.assert;
-const managedProps = ['label', 'files', 'variants', 'relative', 'config', 'views'];
+const managedProps = ['label', 'files', 'variants', 'relative', 'config', 'views', 'src', 'path'];
 const assetTypes = ['scripts', 'styles', 'images', 'fonts', 'media'];
 
 class Component extends Entity {
@@ -27,7 +26,15 @@ class Component extends Entity {
     props.variants = props.variants || new VariantCollection();
     props.config = props.config || {};
 
+    if (props.path) {
+      props.src = new File({
+        path: props.path,
+        base: props.base
+      });
+    }
+
     delete props.views;
+    delete props.path;
 
     super(props);
 
@@ -39,12 +46,14 @@ class Component extends Entity {
       throw new TypeError('The views property cannot be set directly');
     });
 
+    this.defineGetter('src', src => src.clone());
+    this.defineGetter('path', () => this.get('src').path);
     this.defineGetter('views', () => this.getViews());
-
     this.defineGetter('config', value => cloneDeep(value || {}));
 
     this.defineGetter('relative', (value, entity) => {
-      return relative(this.get('base'), this.get('path'));
+      const src = this.getSrc();
+      return src.relative;
     });
 
     this.defineSetter('relative', (value, entity) => {
@@ -64,6 +73,10 @@ class Component extends Entity {
       }
       return value;
     });
+  }
+
+  getSrc() {
+    return this.get('src');
   }
 
   getFiles() {
@@ -128,7 +141,7 @@ class Component extends Entity {
       .map(assetMatcher => this.getFiles().filter(assetMatcher))
       .reduce((coll, files) => coll.concat(files), new FileCollection());
   }
-  
+
   getConfig(path, fallback) {
     if (path) {
       return this.get(`config.${path}`, fallback);
@@ -176,8 +189,7 @@ class Component extends Entity {
     }
     const component = new Component({
       id: normalizeId(config.id || src.stem),
-      path: src.path,
-      base: src.base,
+      src,
       config
     });
 
