@@ -1,5 +1,5 @@
 /* eslint handle-callback-err: off, no-unused-expressions: off */
-const {join} = require('path');
+const {join, normalize} = require('path');
 const mockFs = require('mock-fs');
 const {EventEmitter2} = require('eventemitter2');
 const {expect, sinon} = require('../../../../test/helpers');
@@ -40,10 +40,10 @@ describe('Parser', function () {
       parser.addSource('/src/components');
       expect(parser.sources.length).to.equal(1);
       expect(parser.sources[0]).to.eql({
-        base: '/src/components',
-        glob: '**/*',
+        base: normalize('/src/components'),
+        glob: normalize('**/*'),
         isGlob: true,
-        src: '/src/components/**/*'
+        src: normalize('/src/components/**/*')
       });
     });
     it('converts an array of dir path strings to srcInfo objects and adds then', function () {
@@ -53,7 +53,7 @@ describe('Parser', function () {
       expect(parser.sources.length).to.equal(3);
       expect(parser.sources[2]).to.eql({
         base: join(cwd, 'lib/from/components'),
-        glob: '**/*',
+        glob: normalize('**/*'),
         isGlob: true,
         src: join(cwd, 'lib/from/components/**/*')
       });
@@ -63,10 +63,10 @@ describe('Parser', function () {
       parser.addSource('/src/components/index.js');
       expect(parser.sources.length).to.equal(1);
       expect(parser.sources[0]).to.eql({
-        base: '/src/components',
+        base: normalize('/src/components'),
         glob: '',
         isGlob: false,
-        src: '/src/components/index.js'
+        src: normalize('/src/components/index.js')
       });
     });
     it('converts an array of file path strings to srcInfo objects and adds then', function () {

@@ -5,6 +5,7 @@ const replaceExt = require('replace-ext');
 const cloneStats = require('clone-stats');
 const cloneBuffer = require('clone-buffer');
 const {assert} = require('check-types');
+const slash = require('slash');
 const {mapValues, pick, pickBy, assign} = require('lodash');
 const Vinyl = require('vinyl');
 const {promisify, normalizePath} = require('@frctl/utils');
@@ -34,6 +35,7 @@ class File extends Entity {
     }
     File.validate(props);
     props = Object.assign({}, props, {
+      path: props.path ? slash(props.path) : props.path,
       stat: props.stat || null,
       contents: props.contents || null,
       cwd: normalizePath((props.cwd !== undefined && props.cwd !== null) ? props.cwd : process.cwd())

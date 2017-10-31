@@ -3,7 +3,7 @@
 const {writeFileSync, mkdirSync} = require('fs');
 const {EventEmitter} = require('events');
 const {tmpdir} = require('os');
-const {join} = require('path');
+const {join, normalize} = require('path');
 const {capitalize, omit} = require('lodash');
 const {FileCollection, Collection, EmittingPromise} = require('@frctl/support');
 const {Config} = require('@frctl/config');
@@ -388,7 +388,7 @@ describe('App', function () {
         ]
       });
       const parser = app.getParser();
-      expect(parser.sources.map(src => src.base)[0]).to.equal('/foo');
+      expect(parser.sources.map(src => src.base)[0]).to.equal(normalize('/foo'));
       expect(parser.getTransform('tests')).to.have.property('name').that.equals('tests');
       expect(parser.getTransform('tests').plugins.items.map(plugin => plugin.name)).to.include('foo-plugin');
     });
