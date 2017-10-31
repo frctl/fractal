@@ -1,6 +1,7 @@
-const {join} = require('path');
+const {join, normalize} = require('path');
 const debug = require('debug')('frctl:parser');
 const check = require('check-types');
+const slash = require('slash');
 const globBase = require('glob-base');
 
 const assert = check.assert;
@@ -139,16 +140,18 @@ class Parser {
 
 const getSrcInfo = src => {
   assert.string(src, `src must be a string [src-invalid]`);
+  src = slash(normalizePath(src));
   let srcInfo = globBase(src);
   if (!srcInfo.isGlob) {
     if (getExt(src)) {
       srcInfo.glob = '';
     } else {
-      src = join(src, '**/*');
+      src = normalize(join(src, '**/*'));
       srcInfo = globBase(src);
     }
   }
-  srcInfo.src = src;
+  srcInfo.src = normalize(slash(src));
+  srcInfo.glob = slash(srcInfo.glob);
   return srcInfo;
 };
 

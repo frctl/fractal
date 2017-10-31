@@ -20,6 +20,7 @@
     "glob-base": "^0.3.0",
     "lodash": "^4.17.4",
     "stream-to-promise": "^2.2.0",
+    "slash": "^1.0.0",
     "vinyl-fs": "^2.4.4"
   },
   "devDependencies": {
