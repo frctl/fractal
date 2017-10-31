@@ -151,7 +151,7 @@ const getSrcInfo = src => {
     }
   }
   srcInfo.src = normalize(slash(src));
-  srcInfo.glob = slash(srcInfo.glob);
+  srcInfo.glob = slash(srcInfo.glob).replace(/^\\/,'').replace(/\\$/,'');
   return srcInfo;
 };
 
