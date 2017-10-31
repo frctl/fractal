@@ -139,7 +139,6 @@ class Parser {
 
 const getSrcInfo = src => {
   assert.string(src, `src must be a string [src-invalid]`);
-  src = normalizePath(src);
   let srcInfo = globBase(src);
   if (!srcInfo.isGlob) {
     if (getExt(src)) {
