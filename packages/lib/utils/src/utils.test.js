@@ -442,9 +442,10 @@ describe('Utils', function () {
 
   describe('.removeExt()', function () {
     it('Removes the file extension from a path', function () {
-      expect(utils.removeExt('foo/bar/file.js')).to.equal('foo/bar/file');
-      expect(utils.removeExt('foo/bar/file')).to.equal('foo/bar/file');
-      expect(utils.removeExt('foo/bar/file.html.twig')).to.equal('foo/bar/file.html');
+      expect(utils.removeExt('foo/bar/file.js').endsWith('.js')).to.equal(false);
+      expect(utils.removeExt('foo/bar/file').endsWith('.js')).to.equal(false);
+      expect(utils.removeExt('foo/bar/file.html.twig').endsWith('.twig')).to.equal(false);
+      expect(utils.removeExt('foo/bar/file.html.twig').endsWith('.html')).to.equal(true);
     });
   });
 
@@ -463,13 +464,13 @@ describe('Utils', function () {
       }).to.throw(TypeError, '[paths-invalid]');
     });
     it('Normalises supplied absolute paths', function () {
-      expect(utils.normalizePath('/path/level')).to.equal('/path/level');
-      expect(utils.normalizePath('/path/level/')).to.equal('/path/level');
-      expect(utils.normalizePath('/path/level/', 'ignored/as/absolute')).to.equal('/path/level');
+      expect(utils.normalizePath('/path/level')).to.equal(path.normalize('/path/level'));
+      expect(utils.normalizePath('/path/level/')).to.equal(path.normalize('/path/level'));
+      expect(utils.normalizePath('/path/level/', 'ignored/as/absolute')).to.equal(path.normalize('/path/level'));
     });
     it('Normalises supplied relative paths', function () {
       expect(utils.normalizePath('../path/level/')).to.equal(path.normalize(path.join(process.cwd(), '../path/level')));
-      expect(utils.normalizePath('../path/level/', 'cwd/of/project')).to.equal('cwd/of/path/level');
+      expect(utils.normalizePath('../path/level/', 'cwd/of/project')).to.equal(path.normalize('cwd/of/path/level'));
     });
   });
 
