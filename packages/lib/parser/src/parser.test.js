@@ -40,10 +40,10 @@ describe('Parser', function () {
       parser.addSource('/src/components');
       expect(parser.sources.length).to.equal(1);
       expect(parser.sources[0]).to.eql({
-        base: '/src/components',
+        base: normalize('/src/components'),
         glob: '**/*',
         isGlob: true,
-        src: '/src/components/**/*'
+        src: normalize('/src/components/**/*')
       });
     });
     it('accepts windows-style paths', function () {
@@ -75,10 +75,10 @@ describe('Parser', function () {
       parser.addSource('/src/components/index.js');
       expect(parser.sources.length).to.equal(1);
       expect(parser.sources[0]).to.eql({
-        base: '/src/components',
+        base: normalize('/src/components'),
         glob: '',
         isGlob: false,
-        src: '/src/components/index.js'
+        src: normalize('/src/components/index.js')
       });
     });
     it('converts an array of file path strings to srcInfo objects and adds then', function () {
