@@ -24,7 +24,7 @@ class FileCollection extends EntityCollection {
 
   find(...args) {
     if (args.length === 1 && typeof args[0] === 'string') {
-      return super.find(file => slash(file.relative), slash(args[0]));
+      return super.find(file => slash(file.relative) === slash(args[0]));
     }
     return super.find(...args);
   }

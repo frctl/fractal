@@ -1,9 +1,9 @@
 /* eslint no-unused-expressions: "off" */
 
 const MemoryFS = require('memory-fs');
+const slash = require('slash');
 const {expect, sinon} = require('../../../../../test/helpers');
 const File = require('../entities/file');
-const slash = require('slash');
 const FileCollection = require('./file-collection');
 
 const fsReadMethods = [
