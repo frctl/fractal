@@ -49,6 +49,7 @@ The Inspector UI is currently at a very early stage. Many improvements and updat
 * [ ] **preview rendering**: The current implementation is just a basic proof-of-concept. Per-scenario preview windows with resizing tools and more are planned.
 * [ ] **plugins**: No plugin model is yet available for the Inspector. _Suggestions for possible implementation strategies for this are welcome._
 * [ ] **responsive**: The UI is currently desktop-only. The intention is for this to migrate to a fully responsive UI that can be used for mobile testing.
+* [ ] **browser support**: The UI has currently only been tested on Chrome and needs validating across a wider range of browsers.
 
 #### Pages
 
