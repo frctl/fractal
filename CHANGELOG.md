@@ -1,5 +1,11 @@
 # History
 
+## 2.0.0-beta.3
+
+[FIX] Pages `include` and `extend` tags on Windows
+[FIX] Other misc Windows issues
+[FIX] Inspector filter now works on component `label` instead of `id`
+
 ## 2.0.0-beta.2
 
 [OTHER] Add some basic progress info to `fractal new` command
