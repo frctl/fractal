@@ -35,8 +35,6 @@ You may also want to check out the [default starter project repo](https://github
 
 Fractal v2 requires **Node v7.6+** to run.
 
-Windows is supported via the [Windows Subsystem for Linux](https://msdn.microsoft.com/en-gb/commandline/wsl/about) and the Bash shell.
-
 ## Development and contributing
 
 We are moving development of Fractal v2.0 and all first-party add-ons into a 'monorepo' format, using [Lerna](https://github.com/lerna/lerna) to help manage linking and publishing individual packages within the monorepo.
