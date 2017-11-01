@@ -3,6 +3,7 @@
 const MemoryFS = require('memory-fs');
 const {expect, sinon} = require('../../../../../test/helpers');
 const File = require('../entities/file');
+const slash = require('slash');
 const FileCollection = require('./file-collection');
 
 const fsReadMethods = [
@@ -179,7 +180,7 @@ describe('FileCollection', function () {
     it('adds all files to the MemoryFS instance', function () {
       const collection = makeCollection();
       const memFs = collection.toMemoryFS();
-      expect(memFs.readFileSync(items[0].path).toString()).to.equal(items[0].contents.toString());
+      expect(memFs.readFileSync(slash(items[0].path)).toString()).to.equal(items[0].contents.toString());
     });
     it('throws an error if the MemoryFS instance cannot be created', function () {
       const dodgyFile = items[0].clone();

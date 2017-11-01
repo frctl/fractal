@@ -24,7 +24,7 @@ class FileCollection extends EntityCollection {
 
   find(...args) {
     if (args.length === 1 && typeof args[0] === 'string') {
-      return super.find('relative', args[0]);
+      return super.find(file => slash(file.relative), slash(args[0]));
     }
     return super.find(...args);
   }
@@ -73,8 +73,8 @@ class FileCollection extends EntityCollection {
     const errors = [];
     this.clone().filter(file => !file.isDirectory()).sortBy(file => file.path.length).forEach(file => {
       try {
-        memFs.mkdirpSync(file.dirname);
-        memFs.writeFileSync(file.path, file.contents);
+        memFs.mkdirpSync(slash(file.dirname));
+        memFs.writeFileSync(slash(file.path), file.contents);
       } catch (err) {
         errors.push(err);
       }
