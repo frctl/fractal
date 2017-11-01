@@ -1,15 +1,15 @@
 {
   "name": "@frctl/loader",
   "description": "Alias-able module loader for Fractal",
-  "version": "2.0.0-beta.1",
+  "version": "2.0.0-beta.3",
   "homepage": "http://fractal.build",
   "repository": "https://github.com/frctl/fractal/tree/v2/packages/lib/loader",
   "bugs": "https://github.com/frctl/fractal/issues",
   "author": "Mark Perkins <mark@allmarkedup.com> (http://allmarkedup.com)",
   "license": "MIT",
   "dependencies": {
-    "@frctl/support": "^2.0.0-beta.1",
-    "@frctl/utils": "^2.0.0-beta.1",
+    "@frctl/support": "^2.0.0-beta.3",
+    "@frctl/utils": "^2.0.0-beta.3",
     "debug": "^3.0.0",
     "enhanced-resolve": "^3.4.1",
     "js-yaml": "^3.8.4",

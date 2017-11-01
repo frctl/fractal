@@ -1,6 +1,6 @@
 {
   "name": "@frctl/fractal",
-  "version": "2.0.0-beta.1",
+  "version": "2.0.0-beta.3",
   "description": "The core Fractal parser/renderer",
   "homepage": "http://fractal.build",
   "repository": "https://github.com/frctl/fractal/tree/v2/packages/toolkit/fractal",
@@ -8,14 +8,14 @@
   "author": "Mark Perkins <mark@allmarkedup.com> (http://allmarkedup.com)",
   "license": "MIT",
   "dependencies": {
-    "@frctl/app": "^2.0.0-beta.1",
-    "@frctl/config": "^2.0.0-beta.1",
-    "@frctl/fractal-engine-html": "^2.0.0-beta.1",
-    "@frctl/fractal-plugin-preprocess-templates": "^2.0.0-beta.1",
-    "@frctl/fractal-transform-components": "^2.0.0-beta.1",
-    "@frctl/renderer": "^2.0.0-beta.1",
-    "@frctl/support": "^2.0.0-beta.1",
-    "@frctl/utils": "^2.0.0-beta.1",
+    "@frctl/app": "^2.0.0-beta.3",
+    "@frctl/config": "^2.0.0-beta.3",
+    "@frctl/fractal-engine-html": "^2.0.0-beta.3",
+    "@frctl/fractal-plugin-preprocess-templates": "^2.0.0-beta.3",
+    "@frctl/fractal-transform-components": "^2.0.0-beta.3",
+    "@frctl/renderer": "^2.0.0-beta.3",
+    "@frctl/support": "^2.0.0-beta.3",
+    "@frctl/utils": "^2.0.0-beta.3",
     "debug": "^3.0.0",
     "lodash": "^4.17.4"
   }

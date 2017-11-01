@@ -1,6 +1,6 @@
 {
   "name": "@frctl/server",
-  "version": "2.0.0-beta.1",
+  "version": "2.0.0-beta.3",
   "description": "Component API server for Fractal",
   "homepage": "http://fractal.build",
   "repository": "https://github.com/frctl/fractal/tree/v2/packages/server",
@@ -8,9 +8,9 @@
   "author": "Mark Perkins <mark@allmarkedup.com> (http://allmarkedup.com)",
   "license": "MIT",
   "dependencies": {
-    "@frctl/fractal": "^2.0.0-beta.1",
-    "@frctl/support": "^2.0.0-beta.1",
-    "@frctl/utils": "^2.0.0-beta.1",
+    "@frctl/fractal": "^2.0.0-beta.3",
+    "@frctl/support": "^2.0.0-beta.3",
+    "@frctl/utils": "^2.0.0-beta.3",
     "debug": "^3.0.0",
     "get-port": "^3.2.0",
     "ip": "^1.1.5",
@@ -23,6 +23,6 @@
     "lodash": "^4.17.4"
   },
   "devDependencies": {
-    "@frctl/fractal-engine-html": "^2.0.0-beta.1"
+    "@frctl/fractal-engine-html": "^2.0.0-beta.3"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@frctl/utils",
-  "version": "2.0.0-beta.1",
+  "version": "2.0.0-beta.3",
   "description": "Library of utility functions for Fractal package development",
   "homepage": "http://fractal.build",
   "repository": "https://github.com/frctl/fractal/tree/v2/packages/lib/utils",

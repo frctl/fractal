@@ -1,7 +1,7 @@
 {
   "name": "@frctl/parser",
   "description": "An extensible filesystem parser.",
-  "version": "2.0.0-beta.1",
+  "version": "2.0.0-beta.3",
   "homepage": "http://fractal.build",
   "repository": "https://github.com/frctl/fractal/tree/v2/packages/lib/parser",
   "bugs": "https://github.com/frctl/fractal/issues",
@@ -12,15 +12,15 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@frctl/support": "^2.0.0-beta.1",
-    "@frctl/utils": "^2.0.0-beta.1",
+    "@frctl/support": "^2.0.0-beta.3",
+    "@frctl/utils": "^2.0.0-beta.3",
     "check-more-types": "^2.24.0",
     "check-types": "^7.2.0",
     "debug": "^3.0.0",
     "glob-base": "^0.3.0",
     "lodash": "^4.17.4",
-    "stream-to-promise": "^2.2.0",
     "slash": "^1.0.0",
+    "stream-to-promise": "^2.2.0",
     "vinyl-fs": "^2.4.4"
   },
   "devDependencies": {
