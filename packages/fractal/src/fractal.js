@@ -25,52 +25,58 @@ class Fractal extends App {
   }
 
   render(target, context = {}, opts = {}) {
+    opts = Object.assign({}, opts);
     const renderer = this.getRenderer();
-    if (Scenario.isScenario(context)) {
-      context = context.context;
-    }
     return new EmittingPromise(async (resolve, reject, emitter) => {
       try {
         let component;
         let variant;
+        let template;
+
+        if (Scenario.isScenario(context)) {
+          context = context.context;
+        }
 
         const collections = await this.parse();
 
-        if (!Component.isComponent(target) && !Variant.isVariant(target)) {
-          throw new Error(`Fractal.render - only components or variants can be rendered [target-invalid]`);
+        if (!Component.isComponent(target) && !Variant.isVariant(target) && typeof target !== 'string') {
+          throw new Error(`Fractal.render - only components, variants or strings can be rendered [target-invalid]`);
         }
 
-        if (Component.isComponent(target)) {
-          variant = opts.variant ? target.getVariant(opts.variant) : target.getDefaultVariant();
-          if (!variant) {
-            throw new Error(`Could not find variant '${opts.variant}' for component '${target.id}' [variant-not-found]`);
-          }
-          component = target;
+        if (typeof target === 'string') {
+          template = target;
         } else {
-          variant = target;
-        }
-
-        component = component || collections.components.getComponentForVariant(variant);
-        if (!component) {
-          throw new Error(`Could not find component for variant [component-not-found]`);
-        }
-
-        let template;
-        if (opts.engine) {
-          const engine = renderer.getEngine(opts.engine);
-          for (const tpl of variant.getTemplates()) {
-            if (engine.match(tpl.filename)) {
-              template = tpl;
-              break;
+          if (Component.isComponent(target)) {
+            variant = opts.variant ? target.getVariant(opts.variant) : target.getDefaultVariant();
+            if (!variant) {
+              throw new Error(`Could not find variant '${opts.variant}' for component '${target.id}' [variant-not-found]`);
             }
+            component = target;
+          } else {
+            variant = target;
           }
-          if (!template) {
-            throw new Error(`Could not find '${opts.engine}' template for variant '${variant.id}' of component '${component.id}' [template-not-found]`);
+
+          component = component || collections.components.getComponentForVariant(variant);
+          if (!component) {
+            throw new Error(`Could not find component for variant [component-not-found]`);
           }
-        } else {
-          template = variant.getTemplate(opts.ext);
-          if (!template) {
-            throw new Error(`Could not find template for variant '${variant.id}' of component '${component.id}'${opts.ext ? `with extension '${opts.ext}'` : ''} [template-not-found]`);
+
+          if (opts.engine) {
+            const engine = renderer.getEngine(opts.engine);
+            for (const tpl of variant.getTemplates()) {
+              if (engine.match(tpl.filename)) {
+                template = tpl;
+                break;
+              }
+            }
+            if (!template) {
+              throw new Error(`Could not find '${opts.engine}' template for variant '${variant.id}' of component '${component.id}' [template-not-found]`);
+            }
+          } else {
+            template = variant.getTemplate(opts.ext);
+            if (!template) {
+              throw new Error(`Could not find template for variant '${variant.id}' of component '${component.id}'${opts.ext ? `with extension '${opts.ext}'` : ''} [template-not-found]`);
+            }
           }
         }
 

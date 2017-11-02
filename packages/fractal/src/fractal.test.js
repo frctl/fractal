@@ -103,6 +103,11 @@ describe('Fractal', function () {
       const fractal = makeFractal();
       return expect(fractal.render({})).to.be.rejectedWith(Error, '[target-invalid]');
     });
+    it('Can render strings', async function () {
+      const fractal = makeFractal();
+      sinon.stub(fractal, 'parse').callsFake(() => Promise.resolve(parserOutput));
+      expect(await fractal.render('component!', {})).to.equal('component!');
+    });
     it('Can render components', async function () {
       const fractal = makeFractal();
       sinon.stub(fractal, 'parse').callsFake(() => Promise.resolve(parserOutput));
