@@ -1,6 +1,6 @@
 module.exports = {
 
-  getPartials(components = [], ext){
+  getPartials(components = [], ext) {
     if (!ext) {
       throw new Error('You must specify an extension for the partials [ext-missing]');
     }

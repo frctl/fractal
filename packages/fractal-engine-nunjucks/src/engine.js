@@ -1,5 +1,4 @@
 const nunjucks = require('nunjucks');
-const {ComponentCollection} = require('@frctl/support');
 const {getPartials} = require('@frctl/support/helpers');
 const WithExtension = require('@allmarkedup/nunjucks-with');
 

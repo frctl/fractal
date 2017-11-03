@@ -14,9 +14,9 @@ async function makeContext(params = {component: 'button'}) {
     params,
     components,
     files,
-    throw: function(code){
+    throw: function (code) {
       this.status = code;
-      throw new Error('test')
+      throw new Error('test');
     },
     body: {}
   };
@@ -43,7 +43,7 @@ describe('Server route - components/detail', function () {
       const ctx = await makeContext({component: 'foo'});
       try {
         await route.handler(ctx, () => {});
-      } catch(err) {}
+      } catch (err) {}
       expect(ctx.status).to.equal(404);
     });
     it('sets the body to a JSON-ified component if found', async function () {
