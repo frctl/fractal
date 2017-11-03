@@ -3,11 +3,16 @@ const {Fractal} = require('@frctl/fractal');
 const {expect} = require('../../../../../test/helpers');
 const route = require('./list')();
 
-function makeContext() {
+async function makeContext(params = {component: 'button'}) {
+  const fractal = new Fractal({
+    src: join(__dirname, '/../../../test/fixtures/components')
+  });
+  const {components, files} = await fractal.parse();
   return {
-    fractal: new Fractal({
-      src: join(__dirname, '/../../../test/fixtures/components')
-    }),
+    fractal,
+    params,
+    components,
+    files,
     body: {}
   };
 }
@@ -27,10 +32,10 @@ describe('Server route - components/list', function () {
 
   describe('.handler()', function () {
     it('is asynchronous', async function () {
-      expect(route.handler(makeContext(), () => {})).to.be.instanceOf(Promise);
+      expect(route.handler(await makeContext(), () => {})).to.be.instanceOf(Promise);
     });
     it('returns an array of simple component objects', async function () {
-      const ctx = makeContext();
+      const ctx = await makeContext();
       await route.handler(ctx, () => {});
       expect(ctx.body).to.be.an('array');
       expect(ctx.body[0]).to.have.property('id');

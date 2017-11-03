@@ -11,9 +11,6 @@ module.exports = function () {
 
     async handler(ctx, next) {
       // TODO: better error reporting
-      const app = ctx.fractal;
-      const components = await app.getComponents();
-
       const payload = ctx.request.body || [];
 
       if (!Array.isArray(payload)) {
@@ -23,22 +20,20 @@ module.exports = function () {
 
       const pending = [];
       for (const request of payload) {
-        const component = components.find(request.component);
+        const component = ctx.components.find(request.component);
         if (!component) {
-          ctx.status = 400;
-          return;
+          ctx.throw(400, 'Component not found');
         }
 
         const variant = request.variant ? component.getVariant(request.variant) : component.getDefaultVariant();
         if (!variant) {
-          ctx.status = 400;
-          return;
+          ctx.throw(400, 'Variant not found');
         }
 
         const ext = request.ext;
         const engine = request.engine;
         const context = request.context || {};
-        const result = app.render(variant, context, {ext, engine}).then(output => {
+        const result = ctx.fractal.render(variant, context, {ext, engine}).then(output => {
           return {
             requestData: request,
             // TODO: Figure out why toJSON methods are so slow and re-instate the props below
