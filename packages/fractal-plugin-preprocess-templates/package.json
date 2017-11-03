@@ -1,7 +1,7 @@
 {
   "name": "@frctl/fractal-plugin-preprocess-templates",
   "description": "Dynamic attributes, sub-templates and logic pre-processing directives for variant templates",
-  "version": "2.0.0-beta.3",
+  "version": "2.0.0-beta.4",
   "homepage": "http://fractal.build",
   "repository": "https://github.com/frctl/fractal/tree/v2/packages/fractal-plugin-preprocess-templates",
   "bugs": "https://github.com/frctl/fractal/issues",
@@ -22,6 +22,6 @@
     "vm2": "^3.5.2"
   },
   "devDependencies": {
-    "@frctl/support": "^2.0.0-beta.3"
+    "@frctl/support": "^2.0.0-beta.4"
   }
 }

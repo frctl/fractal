@@ -1,7 +1,7 @@
 {
   "name": "@frctl/fractal-engine-nunjucks",
   "description": "Nunjucks template engine renderer for Fractal",
-  "version": "2.0.0-beta.3",
+  "version": "2.0.0-beta.4",
   "homepage": "http://fractal.build",
   "repository": "https://github.com/frctl/fractal/tree/v2/packages/fractal-engine-nunjucks",
   "bugs": "https://github.com/frctl/fractal/issues",
@@ -13,7 +13,7 @@
   "license": "MIT",
   "dependencies": {
     "@allmarkedup/nunjucks-with": "^0.1.1",
-    "@frctl/support": "^2.0.0-beta.3",
+    "@frctl/support": "^2.0.0-beta.4",
     "nunjucks": "^3.0.1"
   }
 }

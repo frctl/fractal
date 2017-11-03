@@ -1,6 +1,6 @@
 {
   "name": "@frctl/support",
-  "version": "2.0.0-beta.3",
+  "version": "2.0.0-beta.4",
   "description": "Fractal support classes",
   "homepage": "http://fractal.build",
   "repository": "https://github.com/frctl/fractal/tree/v2/packages/lib/support",
