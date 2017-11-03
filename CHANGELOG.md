@@ -5,6 +5,7 @@
 [NEW] Add basic Handlebars rendering engine
 [NEW] Support for rendering strings
 [NEW] Handlebars and Nunjucks adapters now support render-time partial/include lookups
+[NEW] Nunjucks engine now supports supplying filters, extensions and globals
 
 ## 2.0.0-beta.3
 
