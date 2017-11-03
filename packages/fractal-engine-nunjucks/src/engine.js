@@ -1,19 +1,17 @@
 const nunjucks = require('nunjucks');
 const {ComponentCollection} = require('@frctl/support');
+const {getPartials} = require('@frctl/support/helpers');
 const WithExtension = require('@allmarkedup/nunjucks-with');
 
 module.exports = function (config = {}) {
   const exts = [].concat(config.ext || ['.njk', '.nunjucks', '.nunj']);
-  let components = new ComponentCollection();
+  let partials = {};
 
   const TemplateLoader = nunjucks.Loader.extend({
     getSource: function (lookup) {
-      const [componentName, variantName] = lookup.split(':');
-      const variant = components.findOrFail(componentName).getVariantOrDefault(variantName, true);
-      const template = variant.getTemplates().find(tpl => exts.includes(tpl.extname));
-      if (template) {
+      if (partials[lookup]) {
         return {
-          src: template.toString(),
+          src: partials[lookup].toString(),
           path: lookup,
           noCache: true
         };
@@ -28,10 +26,7 @@ module.exports = function (config = {}) {
     name: 'nunjucks',
     match: exts,
     render(str, context = {}, opts = {}) {
-      if (opts.collections && opts.collections.components) {
-        components = opts.collections.components;
-      }
-
+      partials = getPartials(opts.collections && opts.collections.components, exts);
       return new Promise((resolve, reject) => {
         env.renderString(str, context, (err, result) => {
           if (err) {

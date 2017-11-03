@@ -1,35 +1,23 @@
+const {getPartials} = require('@frctl/support/helpers');
 const Handlebars = require('handlebars');
 
 module.exports = function (config = {}) {
   const exts = [].concat(config.ext || ['.hbs', '.handlebars']);
   const env = config.handlebars || Handlebars.create();
-  let partialsList = [];
+  let componentPartials = [];
 
   return {
     name: 'handlebars',
     match: exts,
     render(str, context = {}, opts = {}) {
-      const components = opts.collections && opts.collections.components;
-      partialsList.forEach(name => env.unregisterPartial(name));
-      partialsList = [];
+      componentPartials.forEach(name => env.unregisterPartial(name));
+      componentPartials = [];
 
-      for (const component of components) {
-        let first = true;
-        for (const variant of component.getVariants()) {
-          const tpl = variant.getTemplates().find(tpl => exts.includes(tpl.extname));
-          if (tpl) {
-            const str = tpl.toString();
-            const name = `${component.id}:${variant.id}`;
-            env.registerPartial(name, str);
-            partialsList.push(name);
-            if (first) {
-              env.registerPartial(component.id, str);
-              partialsList.push(component.id);
-              first = false;
-            }
-          }
-        }
-      }
+      const partials = getPartials(opts.collections && opts.collections.components, exts);
+      Object.keys(partials).forEach(name => {
+        env.registerPartial(name, partials[name]);
+        componentPartials.push(name);
+      });
 
       return new Promise((resolve, reject) => {
         const tpl = env.compile(str);

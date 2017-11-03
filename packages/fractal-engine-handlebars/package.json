@@ -8,9 +8,7 @@
   "author": "Mark Perkins <mark@allmarkedup.com> (http://allmarkedup.com)",
   "license": "MIT",
   "dependencies": {
-    "handlebars": "^4.0.11"
-  },
-  "devDependencies": {
+    "handlebars": "^4.0.11",
     "@frctl/support": "^2.0.0-beta.3"
   }
 }
