@@ -5,7 +5,6 @@ const removePosition = require('unist-util-remove-position');
 
 module.exports = function (tree, context, env) {
   const parent = env.component;
-  const variant = env.variant;
 
   visit(tree, 'element', function (node, index, parentNode) {
     if (is(node, 'include')) {
@@ -13,7 +12,7 @@ module.exports = function (tree, context, env) {
         throw new Error(`You must provide a 'component' attribute for the 'include' tag ${parent.id}`);
       }
       const [subComponentId, variantId] = node.properties.component.split(':');
-      const subComponent = env.components.find(subComponentId);
+      const subComponent = env.components.findOrFail(subComponentId);
       if (subComponent.id === parent.id) {
         throw new Error(`Recursive component include detected! Ignoring component.`);
       }
