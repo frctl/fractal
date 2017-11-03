@@ -54,6 +54,7 @@ class App {
         this.cache.set('collections', collections);
         resolve(collections);
       } catch (err) {
+        this.dirty = true;
         reject(err);
       }
     }, opts.emitter);
@@ -63,6 +64,9 @@ class App {
     return result.then(collections => {
       _parsing.set(this, null);
       return collections;
+    }).catch(err => {
+      _parsing.set(this, null);
+      throw err;
     });
   }
 
