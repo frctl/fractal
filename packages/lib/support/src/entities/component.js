@@ -1,4 +1,5 @@
 const {normalizeId, uniqueId, cloneDeep, titlize, slugify} = require('@frctl/utils');
+const {uniq} = require('lodash');
 const check = require('check-types');
 const Validator = require('../validator');
 const schema = require('../../schema');
@@ -39,6 +40,9 @@ class Component extends Entity {
     delete props.path;
 
     super(props);
+
+    this.requires = this.requires || [];
+    this.requires = uniq(this.requires.concat(this.getConfig('requires', [])));
 
     this.defineGetter('label', value => {
       return value || this.getConfig('label') || titlize(this.get('id'));
@@ -97,7 +101,13 @@ class Component extends Entity {
     return this.getVariants().find(id);
   }
 
-  getVariantOrDefault(id) {
+  getVariantOrDefault(id, throwIfNotFound = false) {
+    if (throwIfNotFound) {
+      if (id) {
+        return this.getVariants().findOrFail(id);
+      }
+      return this.getDefaultVariant();
+    }
     return this.getVariants().find(id) || this.getDefaultVariant();
   }
 

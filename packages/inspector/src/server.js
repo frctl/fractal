@@ -1,6 +1,6 @@
 const {join, extname} = require('path');
 const {readFileSync} = require('fs');
-const {flatten, uniq} = require('lodash');
+const {uniq} = require('lodash');
 const {ApiServer} = require('@frctl/server');
 const {FileCollection} = require('@frctl/support');
 const Socket = require('koa-socket');
@@ -37,10 +37,7 @@ module.exports = async function (app, opts = {}) {
     function getAssets(component) {
       let assets = component.get('inspector.assets', component.getFiles().filter(f => ['.js', '.css'].includes(f.extname)));
       assetsList = assetsList.concat(assets);
-      const children = component.getVariants().mapToArray(v => {
-        return v.get('includes', []).map(i => i.component);
-      });
-      const childIds = uniq(flatten(children));
+      const childIds = uniq(component.get('requires'));
       childIds.forEach(id => {
         const component = components.find(id);
         if (component) {

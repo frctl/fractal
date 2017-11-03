@@ -30,24 +30,7 @@ module.exports = function (tree, context, env) {
         throw new Error(`Could not find '${templateExt}' template for component ${subComponent.id}`);
       }
 
-      // Register the include on the parent variant
-
-      variant.includes = variant.get('includes', []);
-
-      const include = {
-        component: subComponent.id,
-        variant: subComponentVariant.id,
-        template: templateExt,
-        count: 1,
-        ref: `${subComponent.id}.${subComponentVariant.id}${templateExt}`
-      };
-
-      const included = variant.includes.find(i => i.ref === include.ref);
-      if (included) {
-        included.count++;
-      } else {
-        variant.includes.push(include);
-      }
+      parent.requires.push(subComponent.id);
 
       const componentNodes = removePosition(template.clone().contents).children;
       parentNode.children.splice(index, 1, ...componentNodes);
