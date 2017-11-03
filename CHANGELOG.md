@@ -1,5 +1,11 @@
 # History
 
+## 2.0.0-beta.4
+
+[NEW] Add basic Handlebars rendering engine
+[NEW] Support for rendering strings
+[NEW] Handlebars and Nunjucks adapters now support render-time partial/include lookups
+
 ## 2.0.0-beta.3
 
 [FIX] Pages `include` and `extend` tags on Windows
