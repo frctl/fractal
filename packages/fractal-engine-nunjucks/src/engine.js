@@ -1,14 +1,37 @@
 const nunjucks = require('nunjucks');
+const {ComponentCollection} = require('@frctl/support');
 const WithExtension = require('@allmarkedup/nunjucks-with');
 
-module.exports = function (opts = {}) {
-  const env = new nunjucks.Environment(opts.loaders || []);
+module.exports = function (config = {}) {
+  const exts = [].concat(config.ext || ['.njk', '.nunjucks', '.nunj']);
+  let components = new ComponentCollection();
+
+  const TemplateLoader = nunjucks.Loader.extend({
+    getSource: function (lookup) {
+      const [componentName, variantName] = lookup.split(':');
+      const variant = components.findOrFail(componentName).getVariantOrDefault(variantName, true);
+      const template = variant.getTemplates().find(tpl => exts.includes(tpl.extname));
+      if (template) {
+        return {
+          src: template.toString(),
+          path: lookup,
+          noCache: true
+        };
+      }
+    }
+  });
+
+  const env = config.env || new nunjucks.Environment(new TemplateLoader());
   env.addExtension('WithExtension', new WithExtension());
 
   return {
     name: 'nunjucks',
-    match: opts.match || ['.njk', '.nunjucks', '.nunj'],
+    match: exts,
     render(str, context = {}, opts = {}) {
+      if (opts.collections && opts.collections.components) {
+        components = opts.collections.components;
+      }
+
       return new Promise((resolve, reject) => {
         env.renderString(str, context, (err, result) => {
           if (err) {
@@ -17,7 +40,6 @@ module.exports = function (opts = {}) {
           resolve(result);
         });
       });
-    },
-    engine: env
+    }
   };
 };

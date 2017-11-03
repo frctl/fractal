@@ -10,18 +10,19 @@ const Entity = require('./entity');
 const parser = new Parser5({locationInfo: true});
 const managedProps = ['extname'];
 
-const cache = {};
+const parseCache = {};
+const stringifyCache = {};
 
 class Template extends Entity {
 
   constructor(props = {}) {
     assert.object(props, 'Template.constructor - props must be an object [properties-invalid]');
     if (typeof props.contents === 'string') {
-      if (cache[props.contents]) {
-        props.contents = cache[props.contents];
+      if (parseCache[props.contents]) {
+        props.contents = parseCache[props.contents];
       } else {
         const dom = fromParse5(parser.parseFragment(props.contents), {file: props.contents});
-        cache[props.contents] = dom;
+        parseCache[props.contents] = dom;
         props.contents = dom;
       }
     }
@@ -30,7 +31,13 @@ class Template extends Entity {
   }
 
   toString() {
-    return toHTML(this.get('contents'));
+    const key = JSON.stringify(this.get('contents'));
+    if (stringifyCache[key]) {
+      return stringifyCache[key];
+    }
+    const str = toHTML(this.get('contents'));
+    stringifyCache[key] = str;
+    return str;
   }
 
   toJSON() {
