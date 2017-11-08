@@ -33,7 +33,7 @@ You may also want to check out the [default starter project repo](https://github
 
 ## Requirements
 
-Fractal v2 requires **Node v7.6+** to run.
+Fractal v2 requires **Node v8.0+** (LTS) to run.
 
 ## Development and contributing
 
@@ -50,10 +50,6 @@ We are moving development of Fractal v2.0 and all first-party add-ons into a 'mo
 Code is linted via xo/eslint using the [Fractal eslint config](https://github.com/frctl/eslint-config-frctl), and tests are written using Mocha & Chai.
 
 Test can be run with `npm test`. There are also NPM package scripts available for running subsets of the tests if required.
-
-## Requirements
-
-Fractal requires [Node.js](https://nodejs.org) v7.6.0 or greater.
 
 ## Credits
 
