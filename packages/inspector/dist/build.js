@@ -12985,15 +12985,26 @@ let previewIds = [];
 
   methods: {
 
+    setError(err) {
+      if (typeof err === 'string') {
+        err = new Error(err);
+      }
+      this.error = err;
+      this.chunks = [];
+      this.assets = [];
+    },
+
     async renderPreview() {
+      if (this.engines.length === 0) {
+        this.setError(`No view engines registered.`);
+        return;
+      }
       const hasMatchingView = this.component.views.find(view => {
         return view.inspector.engine === this.selectedEngine;
       });
       if (!hasMatchingView) {
         const engine = this.engines.find(engine => engine.name === this.selectedEngine);
-        this.error = new Error(`No ${engine.label} view available.`);
-        this.chunks = [];
-        this.assets = [];
+        this.setError(`No ${engine.label} view available.`);
         return;
       }
       try {
@@ -13015,9 +13026,7 @@ let previewIds = [];
         this.chunks = chunks.data.map(result => result.output);
         this.assets = assets.data;
       } catch (err) {
-        this.error = err;
-        this.chunks = [];
-        this.assets = [];
+        this.setError(err);
       }
     }
   },
