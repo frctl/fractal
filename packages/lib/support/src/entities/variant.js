@@ -1,4 +1,4 @@
-const {titlize, slugify, cloneDeep} = require('@frctl/utils');
+const {titlize, slugify, cloneDeep, uniqueId} = require('@frctl/utils');
 const {assert} = require('check-types');
 const schema = require('../../schema');
 const EntityCollection = require('../collections/entity-collection');
@@ -81,6 +81,9 @@ class Variant extends Entity {
   }
 
   addScenario(props) {
+    props = cloneDeep(props);
+    const scenarioIds = this.getScenarios().mapToArray(s => s.id);
+    props.id = uniqueId(slugify(props.id || props.label || 'scenario'), scenarioIds);
     if (!Scenario.isScenario(props)) {
       props = Scenario.from(props);
     }
