@@ -15,7 +15,7 @@
           <input type="checkbox" class="selectorSet__input" @change.stop="handleVariantToggle(variant, $event)" :value="variant.id" v-model="$store.state.selected.variants">
           <span class="selectorSet__label">{{ variant.label }}</span>
         </label>
-        <div class="selectorSet__children">
+        <div class="selectorSet__children" :style="{display: getPreviewsForVariant(variant).length > 1 ? 'block' : 'none' }">
           <label v-for="(preview, index) in getPreviewsForVariant(variant)" :key="preview.id" class="selectorSet__child" :style="{display: preview.default ? 'none' : 'block' }">
             <input type="checkbox" class="selectorSet__input" :value="preview.id" v-model="$store.state.selected.previews" @change.stop="handlePreviewToggle(variant, preview)">
             <span class="selectorSet__label">{{ preview.label }}</span>

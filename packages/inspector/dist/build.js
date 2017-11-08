@@ -14877,7 +14877,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }), _vm._v(" "), _c('span', {
       staticClass: "selectorSet__label"
     }, [_vm._v(_vm._s(variant.label))])]), _vm._v(" "), _c('div', {
-      staticClass: "selectorSet__children"
+      staticClass: "selectorSet__children",
+      style: ({
+        display: _vm.getPreviewsForVariant(variant).length > 1 ? 'block' : 'none'
+      })
     }, _vm._l((_vm.getPreviewsForVariant(variant)), function(preview, index) {
       return _c('label', {
         key: preview.id,
