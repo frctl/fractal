@@ -19,6 +19,10 @@ module.exports = function (config = {}) {
     }
   });
 
+  if (config.views) {
+    loaders.push(new nunjucks.FileSystemLoader(config.views));
+  }
+
   const env = new nunjucks.Environment([new TemplateLoader(), ...loaders]);
 
   env.addExtension('WithExtension', new WithExtension());
