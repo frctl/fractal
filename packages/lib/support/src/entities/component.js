@@ -101,6 +101,10 @@ class Component extends Entity {
     return this.getVariants().find(id);
   }
 
+  isDefaultVariant(variant) {
+    return variant === this.getDefaultVariant();
+  }
+
   getVariantOrDefault(id, throwIfNotFound = false) {
     if (throwIfNotFound) {
       if (id) {
