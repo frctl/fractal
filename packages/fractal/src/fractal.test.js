@@ -1,5 +1,6 @@
 /* eslint import/no-dynamic-require: off,  no-unused-expressions: off */
 
+const {readFileSync} = require('fs');
 const {join} = require('path');
 const {capitalize} = require('lodash');
 const {File, ComponentCollection, FileCollection, EmittingPromise, Component, Variant} = require('@frctl/support');
@@ -10,6 +11,8 @@ const pkg = require('../package.json');
 const ConfigStore = require('./config/store');
 const defaults = require('./config/defaults');
 const Fractal = require('./fractal');
+
+const exampleRenderFile = join(__dirname, '../../../test/fixtures/render/example.fjk');
 
 const config = {
   src: join(__dirname, '../../../../test/fixtures/components'),
@@ -146,6 +149,22 @@ describe('Fractal', function () {
       return expect(fractal.render(parserOutput.components.first(), {}, {
         ext: '.fwig'
       })).to.be.rejectedWith(Error, '[template-not-found]');
+    });
+  });
+
+  describe('.renderFile()', function () {
+    it('returns an EmittingPromise', function () {
+      const fractal = makeFractal();
+      expect(fractal.renderFile(exampleRenderFile)).to.be.instanceOf(EmittingPromise);
+    });
+    it('passes the contents, context and correct file extension to the .render method', async function () {
+      const fractal = makeFractal();
+      const contents = readFileSync(exampleRenderFile, 'utf-8');
+      const context = {};
+      const spy = sinon.spy(fractal, 'render');
+      fractal.renderFile(exampleRenderFile, context);
+      expect(spy.calledWith(contents, context)).to.equal(true);
+      expect(spy.getCalls()[0].args[2].ext).to.equal('.fjk');
     });
   });
 

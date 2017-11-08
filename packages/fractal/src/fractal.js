@@ -1,4 +1,7 @@
+const {extname} = require('path');
+const {readFileSync} = require('fs');
 const App = require('@frctl/app');
+const {normalizePath} = require('@frctl/utils');
 const {Component, Variant, Scenario, EmittingPromise} = require('@frctl/support');
 const Renderer = require('@frctl/renderer');
 const debug = require('debug')('frctl:fractal');
@@ -93,6 +96,13 @@ class Fractal extends App {
         reject(err);
       }
     }, opts.emitter);
+  }
+
+  renderFile(path, context, opts = {}) {
+    opts = Object.assign({}, {ext: extname(path)}, opts);
+    path = normalizePath(path);
+    const contents = readFileSync(path, opts.encoding || 'utf-8');
+    return this.render(contents, context, opts);
   }
 
   getRenderer() {
