@@ -2,7 +2,7 @@
 const {expect} = require('../../../test/helpers');
 const engine = require('./engine');
 
-describe.only('Twig engine', function () {
+describe('Twig engine', function () {
   describe('factory', function () {
     it('is exported as a function', function () {
       expect(engine).to.be.a('function');
