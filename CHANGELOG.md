@@ -1,21 +1,29 @@
 # History
 
+## 2.0.0-beta.5
+
+* [NEW] Add basic [Twig rendering engine](./packages/fractal-engine-twig)
+* [NEW] Add Fractal.renderFile method
+* [FIX] Ignore empty component directories
+* [OTHER] Minor Inspector display improvements
+* [OTHER] Make scenario `id`s optional
+
 ## 2.0.0-beta.4
 
-[NEW] Add basic Handlebars rendering engine
-[NEW] Support for rendering strings
-[NEW] Handlebars and Nunjucks adapters now support render-time partial/include lookups
-[NEW] Nunjucks engine now supports supplying filters, extensions and globals
+* [NEW] Add basic [Handlebars rendering engine](./packages/fractal-engine-handlebars)
+* [NEW] Support for rendering strings
+* [NEW] Handlebars and Nunjucks adapters now support render-time partial/include lookups
+* [NEW] Nunjucks engine now supports supplying filters, extensions and globals
 
 ## 2.0.0-beta.3
 
-[FIX] Pages `include` and `extend` tags on Windows
-[FIX] Other misc Windows issues
-[FIX] Inspector filter now works on component `label` instead of `id`
+* [FIX] Pages `include` and `extend` tags on Windows
+* [FIX] Other misc Windows issues
+* [FIX] Inspector filter now works on component `label` instead of `id`
 
 ## 2.0.0-beta.2
 
-[OTHER] Add some basic progress info to `fractal new` command
+* [OTHER] Add some basic progress info to `fractal new` command
 
 ## 2.0.0-beta.1
 
@@ -23,7 +31,7 @@ Initial release of the v2 beta!
 
 ## 1.1.3
 
-[NEW] Add support for underscore prefixes for 'short' config filenames
+* [NEW] Add support for underscore prefixes for 'short' config filenames
 
 ## 1.1.2
 
