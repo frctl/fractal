@@ -1,14 +1,21 @@
+const {extname} = require('path');
+
 module.exports = {
 
-  getPartials(components = [], ext) {
-    if (!ext) {
-      throw new Error('You must specify an extension for the partials [ext-missing]');
+  getPartials(components = [], matcher) {
+    if (!matcher) {
+      throw new Error('You must specify a template extension matcher [matcher-missing]');
     }
-    ext = [].concat(ext);
+    if (typeof matcher !== 'function') {
+      matcher = filename => {
+        const ext = extname(filename);
+        return [].concat(matcher).includes(ext);
+      }
+    }
     const partials = {};
     for (const component of components) {
       for (const variant of component.getVariants()) {
-        const tpl = variant.getTemplates().find(tpl => ext.includes(tpl.extname));
+        const tpl = variant.getTemplates().find(tpl => matcher(tpl.filename));
         if (tpl) {
           const str = tpl.toString();
           partials[`${component.id}:${variant.id}`] = str;
