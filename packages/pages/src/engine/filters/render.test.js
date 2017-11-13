@@ -63,8 +63,9 @@ describe('render', function () {
   describe('.filter()', function () {
     let spy;
     let render;
+    let filter;
 
-    before(async function(){
+    before(async function () {
       filter = factory();
       render = filter.filter.bind({
         env: {fractal, components}

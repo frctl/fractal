@@ -39,7 +39,7 @@ describe('highlight', function () {
 
         filter.filter(file.contents.toString(), function (stringErr, stringResult) {
           expect(stringErr).to.equal(null);
-          expect(vinylResult).to.equal(stringResult);
+          expect(vinylResult.toString()).to.equal(stringResult.toString());
           done();
         });
       });
@@ -85,5 +85,5 @@ describe('highlight', function () {
 });
 
 function isHighlighted(str) {
-  return /<code class="hljs/.test(str);
+  return /<code class="hljs/.test(str.toString());
 }

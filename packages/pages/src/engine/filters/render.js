@@ -1,4 +1,5 @@
 const {lookup} = require('@frctl/support/helpers');
+const {Template} = require('@frctl/support');
 
 module.exports = function () {
   return {
@@ -10,6 +11,11 @@ module.exports = function () {
     filter: async function (target, ...args) {
       const done = args.pop();
       let [context = {}, opts = {}] = args;
+      if (typeof opts === 'string') {
+        opts = {
+          engine: opts
+        };
+      }
       try {
         if (typeof target === 'string') {
           const [name, ext] = target.split('.');
@@ -19,6 +25,9 @@ module.exports = function () {
           }
           target = variant;
           opts.ext = opts.ext || (ext ? `.${ext}` : null);
+        } else if (Template.isTemplate(target)) {
+          target = target.toString();
+          opts.ext = opts.ext || target.extname;
         }
         const result = await this.env.fractal.render(target, context, opts);
         done(null, result);

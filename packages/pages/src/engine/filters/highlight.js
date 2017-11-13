@@ -1,3 +1,4 @@
+const {SafeString} = require('nunjucks').runtime;
 const highlight = require('highlight.js');
 const {File} = require('@frctl/support');
 
@@ -13,11 +14,13 @@ module.exports = function () {
       const [lang] = args;
       try {
         target = await Promise.resolve(target);
+        if (target instanceof SafeString) {
+          target = target.toString();
+        }
         const contents = File.isFile(target) ? target.contents.toString() : target.toString();
         const output = lang ? highlight.highlight(lang, contents) : highlight.highlightAuto(contents);
-        done(null, `
-          <pre><code class="hljs ${output.language}">${output.value}</code></pre>
-        `);
+        const wrapped = new SafeString(`<pre><code class="hljs ${output.language}">${output.value}</code></pre>`);
+        done(null, wrapped);
       } catch (err) {
         done(err);
       }

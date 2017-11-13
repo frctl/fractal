@@ -1,3 +1,4 @@
+const {SafeString} = require('nunjucks').runtime;
 const beautify = require('js-beautify');
 const {File} = require('@frctl/support');
 const {isPlainObject} = require('lodash');
@@ -24,6 +25,11 @@ module.exports = function (opts = {}) {
 
       try {
         target = await Promise.resolve(target);
+
+        if (target instanceof SafeString) {
+          target = target.toString();
+        }
+
         const contents = File.isFile(target) ? target.contents.toString() : target.toString();
         if (!beautify[lang]) {
           throw new Error(`Cannot beautify ${lang} [lang-invalid]`);

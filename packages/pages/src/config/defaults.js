@@ -32,6 +32,7 @@ module.exports = {
   site: {},
 
   engine: {
+    match: ['.html'],
     globals: {},
     filters: {},
     extensions: {},

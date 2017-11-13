@@ -36,7 +36,7 @@ class Pages extends App {
       try {
         const collections = await this.getCollections(emitter);
         const pages = collections.site.pages.filter(filter);
-        const rendered = await this.renderPages(pages, collections, opts, emitter);
+        const rendered = await this.renderPages(pages, collections, emitter);
 
         if (opts.write) {
           const dest = opts.dest || this.get('dest');
@@ -84,7 +84,7 @@ class Pages extends App {
     ]);
   }
 
-  async renderPages(pages, collections, opts = {}, emitter = {emit: () => {}}) {
+  async renderPages(pages, collections, emitter = {emit: () => {}}) {
     const renderer = this.getRenderer(collections);
 
     return pages.mapToArrayAsync(async page => {
@@ -93,7 +93,14 @@ class Pages extends App {
       if (page.render) {
         this.debug('rendering page %s', page.permalink);
 
-        const engine = page.engine || 'pages';
+        let engine;
+        if (page.engine) {
+          engine = page.engine;
+        } else if (page.target.basename) {
+          engine = renderer.getEngineFor(page.target.basename);
+        } else {
+          engine = 'pages';
+        }
 
         const context = {
           [page.targetAlias]: page.target,

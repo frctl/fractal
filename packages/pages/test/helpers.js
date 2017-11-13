@@ -1,5 +1,5 @@
-const Pages = require('../src/app');
 const {Fractal} = require('@frctl/fractal');
+const Pages = require('../src/app');
 
 const defaults = {
   src: './src',

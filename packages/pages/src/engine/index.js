@@ -1,5 +1,6 @@
 /* eslint import/no-dynamic-require: "off" */
 
+const {parse} = require('path');
 const nunjucks = require('nunjucks');
 const _ = require('lodash');
 const slash = require('slash');
@@ -34,8 +35,9 @@ module.exports = function (config = {}, props = {}) {
   const TemplateLoader = nunjucks.Loader.extend({
     getSource: function (path) {
       path = slash(path);
+      const stem = parse(path).name;
       debug(`Looking for Nunjucks template ${path}`);
-      const file = templates.find(file => slash(file.relative) === path);
+      const file = templates.find(file => file.stem === stem);
       if (file) {
         return {
           src: file.contents.toString(),
@@ -88,7 +90,7 @@ module.exports = function (config = {}, props = {}) {
 
     name: 'pages',
 
-    match: ['.html', '.njk'],
+    match: config.match || ['.html', '.njk'],
 
     render(str, context = {}, opts = {}) {
       partials = getPartials(opts.components, ['.njk', '.nunjucks', '.nunj']);

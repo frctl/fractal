@@ -12,6 +12,7 @@
     "@frctl/config": "^2.0.0-beta.4",
     "@frctl/fractal-engine-html": "^2.0.0-beta.4",
     "@frctl/fractal-plugin-preprocess-templates": "^2.0.0-beta.4",
+    "@frctl/fractal-plugin-engines": "^2.0.0-beta.4",
     "@frctl/fractal-transform-components": "^2.0.0-beta.4",
     "@frctl/renderer": "^2.0.0-beta.4",
     "@frctl/support": "^2.0.0-beta.4",

@@ -49,7 +49,7 @@ class Variant extends Entity {
       return this.getTemplates().first();
     }
     if (args.length === 1 && typeof args[0] === 'string') {
-      return this.getTemplates().find('extname', args[0]);
+      return args[0][0] === '.' ? this.getTemplates().find('extname', args[0]) : this.getTemplates().find('engine', args[0]);
     }
     return this.getTemplates().find(...args);
   }

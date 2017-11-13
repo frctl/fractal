@@ -13000,7 +13000,7 @@ let previewIds = [];
         return;
       }
       const hasMatchingView = this.component.views.find(view => {
-        return view.inspector.engine === this.selectedEngine;
+        return view.engine === this.selectedEngine;
       });
       if (!hasMatchingView) {
         const engine = this.engines.find(engine => engine.name === this.selectedEngine);

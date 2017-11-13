@@ -6,13 +6,18 @@ const {Component, Variant, Scenario, EmittingPromise, File, Template} = require(
 const Renderer = require('@frctl/renderer');
 const debug = require('debug')('frctl:fractal');
 const processTpl = require('@frctl/fractal-plugin-preprocess-templates');
+const attachEngines = require('@frctl/fractal-plugin-engines');
 const Config = require('./config/store');
 
 class Fractal extends App {
 
   constructor(config = {}) {
     const conf = new Config(config);
-    conf.addAccessor('plugins', (plugins, store) => plugins.concat(processTpl(store.get('templates.helpers'))));
+    conf.addAccessor('plugins', (plugins, store) => [
+      attachEngines(),
+      ...plugins,
+      processTpl(store.get('templates.helpers'))
+    ]);
     super(conf);
   }
 
@@ -46,11 +51,10 @@ class Fractal extends App {
         }
 
         if (Template.isTemplate(target)) {
-          const str = target.toString();
           opts = Object.assign(opts, {
             engine: renderer.getEngineFor(target.filename)
           });
-          return resolve(await renderer.render(target, context, opts));
+          return resolve(await renderer.render(target.toString(), context, opts));
         }
 
         let component;

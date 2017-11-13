@@ -67,7 +67,6 @@ class Router {
       props.tags = props.tags || [];
       props.label = Router.resolveLabel(props.label, target, parent, props.target.label || props.target.name || props.target.stem);
       props.title = Router.resolveTitle(props.title, target, parent, props.label);
-      props.engine = props.render ? props.engine || 'pages' : null;
 
       const fallbackId = slugify(trim(props.permalink, '/').replace(/[/.]/g, '-'));
       props.id = Router.resolveId(props.id || fallbackId, target, parent);
@@ -101,7 +100,9 @@ class Router {
       config = cloneDeep(config);
 
       if (config.template) {
-        config.template = get(collections, 'site.templates', []).find(config.template);
+        config.template = get(collections, 'site.templates', []).find(tpl => {
+          return tpl.relative === config.template || tpl.relative.replace(tpl.extname, '') === config.template;
+        });
         if (!config.template) {
           throw new Error(`Could not find template (looked for '${config.template}') [template-not-found]`);
         }
