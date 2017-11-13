@@ -47,7 +47,7 @@ module.exports = function (config = {}) {
       config = toArray(config);
 
       const options = argv.site ? config.find(conf => conf.name === argv.site) : config[0];
-      const pages = new Pages(options);
+      const pages = new Pages(fractal, options);
 
       if (argv.build) {
         /*
@@ -56,7 +56,7 @@ module.exports = function (config = {}) {
 
         const spinner = ora('Generatic static site build...').start();
 
-        const output = await pages.build(fractal, {
+        const output = await pages.build({
           write: true
         });
 
@@ -91,7 +91,7 @@ module.exports = function (config = {}) {
          * rather than writing to disk
          */
 
-        server = await serve(fractal, pages, {port});
+        server = await serve(pages, {port});
         message = `<success>Development server started</success>`;
       }
 

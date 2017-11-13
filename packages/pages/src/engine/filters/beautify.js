@@ -12,7 +12,8 @@ module.exports = function (opts = {}) {
     async: true,
 
     async filter(target, ...args) {
-      let [done, lang = 'html', runtimeOpts = {}] = args.reverse();
+      const done = args.pop();
+      let [lang = 'html', runtimeOpts = {}] = args;
 
       if (isPlainObject(lang)) {
         runtimeOpts = lang;

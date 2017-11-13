@@ -12,15 +12,6 @@ module.exports = {
     port: 7777
   },
 
-  templates: {
-    match: ['.njk', '.html'],
-    filter: null
-  },
-
-  assets: {
-
-  },
-
   pages: {
     defaults: {},
     ext: '.html',
@@ -40,7 +31,7 @@ module.exports = {
 
   site: {},
 
-  nunjucks: {
+  engine: {
     globals: {},
     filters: {},
     extensions: {},
@@ -69,7 +60,8 @@ module.exports = {
 
   transforms: [
     require('../parser/transform-templates'),
-    require('../parser/transform-assets')
+    require('../parser/transform-assets'),
+    require('../parser/transform-pages')
   ]
 
 };

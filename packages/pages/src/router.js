@@ -67,6 +67,7 @@ class Router {
       props.tags = props.tags || [];
       props.label = Router.resolveLabel(props.label, target, parent, props.target.label || props.target.name || props.target.stem);
       props.title = Router.resolveTitle(props.title, target, parent, props.label);
+      props.engine = props.render ? props.engine || 'pages' : null;
 
       const fallbackId = slugify(trim(props.permalink, '/').replace(/[/.]/g, '-'));
       props.id = Router.resolveId(props.id || fallbackId, target, parent);

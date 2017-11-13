@@ -9,7 +9,8 @@ module.exports = function () {
     async: true,
 
     async filter(target, ...args) {
-      const [done, lang] = args.reverse();
+      const done = args.pop();
+      const [lang] = args;
       try {
         target = await Promise.resolve(target);
         const contents = File.isFile(target) ? target.contents.toString() : target.toString();
