@@ -36,10 +36,13 @@ module.exports = function (config = {}) {
   }
 
   return {
+
     name: 'nunjucks',
+
     match: exts,
+
     render(str, context = {}, opts = {}) {
-      partials = getPartials(opts.collections && opts.collections.components, exts);
+      partials = getPartials(opts.components, exts);
       return new Promise((resolve, reject) => {
         env.renderString(str, context, (err, result) => {
           if (err) {
@@ -48,6 +51,7 @@ module.exports = function (config = {}) {
           resolve(result);
         });
       });
-    }
+    },
+    nunjucks: env
   };
 };

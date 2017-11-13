@@ -13,7 +13,7 @@ module.exports = function (config = {}) {
       componentPartials.forEach(name => env.unregisterPartial(name));
       componentPartials = [];
 
-      const partials = getPartials(opts.collections && opts.collections.components, exts);
+      const partials = getPartials(opts.components, exts);
       Object.keys(partials).forEach(name => {
         env.registerPartial(name, partials[name]);
         componentPartials.push(name);

@@ -2,7 +2,6 @@ const Twig = require('twig');
 const {getPartials} = require('@frctl/support/helpers');
 
 module.exports = function (config = {}) {
-
   let partials = {};
   const matcher = config.ext || (filename => filename.match(/\.twig$/));
 
@@ -34,12 +33,11 @@ module.exports = function (config = {}) {
     match: matcher,
 
     render(str, context = {}, opts = {}) {
-
       const alias = `fractal-twig-${Date.now()}`;
 
       // Clear template cache, update partials
       Twig.extend(Twig => Object.keys(partials).forEach(name => delete Twig.Templates.registry[name]));
-      partials = getPartials(opts.collections && opts.collections.components, matcher);
+      partials = getPartials(opts.components, matcher);
       partials[alias] = str;
 
       // create template from string
@@ -55,11 +53,10 @@ module.exports = function (config = {}) {
       return new Promise((resolve, reject) => {
         try {
           resolve(template.render(context));
-        } catch(err) {
+        } catch (err) {
           reject(err);
         }
       });
     }
   };
-
 };

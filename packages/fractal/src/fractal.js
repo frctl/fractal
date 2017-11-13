@@ -2,7 +2,7 @@ const {extname} = require('path');
 const {readFileSync} = require('fs');
 const App = require('@frctl/app');
 const {normalizePath} = require('@frctl/utils');
-const {Component, Variant, Scenario, EmittingPromise} = require('@frctl/support');
+const {Component, Variant, Scenario, EmittingPromise, File, Template} = require('@frctl/support');
 const Renderer = require('@frctl/renderer');
 const debug = require('debug')('frctl:fractal');
 const processTpl = require('@frctl/fractal-plugin-preprocess-templates');
@@ -28,80 +28,91 @@ class Fractal extends App {
   }
 
   render(target, context = {}, opts = {}) {
-    opts = Object.assign({}, opts);
     const renderer = this.getRenderer();
     return new EmittingPromise(async (resolve, reject, emitter) => {
       try {
-        let component;
-        let variant;
-        let template;
+        if (!Component.isComponent(target) && !Variant.isVariant(target) && typeof target !== 'string') {
+          throw new Error(`Fractal.render - only components, variants or strings can be rendered [target-invalid]`);
+        }
 
         if (Scenario.isScenario(context)) {
           context = context.context;
         }
 
-        const collections = await this.parse();
-
-        if (!Component.isComponent(target) && !Variant.isVariant(target) && typeof target !== 'string') {
-          throw new Error(`Fractal.render - only components, variants or strings can be rendered [target-invalid]`);
-        }
+        opts = Object.assign({}, await this.parse(), opts);
 
         if (typeof target === 'string') {
-          template = target;
-        } else {
-          if (Component.isComponent(target)) {
-            variant = opts.variant ? target.getVariant(opts.variant) : target.getDefaultVariant();
-            if (!variant) {
-              throw new Error(`Could not find variant '${opts.variant}' for component '${target.id}' [variant-not-found]`);
-            }
-            component = target;
-          } else {
-            variant = target;
-          }
-
-          component = component || collections.components.getComponentForVariant(variant);
-          if (!component) {
-            throw new Error(`Could not find component for variant [component-not-found]`);
-          }
-
-          if (opts.engine) {
-            const engine = renderer.getEngine(opts.engine);
-            for (const tpl of variant.getTemplates()) {
-              if (engine.match(tpl.filename)) {
-                template = tpl;
-                break;
-              }
-            }
-            if (!template) {
-              throw new Error(`Could not find '${opts.engine}' template for variant '${variant.id}' of component '${component.id}' [template-not-found]`);
-            }
-          } else {
-            template = variant.getTemplate(opts.ext);
-            if (!template) {
-              throw new Error(`Could not find template for variant '${variant.id}' of component '${component.id}'${opts.ext ? `with extension '${opts.ext}'` : ''} [template-not-found]`);
-            }
-          }
+          return resolve(await renderer.render(target, context, opts));
         }
 
-        const renderOpts = {variant, component, collections};
+        if (Template.isTemplate(target)) {
+          const str = target.toString();
+          opts = Object.assign(opts, {
+            engine: renderer.getEngineFor(target.filename)
+          });
+          return resolve(await renderer.render(target, context, opts));
+        }
 
-        emitter.emit('render.start', {template, context, renderOpts});
+        let component;
+        let variant;
+        let template;
 
-        const result = renderer.render(template, context, renderOpts);
+        if (Component.isComponent(target)) {
+          variant = opts.variant ? target.getVariant(opts.variant) : target.getDefaultVariant();
+          if (!variant) {
+            throw new Error(`Could not find variant '${opts.variant}' for component '${target.id}' [variant-not-found]`);
+          }
+          component = target;
+        } else {
+          variant = target;
+        }
 
-        emitter.emit('render.complete', {result, template, context, renderOpts});
+        component = component || opts.components.getComponentForVariant(variant);
+        if (!component) {
+          throw new Error(`Could not find component for variant [component-not-found]`);
+        }
 
-        resolve(result);
+        opts = Object.assign(opts, {component, variant});
+
+        if (opts.engine) {
+          const engine = renderer.getEngine(opts.engine);
+          for (const tpl of variant.getTemplates()) {
+            if (engine.match(tpl.filename)) {
+              template = tpl;
+              break;
+            }
+          }
+          if (!template) {
+            throw new Error(`Could not find '${opts.engine}' template for variant '${variant.id}' of component '${component.id}' [template-not-found]`);
+          }
+        } else {
+          template = variant.getTemplate(opts.ext);
+          if (!template) {
+            throw new Error(`Could not find template for variant '${variant.id}' of component '${component.id}'${opts.ext ? `with extension '${opts.ext}'` : ''} [template-not-found]`);
+          }
+          opts = Object.assign(opts, {
+            engine: renderer.getEngineFor(template.filename)
+          });
+        }
+
+        resolve(await renderer.render(template.toString(), context, opts));
       } catch (err) {
         reject(err);
       }
     }, opts.emitter);
   }
 
-  renderFile(path, context, opts = {}) {
-    opts = Object.assign({}, {ext: extname(path)}, opts);
-    path = normalizePath(path);
-    const contents = readFileSync(path, opts.encoding || 'utf-8');
+  renderFile(target, context, opts = {}) {
+    let ext;
+    let contents;
+    if (File.isFile(target)) {
+      contents = target.contents.toString();
+      ext = target.extname;
+    } else {
+      ext = extname(target);
+      contents = readFileSync(normalizePath(target), opts.encoding || 'utf-8');
+    }
+    opts = Object.assign({}, {ext}, opts);
     return this.render(contents, context, opts);
   }
 
