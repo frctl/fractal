@@ -47,6 +47,11 @@ class Fractal extends App {
         opts = Object.assign({}, await this.parse(), opts);
 
         if (typeof target === 'string') {
+          if (!opts.engine && opts.ext) {
+            opts = Object.assign(opts, {
+              engine: renderer.getEngineFor(opts.ext)
+            });
+          }
           return resolve(await renderer.render(target, context, opts));
         }
 
