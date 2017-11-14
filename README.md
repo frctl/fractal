@@ -18,6 +18,8 @@ For the current v1.x release codebase please switch to the [master branch](https
 
 If you are curious about the v2 beta then please read the [overview](/docs/overview.md) first to get a feel for the scope and current status of the current beta release.
 
+> **Please be aware that until the beta period is complete major (breaking) changes may still be made.** Where possible we will of course try to avoid this but please do not yet start building your production codebase on these early v2 beta versions unless you are prepared to spend time and effort updating between potentially unstable releases.
+
 To get up and running with a sample project then there is some early documentation available in the [docs](/docs/) directory of this repository:
 
 * [v2 overview and current beta status](/docs/overview.md)
@@ -29,7 +31,9 @@ To get up and running with a sample project then there is some early documentati
 
 You may also want to check out the [default starter project repo](https://github.com/frctl/fractal-starter-default) to get a feel for how some of the pieces fit together. (This repo is cloned when creating a new project via the `fractal-beta new` command).
 
-> **Please be aware that until the beta period is complete major (breaking) changes may still be made.** Where possible we will of course try to avoid this but please do not yet start building your production codebase on these early v2 beta versions unless you are prepared to spend time and effort updating between potentially unstable releases.
+## Requirements
+
+Fractal v2 requires **Node v8.0+** (LTS) to run.
 
 ## Development and contributing
 
@@ -46,10 +50,6 @@ We are moving development of Fractal v2.0 and all first-party add-ons into a 'mo
 Code is linted via xo/eslint using the [Fractal eslint config](https://github.com/frctl/eslint-config-frctl), and tests are written using Mocha & Chai.
 
 Test can be run with `npm test`. There are also NPM package scripts available for running subsets of the tests if required.
-
-## Requirements
-
-Fractal requires [Node.js](https://nodejs.org) v7.6.0 or greater.
 
 ## Credits
 

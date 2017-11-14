@@ -100,7 +100,9 @@ class Router {
       config = cloneDeep(config);
 
       if (config.template) {
-        config.template = get(collections, 'site.templates', []).find(config.template);
+        config.template = get(collections, 'site.templates', []).find(tpl => {
+          return tpl.relative === config.template || tpl.relative.replace(tpl.extname, '') === config.template;
+        });
         if (!config.template) {
           throw new Error(`Could not find template (looked for '${config.template}') [template-not-found]`);
         }

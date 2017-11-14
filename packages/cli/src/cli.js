@@ -49,6 +49,11 @@ class Cli {
     return require('../package.json').version;
   }
 
+  get bin() {
+    const pkg = require('../package.json');
+    return Object.keys(pkg.bin)[0];
+  }
+
 }
 
 module.exports = Cli;

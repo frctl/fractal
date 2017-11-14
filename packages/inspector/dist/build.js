@@ -12985,15 +12985,26 @@ let previewIds = [];
 
   methods: {
 
+    setError(err) {
+      if (typeof err === 'string') {
+        err = new Error(err);
+      }
+      this.error = err;
+      this.chunks = [];
+      this.assets = [];
+    },
+
     async renderPreview() {
+      if (this.engines.length === 0) {
+        this.setError(`No view engines registered.`);
+        return;
+      }
       const hasMatchingView = this.component.views.find(view => {
-        return view.inspector.engine === this.selectedEngine;
+        return view.engine === this.selectedEngine;
       });
       if (!hasMatchingView) {
         const engine = this.engines.find(engine => engine.name === this.selectedEngine);
-        this.error = new Error(`No ${engine.label} view available.`);
-        this.chunks = [];
-        this.assets = [];
+        this.setError(`No ${engine.label} view available.`);
         return;
       }
       try {
@@ -13015,9 +13026,7 @@ let previewIds = [];
         this.chunks = chunks.data.map(result => result.output);
         this.assets = assets.data;
       } catch (err) {
-        this.error = err;
-        this.chunks = [];
-        this.assets = [];
+        this.setError(err);
       }
     }
   },
@@ -14475,7 +14484,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return this.components;
       }
       return this.components.filter(component => {
-        return component === this.component || __WEBPACK_IMPORTED_MODULE_0_fuzzysearch___default()(this.filter.toLowerCase(), component.id.toLowerCase());
+        return component === this.component || __WEBPACK_IMPORTED_MODULE_0_fuzzysearch___default()(this.filter.toLowerCase(), component.label.toLowerCase());
       });
     }
 
@@ -14868,7 +14877,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }), _vm._v(" "), _c('span', {
       staticClass: "selectorSet__label"
     }, [_vm._v(_vm._s(variant.label))])]), _vm._v(" "), _c('div', {
-      staticClass: "selectorSet__children"
+      staticClass: "selectorSet__children",
+      style: ({
+        display: _vm.getPreviewsForVariant(variant).length > 1 ? 'block' : 'none'
+      })
     }, _vm._l((_vm.getPreviewsForVariant(variant)), function(preview, index) {
       return _c('label', {
         key: preview.id,

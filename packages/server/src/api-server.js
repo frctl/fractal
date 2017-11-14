@@ -23,6 +23,13 @@ class ApiServer extends Server {
 
     router.use(async (ctx, next) => {
       ctx.fractal = fractal;
+      try {
+        const {components, files} = await fractal.parse();
+        ctx.files = files;
+        ctx.components = components;
+      } catch (err) {
+        ctx.throw(500, err);
+      }
       return next();
     });
 

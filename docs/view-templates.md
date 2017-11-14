@@ -28,8 +28,6 @@ module.exports = {
 }
 ```
 
-> **WIP** - there are currently only Nunjucks and 'vanilla' HTML engines available. This list will be expanded during the beta period.
-
 ## Adding views to components
 
 Each component can have one or more view templates, one per template engine that you wish to support.

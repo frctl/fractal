@@ -52,7 +52,7 @@ export default {
         return this.components;
       }
       return this.components.filter(component => {
-        return component === this.component || fuzzy(this.filter.toLowerCase(), component.id.toLowerCase());
+        return component === this.component || fuzzy(this.filter.toLowerCase(), component.label.toLowerCase());
       });
     }
 

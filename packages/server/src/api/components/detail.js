@@ -6,11 +6,9 @@ module.exports = function () {
     path: '/components/:component',
 
     async handler(ctx, next) {
-      const components = await ctx.fractal.getComponents();
-      const component = components.find(ctx.params.component);
+      const component = ctx.components.find(ctx.params.component);
       if (!component) {
-        ctx.status = 404;
-        return;
+        ctx.throw(404, 'Component not found');
       }
       ctx.body = component.toJSON();
     }

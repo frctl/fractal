@@ -1,7 +1,7 @@
 {
   "name": "@frctl/cli-command-project-info",
   "description": "Get information about Fractal projects",
-  "version": "2.0.0-beta.1",
+  "version": "2.0.0-beta.4",
   "homepage": "http://fractal.build",
   "repository": "https://github.com/frctl/fractal/tree/v2/packages/cli-command-project-info",
   "bugs": "https://github.com/frctl/fractal/issues",
@@ -9,7 +9,7 @@
   "license": "MIT",
   "main": "./src/command.js",
   "devDependencies": {
-    "@frctl/fractal": "^2.0.0-beta.1",
-    "@frctl/support": "^2.0.0-beta.1"
+    "@frctl/fractal": "^2.0.0-beta.4",
+    "@frctl/support": "^2.0.0-beta.4"
   }
 }

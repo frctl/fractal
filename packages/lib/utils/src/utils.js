@@ -162,11 +162,10 @@ const utils = module.exports = {
   normalizePath(filePath, cwd) {
     assert.string(filePath, `Path must be a string. Received '${typeof filePath}' [paths-invalid]`);
     cwd = cwd || process.cwd();
-
     if (!path.isAbsolute(filePath)) {
       filePath = path.join(cwd, filePath);
     }
-    filePath = utils.removeTrailingSeparator(slash(filePath));
+    filePath = utils.removeTrailingSeparator(filePath);
     return path.normalize(filePath);
   },
 

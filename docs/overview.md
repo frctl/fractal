@@ -37,7 +37,7 @@ Some features have not been implemented, and many other areas are still in need 
 Much of the core code is complete, it has a lot of unit tests (not many integration tests at this point, however) and should be fairly stable. It is not quite feature-complete but is not far off. Outstanding items include:
 
 * [ ] **template pre-processing**: `@else` and `@else-if` conditional statements have not yet been implemented.
-* [ ] **template engine adapters** : Only 'vanilla' HTML (with variable placeholders) and Nunjucks template engines are currently available. More will be added during the beta period.
+* [ ] **template engine adapters** : Nunjucks, Twig and Handlebars template engines are currently available. More will be added during the beta period.
 * [ ] **parser/plugin performance**: Many caching improvements still need to be made.
 * [ ] **variants**: Add support for type descriptions for props.
 
@@ -49,6 +49,7 @@ The Inspector UI is currently at a very early stage. Many improvements and updat
 * [ ] **preview rendering**: The current implementation is just a basic proof-of-concept. Per-scenario preview windows with resizing tools and more are planned.
 * [ ] **plugins**: No plugin model is yet available for the Inspector. _Suggestions for possible implementation strategies for this are welcome._
 * [ ] **responsive**: The UI is currently desktop-only. The intention is for this to migrate to a fully responsive UI that can be used for mobile testing.
+* [ ] **browser support**: The UI has currently only been tested on Chrome and needs validating across a wider range of browsers.
 
 #### Pages
 

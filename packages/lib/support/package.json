@@ -1,6 +1,6 @@
 {
   "name": "@frctl/support",
-  "version": "2.0.0-beta.1",
+  "version": "2.0.0-beta.4",
   "description": "Fractal support classes",
   "homepage": "http://fractal.build",
   "repository": "https://github.com/frctl/fractal/tree/v2/packages/lib/support",
@@ -12,7 +12,7 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@frctl/utils": "^2.0.0-beta.1",
+    "@frctl/utils": "^2.0.0-beta.3",
     "ajv": "^5.2.2",
     "ajv-keywords": "^2.1.0",
     "async": "^2.5.0",

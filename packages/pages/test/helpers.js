@@ -1,3 +1,4 @@
+const {Fractal} = require('@frctl/fractal');
 const Pages = require('../src/app');
 
 const defaults = {
@@ -6,5 +7,5 @@ const defaults = {
 };
 
 module.exports.makePages = function (config = {}) {
-  return new Pages(Object.assign({}, defaults, config));
+  return new Pages(new Fractal(), Object.assign({}, defaults, config));
 };

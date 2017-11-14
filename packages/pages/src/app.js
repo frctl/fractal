@@ -1,69 +1,42 @@
 const {join} = require('path');
-const {forEach} = require('lodash');
 const App = require('@frctl/app');
+const Renderer = require('@frctl/renderer');
 const {EmittingPromise} = require('@frctl/support');
 const {permalinkify} = require('@frctl/utils');
 const {Fractal} = require('@frctl/fractal');
 const debug = require('debug')('frctl:pages');
 const {assert} = require('check-types');
 const Config = require('./config/store');
-const Router = require('./router');
-const nunjucksEnv = require('./render/env');
-const renderToFiles = require('./utils/render');
+const engine = require('./engine');
 const clean = require('./utils/clean');
 const write = require('./utils/write');
 
+const _fractal = new WeakMap();
+
 class Pages extends App {
 
-  constructor(config = {}) {
-    assert.string(config.dest, `You must provide a 'dest' value in your pages configuration to specify the output directory [dest-missing]`);
+  constructor(fractal, config = {}) {
+    assert.string(config.dest, `Pages.constructor: You must provide a 'dest' value in your pages configuration to specify the output directory [dest-missing]`);
+    assert.instance(fractal, Fractal, `Pages.constructor: You must provide a Fractal instance [fractal-invalid]`);
     super(new Config(config));
+    _fractal.set(this, fractal);
     this.debug('instantiated new Pages instance');
   }
 
-  build(fractal, opts = {}) {
-    assert.instance(fractal, Fractal, `Pages.build - You must provide a Fractal instance [fractal-invalid]`);
-
+  build(opts = {}) {
     let filter = () => true;
-    if (Array.isArray(opts.pages)) {
-      this.debug(`Building pages: ${opts.pages.join(',')}`);
-      const permalinks = opts.pages.map(url => permalinkify(url));
+
+    if (Array.isArray(opts.filter)) {
+      this.debug(`Building pages: ${opts.filter.join(',')}`);
+      const permalinks = opts.filter.map(url => permalinkify(url));
       filter = page => permalinks.includes(page.permalink);
     }
 
     return new EmittingPromise(async (resolve, reject, emitter) => {
       try {
-        const router = new Router();
-        const parserOutput = [fractal, this].map(app => app.parse({emitter}));
-        const [library, site] = await Promise.all(parserOutput);
-        const collections = {library, site};
-        const renderOpts = this.get('nunjucks');
-        const routeOpts = this.config.get('pages');
-
-        forEach(this.get('routes', {}), (builder, name) => {
-          router.addRoute(name, builder, collections, routeOpts);
-        });
-
-        const pages = collections.site.pages = router.getPages().clone();
-
-        Object.assign(renderOpts.globals, {
-          collections,
-          pages,
-          components: library.components,
-          config: this.config,
-          site: this.get('site')
-        });
-
-        const env = nunjucksEnv(site.templates, renderOpts);
-
-        Object.assign(env, {
-          fractal,
-          collections,
-          pages: this
-        });
-
-        const output = await renderToFiles(pages.filter(filter), env);
-        this.debug(`${output.length} files rendered`);
+        const collections = await this.getCollections(emitter);
+        const pages = collections.site.pages.filter(filter);
+        const rendered = await this.renderPages(pages, collections, emitter);
 
         if (opts.write) {
           const dest = opts.dest || this.get('dest');
@@ -72,23 +45,88 @@ class Pages extends App {
             await clean(dest, this.get('clean'));
           }
           this.debug(`writing pages to ${dest}`);
-          await write(dest, output.map(file => {
+          await write(dest, rendered.map(file => {
             file.path = join(dest, file.permalink);
             file.base = dest;
             return file;
           }));
         }
 
-        resolve(output);
+        resolve(rendered);
       } catch (err) {
         reject(err);
       }
     }, opts.emitter);
   }
 
+  async getCollections(emitter = {emit: () => {}}) {
+    if (this.fractal.dirty) {
+      this.dirty = true;
+    }
+    const parserOutput = [this.fractal, this].map(app => app.parse({emitter}));
+    const [library, site] = await Promise.all(parserOutput);
+    return {library, site};
+  }
+
+  getRenderer({site, library}) {
+    const pagesEngine = engine(this.get('engine'), {
+      fractal: this.fractal,
+      components: library.components,
+      pages: site.pages,
+      collections: {site, library}
+    });
+
+    pagesEngine.env.addGlobal('site', this.get('site'));
+
+    return new Renderer([
+      pagesEngine,
+      ...this.fractal.get('engines')
+    ]);
+  }
+
+  async renderPages(pages, collections, emitter = {emit: () => {}}) {
+    const renderer = this.getRenderer(collections);
+
+    return pages.mapToArrayAsync(async page => {
+      const file = page.toFile();
+      file.permalink = page.permalink;
+      if (page.render) {
+        this.debug('rendering page %s', page.permalink);
+
+        let engine;
+        if (page.engine) {
+          engine = page.engine;
+        } else if (page.target.basename) {
+          engine = renderer.getEngineFor(page.target.basename);
+        } else {
+          engine = 'pages';
+        }
+
+        const context = {
+          [page.targetAlias]: page.target,
+          page,
+          target: page.target
+        };
+
+        const contents = await renderer.render(page.contents.toString(), context, {
+          engine,
+          components: collections.library.components,
+          templates: collections.site.files
+        });
+
+        file.contents = Buffer.from(contents);
+      }
+      return file;
+    });
+  }
+
   debug(...args) {
     debug(...args);
     return this;
+  }
+
+  get fractal() {
+    return _fractal.get(this);
   }
 
   get version() {

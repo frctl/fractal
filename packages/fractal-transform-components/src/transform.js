@@ -20,6 +20,10 @@ module.exports = function (opts = {}) {
         const componentFiles = remainingFiles.filter(file => file.path.startsWith(rootPath));
         remainingFiles = remainingFiles.reject(file => componentFiles.find(f => f.path === file.path));
 
+        if (componentFiles.length === 0) {
+          return; // Ignore empty components
+        }
+
         let config = {};
         const configFile = componentFiles.filter(configMatcher).sortBy('basename', 'asc').first();
         if (configFile) {

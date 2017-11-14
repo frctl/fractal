@@ -11,13 +11,13 @@ module.exports = function infoCommand() {
       let commandList = '';
       if (commands.length > 0) {
         commandList = `<br><dim>Available commands:</dim><br><br>`;
-        commandList += `${commands.map(cmd => `<cyan> ${argv.$0} ${cmd.command}</cyan> - ${cmd.description}`).join('<br>')}<br>`;
+        commandList += `${commands.map(cmd => `<cyan> ${cli.bin} ${cmd.command}</cyan> - ${cmd.description}`).join('<br>')}<br>`;
       }
 
       return `
         <green>Fractal CLI <dim>v${cli.version}</dim></green>
         ${commandList}
-        <dim>Run <reset><cyan>${argv.$0} --help</cyan></reset> for full details on available commands and options.</dim>
+        <dim>Run <reset><cyan>${cli.bin} --help</cyan></reset> for full details on available commands and options.</dim>
       `;
     }
   };

@@ -5,7 +5,6 @@ const removePosition = require('unist-util-remove-position');
 
 module.exports = function (tree, context, env) {
   const parent = env.component;
-  const variant = env.variant;
 
   visit(tree, 'element', function (node, index, parentNode) {
     if (is(node, 'include')) {
@@ -13,7 +12,7 @@ module.exports = function (tree, context, env) {
         throw new Error(`You must provide a 'component' attribute for the 'include' tag ${parent.id}`);
       }
       const [subComponentId, variantId] = node.properties.component.split(':');
-      const subComponent = env.components.find(subComponentId);
+      const subComponent = env.components.findOrFail(subComponentId);
       if (subComponent.id === parent.id) {
         throw new Error(`Recursive component include detected! Ignoring component.`);
       }
@@ -30,24 +29,7 @@ module.exports = function (tree, context, env) {
         throw new Error(`Could not find '${templateExt}' template for component ${subComponent.id}`);
       }
 
-      // Register the include on the parent variant
-
-      variant.includes = variant.get('includes', []);
-
-      const include = {
-        component: subComponent.id,
-        variant: subComponentVariant.id,
-        template: templateExt,
-        count: 1,
-        ref: `${subComponent.id}.${subComponentVariant.id}${templateExt}`
-      };
-
-      const included = variant.includes.find(i => i.ref === include.ref);
-      if (included) {
-        included.count++;
-      } else {
-        variant.includes.push(include);
-      }
+      parent.requires.push(subComponent.id);
 
       const componentNodes = removePosition(template.clone().contents).children;
       parentNode.children.splice(index, 1, ...componentNodes);
