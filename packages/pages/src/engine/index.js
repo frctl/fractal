@@ -15,21 +15,6 @@ const extensions = ['component'];
 module.exports = function (config = {}, props = {}) {
   const loaders = [];
 
-  // The partial loader handles loading of component/variants
-
-  let partials = {};
-  const PartialLoader = nunjucks.Loader.extend({
-    getSource: function (lookup) {
-      if (partials[lookup]) {
-        return {
-          src: partials[lookup].toString(),
-          path: lookup,
-          noCache: true
-        };
-      }
-    }
-  });
-
   // the template loader loads page templates
 
   let templates = {};
@@ -50,7 +35,6 @@ module.exports = function (config = {}, props = {}) {
   });
 
   const env = new nunjucks.Environment([
-    new PartialLoader(),
     new TemplateLoader(),
     ...loaders
   ]);
@@ -97,10 +81,9 @@ module.exports = function (config = {}, props = {}) {
 
     name: 'pages',
 
-    match: config.match || ['.html', '.njk'],
+    match: config.match || ['.html'],
 
     render(str, context = {}, opts = {}) {
-      partials = getPartials(opts.components, ['.njk', '.nunjucks', '.nunj']);
       templates = opts.templates;
 
       return new Promise((resolve, reject) => {
