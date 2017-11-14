@@ -35,7 +35,10 @@ class Template extends Entity {
     if (stringifyCache[key]) {
       return stringifyCache[key];
     }
-    const str = toHTML(this.get('contents'));
+    const str = toHTML(this.get('contents'), {
+      allowDangerousHTML: true,
+      allowDangerousCharacters: true,
+    });
     stringifyCache[key] = str;
     return str;
   }
