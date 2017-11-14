@@ -10,6 +10,7 @@ const WithExtension = require('@allmarkedup/nunjucks-with');
 
 const filters = ['await', 'beautify', 'highlight', 'stringify', 'render'];
 const helpers = ['permalink', 'link-to'];
+const extensions = ['component'];
 
 module.exports = function (config = {}, props = {}) {
   const loaders = [];
@@ -58,15 +59,21 @@ module.exports = function (config = {}, props = {}) {
 
   env.addExtension('WithExtension', new WithExtension());
 
+  for (const name of extensions) {
+    const opts = _.get(config, `opts.extensions.${name}`, {});
+    const Extension = require(`./extensions/${name}`);
+    env.addExtension(name, new Extension(opts));
+  }
+
   for (const name of filters) {
-    const filterOpts = _.get(config, `opts.filters.${name}`, {});
-    const filter = require(`./filters/${name}`)(filterOpts);
+    const opts = _.get(config, `opts.filters.${name}`, {});
+    const filter = require(`./filters/${name}`)(opts);
     env.addFilter(filter.name, filter.filter, filter.async);
   }
 
   for (const name of helpers) {
-    const helperOpts = _.get(config, `opts.helpers.${name}`, {});
-    const helper = require(`./helpers/${name}`)(helperOpts);
+    const opts = _.get(config, `opts.helpers.${name}`, {});
+    const helper = require(`./helpers/${name}`)(opts);
     env.addGlobal(helper.name, helper.helper);
   }
 
