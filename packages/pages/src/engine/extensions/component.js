@@ -15,7 +15,6 @@ module.exports = class IncludeWithNunjucksExtension {
   }
 
   async run(context, target, ...args) {
-
     const callback = args.pop();
     const data = args.shift() || {};
     const opts = args.shift() || {};
@@ -30,8 +29,8 @@ module.exports = class IncludeWithNunjucksExtension {
       opts.ext = opts.ext || (ext ? `.${ext}` : null);
       const result = await context.env.fractal.render(target, data, opts);
       callback(null, new SafeString(result));
-    } catch(err) {
+    } catch (err) {
       callback(err);
     }
   }
-}
+};
