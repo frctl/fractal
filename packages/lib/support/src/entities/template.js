@@ -18,11 +18,13 @@ class Template extends Entity {
   constructor(props = {}) {
     assert.object(props, 'Template.constructor - props must be an object [properties-invalid]');
     if (typeof props.contents === 'string') {
-      if (parseCache[props.contents]) {
-        props.contents = parseCache[props.contents];
+      const str = props.contents;
+      if (parseCache[str]) {
+        props.contents = parseCache[str];
       } else {
-        const dom = fromParse5(parser.parseFragment(props.contents), {file: props.contents});
-        parseCache[props.contents] = dom;
+        const parsed = /<html/i.test(str) ? parser.parse(str) : parser.parseFragment(str);
+        const dom = fromParse5(parsed, {file: str});
+        parseCache[str] = dom;
         props.contents = dom;
       }
     }
