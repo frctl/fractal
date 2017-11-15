@@ -5,7 +5,6 @@ const nunjucks = require('nunjucks');
 const _ = require('lodash');
 const slash = require('slash');
 const debug = require('debug')('frctl:pages');
-const {getPartials} = require('@frctl/support/helpers');
 const WithExtension = require('@allmarkedup/nunjucks-with');
 
 const filters = ['await', 'beautify', 'highlight', 'stringify', 'render'];

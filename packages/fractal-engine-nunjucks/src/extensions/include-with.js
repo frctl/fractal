@@ -28,4 +28,4 @@ module.exports = class IncludeWithExtension {
       callback(null, new SafeString(result));
     });
   }
-}
+};
