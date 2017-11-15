@@ -12932,6 +12932,16 @@ let previewIds = [];
 
   computed: {
 
+    opts() {
+      if (!this.component) {
+        return {};
+      }
+      if (this.component.config && this.component.config.inspector) {
+        return this.component.config.inspector;
+      }
+      return {};
+    },
+
     engines() {
       return this.$store.state.engines;
     },
@@ -12953,22 +12963,25 @@ let previewIds = [];
         return '';
       }
       const markup = this.chunks.join('<br>');
-      return `
-      <!DOCTYPE html>
-      <html lang="en">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <style>${this.css}</style>
-        <title>${this.component.label} | Fractal Inspector</title>
-      </head>
-      <body>
-        ${markup}
-        <script>${this.js}</!script>
-      </body>
-      </html>
-      `.replace(/"/g, '\"').replace('!script', 'script');
+      if (this.opts.wrap) {
+        return `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <meta http-equiv="X-UA-Compatible" content="ie=edge">
+          <style>${this.css}</style>
+          <title>${this.component.label} | Fractal Inspector</title>
+        </head>
+        <body>
+          ${markup}
+          <script>${this.js}</!script>
+        </body>
+        </html>
+        `.replace(/"/g, '\"').replace('!script', 'script');
+      }
+      return markup;
     },
 
     previews() {
