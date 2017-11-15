@@ -1,0 +1,13 @@
+<div class="card">
+
+  <h3 class="card__title">{{ title }}</h3>
+
+  {% if text %}
+  <p class="card__content">{{ text }}</p>
+  {% endif %}
+  <img src="{{ image }}" alt="">
+  {% with button %}
+  {% include "button:primary" %}
+  {% endwith %}
+
+</div>
