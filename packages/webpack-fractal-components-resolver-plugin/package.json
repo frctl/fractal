@@ -1,9 +1,9 @@
 {
-  "name": "@frctl/fractal-components-webpack-resolver-plugin",
+  "name": "@frctl/webpack-fractal-components-resolver-plugin",
   "description": "Webpack resolver for Fractal's asset pipeline",
-  "version": "2.0.0-beta.0",
+  "version": "2.0.0-beta.4",
   "homepage": "http://fractal.build",
-  "repository": "https://github.com/frctl/fractal/tree/v2/packages/fractal/fractal-components-webpack-resolver-plugin",
+  "repository": "https://github.com/frctl/fractal/tree/v2/packages/fractal/webpack-fractal-components-resolver-plugin",
   "bugs": "https://github.com/frctl/fractal/issues",
   "author": "Danielle Huntrods <danielle.huntrods@clearleft.com> (http://clearleft.com)",
   "contributors": [

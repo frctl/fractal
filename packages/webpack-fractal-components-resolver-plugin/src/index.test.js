@@ -14,7 +14,7 @@ const mockResolverAPI = {
 };
 let components;
 
-describe.only('component resolver webpack plugin', function () {
+describe('component resolver webpack plugin', function () {
   before(async function () {
     components = await app.getComponents();
   });
