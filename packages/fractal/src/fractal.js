@@ -67,10 +67,7 @@ class Fractal extends App {
         let template;
 
         if (Component.isComponent(target)) {
-          variant = opts.variant ? target.getVariant(opts.variant) : target.getDefaultVariant();
-          if (!variant) {
-            throw new Error(`Could not find variant '${opts.variant}' for component '${target.id}' [variant-not-found]`);
-          }
+          variant = target.getDefaultVariant();
           component = target;
         } else {
           variant = target;

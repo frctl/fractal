@@ -124,12 +124,6 @@ describe('Fractal', function () {
       const result = await fractal.render(variant);
       expect(result).to.equal('component!');
     });
-    it('rejects if a specified variant cannot be found', function () {
-      const fractal = makeFractal();
-      return expect(fractal.render(parserOutput.components.first(), {}, {
-        variant: 'foo'
-      })).to.be.rejectedWith(Error, '[variant-not-found]');
-    });
     it('rejects if a variants\' component cannot be found', function () {
       const fractal = makeFractal();
       sinon.stub(fractal, 'parse').callsFake(() => Promise.resolve(parserOutput));
