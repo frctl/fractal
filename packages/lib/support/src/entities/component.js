@@ -1,5 +1,5 @@
 const {normalizeId, uniqueId, cloneDeep, titlize, slugify, toArray} = require('@frctl/utils');
-const {uniq} = require('lodash');
+const {uniq, get} = require('lodash');
 const check = require('check-types');
 const Validator = require('../validator');
 const schema = require('../../schema');
@@ -40,6 +40,9 @@ class Component extends Entity {
 
     delete props.views;
     delete props.path;
+
+    props.id = props.id || get(props, 'src.stem');
+    props.id = props.id ? normalizeId(props.id) : props.id;
 
     super(props);
 
@@ -191,7 +194,7 @@ class Component extends Entity {
       throw new TypeError(`Component.from - props.src must be a file instance [properties-invalid]`);
     }
     const component = new Component({
-      id: normalizeId(config.id || src.stem),
+      id: config.id,
       src,
       config
     });

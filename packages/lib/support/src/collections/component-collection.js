@@ -54,7 +54,7 @@ class ComponentCollection extends EntityCollection {
 
   rejectByTag(tagName) {
     const items = this._items.filter(component => {
-      return ! (component.tags || []).includes(tagName);
+      return !(component.tags || []).includes(tagName);
     });
     return new ComponentCollection(items);
   }
