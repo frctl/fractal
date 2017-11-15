@@ -45,6 +45,20 @@ class ComponentCollection extends EntityCollection {
     return new ComponentCollection(items);
   }
 
+  filterByTag(tagName) {
+    const items = this._items.filter(component => {
+      return Array.isArray(component.tags) && component.tags.includes(tagName);
+    });
+    return new ComponentCollection(items);
+  }
+
+  rejectByTag(tagName) {
+    const items = this._items.filter(component => {
+      return ! (component.tags || []).includes(tagName);
+    });
+    return new ComponentCollection(items);
+  }
+
   getComponentForVariant(variant) {
     return super.find(component => {
       const variantRefs = component.getVariants().mapToArray(v => v.uuid);

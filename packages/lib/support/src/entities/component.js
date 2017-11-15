@@ -1,4 +1,4 @@
-const {normalizeId, uniqueId, cloneDeep, titlize, slugify} = require('@frctl/utils');
+const {normalizeId, uniqueId, cloneDeep, titlize, slugify, toArray} = require('@frctl/utils');
 const {uniq} = require('lodash');
 const check = require('check-types');
 const Validator = require('../validator');
@@ -11,7 +11,7 @@ const File = require('./file');
 const Variant = require('./variant');
 
 const assert = check.assert;
-const managedProps = ['label', 'files', 'variants', 'relative', 'config', 'views', 'src', 'path'];
+const managedProps = ['files', 'variants', 'relative', 'config', 'views', 'src', 'path'];
 
 class Component extends Entity {
 
@@ -25,6 +25,8 @@ class Component extends Entity {
     props.files = props.files || new FileCollection();
     props.variants = props.variants || new VariantCollection();
     props.config = props.config || {};
+    props.tags = toArray(props.tags || props.config.tags);
+    props.label = props.label || props.config.label;
 
     if (props.path) {
       props.src = new File({
@@ -43,10 +45,7 @@ class Component extends Entity {
 
     this.requires = this.requires || [];
     this.requires = uniq(this.requires.concat(this.getConfig('requires', [])));
-
-    this.defineGetter('label', value => {
-      return value || this.getConfig('label') || titlize(this.get('id'));
-    });
+    this.label = this.label || titlize(this.id);
 
     this.defineSetter('views', value => {
       throw new TypeError('The views property cannot be set directly');
