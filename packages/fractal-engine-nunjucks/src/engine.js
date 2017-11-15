@@ -1,6 +1,7 @@
 const nunjucks = require('nunjucks');
 const {getPartials} = require('@frctl/support/helpers');
 const WithExtension = require('@allmarkedup/nunjucks-with');
+const IncludeWithExtension = require('./extensions/include-with');
 
 module.exports = function (config = {}) {
   const loaders = [].concat(config.loaders || []);
@@ -26,6 +27,7 @@ module.exports = function (config = {}) {
   const env = new nunjucks.Environment([new TemplateLoader(), ...loaders]);
 
   env.addExtension('WithExtension', new WithExtension());
+  env.addExtension('IncludeWithExtension', new IncludeWithExtension());
 
   Object.keys(config.globals || {}).forEach(key => env.addGlobal(key, config.globals[key]));
   Object.keys(config.extensions || {}).forEach(key => env.addExtension(key, config.extensions[key]));
