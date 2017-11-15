@@ -6,7 +6,7 @@ module.exports = {
     {
       id: 'primary',
       props: {
-        classNames: ['button--primary'],
+        classNames: ['button--primary']
       },
       scenarios: [
         {
@@ -26,7 +26,7 @@ module.exports = {
     {
       id: 'secondary',
       props: {
-        classNames: ['button--secondary'],
+        classNames: ['button--secondary']
       },
       scenarios: [
         {
@@ -47,7 +47,7 @@ module.exports = {
       id: 'next',
       props: {
         classNames: ['button--next'],
-        next: true,
+        next: true
       },
       scenarios: [
         {

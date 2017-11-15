@@ -1,4 +1,6 @@
-require('./button.scss');
+const scss = require('./button.scss');
+
 module.exports = function (scenario) {
-  require('./button.js');
+  const button = require('./button.js');
+  console.log(scss, button);
 };

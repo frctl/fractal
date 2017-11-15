@@ -1,4 +1,6 @@
+/* eslint import/no-extraneous-dependencies: off, import/no-unresolved:off */
 module.exports = function () {
-  require('button/button.js');
-  console.log('card')
-}
+  const button = require('button/button.js');
+  console.log('card');
+  console.log(button);
+};

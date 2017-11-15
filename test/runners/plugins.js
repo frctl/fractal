@@ -34,9 +34,9 @@ module.exports = function (testPath) {
 
       for (let {description, test, throws, timeout, opts = {}, input = Collection.from([]), state, app} of pluginTests) {
         const plugin = pluginFactory(opts);
-        input = Collection.from(input);
-
-        it(description, function () {
+        it(description, async function () {
+          input = await Promise.resolve(input);
+          input = (input instanceof Collection) ? input : Collection.from(input);
           if (timeout) {
             this.timeout(timeout);
           }

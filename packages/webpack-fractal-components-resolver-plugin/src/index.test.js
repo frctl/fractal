@@ -1,13 +1,12 @@
-const { join } = require('path');
-const { mock } = require('sinon');
+const {join} = require('path');
 
 /* eslint no-unused-expressions: off */
 
-const { Fractal } = require('@frctl/fractal');
-const { expect, sinon } = require('../../../test/helpers');
+const {Fractal} = require('@frctl/fractal');
+const {expect, sinon} = require('../../../test/helpers');
 const ComponentResolver = require('./index');
 
-const app = new Fractal({ src: join(__dirname, '../fixtures/components') });
+const app = new Fractal({src: join(__dirname, '../fixtures/components')});
 const mockResolverAPI = {
   plugin: function (target, callback) { },
   doResolve: function (types, request, message, callback) { }
@@ -25,38 +24,35 @@ describe('component resolver webpack plugin', function () {
   describe('apply', function () {
     it('outputs the correct values for a given component request', function () {
       const testRequests = ['button/button.js', 'card/card.css'];
-      const componentResolver = newResolver();
       testRequests.forEach(runComponentTest);
     });
     it('defers to its callback when non-component, relative, or absolute requests made', function () {
       const testRequests = ['module/index.js', './button/button.js', '.', '/root/path/button.js'];
-      const componentResolver = newResolver();
       testRequests.forEach(runNonComponentTest);
     });
   });
 });
 
 function newResolver() {
-  return new ComponentResolver({ components });
+  return new ComponentResolver({components});
 }
-
 
 function expectedRequest(testPath) {
   return {
     file: true,
     path: join(__dirname, `../fixtures/components/@${testPath}`),
     resolved: true
-  }
+  };
 }
 
 function expectedMessage(testPath) {
-  return `expanded component path "${testPath}" to "${join(__dirname, `../fixtures/components/@${testPath}`)}"`;
+  return `expanded component request "${testPath}" to "${join(__dirname, `../fixtures/components/@${testPath}`)}"`;
 }
 
 function runComponentTest(testRequest) {
   const componentResolver = newResolver();
   const callbackSpy = sinon.spy();
-  const pluginStub = sinon.stub(mockResolverAPI, 'plugin').yields({ request: testRequest }, callbackSpy);
+  const pluginStub = sinon.stub(mockResolverAPI, 'plugin').yields({request: testRequest}, callbackSpy);
   const doResolveSpy = sinon.spy(mockResolverAPI, 'doResolve');
 
   componentResolver.apply(mockResolverAPI);
@@ -76,7 +72,7 @@ function runComponentTest(testRequest) {
 function runNonComponentTest(testRequest) {
   const componentResolver = newResolver();
   const callbackSpy = sinon.spy();
-  const pluginStub = sinon.stub(mockResolverAPI, 'plugin').yields({ request: testRequest }, callbackSpy);
+  const pluginStub = sinon.stub(mockResolverAPI, 'plugin').yields({request: testRequest}, callbackSpy);
   const doResolveSpy = sinon.spy(mockResolverAPI, 'doResolve');
 
   componentResolver.apply(mockResolverAPI);

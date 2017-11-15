@@ -17,7 +17,6 @@ class ComponentCollection extends EntityCollection {
    */
   find(...args) {
     if (args.length === 1 && typeof args[0] === 'string') {
-      console.log('id', args[0]);
       return super.find('id', args[0]);
     }
     return super.find(...args);

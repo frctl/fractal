@@ -1,10 +1,9 @@
-require('./card.css');
+const scss = require('./card.css');
 const card = require('./card.js');
 
-module.exports = function(scenario, variant, component){
-
+module.exports = function (scenario, variant, component) {
   card({
     text: scenario.context.text
   });
-
-}
+  console.log(scss);
+};

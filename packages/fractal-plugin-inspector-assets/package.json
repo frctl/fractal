@@ -1,7 +1,7 @@
 {
   "name": "@frctl/fractal-plugin-inspector-assets",
   "description": "Asset bundler for Fractal's Inspector",
-  "version": "2.0.0-beta.0",
+  "version": "2.0.0-beta.4",
   "homepage": "http://fractal.build",
   "repository": "https://github.com/frctl/fractal/tree/v2/packages/fractal/fractal-plugin-inspector-assets",
   "bugs": "https://github.com/frctl/fractal/issues",
@@ -14,6 +14,7 @@
   "dependencies": {
     "@frctl/support": "^2.0.0-beta.4",
     "@frctl/utils": "^2.0.0-beta.3",
+    "@frctl/webpack-fractal-components-resolver-plugin": "^2.0.0-beta.4",
     "css-loader": "^0.28.7",
     "extract-text-webpack-plugin": "^3.0.1",
     "file-loader": "^1.1.5",
@@ -23,6 +24,7 @@
     "webpack": "^3.6.0"
   },
   "devDependencies": {
-    "debug": "^3.0.0"
+    "debug": "^3.0.0",
+    "@frctl/fractal": "^2.0.0-beta.4"
   }
 }
