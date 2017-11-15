@@ -19,6 +19,9 @@ module.exports = {
         views: {
           match: 'view.*'
         },
+        preview: {
+          entry: '**/preview.js'
+        },
         assets: {
           styles: '**/*.{css,scss}',
           scripts: '**/*.js',

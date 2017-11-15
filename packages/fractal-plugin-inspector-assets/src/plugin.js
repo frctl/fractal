@@ -4,7 +4,8 @@ const fs = require('fs');
 const webpack = require('webpack');
 const MemoryFS = require('memory-fs');
 const {promisify} = require('@frctl/utils');
-const {FileCollection, FileSystemStack, ComponentCollection} = require('@frctl/support');
+const {FileCollection, FileSystemStack} = require('@frctl/support');
+const ComponentResolver = require('@frctl/webpack-fractal-components-resolver-plugin');
 const debug = require('debug')('frctl:plugin:inspector-assets');
 
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
@@ -12,70 +13,16 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const styleTest = /\.(sass|scss|css)$/;
 const fileTest = /\.(svg|png|jpg|jpeg|gif|webm|mp4|ogg|woff|woff2)$/;
 
-const getPathHead = (modulePath) => {
-  return modulePath.split(path.sep)[0]
-}
-const getPathTail = (modulePath) => {
-  return modulePath.split(path.sep).slice(1).join(path.sep);
-}
-
-const ComponentResolver = function(options) {
-  this.components = options.components;
-};
-
-ComponentResolver.prototype.apply = function(resolver) {
-  const components = this.components;
-
-  resolver.plugin('module', function(shortRequest, callback) {
-
-    const shortPath = shortRequest.request;
-    // console.log(shortRequest);
-
-    // ignore relative or absolute paths
-    if ( /^\W+/.test(shortPath)){
-      return callback();
-    } else {
-      console.log('ADDING PATH', shortPath);
-    }
-
-    const componentId = getPathHead(shortPath);
-    const requestTail = getPathTail(shortPath);
-
-    const component = components.find('id', componentId);
-
-    //ignore paths which don't match a component
-    if (!component) {
-      return callback();
-    }
-
-    console.log(shortPath, componentId, requestTail);
-    //resolve the long path
-    var longPath = component.path;
-
-    // console.log(path.join(longPath, requestTail))
-
-    //create a new request to resolve the full path
-    const longRequest = {
-      path: path.join(longPath, requestTail),
-      query: shortRequest.query,
-      file: true, resolved: true
-    };
-
-    // console.log('longreq', longRequest);
-
-    //resolve the long path
-    return resolver.doResolve(['file'], longRequest, 'expanded component path \'' + shortPath + '\' to \'' + path.join(longPath, requestTail) + '\'', callback);
-  });
-}
-
-const getConfig = (component, components) => {
+const getConfig = (component, components, app) => {
   const basePath = component.getSrc().path;
-  const stem = component.getSrc().stem;
+  // FIXME: Need to get value of component match from app, not hard-coded
+  const stem = component.getSrc().stem.replace('@', '');
   const extractSASS = new ExtractTextPlugin(`${basePath}/${stem}.css`);
+  const entryMatcher = app.get('components.config.defaults.preview.entry', '**/preview.js');
   const componentResolver = new ComponentResolver({components});
   return {
     context: process.cwd(),
-    entry: component.getAssets().toArray().map(file => file.path),
+    entry: component.getAssets().filter(entryMatcher).toArray().map(file => file.path),
     output: {
       filename: `${stem}.js`,
       path: `${path.join(basePath)}`
@@ -119,19 +66,21 @@ module.exports = function (opts = {}) {
 
     transform: 'components',
 
-    async handler(_components, state, app) {
+    async handler(components, state, app) {
+      const entryMatcher = app.get('components.config.defaults.preview.entry', '**/preview.js');
       // FIXME: looping/compiling need to be optimised here
-      const components = await _components.mapAsync(async component => {
+      return await components.mapAsync(async component => {
         const outputFileSystem = new MemoryFS();
         component.inspector = component.inspector || {};
         const assets = component.getAssets();
-        if (assets.length === 0) {
+        const entries = assets.filter(entryMatcher);
+        if (assets.length === 0 || entries.length === 0) {
           component.inspector.assets = new FileCollection();
           return component;
         }
         assets.toMemoryFS(memoryFs);
 
-        const config = getConfig(component, _components);
+        const config = getConfig(component, components, app);
         const compiler = webpack(config);
         const pRun = promisify(compiler.run.bind(compiler));
 
@@ -144,7 +93,7 @@ module.exports = function (opts = {}) {
         const res = await pRun().catch(err => {
           debug(`Error running plugin handler: ${err}`);
         });
-        console.log(res);
+        debug(`Webpack compiler plugin result for ${component.id}: ${res}`);
 
         component.inspector.assets = await FileCollection.fromMemoryFS(outputFileSystem); // TODO: should this overwrite, or merge in some way?
         debug(`
@@ -152,9 +101,6 @@ component: ${util.inspect(component.inspector.assets.mapToArray(file => ({path: 
 `);
         return component;
       });
-
-      return components;
     }
-
   };
 };
