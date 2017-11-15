@@ -19,6 +19,7 @@ class ApiServer extends Server {
 
     super(opts);
 
+    const componentOpts = opts.components || {};
     const router = new Router(opts.api);
 
     router.use(async (ctx, next) => {
@@ -26,7 +27,7 @@ class ApiServer extends Server {
       try {
         const {components, files} = await fractal.parse();
         ctx.files = files;
-        ctx.components = components;
+        ctx.components = componentOpts.filter ? components.filter(componentOpts.filter) : components;
       } catch (err) {
         ctx.throw(500, err);
       }
