@@ -1,0 +1,19 @@
+@import '~/config.scss';
+@import 'button/button.scss';
+
+.card {
+  border: 1px solid #ccc;
+  box-shadow: 2px 2px 2px rgba(0,0,0,0.2);
+  max-width: 500px;
+  border-radius: 4px;
+  padding: 1em;
+  font-family: sans-serif;
+}
+
+.card__title {
+  margin: 0.4em 0 0.5em 0;
+}
+
+.card__content {
+  line-height: 1.4;
+}
