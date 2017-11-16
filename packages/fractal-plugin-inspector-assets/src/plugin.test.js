@@ -56,7 +56,6 @@ module.exports = function (scenario) {
     })
   ]),
   config: {
-    id: `${name}-id-set`,
     assets: {
       scripts: '**/*.js',
       styles: '**/*.{scss,css}',
@@ -73,7 +72,6 @@ const makeEmptyComponent = name => Component.from({
     }
   }),
   config: {
-    id: `${name}-id-set`,
     assets: {
       scripts: '**/*.js',
       styles: '**/*.{scss,css}',
@@ -124,7 +122,6 @@ require('./${name}.${type}');
     }),
     files: FileCollection.from([chosenFile, previewFile]),
     config: {
-      id: `${name}-id-set`,
       assets: {
         scripts: '**/*.js',
         styles: '**/*.{scss,css}',
@@ -212,7 +209,7 @@ tests.addPluginTest({
   timeout: 3000,
   test: function (collection) {
     for (const component of collection) {
-      component.inspector.assets.toArray().map(file => console.log('\n', file.path, file.contents.toString()));
+      // component.inspector.assets.toArray().map(file => console.log('\n', file.path, file.contents.toString()));
       expect(component.inspector.assets).to.be.a('FileCollection');
       expect(component.inspector.assets.toArray().map(file => file.path).length).to.equal(2);
     }
@@ -227,4 +224,4 @@ tests.addPluginTest({
 //  description: 'it works for media and font assets'
 // })
 
-tests.runOnly();
+tests.run();

@@ -20,7 +20,7 @@ module.exports = {
           match: 'view.*'
         },
         preview: {
-          entry: '**/preview.js'
+          assets: '**/preview.js'
         },
         assets: {
           styles: '**/*.{css,scss}',

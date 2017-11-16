@@ -15,17 +15,18 @@ const fileTest = /\.(svg|png|jpg|jpeg|gif|webm|mp4|ogg|woff|woff2)$/;
 
 const getConfig = (component, components, app) => {
   const basePath = component.getSrc().path;
-  // FIXME: Need to get value of component match from app, not hard-coded
-  const stem = component.getSrc().stem.replace('@', '');
+  const stem = component.id;
   const extractSASS = new ExtractTextPlugin(`${basePath}/${stem}.css`);
-  const entryMatcher = app.get('components.config.defaults.preview.entry', '**/preview.js');
+  const entryMatcher = app.get('components.config.defaults.preview.assets', '**/preview.js');
   const componentResolver = new ComponentResolver({components});
   return {
     context: process.cwd(),
     entry: component.getAssets().filter(entryMatcher).toArray().map(file => file.path),
     output: {
       filename: `${stem}.js`,
-      path: `${path.join(basePath)}`
+      path: `${path.join(basePath)}`,
+      library: 'FractalExport',
+      libraryTarget: 'umd'
     },
     resolve: {
       plugins: [
