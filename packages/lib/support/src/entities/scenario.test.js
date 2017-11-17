@@ -10,14 +10,18 @@ const defaultProps = {
 };
 const makeScenario = props => new Scenario(props || defaultProps);
 
-describe('Scenario', function () {
+describe.only('Scenario', function () {
   describe('constructor', function () {
     it(`creates a new instance of a Scenario`, function () {
       const scenario = makeScenario();
       expect(scenario).to.exist;
       expect(scenario instanceof Scenario).to.be.true;
     });
-    it('throws an error on invalid props');
+    it('throws an error on invalid props', function(){
+      expect(() => makeScenario({
+        foo: 'bar'
+      })).to.throw(`[properties-invalid]`);
+    });
   });
 
   describe('.id', function () {

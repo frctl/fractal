@@ -16,9 +16,5 @@ module.exports = {
       minLength: 1
     }
   },
-  anyOf: [{
-    required: ['path']
-  }, {
-    required: ['history']
-  }]
+  required: ['path']
 };

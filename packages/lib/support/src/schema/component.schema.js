@@ -5,33 +5,30 @@ module.exports = {
   $schema: 'http://json-schema.org/draft-06/schema#',
   definitions: {
     file: fileSchema,
-    fileCollection: fileCollectionSchema
   },
   type: 'object',
   properties: {
     id: {
       type: 'string'
     },
-    path: {
-      type: 'string'
-    },
-    base: {
-      type: 'string'
+    src: {
+      oneOf: [{
+        instanceof: 'File'
+      }, {
+        $ref: '#/definitions/file'
+      }]
     },
     config: {
-      type: 'object'
+      type: 'object',
+      // TODO: config object schema
     },
     files: {
       oneOf: [{
-        $ref: '#/definitions/fileCollection'
+        instanceof: 'FileCollection'
       }, {
         type: 'array'
       }]
     }
   },
-  oneOf: [{
-    required: ['path']
-  }, {
-    required: ['src']
-  }]
+  required: ['id', 'src']
 };

@@ -22,7 +22,7 @@ const baseFileData = {
 };
 const makeFile = input => new File(input || Object.assign({}, minFileData));
 
-describe('File', function () {
+describe.only('File', function () {
   describe('constructor', function () {
     it('returns a new instance', function () {
       const file = makeFile();
@@ -45,28 +45,18 @@ describe('File', function () {
     it('sets cwd', function () {
       const val = path.normalize('/');
       const file = makeFile({
-        path: minFileData.path,
+        path: baseFileData.path,
         cwd: val
       });
       expect(file.cwd).to.equal(val);
     });
 
-    it('sets path (and history)', function () {
+    it('sets path', function () {
       const val = path.normalize('/test.coffee');
       const file = makeFile({
         path: val
       });
       expect(file.path).to.equal(val);
-      expect(file.history).to.eql([val]);
-    });
-
-    it('sets history (and path)', function () {
-      const val = path.normalize('/test.coffee');
-      const file = makeFile({
-        history: [val]
-      });
-      expect(file.path).to.equal(val);
-      expect(file.history).to.eql([val]);
     });
 
     it('sets stat', function () {
@@ -108,7 +98,6 @@ describe('File', function () {
         path: val
       });
       expect(file.path).to.equal(expected);
-      expect(file.history).to.eql([expected]);
     });
 
     it('normalizes and removes trailing separator from path', function () {
@@ -118,87 +107,6 @@ describe('File', function () {
         path: val
       });
       expect(file.path).to.eql(expected);
-    });
-
-    it('normalizes history', function () {
-      const val = [
-        '/test/bar/../bar/test.coffee',
-        '/test/foo/../test.coffee'
-      ];
-      const expected = val.map(function (p) {
-        return path.normalize(p);
-      });
-      const file = makeFile({
-        history: val
-      });
-      expect(file.path).to.equal(expected[1]);
-      expect(file.history).to.eql(expected);
-    });
-
-    it('normalizes and removes trailing separator from history', function () {
-      const val = [
-        '/test/foo/../foo/',
-        '/test/bar/../bar/'
-      ];
-      const expected = val.map(function (p) {
-        return path.normalize(p.slice(0, -1));
-      });
-      const file = makeFile({
-        history: val
-      });
-      expect(file.history).to.eql(expected);
-    });
-
-    it('appends path to history if both exist and different from last', function () {
-      const val = path.normalize('/test/baz/test.coffee');
-      const history = [
-        path.normalize('/test/bar/test.coffee'),
-        path.normalize('/test/foo/test.coffee')
-      ];
-      const file = makeFile({
-        path: val,
-        history: history
-      });
-
-      const expectedHistory = history.concat(val);
-
-      expect(file.path).to.equal(val);
-      expect(file.history).to.eql(expectedHistory);
-    });
-
-    it('does not append path to history if both exist and same as last', function () {
-      const val = path.normalize('/test/baz/test.coffee');
-      const history = [
-        path.normalize('/test/bar/test.coffee'),
-        path.normalize('/test/foo/test.coffee'),
-        val
-      ];
-      const file = makeFile({
-        path: val,
-        history: history
-      });
-
-      expect(file.path).to.equal(val);
-      expect(file.history).to.eql(history);
-    });
-
-    it('does not mutate history array passed in', function () {
-      const val = path.normalize('/test/baz/test.coffee');
-      const history = [
-        path.normalize('/test/bar/test.coffee'),
-        path.normalize('/test/foo/test.coffee')
-      ];
-      const historyCopy = Array.prototype.slice.call(history);
-      const file = makeFile({
-        path: val,
-        history: history
-      });
-
-      const expectedHistory = history.concat(val);
-
-      expect(file.path).to.equal(val);
-      expect(file.history).to.eql(expectedHistory);
-      expect(history).to.eql(historyCopy);
     });
   });
   describe('defaults', function () {
@@ -217,10 +125,6 @@ describe('File', function () {
         cwd
       });
       expect(file.base).to.equal(cwd);
-    });
-    it('defaults history to the path entry', function () {
-      const file = makeFile();
-      expect(file.history).to.eql([minFileData.path]);
     });
     it('defaults stat to null', function () {
       const file = makeFile();
@@ -252,15 +156,6 @@ describe('File', function () {
       const file = makeFile();
       file.contents = val;
       expect(file.contents).to.equal(null);
-    });
-    it('does not set a string', function () {
-      const val = 'test';
-      const file = makeFile();
-
-      function invalid() {
-        file.contents = val;
-      }
-      expect(invalid).to.throw(TypeError, '[invalid-contents]');
     });
   });
 
@@ -301,7 +196,7 @@ describe('File', function () {
       expect(file.cwd).to.equal(val);
       expect(() => {
         file.cwd = '/foo';
-      }).to.throw(TypeError, '[invalid-set-cwd]');
+      }).to.throw(Error, '[invalid-set-cwd]');
       expect(file.cwd).to.equal(val);
     });
     it('throws on init with invalid values', function () {
@@ -441,7 +336,7 @@ describe('File', function () {
         file.relative = 'test';
       }
 
-      expect(invalid).to.throw(TypeError, '[invalid-set-relative]');
+      expect(invalid).to.throw(Error, '[invalid-set-relative]');
     });
 
     it('returns a relative path from base', function () {
@@ -666,6 +561,8 @@ describe('File', function () {
 
       file.extname = '.png';
       expect(file.path).to.equal(path.normalize('/test/test.png'));
+      file.set('extname', '.jpg');
+      expect(file.get('path')).to.equal(path.normalize('/test/test.jpg'));
     });
   });
 
@@ -678,6 +575,7 @@ describe('File', function () {
       });
 
       expect(file.stem).to.equal('test');
+      expect(file.get('stem')).to.equal('test');
     });
 
     it('replaces the stem of the path', function () {
@@ -689,61 +587,13 @@ describe('File', function () {
 
       file.stem = 'foo';
       expect(file.path).to.equal(path.normalize('/test/foo.coffee'));
+
+      file.set('stem', 'bar');
+      expect(file.get('path')).to.equal(path.normalize('/test/bar.coffee'));
     });
   });
 
   describe('.path get/set', function () {
-    it('records path in history upon instantiation', function () {
-      const file = makeFile({
-        cwd: '/',
-        path: '/test/test.coffee'
-      });
-      const history = [
-        path.normalize('/test/test.coffee')
-      ];
-
-      expect(file.path).to.equal(history[0]);
-      expect(file.history).to.eql(history);
-    });
-
-    it('records path in history when set', function () {
-      const val = path.normalize('/test/test.js');
-      const file = makeFile({
-        cwd: '/',
-        path: '/test/test.coffee'
-      });
-      const history = [
-        path.normalize('/test/test.coffee'),
-        val
-      ];
-
-      file.path = val;
-      expect(file.path).to.equal(val);
-      expect(file.history).to.eql(history);
-
-      const val2 = path.normalize('/test/test.es6');
-      history.push(val2);
-
-      file.path = val2;
-      expect(file.path).to.equal(val2);
-      expect(file.history).to.eql(history);
-    });
-
-    it('does not record path in history when set to the current path', function () {
-      const val = path.normalize('/test/test.coffee');
-      const file = makeFile({
-        cwd: '/',
-        path: val
-      });
-      const history = [
-        val
-      ];
-
-      file.path = val;
-      file.path = val;
-      expect(file.path).to.equal(val);
-      expect(file.history).to.eql(history);
-    });
 
     it('throws on set with empty-string path', function () {
       const file = makeFile();
@@ -775,7 +625,6 @@ describe('File', function () {
       file.path = val;
 
       expect(file.path).to.equal(expected);
-      expect(file.history).to.eql([expected]);
     });
 
     it('removes the trailing separator upon set', function () {
@@ -783,7 +632,6 @@ describe('File', function () {
       file.path = '/test/';
 
       expect(file.path).to.equal(path.normalize('/test'));
-      expect(file.history).to.eql([path.normalize(minFileData.path), path.normalize('/test')]);
     });
 
     it('removes the trailing separator upon set when directory', function () {
@@ -798,7 +646,6 @@ describe('File', function () {
       file.path = '/test/';
 
       expect(file.path).to.equal(path.normalize('/test'));
-      expect(file.history).to.eql([path.normalize(minFileData.path), path.normalize('/test')]);
     });
 
     it('removes the trailing separator upon set when symlink', function () {
@@ -813,7 +660,6 @@ describe('File', function () {
       file.path = '/test/';
 
       expect(file.path).to.equal(path.normalize('/test'));
-      expect(file.history).to.eql([path.normalize(minFileData.path), path.normalize('/test')]);
     });
 
     it('removes the trailing separator upon set when directory & symlink', function () {
@@ -831,7 +677,6 @@ describe('File', function () {
       file.path = '/test/';
 
       expect(file.path).to.equal(path.normalize('/test'));
-      expect(file.history).to.eql([path.normalize(minFileData.path), path.normalize('/test')]);
     });
   });
 
@@ -947,22 +792,6 @@ describe('File', function () {
       expect(copy.stat).to.be.an.instanceof(fs.Stats);
     });
 
-    it('properly clones the `history` property', function () {
-      const options = {
-        cwd: path.normalize('/'),
-        base: path.normalize('/test/'),
-        path: path.normalize('/test/test.js'),
-        contents: new Buffer('test')
-      };
-
-      const file = makeFile(options);
-      const copy = file.clone();
-
-      expect(copy.history[0]).to.equal(options.path);
-      copy.path = 'lol';
-      expect(file.path).to.not.equal(copy.path);
-    });
-
     it('copies custom properties', function () {
       const options = {
         cwd: '/',
@@ -982,29 +811,6 @@ describe('File', function () {
       expect(file2.custom).to.not.equal(file.custom);
       expect(file2.custom.meta).to.not.equal(file.custom.meta);
       expect(file2.custom).to.eql(file.custom);
-    });
-
-    it('copies history', function () {
-      const options = {
-        cwd: '/',
-        base: '/test/',
-        path: '/test/test.coffee',
-        contents: null
-      };
-      const history = [
-        path.normalize('/test/test.coffee'),
-        path.normalize('/test/test.js'),
-        path.normalize('/test/test-938di2s.js')
-      ];
-
-      const file = makeFile(options);
-      file.path = history[1];
-      file.path = history[2];
-      const file2 = file.clone();
-
-      expect(file2.history).to.eql(history);
-      expect(file2.history).to.not.equal(file.history);
-      expect(file2.path).to.equal(history[2]);
     });
 
     it('supports deep copy of all attributes', function () {
@@ -1069,8 +875,7 @@ describe('File', function () {
         contents: 'var x = 123',
         dirname: '/test',
         stem: 'file',
-        stat: null,
-        history: ['/test/file.js']
+        stat: null
       });
     });
     it(`does not output 'hidden' (underscore-prefixed) properties`, function () {
@@ -1121,10 +926,10 @@ describe('File', function () {
   });
   describe('.from()', function () {
     it(`creates a new instance of a File`, function () {
-      const fileFrom = File.from(baseFileData);
+      const fileFrom = File.from(minFileData);
       const file = makeFile();
       expect(fileFrom instanceof File).to.be.true;
-      expect(file).to.eql(fileFrom);
+      expect(omit(file.toJSON(), 'uuid')).to.eql(omit(fileFrom.toJSON(), 'uuid'));
     });
   });
   describe('.fromPath()', function () {

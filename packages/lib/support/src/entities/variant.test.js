@@ -33,22 +33,6 @@ describe('Variant', function () {
     it('is generated from the id if not set in props');
   });
 
-  describe('.getTemplates()', function () {
-    it('returns a collection', function () {
-      const variant = makeVariant();
-      expect(variant.getTemplates()).to.be.instanceOf(Collection);
-    });
-  });
-
-  describe('.addTemplate()', function () {
-    it('creates a new template and adds it to the template set', function () {
-      const variant = makeVariant();
-      variant.addTemplate({contents: '<span></span>', filename: 'file.html'});
-      expect(variant.getTemplates().length).to.equal(1);
-      expect(variant.getTemplate()).to.be.instanceOf(Template);
-    });
-  });
-
   describe('.clone()', function () {
     it(`preserves the UUID of the variant`, function () {
       const variant = makeVariant();

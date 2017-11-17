@@ -2,57 +2,54 @@
 const {expect} = require('../../../../../test/helpers');
 const Template = require('./template');
 
-const defaultContent = {};
-const makeTemplate = (content, filename) => new Template({contents: content || defaultContent, filename: filename || 'foo.html'});
+const templateData = {
+  cwd: '/',
+  base: '/test/',
+  path: '/test/file.js',
+  contents: new Buffer('<div></div>')
+};
+const makeTemplate = props => new Template(props || templateData);
 
-describe('Template', function () {
+describe.only('Template', function () {
   describe('constructor', function () {
     it(`creates a new instance of a Template`, function () {
       const template = makeTemplate();
       expect(template).to.exist;
       expect(template instanceof Template).to.be.true;
     });
-    it('accepts a DOM tree as contents');
-    it('accepts a string as contents');
+    it('throws an error on invalid props', function(){
+      expect(() => makeTemplate({
+        foo: 'bar'
+      })).to.throw(`[properties-invalid]`);
+    });
   });
 
-  describe('.filename', function () {
-    it('gets the filename', function () {
+  describe('.transform()', function () {
+    it('accepts a function that mutates the contents', function () {
       const template = makeTemplate();
-      expect(template.filename).to.equal('foo.html');
+      template.transform(contents => {
+        contents.children[0].tagName = 'span';
+      });
+      expect(template.contents).to.equal('<span></span>');
     });
   });
 
-  describe('.extname', function () {
-    it('gets the file extension', function () {
+  describe('get .contents', function () {
+    it('returns the contents as a string', function () {
       const template = makeTemplate();
-      expect(template.extname).to.equal('.html');
+      expect(template.contents).to.be.a('string');
     });
   });
 
-  describe('.contents', function () {
-    it('returns the template AST', function () {
-      const template = makeTemplate(defaultContent);
-      expect(template.contents).to.be.an('object');
-      expect(template.contents).to.eql(defaultContent);
+  describe('set .contents', function () {
+    it('sets the contents', function () {
+      const template = makeTemplate();
+      template.contents = '<br>';
+      expect(template.contents).to.equal('<br>');
     });
-  });
-
-  describe('.clone', function () {
-    it('clones the template including the DOM tree', function () {
-      const template = makeTemplate(defaultContent);
-      const cloned = template.clone();
-      expect(template).to.eql(cloned);
-      expect(template).to.not.equal(cloned);
-      expect(template.contents).to.eql(cloned.contents);
-      expect(template.contents).to.not.equal(cloned.contents);
-    });
-  });
-
-  describe('.toString()', function () {
-    it('stringifies the template', function () {
-      const template = makeTemplate('<span></span>');
-      expect(template.toString()).to.equal('<span></span>');
+    it('throws an error if contents is invalid', function () {
+      const template = makeTemplate();
+      expect(() => {template.contents = {}}).to.throw('[invalid-contents]');
     });
   });
 
@@ -63,6 +60,7 @@ describe('Template', function () {
       expect(Template.isTemplate({})).to.be.false;
     });
   });
+
   describe('.[Symbol.toStringTag]', function () {
     const template = makeTemplate();
     expect(template[Symbol.toStringTag]).to.equal('Template');

@@ -1,113 +1,76 @@
 const {assert} = require('check-types');
-const {mapValues, pickBy, get, set, unset} = require('lodash');
-const {cloneDeep, hash, uuid} = require('@frctl/utils');
-// const reservedWords = require('../../reserved-words');
+const {mapValues, pickBy, omitBy, get, set} = require('lodash');
+const {cloneDeep, uuid} = require('@frctl/utils');
+const Validator = require('../validator');
 
-const _data = new WeakMap();
-const _setters = new WeakMap();
-const _getters = new WeakMap();
-
-const managedProps = [];
+const managedProps = ['uuid','config'];
 
 class Entity {
 
-  constructor(props = {}) {
-    if (Entity.isEntity(props)) {
+  constructor(props = {}){
+    if (props instanceof this.constructor) {
       return props;
     }
 
-    assert.object(props, 'Entity.constructor - props must be an object [properties-invalid]');
+    this.constructor.validate(props);
 
-    props.uuid = props.uuid || uuid();
+    this._uuid = props.uuid || uuid();
+    this._config = cloneDeep(props.config || {});
 
-    this._validateOrThrow(props);
-
-    _data.set(this, cloneDeep(props));
-    _setters.set(this, []);
-    _getters.set(this, []);
-
-    const proxy = new Proxy(this, {
-      get(target, propKey, receiver) {
-        if (!Reflect.has(target, propKey)) {
-          return target.get(propKey);
-        }
-        const originalProp = Reflect.get(target, propKey);
-        if ((typeof originalProp === 'function') && (propKey !== 'constructor')) {
-          return originalProp.bind(target);
-        }
-        return originalProp;
-      },
-      set(target, propKey, value, receiver) {
-        if (!Reflect.has(target, propKey)) {
-          target.set(propKey, value);
-          return true;
-        }
-        return Reflect.set(target, propKey, value);
-      },
-      has(target, propKey) {
-        return (
-          Reflect.has(target, propKey) ||
-          Reflect.has(_data.get(target), propKey)
-        );
-      }
-    });
-
-    this._proxy = proxy;
-
-    return proxy;
+    Object.assign(this, pickBy(props, (value, key) => this.constructor.isCustomProp(key)));
   }
 
-  get(path, fallback) {
-    const initial = get(_data.get(this), path, fallback);
-    return computeFinal(_getters.get(this), path, initial, this);
+  get uuid(){
+    return this._uuid;
   }
 
-  set(path, value) {
-    assert.string(path, `${this[Symbol.toStringTag]}.set - 'path' argument must be a string [path-invalid]`);
-    // TODO: extract shared caching code with config // this.removeFromCache(path);
-    const final = computeFinal(_setters.get(this), path, value, this);
-    set(_data.get(this), path, final);
-    return final;
+  set uuid(uuid){
+    throw new Error(`${this.constructor.name}.uuid is read-only after initialisation [invalid-set-uuid]`);
   }
 
-  unset(path) {
-    assert.string(path, `${this[Symbol.toStringTag]}.set - 'path' argument must be a string [path-invalid]`);
-    return unset(_data.get(this), path);
+  get config(){
+    return cloneDeep(this._config);
   }
 
-  getData() {
-    return cloneDeep(_data.get(this));
+  set config(config){
+    throw new Error(`${this.constructor.name}.config cannot be set after instantiation [invalid-set-config]`);
   }
 
-  setData(data) {
-    _data.set(this, cloneDeep(data));
+  get(path, fallback){
+    return get(this, path, fallback);
+  }
+
+  set(path, value){
+    set(this, path, value);
     return this;
   }
 
-  getProps() {
-    const props = this.getData();
-    for (const getter of _getters.get(this)) {
-      if (!get(props, getter.path)) {
-        set(props, getter.path, this.get(getter.path));
-      }
+  getProps(){
+    return pickBy(this, (item, key) => key[0] !== '_');
+  }
+
+  getCustomProps(){
+    return pickBy(this, (value, key) => this.constructor.isCustomProp(key));
+  }
+
+  getManagedProps(){
+    return omitBy(this, (value, key) => this.constructor.isCustomProp(key));
+  }
+
+  getConfig(path, fallback){
+    if (path) {
+      return cloneDeep(get(this._config, path, fallback));
     }
-    return props;
+    return this.config;
   }
 
-  defineGetter(path, getter) {
-    _getters.get(this).push({path: path, handler: getter});
-  }
-
-  defineSetter(path, setter) {
-    _setters.get(this).push({path: path, handler: setter});
+  clone() {
+    const props = Object.assign({}, this, this.getManagedProps());
+    return new this.constructor(cloneDeep(props));
   }
 
   toJSON() {
-    let props = this.getProps();
-    props = pickBy(props, (item, key) => {
-      return !key.startsWith('_');
-    });
-    return mapValues(props, (item, key) => {
+    return mapValues(this.getProps(), (item, key) => {
       if (Buffer.isBuffer(item)) {
         return item.toString();
       }
@@ -118,62 +81,36 @@ class Entity {
     });
   }
 
-  clone() {
-    const cloned = new this.constructor(_data.get(this));
-    return this._assignProps(cloned);
-  }
-
-  hash() {
-    const merged = this.getData();
-    const hashProps = mapValues(merged, (item, key) => {
-      return (item && typeof item.hash === 'function') ? item.hash() : item;
-    });
-    return hash(JSON.stringify(hashProps));
-  }
-
   // TODO: Improve formatting: use logging class?
   inspect(depth, opts) {
-    return `${this[Symbol.toStringTag]} ${JSON.stringify(this.getData())}`;
-  }
-
-  _validateOrThrow(props) {
-    assert.maybe.object(props, `Entity.constructor: The properties provided to Entity must be in object form [properties-invalid]`);
-  }
-
-  _assignProps(target) {
-    _getters.get(this).forEach(({path, handler}) => {
-      if (this.constructor.isCustomProp(path)) {
-        target.defineGetter(path, handler);
-      }
-    });
-    _setters.get(this).forEach(({path, handler}) => {
-      if (this.constructor.isCustomProp(path)) {
-        target.defineSetter(path, handler);
-      }
-    });
-    return target;
-  }
-
-  get [Symbol.toStringTag]() {
-    return 'Entity';
+    return `${this[Symbol.toStringTag]} ${JSON.stringify(this.getProps(), null, 2)}`;
   }
 
   static isCustomProp(name) {
     return !managedProps.includes(name);
   }
 
-  static from(props) {
+  static from(props = {}){
     return new this(props);
+  }
+
+  static validate(props){
+    assert.maybe.object(props, `${this.constructor.name}.constructor: The properties provided to Entity must be in object form [properties-invalid]`);
+    if (this.schema) {
+      Validator.assertValid(props, this.schema, `${this.constructor.name}.constructor: Invalid properties schema [properties-invalid]`);
+    }
   }
 
   static isEntity(item) {
     return item instanceof Entity;
   }
+
+  get [Symbol.toStringTag]() {
+    return 'Entity';
+  }
+
 }
 
-function computeFinal(arr, path, initial, entity) {
-  return arr.filter(s => s.path === path)
-  .reduce((acc, current) => current.handler(acc, entity), initial);
-}
+managedProps.forEach(prop => Object.defineProperty(Entity.prototype, prop, {enumerable: true}));
 
 module.exports = Entity;
