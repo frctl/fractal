@@ -18,6 +18,16 @@ module.exports = {
       defaults: {
         views: {
           match: 'view.*'
+        },
+        preview: {
+          assets: '**/preview.js'
+        },
+        assets: {
+          styles: '**/*.{css,scss}',
+          scripts: '**/*.js',
+          images: '**/*.{svg,png,jpg,jpeg,gif}',
+          media: '**/*.{webm,mp4,ogg}',
+          fonts: '**/*.{woff,woff2}'
         }
       }
     },

@@ -3,6 +3,7 @@ const check = require('check-types');
 const slash = require('slash');
 const MemoryFS = require('memory-fs');
 const File = require('../entities/file');
+const FileSystemReader = require('../fs/fs-file-reader');
 const EntityCollection = require('./entity-collection');
 const Collection = require('./collection');
 
@@ -67,9 +68,8 @@ class FileCollection extends EntityCollection {
     return new FileCollection(items);
   }
 
-  toMemoryFS() {
+  toMemoryFS(memFs = new MemoryFS()) {
     // TODO: can we cache this MemoryFs instance creation somehow?
-    const memFs = new MemoryFS();
     const errors = [];
     this.clone().filter(file => !file.isDirectory()).sortBy(file => file.path.length).forEach(file => {
       try {
@@ -101,6 +101,29 @@ class FileCollection extends EntityCollection {
 
   static validate(items) {
     return check.maybe.array.of.instance(items, File);
+  }
+
+  static fromMemoryFS(memFs) {
+    const reader = new FileSystemReader(memFs);
+    const files = [];
+    const errors = [];
+    return new Promise((resolve, reject) => {
+      reader.readFiles('/', '',
+        function (err, content, filename, next) {
+          if (err) {
+            errors.push(err);
+          } else {
+            files.push({path: filename, contents: content});
+          }
+          next();
+        },
+        function (err, fls) {
+          if (err || errors.length > 0) {
+            return reject(err || new Error(`Could not create FileCollection from MemoryFS instance [from-memfs-error]\n  ${errors.join('\n')}`));
+          }
+          resolve(FileCollection.from(files));
+        });
+    });
   }
 }
 

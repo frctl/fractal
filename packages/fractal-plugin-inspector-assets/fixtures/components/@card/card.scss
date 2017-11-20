@@ -1,0 +1,17 @@
+@import '~button/button.scss';
+$border-color: #ccc;
+
+.card {
+  border: 1px solid $border-color;
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+  max-width: 500px;
+  border-radius: 4px;
+  padding: 1em;
+  font-family: sans-serif;
+  &__title {
+    margin: 0.4em 0 0.5em 0;
+  }
+  &__content {
+    line-height: 1.4;
+  }
+}

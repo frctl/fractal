@@ -18,7 +18,8 @@
     "test:watch": "yarn run test:unit -- --watch",
     "lint": "xo",
     "lint:fix": "xo --fix",
-    "bootstrap": "lerna bootstrap"
+    "bootstrap": "lerna bootstrap",
+    "clean": "lerna clean"
   },
   "devDependencies": {
     "@frctl/eslint-config-frctl": "^0.1.2",

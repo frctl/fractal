@@ -11,3 +11,5 @@ module.exports.Scenario = require('./src/entities/scenario');
 module.exports.Emitter = require('./src/emitter');
 module.exports.EmittingPromise = require('./src/emitting-promise');
 module.exports.Validator = require('./src/validator');
+module.exports.FileSystemReader = require('./src/fs/fs-file-reader');
+module.exports.FileSystemStack = require('./src/fs/fs-stack');

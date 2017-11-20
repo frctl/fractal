@@ -1,0 +1,20 @@
+.button {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 1em;
+  background-color: #fff;
+  cursor: pointer;
+  font-size: 20px;
+  font-family: sans-serif;
+}
+
+.button--primary {
+  border: 1px solid green;
+  font-weight: bold;
+  color: green;
+}
+
+.button--secondary {
+  opacity: 0.7;
+  color: #777;
+}

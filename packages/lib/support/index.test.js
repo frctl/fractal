@@ -14,7 +14,9 @@ const srcExports = {
   Scenario: require('./src/entities/scenario'),
   Emitter: require('./src/emitter'),
   EmittingPromise: require('./src/emitting-promise'),
-  Validator: require('./src/validator')
+  Validator: require('./src/validator'),
+  FileSystemReader: require('./src/fs/fs-file-reader'),
+  FileSystemStack: require('./src/fs/fs-stack')
 };
 
 describe('Support exports', function () {

@@ -192,6 +192,10 @@ describe('FileCollection', function () {
     });
   });
 
+  describe(`.fromMemoryFS`, function () {
+    it('converts a memory-fs instance to a FileCollection');
+  });
+
   describe('MemoryFS proxing', function () {
     it(`adds MemoryFS 'read' methods onto the main collection instance`, function () {
       const collection = makeCollection();

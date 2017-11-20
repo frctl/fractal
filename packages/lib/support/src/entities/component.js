@@ -12,6 +12,7 @@ const Variant = require('./variant');
 
 const assert = check.assert;
 const managedProps = ['files', 'variants', 'relative', 'config', 'views', 'src', 'path'];
+const assetTypes = ['scripts', 'styles', 'images', 'fonts', 'media'];
 
 class Component extends Entity {
 
@@ -146,6 +147,15 @@ class Component extends Entity {
 
   getView(...args) {
     return args ? this.getViews().find(...args) : this.views.first();
+  }
+
+  getAssets(type) {
+    // TODO: Assert type === (someOf(assetTypes) || null)
+    const types = type ? [].concat(type) : assetTypes;
+    const assetMatchers = types.map(type => this.getConfig(`assets.${type}`, () => false));
+    return assetMatchers
+      .map(assetMatcher => this.getFiles().filter(assetMatcher))
+      .reduce((coll, files) => coll.concat(files), new FileCollection());
   }
 
   getConfig(path, fallback) {
