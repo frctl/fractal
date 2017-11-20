@@ -47,6 +47,11 @@ class Fractal extends App {
         opts = Object.assign({}, await this.parse(), opts);
 
         if (typeof target === 'string') {
+          if (!opts.engine && opts.ext) {
+            opts = Object.assign(opts, {
+              engine: renderer.getEngineFor(opts.ext)
+            });
+          }
           return resolve(await renderer.render(target, context, opts));
         }
 
@@ -62,10 +67,7 @@ class Fractal extends App {
         let template;
 
         if (Component.isComponent(target)) {
-          variant = opts.variant ? target.getVariant(opts.variant) : target.getDefaultVariant();
-          if (!variant) {
-            throw new Error(`Could not find variant '${opts.variant}' for component '${target.id}' [variant-not-found]`);
-          }
+          variant = target.getDefaultVariant();
           component = target;
         } else {
           variant = target;

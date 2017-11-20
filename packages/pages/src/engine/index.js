@@ -5,29 +5,14 @@ const nunjucks = require('nunjucks');
 const _ = require('lodash');
 const slash = require('slash');
 const debug = require('debug')('frctl:pages');
-const {getPartials} = require('@frctl/support/helpers');
 const WithExtension = require('@allmarkedup/nunjucks-with');
 
 const filters = ['await', 'beautify', 'highlight', 'stringify', 'render'];
 const helpers = ['permalink', 'link-to'];
+const extensions = ['component'];
 
 module.exports = function (config = {}, props = {}) {
   const loaders = [];
-
-  // The partial loader handles loading of component/variants
-
-  let partials = {};
-  const PartialLoader = nunjucks.Loader.extend({
-    getSource: function (lookup) {
-      if (partials[lookup]) {
-        return {
-          src: partials[lookup].toString(),
-          path: lookup,
-          noCache: true
-        };
-      }
-    }
-  });
 
   // the template loader loads page templates
 
@@ -49,7 +34,6 @@ module.exports = function (config = {}, props = {}) {
   });
 
   const env = new nunjucks.Environment([
-    new PartialLoader(),
     new TemplateLoader(),
     ...loaders
   ]);
@@ -58,15 +42,21 @@ module.exports = function (config = {}, props = {}) {
 
   env.addExtension('WithExtension', new WithExtension());
 
+  for (const name of extensions) {
+    const opts = _.get(config, `opts.extensions.${name}`, {});
+    const Extension = require(`./extensions/${name}`);
+    env.addExtension(name, new Extension(opts));
+  }
+
   for (const name of filters) {
-    const filterOpts = _.get(config, `opts.filters.${name}`, {});
-    const filter = require(`./filters/${name}`)(filterOpts);
+    const opts = _.get(config, `opts.filters.${name}`, {});
+    const filter = require(`./filters/${name}`)(opts);
     env.addFilter(filter.name, filter.filter, filter.async);
   }
 
   for (const name of helpers) {
-    const helperOpts = _.get(config, `opts.helpers.${name}`, {});
-    const helper = require(`./helpers/${name}`)(helperOpts);
+    const opts = _.get(config, `opts.helpers.${name}`, {});
+    const helper = require(`./helpers/${name}`)(opts);
     env.addGlobal(helper.name, helper.helper);
   }
 
@@ -90,10 +80,9 @@ module.exports = function (config = {}, props = {}) {
 
     name: 'pages',
 
-    match: config.match || ['.html', '.njk'],
+    match: config.match || ['.html'],
 
     render(str, context = {}, opts = {}) {
-      partials = getPartials(opts.components, ['.njk', '.nunjucks', '.nunj']);
       templates = opts.templates;
 
       return new Promise((resolve, reject) => {

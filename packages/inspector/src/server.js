@@ -14,7 +14,8 @@ module.exports = async function (app, opts = {}) {
   const server = new ApiServer(app, {
     api: {
       prefix: '/_api'
-    }
+    },
+    components: opts.components
   });
 
   /*

@@ -32,7 +32,8 @@ module.exports = {
       }
     },
     templates: {
-      globals: {}
+      globals: {},
+      helpers: {}
     }
   },
 
