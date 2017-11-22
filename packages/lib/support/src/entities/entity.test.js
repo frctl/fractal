@@ -11,7 +11,7 @@ const basicEntity = {
 
 const makeEntity = input => new Entity(input || basicEntity);
 
-describe.only('Entity', function () {
+describe('Entity', function () {
   describe('constructor', function () {
     it('returns a new instance', function () {
       const entity = new Entity();
@@ -21,17 +21,11 @@ describe.only('Entity', function () {
       const entity = makeEntity();
       expect(entity.path).to.equal(basicEntity.path);
     });
-    it('uses the supplied UUID if provided', function () {
-      const entity = makeEntity({
-        uuid: '1234'
-      });
-      expect(entity.uuid).to.equal('1234');
-    });
     it('assigns a UUID to the entity if one is not supplied in props', function () {
       const entity = makeEntity();
       const entity2 = makeEntity();
-      expect(entity.uuid).to.be.a('string');
-      expect(entity.uuid).to.not.equal(entity2.uuid);
+      expect(entity._uuid).to.be.a('string');
+      expect(entity._uuid).to.not.equal(entity2._uuid);
     });
   });
 
@@ -45,7 +39,7 @@ describe.only('Entity', function () {
     it(`preserves the UUID of the entity`, function () {
       const entity = makeEntity();
       const clone = entity.clone();
-      expect(entity.uuid).to.equal(clone.uuid);
+      expect(entity._uuid).to.equal(clone._uuid);
     });
     it(`clones all entity properties`, function () {
       const entity = makeEntity();
@@ -56,15 +50,4 @@ describe.only('Entity', function () {
     });
   });
 
-  describe('.uuid', function () {
-    it('returns the UUID', function () {
-      const entity = makeEntity();
-      expect(entity.uuid).to.be.a('string');
-    });
-    it('is not writable', function () {
-      const entity = makeEntity();
-      const uuid = entity.uuid;
-      expect(() => entity.uuid = 'foo').to.throw('[invalid-set-uuid]');
-    });
-  });
 });

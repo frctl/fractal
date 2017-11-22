@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const Vinyl = require('vinyl');
 const {omit} = require('lodash');
-const {normalizePath} = require('@frctl/utils');
+const {normalizePath, hash} = require('@frctl/utils');
 const {expect} = require('../../../../../test/helpers');
 const File = require('./file');
 
@@ -22,7 +22,7 @@ const baseFileData = {
 };
 const makeFile = input => new File(input || Object.assign({}, minFileData));
 
-describe.only('File', function () {
+describe('File', function () {
   describe('constructor', function () {
     it('returns a new instance', function () {
       const file = makeFile();
@@ -866,6 +866,7 @@ describe.only('File', function () {
       const jsonedFile = omit(file.toJSON(), ['uuid']);
       expect(jsonedFile).to.be.an('object');
       expect(jsonedFile).to.eql({
+        id: hash('/test/file.js'),
         cwd: '/',
         relative: 'file.js',
         path: '/test/file.js',

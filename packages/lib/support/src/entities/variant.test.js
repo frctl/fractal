@@ -34,10 +34,10 @@ describe('Variant', function () {
   });
 
   describe('.clone()', function () {
-    it(`preserves the UUID of the variant`, function () {
+    it(`preserves the ID of the variant`, function () {
       const variant = makeVariant();
       const cloned = variant.clone();
-      expect(variant.uuid).to.equal(cloned.uuid);
+      expect(variant.id).to.equal(cloned.id);
     });
   });
 

@@ -10,7 +10,7 @@ const templateData = {
 };
 const makeTemplate = props => new Template(props || templateData);
 
-describe.only('Template', function () {
+describe('Template', function () {
   describe('constructor', function () {
     it(`creates a new instance of a Template`, function () {
       const template = makeTemplate();

@@ -9,19 +9,6 @@ const assert = check.assert;
 
 class ComponentCollection extends EntityCollection {
 
-  /*
-   * find('id')
-   * find('prop', value)
-   * find({prop: value})
-   * find(fn)
-   */
-  find(...args) {
-    if (args.length === 1 && typeof args[0] === 'string') {
-      return super.find('id', args[0]);
-    }
-    return super.find(...args);
-  }
-
   filterByPath(...args) {
     let paths = [].concat(...args);
     assert.array.of.string(paths, `ComponentCollection.filterByPath: path argument must be a string or array of strings [paths-invalid]`);
@@ -66,16 +53,6 @@ class ComponentCollection extends EntityCollection {
     });
   }
 
-  _castItems(items) {
-    return items.map(i => new Component(i));
-  }
-
-  _validateOrThrow(items) {
-    const isValid = ComponentCollection.validate(items);
-    assert(isValid, `ComponentCollection.constructor: The 'items' argument is optional but must be an array of Components [items-invalid]`, TypeError);
-    return isValid;
-  }
-
   get [Symbol.toStringTag]() {
     return 'ComponentCollection';
   }
@@ -86,7 +63,6 @@ class ComponentCollection extends EntityCollection {
 
 }
 
-Collection.addEntityDefinition(Component, ComponentCollection);
-Collection.addTagDefinition('ComponentCollection', ComponentCollection);
+ComponentCollection.entity = Component;
 
 module.exports = ComponentCollection;

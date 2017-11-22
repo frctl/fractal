@@ -1,39 +1,34 @@
 const {assert} = require('check-types');
-const {mapValues, pickBy, omitBy, get, set} = require('lodash');
+const {mapValues, pickBy, omitBy, get, set, toPlainObject} = require('lodash');
 const {cloneDeep, uuid} = require('@frctl/utils');
 const Validator = require('../validator');
 
-const managedProps = ['uuid','config'];
+const managedProps = ['_uuid', 'id'];
 
 class Entity {
 
   constructor(props = {}){
-    if (props instanceof this.constructor) {
+    if (Entity.isEntity(props)) {
       return props;
     }
 
     this.constructor.validate(props);
 
-    this._uuid = props.uuid || uuid();
-    this._config = cloneDeep(props.config || {});
+    Object.defineProperty(this, '_uuid', {
+      value: props._uuid || uuid()
+    });
+
+    this._id = props.id || this._uuid;
 
     Object.assign(this, pickBy(props, (value, key) => this.constructor.isCustomProp(key)));
   }
 
-  get uuid(){
-    return this._uuid;
+  get id(){
+    return this._id;
   }
 
-  set uuid(uuid){
-    throw new Error(`${this.constructor.name}.uuid is read-only after initialisation [invalid-set-uuid]`);
-  }
-
-  get config(){
-    return cloneDeep(this._config);
-  }
-
-  set config(config){
-    throw new Error(`${this.constructor.name}.config cannot be set after instantiation [invalid-set-config]`);
+  set id(id){
+    throw new Error('Component.id cannot be set after instantiation [invalid-set-id]');
   }
 
   get(path, fallback){
@@ -43,6 +38,10 @@ class Entity {
   set(path, value){
     set(this, path, value);
     return this;
+  }
+
+  getIdentifier() {
+    return this._uuid;
   }
 
   getProps(){
@@ -57,15 +56,10 @@ class Entity {
     return omitBy(this, (value, key) => this.constructor.isCustomProp(key));
   }
 
-  getConfig(path, fallback){
-    if (path) {
-      return cloneDeep(get(this._config, path, fallback));
-    }
-    return this.config;
-  }
-
   clone() {
-    const props = Object.assign({}, this, this.getManagedProps());
+    const props = Object.assign(toPlainObject(this), this.getManagedProps(), {
+      _uuid: this.getIdentifier()
+    });
     return new this.constructor(cloneDeep(props));
   }
 
@@ -95,10 +89,11 @@ class Entity {
   }
 
   static validate(props){
-    assert.maybe.object(props, `${this.constructor.name}.constructor: The properties provided to Entity must be in object form [properties-invalid]`);
+    assert.object(props, `${this.name}.constructor: The properties provided to Entity must be in object form [properties-invalid]`);
     if (this.schema) {
-      Validator.assertValid(props, this.schema, `${this.constructor.name}.constructor: Invalid properties schema [properties-invalid]`);
+      Validator.assertValid(props, this.schema, `${this.name}.constructor: Invalid properties schema [properties-invalid]`);
     }
+    return true;
   }
 
   static isEntity(item) {

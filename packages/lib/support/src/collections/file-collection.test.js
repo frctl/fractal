@@ -6,18 +6,18 @@ const {expect, sinon} = require('../../../../../test/helpers');
 const File = require('../entities/file');
 const FileCollection = require('./file-collection');
 
-const fsReadMethods = [
-  'existsSync',
-  'statSync',
-  'readFileSync',
-  'readdirSync',
-  'readlinkSync',
-  'stat',
-  'readdir',
-  'readlink',
-  'readFile',
-  'exists'
-];
+// const fsReadMethods = [
+//   'existsSync',
+//   'statSync',
+//   'readFileSync',
+//   'readdirSync',
+//   'readlinkSync',
+//   'stat',
+//   'readdir',
+//   'readlink',
+//   'readFile',
+//   'exists'
+// ];
 
 let items = [{
   cwd: '/',
@@ -65,10 +65,10 @@ describe('FileCollection', function () {
   });
   describe('.from()', function () {
     it('successfully creates a FileCollection when valid input is supplied', function () {
-      expect(() => makeCollectionFrom('text')).to.throw(TypeError, '[properties-invalid]');
-      expect(() => makeCollectionFrom({single: 'object'})).to.throw(TypeError, '[properties-invalid]');
-      expect(() => makeCollectionFrom({path: 'valid-file-object-definition/'})).to.not.throw();
-      expect(() => makeCollectionFrom(new File({path: 'valid-file-object-definition/'}))).to.not.throw();
+      expect(() => makeCollectionFrom('text')).to.throw(TypeError, '[items-invalid]');
+      expect(() => makeCollectionFrom([{single: 'object'}])).to.throw(TypeError, '[properties-invalid]');
+      expect(() => makeCollectionFrom([{path: 'valid-file-object-definition/'}])).to.not.throw();
+      expect(() => makeCollectionFrom([new File({path: 'valid-file-object-definition/'})])).to.not.throw();
       expect(() => makeCollectionFrom([File.from({single: 'object'}), File.from({another: 'object'})])).to.throw(TypeError, '[properties-invalid]');
       expect(() => makeCollectionFrom([File.from({path: 'object'}), File.from({path: 'object'})])).to.not.throw();
     });
@@ -192,14 +192,14 @@ describe('FileCollection', function () {
     });
   });
 
-  describe('MemoryFS proxing', function () {
-    it(`adds MemoryFS 'read' methods onto the main collection instance`, function () {
-      const collection = makeCollection();
-      expect(collection.readFileSync(items[0].path).toString()).to.eql(items[0].contents.toString());
-      expect(collection.existsSync(items[0].path)).to.eql(true);
-      for (const method of fsReadMethods) {
-        expect(collection[method]).to.be.a('function');
-      }
-    });
-  });
+  // describe('MemoryFS proxing', function () {
+  //   it(`adds MemoryFS 'read' methods onto the main collection instance`, function () {
+  //     const collection = makeCollection();
+  //     expect(collection.readFileSync(items[0].path).toString()).to.eql(items[0].contents.toString());
+  //     expect(collection.existsSync(items[0].path)).to.eql(true);
+  //     for (const method of fsReadMethods) {
+  //       expect(collection[method]).to.be.a('function');
+  //     }
+  //   });
+  // });
 });

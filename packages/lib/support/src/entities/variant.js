@@ -1,19 +1,31 @@
 const {titlize, slugify, cloneDeep} = require('@frctl/utils');
 const {assert} = require('check-types');
 const schema = require('../../schema');
+const FileCollection = require('../collections/file-collection');
 const Entity = require('./entity');
 
-const managedProps = [];
+const managedProps = ['views'];
 
 class Variant extends Entity {
 
   constructor(props) {
+    if (Variant.isVariant(props)) {
+      return props;
+    }
     super(props);
+
+    this._id = slugify(props.id);
+    this._views = new FileCollection(props.views);
+
     this.label = props.label || titlize(this.id);
   }
 
-  static fromConfig(config = {}) {
-    return new Variant(Object.assign(config, {config}));
+  get views(){
+    return this._views;
+  }
+
+  set views(views){
+    throw new Error('Variant.views cannot be set after instantiation [invalid-set-views]');
   }
 
   static isVariant(item) {

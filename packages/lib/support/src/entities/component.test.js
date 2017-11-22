@@ -17,7 +17,7 @@ const basicComponent = {
 
 const makeComponent = input => new Component(input || basicComponent);
 
-describe.only('Component', function () {
+describe('Component', function () {
   describe('constructor', function () {
     it('returns a new instance that extends the Entity class', function () {
       const component = makeComponent();
@@ -33,4 +33,5 @@ describe.only('Component', function () {
       expect(component.config).to.not.equal(basicComponent.config);
     });
   });
+
 });

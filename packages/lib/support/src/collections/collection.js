@@ -7,19 +7,23 @@ const check = require('check-types');
 const checkMore = require('check-more-types');
 
 const assert = check.assert;
-const entityMap = new Map();
-const tagMap = new Map();
+const iter = (...args) => iteratee(args.length === 2 ? [...args] : args[0]);
 
 class Collection {
 
   constructor(items = []) {
-    items = this._normaliseItems(items);
-    if (items) {
-      items = this._castItems(items);
+    if (Collection.isCollection(items)) {
+      items = items.toArray();
     }
-    this._validateOrThrow(items);
 
-    this._items = items;
+    assert.array(items, `Collection items argument must be an array or Collection instance [items-invalid]`);
+    items.forEach(item => {
+      if (item && (!isObjectLike(item) || isArray(item))) {
+        throw new TypeError(`${this.name}.validate - collection items must be objects [items-invalid]`);
+      }
+    });
+
+    this._items = compact(items);
 
     /*
      * Wrap in a proxy so that we can access items by
@@ -117,7 +121,7 @@ class Collection {
   findOrFail(...args) {
     const item = this.find(...args);
     if (!item) {
-      throw new Error(`Item not found [item-not-found]`);
+      throw new Error(`CollectionItem not found [item-not-found]`);
     }
     return item;
   }
@@ -151,21 +155,11 @@ class Collection {
   }
 
   map(...args) {
-    let [fn, thisOrType, maybeType] = args;
-    let [thisArg, type] = this._getThisAndType(thisOrType, maybeType);
-    let Constr = this._getConstr(type, this._items, fn, thisArg);
-
-    return new Constr(this._items.map(fn, thisArg));
+    return this._new(this._items.map(...args));
   }
 
   mapAsync(...args) {
-    let [fn, thisOrType, maybeType] = args;
-    let [thisArg, type] = this._getThisAndType(thisOrType, maybeType);
-
-    const results = this._items.map(fn, thisArg);
-    return Promise.resolve(this._getConstrAsync(type, this._items, fn, thisArg)).then(Constr => {
-      return Promise.all(results).then(items => new Constr(items));
-    });
+    return Promise.all(this._items.map(...args)).then(items => this._new(items));
   }
 
   mapToArray(...args) {
@@ -174,6 +168,14 @@ class Collection {
 
   mapToArrayAsync(...args) {
     return Promise.all(this._items.map(...args));
+  }
+
+  mapToCollection(...args) {
+    return new Collection(this._items.map(...args));
+  }
+
+  mapToCollectionAsync(...args) {
+    return this.mapToArrayAsync(...args).then(items => new Collection(items));
   }
 
   groupBy(grouper) {
@@ -202,103 +204,20 @@ class Collection {
       if (item && typeof item.toJSON === 'function') {
         return item.toJSON();
       }
-      return mapValues(item, prop => {
-        if (prop && typeof prop.toJSON === 'function') {
-          return prop.toJSON();
-        }
-        return prop;
-      });
+      return item;
     });
   }
 
   clone() {
-    const items = this.toArray().map(item => {
-      if (typeof item.clone === 'function') {
-        return item.clone();
-      }
-      return cloneDeep(item);
-    });
-    return this._new(items);
+    return this._new(this.toArray().map(item => cloneDeep(item)));
   }
 
   inspect(depth, opts) {
     return `${this[Symbol.toStringTag]} [${this._items.map(i => ((i && i.inspect && i.inspect()) || i))}]`;
   }
 
-  _validateOrThrow(items) {
-    const isValid = Collection.validate(items);
-    assert(isValid, `Collection.constructor: The 'items' argument is optional but must be an array of objects [items-invalid]`, TypeError);
-    return isValid;
-  }
-
   _new(...args) {
     return new this.constructor(...args);
-  }
-
-  _normaliseItems(items) {
-    if (Collection.isCollection(items)) {
-      items = items.toArray();
-    }
-    if (isArray(items)) {
-      items = compact(items);
-    } else if (items) {
-      items = [].concat(items);
-    }
-    return items;
-  }
-
-  _castItems(items) {
-    return items;
-  }
-
-  _getConstrFromType(type) {
-    assert(tagMap.has(type), `Collection.map: type '${type}' not found. Valid types are ${[...tagMap.keys()].join(', ')} [type-not-found]`, ReferenceError);
-    return tagMap.get(type);
-  }
-
-  _getThisAndType(thisOrType, maybeType) {
-    let thisArg;
-    let type;
-
-    if (check.string(thisOrType)) {
-      type = thisOrType;
-    } else if (thisOrType) {
-      thisArg = thisOrType;
-      type = maybeType;
-    }
-
-    return [thisArg, type];
-  }
-
-  _getConstr(type, items, fn, thisArg) {
-    if (type) {
-      return this._getConstrFromType(type);
-    }
-    if (!items[0]) {
-      return this.constructor;
-    }
-    fn = thisArg ? fn.bind(thisArg) : fn;
-    const item = fn(items[0], 0, items);
-    assert(checkMore.not.promise(item),
-      `The mapping function supplied returned a Promise - please use 'mapAsync' for asynchronous mapping of a Collection [map-returned-promise]`, ReferenceError);
-    assert((check.not.null(item) && check.not.undefined(item)),
-      `The mapping function supplied returned a 'null' or 'undefined' value, please ensure values are filtered before attempting to 'map' a Collection [map-returned-null-or-undefined]`, ReferenceError);
-    return entityMap.get(item.constructor) || Collection;
-  }
-
-  _getConstrAsync(type, items, fn, thisArg) {
-    if (type) {
-      return Promise.resolve(this._getConstrFromType(type));
-    }
-    if (!items[0]) {
-      return Promise.resolve(this.constructor);
-    }
-    fn = thisArg ? fn.bind(thisArg) : fn;
-    return Promise.resolve(fn(items[0], 0, items)).then(item => {
-      assert((check.not.null(item) && check.not.undefined(item)),
-        `The mapping funtion supplied returned a 'null' or 'undefined' value, please ensure values are filtered before attempting to 'map' a Collection [map-returned-null-or-undefined]`, ReferenceError);
-      return entityMap.get(item.constructor) || Collection;
-    });
   }
 
   [Symbol.iterator]() {
@@ -320,35 +239,6 @@ class Collection {
   static from(...args) {
     return new this(...args);
   }
-
-  static validate(items) {
-    if (items) {
-      return isArray(items) && items.reduce((acc, i) => (acc && isObjectLike(i) && !isArray(i)), true);
-    }
-    return true;
-  }
-
-  static addEntityDefinition(key, value) {
-    entityMap.set(key, value);
-  }
-
-  static getEntityMap() {
-    return entityMap;
-  }
-
-  static addTagDefinition(key, value) {
-    tagMap.set(key, value);
-  }
-
-  static getTagMap() {
-    return tagMap;
-  }
-}
-
-Collection.addTagDefinition('Collection', Collection);
-
-function iter(...args) {
-  return iteratee(args.length === 2 ? [...args] : args[0]);
 }
 
 module.exports = Collection;

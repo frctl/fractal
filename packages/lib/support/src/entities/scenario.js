@@ -8,12 +8,14 @@ const managedProps = [];
 class Scenario extends Entity {
 
   constructor(props) {
+    if (Scenario.isScenario(props)) {
+      return props;
+    }
     super(props);
-    this.label = props.label || titlize(this.id);
-  }
 
-  static fromConfig(config = {}) {
-    return new Scenario(Object.assign(config, {config}));
+    this._id = slugify(props.id);
+
+    this.label = props.label || titlize(this.id);
   }
 
   static isScenario(item) {

@@ -1,36 +1,43 @@
-const check = require('check-types');
+const {isPlainObject} = require('lodash');
+const {assert} = require('check-types');
 const Entity = require('../entities/entity');
 const Collection = require('./collection');
 
-const assert = check.assert;
-
 class EntityCollection extends Collection {
+
+  constructor(items = []){
+    super(items);
+    const TargetEntity = this.constructor.entity;
+    if (TargetEntity) {
+      this._items = this._items.map(item => {
+        if (isPlainObject(item)) {
+          item = new TargetEntity(item);
+        }
+        if (item instanceof TargetEntity) {
+          return item;
+        }
+        throw new TypeError(`${this.constructor.name}.constructor - collection items must be '${TargetEntity.name}' instances [invalid-items]`);
+      });
+    }
+  }
+
+  find(...args) {
+    if (args.length === 1 && typeof args[0] === 'string') {
+      return super.find('id', args[0]);
+    }
+    return super.find(...args);
+  }
 
   toJSON() {
     return this._items.map(i => i.toJSON());
-  }
-
-  _validateOrThrow(items) {
-    const isValid = EntityCollection.validate(items);
-    assert(isValid, `EntityCollection.constructor: The 'items' argument is optional but must be an array of Entities or objects [items-invalid]`, TypeError);
-    return isValid;
-  }
-
-  _castItems(items) {
-    return items.map(i => new Entity(i));
   }
 
   get [Symbol.toStringTag]() {
     return 'EntityCollection';
   }
 
-  static validate(items) {
-    return check.maybe.array.of.instance(items, Entity);
-  }
-
 }
 
-Collection.addEntityDefinition(Entity, EntityCollection);
-Collection.addTagDefinition('EntityCollection', EntityCollection);
+EntityCollection.entity = Entity;
 
 module.exports = EntityCollection;

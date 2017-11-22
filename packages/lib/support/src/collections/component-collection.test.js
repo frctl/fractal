@@ -2,6 +2,7 @@
 
 const {expect} = require('../../../../../test/helpers');
 const File = require('../entities/file');
+const FileCollection = require('./file-collection');
 const Component = require('../entities/component');
 const Collection = require('./collection');
 
@@ -57,10 +58,12 @@ let items = [{
 }
 ];
 
-const makeComponent = input => Component.from({
-  src: new File({path: input.path, cwd: '/'}),
-  config: Object.assign({}, {id: input.id}, input.config)});
-
+const makeComponent = input => {
+  const src = new File({path: input.path, cwd: '/'});
+  const files = new FileCollection();
+  const config = Object.assign({}, {id: input.id}, input.config);
+  return Component.from(src, files, config);
+};
 const makeCollection = input => new ComponentCollection(input || items.map(makeComponent));
 const makeCollectionFrom = input => ComponentCollection.from(input || items.map(makeComponent));
 
@@ -75,11 +78,11 @@ describe('ComponentCollection', function () {
   });
   describe('.from()', function () {
     it('successfully creates a ComponentCollection when valid input is supplied', function () {
-      expect(() => makeCollectionFrom('text')).to.throw(TypeError, '[properties-invalid]');
-      expect(() => makeCollectionFrom({invalid: 'object'})).to.throw(TypeError, '[properties-invalid]');
-      expect(() => makeCollectionFrom(Component.from({src: new File({path: 'path', cwd: '/'})}))).to.not.throw();
-      expect(() => makeCollectionFrom([Component.from({invalid: 'object'}), Component.from({anotherInvalid: 'object'})])).to.throw(TypeError, '[properties-invalid]');
-      expect(() => makeCollectionFrom([Component.from({src: new File({path: 'valid-file-props1/', cwd: '/'})}), Component.from({src: new File({path: 'valid-file-props2/', cwd: '/'})})])).to.not.throw();
+      expect(() => makeCollectionFrom('text')).to.throw(TypeError, '[items-invalid]');
+      expect(() => makeCollectionFrom({invalid: 'object'})).to.throw(TypeError, '[items-invalid]');
+      expect(() => makeCollectionFrom([Component.from(new File({path: 'path', cwd: '/'}))])).to.not.throw();
+      expect(() => makeCollectionFrom([Component.from({invalid: 'object'}), Component.from({anotherInvalid: 'object'})])).to.throw(TypeError, '[src-invalid]');
+      expect(() => makeCollectionFrom([Component.from(new File({path: 'valid-file-props1/', cwd: '/'})), Component.from(new File({path: 'valid-file-props2/', cwd: '/'}))])).to.not.throw();
     });
   });
 

@@ -8,7 +8,7 @@ const {assert} = require('check-types');
 const slash = require('slash');
 const {mapValues, pick, pickBy, omitBy, assign} = require('lodash');
 const Vinyl = require('vinyl');
-const {promisify, normalizePath, normalizeExt} = require('@frctl/utils');
+const {promisify, normalizePath, normalizeExt, hash} = require('@frctl/utils');
 const schema = require('../../schema');
 const Entity = require('./entity');
 
@@ -28,10 +28,14 @@ const managedProps = [
 class File extends Entity {
 
   constructor(props = {}){
+    if (File.isFile(props)) {
+      return props;
+    }
 
     props = Object.assign({}, props, {
       stat: props.stat || null,
       contents: props.contents || null,
+      id: props.id || (props.path ? hash(props.path) : undefined)
     });
 
     super(props);

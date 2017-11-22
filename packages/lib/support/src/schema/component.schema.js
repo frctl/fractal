@@ -12,7 +12,7 @@ module.exports = {
       type: 'string'
     },
     src: {
-      oneOf: [{
+      anyOf: [{
         instanceof: 'File'
       }, {
         $ref: '#/definitions/file'
@@ -23,8 +23,22 @@ module.exports = {
       // TODO: config object schema
     },
     files: {
-      oneOf: [{
+      anyOf: [{
         instanceof: 'FileCollection'
+      }, {
+        type: 'array'
+      }]
+    },
+    variants: {
+      anyOf: [{
+        instanceof: 'VariantCollection'
+      }, {
+        type: 'array'
+      }]
+    },
+    scenarios: {
+      anyOf: [{
+        instanceof: 'EntityCollection'
       }, {
         type: 'array'
       }]

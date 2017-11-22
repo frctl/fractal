@@ -10,7 +10,7 @@ const defaultProps = {
 };
 const makeScenario = props => new Scenario(props || defaultProps);
 
-describe.only('Scenario', function () {
+describe('Scenario', function () {
   describe('constructor', function () {
     it(`creates a new instance of a Scenario`, function () {
       const scenario = makeScenario();
@@ -43,6 +43,7 @@ describe.only('Scenario', function () {
       expect(Scenario.isScenario({})).to.be.false;
     });
   });
+
   describe('.[Symbol.toStringTag]', function () {
     const scenario = makeScenario();
     expect(scenario[Symbol.toStringTag]).to.equal('Scenario');

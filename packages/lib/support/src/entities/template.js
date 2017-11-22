@@ -16,6 +16,9 @@ const managedProps = [];
 class Template extends File {
 
   constructor(props) {
+    if (Template.isTemplate(props)) {
+      return props;
+    }
     super(props);
   }
 

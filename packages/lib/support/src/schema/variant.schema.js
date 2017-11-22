@@ -5,8 +5,13 @@ module.exports = {
     id: {
       type: 'string'
     },
-    templates: {
-      type: 'object'
-    }
-  }
+    views: {
+      anyOf: [{
+        instanceof: 'FileCollection'
+      }, {
+        type: 'array'
+      }]
+    },
+  },
+  required: ['id']
 };

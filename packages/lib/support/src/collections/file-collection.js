@@ -7,18 +7,18 @@ const EntityCollection = require('./entity-collection');
 const Collection = require('./collection');
 
 const assert = check.assert;
-const fsReadMethods = [
-  'existsSync',
-  'statSync',
-  'readFileSync',
-  'readdirSync',
-  'readlinkSync',
-  'stat',
-  'readdir',
-  'readlink',
-  'readFile',
-  'exists'
-];
+// const fsReadMethods = [
+//   'existsSync',
+//   'statSync',
+//   'readFileSync',
+//   'readdirSync',
+//   'readlinkSync',
+//   'stat',
+//   'readdir',
+//   'readlink',
+//   'readFile',
+//   'exists'
+// ];
 
 class FileCollection extends EntityCollection {
 
@@ -85,33 +85,19 @@ class FileCollection extends EntityCollection {
     return memFs;
   }
 
-  _validateOrThrow(items) {
-    const isValid = FileCollection.validate(items);
-    assert(isValid, `FileCollection.constructor: The 'items' argument is optional but must be an array of Files [items-invalid]`, TypeError);
-    return isValid;
-  }
-
-  _castItems(items) {
-    return items.map(i => new File(i));
-  }
-
   get [Symbol.toStringTag]() {
     return 'FileCollection';
   }
 
-  static validate(items) {
-    return check.maybe.array.of.instance(items, File);
-  }
 }
 
-for (const fsMethod of fsReadMethods) {
-  FileCollection.prototype[fsMethod] = function (...args) {
-    const fs = this.toMemoryFS();
-    return fs[fsMethod].bind(fs)(...args);
-  };
-}
+// for (const fsMethod of fsReadMethods) {
+//   FileCollection.prototype[fsMethod] = function (...args) {
+//     const fs = this.toMemoryFS();
+//     return fs[fsMethod].bind(fs)(...args);
+//   };
+// }
 
-Collection.addEntityDefinition(File, FileCollection);
-Collection.addTagDefinition('FileCollection', FileCollection);
+FileCollection.entity = File;
 
 module.exports = FileCollection;
