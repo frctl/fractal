@@ -7,7 +7,7 @@ const managedProps = ['_uuid', 'id'];
 
 class Entity {
 
-  constructor(props = {}){
+  constructor(props = {}) {
     if (Entity.isEntity(props)) {
       return props;
     }
@@ -23,19 +23,19 @@ class Entity {
     Object.assign(this, pickBy(props, (value, key) => this.constructor.isCustomProp(key)));
   }
 
-  get id(){
+  get id() {
     return this._id;
   }
 
-  set id(id){
+  set id(id) {
     throw new Error('Component.id cannot be set after instantiation [invalid-set-id]');
   }
 
-  get(path, fallback){
+  get(path, fallback) {
     return get(this, path, fallback);
   }
 
-  set(path, value){
+  set(path, value) {
     set(this, path, value);
     return this;
   }
@@ -44,15 +44,15 @@ class Entity {
     return this._uuid;
   }
 
-  getProps(){
+  getProps() {
     return pickBy(this, (item, key) => key[0] !== '_');
   }
 
-  getCustomProps(){
+  getCustomProps() {
     return pickBy(this, (value, key) => this.constructor.isCustomProp(key));
   }
 
-  getManagedProps(){
+  getManagedProps() {
     return omitBy(this, (value, key) => this.constructor.isCustomProp(key));
   }
 
@@ -84,11 +84,11 @@ class Entity {
     return !managedProps.includes(name);
   }
 
-  static from(props = {}){
+  static from(props = {}) {
     return new this(props);
   }
 
-  static validate(props){
+  static validate(props) {
     assert.object(props, `${this.name}.constructor: The properties provided to Entity must be in object form [properties-invalid]`);
     if (this.schema) {
       Validator.assertValid(props, this.schema, `${this.name}.constructor: Invalid properties schema [properties-invalid]`);

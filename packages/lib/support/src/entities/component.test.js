@@ -8,7 +8,7 @@ const basicComponent = {
   id: 'test-component',
   src: {
     path: '/components/@foo',
-    base: '/components',
+    base: '/components'
   },
   config: {
     foo: 'bar'
@@ -33,5 +33,4 @@ describe('Component', function () {
       expect(component.config).to.not.equal(basicComponent.config);
     });
   });
-
 });

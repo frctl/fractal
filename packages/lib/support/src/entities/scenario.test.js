@@ -17,7 +17,7 @@ describe('Scenario', function () {
       expect(scenario).to.exist;
       expect(scenario instanceof Scenario).to.be.true;
     });
-    it('throws an error on invalid props', function(){
+    it('throws an error on invalid props', function () {
       expect(() => makeScenario({
         foo: 'bar'
       })).to.throw(`[properties-invalid]`);

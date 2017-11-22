@@ -2,7 +2,6 @@
 
 const {expect} = require('../../../../../test/helpers');
 const Variant = require('../entities/variant');
-const Collection = require('./collection');
 const VariantCollection = require('./variant-collection');
 
 const items = [
@@ -16,13 +15,6 @@ const items = [
     id: 'baz'
   }
 ];
-
-const newItem = {
-  id: 'wobble',
-  foo: 'bar'
-};
-
-const itemsWithDefault = items.map(i => i.id === 'baz' ? {id: i.id} : i);
 
 const makeCollection = input => new VariantCollection(input || items.slice(0));
 const makeCollectionFrom = input => VariantCollection.from(input || items.slice(0));
@@ -61,8 +53,6 @@ describe('VariantCollection', function () {
       expect(() => makeCollectionFrom([Variant.from({id: 'valid-variant-props1/'}), Variant.from({id: 'valid-variant-props2/'})])).to.not.throw();
     });
   });
-
-
 
   describe('.clone()', function () {
     it('clones successfully', function () {

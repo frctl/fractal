@@ -17,7 +17,7 @@ describe('Template', function () {
       expect(template).to.exist;
       expect(template instanceof Template).to.be.true;
     });
-    it('throws an error on invalid props', function(){
+    it('throws an error on invalid props', function () {
       expect(() => makeTemplate({
         foo: 'bar'
       })).to.throw(`[properties-invalid]`);
@@ -49,7 +49,9 @@ describe('Template', function () {
     });
     it('throws an error if contents is invalid', function () {
       const template = makeTemplate();
-      expect(() => {template.contents = {}}).to.throw('[invalid-contents]');
+      expect(() => {
+        template.contents = {};
+      }).to.throw('[invalid-contents]');
     });
   });
 

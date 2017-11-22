@@ -1,7 +1,5 @@
 /* eslint no-unused-expressions: "off" */
 
-const {omit} = require('lodash');
-const {hash} = require('@frctl/utils');
 const {expect} = require('../../../../../test/helpers');
 const Entity = require('./entity');
 
@@ -49,5 +47,4 @@ describe('Entity', function () {
       expect(entity.toJSON()).to.eql(clone.toJSON());
     });
   });
-
 });

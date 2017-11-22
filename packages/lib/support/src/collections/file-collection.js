@@ -4,21 +4,8 @@ const slash = require('slash');
 const MemoryFS = require('memory-fs');
 const File = require('../entities/file');
 const EntityCollection = require('./entity-collection');
-const Collection = require('./collection');
 
 const assert = check.assert;
-// const fsReadMethods = [
-//   'existsSync',
-//   'statSync',
-//   'readFileSync',
-//   'readdirSync',
-//   'readlinkSync',
-//   'stat',
-//   'readdir',
-//   'readlink',
-//   'readFile',
-//   'exists'
-// ];
 
 class FileCollection extends EntityCollection {
 
@@ -90,13 +77,6 @@ class FileCollection extends EntityCollection {
   }
 
 }
-
-// for (const fsMethod of fsReadMethods) {
-//   FileCollection.prototype[fsMethod] = function (...args) {
-//     const fs = this.toMemoryFS();
-//     return fs[fsMethod].bind(fs)(...args);
-//   };
-// }
 
 FileCollection.entity = File;
 

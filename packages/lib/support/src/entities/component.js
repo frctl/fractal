@@ -1,13 +1,14 @@
 
 const {get} = require('lodash');
-const {assert} = require('check-types');
-const {normalizeId, uniqueId, cloneDeep, titlize, slugify, toArray} = require('@frctl/utils');
+const {cloneDeep, titlize, slugify} = require('@frctl/utils');
 const schema = require('../../schema');
 const FileCollection = require('../collections/file-collection');
+const TemplateCollection = require('../collections/template-collection');
 const ScenarioCollection = require('../collections/scenario-collection');
 const VariantCollection = require('../collections/variant-collection');
 const File = require('./file');
 const Entity = require('./entity');
+const Variant = require('./variant');
 const Template = require('./template');
 const Scenario = require('./scenario');
 
@@ -24,7 +25,7 @@ const managedProps = [
 
 class Component extends Entity {
 
-  constructor(props = {}){
+  constructor(props = {}) {
     if (Component.isComponent(props)) {
       return props;
     }
@@ -32,17 +33,23 @@ class Component extends Entity {
     props = Object.assign({}, props, {
       tags: props.tags || [],
       required: props.requires || [],
-      files: new FileCollection(props.files),
-      views: new FileCollection(props.views),
-      variants: new VariantCollection(props.variants),
-      scenarios: new ScenarioCollection(props.scenarios)
+      views: props.views || [],
+      files: props.files || [],
+      variants: props.variants || [],
+      scenarios: props.scenarios || []
     });
 
     super(props);
 
-    ['files','views','variants','scenarios'].forEach(prop => {
-      this[`_${prop}`] = props[prop];
-    });
+    this._files = new FileCollection();
+    this._views = new TemplateCollection();
+    this._variants = new VariantCollection();
+    this._scenarios = new ScenarioCollection();
+
+    props.files.forEach(file => this.addView(file));
+    props.views.forEach(view => this.addView(view));
+    props.variants.forEach(variant => this.addVariant(variant));
+    props.scenarios.forEach(scenario => this.addScenario(scenario));
 
     this._src = new File(props.src);
     this._id = slugify(props.id);
@@ -51,63 +58,63 @@ class Component extends Entity {
     this.label = this.label || titlize(this.id);
   }
 
-  get src(){
+  get src() {
     return this._src;
   }
 
-  set src(src){
+  set src(src) {
     throw new Error('Component.src cannot be set after instantiation [invalid-set-src]');
   }
 
-  get path(){
+  get path() {
     return this.src.path;
   }
 
-  set path(path){
+  set path(path) {
     throw new Error(`Component.path is generated the from src file and cannot be set [invalid-set-path]`);
   }
 
-  get relative(){
+  get relative() {
     return this.src.relative;
   }
 
-  set relative(path){
+  set relative(path) {
     throw new Error(`Component.relative is generated the from src file and cannot be set [invalid-set-relative]`);
   }
 
-  get files(){
+  get files() {
     return this._files;
   }
 
-  set files(files){
+  set files(files) {
     throw new Error('Component.files cannot be set after instantiation [invalid-set-files]');
   }
 
-  get variants(){
-    return this._files;
+  get variants() {
+    return this._variants;
   }
 
-  set variants(variants){
+  set variants(variants) {
     throw new Error('Component.variants cannot be set after instantiation [invalid-set-variants]');
   }
 
-  get views(){
+  get views() {
     return this._views;
   }
 
-  set views(views){
+  set views(views) {
     throw new Error('Component.views cannot be set after instantiation [invalid-set-views]');
   }
 
-  get config(){
+  get config() {
     return cloneDeep(this._config);
   }
 
-  set config(id){
-    throw new Error(`${this.constructor.name}.config cannot be set after instantiation [invalid-set-config]`)
+  set config(id) {
+    throw new Error(`${this.constructor.name}.config cannot be set after instantiation [invalid-set-config]`);
   }
 
-  getConfig(path, fallback){
+  getConfig(path, fallback) {
     if (path) {
       return cloneDeep(get(this._config, path, fallback));
     }
@@ -118,12 +125,40 @@ class Component extends Entity {
     return this.files;
   }
 
+  addFile(file) {
+    file = File.isFile(file) ? file : new File(file);
+    file.base = this.path; // Make the rel path of the file relative to the Component source dir
+    this._files = this._files.push(file);
+    return this;
+  }
+
+  getView(...args) {
+    return args.length > 1 ? this.views.find(...args) : this.views.first();
+  }
+
+  getViews() {
+    return this.views;
+  }
+
+  addView(view) {
+    const file = File.isFile(view) ? view : new File(view);
+    const tpl = Template.fromFile(file);
+    tpl.base = this.path;
+    if (!this.files.find('path', file.path)) {
+      // if it doesn't exist in the files collection, add it in
+      this.addFile(file);
+    }
+    this.variants.forEach(variant => variant.addView(tpl));
+    this._views = this._views.push(tpl);
+    return this;
+  }
+
   getVariants() {
     return this.variants;
   }
 
   getDefaultVariant() {
-    return this.default ? this.getVariants().find(this.defaultVariant) : this.variants.first();
+    return this.variants.first(); // TODO: Allow specifying custom default via config
   }
 
   getVariant(...args) {
@@ -141,24 +176,33 @@ class Component extends Entity {
     return variant === this.getDefaultVariant();
   }
 
-  getView(...args) {
-    return args.length > 1 ? this.views.find(...args) : this.views.first();
+  addVariant(variant) {
+    if (!Variant.isVariant(variant)) {
+      variant.views = this.views.clone();
+      variant = new Variant(variant);
+    }
+    this._variants = this._variants.push(variant);
+    return this;
   }
 
-  getViews(){
-    return this.views;
-  }
-
-  getScenario(...args){
+  getScenario(...args) {
     return args.length > 1 ? this.scenarios.find(...args) : this.getDefaultScenario();
   }
 
-  getScenarios(){
+  getScenarios() {
     return this.scenarios;
   }
 
-  getDefaultScenario(){
+  getDefaultScenario() {
     return this.scenarios.first();
+  }
+
+  addScenario(scenario) {
+    if (!Scenario.isScenario(scenario)) {
+      scenario = new Scenario(scenario);
+    }
+    this._scenarios = this._scenarios.push(scenario);
+    return this;
   }
 
   toJSON() {
@@ -174,7 +218,7 @@ class Component extends Entity {
     });
   }
 
-  static from(src, files = new FileCollection(), config = {}){
+  static from(src, files = new FileCollection(), config = {}) {
     if (!File.isFile(src)) {
       throw new TypeError(`Component.from - 'src' argument must be a File instance [src-invalid]`);
     }
@@ -182,36 +226,17 @@ class Component extends Entity {
       throw new TypeError(`Component.from - 'files' argument must be a FileCollection instance [files-invalid]`);
     }
 
-    // Make the relative path of each file relative
-    // to the Component source directory
-    files = files.map(file => {
-      file.base = src.path;
-      return file;
-    });
-
     const viewMatcher = get(config, 'views.match', () => false); // default to no matches
-    const views = files.filter(viewMatcher).map(view => Template.fromView(view));
-
-    const scenarios = new ScenarioCollection();
-    const variants = new VariantCollection();
-
-    for (const variant of get(config, 'variants', [])) {
-      variants.push(Object.assign(variant, {
-        views: views.clone()
-      }));
-    }
-
-    for (const scenario of get(config, 'scenarios', [])) {
-      scenarios.push(scenario);
-    }
 
     const props = {
       id: config.id || src.stem,
       label: config.label,
-      default: config.default,
+      variants: get(config, 'variants', []),
+      scenarios: get(config, 'scenarios', []),
+      views: files.filter(viewMatcher)
     };
 
-    return new Component(Object.assign(props, { src, files, config, views, variants, scenarios }));
+    return new Component(Object.assign(props, {src, files, config}));
   }
 
   static isComponent(item) {

@@ -594,7 +594,6 @@ describe('File', function () {
   });
 
   describe('.path get/set', function () {
-
     it('throws on set with empty-string path', function () {
       const file = makeFile();
 

@@ -1,6 +1,7 @@
 const isBuffer = require('buffer').Buffer.isBuffer;
-const {titlize, slugify, cloneDeep} = require('@frctl/utils');
 const {assert} = require('check-types');
+const cloneStats = require('clone-stats');
+const cloneBuffer = require('clone-buffer');
 const fromParse5 = require('hast-util-from-parse5');
 const toHTML = require('hast-util-to-html');
 const Parser5 = require('parse5/lib/parser');
@@ -22,7 +23,7 @@ class Template extends File {
     super(props);
   }
 
-  get contents(){
+  get contents() {
     if (!this._contents) {
       return '';
     }
@@ -36,7 +37,7 @@ class Template extends File {
     return stringifyCache[key];
   }
 
-  set contents(str){
+  set contents(str) {
     if (!isBuffer(str) && typeof str !== 'string') {
       throw new TypeError('Template.contents must be a Buffer or a string [invalid-contents]');
     }
@@ -48,13 +49,14 @@ class Template extends File {
     this._contents = parseCache[str];
   }
 
-  transform(fn){
+  transform(fn) {
     assert.function(fn, `Template.transform - transformer must be a function [transformer-invalid]`);
     fn(this._contents);
     return this;
   }
 
-  static fromFile(file){
+  static fromFile(file) {
+    file = File.isFile(file) ? file : new File(file);
     return new Template(Object.assign({}, file.getCustomProps(), {
       cwd: file.cwd,
       path: file.path,

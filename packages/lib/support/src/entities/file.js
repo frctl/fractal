@@ -5,8 +5,7 @@ const replaceExt = require('replace-ext');
 const cloneStats = require('clone-stats');
 const cloneBuffer = require('clone-buffer');
 const {assert} = require('check-types');
-const slash = require('slash');
-const {mapValues, pick, pickBy, omitBy, assign} = require('lodash');
+const {omitBy} = require('lodash');
 const Vinyl = require('vinyl');
 const {promisify, normalizePath, normalizeExt, hash} = require('@frctl/utils');
 const schema = require('../../schema');
@@ -27,7 +26,7 @@ const managedProps = [
 
 class File extends Entity {
 
-  constructor(props = {}){
+  constructor(props = {}) {
     if (File.isFile(props)) {
       return props;
     }
@@ -42,7 +41,7 @@ class File extends Entity {
 
     this._cwd = normalizePath(props.cwd || process.cwd());
 
-    ['base','path','contents'].forEach(prop => this.set(prop, props[prop]));
+    ['base', 'path', 'contents'].forEach(prop => this.set(prop, props[prop]));
   }
 
   get path() {
@@ -54,72 +53,72 @@ class File extends Entity {
     this._path = normalizePath(path);
   }
 
-  get cwd(){
+  get cwd() {
     return this._cwd;
   }
 
-  set cwd(cwd){
+  set cwd(cwd) {
     throw new Error('File.cwd is read-only after initialisation [invalid-set-cwd]');
   }
 
-  get relative(){
+  get relative() {
     return relative(this.base, this.path);
   }
 
-  set relative(path){
+  set relative(path) {
     throw new Error('File.relative is generated from the base and path attributes. Do not modify it [invalid-set-relative]');
   }
 
-  get basename(){
+  get basename() {
     return basename(this.path);
   }
 
-  set basename(value){
+  set basename(value) {
     this.path = join(this.dirname, value);
   }
 
-  get dirname(){
+  get dirname() {
     return dirname(this.path);
   }
 
-  set dirname(value){
+  set dirname(value) {
     this.path = join(value, this.basename);
   }
 
-  get extname(){
+  get extname() {
     return extname(this.path);
   }
 
-  set extname(value){
+  set extname(value) {
     this.path = replaceExt(this.path, normalizeExt(value));
   }
 
-  get stem(){
+  get stem() {
     return basename(this.path, this.extname);
   }
 
-  set stem(value){
+  set stem(value) {
     this.path = join(this.dirname, value + this.extname);
   }
 
-  get base(){
+  get base() {
     return this._base || this.cwd;
   }
 
-  set base(base){
+  set base(base) {
     assert.maybe.nonEmptyString(base, `File.base - 'base' argument must be a non-empty string, or null/undefined [base-invalid]`);
     if (base === null || base === undefined) {
-      return this._base = null;
+      this._base = null;
     }
     base = normalizePath(base);
     this._base = base === this.cwd ? null : base;
   }
 
-  get contents(){
+  get contents() {
     return this._contents;
   }
 
-  set contents(contents){
+  set contents(contents) {
     if (typeof contents === 'string') {
       contents = Buffer.from(contents);
     }

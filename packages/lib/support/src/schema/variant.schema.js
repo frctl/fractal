@@ -9,9 +9,11 @@ module.exports = {
       anyOf: [{
         instanceof: 'FileCollection'
       }, {
+        instanceof: 'TemplateCollection'
+      }, {
         type: 'array'
       }]
-    },
+    }
   },
   required: ['id']
 };

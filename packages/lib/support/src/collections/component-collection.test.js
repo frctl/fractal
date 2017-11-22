@@ -2,8 +2,8 @@
 
 const {expect} = require('../../../../../test/helpers');
 const File = require('../entities/file');
-const FileCollection = require('./file-collection');
 const Component = require('../entities/component');
+const FileCollection = require('./file-collection');
 const Collection = require('./collection');
 
 const ComponentCollection = require('./component-collection');

@@ -4,7 +4,6 @@ const {
 } = require('lodash');
 const {cloneDeep} = require('@frctl/utils');
 const check = require('check-types');
-const checkMore = require('check-more-types');
 
 const assert = check.assert;
 const iter = (...args) => iteratee(args.length === 2 ? [...args] : args[0]);

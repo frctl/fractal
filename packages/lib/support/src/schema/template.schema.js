@@ -4,7 +4,7 @@ module.exports = {
   type: 'object',
   properties: {
     contents: {
-      instanceOf: 'Buffer',
+      instanceOf: 'Buffer'
     },
     path: {
       type: 'string',

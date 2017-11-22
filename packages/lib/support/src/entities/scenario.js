@@ -1,5 +1,4 @@
-const {titlize, slugify, cloneDeep} = require('@frctl/utils');
-const {assert} = require('check-types');
+const {titlize, slugify} = require('@frctl/utils');
 const schema = require('../../schema');
 const Entity = require('./entity');
 

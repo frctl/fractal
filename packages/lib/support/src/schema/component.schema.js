@@ -1,10 +1,9 @@
 const fileSchema = require('./file.schema');
-const fileCollectionSchema = require('./file-collection.schema');
 
 module.exports = {
   $schema: 'http://json-schema.org/draft-06/schema#',
   definitions: {
-    file: fileSchema,
+    file: fileSchema
   },
   type: 'object',
   properties: {
@@ -19,7 +18,7 @@ module.exports = {
       }]
     },
     config: {
-      type: 'object',
+      type: 'object'
       // TODO: config object schema
     },
     files: {

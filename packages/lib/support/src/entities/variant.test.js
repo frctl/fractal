@@ -1,9 +1,7 @@
 /* eslint no-unused-expressions: "off" */
 const {expect} = require('../../../../../test/helpers');
-const Collection = require('../collections/collection');
 const Variant = require('./variant');
 const Entity = require('./entity');
-const Template = require('./template');
 
 const defaultProps = {
   id: 'variant'
@@ -23,10 +21,6 @@ describe('Variant', function () {
       expect(() => makeVariant(['invalid', 'array'])).to.throw(TypeError, '[properties-invalid]');
       expect(() => makeVariant('invalid string')).to.throw(TypeError, '[properties-invalid]');
     });
-  });
-
-  describe('.id', function () {
-    it('is generated from the label if not set in props');
   });
 
   describe('.label', function () {

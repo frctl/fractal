@@ -15,6 +15,7 @@ class Validator extends Ajv {
     definition.CONSTRUCTORS.Component = require('./entities/component');
     definition.CONSTRUCTORS.Collection = require('./collections/collection');
     definition.CONSTRUCTORS.FileCollection = require('./collections/file-collection');
+    definition.CONSTRUCTORS.TemplateCollection = require('./collections/template-collection');
     definition.CONSTRUCTORS.EntityCollection = require('./collections/entity-collection');
     definition.CONSTRUCTORS.VariantCollection = require('./collections/variant-collection');
     definition.CONSTRUCTORS.ComponentCollection = require('./collections/component-collection');

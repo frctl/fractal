@@ -1,11 +1,10 @@
 const {isPlainObject} = require('lodash');
-const {assert} = require('check-types');
 const Entity = require('../entities/entity');
 const Collection = require('./collection');
 
 class EntityCollection extends Collection {
 
-  constructor(items = []){
+  constructor(items = []) {
     super(items);
     const TargetEntity = this.constructor.entity;
     if (TargetEntity) {
