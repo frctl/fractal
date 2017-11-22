@@ -12,7 +12,7 @@ const parser = new Parser5({locationInfo: true});
 const parseCache = {};
 const stringifyCache = {};
 
-const managedProps = [];
+const managedProps = ['contents'];
 
 class Template extends File {
 
@@ -55,14 +55,18 @@ class Template extends File {
     return this;
   }
 
+  toFile(file) {
+    return new File(Object.assign({}, this.getProps(), {
+      stat: (this.stat ? cloneStats(this.stat) : null),
+      contents: Buffer.from(this.contents)
+    }));
+  }
+
   static fromFile(file) {
     file = File.isFile(file) ? file : new File(file);
-    return new Template(Object.assign({}, file.getCustomProps(), {
-      cwd: file.cwd,
-      path: file.path,
-      base: file.base,
+    return new Template(Object.assign({}, file.getProps(), {
       stat: (file.stat ? cloneStats(file.stat) : null),
-      contents: file.contents ? cloneBuffer(file.contents) : null
+      contents: Buffer.isBuffer(file.contents) ? cloneBuffer(file.contents) : file.contents
     }));
   }
 

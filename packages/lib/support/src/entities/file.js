@@ -109,9 +109,10 @@ class File extends Entity {
     assert.maybe.nonEmptyString(base, `File.base - 'base' argument must be a non-empty string, or null/undefined [base-invalid]`);
     if (base === null || base === undefined) {
       this._base = null;
+    } else {
+      base = normalizePath(base);
+      this._base = base === this.cwd ? null : base;
     }
-    base = normalizePath(base);
-    this._base = base === this.cwd ? null : base;
   }
 
   get contents() {
@@ -137,6 +138,13 @@ class File extends Entity {
     }
     return false;
   }
+
+  clone() {
+    return Object.assign(super.clone(), {
+      stat: (this.stat ? cloneStats(this.stat) : null),
+      contents: Buffer.isBuffer(this.contents) ? cloneBuffer(this.contents) : this.contents
+    });
+  };
 
   toString() {
     return this.contents ? String(this.contents) : '';

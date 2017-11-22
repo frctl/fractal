@@ -15,9 +15,16 @@ class EntityCollection extends Collection {
         if (item instanceof TargetEntity) {
           return item;
         }
-        throw new TypeError(`${this.constructor.name}.constructor - collection items must be '${TargetEntity.name}' instances [invalid-items]`);
+        throw new TypeError(`${this.constructor.name} - collection items must be '${TargetEntity.name}' instances [invalid-items]`);
       });
     }
+    const ids = [];
+    this.forEach(item => {
+      if (ids.includes(item.id)) {
+        throw new Error(`${this.constructor.name} - Multiple items with id ${item.id} found. IDs must be unique within a collection [duplicate-ids]`);
+      }
+      ids.push(item.id);
+    });
   }
 
   find(...args) {

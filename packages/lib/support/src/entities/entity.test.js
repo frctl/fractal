@@ -22,8 +22,44 @@ describe('Entity', function () {
     it('assigns a UUID to the entity if one is not supplied in props', function () {
       const entity = makeEntity();
       const entity2 = makeEntity();
-      expect(entity._uuid).to.be.a('string');
-      expect(entity._uuid).to.not.equal(entity2._uuid);
+      expect(entity.getIdentifier()).to.be.a('string');
+      expect(entity.getIdentifier()).to.not.equal(entity2.getIdentifier());
+    });
+  });
+
+  describe('.get()', function () {
+    it(`gets a property value from the Entity`, function () {
+      const entity = makeEntity();
+      expect(entity.get('path')).to.equal(basicEntity.path);
+    });
+    it(`returns the fallback if the property is not defined`, function () {
+      const entity = makeEntity();
+      expect(entity.get('fabulous', 'hair')).to.equal('hair');
+    });
+    it(`works with dot-notation paths`, function () {
+      const entity = makeEntity({
+        foo: {
+          bar: 'baz'
+        }
+      });
+      expect(entity.get('foo.bar')).to.equal('baz');
+    });
+  });
+
+  describe('.set()', function () {
+    it(`sets a property value on the Entity`, function () {
+      const entity = makeEntity();
+      entity.set('foo', 'bar');
+      expect(entity.get('foo')).to.equal('bar');
+    });
+    it(`works with dot-notation paths`, function () {
+      const entity = makeEntity();
+      entity.set('foo.bar', 'baz');
+      expect(entity.foo.bar).to.equal('baz');
+    });
+    it(`works with managed property getters`, function () {
+      const entity = makeEntity();
+      expect(() => entity.set('id', 'baz')).to.throw('[invalid-set-id]');
     });
   });
 
@@ -37,7 +73,7 @@ describe('Entity', function () {
     it(`preserves the UUID of the entity`, function () {
       const entity = makeEntity();
       const clone = entity.clone();
-      expect(entity._uuid).to.equal(clone._uuid);
+      expect(entity.getIdentifier()).to.equal(clone.getIdentifier());
     });
     it(`clones all entity properties`, function () {
       const entity = makeEntity();

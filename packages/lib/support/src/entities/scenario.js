@@ -13,7 +13,7 @@ class Scenario extends Entity {
     super(props);
 
     this._id = slugify(props.id);
-
+    // this._context = slugify(props.context);
     this.label = props.label || titlize(this.id);
   }
 

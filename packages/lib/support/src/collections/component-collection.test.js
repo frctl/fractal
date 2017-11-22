@@ -49,7 +49,7 @@ let items = [{
   }
 },
 {
-  id: 'jerry',
+  id: 'bob',
   path: '/characters/dogs/jerry',
   config: {
     disney: false,
@@ -81,7 +81,7 @@ describe('ComponentCollection', function () {
       expect(() => makeCollectionFrom('text')).to.throw(TypeError, '[items-invalid]');
       expect(() => makeCollectionFrom({invalid: 'object'})).to.throw(TypeError, '[items-invalid]');
       expect(() => makeCollectionFrom([Component.from(new File({path: 'path', cwd: '/'}))])).to.not.throw();
-      expect(() => makeCollectionFrom([Component.from({invalid: 'object'}), Component.from({anotherInvalid: 'object'})])).to.throw(TypeError, '[src-invalid]');
+      expect(() => makeCollectionFrom([Component.from({invalid: 'object'}), Component.from({anotherInvalid: 'object'})])).to.throw(TypeError, '[properties-invalid]');
       expect(() => makeCollectionFrom([Component.from(new File({path: 'valid-file-props1/', cwd: '/'})), Component.from(new File({path: 'valid-file-props2/', cwd: '/'}))])).to.not.throw();
     });
   });

@@ -3,7 +3,7 @@ const {mapValues, pickBy, omitBy, get, set, toPlainObject} = require('lodash');
 const {cloneDeep, uuid} = require('@frctl/utils');
 const Validator = require('../validator');
 
-const managedProps = ['_uuid', 'id'];
+const managedProps = ['id'];
 
 class Entity {
 
@@ -14,11 +14,8 @@ class Entity {
 
     this.constructor.validate(props);
 
-    Object.defineProperty(this, '_uuid', {
-      value: props._uuid || uuid()
-    });
-
-    this._id = props.id || this._uuid;
+    this._uuid = props._uuid || uuid();
+    this._id = props.id || this.getIdentifier();
 
     Object.assign(this, pickBy(props, (value, key) => this.constructor.isCustomProp(key)));
   }
@@ -57,10 +54,13 @@ class Entity {
   }
 
   clone() {
-    const props = Object.assign(toPlainObject(this), this.getManagedProps(), {
-      _uuid: this.getIdentifier()
-    });
-    return new this.constructor(cloneDeep(props));
+
+    // const obj = cloneDeep(toPlainObject(this));
+    return Object.assign(Object.create(Object.getPrototypeOf(this)), this);
+    // const props = Object.assign(toPlainObject(this), this.getManagedProps(), {
+    //   _uuid: this.getIdentifier()
+    // });
+    // return new this.constructor(cloneDeep(props));
   }
 
   toJSON() {

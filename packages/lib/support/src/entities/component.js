@@ -41,19 +41,24 @@ class Component extends Entity {
 
     super(props);
 
+    this._src = new File(props.src);
+    this._id = slugify(props.id);
+    this._config = cloneDeep(props.config || {});
+
     this._files = new FileCollection();
     this._views = new TemplateCollection();
     this._variants = new VariantCollection();
     this._scenarios = new ScenarioCollection();
 
-    props.files.forEach(file => this.addView(file));
+    props.files.forEach(file => this.addFile(file));
     props.views.forEach(view => this.addView(view));
     props.variants.forEach(variant => this.addVariant(variant));
     props.scenarios.forEach(scenario => this.addScenario(scenario));
 
-    this._src = new File(props.src);
-    this._id = slugify(props.id);
-    this._config = cloneDeep(props.config || {});
+    // always need one variant, if none are supplied then create one
+    if (this.variants.length === 0) {
+      this.addVariant({id: 'default'});
+    }
 
     this.label = this.label || titlize(this.id);
   }
@@ -90,6 +95,14 @@ class Component extends Entity {
     throw new Error('Component.files cannot be set after instantiation [invalid-set-files]');
   }
 
+  get views() {
+    return this._views;
+  }
+
+  set views(views) {
+    throw new Error('Component.views cannot be set after instantiation [invalid-set-views]');
+  }
+
   get variants() {
     return this._variants;
   }
@@ -98,12 +111,12 @@ class Component extends Entity {
     throw new Error('Component.variants cannot be set after instantiation [invalid-set-variants]');
   }
 
-  get views() {
-    return this._views;
+  get scenarios() {
+    return this._scenarios;
   }
 
-  set views(views) {
-    throw new Error('Component.views cannot be set after instantiation [invalid-set-views]');
+  set scenarios(scenarios) {
+    throw new Error('Component.scenarios cannot be set after instantiation [invalid-set-scenarios]');
   }
 
   get config() {
@@ -126,14 +139,14 @@ class Component extends Entity {
   }
 
   addFile(file) {
-    file = File.isFile(file) ? file : new File(file);
+    file = File.isFile(file) ? file.clone() : new File(file);
     file.base = this.path; // Make the rel path of the file relative to the Component source dir
     this._files = this._files.push(file);
     return this;
   }
 
   getView(...args) {
-    return args.length > 1 ? this.views.find(...args) : this.views.first();
+    return args.length > 0 ? this.views.find(...args) : this.views.first();
   }
 
   getViews() {
@@ -141,12 +154,11 @@ class Component extends Entity {
   }
 
   addView(view) {
-    const file = File.isFile(view) ? view : new File(view);
+    const file = File.isFile(view) ? view.clone() : new File(view);
     const tpl = Template.fromFile(file);
     tpl.base = this.path;
     if (!this.files.find('path', file.path)) {
-      // if it doesn't exist in the files collection, add it in
-      this.addFile(file);
+      this.addFile(file); // if it doesn't exist in the files collection, add it in
     }
     this.variants.forEach(variant => variant.addView(tpl));
     this._views = this._views.push(tpl);
@@ -157,19 +169,12 @@ class Component extends Entity {
     return this.variants;
   }
 
+  getVariant(...args) {
+    return args.length > 0 ? this.variants.find(...args) : this.getDefaultVariant();
+  }
+
   getDefaultVariant() {
     return this.variants.first(); // TODO: Allow specifying custom default via config
-  }
-
-  getVariant(...args) {
-    return args.length > 1 ? this.variants.find(...args) : this.getDefaultVariant();
-  }
-
-  getVariantOrDefault(id, throwIfNotFound = false) {
-    if (throwIfNotFound) {
-      return id ? this.variants.findOrFail(id) : this.getDefaultVariant();
-    }
-    return this.variants.find(id) || this.getDefaultVariant();
   }
 
   isDefaultVariant(variant) {
@@ -186,7 +191,7 @@ class Component extends Entity {
   }
 
   getScenario(...args) {
-    return args.length > 1 ? this.scenarios.find(...args) : this.getDefaultScenario();
+    return args.length > 0 ? this.scenarios.find(...args) : this.getDefaultScenario();
   }
 
   getScenarios() {
@@ -218,13 +223,13 @@ class Component extends Entity {
     });
   }
 
-  static from(src, files = new FileCollection(), config = {}) {
-    if (!File.isFile(src)) {
-      throw new TypeError(`Component.from - 'src' argument must be a File instance [src-invalid]`);
+  static from(src, files = [], config = {}) {
+    src = new File(src);
+    if (!FileCollection.isCollection(files) && !Array.isArray(files)) {
+      throw new TypeError(`Component.from - 'files' argument must be an array or FileCollection instance [files-invalid]`);
     }
-    if (!FileCollection.isCollection(files)) {
-      throw new TypeError(`Component.from - 'files' argument must be a FileCollection instance [files-invalid]`);
-    }
+
+    files = new FileCollection(files);
 
     const viewMatcher = get(config, 'views.match', () => false); // default to no matches
 

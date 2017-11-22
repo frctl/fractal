@@ -15,7 +15,7 @@
     "test": "yarn run lint:fix && nyc yarn run test:unit",
     "test:ci": "yarn run bootstrap && nyc yarn run test:unit && nyc report --reporter=text-lcov | coveralls",
     "test:unit": "mocha \"./{,!(node_modules)/**/}*.test.js\" --recursive --require test/support/env",
-    "test:support": "mocha \"./packages/lib/support/{,!(node_modules)/**/}*.test.js\" --recursive --require test/support/env",
+    "test:support": "mocha \"./packages/lib/support/src/{,!(node_modules)/**/}*.test.js\" --recursive --require test/support/env",
     "test:watch": "yarn run test:unit -- --watch",
     "lint": "xo",
     "lint:fix": "xo --fix",

@@ -55,6 +55,16 @@ describe('Template', function () {
     });
   });
 
+  describe('.clone()', function () {
+    it('creates a new instance', function () {
+      const template = makeTemplate();
+      const newTemplate = template.clone();
+      expect(Template.isTemplate(newTemplate)).to.equal(true);
+      expect(newTemplate).to.not.equal(template);
+      expect(newTemplate).to.eql(template);
+    });
+  });
+
   describe('.isTemplate()', function () {
     it('returns true if item is a Template and false otherwise', function () {
       const template = makeTemplate();

@@ -6,19 +6,6 @@ const {expect, sinon} = require('../../../../../test/helpers');
 const File = require('../entities/file');
 const FileCollection = require('./file-collection');
 
-// const fsReadMethods = [
-//   'existsSync',
-//   'statSync',
-//   'readFileSync',
-//   'readdirSync',
-//   'readlinkSync',
-//   'stat',
-//   'readdir',
-//   'readlink',
-//   'readFile',
-//   'exists'
-// ];
-
 let items = [{
   cwd: '/',
   path: '/mice/mickey.js',
@@ -70,7 +57,7 @@ describe('FileCollection', function () {
       expect(() => makeCollectionFrom([{path: 'valid-file-object-definition/'}])).to.not.throw();
       expect(() => makeCollectionFrom([new File({path: 'valid-file-object-definition/'})])).to.not.throw();
       expect(() => makeCollectionFrom([File.from({single: 'object'}), File.from({another: 'object'})])).to.throw(TypeError, '[properties-invalid]');
-      expect(() => makeCollectionFrom([File.from({path: 'object'}), File.from({path: 'object'})])).to.not.throw();
+      expect(() => makeCollectionFrom([File.from({path: 'object'}), File.from({path: 'object2'})])).to.not.throw();
     });
   });
 
@@ -191,15 +178,4 @@ describe('FileCollection', function () {
       expect(() => collection.toMemoryFS()).to.throw('[memfs-error]');
     });
   });
-
-  // describe('MemoryFS proxing', function () {
-  //   it(`adds MemoryFS 'read' methods onto the main collection instance`, function () {
-  //     const collection = makeCollection();
-  //     expect(collection.readFileSync(items[0].path).toString()).to.eql(items[0].contents.toString());
-  //     expect(collection.existsSync(items[0].path)).to.eql(true);
-  //     for (const method of fsReadMethods) {
-  //       expect(collection[method]).to.be.a('function');
-  //     }
-  //   });
-  // });
 });
