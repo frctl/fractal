@@ -54,13 +54,12 @@ class Entity {
   }
 
   clone() {
-
-    // const obj = cloneDeep(toPlainObject(this));
-    return Object.assign(Object.create(Object.getPrototypeOf(this)), this);
     // const props = Object.assign(toPlainObject(this), this.getManagedProps(), {
     //   _uuid: this.getIdentifier()
     // });
     // return new this.constructor(cloneDeep(props));
+    const cloned = mapValues(this, value => cloneDeep(value));
+    return Object.assign(Object.create(Object.getPrototypeOf(this)), cloned);
   }
 
   toJSON() {

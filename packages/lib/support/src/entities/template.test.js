@@ -61,7 +61,16 @@ describe('Template', function () {
       const newTemplate = template.clone();
       expect(Template.isTemplate(newTemplate)).to.equal(true);
       expect(newTemplate).to.not.equal(template);
-      expect(newTemplate).to.eql(template);
+      expect(newTemplate.getProps()).to.eql(template.getProps());
+    });
+    it('does not break the vdom handling', function () {
+      const template = makeTemplate();
+      const newTemplate = template.clone();
+      newTemplate.transform(dom => {
+        dom.children[0].tagName = 'span';
+      })
+      expect(newTemplate.contents).to.equal('<span></span>');
+      expect(template.contents).to.equal('<div></div>');
     });
   });
 

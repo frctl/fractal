@@ -5,6 +5,7 @@ const cloneBuffer = require('clone-buffer');
 const fromParse5 = require('hast-util-from-parse5');
 const toHTML = require('hast-util-to-html');
 const Parser5 = require('parse5/lib/parser');
+const {cloneDeep} = require('@frctl/utils');
 const schema = require('../../schema');
 const File = require('./file');
 
@@ -12,7 +13,7 @@ const parser = new Parser5({locationInfo: true});
 const parseCache = {};
 const stringifyCache = {};
 
-const managedProps = ['contents'];
+const managedProps = [];
 
 class Template extends File {
 
@@ -51,7 +52,9 @@ class Template extends File {
 
   transform(fn) {
     assert.function(fn, `Template.transform - transformer must be a function [transformer-invalid]`);
-    fn(this._contents);
+    const contents = cloneDeep(this._contents);
+    fn(contents);
+    this._contents = contents;
     return this;
   }
 
