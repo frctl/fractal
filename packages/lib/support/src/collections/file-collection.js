@@ -12,7 +12,7 @@ class FileCollection extends EntityCollection {
   find(...args) {
     if (args.length === 1 && typeof args[0] === 'string') {
       return super.find(file => slash(file.relative) === slash(args[0]));
-    }
+    };
     return super.find(...args);
   }
 
@@ -20,14 +20,14 @@ class FileCollection extends EntityCollection {
     if (args.length === 1 && (typeof args[0] === 'string' || Array.isArray(args[0]))) {
       return this.filterByPath(...args);
     }
-    return new FileCollection(super.filter(...args).toArray());
+    return new this.constructor(super.filter(...args).toArray());
   }
 
   reject(...args) {
     if (args.length === 1 && (typeof args[0] === 'string' || Array.isArray(args[0]))) {
       return this.rejectByPath(...args);
     }
-    return new FileCollection(super.reject(...args).toArray());
+    return new this.constructor(super.reject(...args).toArray());
   }
 
   filterByPath(...args) {
@@ -39,7 +39,7 @@ class FileCollection extends EntityCollection {
       return multimatch([slash(file.relative)], paths).length;
     });
 
-    return new FileCollection(items);
+    return new this.constructor(items);
   }
 
   rejectByPath(...args) {
@@ -51,7 +51,7 @@ class FileCollection extends EntityCollection {
       return !multimatch([slash(file.relative)], paths).length;
     });
 
-    return new FileCollection(items);
+    return new this.constructor(items);
   }
 
   toMemoryFS() {

@@ -68,7 +68,7 @@ describe('Template', function () {
       const newTemplate = template.clone();
       newTemplate.transform(dom => {
         dom.children[0].tagName = 'span';
-      })
+      });
       expect(newTemplate.contents).to.equal('<span></span>');
       expect(template.contents).to.equal('<div></div>');
     });

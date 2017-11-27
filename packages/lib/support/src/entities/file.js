@@ -144,7 +144,7 @@ class File extends Entity {
       stat: (this.stat ? cloneStats(this.stat) : null),
       contents: Buffer.isBuffer(this.contents) ? cloneBuffer(this.contents) : this.contents
     });
-  };
+  }
 
   toString() {
     return this.contents ? String(this.contents) : '';

@@ -1,7 +1,7 @@
 const Template = require('../entities/template');
-const EntityCollection = require('./entity-collection');
+const FileCollection = require('./file-collection');
 
-class TemplateCollection extends EntityCollection {
+class TemplateCollection extends FileCollection {
 
   get [Symbol.toStringTag]() {
     return 'TemplateCollection';

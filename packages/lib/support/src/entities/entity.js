@@ -1,5 +1,5 @@
 const {assert} = require('check-types');
-const {mapValues, pickBy, omitBy, get, set, toPlainObject} = require('lodash');
+const {mapValues, pickBy, omitBy, get, set} = require('lodash');
 const {cloneDeep, uuid} = require('@frctl/utils');
 const Validator = require('../validator');
 

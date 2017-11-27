@@ -57,7 +57,7 @@ describe('EntityCollection', function () {
     });
     it('throws an error if multiple items with the same ID are provided', function () {
       expect(() => {
-        new EntityCollection([{id: 'foo'}, {id: 'bar'}, {id: 'foo'}]);
+        return new EntityCollection([{id: 'foo'}, {id: 'bar'}, {id: 'foo'}]);
       }).to.throw('[duplicate-ids]');
     });
   });

@@ -157,7 +157,7 @@ class Component extends Entity {
     const file = File.isFile(view) ? view.clone() : new File(view);
     const tpl = Template.fromFile(file);
     tpl.base = this.path;
-    if (!this.files.find('path', file.path)) {
+    if (!this.files.find({path: file.path})) {
       this.addFile(file); // if it doesn't exist in the files collection, add it in
     }
     this.variants.forEach(variant => variant.addView(tpl));

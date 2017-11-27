@@ -8,6 +8,7 @@ const ScenarioCollection = require('../collections/scenario-collection');
 const Component = require('./component');
 const Template = require('./template');
 const Variant = require('./variant');
+const Scenario = require('./scenario');
 const Entity = require('./entity');
 const File = require('./file');
 
@@ -230,12 +231,13 @@ describe('Component', function () {
       const component = new Component(fullComponent);
       expect(component.getView()).to.equal(component.views[0]);
     });
-    it('proxies the file collection .find() method when args are supplied', function () {
+    it('proxies the view collection .find() method when args are supplied', function () {
       const component = new Component(fullComponent);
-      const spy = sinon.stub(component.files, 'find');
-      const args = {path: '/src/component/view.hbs'};
+      const spy = sinon.spy(component.views, 'find');
+      const args = {basename: 'view.hbs'};
       expect(component.getView(args)).to.equal(component.views[0]);
-      expect(spy.calledWith(args)).to.be, true;
+      expect(spy.calledWith(args)).to.be.true;
+      spy.restore();
     });
   });
 
@@ -295,10 +297,11 @@ describe('Component', function () {
     });
     it('proxies the variant collection .find() method when args are supplied', function () {
       const component = new Component(fullComponent);
-      const spy = sinon.stub(component.variants, 'find');
+      const spy = sinon.spy(component.variants, 'find');
       const args = 'variant-1';
       expect(component.getVariant(args)).to.equal(component.variants.find('variant-1'));
-      expect(spy.calledWith(args)).to.be, true;
+      expect(spy.calledWith(args)).to.be.true;
+      spy.restore();
     });
   });
 
@@ -324,6 +327,11 @@ describe('Component', function () {
       component.addVariant({id: 'new-variant'});
       expect(component.variants.length).to.equal(variantsCount + 1);
     });
+    it('converts plain objects to variant instances', function () {
+      const component = new Component(basicComponent);
+      component.addVariant({id: 'new-variant'});
+      expect(component.getVariant('new-variant')).to.be.instanceOf(Variant);
+    });
     it('adds copies of all views to the variant if a plain object is provided', function () {
       const component = new Component(basicComponent);
       component.addVariant({id: 'new-variant'});
@@ -334,6 +342,49 @@ describe('Component', function () {
       const component = new Component(basicComponent);
       component.addVariant(new Variant({id: 'new-variant'}));
       expect(component.getVariant('new-variant').views.length).to.equal(0);
+    });
+  });
+
+  describe('.getScenarios()', function () {
+    it('is an alias for .scenarios', function () {
+      const component = new Component(fullComponent);
+      expect(component.getScenarios()).to.equal(component.scenarios);
+    });
+  });
+
+  describe('.getScenario()', function () {
+    it('returns the default scenario when called with no args', function () {
+      const component = new Component(fullComponent);
+      expect(component.getScenario()).to.equal(component.getDefaultScenario());
+    });
+    it('proxies the scenario collection .find() method when args are supplied', function () {
+      const component = new Component(fullComponent);
+      const spy = sinon.spy(component.scenarios, 'find');
+      const args = 'scenario-1';
+      expect(component.getScenario(args)).to.equal(component.scenarios.find('scenario-1'));
+      expect(spy.calledWith(args)).to.be.true;
+      spy.restore();
+    });
+  });
+
+  describe('.getDefaultScenario()', function () {
+    it('returns the first scenario', function () {
+      const component = new Component(fullComponent);
+      expect(component.getDefaultScenario()).to.equal(component.scenarios[0]);
+    });
+  });
+
+  describe('.addScenario()', function () {
+    it('adds a scenario to the component scenarios collection', function () {
+      const component = new Component(basicComponent);
+      const scenariosCount = component.scenarios.length;
+      component.addScenario({id: 'new-scenario'});
+      expect(component.scenarios.length).to.equal(scenariosCount + 1);
+    });
+    it('converts plain objects to scenario instances', function () {
+      const component = new Component(basicComponent);
+      component.addScenario({id: 'new-scenario'});
+      expect(component.getScenario('new-scenario')).to.be.instanceOf(Scenario);
     });
   });
 
