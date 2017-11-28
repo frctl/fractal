@@ -229,7 +229,10 @@ class Component extends Entity {
       throw new TypeError(`Component.from - 'files' argument must be an array or FileCollection instance [files-invalid]`);
     }
 
-    files = new FileCollection(files);
+    files = new FileCollection(files).map(file => {
+      file.base = src.path;
+      return file;
+    });
 
     const viewMatcher = get(config, 'views.match', () => false); // default to no matches
 

@@ -110,7 +110,8 @@ describe('Pipeline', function () {
       const pipelineWithPass = makePipeline([passThru, noOpTransform]);
       const result = await pipelineWithPass.process(data, context, emitter);
 
-      expect(result).to.be.an('object').with.a.property('no-op').that.is.a('FileCollection').with.a.property('_items').that.eqls(data);
+      expect(result).to.be.an('object').with.a.property('no-op').that.is.a('FileCollection');
+      expect(result['no-op'].toJSON()).to.eql(data.map(file => file.toJSON()));
     });
     it(`clones data before passing on to next transform`, async function () {
       const emitter = new EventEmitter2();

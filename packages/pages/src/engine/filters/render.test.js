@@ -13,30 +13,12 @@ const files = new FileCollection([
 ]);
 
 const components = new ComponentCollection([
-  Component.from({
-    src: files.find({
-      stem: '@test-component'
-    }),
-    files: FileCollection.from([
-      new File({
-        name: 'view',
-        base: 'components/@test-component',
-        path: 'components/@test-component/view.fjk',
-        contents: Buffer.from('test')
-      })
-    ]),
-    config: {
-      id: 'test-component',
-      views: {
-        match: 'view.*'
-      },
-      variants: [{
-        id: 'default',
-        context: {
-          foo: 'bar'
-        }
-      }]
-    }
+  Component.from(files.find({stem: '@test-component'}), files.filter(file => !file.isDirectory()), {
+    id: 'test-component',
+    views: {
+      match: '**/view.*'
+    },
+    variants: [{id: 'default'}]
   })
 ]);
 

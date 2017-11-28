@@ -32,7 +32,10 @@ describe('Server route - render', function () {
 
   describe('.handler()', function () {
     it('is asynchronous', async function () {
-      expect(route.handler(await makeContext(), () => {})).to.be.instanceOf(Promise);
+      const ctx = await makeContext();
+      const result = route.handler(ctx, () => {});
+      result.catch(err => {}); // no-op
+      expect(result).to.be.instanceOf(Promise);
     });
     it('Sets the body to an array');
     it('Renders each requestes variant/scenario/ext combination and returns a summary object for each');

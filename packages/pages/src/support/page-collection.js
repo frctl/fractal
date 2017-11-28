@@ -1,4 +1,4 @@
-const {Entity, EntityCollection, Collection} = require('@frctl/support');
+const {Entity, EntityCollection} = require('@frctl/support');
 const {isMatch, isString} = require('lodash');
 const Page = require('./page');
 
@@ -7,15 +7,9 @@ class PageCollection extends EntityCollection {
   find(...args) {
     let page;
     if (isString(args[0]) && args.length === 1) {
-      /**
-       * Look up by page ID
-       */
       page = super.find('id', args[0]);
     }
     if (!page && args.length >= 2) {
-      /**
-       * Look up by route
-       */
       page = this.findByRoute(...args);
     }
     if (page) {
@@ -27,7 +21,7 @@ class PageCollection extends EntityCollection {
   findByRoute(routeName, target) {
     return this._items.filter(page => page.route === routeName).find(page => {
       if (Entity.isEntity(target) && Entity.isEntity(page.target)) {
-        return target.uuid === page.target.uuid;
+        return target.getIdentifier() === page.target.getIdentifier();
       }
       return isMatch(page.target, target);
     });
@@ -46,7 +40,6 @@ class PageCollection extends EntityCollection {
 
 }
 
-Collection.addEntityDefinition(Page, PageCollection);
-Collection.addTagDefinition('PageCollection', PageCollection);
+PageCollection.entity = Page;
 
 module.exports = PageCollection;

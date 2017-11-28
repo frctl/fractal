@@ -14,9 +14,9 @@ module.exports = function () {
           }
         });
         component.getVariants().forEach(variant => {
-          variant.getTemplates().forEach(template => {
+          variant.getViews().forEach(template => {
             for (const engine of engines) {
-              if (engine.match(template.filename)) {
+              if (engine.match(template.basename)) {
                 template.engine = engine.name;
                 break;
               }

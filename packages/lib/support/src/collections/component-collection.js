@@ -47,8 +47,8 @@ class ComponentCollection extends EntityCollection {
 
   getComponentForVariant(variant) {
     return super.find(component => {
-      const variantRefs = component.getVariants().mapToArray(v => v.uuid);
-      return variantRefs.includes(variant.uuid);
+      const variantRefs = component.getVariants().mapToArray(v => v.getIdentifier());
+      return variantRefs.includes(variant.getIdentifier());
     });
   }
 

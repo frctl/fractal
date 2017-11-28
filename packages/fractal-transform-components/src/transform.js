@@ -1,4 +1,4 @@
-const {defaultsDeep, addTrailingSeparator} = require('@frctl/utils');
+const {defaultsDeep, addTrailingSeparator, normalizeId} = require('@frctl/utils');
 const {Component, ComponentCollection} = require('@frctl/support');
 
 module.exports = function (opts = {}) {
@@ -32,12 +32,11 @@ module.exports = function (opts = {}) {
         }
 
         config = defaultsDeep(config, configDefaults);
-
-        return Component.from({
-          src: dir,
-          files: componentFiles.reject(configMatcher),
-          config
+        config = Object.assign(config, {
+          id: config.id || normalizeId(dir.stem)
         });
+
+        return Component.from(dir, componentFiles.reject(configMatcher), config);
       }));
     }
   };

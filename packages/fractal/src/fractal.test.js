@@ -32,30 +32,12 @@ const files = new FileCollection([
 ]);
 
 const components = new ComponentCollection([
-  Component.from({
-    src: files.find({
-      stem: '@test-component'
-    }),
-    files: FileCollection.from([
-      new File({
-        name: 'view',
-        base: 'components/@test-component',
-        path: 'components/@test-component/view.fjk',
-        contents: Buffer.from('component!')
-      })
-    ]),
-    config: {
-      id: 'test-component',
-      views: {
-        match: 'view.*'
-      },
-      variants: [{
-        id: 'default',
-        context: {
-          foo: 'bar'
-        }
-      }]
-    }
+  Component.from(files.find({stem: '@test-component'}), files.filter(file => !file.isDirectory()), {
+    id: 'test-component',
+    views: {
+      match: '**/view.*'
+    },
+    variants: [{id: 'default'}]
   })
 ]);
 
@@ -92,6 +74,7 @@ describe('Fractal', function () {
     });
     it('resolves to a string', async function () {
       const fractal = makeFractal();
+      sinon.stub(fractal, 'parse').callsFake(() => Promise.resolve(parserOutput));
       expect(await fractal.render(components.first())).to.be.a('string');
     });
     it('rejects if no engines have been added', function () {

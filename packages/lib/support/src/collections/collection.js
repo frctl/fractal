@@ -18,7 +18,7 @@ class Collection {
     assert.array(items, `Collection items argument must be an array or Collection instance [items-invalid]`);
     items.forEach(item => {
       if (item && (!isObjectLike(item) || isArray(item))) {
-        throw new TypeError(`${this.name}.validate - collection items must be objects [items-invalid]`);
+        throw new TypeError(`${this.constructor.name}.validate - collection items must be objects [items-invalid]`);
       }
     });
 

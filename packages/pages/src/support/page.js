@@ -1,13 +1,8 @@
 const {join} = require('path');
-const {Entity, Validator, File} = require('@frctl/support');
+const {Entity, File} = require('@frctl/support');
 const schema = require('./page.schema');
 
 class Page extends Entity {
-
-  constructor(props) {
-    Validator.assertValid(props, schema, 'Page.constructor - invalid property schema [properties-invalid]');
-    super(props);
-  }
 
   toFile(opts = {}) {
     return new File({
@@ -26,5 +21,7 @@ class Page extends Entity {
   }
 
 }
+
+Page.schema = schema;
 
 module.exports = Page;

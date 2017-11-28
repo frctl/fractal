@@ -81,9 +81,9 @@ describe('PageCollection', function () {
 
   describe('.from()', function () {
     it('successfully creates a PageCollection when valid input is supplied', function () {
-      expect(() => makeCollectionFrom('text')).to.throw(TypeError, '[properties-invalid]');
-      expect(() => makeCollectionFrom(pages[0])).to.not.throw();
-      expect(() => makeCollectionFrom(new Page(pages[0]))).to.not.throw();
+      expect(() => makeCollectionFrom('text')).to.throw(TypeError, '[items-invalid]');
+      expect(() => makeCollectionFrom([pages[0]])).to.not.throw();
+      expect(() => makeCollectionFrom([new Page(pages[0])])).to.not.throw();
       expect(() => makeCollectionFrom(pages)).to.not.throw();
     });
   });

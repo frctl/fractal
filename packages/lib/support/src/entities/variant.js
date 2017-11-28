@@ -40,6 +40,10 @@ class Variant extends Entity {
     return this.views;
   }
 
+  getView(...args) {
+    return args.length > 0 ? this.views.find(...args) : this.views.first();
+  }
+
   addView(view) {
     view = File.isFile(view) ? view.clone() : new File(view);
     view = Template.fromFile(view);

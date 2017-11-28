@@ -22,7 +22,7 @@ module.exports = function (opts = {}) {
             }
           });
 
-          variant.getTemplates().forEach(template => {
+          variant.getViews().forEach(template => {
             const env = {template, component, variant, components};
             ['attrs', 'logic', 'include'].forEach(name => {
               const transform = require(`./${name}`);

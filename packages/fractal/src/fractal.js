@@ -44,7 +44,8 @@ class Fractal extends App {
           context = context.context;
         }
 
-        opts = Object.assign({}, await this.parse(), opts);
+        const collections = await this.parse();
+        opts = Object.assign({}, collections, opts);
 
         if (typeof target === 'string') {
           if (!opts.engine && opts.ext) {
@@ -82,7 +83,7 @@ class Fractal extends App {
 
         if (opts.engine) {
           const engine = renderer.getEngine(opts.engine);
-          for (const tpl of variant.getTemplates()) {
+          for (const tpl of variant.getViews()) {
             if (engine.match(tpl.filename)) {
               template = tpl;
               break;
@@ -92,12 +93,13 @@ class Fractal extends App {
             throw new Error(`Could not find '${opts.engine}' template for variant '${variant.id}' of component '${component.id}' [template-not-found]`);
           }
         } else {
-          template = variant.getTemplate(opts.ext);
+
+          template = variant.getView(opts.ext ? {extname: opts.ext} : undefined);
           if (!template) {
             throw new Error(`Could not find template for variant '${variant.id}' of component '${component.id}'${opts.ext ? `with extension '${opts.ext}'` : ''} [template-not-found]`);
           }
           opts = Object.assign(opts, {
-            engine: renderer.getEngineFor(template.filename)
+            engine: renderer.getEngineFor(template.relative)
           });
         }
 

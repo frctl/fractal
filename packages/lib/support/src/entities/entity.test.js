@@ -80,7 +80,7 @@ describe('Entity', function () {
       entity.foo = 'bar';
       const clone = entity.clone();
       expect(entity.foo).to.eql(clone.foo);
-      expect(entity.toJSON()).to.eql(clone.toJSON());
+      expect(entity).to.eql(clone);
     });
   });
 });

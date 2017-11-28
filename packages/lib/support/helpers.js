@@ -18,7 +18,7 @@ module.exports = {
     const partials = {};
     for (const component of components) {
       for (const variant of component.getVariants()) {
-        const tpl = variant.getTemplates().find(tpl => matcher(tpl.filename));
+        const tpl = variant.getViews().find(tpl => matcher(tpl.filename));
         if (tpl) {
           const str = tpl.toString();
           partials[`${component.id}:${variant.id}`] = str;

@@ -45,10 +45,7 @@ const validTransformWithPluginList = makeTransform('valid-transform-with-plugin-
 const filesToComponents = files => {
   const comps = files.filter(f => (f.stem.indexOf('@') === 0))
     .toArray()
-    .map(f => Component.from({
-      src: new File({path: f.dirname}),
-      name: f.stem
-    }));
+    .map(f => Component.from(new File({path: f.dirname})));
   return ComponentCollection.from(comps);
 };
 

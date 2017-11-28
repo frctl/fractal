@@ -49,7 +49,9 @@ module.exports = async function (pages, opts = {}) {
     }
   });
 
-  server.addStatic(pages.get('dest'));
+  if (pages.get('dest')) {
+    server.addStatic(pages.get('dest'));
+  }
 
   await Promise.all([pages, fractal].map(app => {
     app.watch();
