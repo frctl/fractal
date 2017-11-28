@@ -25,8 +25,8 @@ module.exports = function (opts = {}) {
           variant.getViews().forEach(template => {
             const env = {template, component, variant, components};
             ['attrs', 'logic', 'include'].forEach(name => {
-              const transform = require(`./${name}`);
-              transform(template.contents, context, env);
+              const transformer = require(`./${name}`)(context, env);
+              template.transform(transformer);
             });
           });
         });

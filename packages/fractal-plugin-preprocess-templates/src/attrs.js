@@ -5,24 +5,26 @@ const commaSep = require('comma-separated-tokens');
 const spaceSep = require('space-separated-tokens');
 const safeEval = require('./eval');
 
-module.exports = function (tree, context, env) {
-  visit(tree, 'element', function (node, index, parentNode) {
-    if (node.properties) {
-      for (const key of Object.keys(node.properties)) {
-        if (key[0] === ':') {
-          const propName = key.slice(1);
-          const propInfo = getPropInfo(propName);
-          const name = propInfo ? propInfo.propertyName : propName;
-          const result = safeEval(node.properties[key], context, env);
+module.exports = function (context, env) {
+  return function(tree) {
+    visit(tree, 'element', function (node, index, parentNode) {
+      if (node.properties) {
+        for (const key of Object.keys(node.properties)) {
+          if (key[0] === ':') {
+            const propName = key.slice(1);
+            const propInfo = getPropInfo(propName);
+            const name = propInfo ? propInfo.propertyName : propName;
+            const result = safeEval(node.properties[key], context, env);
 
-          delete node.properties[key];
+            delete node.properties[key];
 
-          node.properties[name] = resolveValue(node.properties[name], result, propInfo);
+            node.properties[name] = resolveValue(node.properties[name], result, propInfo);
+          }
         }
       }
-    }
-  });
-  return tree;
+    });
+    return tree;
+  }
 };
 
 function resolveValue(existing, additional, propInfo) {

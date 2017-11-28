@@ -1,17 +1,19 @@
 const visit = require('unist-util-visit');
 const safeEval = require('./eval');
 
-module.exports = function (tree, context, env) {
-  visit(tree, 'element', function (node, index, parentNode) {
-    if (node.properties['@if']) {
-      const result = safeEval(node.properties['@if'], context, env);
-      delete node.properties['@if'];
-      if (!result) {
-        // false, remove the node
-        parentNode.children.splice(index, 1);
+module.exports = function (context, env) {
+  return function(tree) {
+    visit(tree, 'element', function (node, index, parentNode) {
+      if (node.properties['@if']) {
+        const result = safeEval(node.properties['@if'], context, env);
+        delete node.properties['@if'];
+        if (!result) {
+          // false, remove the node
+          parentNode.children.splice(index, 1);
+        }
+        // TODO: Handle if/else and else statements
       }
-      // TODO: Handle if/else and else statements
-    }
-  });
-  return tree;
+    });
+    return tree;
+  }
 };
