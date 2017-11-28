@@ -84,7 +84,7 @@ class Fractal extends App {
         if (opts.engine) {
           const engine = renderer.getEngine(opts.engine);
           for (const tpl of variant.getViews()) {
-            if (engine.match(tpl.filename)) {
+            if (engine.match(tpl.basename)) {
               template = tpl;
               break;
             }
@@ -99,7 +99,7 @@ class Fractal extends App {
             throw new Error(`Could not find template for variant '${variant.id}' of component '${component.id}'${opts.ext ? `with extension '${opts.ext}'` : ''} [template-not-found]`);
           }
           opts = Object.assign(opts, {
-            engine: renderer.getEngineFor(template.relative)
+            engine: renderer.getEngineFor(template.basename)
           });
         }
 
