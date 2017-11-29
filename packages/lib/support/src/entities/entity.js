@@ -54,16 +54,12 @@ class Entity {
   }
 
   clone() {
-    // const props = Object.assign(toPlainObject(this), this.getManagedProps(), {
-    //   _uuid: this.getIdentifier()
-    // });
-    // return new this.constructor(cloneDeep(props));
     const cloned = mapValues(this, value => cloneDeep(value));
     return Object.assign(Object.create(Object.getPrototypeOf(this)), cloned);
   }
 
   toJSON() {
-    return mapValues(this.getProps(), (item, key) => {
+    const props = mapValues(this.getProps(), (item, key) => {
       if (Buffer.isBuffer(item)) {
         return item.toString();
       }
@@ -71,6 +67,9 @@ class Entity {
         return item.toJSON();
       }
       return item;
+    });
+    return Object.assign(props, {
+      uuid: this.getIdentifier()
     });
   }
 

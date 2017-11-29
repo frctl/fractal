@@ -111,7 +111,7 @@ describe('Pipeline', function () {
       const result = await pipelineWithPass.process(data, context, emitter);
 
       expect(result).to.be.an('object').with.a.property('no-op').that.is.a('FileCollection');
-      expect(result['no-op'].toJSON()).to.eql(data.map(file => file.toJSON()));
+      expect(result['no-op'].toJSON().map(f => f.path)).to.eql(data.map(f => f.path));
     });
     it(`clones data before passing on to next transform`, async function () {
       const emitter = new EventEmitter2();
