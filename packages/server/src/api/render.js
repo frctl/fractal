@@ -36,9 +36,8 @@ module.exports = function () {
         const result = ctx.fractal.render(variant, context, {ext, engine}).then(output => {
           return {
             requestData: request,
-            // TODO: Figure out why toJSON methods are so slow and re-instate the props below
-            // component: component.toJSON(),
-            // variant: variant.toJSON(),
+            component: component.toJSON(),
+            variant: variant.toJSON(),
             context,
             output
           };

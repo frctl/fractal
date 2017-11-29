@@ -6,11 +6,7 @@ module.exports = function () {
     path: '/components',
 
     async handler(ctx, next) {
-      ctx.body = ctx.components.mapToArray(component => {
-        const componentData = component.getProps();
-        componentData.variants = component.getVariants().toJSON();
-        return componentData;
-      });
+      ctx.body = ctx.components.toJSON();
     }
 
   };
