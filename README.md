@@ -1,3 +1,14 @@
+---
+## Current project status - please read!
+
+Unfortunately Fractal is **not currently under active development.** However The 1.x (master) branch is stable and is being used in many projects. Documentation for this version is available at https://fractal.build. 
+
+> The 2.0 beta branch is _not_ recommended for use as there are many outstanding issues + bugs, limited documentation and no active development at this time.
+
+**If anyone is interested in becoming a maintainer or taking over the project please email mark@allmarkedup.com to discuss further.**
+
+---
+
 # Fractal
 
 Fractal is a tool to help you **build** and **document** web component libraries and then **integrate** them into your projects.
