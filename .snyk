@@ -1,0 +1,47 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.12.0
+ignore: {}
+# patches apply the minimum changes required to fix a vulnerability
+patch:
+  'npm:debug:20170905':
+    - browser-sync > localtunnel > debug:
+        patched: '2018-07-05T07:25:11.227Z'
+    - '@frctl/handlebars > @frctl/fractal > @frctl/mandelbrot > @frctl/fractal > browser-sync > localtunnel > debug':
+        patched: '2018-07-05T07:25:11.227Z'
+    - '@frctl/mandelbrot > @frctl/fractal > browser-sync > localtunnel > debug':
+        patched: '2018-07-05T07:25:11.227Z'
+    - '@frctl/mandelbrot > @frctl/fractal > @frctl/handlebars > @frctl/fractal > browser-sync > localtunnel > debug':
+        patched: '2018-07-05T07:25:11.227Z'
+    - '@frctl/handlebars > @frctl/fractal > browser-sync > localtunnel > debug':
+        patched: '2018-07-05T07:25:11.227Z'
+  'npm:lodash:20180130':
+    - cli-table2 > lodash:
+        patched: '2018-07-05T07:25:11.227Z'
+    - browser-sync > easy-extender > lodash:
+        patched: '2018-07-05T07:25:11.227Z'
+    - '@frctl/handlebars > @frctl/fractal > cli-table2 > lodash':
+        patched: '2018-07-05T07:25:11.227Z'
+    - '@frctl/handlebars > @frctl/fractal > browser-sync > easy-extender > lodash':
+        patched: '2018-07-05T07:25:11.227Z'
+    - '@frctl/handlebars > @frctl/fractal > @frctl/mandelbrot > @frctl/fractal > cli-table2 > lodash':
+        patched: '2018-07-05T07:25:11.227Z'
+    - vorpal > inquirer > lodash:
+        patched: '2018-07-05T07:25:11.227Z'
+    - '@frctl/handlebars > @frctl/fractal > @frctl/mandelbrot > @frctl/fractal > vorpal > inquirer > lodash':
+        patched: '2018-07-05T07:25:11.227Z'
+    - '@frctl/handlebars > @frctl/fractal > vorpal > inquirer > lodash':
+        patched: '2018-07-05T07:25:11.227Z'
+    - '@frctl/mandelbrot > @frctl/fractal > cli-table2 > lodash':
+        patched: '2018-07-05T07:25:11.227Z'
+    - '@frctl/mandelbrot > @frctl/fractal > browser-sync > easy-extender > lodash':
+        patched: '2018-07-05T07:25:11.227Z'
+    - '@frctl/mandelbrot > @frctl/fractal > @frctl/handlebars > @frctl/fractal > cli-table2 > lodash':
+        patched: '2018-07-05T07:25:11.227Z'
+    - '@frctl/mandelbrot > @frctl/fractal > @frctl/handlebars > @frctl/fractal > browser-sync > easy-extender > lodash':
+        patched: '2018-07-05T07:25:11.227Z'
+    - '@frctl/mandelbrot > @frctl/fractal > @frctl/handlebars > @frctl/fractal > vorpal > inquirer > lodash':
+        patched: '2018-07-05T07:25:11.227Z'
+    - '@frctl/mandelbrot > @frctl/fractal > vorpal > inquirer > lodash':
+        patched: '2018-07-05T07:25:11.227Z'
+    - '@frctl/handlebars > @frctl/fractal > @frctl/mandelbrot > @frctl/fractal > browser-sync > easy-extender > lodash':
+        patched: '2018-07-05T07:25:11.227Z'

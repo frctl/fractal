@@ -28,7 +28,7 @@ const resolver = module.exports = {
 
         function mapper(item, key) {
 
-            if (!item) {
+            if (item === undefined || item === null) {
                 return Promise.resolve(null);
             }
 
