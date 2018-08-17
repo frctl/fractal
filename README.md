@@ -1,11 +1,15 @@
 ---
 ## Current project status - please read!
 
-Unfortunately Fractal is **not currently under active development.** However The 1.x (master) branch is stable and is being used in many projects. Documentation for this version is available at https://fractal.build. 
+As you may be aware, changes in Fractal's core team meant that new development on this project was restricted for a time.
 
-> The 2.0 beta branch is _not_ recommended for use as there are many outstanding issues + bugs, limited documentation and no active development at this time.
+In order to safeguard its future, we decided to ask our community for help, and the response has been overwhelming. We've received so many offers of support in all forms that we can safely say that development will be starting up again shortly. Thank you all!
 
-**If anyone is interested in becoming a maintainer or taking over the project please email mark@allmarkedup.com to discuss further.**
+Please see [issue #449](https://github.com/frctl/fractal/issues/449) ('An update on Fractal's future development') for more details about how we are planning on moving Fractal forwards in the future.
+
+Currently The 1.x (master) branch is stable and is being used in many projects. Documentation for this version is available at https://fractal.build. The 2.0 (beta) branch is _not_ recommended for use as there are many outstanding issues + bugs, limited documentation and no active development at this time.
+
+**We are looking for developers and maintainers! Please add a comment to [issue #449](https://github.com/frctl/fractal/issues/449) if you are interested in helping out with Fractal's future development.**
 
 ---
 
