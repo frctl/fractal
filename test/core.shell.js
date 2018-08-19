@@ -42,13 +42,13 @@ describe('Shell', function() {
         })
     });
 
-    // it('can execute a child process', function(done) {
-    //     // This should be OK cross-platform.
-    //     // If not - any suggestions?
-    //     const cmd = shell.exec('node -v');
-    //     cmd.stdout.on('data', function(data) {
-    //         expect(data.toString()).to.equal(process.version);
-    //         done();
-    //     })
-    // });
+    it('can execute a child process', function(done) {
+        // This should be OK cross-platform.
+        // If not - any suggestions?
+        const cmd = shell.exec('node', ['-v']);
+        cmd.stdout.on('data', function(data) {
+            expect(data.toString().trim()).to.equal(process.version);
+            done();
+        });
+    });
 });
