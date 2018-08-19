@@ -1,3 +1,4 @@
+const fs = require('fs');
 
 /**
  * Change the current working directory.
@@ -8,8 +9,15 @@ const cd = function(directory = '') {
     process.chdir(directory);
 }
 
-const touch = function(filename) {
 
+/**
+ * Create a file.
+ *
+ * @param {*} filename The filename of the file to create.
+ */
+const touch = function(filename) {
+    const handle = fs.openSync(filename, 'w');
+    fs.closeSync(handle);
 }
 
 const exec = function(cmd, opts = []) {
