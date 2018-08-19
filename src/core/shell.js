@@ -1,34 +1,36 @@
 const fs = require('fs');
 const spawn = require('child_process').spawn;
 
-/**
- * Change the current working directory.
- *
- * @param {string} [directory=''] The directory to navigate into.
- */
-const cd = function(directory = '') {
-    return process.chdir(directory);
-}
+module.exports = {
 
-/**
- * Create a file.
- *
- * @param {string} filename The filename of the file to create.
- */
-const touch = function(filename) {
-    const handle = fs.openSync(filename, 'w');
-    fs.closeSync(handle);
-}
+    /**
+     * Change the current working directory.
+     *
+     * @param {string} [directory=''] The directory to navigate into.
+     */
+    cd(directory = '') {
+        return process.chdir(directory);
+    },
 
-/**
- * Spawn a child process.
- *
- * @param {string} cmd
- * @param {string[]} [opts=[]]
- * @returns {ChildProcess}
- */
-const exec = function(cmd, opts = []) {
-    return spawn(cmd, opts);
-}
+    /**
+     * Create a file.
+     *
+     * @param {string} filename The filename of the file to create.
+     */
+    touch(filename) {
+        const handle = fs.openSync(filename, 'w');
+        fs.closeSync(handle);
+    },
 
-module.exports = { cd, exec, touch };
+    /**
+     * Spawn a child process.
+     *
+     * @param {string} cmd
+     * @param {string[]} [opts=[]]
+     * @returns {ChildProcess}
+     */
+    exec(cmd, opts = []) {
+        return spawn(cmd, opts);
+    }
+
+};
