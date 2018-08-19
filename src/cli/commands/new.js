@@ -5,7 +5,7 @@ const _ = require('lodash');
 const Path = require('path');
 const Handlebars = require('handlebars');
 const inquirer = require('inquirer');
-const shell = require('shelljs');
+const shell = require('../../core/shell');
 const fs = Promise.promisifyAll(require('fs-extra'));
 const helpers = require('../../core/utils');
 
@@ -115,13 +115,15 @@ module.exports = {
             }).finally(() => {
                 console.log('Installing NPM dependencies - this may take some time!');
                 shell.cd(basePath);
-                const install = shell.exec('npm i', {
-                    silent: false,
-                }, function () {
+                const installCmd = shell.exec('npm', ['install']);
+                // Log stdout.
+                installCmd.stdout.on('data', (data) => console.log(data.toString()));
+                // Success!
+                installCmd.stdout.on('end', () => {
                     console.success('Your new Fractal project has been set up.');
                     done();
                 });
-                install.stdout.on('data', (data) => console.log);
+
             }).catch(e => {
                 fs.remove(basePath);
                 console.error(e);
