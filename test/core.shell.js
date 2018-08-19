@@ -48,7 +48,8 @@ describe('Shell', function() {
         const cmd = shell.exec('node', ['-v']);
         cmd.stdout.on('data', function(data) {
             expect(data.toString().trim()).to.equal(process.version);
-            done();
         });
+        // Run this on the end event so we are sure the child process under test actually ends.
+        cmd.stdout.on('end', done);
     });
 });
