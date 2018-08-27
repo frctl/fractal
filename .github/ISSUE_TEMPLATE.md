@@ -1,4 +1,4 @@
-Have you read Fractal's [Code of Conduct](.github/CODE_OF_CONDUCT.md)? By filing an Issue, you are expected to comply with it, including treating everyone with respect
+Have you read Fractal's [Code of Conduct](/.github/CODE_OF_CONDUCT.md)? By filing an Issue, you are expected to comply with it, including treating everyone with respect
 
 Do you want to ask a question? Are you looking for support? The Fractal Slack channel is the best place for getting support: https://fractalize.slack.com
 
