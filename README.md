@@ -38,9 +38,14 @@ There is no 'official' demo for Fractal up yet, but [bits.24ways.org](http://bit
 
 ## Requirements
 
-Fractal requires [Node.js](https://nodejs.org) v4.4.7+
+Any LTS (Long-term stable) version of NodeJS. At the time of writing this is 6 (Boron) and 8 (Carbon).
 
-It is the intention that Fractal’s Node.js version support will track the latest Node LTS release version.
+If you're on an earlier (unsupported) version of NodeJS, then see the below compatibility table.
+
+| NodeJS version | Fractal version |
+| -------------- | --------------- |
+| 4.x            | 1.17            |
+| 5.x            | 1.17            |
 
 ## Testing
 
