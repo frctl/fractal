@@ -38,7 +38,7 @@ There is no 'official' demo for Fractal up yet, but [bits.24ways.org](http://bit
 
 ## Requirements
 
-Any LTS version of NodeJS. At the time of writing this is 6 (Boron) and 8 (Carbon).
+Any LTS (Long-term stable) version of NodeJS. At the time of writing this is 6 (Boron) and 8 (Carbon).
 
 If you're on an earlier (unsupported) version of NodeJS, then see the below compatibility table.
 
