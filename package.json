@@ -52,7 +52,7 @@
     "throat": "^3.0.0",
     "update-notifier": "^1.0.2",
     "vinyl": "^1.2.0",
-    "vorpal": "~1.11.2"
+    "vorpal": "^1.12.0"
   },
   "bin": {
     "fractal": "./bin/fractal"
@@ -67,7 +67,7 @@
     "chai": "^4.1.1",
     "chai-as-promised": "^7.1.1",
     "istanbul": "^0.4.4",
-    "mocha": "^3.0.0",
+    "mocha": "^4.1.0",
     "pre-commit": "^1.1.3",
     "proxyquire": "^1.7.10",
     "sinon": "3.2.1"
