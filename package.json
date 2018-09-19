@@ -42,7 +42,7 @@
     "mime": "^1.3.4",
     "minimist": "^1.2.0",
     "mixwith": "^0.1.1",
-    "nunjucks": "^2.4.2",
+    "nunjucks": "^3.1.3",
     "path-to-regexp": "^1.5.3",
     "portscanner": "^1.0.0",
     "readable-stream": "^2.1.4",
