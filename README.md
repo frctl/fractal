@@ -1,15 +1,15 @@
 ---
-## Current project status - please read!
+## Project update - please read!
 
-As you may be aware, changes in Fractal's core team meant that new development on this project was restricted for a time.
+As you may be aware, there have recently been some changes in Fractal's core team.
 
-In order to safeguard its future, we decided to ask our community for help, and the response has been overwhelming. We've received so many offers of support in all forms that we can safely say that development will be starting up again shortly. Thank you all!
+In order to safeguard its future, we decided to ask our community for help, and the response has been overwhelming. **We've received so many offers of support in all forms that we can safely say that development will be starting up again shortly. Thank you all!**
+
+We have an active and helpful community on [Fractal's Slack workspace](https://slack.fractal.build/) - join us there for support and tips.
 
 Please see [issue #449](https://github.com/frctl/fractal/issues/449) ('An update on Fractal's future development') for more details about how we are planning on moving Fractal forwards in the future.
 
-Currently The 1.x (master) branch is stable and is being used in many projects. Documentation for this version is available at https://fractal.build. The 2.0 (beta) branch is _not_ recommended for use as there are many outstanding issues + bugs, limited documentation and no active development at this time.
-
-**We are looking for developers and maintainers! Please add a comment to [issue #449](https://github.com/frctl/fractal/issues/449) if you are interested in helping out with Fractal's future development.**
+Currently the 1.x (master) branch is stable and is being used in many projects. Documentation for this version is available at https://fractal.build. The 2.0 (beta) branch is _not_ recommended for use as there are many outstanding issues + bugs, limited documentation and may change _significantly_ once development begins again.
 
 ---
 
@@ -20,7 +20,6 @@ Fractal is a tool to help you **build** and **document** web component libraries
 [![Build Status](https://img.shields.io/travis/frctl/fractal/master.svg?style=flat-square)](https://travis-ci.org/frctl/fractal)
 [![Greenkeeper badge](https://img.shields.io/badge/greenkeeper-enabled-brightgreen.svg?style=flat-square)](https://greenkeeper.io/)
 [![NPM Version](https://img.shields.io/npm/v/@frctl/fractal.svg?style=flat-square)](https://www.npmjs.com/package/@frctl/fractal)
-[![Slack Status](http://slack.fractal.build/badge.svg)](http://slack.fractal.build)
 
 **Read the Fractal documentation at http://fractal.build/guide.**
 
@@ -40,9 +39,14 @@ There is no 'official' demo for Fractal up yet, but [bits.24ways.org](http://bit
 
 ## Requirements
 
-Fractal requires [Node.js](https://nodejs.org) v4.4.7+
+Any LTS (Long-term stable) version of NodeJS. At the time of writing this is 6 (Boron) and 8 (Carbon).
 
-It is the intention that Fractal’s Node.js version support will track the latest Node LTS release version.
+If you're on an earlier (unsupported) version of NodeJS, then see the below compatibility table.
+
+| NodeJS version | Fractal version |
+| -------------- | --------------- |
+| 4.x            | 1.17            |
+| 5.x            | 1.17            |
 
 ## Testing
 
