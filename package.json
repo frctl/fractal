@@ -52,7 +52,7 @@
     "throat": "^3.0.0",
     "update-notifier": "^1.0.2",
     "vinyl": "^1.2.0",
-    "vorpal": "~1.11.2",
+    "vorpal": "^1.12.0",
     "snyk": "^1.88.0"
   },
   "bin": {
