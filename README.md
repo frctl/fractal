@@ -18,7 +18,6 @@ Fractal is a tool to help you **build** and **document** web component libraries
 [![Build Status](https://img.shields.io/travis/frctl/fractal/master.svg?style=flat-square)](https://travis-ci.org/frctl/fractal)
 [![Greenkeeper badge](https://img.shields.io/badge/greenkeeper-enabled-brightgreen.svg?style=flat-square)](https://greenkeeper.io/)
 [![NPM Version](https://img.shields.io/npm/v/@frctl/fractal.svg?style=flat-square)](https://www.npmjs.com/package/@frctl/fractal)
-[![Slack Status](http://slack.fractal.build/badge.svg)](http://slack.fractal.build)
 
 **Read the Fractal documentation at http://fractal.build/guide.**
 
