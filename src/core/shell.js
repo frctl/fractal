@@ -1,5 +1,5 @@
 const fs = require('fs');
-const spawn = require('child_process').spawn;
+const cp = require('child_process');
 
 module.exports = {
 
@@ -30,7 +30,7 @@ module.exports = {
      * @returns {ChildProcess}
      */
     exec(cmd, opts = []) {
-        return spawn(cmd, opts);
+        return cp.spawn(cmd, opts);
     }
 
 };
