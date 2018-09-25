@@ -23,10 +23,10 @@ module.exports = class VariantCollection extends EntityCollection {
         if (this._hasSharedView()) {
             return this.default().getContent();
         }
+        const collator = this.parent.collator;
         return Promise.all(this.toArray().map(variant => {
             return variant.getContent().then(content => {
-                const collator = this.parent.collator;
-                return _.isFunction(collator) ? collator(content, variant) : content;
+                return `<!-- ${variant.label} -->\n${content.trim()}\n`;
             });
         })).then(contents => contents.join('\n'));
     }
@@ -37,15 +37,14 @@ module.exports = class VariantCollection extends EntityCollection {
         }
         return (this.toArray().map(variant => {
             const content = variant.getContentSync();
-            const collator = this.parent.collator;
-            return _.isFunction(collator) ? collator(content, variant) : content;
+            return `<!-- ${variant.label} -->\n${content.trim()}\n`;
         })).join('\n');
     }
 
     getCollatedContext() {
         const collated = {};
         this.toArray().forEach(variant => {
-            collated[`@${variant.handle}`] = variant.getResolvedContext();
+            collated[`${variant.label}`] = variant.getResolvedContext();
         });
         return Promise.props(collated);
     }
@@ -72,6 +71,7 @@ module.exports = class VariantCollection extends EntityCollection {
     }
 
     static *create(component, defaultView, configured, views, opts) {
+        
         configured = configured || [];
         views = views || [];
         let variants = [];
@@ -91,9 +91,9 @@ module.exports = class VariantCollection extends EntityCollection {
         }
 
         if (!hasDefaultConfigured) {
-            variants.push(new Variant({
+            variants.push(Variant.create({
                 name: component.defaultName,
-                handle:    `${component.handle}${source.get('splitter')}${component.defaultName}`.toLowerCase(),
+                handle: `${component.handle}${source.get('splitter')}${component.defaultName}`.toLowerCase(),
                 view: opts.view,
                 viewPath: Path.join(opts.dir, opts.view),
                 dir: opts.dir,
@@ -130,7 +130,7 @@ module.exports = class VariantCollection extends EntityCollection {
             p.handle = `${component.handle}${source.get('splitter')}${p.name}`.toLowerCase();
             p.isHidden = _.isUndefined(conf.hidden) ? viewFile.isHidden : conf.hidden;
 
-            return new Variant(p, viewFile, resources.filter(isRelated(p.handle)), component);
+            return Variant.create(p, viewFile, resources.filter(isRelated(p.handle)), component);
         }));
 
         variants = variants.concat(configuredVars);
@@ -149,7 +149,7 @@ module.exports = class VariantCollection extends EntityCollection {
                 isHidden: viewFile.isHidden,
             };
             variants.push(
-                new Variant(p, viewFile, resources.filter(isRelated(p.handle)), component)
+                Variant.create(p, viewFile, resources.filter(isRelated(p.handle)), component)
             );
         });
 

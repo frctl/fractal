@@ -93,21 +93,42 @@ module.exports = {
     },
 
     mergeProp(prop, upstream) {
-        if (_.isFunction(prop)) {
-            return prop;
-        }
-        if (_.isFunction(upstream)) {
-            return upstream;
-        }
         if (_.isArray(upstream)) {
             return _.uniq(_.concat(upstream, _.castArray(prop)));
-        } else if (_.isObject(upstream)) {
-            return _.defaultsDeep(_.clone(prop || {}), _.clone(upstream));
+        } else if (_.isPlainObject(upstream) && _.isPlainObject(prop)) {
+            return this.defaultsDeep(_.cloneDeep(prop || {}), upstream);
         }
         if (_.isUndefined(prop)) {
             return upstream;
         }
         return prop;
+    },
+
+    /*
+    * Non-array merging version of _.defaultsDeep
+    *
+    * utils.defaultsDeep(src, defaults);
+    */
+
+    defaultsDeep() {
+
+        let output = {};
+
+        _.toArray(arguments).reverse().forEach(item => {
+            _.mergeWith(output, item, (objectValue, sourceValue) => {
+                if (_.isArray(sourceValue)) {
+                    return sourceValue;
+                }
+                if (!_.isPlainObject(sourceValue) || ! _.isPlainObject(objectValue)) {
+                    return sourceValue;
+                }
+                if (_.isUndefined(sourceValue)) {
+                    return objectValue;
+                }
+            });
+        });
+
+        return output;
     },
 
     relUrlPath(toPath, fromPath, opts) {

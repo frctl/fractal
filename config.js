@@ -17,6 +17,12 @@ module.exports = {
         yield: 'yield',
         splitter: '--',
         ext: '.hbs',
+        files: {
+            preview: 'preview',
+            config: 'config',
+            collator: 'collator',
+            notes: 'readme'
+        },
         resources: {
             assets: {
                 label: 'Assets',
@@ -24,11 +30,12 @@ module.exports = {
             }
         },
         default: {
-            collator: function(markup, item) { return `<!-- Start: @${item.handle} -->\n${markup}\n<!-- End: @${item.handle} -->\n` },
+            collator: function collator(markup, item) { return `<!-- Start: @${item.handle} -->\n${markup}\n<!-- End: @${item.handle} -->\n` },
             preview: null,
             display: {},
             context: {},
             tags: [],
+            meta: {},
             status: 'ready',
             collated: false,
             prefix: null,
@@ -83,7 +90,10 @@ module.exports = {
                 description: 'Ready for referencing.',
                 color: '#29CC29'
             }
-        }
+        },
+        files: {
+            config: 'config',
+        },
     },
     assets: {
         label: 'assets',
@@ -96,7 +106,7 @@ module.exports = {
             sync: false,
             watch: false,
             port: null,
-            syncOptions: {},
+            syncOptions: {}
         },
         builder: {
             dest: null,
@@ -104,6 +114,9 @@ module.exports = {
             ext: '.html',
             urls: {
                 ext: '.html'
+            },
+            static: {
+                ignored: []
             }
         },
         static: {

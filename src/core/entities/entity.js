@@ -12,6 +12,8 @@ module.exports = class Entity extends mix(Heritable, EntityMixin) {
     constructor(name, config, parent) {
         super();
         this.isEntity = true;
+        this._contextData = {};
+        this._hasResolvedContext = false;
         this.initEntity(name, config, parent);
         this.setHeritable(parent);
 
@@ -33,10 +35,31 @@ module.exports = class Entity extends mix(Heritable, EntityMixin) {
         return this.getResolvedContext().then(context => Object.keys(context).length);
     }
 
+    setContext(data) {
+        this._contextData = data;
+        this._hasResolvedContext = true;
+    }
+
+    getContext() {
+        return _.clone(this._contextData);
+    }
+
     toJSON() {
         const self = super.toJSON();
         self.isEntity = true;
         return self;
+    }
+
+    static defineProperty(key, opts) {
+        if (_.isPlainObject(opts)) {
+            Object.defineProperty(this.prototype, key, opts);
+        } else {
+            Object.defineProperty(this.prototype, key, {
+                enumerable: true,
+                writable: true,
+                value: opts
+            });
+        }
     }
 
 };

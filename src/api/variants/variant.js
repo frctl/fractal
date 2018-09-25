@@ -14,11 +14,11 @@ module.exports = class Variant extends Entity {
         this.viewPath = config.viewPath;
         this.viewDir = config.dir;
         this.relViewPath = Path.relative(this.source.fullPath, Path.resolve(this.viewPath));
-        this.notes = config.notes || this.parent.notes;
         this.isDefault = config.isDefault || false;
         this.lang = view.lang.name;
         this.editorMode = view.lang.mode;
         this.editorScope = view.lang.scope;
+        this._notes = config.notes || config.readme || null;
         this._view = view;
         this._resources = resources;
         this._referencedBy = null;
@@ -31,6 +31,10 @@ module.exports = class Variant extends Entity {
 
     _handle(config) {
         return utils.slugify(config.handle).toLowerCase();
+    }
+
+    get notes() {
+        return this._notes || this.parent.notes;
     }
 
     get alias() {
@@ -145,15 +149,26 @@ module.exports = class Variant extends Entity {
         self.baseHandle = this.baseHandle;
         self.alias = this.alias;
         self.notes = this.notes;
+        self.meta = this.meta;
         self.status = this.status;
         self.display = this.display;
         self.isDefault = this.isDefault;
         self.viewPath = this.viewPath;
         self.preview = this.preview;
-        self.context = this.context;
+        self.context = this.getContext();
         self.resources = this.resourcesJSON();
         self.content = this.getContentSync();
+        self.lang = this.lang;
+        self.editorMode = this.editorMode;
+        self.editorScope = this.editorScope;
         return self;
+    }
+
+    static create(config, view, resources, parent) {
+        parent.source.emit('variant:beforeCreate', config, view, resources, parent);
+        const variant = new Variant(config, view, resources, parent);
+        parent.source.emit('variant:created', variant);
+        return variant;
     }
 
 };

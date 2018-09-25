@@ -22,48 +22,6 @@ module.exports = {
             after: files => _.orderBy(files, ['isDirectory', 'order', 'path'], ['desc', 'asc', 'asc']),
             build: build,
         });
-
-        function build(filePath, stat) {
-            return co(function* () {
-                const p = Path.parse(filePath);
-                p.relPath = Path.relative(dir, filePath);
-                p.fsName = p.name;
-                p.name = _.get(p.fsName.match(/^_?(\d+\-)?(.*)/), 2, p.fsName);
-                p.path = filePath;
-                p.dirs = _.compact(p.dir.split('/'));
-                p.isHidden = !!(_.find(p.relPath.split('/'), s => s.startsWith('_')) || p.fsName.startsWith('_'));
-                p.order = parseInt(_.get(p.fsName.match(/^_?(\d+)\-.*/), 1, 1000000), 10);
-                p.ext = p.ext.toLowerCase();
-                p.isFile = stat.isFile();
-                p.isDirectory = stat.isDirectory();
-                p.stat = stat;
-                if (p.isFile) {
-                    p.lang = utils.lang(filePath);
-                    p.isBinary = yield checkIsBinary(p);
-                    p.readBuffer = function () {
-                        return fs.readFileSync(filePath);
-                    };
-                    p.readSync = function () {
-                        const contents = p.isBinary ? fs.readFileSync(filePath) : fs.readFileSync(filePath, 'utf8');
-                        return contents.toString();
-                    };
-                    p.read = function () {
-                        const read = p.isBinary ? readFile(filePath) : readFile(filePath, 'utf8');
-                        return read.then(function (contents) {
-                            return contents.toString();
-                        });
-                    };
-                }
-                p.toString = function () {
-                    return p.path;
-                };
-                p.toJSON = function () {
-                    const self = _.clone(this);
-                    return self;
-                };
-                return p;
-            });
-        }
     },
 
     globDescribe(dir, relDir, match) {
@@ -86,7 +44,55 @@ module.exports = {
         });
     },
 
+    find(filePath) {
+        return fs.statAsync(filePath).then((stat) => {
+            return build(filePath, stat, Path.parse(filePath).dir);
+        });
+    }
+
 };
+
+function build(filePath, stat, root) {
+    return co(function* () {
+        const p = Path.parse(filePath);
+        p.relPath = Path.relative(root, filePath);
+        p.fsName = p.name;
+        p.name = _.get(p.fsName.match(/^_?(\d+\-)?(.*)/), 2, p.fsName);
+        p.path = filePath;
+        p.dirs = _.compact(p.dir.split('/'));
+        p.isHidden = !!(_.find(p.relPath.split('/'), s => s.startsWith('_')) || p.fsName.startsWith('_'));
+        p.order = parseInt(_.get(p.fsName.match(/^_?(\d+)\-.*/), 1, 1000000), 10);
+        p.ext = p.ext.toLowerCase();
+        p.isFile = stat.isFile();
+        p.isDirectory = stat.isDirectory();
+        p.stat = stat;
+        if (p.isFile) {
+            p.lang = utils.lang(filePath);
+            p.isBinary = yield checkIsBinary(p);
+            p.readBuffer = function () {
+                return fs.readFileSync(filePath);
+            };
+            p.readSync = function () {
+                const contents = p.isBinary ? fs.readFileSync(filePath) : fs.readFileSync(filePath, 'utf8');
+                return contents.toString();
+            };
+            p.read = function () {
+                const read = p.isBinary ? readFile(filePath) : readFile(filePath, 'utf8');
+                return read.then(function (contents) {
+                    return contents.toString();
+                });
+            };
+        }
+        p.toString = function () {
+            return p.path;
+        };
+        p.toJSON = function () {
+            const self = _.clone(this);
+            return self;
+        };
+        return p;
+    });
+}
 
 function dirscribe(root, opts) {
     opts = opts || {};
@@ -107,7 +113,7 @@ function dirscribe(root, opts) {
         let statCache;
         return fs.statAsync(filePath).then(function (stat) {
             statCache = stat;
-            return build(filePath, stat);
+            return build(filePath, stat, root);
         }).then(function (desc) {
             if (recursive && statCache.isDirectory()) {
                 return readdir(filePath).then(function (children) {

@@ -12,6 +12,13 @@ const DocSource       = require('../src/api/docs');
 
 describe('Fractal', function(){
 
+    before(function(){
+        app.web;
+        app.cli;
+        app.docs;
+        app.components;
+    });
+
     it('is an event emitter', function(){
         expect(app.hasMixedIn('Emitter')).to.be.true;
     });

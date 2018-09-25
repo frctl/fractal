@@ -1,0 +1,24 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.12.0
+ignore: {}
+# patches apply the minimum changes required to fix a vulnerability
+patch:
+  'npm:lodash:20180130':
+    - cli-table2 > lodash:
+        patched: '2018-07-03T04:57:27.305Z'
+    - browser-sync > easy-extender > lodash:
+        patched: '2018-07-03T04:57:27.305Z'
+    - '@frctl/mandelbrot > @frctl/fractal > cli-table2 > lodash':
+        patched: '2018-07-03T04:57:27.305Z'
+    - '@frctl/mandelbrot > @frctl/fractal > browser-sync > easy-extender > lodash':
+        patched: '2018-07-03T04:57:27.305Z'
+    - '@frctl/mandelbrot > @frctl/fractal > @frctl/handlebars > @frctl/fractal > cli-table2 > lodash':
+        patched: '2018-07-03T04:57:27.305Z'
+    - '@frctl/mandelbrot > @frctl/fractal > @frctl/handlebars > @frctl/fractal > browser-sync > easy-extender > lodash':
+        patched: '2018-07-03T04:57:27.305Z'
+    - '@frctl/mandelbrot > @frctl/fractal > @frctl/handlebars > @frctl/fractal > vorpal > inquirer > lodash':
+        patched: '2018-07-03T04:57:27.305Z'
+    - '@frctl/mandelbrot > @frctl/fractal > vorpal > inquirer > lodash':
+        patched: '2018-07-03T04:57:27.305Z'
+    - vorpal > inquirer > lodash:
+        patched: '2018-07-03T04:57:27.305Z'

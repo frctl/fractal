@@ -1,6 +1,7 @@
 'use strict';
 
 const Promise = require('bluebird');
+const anymatch = require('anymatch');
 const Path = require('path');
 const co = require('co');
 const _ = require('lodash');
@@ -8,170 +9,218 @@ const fs = Promise.promisifyAll(require('fs-extra'));
 const Log = require('../core/log');
 const mix = require('../core/mixins/mix');
 const Emitter = require('../core/mixins/emitter');
+const throat = require('throat');
 
 module.exports = class Builder extends mix(Emitter) {
 
     constructor(theme, engine, config, app) {
         super(app);
+
         this._app = app;
         this._engine = engine;
         this._config = config;
         this._theme = theme;
-        this._targets = [];
-        this._throttle = require('throat')(Promise)(config.concurrency || 100);
+
+        this._static = [];
+        this._requests = [];
+
+        this._throttle = throat(config.concurrency || 100);
+
+        this._init();
+    }
+
+    /*
+     * Deprecated. Use start() instead.
+     */
+    build() {
+        return this.start();
+    }
+
+    start() {
+
+        this._validate();
+        this._reset();
+
+        // Make sure the sources have loaded
+        return this._app.load().then(() => {
+
+            this._buildRequests();
+
+            this.emit('start');
+
+            // remove and recreate build dir
+            const setup = fs.removeAsync(this._config.dest).then(() => fs.ensureDirAsync(this._config.dest));
+
+            return setup.then(() => {
+
+                let jobs = [];
+
+                // 1. Start any static copy jobs
+                jobs.push(this._static.map(p => this._throttle(() => this._copy(p.path, Path.join(Path.sep, p.mount)))));
+
+                // 2. Run the requests in parallel
+                this._requests.forEach(r => {
+                    let req = this._throttle(() => this._onRequest(r));
+                    if (req) {
+                        this._jobsCount++;
+                        jobs.push(req);
+                    }
+                });
+
+                return Promise.all(_.flatten(jobs));
+            });
+
+        }).then(() => {
+            const stats = {
+                errorCount: this._errorCount,
+            };
+            this.emit('end', stats);
+            return stats;
+        }).catch(e => {
+            this.emit('error', e);
+            throw e;
+        });
+    }
+
+    stop() {
+        // can we stop it once running?
+    }
+
+    use() {
+
+    }
+
+    _reset() {
         this._errorCount = 0;
         this._jobsCount = 0;
         this._progressCount = 0;
     }
 
-    build() {
-        return this._app.load().then(() => {
-            try {
-                this._validate();
-            } catch (e) {
-                return Promise.reject(e);
+    _init() {
+        this._static = this._static.concat(this._theme.static());
+        this._engine.setGlobal('env', {
+            builder: true,
+        });
+    }
+
+    _buildRequests() {
+        const routes = this._theme.routes();
+        const resolvers = _.isFunction(this._theme.resolvers) ? this._theme.resolvers() : this._getLegacyResolvers(routes);
+        let requests = [];
+
+        _.forEach(resolvers, (routeResolvers, handle) => {
+            const route = _.find(routes, {handle: handle});
+
+            if (!route) {
+                Log.debug(`No route found for handle '${handle}'`);
+                return;
             }
 
-            this._engine.setGlobal('env', {
-                builder: true,
-            });
+            for (let resolver of routeResolvers) {
+                let resolverSet = _.isFunction(resolver) ? resolver(this._app) : [].concat(resolver);
+                for (const params of resolverSet) {
+                    const url = this._theme.urlFromRoute(route.handle, params, true);
+                    const req = Builder.Request(url, params, route);
+                    this._requests.push(req);
+                }
+            }
 
-            this.emit('start');
-
-            const setup = fs.removeAsync(this._config.dest).then(() => fs.ensureDirAsync(this._config.dest));
-
-            return setup.then(() => {
-                this._addTargets();
-
-                this.emit('ready', this);
-                this._theme.emit('build', this, this._app);
-
-                const copyStatic = this._theme.static().map(p => this._copyStatic(p.path, Path.join('/', p.mount)));
-
-                const buildTargets = this._buildTargets();
-
-                return Promise.all(copyStatic.concat(buildTargets));
-            }).then(() => {
-                const stats = {
-                    errorCount: this._errorCount,
-                };
-                this.emit('end', stats);
-                return stats;
-            }).catch(e => {
-                this.emit('error', e);
-                throw e;
-            }).finally(() => {
-                this._errorCount = 0;
-                this._jobsCount = 0;
-                this._progressCount = 0;
-            });
         });
     }
 
-    targets() {
-        return this._targets;
+    _getLegacyResolvers(routes) {
+        let resolvers = {};
+        for (let route of routes) {
+            _.set(resolvers, route.handle, [].concat(route.params || null));
+        }
+        return resolvers;
     }
 
-    _copyStatic(source, dest) {
-        dest = _.trimEnd(Path.join(this._config.dest, dest), '/');
+    _onRequest(req) {
+
+        if (req.route.redirect && this._theme.redirectView) {
+            req.route.context = {
+                redirectUrl: req.route.redirect
+            };
+            req.route.view = this._theme.redirectView();
+        }
+
+        if (req.route.static) {
+            const staticPath = _.isFunction(req.route.static) ? req.route.static(req.params, this._app) : req.route.static;
+            return this._copy(unescape(staticPath), unescape(req.url), false);
+        }
+
+        if (req.route.view) {
+            const ext = this._app.web.get('builder.ext');
+            const dest = req.url + (req.url == '/' ? `index${ext}` : ext);
+            const context = req.route.context || {};
+
+            context.request = req;
+            context.renderEnv = {
+                request: context.request,
+                builder: true,
+                server: false,
+            };
+
+            return this._render(req.route.view, context)
+                    .then(contents => this._write(contents, dest) )
+                    .then(() => {
+                        this.emit('exported', req);
+                        Log.debug(`Exported '${req.url}' ==> '${dest}'`);
+                        this._updateProgress();
+                    })
+                    .catch(err => this._onError(err, req, dest));
+        }
+
+    }
+
+    _onError(err, req, dest) {
+        this._errorCount++;
+        this._updateProgress();
+        this.emit('error', new Error(`Failed to export url ${req.url} - ${err.message}`));
+        return this._render(this._theme.errorView(), { error: err }).then(contents => this._write(contents, dest)).catch(err => {
+            this.emit('error', err);
+        });
+    }
+
+    _render(view, context) {
+        if (_.isFunction(view)) {
+            return this._engine.renderString(view(), context);
+        } else {
+            return this._engine.render(view, context);
+        }
+    }
+
+    _copy(source, dest, addToJobCount) {
+        let ignored = this._config.static.ignored;
+        dest = _.trimEnd(Path.join(this._config.dest, dest), Path.sep);
         source = Path.resolve(source);
-        this._jobsCount++;
+        if (addToJobCount !== false) {
+            this._jobsCount++;
+        }
         return fs.copyAsync(source, dest, {
             clobber: true,
+            filter: function(path){
+                return ! anymatch(ignored, path);
+            }
         }).then(() => {
             this._updateProgress();
-            Log.debug(`Copied static asset directory '${source}' ==> '${dest}'`);
+            Log.debug(`Copied '${source}' ==> '${dest}'`);
         }).catch(e => {
-            Log.debug(`Error copying static asset directory '${source}' ==> '${dest}'`);
+            this._updateProgress();
+            Log.error(`Error copying '${source}' ==> '${dest}'`);
             this._errorCount++;
         });
+    }
+
+    _write(contents, dest) {
+        dest = _.trimEnd(Path.join(this._config.dest, dest), Path.sep);
+        return fs.ensureDirAsync(Path.parse(dest).dir).then(() => fs.writeFileAsync(dest, contents));
     }
 
     _updateProgress() {
         this._progressCount++;
         this.emit('progress', this._progressCount, this._jobsCount);
-    }
-
-    addRoute(name, params) {
-        const url = this._theme.urlFromRoute(name, params, true);
-        const route = _.clone(this._theme.matchRoute(url));
-        if (route) {
-            route.url = url;
-            this._targets.push(route);
-            return this;
-        } else {
-            Log.debug(`Could not add route '${name}' to builder - route not found.`);
-        }
-    }
-
-    _addTargets() {
-        this._theme.routes().filter(route => route.view || route.static).forEach(route => {
-            try {
-                if (route.params) {
-                    const params = _.isFunction(route.params) ? route.params(this._app) : [].concat(route.params);
-                    for (const p of params) {
-                        this.addRoute(route.handle, p);
-                    }
-                } else {
-                    this.addRoute(route.handle);
-                }
-            } catch (e) {
-                throw new Error(`Could not add route '${route.path}' to builder: ${e.message}`);
-            }
-        });
-    }
-
-    _buildTargets() {
-        const self = this;
-        const ext = this._app.web.get('builder.ext');
-        return this._targets.map(target => {
-            const savePath = Path.join(this._config.dest, target.url) + (target.url == '/' ? `index${ext}` : ext);
-            const pathInfo = Path.parse(savePath);
-            this._jobsCount++;
-            return this._throttle(() => {
-                if (target.route.static) {
-                    const staticPath = _.isFunction(target.route.static) ? target.route.static(target.params, this._app) : target.route.static;
-                    const dest = Path.join(this._config.dest, unescape(target.url));
-
-                    return fs.copyAsync(unescape(staticPath), dest, {
-                        clobber: true,
-                    }).then(() => {
-                        this._updateProgress();
-                    }).catch(e => {
-                        Log.debug(`Error copying static asset '${staticPath}' ==> '${dest}'`);
-                        this._errorCount++;
-                    });
-                }
-
-                return fs.ensureDirAsync(pathInfo.dir).then(() => {
-                    function write(html) {
-                        return fs.writeFileAsync(savePath, html).then(() => {
-                            self.emit('exported', target);
-                            Log.debug(`Exported '${target.url}' ==> '${savePath}'`);
-                        });
-                    }
-
-                    const context = target.route.context || {};
-                    context.request = this._fakeRequest(target);
-                    context.renderEnv = {
-                        request: context.request,
-                        builder: true,
-                        server: false,
-                    };
-
-                    return this._engine.render(target.route.view, context).then(html => write(html)).catch(err => {
-                        this._errorCount++;
-                        this.emit('error', new Error(`Failed to export url ${target.url} - ${err.message}`));
-
-                        return this._engine.render(this._theme.errorView(), { error: err }).then(html => write(html));
-                    }).catch(err => {
-                        this.emit('error', err);
-                    });
-                }).then(() => {
-                    this._updateProgress();
-                });
-            });
-        });
     }
 
     _validate() {
@@ -185,17 +234,18 @@ module.exports = class Builder extends mix(Emitter) {
         }
     }
 
-    _fakeRequest(target) {
+    static Request(url, params, route) {
+        route = _.clone(route);
         return {
             headers: {},
             query: {},
-            url: target.url,
-            segments: _.compact(target.url.split('/')),
-            params: target.params,
-            path: target.url,
+            url: url,
+            segments: _.compact(url.split('/')),
+            params: params,
+            path: url,
             error: null,
             errorStatus: null,
-            route: target.route,
+            route: route,
         };
     }
 

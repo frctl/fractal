@@ -15,12 +15,12 @@ const Configurable = require('../mixins/configurable');
 const Collection = require('../mixins/collection');
 const Emitter = require('../mixins/emitter');
 const Stream = require('../promise-stream');
+const resolver = require('../../core/resolver');
 
 module.exports = mixin((superclass) => class Source extends mix(superclass).with(Configurable, Collection, Emitter) {
 
     constructor() {
         super();
-        // super.apply(null, Array.from(arguments));
         super.addMixedIn('Source');
         this.isSource = true;
         this.isLoaded = false;
@@ -113,6 +113,7 @@ module.exports = mixin((superclass) => class Source extends mix(superclass).with
             Log.debug(`Watching ${this.name} directory - ${sourcePath}`);
             this._monitor = chokidar.watch(sourcePath, {
                 ignored: /[\/\\]\./,
+                ignoreInitial: true
             });
             this._monitor.on('ready', () => {
                 this._monitor.on('all', (event, path) => {
@@ -151,7 +152,19 @@ module.exports = mixin((superclass) => class Source extends mix(superclass).with
     }
 
     isConfig(file) {
-        return anymatch('**/*.config.{js,json,yaml,yml}', this._getPath(file));
+        return anymatch([`**/*.${this.get('files.config')}.{js,json,yaml,yml}`, `**/${this.get('files.config')}.{js,json,yaml,yml}`, `**/_${this.get('files.config')}.{js,json,yaml,yml}`], this._getPath(file));
+    }
+
+    _resolveTreeContext(tree) {
+        let pending = [];
+        for (let item of tree.flattenDeep()) {
+            let resolvedContext = resolver.context(item.context, this).then(ctx => {
+                item.setContext(ctx);
+                return ctx;
+            });
+            pending.push(resolvedContext);
+        }
+        return Promise.all(pending).then(() => tree);
     }
 
     _build() {
@@ -159,9 +172,11 @@ module.exports = mixin((superclass) => class Source extends mix(superclass).with
             return Promise.resolve(this);
         }
         this._loading = this._getTree().then(fileTree => {
-            this._fileTree = fileTree;
-            this._loading = false;
-            return this._parse(fileTree);
+            return this._parse(fileTree).then(tree => this._resolveTreeContext(tree)).then(tree => {
+                this._fileTree = tree;
+                this._loading = false;
+                return tree;
+            });
         }).catch(e => {
             Log.error(e);
             if (this._app.debug) {

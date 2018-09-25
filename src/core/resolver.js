@@ -1,7 +1,6 @@
 'use strict';
 
 const Promise = require('bluebird');
-const co = require('co');
 const _ = require('lodash');
 const Log = require('./log');
 
@@ -17,42 +16,64 @@ const resolver = module.exports = {
     context(context, source) {
         const self = this;
 
-        const resolve = co.wrap(function* (obj) {
-            const mapper = co.wrap(function* (item, key) {
-                item = yield Promise.resolve(item);
-                if (_.isFunction(item)) {
-                    return resolve(item());
-                }
-                if (_.isArray(item) || _.isObject(item)) {
-                    return resolve(item);
-                }
-                if (_.isString(item) && _.startsWith(item, '@')) {
-                    const parts = item.split('.');
-                    const handle = parts.shift();
-                    let entity = source.find(handle);
-                    if (entity) {
-                        entity = self.entity(entity);
-                        const entityContext = yield resolve(entity.context);
-                        if (parts.length) {
-                            return _.get(entityContext, parts.join('.'), null);
-                        }
-                        return entityContext;
-                    }
-                    Log.warn(`Could not resolve context reference for ${item}`);
-                    return null;
-                }
-                if (_.isString(item) && _.startsWith(item, '\\@')) {
-                    return item.replace(/^\\@/, '@');
-                }
-
-                return item;
-            });
-
+        function resolve(obj) {
+            if (!obj) {
+                return Promise.resolve(null);
+            }
             const iterator = _.isArray(obj) ? 'map' : 'mapValues';
-            return yield _[iterator](obj, mapper);
-        });
+            const resolver = iterator == 'map' ? 'all': 'props';
 
-        return resolve(context);
-    },
+            return Promise[resolver](_[iterator](obj, mapper));
+        }
+
+        function mapper(item, key) {
+
+            if (item === undefined || item === null) {
+                return Promise.resolve(null);
+            }
+
+            if (item.then) {
+                return item;
+            }
+
+            if (_.isString(item) && _.startsWith(item, '\\@')) {
+                return item.replace(/^\\@/, '@');
+            }
+
+            if (_.isString(item) && _.startsWith(item, '@')) {
+                const parts = item.split('.');
+                const handle = parts.shift();
+                let entity = source.find(handle);
+                if (entity) {
+                    entity = self.entity(entity);
+                    if (entity._hasResolvedContext) {
+                        let context = entity.getContext();
+                        if (parts.length) {
+                            return _.get(context, parts.join('.'), null);
+                        }
+                        return context;
+                    } else {
+                        return resolve(entity.context).then(entityContext => {
+                            let clonedContext = _.cloneDeep(entityContext);
+                            if (parts.length) {
+                                return _.get(clonedContext, parts.join('.'), null);
+                            }
+                            return clonedContext;
+                        });
+                    }
+                }
+                Log.warn(`Could not resolve context reference for ${item}`);
+                return null;
+            }
+
+            if (_.isArray(item) || _.isObject(item)) {
+                return resolve(item);
+            }
+
+            return item;
+        }
+
+        return resolve(context).then(ctx => _.cloneDeep(ctx));
+    }
 
 };

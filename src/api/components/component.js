@@ -16,8 +16,6 @@ module.exports = class Component extends Entity {
         super(config.name, config, parent);
         this.isComponent = true;
         this.defaultName = config.default ? utils.slugify(config.default.toLowerCase()) : 'default';
-        this.notes = config.notes || null;
-        this.notesFromFile = config.notesFromFile || false;
         this.lang = files.view.lang.name;
         this.editorMode = files.view.lang.mode;
         this.editorScope = files.view.lang.scope;
@@ -25,6 +23,7 @@ module.exports = class Component extends Entity {
         this.viewDir = files.view.dir;
         this.configData = config.raw;
         this.relViewPath = Path.relative(this.source.fullPath, Path.resolve(files.view.path));
+        this._notes = config.notes || config.readme || null;
         this._resources = resources;
         this._resourceCollections = null;
         this._variants = new VariantCollection({ name: `${this.name}-variants` }, [], parent);
@@ -63,6 +62,10 @@ module.exports = class Component extends Entity {
 
     get baseHandle() {
         return this.handle;
+    }
+
+    get notes() {
+        return _.get(this._notes, 'isFile') ? this._notes.getContentSync() : this._notes;
     }
 
     render(context, env, opts) {
@@ -149,25 +152,26 @@ module.exports = class Component extends Entity {
         self.baseHandle = this.baseHandle;
         self.notes = this.notes;
         self.tags = this.tags;
+        self.meta = this.meta;
         self.isCollated = this.isCollated;
         self.preview = this.preview;
         self.display = this.display;
         self.viewPath = this.viewPath;
         self.resources = this.resourcesJSON();
         self.variants = this.variants().toJSON();
+        self.lang = this.lang;
+        self.editorMode = this.editorMode;
+        self.editorScope = this.editorScope;
         return self;
     }
 
     static *create(config, files, resources, parent) {
-        config.notes = config.notes || config.readme;
-        if (!config.notes && files.readme || config.notesFromFile && files.readme) {
-            config.notesFromFile = true;
-            config.notes = yield files.readme.read();
-        }
+        parent.source.emit('component:beforeCreate', config, files, resources, parent);
         config.raw = files.config ? yield Data.readFile(files.config.path) : null;
         const comp = new Component(config, files, resources, parent);
         const variants = yield VariantCollection.create(comp, files.view, config.variants, files.varViews, config);
         comp.setVariants(variants);
+        parent.source.emit('component:created', comp);
         return comp;
     }
 

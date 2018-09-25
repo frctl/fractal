@@ -1,6 +1,7 @@
 'use strict';
 
 const _ = require('lodash');
+const utils = require('../core/utils');
 const mix = require('../core/mixins/mix');
 const Configurable = require('../core/mixins/configurable');
 const Emitter = require('../core/mixins/emitter');
@@ -21,21 +22,27 @@ module.exports = class Web extends mix(Configurable, Emitter) {
     }
 
     server(config) {
-        const opts = _.defaultsDeep(config, this.get('server'));
+        const opts = utils.defaultsDeep(config, this.get('server'));
         const theme = this._loadTheme(opts.theme);
         const engine = new Engine(theme.loadPaths(), 'server', this._app);
         theme.emit('init', engine, this._app);
         engine.setGlobal('theme', theme);
-        return new Server(theme, engine, opts, this._app);
+        this.emit('server:beforeCreate', theme, engine, opts);
+        const server = new Server(theme, engine, opts, this._app);
+        this.emit('server:created', server);
+        return server;
     }
 
     builder(config) {
-        const opts = _.defaultsDeep(config, this.get('builder'));
+        const opts = utils.defaultsDeep(config, this.get('builder'));
         const theme = this._loadTheme(opts.theme);
         const engine = new Engine(theme.loadPaths(), 'builder', this._app);
         theme.emit('init', engine, this._app);
         engine.setGlobal('theme', theme);
-        return new Builder(theme, engine, opts, this._app);
+        this.emit('builder:beforeCreate', theme, engine, opts);
+        const builder = new Builder(theme, engine, opts, this._app);
+        this.emit('builder:created', builder);
+        return builder;
     }
 
     theme(name, instance) {
@@ -56,7 +63,7 @@ module.exports = class Web extends mix(Configurable, Emitter) {
     }
 
     _init(defaults) {
-        const opts = _.defaultsDeep(config, defaults);
+        const opts = utils.defaultsDeep(config, defaults);
         const theme = this._loadTheme(opts.theme);
     }
 

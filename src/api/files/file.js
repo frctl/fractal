@@ -30,6 +30,10 @@ module.exports = class File {
         this.mime = mime.lookup(this.ext);
     }
 
+    getContext() {
+        return {};
+    }
+
     get contents() {
         return this._file.readBuffer();
     }
@@ -44,6 +48,14 @@ module.exports = class File {
 
     getContentSync() {
         return this._file.readSync().toString();
+    }
+
+    read() {
+        return this.getContent();
+    }
+
+    readSync() {
+        return this.getContentSync();
     }
 
     toVinyl() {
