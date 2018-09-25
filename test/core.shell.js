@@ -3,8 +3,14 @@ const expect = chai.expect;
 const mock = require('mock-fs');
 const path = require('path');
 const fs = require('fs');
-
-const shell = require('../src/core/shell');
+const sinon = require('sinon');
+const spawnStub = sinon.stub();
+const proxyquire = require('proxyquire');
+const shell = proxyquire('../src/core/shell', {
+    child_process: {
+        spawn: spawnStub
+    }
+});
 
 describe('Shell', function() {
 
@@ -25,6 +31,8 @@ describe('Shell', function() {
         process.cwd(originalPwd);
         // Reset the filesystem.
         mock.restore();
+        // Reset Sinon stubs.
+        spawnStub.restore;
     })
 
     it('can change directory', function() {
@@ -42,14 +50,9 @@ describe('Shell', function() {
         })
     });
 
-    it('can execute a child process', function(done) {
-        // This should be OK cross-platform.
-        // If not - any suggestions?
-        const cmd = shell.exec('node', ['-v']);
-        cmd.stdout.on('data', function(data) {
-            expect(data.toString().trim()).to.equal(process.version);
-        });
-        // Run this on the end event so we are sure the child process under test actually ends.
-        cmd.stdout.on('end', done);
+    it('can execute a child process', function() {
+        shell.exec('node', ['-v']);
+        const expectation = spawnStub.calledWithExactly('node', ['-v']);
+        expect(expectation).to.be.true;
     });
 });
