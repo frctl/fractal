@@ -11,7 +11,7 @@ const path = require('path');
 module.exports = function (fractal) {
     return function (Twig) {
         return {
-            type: Twig.logic.type.include,
+            type: 'rendertag',
             regex: /^render\s+(.+?)\s*(?:with\s+([\S\s]+?))?\s*$/,
             next: [],
             open: true,
