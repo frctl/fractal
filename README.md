@@ -45,8 +45,8 @@ If you're on an earlier (unsupported) version of NodeJS, then see the below comp
 
 | NodeJS version | Fractal version |
 | -------------- | --------------- |
-| 4.x            | 1.17            |
-| 5.x            | 1.17            |
+| 4.x            | 1.1.7           |
+| 5.x            | 1.1.7           |
 
 ## Testing
 
