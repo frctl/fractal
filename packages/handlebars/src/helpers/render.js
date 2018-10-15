@@ -6,9 +6,11 @@ const _          = require('lodash');
 module.exports = function(fractal){
 
     return function render(handle){
+
         let context;
         let source = fractal.components;
         const opts = arguments[arguments.length-1].hash;
+        const root = arguments[arguments.length-1].data.root;
         const merge = opts.merge || false;
         if (arguments.length >= 3) {
             context = arguments[1];
@@ -27,7 +29,14 @@ module.exports = function(fractal){
         } else if (merge) {
             context = _.defaultsDeep(context, defaultContext);
         }
-        return entity.render(context).then(html => new Handlebars.SafeString(html));
+        
+        return source.resolve(context).then(context => {
+            // fix env for rendered components
+            let env = JSON.parse(JSON.stringify(root._env));
+            _.set(context, '_env', env);
+
+            return entity.render(context).then(html => new Handlebars.SafeString(html));
+        });
     };
 
 };
