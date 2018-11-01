@@ -11,12 +11,12 @@ renderer.code = function(code, lang, escaped) {
     code = output;
   }
   if (!lang) {
-    return `<code><pre>${code}</pre></code>`;
+    return `<pre><code>${code}</code></pre>`;
   }
-  return `<code class="${this.options.langPrefix}${escape(
+  return `<pre><code class="${this.options.langPrefix}${escape(
     lang,
     true
-  )}"><pre>${code}</pre></code>`;
+  )}">${code}</code></pre>`;
 };
 
 /*
