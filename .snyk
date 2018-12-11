@@ -1,5 +1,5 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
-version: v1.12.0
+version: v1.13.1
 ignore: {}
 # patches apply the minimum changes required to fix a vulnerability
 patch:
@@ -22,3 +22,6 @@ patch:
         patched: '2018-07-03T04:57:27.305Z'
     - vorpal > inquirer > lodash:
         patched: '2018-07-03T04:57:27.305Z'
+  'npm:debug:20170905':
+    - '@frctl/mandelbrot > @frctl/fractal > browser-sync > localtunnel > debug':
+        patched: '2018-12-11T05:37:55.436Z'
