@@ -20,7 +20,7 @@
     "promised-handlebars": "^2.0.0"
   },
   "peerDependencies": {
-    "@frctl/fractal": "^1.0.0"
+    "@frctl/fractal": "^1.1.0"
   },
   "devDependencies": {}
 }

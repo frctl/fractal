@@ -2,6 +2,7 @@
 
 const Handlebars = require('handlebars');
 const _          = require('lodash');
+const utils      = require('@frctl/fractal').utils;
 
 module.exports = function(fractal){
 
@@ -27,7 +28,7 @@ module.exports = function(fractal){
         if (!context) {
             context = defaultContext;
         } else if (merge) {
-            context = _.defaultsDeep(context, defaultContext);
+            context = utils.defaultsDeep(context, defaultContext);
         }
         
         return source.resolve(context).then(context => {
