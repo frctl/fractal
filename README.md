@@ -1,18 +1,3 @@
----
-## Project update - please read!
-
-As you may be aware, there have recently been some changes in Fractal's core team.
-
-In order to safeguard its future, we decided to ask our community for help, and the response has been overwhelming. **We've received so many offers of support in all forms that we can safely say that development will be starting up again shortly. Thank you all!**
-
-We have an active and helpful community on [Fractal's Slack workspace](https://slack.fractal.build/) - join us there for support and tips.
-
-Please see [issue #449](https://github.com/frctl/fractal/issues/449) ('An update on Fractal's future development') for more details about how we are planning on moving Fractal forwards in the future.
-
-Currently the 1.x (master) branch is stable and is being used in many projects. Documentation for this version is available at https://fractal.build. The 2.0 (beta) branch is _not_ recommended for use as there are many outstanding issues + bugs, limited documentation and may change _significantly_ once development begins again.
-
----
-
 # Fractal
 
 Fractal is a tool to help you **build** and **document** web component libraries and then **integrate** them into your projects.
@@ -22,6 +7,8 @@ Fractal is a tool to help you **build** and **document** web component libraries
 [![NPM Version](https://img.shields.io/npm/v/@frctl/fractal.svg?style=flat-square)](https://www.npmjs.com/package/@frctl/fractal)
 
 **Read the Fractal documentation at http://fractal.build/guide.**
+
+**Need help?** We have an active and helpful community on [Fractal's Slack workspace](https://slack.fractal.build/) - join us there for support and tips.
 
 ## Introduction
 
@@ -53,6 +40,10 @@ If you're on an earlier (unsupported) version of NodeJS, then see the below comp
 Fractal is a project that has recently evolved rapidly and organically from a proof-of-concept prototype into a more stable, mature tool. Because of this it's currently pretty far behind where it should be in terms of test coverage. Any contributions on this front would be most welcome!
 
 Existing tests can be run using the `npm test` command.
+
+## Contributing
+
+Fractal has an active group of contributors but we are always looking for more help. If you are interested in contributing then please come and say hi on [Fractal's Slack workspace](https://slack.fractal.build/) - or of course we will always welcome pull requests on any of the [frctl organisation](https://github.com/frctl) repos.
 
 ## Credits
 
