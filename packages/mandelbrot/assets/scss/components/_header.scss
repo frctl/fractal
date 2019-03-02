@@ -15,11 +15,14 @@
     font-size: 1.125rem; // 18px
     line-height: (24 / 18);
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .Header-button {
     @include border-inline(end, 1px solid rgba($color-header-content, 0.25));
     display: block;
+    flex-shrink: 0;
     border: 0;
     height: 3rem;
     width: 3rem;

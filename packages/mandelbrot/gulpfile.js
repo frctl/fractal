@@ -32,7 +32,7 @@ gulp.task('css:skins', function() {
     const skins = require('./assets/scss/skins/_skins.json');
 
     for (let skin of skins) {
-        fs.writeFile(`./assets/scss/skins/${skin.name}.scss`,
+        fs.writeFileSync(`./assets/scss/skins/${skin.name}.scss`,
 `
 $color-header-background: ${skin.accent};
 $color-header-content: ${skin.complement};
