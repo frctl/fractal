@@ -20,6 +20,8 @@ Fractal is a tool to help you **build** and **document** web component libraries
 [![Build Status](https://img.shields.io/travis/frctl/fractal/master.svg?style=flat-square)](https://travis-ci.org/frctl/fractal)
 [![Greenkeeper badge](https://img.shields.io/badge/greenkeeper-enabled-brightgreen.svg?style=flat-square)](https://greenkeeper.io/)
 [![NPM Version](https://img.shields.io/npm/v/@frctl/fractal.svg?style=flat-square)](https://www.npmjs.com/package/@frctl/fractal)
+[![Backers on Open Collective](https://opencollective.com/fractal/backers/badge.svg?style=flat-square)](#backers) 
+[![Sponsors on Open Collective](https://opencollective.com/fractal/sponsors/badge.svg?style=flat-square)](#sponsors)
 
 **Read the Fractal documentation at http://fractal.build/guide.**
 
@@ -61,3 +63,33 @@ Fractal is developed and maintained by [Danielle Huntrods](http://github.com/dkh
 Ongoing support by [Clearleft](https://clearleft.com) makes this project possible. Thank you!
 
 <a href="https://clearleft.com"><img width="110" src="http://clearleft.s3.amazonaws.com/logo.png"></a>
+
+## Contributors
+
+This project exists thanks to all the people who contribute. 
+<a href="https://github.com/frctl/fractal/graphs/contributors"><img src="https://opencollective.com/fractal/contributors.svg?width=890&button=false" /></a>
+
+
+## Backers
+
+Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/fractal#backer)]
+
+<a href="https://opencollective.com/fractal#backers" target="_blank"><img src="https://opencollective.com/fractal/backers.svg?width=890"></a>
+
+
+## Sponsors
+
+Support this project by becoming a sponsor. Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com/fractal#sponsor)]
+
+<a href="https://opencollective.com/fractal/sponsor/0/website" target="_blank"><img src="https://opencollective.com/fractal/sponsor/0/avatar.svg"></a>
+<a href="https://opencollective.com/fractal/sponsor/1/website" target="_blank"><img src="https://opencollective.com/fractal/sponsor/1/avatar.svg"></a>
+<a href="https://opencollective.com/fractal/sponsor/2/website" target="_blank"><img src="https://opencollective.com/fractal/sponsor/2/avatar.svg"></a>
+<a href="https://opencollective.com/fractal/sponsor/3/website" target="_blank"><img src="https://opencollective.com/fractal/sponsor/3/avatar.svg"></a>
+<a href="https://opencollective.com/fractal/sponsor/4/website" target="_blank"><img src="https://opencollective.com/fractal/sponsor/4/avatar.svg"></a>
+<a href="https://opencollective.com/fractal/sponsor/5/website" target="_blank"><img src="https://opencollective.com/fractal/sponsor/5/avatar.svg"></a>
+<a href="https://opencollective.com/fractal/sponsor/6/website" target="_blank"><img src="https://opencollective.com/fractal/sponsor/6/avatar.svg"></a>
+<a href="https://opencollective.com/fractal/sponsor/7/website" target="_blank"><img src="https://opencollective.com/fractal/sponsor/7/avatar.svg"></a>
+<a href="https://opencollective.com/fractal/sponsor/8/website" target="_blank"><img src="https://opencollective.com/fractal/sponsor/8/avatar.svg"></a>
+<a href="https://opencollective.com/fractal/sponsor/9/website" target="_blank"><img src="https://opencollective.com/fractal/sponsor/9/avatar.svg"></a>
+
+
