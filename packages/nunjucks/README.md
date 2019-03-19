@@ -4,17 +4,23 @@ An adapter to let you use [Nunjucks](http://mozilla.github.io/nunjucks/) templat
 
 [![NPM Version](https://img.shields.io/npm/v/@frctl/nunjucks.svg?style=flat-square)](https://www.npmjs.com/package/@frctl/nunjucks)
 
+## 🚨 Breaking changes in v2.0
+
+- `render` tag - Arrays in context data are **no longer merged** with those in the default component context
+- **Autoescaping** - this is now **disabled by default**. Preview templates will need to be updated to mark the `yield` output as safe using the Nunjucks `safe` filter: `{{ yield | safe }}`. Alternatively this can be enabled globally again using the environment options when [configuring the adapter](#customisation) (not recommended).
+- **Nunjucks version** - bumped to 3.x
+
 ## Installation
 
-```shell
+```bash
 npm i @frctl/nunjucks --save
 ```
 
 ## Usage
 
 ```javascript
-fractal.components.engine('@frctl/nunjucks'); // register the Nunjucks adapter for your components
-fractal.components.set('ext', '.nunj'); // look for files with a .nunj file extension
+fractal.components.engine("@frctl/nunjucks"); // register the Nunjucks adapter for your components
+fractal.components.set("ext", ".nunj"); // look for files with a .nunj file extension
 ```
 
 ## Customisation
@@ -22,31 +28,35 @@ fractal.components.set('ext', '.nunj'); // look for files with a .nunj file exte
 If you want to register custom [filters](https://mozilla.github.io/nunjucks/api.html#custom-filters), global variables or [extensions](https://mozilla.github.io/nunjucks/api.html#custom-tags) to the underlying Nunjucks engine then you can configure an instance as follows:
 
 ```javascript
-
-const nunj = require('@frctl/nunjucks')({
-    filters: {
-        // filter-name: function filterFunc(){}
-    },
-    globals: {
-        // global-name: global-val
-    },
-    extensions: {
-        // extension-name: function extensionFunc(){}
-    }
+const nunj = require("@frctl/nunjucks")({
+  env: {
+    // Nunjucks environment opts: https://mozilla.github.io/nunjucks/api.html#configure
+  },
+  filters: {
+    // filter-name: function filterFunc(){}
+  },
+  globals: {
+    // global-name: global-val
+  },
+  extensions: {
+    // extension-name: function extensionFunc(){}
+  }
 });
 
-fractal.components.engine(nunj); /* set as the default template engine for components */
+fractal.components.engine(
+  nunj
+); /* set as the default template engine for components */
 ```
 
 For example, to register the 'shorten' filter example from the [Nujucks docs](https://mozilla.github.io/nunjucks/api.html#custom-filters):
 
 ```javascript
-const nunj = require('@frctl/nunjucks')({
-    filters: {
-        shorten: function(str, count) {
-            return str.slice(0, count || 5);
-        }
+const nunj = require("@frctl/nunjucks")({
+  filters: {
+    shorten: function(str, count) {
+      return str.slice(0, count || 5);
     }
+  }
 });
 ```
 
@@ -67,8 +77,8 @@ By default, the Nunjucks adapter expects you to use the Fractal component `@hand
 However, if you wish to include (or extend) non-component templates, you can also specify a path (or an array of paths) of directories for Nunjucks to search in for non-component templates when configuring your Nunjucks instance. For example:
 
 ```javascript
-const nunj = require('@frctl/nunjucks')({
-    paths: ['path/to/files']
+const nunj = require("@frctl/nunjucks")({
+  paths: ["path/to/files"]
 });
 ```
 
@@ -79,7 +89,6 @@ const nunj = require('@frctl/nunjucks')({
 In this example the file `foo.html` would be searched for in the `path/to/files` directory and included if found.
 
 > Using additional search paths in this manner **does not** prevent standard `@handle` syntax includes working as well.
-
 
 ## Extensions
 
@@ -95,14 +104,13 @@ The `render` extension renders a component (referenced by it's handle) using the
 
 ```html
 <!-- pass in data for rendering -->
-{% render '@example', {title: 'An Example'} %}
-{% render '@example', someData %}
+{% render '@example', {title: 'An Example'} %} {% render '@example', someData %}
 
 <!-- use the config file data for rendering -->
 {% render '@example' %}
 ```
 
-You can also pass in a *partial* data object (i.e. containing only some of the properties the component expects) and then pass a third argument of `true` to the tag to populate the missing items from the default context data. This allows you to override only the items you need to for this instance of the rendered component.
+You can also pass in a _partial_ data object (i.e. containing only some of the properties the component expects) and then pass a third argument of `true` to the tag to populate the missing items from the default context data. This allows you to override only the items you need to for this instance of the rendered component.
 
 ```html
 <!-- will get any missing properties from the component context data -->
@@ -116,11 +124,12 @@ Outputs the resolved context data for a component.
 ```html
 {% context '@example' %}
 
-<!-- Outputs:
-{
-    "foo": "bar",
-    "baz": "bar"
-}
+<!--
+  Outputs:
+  {
+      "foo": "bar",
+      "baz": "bar"
+  }
 -->
 ```
 
@@ -131,8 +140,9 @@ Outputs the raw view template contents for the specified component.
 ```html
 {% view '@example' %}
 
-<!-- Outputs:
-<p>{{ text }}</p>
+<!--
+  Outputs:
+  <p>{{ text }}</p>
 -->
 ```
 
@@ -150,7 +160,7 @@ Takes a root-relative path and re-writes it if required to make it work in stati
 {{ '/css/my-stylesheet.css' | path }}
 ```
 
-The path argument should begin with a slash and be relative to the web root. During a static HTML export this path will then be re-written to be relative to the current page.  
+The path argument should begin with a slash and be relative to the web root. During a static HTML export this path will then be re-written to be relative to the current page.
 
 ## Special variables
 
@@ -158,27 +168,31 @@ The Nunjucks adapter also makes a few special variables available to your templa
 
 Note that using these may tie your templates a little more tightly into Fractal so you may choose not to use them for that reason.
 
-### _config
+### \_config
 
 Contains the full Fractal configuration object. Useful for when you want to refer to a configuration item in your documentation (or components).
 
 ```html
-{{ _config.project.title }} <!-- outputs the project title -->
-{{ _config.components.ext }} <!-- outputs the extension used for components -->
+{{ _config.project.title }}
+<!-- outputs the project title -->
+{{ _config.components.ext }}
+<!-- outputs the extension used for components -->
 ```
 
-### _self
+### \_self
 
 Contains a simple data object representation of the top-level item (i.e. component or page) being rendered.
 
 ```html
-{{ _self.title }} <!-- outputs 'Button' -->
+{{ _self.title }}
+<!-- outputs 'Button' -->
 ```
 
-### _target
+### \_target
 
 This variable is only set in component preview layouts, and contains a simple data object representation of the item (i.e. component or page) being rendered _within_ the preview layout.
 
 ```html
-{{ _target.title }} <!-- outputs 'Button' -->
+{{ _target.title }}
+<!-- outputs 'Button' -->
 ```

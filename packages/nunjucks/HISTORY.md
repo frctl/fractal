@@ -1,8 +1,11 @@
 # History
 
-## 1.0.3
+## 2.0
 
-- [FIX] Add fix for context data refs issue in nested components.
+- Update Nunjucks to v3.x
+- Prevent array merging in `render` tag context data
+- Enable autoescaping by default
+- Add ability to provide environment configuration options
 
 ## 1.0.2
 

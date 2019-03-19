@@ -9,7 +9,7 @@ const Adapter  = require('@frctl/fractal').Adapter;
 
 class NunjucksAdapter extends Adapter {
 
-    constructor(source, loadPaths, app) {
+    constructor(source, config, app) {
 
         super(null, source);
 
@@ -46,7 +46,7 @@ class NunjucksAdapter extends Adapter {
          *  include a FileSystemLoader instance.
          */
 
-        if (loadPaths) {
+        if (config.paths) {
 
             const FileSystemLoader = nunjucks.Loader.extend({
 
@@ -80,16 +80,14 @@ class NunjucksAdapter extends Adapter {
                     };
                  }
             });
-            loaders.push(new FileSystemLoader(loadPaths));
+            loaders.push(new FileSystemLoader(config.paths));
         }
 
         /**
          * Instantiate the Nunjucks environment instance.
          */
 
-        let nj = Promise.promisifyAll(new nunjucks.Environment(loaders, {
-            autoescape: false
-        }));
+        let nj = Promise.promisifyAll(new nunjucks.Environment(loaders, config.env || {}));
 
         this._engine = nj;
     }
@@ -119,7 +117,7 @@ module.exports = function(config) {
 
         register(source, app) {
 
-            const adapter = new NunjucksAdapter(source, config.paths, app);
+            const adapter = new NunjucksAdapter(source, config, app);
             const nj = adapter.engine;
 
             if (!config.pristine) {
