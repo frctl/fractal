@@ -1,6 +1,6 @@
 {
   "name": "@frctl/mandelbrot",
-  "version": "1.2.1-rc.2",
+  "version": "1.2.1",
   "description": "The default theme for Fractal.",
   "main": "index.js",
   "repository": {
@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "@frctl/fractal": "^1.1.0-alpha.0",
-    "lodash": "^4.12.0",
-    "js-beautify": "^1.6.2"
+    "js-beautify": "^1.6.2",
+    "lodash": "^4.12.0"
   }
 }
