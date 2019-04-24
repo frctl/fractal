@@ -1,5 +1,7 @@
 'use strict';
 
+const nunjucks = require('nunjucks');
+
 module.exports = function(fractal){
 
     function ViewExtension() {
@@ -27,7 +29,7 @@ module.exports = function(fractal){
                 entity = entity.variants().default();
             }
             entity.getContent().then(content => {
-                callback(null, content);
+                callback(null, new nunjucks.runtime.SafeString(content));
             }).catch(err => {
                 callback(err);
             });

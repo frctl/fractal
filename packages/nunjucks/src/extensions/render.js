@@ -1,5 +1,6 @@
 'use strict';
 
+const nunjucks = require('nunjucks');
 const utils = require('@frctl/fractal').utils;
 
 module.exports = function(fractal){
@@ -41,7 +42,7 @@ module.exports = function(fractal){
                 let env = JSON.parse(JSON.stringify(rootContext._env));
                 context._env = env;
                 entity.render(context).then(html => {
-                    callback(null, html);
+                    callback(null, new nunjucks.runtime.SafeString(html));
                 }).catch(err => {
                     callback(err);
                 });
