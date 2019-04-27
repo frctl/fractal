@@ -30,11 +30,6 @@
     color: inherit;
     cursor: pointer;
 
-    &:focus,
-    &:active {
-        outline: none;
-    }
-
     &:hover {
         background-color: rgba($color-header-content, 0.05);
     }
