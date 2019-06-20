@@ -121,7 +121,7 @@ module.exports = class Server extends mix(Emitter) {
     }
 
     _startSync(resolve, reject) {
-        const syncServer = require('browser-sync').create();
+        const syncServer = require('browser-sync').create(this._app._config.project.title);
         const bsConfig = utils.defaultsDeep(this._config.syncOptions || {}, {
             logLevel: this._config.debug ? 'debug' : 'silent',
             logPrefix: 'Fractal',
