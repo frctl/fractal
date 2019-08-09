@@ -62,8 +62,8 @@ module.exports = {
                 }
                 return Promise.resolve(data);
             } catch (err) {
-                Log.error(`Error loading data file ${filePath}: ${err.message}`);
-                return Promise.reject(err);
+                Log.error(`Error parsing data file ${filePath.split('/')[filePath.split('/').length - 1]}: ${err.message}`);
+                return Promise.resolve({});
             }
         } else {
             return fs.readFileAsync(filePath, 'utf8').then(contents => this.parse(contents, format)).catch(err => {
