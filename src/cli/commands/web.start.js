@@ -44,10 +44,15 @@ module.exports = {
             } else {
                 this.console.error(err.message, err);
             }
+            done();
         });
 
-        return server.start(args.options.sync).catch(e => {
+        server.on('destroy', () => done());
+        server.on('stopped', () => done());
+
+        server.start(args.options.sync).catch(e => {
             this.console.error(e);
+            done();
         });
     },
 
