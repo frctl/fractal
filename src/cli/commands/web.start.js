@@ -43,8 +43,8 @@ module.exports = {
                 this.console.warn(`404: ${err.message}`);
             } else {
                 this.console.error(err.message, err);
+                done();
             }
-            done();
         });
 
         server.on('destroy', () => done());
