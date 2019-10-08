@@ -44,7 +44,6 @@ module.exports = {
             } else {
                 this.console.error(err.message, err);
             }
-            done();
         });
 
         server.on('destroy', () => done());
