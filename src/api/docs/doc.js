@@ -6,6 +6,18 @@ const matter = require('gray-matter');
 const _ = require('lodash');
 const utils = require('../../core/utils');
 const Entity = require('../../core/entities/entity');
+const toml = require('toml');
+const coffee = require('coffeescript');
+
+const matterEngines = {
+    toml: toml.parse.bind(toml),
+    coffee: {
+        parse: function(str, options) {
+            /* eslint no-eval: 0 */
+            return coffee['eval'](str, options);
+        }
+    }
+}
 
 module.exports = class Doc extends Entity {
 
@@ -69,7 +81,7 @@ module.exports = class Doc extends Entity {
 
     static create(config, content, parent) {
         parent.source.emit('doc:beforeCreate', config, content, parent);
-        const parsed = matter(content);
+        const parsed = matter(content, { engines: matterEngines });
         config = _.defaults(parsed.data || {}, config);
         const doc = new Doc(config, parsed.content, parent);
         parent.source.emit('doc:created', doc);
