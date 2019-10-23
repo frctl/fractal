@@ -40,6 +40,15 @@ const resolver = module.exports = {
                 return item.replace(/^\\@/, '@');
             }
 
+            if (_.isString(item) && _.startsWith(item, '@') && !item.includes('.')) {
+                const entity = source.find(item);
+                const fullRenderedComponent = source.engine().render(entity.viewPath, entity.content, entity.context, {
+                    self: entity.toJSON(),
+                    env: {},
+                });
+                return fullRenderedComponent;
+            }
+
             if (_.isString(item) && _.startsWith(item, '@')) {
                 const parts = item.split('.');
                 const handle = parts.shift();
