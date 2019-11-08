@@ -127,6 +127,7 @@ module.exports.Fractal = Fractal;
 module.exports.WebTheme = require('./web/theme');
 module.exports.CliTheme = require('./cli/theme');
 module.exports.Adapter = require('./core/adapter');
+module.exports.log = require('./core/log');
 module.exports.utils = require('./core/utils');
 
 module.exports.core = {
