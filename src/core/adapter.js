@@ -5,6 +5,7 @@ const _ = require('lodash');
 const Path = require('path');
 const mix = require('./mixins/mix');
 const Emitter = require('./mixins/emitter');
+const utils = require('./utils');
 
 module.exports = class Adapter extends mix(Emitter) {
 
@@ -44,12 +45,12 @@ module.exports = class Adapter extends mix(Emitter) {
     }
 
     getView(handle) {
-        let prefixMatcher = new RegExp(`^\\${this._handlePrefix}`);
+        let prefixMatcher = new RegExp(`^${utils.escapeForRegexp(this._handlePrefix)}`);
         return _.find(this._views, view => (view.handle.replace(prefixMatcher, '') === handle.replace(prefixMatcher, '')));
     }
 
     _parseReferences(view) {
-        const matcher = new RegExp(`\\${this._handlePrefix}[0-9a-zA-Z\-\_]*`, 'g');
+        const matcher = new RegExp(`${utils.escapeForRegexp(this._handlePrefix)}[0-9a-zA-Z\-\_]*`, 'g');
         const content = view.content;
         const referenced = content.match(matcher) || [];
         return _.uniq(_.compact(referenced.map(handle => this._source.find(handle))));

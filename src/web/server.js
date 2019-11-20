@@ -157,7 +157,6 @@ module.exports = class Server extends mix(Emitter) {
                 ignoreInitial: true
             });
             function getFilePaths(filepath){
-                const pathMatch = new RegExp(`^${s.path}`);
                 return Path.join(s.mount || '/', filepath.replace(s.path, ''));
             }
             monitor.on('change', filepath => reload(filepath, getFilePaths(filepath)));
