@@ -9,6 +9,7 @@ const VariantCollection = require('../variants/collection');
 const FileCollection = require('../files/collection');
 const AssetCollection = require('../assets/collection');
 const Asset = require('../assets/asset');
+const Log = require('../../core/log');
 
 module.exports = class Component extends Entity {
 
@@ -167,7 +168,12 @@ module.exports = class Component extends Entity {
 
     static *create(config, files, resources, parent) {
         parent.source.emit('component:beforeCreate', config, files, resources, parent);
-        config.raw = files.config ? yield Data.readFile(files.config.path) : null;
+        try {
+            config.raw = files.config ? yield Data.readFile(files.config.path) : null;
+        } catch (err) {
+            Log.error(`Error loading data file ${file.config.path}: ${err.message}`);
+            config.raw = null;
+        }
         const comp = new Component(config, files, resources, parent);
         const variants = yield VariantCollection.create(comp, files.view, config.variants, files.varViews, config);
         comp.setVariants(variants);
