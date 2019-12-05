@@ -1,8 +1,6 @@
 language: node_js
 node_js:
-    - "lts/boron"
     - "lts/carbon"
-    - "10"
-allow_failure:
-    node_js: "10"
+    - "lts/dubnium"
+    - "lts/erbium"
 sudo: false
