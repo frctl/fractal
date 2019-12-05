@@ -39,6 +39,12 @@ const twigAdapter = require('@frctl/twig')({
     // this will change your includes to {% include '%button' %}
     // default is '@'
     handlePrefix: '%',
+    
+    // set a base path for twigjs
+    // Setting base to '/' will make sure all resolved render paths
+    // start at the defined components dir, instead of being relative.
+    // default is null
+    base: '/',
 
     // register custom filters
     filters: {
