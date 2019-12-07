@@ -66,6 +66,10 @@ const resolver = module.exports = {
                 return null;
             }
 
+            if (_.isFunction(item)) {
+                return item;
+            }
+
             if (_.isArray(item) || _.isObject(item)) {
                 return resolve(item);
             }
