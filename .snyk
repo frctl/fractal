@@ -1,5 +1,5 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
-version: v1.13.5
+version: v1.14.0
 # ignores vulnerabilities until expiry date; change duration by modifying expiry date
 ignore:
   'npm:braces:20180219':
@@ -82,3 +82,6 @@ patch:
         patched: '2019-07-09T00:21:02.330Z'
     - '@frctl/mandelbrot > @frctl/fractal > @frctl/handlebars > handlebars > async > lodash':
         patched: '2019-07-09T00:21:02.330Z'
+  SNYK-JS-TREEKILL-536781:
+    - snyk > snyk-sbt-plugin > tree-kill:
+        patched: '2019-12-17T00:21:30.882Z'
