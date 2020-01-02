@@ -69,6 +69,11 @@ const twigAdapter = require('@frctl/twig')({
     // default is null
     base: '/',
 
+    // should missing variable/keys emit an error message
+    // If false, they default to null.
+    // default is false
+    strict_variables: true,
+
     // register custom filters
     filters: {
         // usage: {{ label|capitalize }}
