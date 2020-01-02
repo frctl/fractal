@@ -19,6 +19,29 @@ fractal.components.engine(twigAdapter);
 fractal.components.set('ext', '.twig');
 ```
 
+## Using Twig for docs
+
+To use Twig for docs, set the docs engine to `@frctl/twig`:
+```
+fractal.docs.engine(twigAdapter);
+```
+
+However, due to the way this adapter currently extends Twig, it is necessary to *set the docs engine before setting the components engine*.
+
+```
+/*
+ * Require the Twig adapter
+ */
+const twigAdapter = require('@frctl/twig')();
+
+// first set docs engine
+fractal.docs.engine(twigAdapter);
+
+// then set components engine
+fractal.components.engine(twigAdapter);
+```
+
+
 ## Extending with a custom config
 ```
 /*
@@ -39,7 +62,7 @@ const twigAdapter = require('@frctl/twig')({
     // this will change your includes to {% include '%button' %}
     // default is '@'
     handlePrefix: '%',
-    
+
     // set a base path for twigjs
     // Setting base to '/' will make sure all resolved render paths
     // start at the defined components dir, instead of being relative.
