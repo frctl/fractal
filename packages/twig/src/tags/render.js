@@ -65,7 +65,7 @@ module.exports = function (fractal) {
                     template = file;
                 }
                 else {
-                    template = this.importFile(file);
+                    template = this.template.importFile(file);
                 }
 
                 return {
