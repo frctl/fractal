@@ -152,7 +152,8 @@ class TwigAdapter extends Fractal.Adapter {
                     rethrow: true,
                     name: meta.self ? `${self._config.handlePrefix}${meta.self.handle}` : tplPath,
                     precompiled: str,
-                    base: self._config.base
+                    base: self._config.base,
+                    strict_variables: self._config.strict_variables
                 });
                 resolve(template.render(context));
             } catch (e) {
@@ -176,7 +177,8 @@ module.exports = function(config) {
         pristine: false,
         handlePrefix: '@',
         importContext: false,
-        base: null
+        base: null,
+        strict_variables: false
     });
 
     return {
