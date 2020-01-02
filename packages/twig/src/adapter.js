@@ -65,7 +65,7 @@ class TwigAdapter extends Fractal.Adapter {
                         let prefixMatcher = new RegExp(`^\\${self._config.handlePrefix}`);
                         let entity = source.find(handle.replace(prefixMatcher, '@'));
                         if (entity) {
-                            entity = entity.isVariant ? entity : entity.variants().default();
+                            entity = entity.isComponent ? entity.variants().default() : entity;
                             if (config.importContext) {
                                 context = utils.defaultsDeep(_.cloneDeep(context), entity.getContext());
                                 context._self = entity.toJSON();
