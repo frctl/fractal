@@ -30,7 +30,7 @@
     "fs-extra": "^0.30.0",
     "globby": "^6.0.0",
     "gray-matter": "^2.0.2",
-    "handlebars": "^4.0.13",
+    "handlebars": "^4.0.14",
     "highlight.js": "^9.5.0",
     "inquirer": "^1.1.2",
     "istextorbinary": "^2.1.0",
