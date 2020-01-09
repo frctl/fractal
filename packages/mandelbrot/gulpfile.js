@@ -1,6 +1,14 @@
 'use strict';
 
-const gulp              = require('gulp');
+const {
+    dest,
+    parallel,
+    series,
+    src,
+    watch,
+} = require('gulp');
+const cleanCSS          = require('gulp-clean-css');
+const gulpif            = require('gulp-if');
 const sass              = require('gulp-sass');
 const sourcemaps        = require('gulp-sourcemaps');
 const autoprefixer      = require('gulp-autoprefixer');
@@ -17,17 +25,22 @@ const del               = require('del');
 //
 // JS
 //
-gulp.task('js', ['clean:js'], () => compileJS());
-gulp.task('js:watch', () => compileJS(true));
+function compileJs() {
+    return bundleJs();
+}
 
-gulp.task('clean:js', function() {
+function cleanJs() {
     return del(['./dist/js']);
-});
+}
+
+const js = series(cleanJs, compileJs);
+
+exports.js = js;
 
 //
 // CSS
 //
-gulp.task('css:skins', function() {
+function createCssSkins(cb) {
     const fs = require('fs');
     const skins = require('./assets/scss/skins/_skins.json');
 
@@ -43,74 +56,94 @@ $color-link: ${skin.links};
 @import "../components/**/*.scss";
 `);
     }
-});
 
-gulp.task('css', ['css:skins'], function() {
-  return gulp.src('./assets/scss/skins/*.scss')
-    .pipe(stylelint({
-        reporters: [{formatter: 'string', console: true}]
-    }))
-    .pipe(sassGlob())
-    .pipe(sass({
-        includePaths: 'node_modules'
-    }).on('error', sass.logError))
-    .pipe(autoprefixer({
-        browsers: ['last 5 versions']
-    }))
-    .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest('./dist/css'));
-});
+    cb();
+}
 
-gulp.task('css:clean', function() {
-    return del(['./dist/css']);
-});
+function bundleCss(watch) {
+    return src('./assets/scss/skins/*.scss')
+        .pipe(stylelint({
+            reporters: [{formatter: 'string', console: true}]
+        }))
+        .pipe(sassGlob())
+        .pipe(sass({
+            includePaths: 'node_modules'
+        }).on('error', sass.logError))
+        .pipe(autoprefixer())
+        .pipe(gulpif(!watch, cleanCSS()))
+        .pipe(sourcemaps.write('.'))
+        .pipe(dest('./dist/css'));
+}
 
-gulp.task('css:watch', function () {
-    gulp.watch('./assets/scss/**/*.scss', ['css']);
-});
+function compileAndMinifyCss() {
+    return bundleCss();
+}
+
+function compileCss() {
+    return bundleCss(true);
+}
+
+const css = series(createCssSkins, compileAndMinifyCss);
+
+exports.css = css;
 
 //
 // Fonts
 //
-gulp.task('fonts', ['fonts:clean'], function() {
-   gulp.src('./assets/fonts/**/*').pipe(gulp.dest('./dist/fonts'));
-});
+function copyFonts() {
+    return src('./assets/fonts/**/*')
+        .pipe(dest('./dist/fonts'));
+}
 
-gulp.task('fonts:clean', function() {
+function cleanFonts() {
     return del(['./dist/fonts']);
-});
+}
 
-gulp.task('fonts:watch', function () {
-    gulp.watch('./assets/fonts/**/*', ['fonts']);
-});
+const fonts = series(cleanFonts, copyFonts);
+
+exports.fonts = fonts;
 
 //
 // Images
 //
-gulp.task('img', ['img:clean'], function() {
-   gulp.src('./assets/img/**/*').pipe(gulp.dest('./dist/img'));
-   gulp.src('./assets/favicon.ico').pipe(gulp.dest('./dist'));
-});
+function copyImg() {
+    return src('./assets/img/**/*')
+        .pipe(dest('./dist/img'));
+}
 
-gulp.task('img:clean', function() {
+function copyFavicon() {
+    return src('./assets/favicon.ico')
+        .pipe(dest('./dist'));
+}
+
+function cleanImg() {
     return del(['./dist/img']);
-});
+}
 
-gulp.task('img:watch', function () {
-    gulp.watch('./assets/img/**/*', ['img']);
-});
+const img = series(cleanImg, parallel(copyImg, copyFavicon));
+
+exports.img = img;
 
 //
 // Task sets
 //
-gulp.task('watch', ['css:watch', 'js:watch', 'img:watch']);
+function watchFiles() {
+    watch('./assets/scss/**/*.scss', compileCss);
+    bundleJs(true);
+    watch('./assets/img/**/*', img);
+    watch('./assets/fonts/**/*', fonts);
+}
 
-gulp.task('default', ['fonts', 'css', 'js', 'img']);
+const compile = series(css, js, img, fonts);
+
+exports.watch = series(compile, watchFiles);
+
+exports.default = compile;
 
 //
 // Utils
 //
-function compileJS(watch) {
+function bundleJs(watch) {
 
     let bundler = browserify('./assets/js/mandelbrot.js', {
         debug: true
@@ -141,10 +174,10 @@ function compileJS(watch) {
 
         bundle.pipe(sourcemaps.init({loadMaps: true}))
             .pipe(sourcemaps.write('./'))
-            .pipe(gulp.dest('./dist/js'));
+            .pipe(dest('./dist/js'));
 
         return bundle;
     }
 
-    rebundle();
+    return rebundle();
 }
