@@ -74,6 +74,12 @@ const twigAdapter = require('@frctl/twig')({
     // default is false
     strict_variables: true,
 
+    // define Twig namespaces, see https://github.com/twigjs/twig.js/wiki#namespaces
+    // this may break some fractal functionality, like including components via their handles and the render tag
+    namespaces: {
+        'Components': './components'
+    },
+
     // register custom filters
     filters: {
         // usage: {{ label|capitalize }}
