@@ -4,7 +4,7 @@
     font-feature-settings: "liga", "dlig", "kern", "onum";
     hanging-punctuation: first;
 
-    > *:not(:last-child) {
+    > *:not(pre):not(:last-child) {
         margin-bottom: 0.75em;
     }
 
@@ -68,24 +68,25 @@
         opacity: 0.75;
     }
 
-    code,
-    code pre {
+    code {
+        padding: 0.125rem;
+        background-color: rgba($color-text, 0.075);
+    }
+
+    pre > code {
+        padding: 0;
+        background: 0;
+    }
+
+    pre {
+        padding: 0.125rem 0.5rem;
+        margin: 1rem -0.5rem;
+        overflow: auto;
         background-color: rgba($color-text, 0.075);
     }
 
     img {
         max-width: 100%;
-    }
-
-    p code,
-    li code {
-        padding: 0.125rem;
-    }
-
-    code pre {
-        padding: 0.125rem 0.5rem;
-        margin: 1rem -0.5rem;
-        overflow: auto;
     }
 
     table {
