@@ -310,7 +310,7 @@ module.exports = class ComponentSource extends EntitySource {
                 return file.getContent().then(content => ({
                     context: {},
                     content: content,
-                    viewPath: file.viewPath,
+                    viewPath: file.path,
                     self: file.toJSON()
                 }));
             }).catch(err => {
