@@ -141,10 +141,11 @@ class TwigAdapter extends Fractal.Adapter {
 
             try {
                 let template = self.engine.twig({
-                    method: 'fractal',
+                    method: self._config.method,
                     async: false,
                     rethrow: true,
-                    name: meta.self ? `${self._config.handlePrefix}${meta.self.handle}` : tplPath,
+                    name: self._config.method === 'fractal' ? (meta.self ? `${self._config.handlePrefix}${meta.self.handle}` : tplPath) : undefined,
+                    path: path,
                     precompiled: str,
                     base: self._config.base,
                     strict_variables: self._config.strict_variables,
@@ -169,6 +170,7 @@ class TwigAdapter extends Fractal.Adapter {
 module.exports = function(config) {
 
     config = _.defaults(config || {}, {
+        method: 'fractal',
         pristine: false,
         handlePrefix: '@',
         importContext: false,

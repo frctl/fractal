@@ -80,6 +80,13 @@ const twigAdapter = require('@frctl/twig')({
         'Components': './components'
     },
 
+    // use twig.js default template loader
+    // this will allow including templates via relative paths, like twig.js or PHP Twig does by default
+    // changing this will break including components via their fractal handles
+    // changing this will break the custom render tag
+    // default is 'fractal'
+    method: 'fs',
+
     // register custom filters
     filters: {
         // usage: {{ label|capitalize }}
