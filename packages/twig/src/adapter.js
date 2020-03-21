@@ -4,6 +4,7 @@ const Fractal = require('@frctl/fractal');
 const _ = require('lodash');
 const Path = require('path');
 const utils = Fractal.utils;
+const adapterUtils = require('./utils');
 
 class TwigAdapter extends Fractal.Adapter {
 
@@ -23,12 +24,10 @@ class TwigAdapter extends Fractal.Adapter {
 
             Twig.Templates.registerLoader('fractal', function(location, params, callback, errorCallback) {
 
-                let parser = Twig.Templates.parsers['twig'];
-
                 if (params.precompiled) {
                     params.data = params.precompiled;
                 } else {
-                    let view = isHandle(location) ? self.getView(location) : _.find(self.views, {path: Path.join(source.fullPath, location)});
+                    let view = adapterUtils.isHandle(location, self._config.handlePrefix) ? self.getView(location) : _.find(self.views, {path: Path.join(source.fullPath, location)});
                     if (!view) {
 
                         throw new Error(`Template ${location} not found`);
@@ -52,7 +51,7 @@ class TwigAdapter extends Fractal.Adapter {
 
                     let handle = null;
 
-                    if (isHandle(this.id)) {
+                    if (adapterUtils.isHandle(this.id, self._config.handlePrefix)) {
                         handle = this.id;
                     } else {
                         let view = _.find(self.views, {path: Path.join(source.fullPath, this.id)});
@@ -62,8 +61,7 @@ class TwigAdapter extends Fractal.Adapter {
                     }
 
                     if (handle) {
-                        let prefixMatcher = new RegExp(`^\\${self._config.handlePrefix}`);
-                        let entity = source.find(handle.replace(prefixMatcher, '@'));
+                        let entity = source.find(adapterUtils.replaceHandlePrefix(handle, self._config.handlePrefix));
                         if (entity) {
                             entity = entity.isComponent ? entity.variants().default() : entity;
                             if (config.importContext) {
@@ -118,10 +116,6 @@ class TwigAdapter extends Fractal.Adapter {
             }
 
         });
-
-        function isHandle(str) {
-            return str && str.startsWith(self._config.handlePrefix);
-        }
     }
 
     get twig() {
@@ -200,7 +194,7 @@ module.exports = function(config) {
                     Twig.extendTest(name, test);
                 });
                 Twig.extend(function(Twig) {
-                    _.each(require('./tags')(app), function(tag){
+                    _.each(require('./tags')(app, config), function(tag){
                         Twig.exports.extendTag(tag(Twig));
                     });
                 });

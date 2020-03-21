@@ -1,15 +1,15 @@
 'use strict';
 
-const _ = require('lodash');
 const path = require('path');
 const utils = require('@frctl/fractal').utils;
+const adapterUtils = require('../utils');
 
 /**
  * Render tag
  *
  *  Format: {% render "@component" with {some: 'values'} %}
  */
-module.exports = function (fractal) {
+module.exports = function (fractal, config) {
     return function (Twig) {
         return {
             type: 'rendertag',
@@ -42,7 +42,11 @@ module.exports = function (fractal) {
             },
             parse: function (token, context, chain) {
                 const file = Twig.expression.parse.apply(this, [token.stack, context]);
-                const handle = path.parse(file).name;
+                let handle = path.parse(file).name;
+
+                if (adapterUtils.isHandle(handle, config.handlePrefix)) {
+                    handle = adapterUtils.replaceHandlePrefix(handle, config.handlePrefix);
+                }
 
                 if (!handle.startsWith('@')) {
                     throw new Error(`You must provide a valid component handle to the render tag.`);
