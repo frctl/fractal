@@ -8,7 +8,7 @@ Fractal is a tool to help you **build** and **document** web component libraries
 
 **Read the Fractal documentation at http://fractal.build/guide.**
 
-**Need help?** We have an active and helpful community on [Fractal's Slack workspace](https://slack.fractal.build/) - join us there for support and tips.
+**Need help?** We have an active and helpful community on [Fractal's Discord server](https://discord.gg/vuRz4Yx) - join us there for support and tips.
 
 ## Introduction
 
