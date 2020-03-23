@@ -1,5 +1,7 @@
 'use strict';
 
+import 'core-js/features/array/find';;
+
 global.jQuery    = require('jquery');
 const pjax       = require('jquery-pjax');
 const $          = global.jQuery;
@@ -11,6 +13,7 @@ const utils      = require('./utils');
 const framer     = require('./components/frame');
 const Tree       = require('./components/tree');
 const Pen        = require('./components/pen');
+const Search     = require('./components/search');
 
 global.fractal = {
     events: events
@@ -18,6 +21,7 @@ global.fractal = {
 
 const frame     = framer($('#frame'));
 const navTrees  = $.map($('[data-behaviour="tree"]'), t => new Tree(t));
+const search    = $.map($('[data-behaviour="search"]'), s => new Search(s, navTrees));
 let pens        = [];
 
 loadPen();

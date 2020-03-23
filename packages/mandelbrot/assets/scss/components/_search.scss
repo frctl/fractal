@@ -1,0 +1,16 @@
+.Navigation-search {
+    padding: 1em;
+}
+
+.Search-label {
+    @include font(label);
+    margin-bottom: 0.5rem;
+    color: $color-sidebar-heading;
+}
+
+.Search-input {
+    width: 100%;
+    border-radius: 3px;
+    border: 1px solid $color-frame-border;
+    padding: .5em;
+}

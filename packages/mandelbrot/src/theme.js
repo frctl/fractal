@@ -21,12 +21,16 @@ module.exports = function(options){
         favicon: null,
         labels: {
             info: 'Information',
-            builtOn: 'Built on'
+            builtOn: 'Built on',
+            search: {
+                label: 'Search',
+                placeholder: 'Enter keyword...',
+            },
         }
     });
 
     config.panels  = config.panels || ['html', 'view', 'context', 'resources', 'info', 'notes'];
-    config.nav     = config.nav || ['components','docs','assets'];
+    config.nav     = config.nav || ['search', 'components', 'docs', 'assets', 'information'];
     config.styles  = [].concat(config.styles).concat(config.stylesheet).filter(url => url).map(url => (url === 'default' ? `/${config.static.mount}/css/${config.skin}.css` : url));
     config.scripts = [].concat(config.scripts).filter(url => url).map(url => (url === 'default' ? `/${config.static.mount}/js/mandelbrot.js` : url));
     config.favicon = config.favicon || `/${config.static.mount}/favicon.ico`;
