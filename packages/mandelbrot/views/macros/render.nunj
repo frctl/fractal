@@ -1,6 +1,10 @@
 {% macro entity(rendered) %}
 {% if rendered | isError %}
-{% set renderError %}<!-- Error rendering component: {{ error.message }} -->{% endset %}
+{% set renderError %}
+<!-- Error rendering component -->
+<!-- {{ rendered.message }} -->
+<!-- {{ rendered.stack }} -->
+{% endset %}
 {{ renderError | highlight('html') }}
 {% else %}
 {{ rendered | beautify | highlight('html') }}
