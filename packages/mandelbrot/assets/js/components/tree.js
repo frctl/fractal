@@ -28,6 +28,7 @@ class Tree {
         }
         this._state = jQuery.unique(this._state);
         this._applyState();
+        events.trigger('scroll-sidebar');
         events.on('main-content-preload', (e, url) => {
             this.selectItem(getTreeUrl(url));
         });

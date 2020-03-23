@@ -23,7 +23,6 @@ module.exports = function(element){
 
     let sidebarWidth   = utils.isSmallScreen() ? sidebarMin : storage.get(`frame.sidebar`, sidebar.outerWidth());
     let sidebarState   = utils.isSmallScreen() ? 'closed' : storage.get(`frame.state`, 'open');
-    let scrollPos      = storage.get(`frame.scrollPos`, 0);
     let dragOccuring   = false;
     let isInitialClose = false;
     let handleClicks   = 0;
@@ -34,8 +33,6 @@ module.exports = function(element){
         isInitialClose = true;
         closeSidebar();
     }
-
-    sidebar.scrollTop(scrollPos);
 
     handle.on('mousedown', e => {
         handleClicks++;
@@ -90,6 +87,10 @@ module.exports = function(element){
         setTimeout(function(){
             dragOccuring = false;
         }, 200);
+    });
+    events.on('scroll-sidebar', function() {
+        const scrollPos = storage.get(`frame.scrollPos`, 0);
+        sidebar.scrollTop(scrollPos);
     });
 
     events.on('data-changed', function(){
