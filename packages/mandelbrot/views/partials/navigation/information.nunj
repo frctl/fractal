@@ -1,0 +1,13 @@
+<div class="Navigation-group">
+    <div class="Tree">
+        <div class="Tree-title">
+            {{ frctl.theme.get('labels.info') }}
+        </div>
+        <div class="Tree-aside">
+            {{ frctl.theme.get('labels.builtOn') }}:
+            <time datetime="{{ frctl.theme.get('now').toISOString() }}">
+                {{ frctl.theme.get('now').toLocaleDateString(frctl.theme.get('lang')) }}
+            </time>
+        </div>
+    </div>
+</div>

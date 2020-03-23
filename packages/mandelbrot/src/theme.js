@@ -18,7 +18,11 @@ module.exports = function(options){
             mount: 'themes/mandelbrot',
         },
         version: packageJSON.version,
-        favicon: null
+        favicon: null,
+        labels: {
+            info: 'Information',
+            builtOn: 'Built on'
+        }
     });
 
     config.panels  = config.panels || ['html', 'view', 'context', 'resources', 'info', 'notes'];
@@ -26,6 +30,7 @@ module.exports = function(options){
     config.styles  = [].concat(config.styles).concat(config.stylesheet).filter(url => url).map(url => (url === 'default' ? `/${config.static.mount}/css/${config.skin}.css` : url));
     config.scripts = [].concat(config.scripts).filter(url => url).map(url => (url === 'default' ? `/${config.static.mount}/js/mandelbrot.js` : url));
     config.favicon = config.favicon || `/${config.static.mount}/favicon.ico`;
+    config.now     = new Date();
 
     const assetSourceName = 'components';
 
