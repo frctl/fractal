@@ -36,7 +36,7 @@
     "gulp-stylelint": "^10.0.0",
     "gulp-uglify": "^3.0.2",
     "highlight.js": "^9.1.0",
-    "jquery": "^2.2.1",
+    "jquery": "^3.4.0",
     "jquery-pjax": "git+https://github.com/defunkt/jquery-pjax.git",
     "jquery-resizable-dom": "^0.16.0",
     "normalize.css": "^4.1.1",
