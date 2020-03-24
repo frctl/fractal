@@ -43,7 +43,7 @@
     "mime": "^1.3.4",
     "minimist": "^1.2.0",
     "mixwith": "^0.1.1",
-    "mocha": "^5.0.3",
+    "mocha": "^7.1.1",
     "nunjucks": "^3.1.3",
     "path-to-regexp": "^1.5.3",
     "portscanner": "^1.0.0",
