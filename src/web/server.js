@@ -237,7 +237,7 @@ module.exports = class Server extends mix(Emitter) {
         };
 
         this._render(match.route.view, context)
-            .then(v => res.send(v).end())
+            .then(v => res.send(v))
             .catch(err => next(err));
     }
 
@@ -251,7 +251,7 @@ module.exports = class Server extends mix(Emitter) {
         }
 
         this._render(this._theme.errorView(), { error: err })
-            .then(v => res.send(v).end())
+            .then(v => res.send(v))
             .catch(err => next(err));
 
         this.emit('error', err, res.locals.__request);
