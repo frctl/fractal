@@ -341,12 +341,18 @@ module.exports = class ComponentSource extends EntitySource {
     }
 
     isView(file) {
-        return anymatch([
+        const matchers = [
             `**/*${this.get('ext')}`,
             `!**/*${this.get('splitter')}*${this.get('ext')}`,
             `!**/*.${this.get('files.config')}.${this.get('ext')}`,
             `!**/${this.get('files.config')}.{js,json,yaml,yml}`
-        ], this._getPath(file));
+        ];
+
+        if (this.get('exclude')) {
+            matchers.push(`!${this.get('exclude')}`);
+        }
+
+        return anymatch(matchers, this._getPath(file));
     }
 
     isVarView(file) {
