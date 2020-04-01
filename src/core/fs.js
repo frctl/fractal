@@ -14,13 +14,14 @@ const notBinary = ['.nunj', '.nunjucks', '.hbs', '.handlebars', '.jsx', '.twig']
 
 module.exports = {
 
-    describe(dir, relDir, filter) {
+    describe(dir, relDir, filter, ext) {
         filter = filter || (filePath => !(/(^|\/)\.[^\/\.]/g).test(filePath));
 
         return dirscribe(dir, {
             filter: filter,
             after: files => _.orderBy(files, ['isDirectory', 'order', 'path'], ['desc', 'asc', 'asc']),
             build: build,
+            ext: ext,
         });
     },
 
@@ -52,11 +53,14 @@ module.exports = {
 
 };
 
-function build(filePath, stat, root) {
+function build(filePath, stat, root, ext) {
     return co(function* () {
         const p = Path.parse(filePath);
+        // use basename instead of p.name to account for double extensions, like ".html.twig"
+        const basename = Path.basename(filePath, ext);
+
         p.relPath = Path.relative(root, filePath);
-        p.fsName = p.name;
+        p.fsName = basename;
         p.name = _.get(p.fsName.match(/^_?(\d+\-)?(.*)/), 2, p.fsName);
         p.path = filePath;
         p.dirs = _.compact(p.dir.split('/'));
@@ -101,6 +105,7 @@ function dirscribe(root, opts) {
     const build = opts.build || buildDefault;
     const recursive = opts.recursive === false ? false : true;
     const childrenKey = opts.childrenKey || 'children';
+    const ext = opts.ext || undefined;
 
     function readdir(dir) {
         return fs.readdirAsync(dir)
@@ -113,7 +118,7 @@ function dirscribe(root, opts) {
         let statCache;
         return fs.statAsync(filePath).then(function (stat) {
             statCache = stat;
-            return build(filePath, stat, root);
+            return build(filePath, stat, root, ext);
         }).then(function (desc) {
             if (recursive && statCache.isDirectory()) {
                 return readdir(filePath).then(function (children) {
