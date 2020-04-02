@@ -1,5 +1,6 @@
 'use strict';
 
+const _ = require('lodash');
 const path = require('path');
 const utils = require('@frctl/fractal').utils;
 const adapterUtils = require('../utils');
