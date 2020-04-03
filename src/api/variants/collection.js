@@ -70,10 +70,11 @@ module.exports = class VariantCollection extends EntityCollection {
         return true;
     }
 
-    static *create(component, defaultView, configured, views, opts) {
-        
+    static *create(component, defaultView, configured, views, readmes, opts) {
+
         configured = configured || [];
         views = views || [];
+        readmes = readmes || [];
         let variants = [];
         const source = component.source;
         const resources = component.resources();
@@ -129,6 +130,8 @@ module.exports = class VariantCollection extends EntityCollection {
             p.viewPath = Path.join(p.dir, p.view);
             p.handle = `${component.handle}${source.get('splitter')}${p.name}`.toLowerCase();
             p.isHidden = _.isUndefined(conf.hidden) ? viewFile.isHidden : conf.hidden;
+            const readmeName = `${opts.viewName}${source.get('splitter')}${p.name}.${source.get('files.notes')}`.toLowerCase();
+            p.readme = _.find(readmes, f => { let ret = f.name.toLowerCase() === readmeName; if (ret) {console.log({f})}; return ret;});
 
             return Variant.create(p, viewFile, resources.filter(isRelated(p.handle)), component);
         }));
