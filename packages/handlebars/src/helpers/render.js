@@ -24,20 +24,21 @@ module.exports = function(fractal){
         if (!entity) {
             throw new Error(`Could not render component '${handle}' - component not found.`);
         }
-        const defaultContext = entity.isComponent ? entity.variants().default().context : entity.context;
+        const defaultContext = entity.isComponent ? entity.variants().default().getContext() : entity.getContext();
         if (!context) {
             context = defaultContext;
         } else if (merge) {
             context = utils.defaultsDeep(context, defaultContext);
         }
-        
+
         return source.resolve(context).then(context => {
             // fix env for rendered components
             let env = JSON.parse(JSON.stringify(root._env));
             _.set(context, '_env', env);
 
-            return entity.render(context).then(html => new Handlebars.SafeString(html));
+            return entity.render(context).then(html => new Handlebars.SafeString(html)).catch(err => {});
         });
+
     };
 
 };
