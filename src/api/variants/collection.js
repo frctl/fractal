@@ -131,7 +131,7 @@ module.exports = class VariantCollection extends EntityCollection {
             p.handle = `${component.handle}${source.get('splitter')}${p.name}`.toLowerCase();
             p.isHidden = _.isUndefined(conf.hidden) ? viewFile.isHidden : conf.hidden;
             const readmeName = `${opts.viewName}${source.get('splitter')}${p.name}.${source.get('files.notes')}`.toLowerCase();
-            p.readme = _.find(readmes, f => { let ret = f.name.toLowerCase() === readmeName; if (ret) {console.log({f})}; return ret;});
+            p.readme = _.find(readmes, f => f.name.toLowerCase() === readmeName);
 
             return Variant.create(p, viewFile, resources.filter(isRelated(p.handle)), component);
         }));
