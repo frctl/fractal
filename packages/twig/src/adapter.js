@@ -14,6 +14,8 @@ class TwigAdapter extends Fractal.Adapter {
         this._app = app;
         this._config = config;
 
+        source.set('engine', '@frctl/twig');
+
         let self = this;
 
         Twig.extend(function(Twig) {
