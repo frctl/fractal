@@ -386,7 +386,8 @@ module.exports = class ComponentSource extends EntitySource {
             `!**/*.${this.get('files.config')}.{js,json,yaml,yml}`,
             `!**/${this.get('files.config')}.{js,json,yaml,yml}`,
             `!**/_${this.get('files.config')}.{js,json,yaml,yml}`,
-            `!**/${this.get('files.notes')}.md`
+            `!**/${this.get('files.notes')}.md`,
+            `!**/*.${this.get('files.notes')}.md`,
         ], this._getPath(file));
     }
 
