@@ -20,8 +20,8 @@ module.exports = function(fractal){
         if (!entity) {
             throw new Error(`Could not get context for component '${handle}' - component not found.`);
         }
-        const defaultContext = entity.isComponent ? entity.variants().default().context : entity.context;
-        return source.resolve(_.defaultsDeep(context || {}, defaultContext));
+        const defaultContext = entity.isComponent ? entity.variants().default().getContext() : entity.getContext();
+        return _.defaultsDeep(context || {}, defaultContext);
     };
 
 };
