@@ -362,7 +362,7 @@ module.exports = class ComponentSource extends EntitySource {
     }
 
     isVarReadme(file) {
-        return anymatch(`**/*${this.get('splitter')}*${this.get('files.notes')}.md`, this._getPath(file));
+        return anymatch(`**/*${this.get('splitter')}*.${this.get('files.notes')}.md`, this._getPath(file));
     }
 
     isPreview(file) {
