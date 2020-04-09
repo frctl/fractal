@@ -474,7 +474,6 @@ module.exports = class ComponentSource extends EntitySource {
                 const nameMatch = view.name;
                 // config files for 'simple' components must have the format component-name.config.ext
                 const configFile = _.find(matched.configs, f => f.base.startsWith(`${nameMatch}.`) || f.base.startsWith(`_${nameMatch}.`));
-                const readmeFile = matched.files.find(f => source.isReadme(f));
                 const conf = EntitySource.getConfig(configFile, {
                     name: view.name,
                     order: view.order,
@@ -483,7 +482,7 @@ module.exports = class ComponentSource extends EntitySource {
                     viewName: view.name,
                     viewPath: view.path,
                     dir: dir.path,
-                    readme: readmeFile ? new File(readmeFile) : undefined,
+                    readme: matchFile(source.isReadme),
                 });
 
                 return conf.then(c => {
