@@ -91,8 +91,12 @@ module.exports = class VariantCollection extends EntityCollection {
             };
         }
 
+        function findReadme(name) {
+            const readmeName = `${opts.viewName}${source.get('splitter')}${name}.${source.get('files.notes')}`.toLowerCase();
+            return _.find(readmes, f => f.name.toLowerCase() === readmeName);
+        }
+
         if (!hasDefaultConfigured) {
-            const readmeName = `${opts.viewName}${source.get('splitter')}${component.defaultName}.${source.get('files.notes')}`.toLowerCase();
             variants.push(Variant.create({
                 name: component.defaultName,
                 handle: `${component.handle}${source.get('splitter')}${component.defaultName}`.toLowerCase(),
@@ -102,7 +106,7 @@ module.exports = class VariantCollection extends EntityCollection {
                 isDefault: true,
                 isHidden: false,
                 order: 1,
-                readme:  _.find(readmes, f => f.name.toLowerCase() === readmeName),
+                readme: findReadme(component.defaultName),
             }, defaultView, resources, component));
         }
 
@@ -132,8 +136,7 @@ module.exports = class VariantCollection extends EntityCollection {
             p.viewPath = Path.join(p.dir, p.view);
             p.handle = `${component.handle}${source.get('splitter')}${p.name}`.toLowerCase();
             p.isHidden = _.isUndefined(conf.hidden) ? viewFile.isHidden : conf.hidden;
-            const readmeName = `${opts.viewName}${source.get('splitter')}${p.name}.${source.get('files.notes')}`.toLowerCase();
-            p.readme = _.find(readmes, f => f.name.toLowerCase() === readmeName);
+            p.readme = findReadme(p.name);
 
             return Variant.create(p, viewFile, resources.filter(isRelated(p.handle)), component);
         }));
@@ -144,7 +147,6 @@ module.exports = class VariantCollection extends EntityCollection {
 
         views.filter(f => !_.includes(usedViews, f.base)).forEach(viewFile => {
             const name = utils.slugify(viewFile.name.split(source.get('splitter'))[1]).toLowerCase();
-            const readmeName = `${opts.viewName}${source.get('splitter')}${name}.${source.get('files.notes')}`.toLowerCase();
             const p = {
                 name: name,
                 handle:   `${component.handle}${source.get('splitter')}${name}`,
@@ -153,7 +155,7 @@ module.exports = class VariantCollection extends EntityCollection {
                 order: viewFile.order,
                 dir: opts.dir,
                 isHidden: viewFile.isHidden,
-                readme: _.find(readmes, f => f.name.toLowerCase() === readmeName),
+                readme: findReadme(name),
             };
             variants.push(
                 Variant.create(p, viewFile, resources.filter(isRelated(p.handle)), component)
