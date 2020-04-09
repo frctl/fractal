@@ -169,7 +169,7 @@ module.exports = class Component extends Entity {
         parent.source.emit('component:beforeCreate', config, files, resources, parent);
         config.raw = files.config ? yield Data.readFile(files.config.path) : null;
         const comp = new Component(config, files, resources, parent);
-        const variants = yield VariantCollection.create(comp, files.view, config.variants, files.varViews, config);
+        const variants = yield VariantCollection.create(comp, files.view, config.variants, files.varViews, files.varReadmes, config);
         comp.setVariants(variants);
         parent.source.emit('component:created', comp);
         return comp;

@@ -70,10 +70,11 @@ module.exports = class VariantCollection extends EntityCollection {
         return true;
     }
 
-    static *create(component, defaultView, configured, views, opts) {
-        
+    static *create(component, defaultView, configured, views, readmes, opts) {
+
         configured = configured || [];
         views = views || [];
+        readmes = readmes || [];
         let variants = [];
         const source = component.source;
         const resources = component.resources();
@@ -90,6 +91,11 @@ module.exports = class VariantCollection extends EntityCollection {
             };
         }
 
+        function findReadme(name) {
+            const readmeName = `${opts.viewName}${source.get('splitter')}${name}.${source.get('files.notes')}`.toLowerCase();
+            return _.find(readmes, f => f.name.toLowerCase() === readmeName);
+        }
+
         if (!hasDefaultConfigured) {
             variants.push(Variant.create({
                 name: component.defaultName,
@@ -100,6 +106,7 @@ module.exports = class VariantCollection extends EntityCollection {
                 isDefault: true,
                 isHidden: false,
                 order: 1,
+                readme: findReadme(component.defaultName),
             }, defaultView, resources, component));
         }
 
@@ -129,6 +136,7 @@ module.exports = class VariantCollection extends EntityCollection {
             p.viewPath = Path.join(p.dir, p.view);
             p.handle = `${component.handle}${source.get('splitter')}${p.name}`.toLowerCase();
             p.isHidden = _.isUndefined(conf.hidden) ? viewFile.isHidden : conf.hidden;
+            p.readme = findReadme(p.name);
 
             return Variant.create(p, viewFile, resources.filter(isRelated(p.handle)), component);
         }));
@@ -147,6 +155,7 @@ module.exports = class VariantCollection extends EntityCollection {
                 order: viewFile.order,
                 dir: opts.dir,
                 isHidden: viewFile.isHidden,
+                readme: findReadme(name),
             };
             variants.push(
                 Variant.create(p, viewFile, resources.filter(isRelated(p.handle)), component)

@@ -34,6 +34,9 @@ module.exports = class Variant extends Entity {
     }
 
     get notes() {
+        if (_.get(this._notes, 'isFile')) {
+            return this._notes.readSync();
+        }
         return this._notes || this.parent.notes;
     }
 

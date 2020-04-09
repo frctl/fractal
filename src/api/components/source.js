@@ -275,7 +275,7 @@ module.exports = class ComponentSource extends EntitySource {
 
     _appendEventFileInfo(file, eventData) {
         eventData = super._appendEventFileInfo(file, eventData);
-        for (const test of ['isResource', 'isTemplate', 'isReadme', 'isView', 'isVarView', 'isWrapper']) {
+        for (const test of ['isResource', 'isTemplate', 'isReadme', 'isVarReadme', 'isView', 'isVarView', 'isWrapper']) {
             if (this[test](file)) {
                 eventData[test] = true;
             }
@@ -354,7 +354,15 @@ module.exports = class ComponentSource extends EntitySource {
     }
 
     isReadme(file) {
-        return anymatch(`**/${this.get('files.notes')}.md`, this._getPath(file));
+        return anymatch([
+            `**/${this.get('files.notes')}.md`,
+            `**/*.${this.get('files.notes')}.md`,
+            `!**/*${this.get('splitter')}*.${this.get('files.notes')}.md`,
+        ], this._getPath(file));
+    }
+
+    isVarReadme(file) {
+        return anymatch(`**/*${this.get('splitter')}*.${this.get('files.notes')}.md`, this._getPath(file));
     }
 
     isPreview(file) {
@@ -378,7 +386,8 @@ module.exports = class ComponentSource extends EntitySource {
             `!**/*.${this.get('files.config')}.{js,json,yaml,yml}`,
             `!**/${this.get('files.config')}.{js,json,yaml,yml}`,
             `!**/_${this.get('files.config')}.{js,json,yaml,yml}`,
-            `!**/${this.get('files.notes')}.md`
+            `!**/${this.get('files.notes')}.md`,
+            `!**/*.${this.get('files.notes')}.md`,
         ], this._getPath(file));
     }
 
@@ -396,6 +405,7 @@ module.exports = class ComponentSource extends EntitySource {
                 files: files,
                 views: files.filter(f => source.isView(f)),
                 varViews: files.filter(f => source.isVarView(f)),
+                varReadmes: files.filter(f => source.isVarReadme(f)),
                 configs: files.filter(f => source.isConfig(f)),
                 resources: files.filter(f => source.isResource(f)),
             };
@@ -443,6 +453,7 @@ module.exports = class ComponentSource extends EntitySource {
                 const files = {
                     view: view,
                     varViews: _.filter(matched.varViews, f => f.name.startsWith(nameMatch)),
+                    varReadmes: _.filter(matched.varReadmes, f => f.name.startsWith(nameMatch)),
                     config: configFile
                 };
                 return Component.create(dirConfig, files, resources, parent || source);
@@ -471,12 +482,14 @@ module.exports = class ComponentSource extends EntitySource {
                     viewName: view.name,
                     viewPath: view.path,
                     dir: dir.path,
+                    readme: matchFile(source.isReadme),
                 });
 
                 return conf.then(c => {
                     const files = {
                         view: view,
                         varViews: matched.varViews.filter(f => f.name.startsWith(nameMatch)),
+                        varReadmes: _.filter(matched.varReadmes, f => f.name.startsWith(nameMatch)),
                         config: configFile
                     };
                     const resources = new FileCollection({}, []);
