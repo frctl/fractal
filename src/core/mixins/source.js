@@ -187,7 +187,7 @@ module.exports = mixin((superclass) => class Source extends mix(superclass).with
     }
 
     _getTree() {
-        return fs.describe(this.fullPath, this.relPath);
+        return fs.describe(this.fullPath, this.relPath, undefined, this.get('ext'));
     }
 
     _parse() {
