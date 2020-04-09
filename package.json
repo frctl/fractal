@@ -60,9 +60,7 @@
   },
   "scripts": {
     "test": "mocha --require test/support/env --reporter spec",
-    "coverage": "nyc --reporter=lcov --reporter=text  npm run test",
-    "snyk-protect": "snyk protect",
-    "prepare": "npm run snyk-protect"
+    "coverage": "nyc --reporter=lcov --reporter=text  npm run test"
   },
   "devDependencies": {
     "chai": "^4.1.1",
@@ -73,10 +71,8 @@
     "nyc": "^15.0.1",
     "pre-commit": "^1.1.3",
     "proxyquire": "^1.7.10",
-    "sinon": "^9.0.1",
-    "snyk": "^1.192.4"
+    "sinon": "^9.0.1"
   },
-  "snyk": true,
   "publishConfig": {
     "access": "public"
   }
