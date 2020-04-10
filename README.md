@@ -45,7 +45,7 @@ Component (or pattern) libraries are a way of designing and building websites in
 
 Fractal helps you assemble, preview and document website component libraries, or even scale up to document entire design systems for your organisation.
 
-Check out the the [documentation][docs] for more information.
+Check out the [documentation][docs] for more information.
 
 ## Requirements
 
