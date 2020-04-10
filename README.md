@@ -1,13 +1,11 @@
 # Fractal
 
-Fractal is a tool to help you **build** and **document** web component libraries and then **integrate** them into your projects.
+![Travis (.org)](https://img.shields.io/travis/frctl/fractal?label=travis%20ci)
+[![NPM Version](https://img.shields.io/npm/v/@frctl/fractal.svg)](https://www.npmjs.com/package/@frctl/fractal)
+[![Chat with us on Discord](https://img.shields.io/badge/discord-join-7289DA)]([google.com](https://discord.gg/vuRz4Yx))
+![npm](https://img.shields.io/npm/dm/@frctl/fractal)
 
-[![Build Status](https://img.shields.io/travis/frctl/fractal/master.svg?style=flat-square)](https://travis-ci.org/frctl/fractal)
-[![NPM Version](https://img.shields.io/npm/v/@frctl/fractal.svg?style=flat-square)](https://www.npmjs.com/package/@frctl/fractal)
-
-**Read the Fractal documentation at http://fractal.build/guide.**
-
-**Need help?** We have an active and helpful community on [Fractal's Discord server](https://discord.gg/vuRz4Yx) - join us there for support and tips.
+**Read the full Fractal documentation at http://fractal.build/guide.**
 
 ## Introduction
 
