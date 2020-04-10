@@ -110,7 +110,7 @@ Please note we have a [code of conduct](.github/CODE_OF_CONDUCT.md), please foll
 
 ### Testing
 
-Fractal is a project that has recently evolved rapidly and organically from a proof-of-concept prototype into a more stable, mature tool. Because of this it's currently pretty far behind where it should be in terms of test coverage. Any contributions on this front would be most welcome!
+Fractal is a project that evolved rapidly and organically from a proof-of-concept prototype into a more stable, mature tool. Because of this it's currently pretty far behind where it should be in terms of test coverage. Any contributions on this front would be most welcome!
 
 Existing tests can be run using the `npm test` command.
 
