@@ -70,6 +70,21 @@
         "maintenance",
         "review"
       ]
+    },
+    {
+      "login": "LeBenLeBen",
+      "name": "Benoît Burgener",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/793344?v=4",
+      "profile": "http://www.benoitburgener.ch",
+      "contributions": [
+        "question",
+        "bug",
+        "code",
+        "doc",
+        "ideas",
+        "maintenance",
+        "review"
+      ]
     }
   ],
   "contributorsPerLine": 7
