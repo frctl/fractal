@@ -39,6 +39,24 @@
         "ideas",
         "projectManagement"
       ]
+    },
+    {
+      "login": "Chapabu",
+      "name": "Matt Chapman",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/1395471?v=4",
+      "profile": "https://github.com/Chapabu",
+      "contributions": [
+        "question",
+        "bug",
+        "code",
+        "doc",
+        "ideas",
+        "infra",
+        "maintenance",
+        "projectManagement",
+        "review",
+        "tool"
+      ]
     }
   ],
   "contributorsPerLine": 7
