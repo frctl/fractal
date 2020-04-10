@@ -66,7 +66,7 @@ Then you can either run `node_modules/.bin/fractal start` to start up the projec
 e.g.
 
 ```json
-scripts: {
+"scripts": {
     "fractal:start": "fractal start --sync",
     "fractal:build": "fractal build"
 }
