@@ -1,4 +1,7 @@
 <!-- markdownlint-disable MD033 MD041 -->
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-0-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 <p align=center>
   <a href="" align=center>
     <img
@@ -84,9 +87,5 @@ Existing tests can be run using the `npm test` command.
 Fractal has an active group of contributors but we are always looking for more help. If you are interested in contributing then please come and say hi on [Fractal's Discord server](https://discord.gg/vuRz4Yx) - or of course we will always welcome pull requests on any of the [frctl organisation](https://github.com/frctl) repos.
 
 Please note we have a [code of conduct](.github/CODE_OF_CONDUCT.md), please follow it in all your interactions with the project.
-
-## Credits
-
-Fractal is developed and maintained by [Danielle Huntrods](http://github.com/dkhuntrods), [Mark Perkins](http://github.com/allmarkedup) and all our excellent contributors.
 
 [docs]: https://fractal.build
