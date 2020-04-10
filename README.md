@@ -56,7 +56,7 @@ You'll need a [supported LTS version](https://github.com/nodejs/Release) of Node
 ### Install into your project (recommended)
 
 ```shell
-npm install @frctl/fractal
+npm install @frctl/fractal --save-dev
 ```
 
 Then create your `fractal.js` file in the project root, and configure using the [official documentation][docs].
