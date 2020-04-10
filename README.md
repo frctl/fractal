@@ -1,19 +1,45 @@
-# Fractal
+<!-- markdownlint-disable MD033 MD041 -->
+<p align=center>
+  <a href="" align=center>
+    <img
+        src="https://d33wubrfki0l68.cloudfront.net/5d2e88eb1e2b69f3f8b3a3372b6e4b3b4f095130/2159b/hero.png"
+        alt=""
+        style="width:110px">
+  </a>
+  <h1 style="text-align: center">Fractal</h1>
+</p>
 
-![Travis (.org)](https://img.shields.io/travis/frctl/fractal?label=travis%20ci)
-[![NPM Version](https://img.shields.io/npm/v/@frctl/fractal.svg)](https://www.npmjs.com/package/@frctl/fractal)
-[![Chat with us on Discord](https://img.shields.io/badge/discord-join-7289DA)]([google.com](https://discord.gg/vuRz4Yx))
-![npm](https://img.shields.io/npm/dm/@frctl/fractal)
+<br />
+<div style="text-align: center">
+  <!-- Travis -->
+  <a href="https://travis-ci.org/frctl/fractal">
+    <img src="https://img.shields.io/travis/frctl/fractal?label=travis%20ci" alt="">
+  </a>
+  <!-- NPM Version -->
+  <a href="https://www.npmjs.com/package/@frctl/fractal" title="Current version">
+    <img src="https://img.shields.io/npm/v/@frctl/fractal.svg" alt="">
+  </a>
+  <!-- Discord -->
+  <a href="https://www.npmjs.com/package/@frctl/fractal" title="Chat with us on Discord">
+    <img src="https://img.shields.io/badge/discord-join-7289DA" alt="">
+  </a>
+  <!-- NPM Downloads -->
+  <a href="https://www.npmjs.com/package/@frctl/fractal" title="NPM monthly downloads">
+    <img src="https://img.shields.io/npm/dm/@frctl/fractal" alt="">
+  </a>
+</div>
 
-**Read the full Fractal documentation at http://fractal.build/guide.**
+<br />
+
+Fractal is a tool to help you **build** and **document** web component libraries and design systems.
+
+[Read the full Fractal documentation](http://fractal.build/guide.)
 
 ## Introduction
 
 Component (or pattern) libraries are a way of designing and building websites in a modular fashion, breaking up the UI into small, reusable chunks that can then later be assembled in a variety of ways to build anything from larger components right up to whole pages.
 
-Fractal helps you assemble, preview and document website component libraries, and then integrate them into your web sites, apps and build processes to create joined up, 'living' projects.
-
-Fractal can be run from the command line or integrated into your project via its API.
+Fractal helps you assemble, preview and document website component libraries, or even scale up to document entire design systems for your organisation.
 
 Check out the the [Fractal documentation](http://fractal.build/guide) for more information.
 
