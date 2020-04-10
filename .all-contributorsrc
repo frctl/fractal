@@ -94,6 +94,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "Schleuse",
+      "name": "René Schleusner",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/2717384?v=4",
+      "profile": "https://github.com/Schleuse",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7

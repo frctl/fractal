@@ -1,6 +1,6 @@
 <!-- markdownlint-disable MD033 MD041 -->
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 <p align=center>
   <a href="" align=center>
@@ -103,6 +103,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="http://eida.st"><img src="https://avatars1.githubusercontent.com/u/1892091?v=4" width="100px;" alt=""/><br /><sub><b>Mihkel Eidast</b></sub></a><br /><a href="#question-risker" title="Answering Questions">💬</a> <a href="https://github.com/frctl/fractal/issues?q=author%3Arisker" title="Bug reports">🐛</a> <a href="https://github.com/frctl/fractal/commits?author=risker" title="Code">💻</a> <a href="#maintenance-risker" title="Maintenance">🚧</a> <a href="https://github.com/frctl/fractal/pulls?q=is%3Apr+reviewed-by%3Arisker" title="Reviewed Pull Requests">👀</a></td>
     <td align="center"><a href="http://www.benoitburgener.ch"><img src="https://avatars1.githubusercontent.com/u/793344?v=4" width="100px;" alt=""/><br /><sub><b>Benoît Burgener</b></sub></a><br /><a href="#question-LeBenLeBen" title="Answering Questions">💬</a> <a href="https://github.com/frctl/fractal/issues?q=author%3ALeBenLeBen" title="Bug reports">🐛</a> <a href="https://github.com/frctl/fractal/commits?author=LeBenLeBen" title="Code">💻</a> <a href="https://github.com/frctl/fractal/commits?author=LeBenLeBen" title="Documentation">📖</a> <a href="#ideas-LeBenLeBen" title="Ideas, Planning, & Feedback">🤔</a> <a href="#maintenance-LeBenLeBen" title="Maintenance">🚧</a> <a href="https://github.com/frctl/fractal/pulls?q=is%3Apr+reviewed-by%3ALeBenLeBen" title="Reviewed Pull Requests">👀</a></td>
     <td align="center"><a href="https://github.com/levito"><img src="https://avatars0.githubusercontent.com/u/70500?v=4" width="100px;" alt=""/><br /><sub><b>Veit Lehmann</b></sub></a><br /><a href="https://github.com/frctl/fractal/commits?author=levito" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/Schleuse"><img src="https://avatars1.githubusercontent.com/u/2717384?v=4" width="100px;" alt=""/><br /><sub><b>René Schleusner</b></sub></a><br /><a href="https://github.com/frctl/fractal/commits?author=Schleuse" title="Code">💻</a></td>
   </tr>
 </table>
 
