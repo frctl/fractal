@@ -1,6 +1,6 @@
 <!-- markdownlint-disable MD033 MD041 -->
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 <p align=center>
   <a href="" align=center>
@@ -98,6 +98,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <table>
   <tr>
     <td align="center"><a href="http://allmarkedup.com"><img src="https://avatars1.githubusercontent.com/u/126726?v=4" width="100px;" alt=""/><br /><sub><b>Mark Perkins</b></sub></a><br /><a href="#question-allmarkedup" title="Answering Questions">💬</a> <a href="https://github.com/frctl/fractal/issues?q=author%3Aallmarkedup" title="Bug reports">🐛</a> <a href="https://github.com/frctl/fractal/commits?author=allmarkedup" title="Code">💻</a> <a href="#content-allmarkedup" title="Content">🖋</a> <a href="#design-allmarkedup" title="Design">🎨</a> <a href="https://github.com/frctl/fractal/commits?author=allmarkedup" title="Documentation">📖</a> <a href="#infra-allmarkedup" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/frctl/fractal/pulls?q=is%3Apr+reviewed-by%3Aallmarkedup" title="Reviewed Pull Requests">👀</a></td>
+    <td align="center"><a href="https://github.com/dkhuntrods"><img src="https://avatars0.githubusercontent.com/u/852397?v=4" width="100px;" alt=""/><br /><sub><b>dkhuntrods</b></sub></a><br /><a href="https://github.com/frctl/fractal/commits?author=dkhuntrods" title="Code">💻</a> <a href="#content-dkhuntrods" title="Content">🖋</a> <a href="https://github.com/frctl/fractal/commits?author=dkhuntrods" title="Documentation">📖</a> <a href="#eventOrganizing-dkhuntrods" title="Event Organizing">📋</a> <a href="#ideas-dkhuntrods" title="Ideas, Planning, & Feedback">🤔</a> <a href="#projectManagement-dkhuntrods" title="Project Management">📆</a></td>
   </tr>
 </table>
 

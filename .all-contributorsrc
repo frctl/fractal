@@ -25,6 +25,20 @@
         "infra",
         "review"
       ]
+    },
+    {
+      "login": "dkhuntrods",
+      "name": "dkhuntrods",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/852397?v=4",
+      "profile": "https://github.com/dkhuntrods",
+      "contributions": [
+        "code",
+        "content",
+        "doc",
+        "eventOrganizing",
+        "ideas",
+        "projectManagement"
+      ]
     }
   ],
   "contributorsPerLine": 7
