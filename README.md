@@ -10,7 +10,7 @@
 </p>
 
 <br />
-<div style="text-align: center">
+<div align="center">
   <!-- Travis -->
   <a href="https://travis-ci.org/frctl/fractal">
     <img src="https://img.shields.io/travis/frctl/fractal?label=travis%20ci" alt="">
