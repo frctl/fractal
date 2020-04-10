@@ -76,17 +76,17 @@ This option is not recommended until a global Fractal install is capable of offl
 
 There is no 'official' demo for Fractal up yet, but [bits.24ways.org](http://bits.24ways.org) (repository: https://github.com/24ways/frontend) is an excellent example of a component library built on Fractal. Kudos to [@paulrobertlloyd](https://github.com/paulrobertlloyd) for his great work!
 
-## Testing
-
-Fractal is a project that has recently evolved rapidly and organically from a proof-of-concept prototype into a more stable, mature tool. Because of this it's currently pretty far behind where it should be in terms of test coverage. Any contributions on this front would be most welcome!
-
-Existing tests can be run using the `npm test` command.
-
 ## Contributing
 
 Fractal has an active group of contributors but we are always looking for more help. If you are interested in contributing then please come and say hi on [Fractal's Discord server](https://discord.gg/vuRz4Yx) - or of course we will always welcome pull requests on any of the [frctl organisation](https://github.com/frctl) repos.
 
 Please note we have a [code of conduct](.github/CODE_OF_CONDUCT.md), please follow it in all your interactions with the project.
+
+### Testing
+
+Fractal is a project that has recently evolved rapidly and organically from a proof-of-concept prototype into a more stable, mature tool. Because of this it's currently pretty far behind where it should be in terms of test coverage. Any contributions on this front would be most welcome!
+
+Existing tests can be run using the `npm test` command.
 
 ## Contributors ✨
 
