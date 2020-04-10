@@ -49,11 +49,9 @@
         "question",
         "bug",
         "code",
-        "doc",
         "ideas",
         "infra",
         "maintenance",
-        "projectManagement",
         "review",
         "tool"
       ]
