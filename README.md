@@ -89,8 +89,4 @@ Please note we have a [code of conduct](.github/CODE_OF_CONDUCT.md), please foll
 
 Fractal is developed and maintained by [Danielle Huntrods](http://github.com/dkhuntrods), [Mark Perkins](http://github.com/allmarkedup) and all our excellent contributors.
 
-Ongoing support by [Clearleft](https://clearleft.com) makes this project possible. Thank you!
-
-<a href="https://clearleft.com"><img width="110" src="http://clearleft.s3.amazonaws.com/logo.png"></a>
-
 [docs]: https://fractal.build
