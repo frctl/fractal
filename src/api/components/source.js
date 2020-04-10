@@ -347,9 +347,22 @@ module.exports = class ComponentSource extends EntitySource {
             `!**/*.${this.get('files.config')}.${this.get('ext')}`,
             `!**/${this.get('files.config')}.{js,json,yaml,yml}`
         ];
+        const exclude = this.get('exclude');
 
-        if (this.get('exclude')) {
-            matchers.push(`!${this.get('exclude')}`);
+        function addMatcher(matcher) {
+            if (_.isString(matcher)) {
+                matchers.push(`${matcher}`);
+            }
+        }
+
+        if (exclude) {
+            if (_.isArray(exclude)) {
+                for (const excludeItem of exclude) {
+                    addMatcher(`!${excludeItem}`);
+                }
+            } else {
+                addMatcher(`!${exclude}`);
+            }
         }
 
         return anymatch(matchers, this._getPath(file));
