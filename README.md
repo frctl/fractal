@@ -45,7 +45,7 @@ Component (or pattern) libraries are a way of designing and building websites in
 
 Fractal helps you assemble, preview and document website component libraries, or even scale up to document entire design systems for your organisation.
 
-Check out the the [documentation][docs] for more information.
+Check out the [documentation][docs] for more information.
 
 ## Requirements
 
@@ -56,7 +56,7 @@ You'll need a [supported LTS version](https://github.com/nodejs/Release) of Node
 ### Install into your project (recommended)
 
 ```shell
-npm install @frctl/fractal
+npm install @frctl/fractal --save-dev
 ```
 
 Then create your `fractal.js` file in the project root, and configure using the [official documentation][docs].
@@ -66,7 +66,7 @@ Then you can either run `node_modules/.bin/fractal start` to start up the projec
 e.g.
 
 ```json
-scripts: {
+"scripts": {
     "fractal:start": "fractal start --sync",
     "fractal:build": "fractal build"
 }
