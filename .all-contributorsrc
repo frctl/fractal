@@ -52,8 +52,7 @@
         "ideas",
         "infra",
         "maintenance",
-        "review",
-        "tool"
+        "review"
       ]
     },
     {
@@ -103,5 +102,5 @@
       ]
     }
   ],
-  "contributorsPerLine": 7
+  "contributorsPerLine": 6
 }
