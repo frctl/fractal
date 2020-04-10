@@ -57,6 +57,19 @@
         "review",
         "tool"
       ]
+    },
+    {
+      "login": "risker",
+      "name": "Mihkel Eidast",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/1892091?v=4",
+      "profile": "http://eida.st",
+      "contributions": [
+        "question",
+        "bug",
+        "code",
+        "maintenance",
+        "review"
+      ]
     }
   ],
   "contributorsPerLine": 7
