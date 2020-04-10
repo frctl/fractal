@@ -85,6 +85,15 @@
         "maintenance",
         "review"
       ]
+    },
+    {
+      "login": "levito",
+      "name": "Veit Lehmann",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/70500?v=4",
+      "profile": "https://github.com/levito",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7
