@@ -1,7 +1,4 @@
 <!-- markdownlint-disable MD033 MD041 -->
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
 <p align=center>
   <a href="" align=center>
     <img
@@ -9,7 +6,8 @@
         alt=""
         style="width:110px">
   </a>
-  <h1 style="text-align: center">Fractal</h1>
+  <h1 style="text-align: center; border-bottom: none">Fractal</h1>
+  <h2 style="text-align: center">Build. Document. Integrate.</h2>
 </p>
 
 <br />
@@ -30,6 +28,10 @@
   <a href="https://www.npmjs.com/package/@frctl/fractal" title="NPM monthly downloads">
     <img src="https://img.shields.io/npm/dm/@frctl/fractal" alt="">
   </a>
+  <!-- License -->
+  <a href="https://github.com/frctl/fractal/blob/master/LICENSE" title="MIT license">
+    <img alt="GitHub" src="https://img.shields.io/github/license/frctl/fractal">
+  </a>
 </div>
 
 <br />
@@ -48,7 +50,7 @@ Check out the the [documentation][docs] for more information.
 
 ## Requirements
 
-You'll need a [supported LTS version](https://github.com/nodejs/Release) of Node. Fractal may work on unsupported versions, but there is no active support from Fractal and new features not be backwards compatible with EOL verions of Node.
+You'll need a [supported LTS version](https://github.com/nodejs/Release) of Node. Fractal may work on unsupported versions, but there is no active support from Fractal and new features may not be backwards compatible with EOL versions of Node.
 
 ## Getting started
 
@@ -59,6 +61,23 @@ npm install @frctl/fractal
 ```
 
 Then create your `fractal.js` file in the project root, and configure using the [official documentation][docs].
+
+Then you can either run `node_modules/.bin/fractal start` to start up the project, or create an alias under the `scripts` section in your package.json as a shortcut.
+
+e.g.
+
+```json
+scripts: {
+    "fractal:start": "fractal start --sync",
+    "fractal:build": "fractal build"
+}
+```
+
+then
+
+```shell
+npm run fractal:start
+```
 
 ### Installing globally
 
@@ -72,9 +91,9 @@ The downside is that it's then difficult to use different Fractal versions on di
 
 This option is not recommended until a global Fractal install is capable of offloading to a project specific version.
 
-## Demo
+## Examples
 
-There is no 'official' demo for Fractal up yet, but [bits.24ways.org](http://bits.24ways.org) (repository: https://github.com/24ways/frontend) is an excellent example of a component library built on Fractal. Kudos to [@paulrobertlloyd](https://github.com/paulrobertlloyd) for his great work!
+While there are no official examples or demo instances, there are lots of public examples on the [Awesome Fractal](https://github.com/frctl/awesome-fractal) repo.
 
 ## Contributing
 
@@ -113,5 +132,8 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
 
+## License
+
+[MIT](https://github.com/frctl/fractal/blob/master/LICENSE)
 
 [docs]: https://fractal.build
