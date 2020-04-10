@@ -90,6 +90,14 @@ The downside is that it's then difficult to use different Fractal versions on di
 
 This option is not recommended until a global Fractal install is capable of offloading to a project specific version.
 
+### Note for Windows
+
+There are currently known issues on Windows. See the following for more information and a temporary workaround:
+
+https://github.com/frctl/fractal/issues/118#issuecomment-255254117
+
+* Note: If anyone uses Windows and wants to look into a more permanent fix, then PRs are welcome.
+
 ## Examples
 
 While there are no official examples or demo instances, there are lots of public examples on the [Awesome Fractal](https://github.com/frctl/awesome-fractal) repo.
