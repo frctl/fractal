@@ -33,7 +33,7 @@
 
 Fractal is a tool to help you **build** and **document** web component libraries and design systems.
 
-[Read the full Fractal documentation](http://fractal.build/guide.)
+[Read the full Fractal documentation][docs]
 
 ## Introduction
 
@@ -41,22 +41,37 @@ Component (or pattern) libraries are a way of designing and building websites in
 
 Fractal helps you assemble, preview and document website component libraries, or even scale up to document entire design systems for your organisation.
 
-Check out the the [Fractal documentation](http://fractal.build/guide) for more information.
+Check out the the [documentation][docs] for more information.
+
+## Requirements
+
+You'll need a [supported LTS version](https://github.com/nodejs/Release) of Node. Fractal may work on unsupported versions, but there is no active support from Fractal and new features not be backwards compatible with EOL verions of Node.
+
+## Getting started
+
+### Install into your project (recommended)
+
+```shell
+npm install @frctl/fractal
+```
+
+Then create your `fractal.js` file in the project root, and configure using the [official documentation][docs].
+
+### Installing globally
+
+```shell
+npm i -g @frctl/fractal
+```
+
+This will also give you global access to the `fractal` command which you can use to scaffold a new Fractal project with `fractal new`.
+
+The downside is that it's then difficult to use different Fractal versions on different projects.
+
+This option is not recommended until a global Fractal install is capable of offloading to a project specific version.
 
 ## Demo
 
 There is no 'official' demo for Fractal up yet, but [bits.24ways.org](http://bits.24ways.org) (repository: https://github.com/24ways/frontend) is an excellent example of a component library built on Fractal. Kudos to [@paulrobertlloyd](https://github.com/paulrobertlloyd) for his great work!
-
-## Requirements
-
-Any LTS (Long-term stable) version of NodeJS. At the time of writing this is 6 (Boron) and 8 (Carbon).
-
-If you're on an earlier (unsupported) version of NodeJS, then see the below compatibility table.
-
-| NodeJS version | Fractal version |
-| -------------- | --------------- |
-| 4.x            | 1.1.7           |
-| 5.x            | 1.1.7           |
 
 ## Testing
 
@@ -77,3 +92,5 @@ Fractal is developed and maintained by [Danielle Huntrods](http://github.com/dkh
 Ongoing support by [Clearleft](https://clearleft.com) makes this project possible. Thank you!
 
 <a href="https://clearleft.com"><img width="110" src="http://clearleft.s3.amazonaws.com/logo.png"></a>
+
+[docs]: https://fractal.build
