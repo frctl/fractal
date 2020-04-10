@@ -1,13 +1,12 @@
 <!-- markdownlint-disable MD033 MD041 -->
 <p align=center>
-  <a href="" align=center>
+  <a href="https://fractal.build/" align=center>
     <img
         src="https://d33wubrfki0l68.cloudfront.net/5d2e88eb1e2b69f3f8b3a3372b6e4b3b4f095130/2159b/hero.png"
         alt=""
-        style="width:110px">
+        width="110px">
   </a>
-  <h1 style="text-align: center; border-bottom: none">Fractal</h1>
-  <h2 style="text-align: center">Build. Document. Integrate.</h2>
+  <h1 align="center">Fractal</h1>
 </p>
 
 <br />
