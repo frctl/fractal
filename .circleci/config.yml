@@ -27,17 +27,6 @@ run_tests: &run_tests
     command: npm test
 
 ##
-# Common steps
-##
-
-common_steps: &common_steps
-  - checkout
-  - *restore_node_cache
-  - *npm_install
-  - *save_node_cache
-  - *run_tests
-
-##
 # Jobs
 ##
 
@@ -46,12 +35,11 @@ jobs:
     docker:
       - image: circleci/node:dubnium
     steps:
-      <<: *common_steps
-  test-erbium:
-    docker:
-      - image: circleci/node:erbium
-    steps:
-      <<: *common_steps
+      - checkout
+      - *restore_node_cache
+      - *npm_install
+      - *save_node_cache
+      - *run_tests
 
 ##
 # Workflows
