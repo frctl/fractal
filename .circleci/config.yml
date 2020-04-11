@@ -44,6 +44,7 @@ jobs:
           at: .
       - run:
           name: Run tests
+          command: npm test
 
 ##
 # Workflows
