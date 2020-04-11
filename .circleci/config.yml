@@ -43,7 +43,7 @@ jobs:
           at: .
       - run:
           name: Run tests
-          command: npm test:ci
+          command: npm run test:ci
       - store_test_results:
           path: reports
       - store_artifacts:
