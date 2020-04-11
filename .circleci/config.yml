@@ -5,7 +5,6 @@ version: 2.1
 ##
 
 defaults: &defaults
-  working_directory: /app
   docker:
     - image: circleci/node:dubnium
 
