@@ -31,7 +31,7 @@ run_tests: &run_tests
 ##
 
 jobs:
-  test-dubnium:
+  build-and-test:
     docker:
       - image: circleci/node:dubnium
     steps:
@@ -49,5 +49,4 @@ workflows:
   version: 2
   test:
     jobs:
-      - test-dubnium
-      - test-erbium
+      - build-and-test
