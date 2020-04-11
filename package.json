@@ -12,6 +12,13 @@
   "bugs": {
     "url": "https://github.com/frctl/fractal/issues"
   },
+  "scripts": {
+    "test": "mocha --require test/support/env --reporter spec",
+    "test:ci": "mocha --require test/support/env --reporter mocha-junit-reporter --reporter-options mochaFile=reports/mocha/test-results.xml",
+    "coverage": "nyc --reporter=lcov --reporter=text  npm run test",
+    "contributors:add": "all-contributors add",
+    "contributors:generate": "all-contributors generate"
+  },
   "homepage": "https://github.com/frctl/fractal",
   "dependencies": {
     "@allmarkedup/fang": "^1.0.0",
@@ -57,12 +64,6 @@
   },
   "engines": {
     "node": ">= 10.0.0"
-  },
-  "scripts": {
-    "test": "mocha --require test/support/env --reporter spec",
-    "coverage": "nyc --reporter=lcov --reporter=text  npm run test",
-    "contributors:add": "all-contributors add",
-    "contributors:generate": "all-contributors generate"
   },
   "devDependencies": {
     "all-contributors-cli": "^6.14.1",

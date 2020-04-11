@@ -43,7 +43,11 @@ jobs:
           at: .
       - run:
           name: Run tests
-          command: npm test
+          command: npm test:ci
+      - store_test_results:
+          path: reports
+      - store_artifacts:
+          path: ./reports/mocha/test-results.xml
 
 ##
 # Workflows
