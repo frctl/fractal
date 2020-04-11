@@ -1,0 +1,65 @@
+version: 2.1
+
+##
+# Common tasks
+##
+
+restore_node_cache: &restore_node_cache
+  restore_cache:
+    name: Restore node_modules cache
+    keys:
+      - dependencies-{{ checksum "package-lock.json" }}
+
+save_node_cache: &save_node_cache
+  name: Cache node_modules
+  key: dependencies-{{ checksum "package-lock.json" }}
+  paths:
+    - node_modules
+
+npm_install: &npm_install
+  run:
+    name: Install dependencies
+    command: npm ci
+
+run_tests: &run_tests
+  run:
+    name: Run tests
+    command: npm test
+
+##
+# Common steps
+##
+
+common_steps: &common_steps
+  - checkout
+  - *restore_node_cache
+  - *npm_install
+  - *save_node_cache
+  - *run_tests
+
+##
+# Jobs
+##
+
+jobs:
+  test-dubnium:
+    docker:
+      - image: circleci/node:dubnium
+    steps:
+      <<: *common_steps
+  test-erbium:
+    docker:
+      - image: circleci/node:erbium
+    steps:
+      <<: *common_steps
+
+##
+# Workflows
+##
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test-dubnium
+      - test-erbium

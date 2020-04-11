@@ -14,5 +14,8 @@ indent_size = 2
 [.md]
 indent_size = 2
 
+[*.yml]
+indent_size = 2
+
 [.*rc]
 indent_size = 2
