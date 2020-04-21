@@ -12,12 +12,28 @@ const Stream = require('stream');
 module.exports = {
 
     lang(filePath) {
-        return fang(filePath) || {
-            name: Path.parse(filePath).ext.replace('.', '').toUpperCase(),
-            mode: 'text',
-            scope: null,
-            color: null,
-        };
+        const name = Path.parse(filePath).ext.replace('.', '').toUpperCase();
+        switch (name) {
+            case 'NUNJUCKS':
+            case 'NUNJS':
+            case 'NUNJ':
+            case 'NJ':
+            case 'JINJA2':
+            case 'J2':
+                return {
+                    name: 'HTML+Django',
+                    mode: 'django',
+                    scope: 'text.html.django',
+                    color: null,
+                };
+            default:
+                return fang(filePath) || {
+                    name: name,
+                    mode: 'text',
+                    scope: null,
+                    color: null,
+                };
+        }
     },
 
     titlize(str) {
