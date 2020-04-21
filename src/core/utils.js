@@ -132,11 +132,15 @@ module.exports = {
     },
 
     relUrlPath(toPath, fromPath, opts) {
-        if (toPath.startsWith('http') || toPath.startsWith('.')) {
+        if (toPath.startsWith('http')) {
             return toPath;
         }
 
         const ext = opts.ext || '';
+
+        if (toPath.startsWith('.')) {
+            return ext === '' ? toPath : toPath + ext;
+        }
 
         fromPath = getStaticPagePath(fromPath).replace(/\\/g, '/');
         toPath = ('/' + _.trim(Path.extname(toPath) ? toPath : getStaticPagePath(toPath), '/')).replace(/\\/g, '/');
