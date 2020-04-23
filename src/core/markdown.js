@@ -11,9 +11,9 @@ renderer.code = function(code, lang, escaped) {
     code = output;
   }
   if (!lang) {
-    return `<pre><code>${code}</code></pre>`;
+    return `<pre><code class="hljs">${code}</code></pre>`;
   }
-  return `<pre><code class="${this.options.langPrefix}${escape(
+  return `<pre><code class="hljs ${this.options.langPrefix}${escape(
     lang,
     true
   )}">${code}</code></pre>`;
