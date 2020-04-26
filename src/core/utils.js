@@ -30,7 +30,7 @@ module.exports = {
             default:
                 return fang(filePath) || {
                     name: name,
-                    mode: 'text',
+                    mode: 'plaintext',
                     scope: null,
                     color: null,
                 };
