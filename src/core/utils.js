@@ -17,6 +17,7 @@ module.exports = {
             case 'NUNJUCKS':
             case 'NUNJS':
             case 'NUNJ':
+            case 'NJK':
             case 'NJ':
             case 'JINJA2':
             case 'J2':
