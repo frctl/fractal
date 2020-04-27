@@ -77,7 +77,7 @@ module.exports = {
             const publicDir = Path.join(basePath, answers.publicDir);
             const packageJSONPath = Path.join(basePath, 'package.json');
             const gitIgnorePath = Path.join(basePath, '.gitignore');
-            const fractalFilePath = Path.join(basePath, 'fractal.js');
+            const fractalFilePath = Path.join(basePath, 'fractal.config.js');
             const docsIndexPath = Path.join(docsDir, '01-index.md');
             const componentCopyTo = Path.join(componentsDir, 'example');
 
