@@ -1,5 +1,9 @@
 # History
 
+## 2.0.1
+
+- Fix issue with `render`and `view` tag output being escaped 
+
 ## 2.0
 
 - Update Nunjucks to v3.x
