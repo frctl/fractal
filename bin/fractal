@@ -90,7 +90,7 @@ FractalCli.launch(config, function(env){
         }
 
         if (Path.basename(configPath) === 'fractal.js') {
-            console.log(`Deprecated configuration file name! Rename your config file to fractal.config.js.`);
+            console.log(`Deprecated configuration file name! Rename fractal.js to fractal.config.js.`);
         }
 
     } else {
