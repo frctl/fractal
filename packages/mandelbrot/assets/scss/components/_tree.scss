@@ -17,20 +17,21 @@
             display: none;
         }
 
-        .Tree-collectionLabel {
-            span::before {
-                [dir="ltr"] & {
-                    background-image: url("../img/icon-navigation-closed-ltr.svg");
-                }
-                [dir="rtl"] & {
-                    background-image: url("../img/icon-navigation-closed-rtl.svg");
-                }
+        .Tree-collectionLabel::before {
+            [dir="ltr"] & {
+                background-image: url("../img/icon-navigation-closed-ltr.svg");
+            }
+            [dir="rtl"] & {
+                background-image: url("../img/icon-navigation-closed-rtl.svg");
             }
         }
     }
 }
 
 .Tree-collectionLabel {
+    display: block;
+    position: relative;
+    width: 100%;
     @include font(caption);
     padding-top: 0.375rem;
     padding-bottom: 0.375rem;
@@ -39,22 +40,21 @@
     user-select: none;
     color: $color-text;
 
+    [dir="ltr"] & {
+        text-align: left;
+    }
+    [dir="rtl"] & {
+        text-align: right;
+    }
+
     &:hover {
         background-color: $color-ui-hover;
     }
 
-    span {
-        @include padding-inline(start, 0.75rem);
-        @include margin-inline(start, -1.75rem);
-        display: block;
-        position: relative;
-    }
-
-    span::before {
-        @include offset-inline(start);
+    &::before {
         display: inline-block;
         position: absolute;
-        top: 0.25rem;
+        top: 0.75rem;
         width: 0.75rem;
         height: 0.75rem;
         background-image: url("../img/icon-navigation-opened.svg");
@@ -92,11 +92,16 @@
 
 @for $i from 1 through 8 {
     .Tree-depth-#{$i} {
-        $padLeft: ($i * 1rem);
+        .Tree-collectionLabel {
+            @include padding-inline(start, (($i - 1) * 1rem));
 
-        .Tree-collectionLabel,
+            &::before {
+                @include offset-inline(start, (($i - 2) + 0.25rem));
+            }
+        }
+
         .Tree-entityLink {
-            @include padding-inline(start, $padLeft);
+            @include padding-inline(start, ($i * 1rem));
         }
     }
 }

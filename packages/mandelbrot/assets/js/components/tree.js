@@ -82,12 +82,14 @@ class TreeCollection {
 
     open(silent){
         this._el.removeClass('is-closed');
+        this._toggle.attr('aria-expanded', 'true');
         this._isOpen = true;
         if (!silent) this._tree.saveState();
     }
 
     close(silent){
         this._el.addClass('is-closed');
+        this._toggle.attr('aria-expanded', 'false');
         this._isOpen = false;
         if (!silent) this._tree.saveState();
     }
