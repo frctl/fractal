@@ -5,6 +5,7 @@ const _ = require('lodash');
 const Path = require('path');
 const Handlebars = require('handlebars');
 const inquirer = require('inquirer');
+const execa = require("execa");
 const shell = require('../../core/shell');
 const fs = Promise.promisifyAll(require('fs-extra'));
 const helpers = require('../../core/utils');
@@ -112,18 +113,13 @@ module.exports = {
                     fs.writeFileAsync(fractalFilePath, fractalContents),
                     fs.writeFileAsync(docsIndexPath, indexContents),
                 ]);
-            }).finally(() => {
+            }).finally(async () => {
                 console.log('Installing NPM dependencies - this may take some time!');
                 shell.cd(basePath);
-                const installCmd = shell.exec('npm', ['install']);
-                // Log stdout.
-                installCmd.stdout.on('data', (data) => console.log(data.toString()));
-                // Success!
-                installCmd.stdout.on('end', () => {
-                    console.success('Your new Fractal project has been set up.');
-                    done();
-                });
-
+                const { stdout } = await execa('npm', ['install']);
+                console.log(stdout);
+                console.success('Your new Fractal project has been set up.');
+                done();
             }).catch(e => {
                 fs.remove(basePath);
                 console.error(e);

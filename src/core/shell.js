@@ -22,15 +22,4 @@ module.exports = {
         fs.closeSync(handle);
     },
 
-    /**
-     * Spawn a child process.
-     *
-     * @param {string} cmd
-     * @param {string[]} [opts=[]]
-     * @returns {ChildProcess}
-     */
-    exec(cmd, opts = []) {
-        return cp.spawn(cmd, opts);
-    }
-
 };
