@@ -25,7 +25,7 @@ https://discord.gg/vuRz4Yx
 
 **Reproduces how often:** [What percentage of the time does it reproduce?]
 
-**Reduced test case:** (if relevant) - this might be a link to a gist of your `fractal.js` file, or a git repo for more complex issues
+**Reduced test case:** (if relevant) - this might be a link to a gist of your `fractal.config.js` file, or a git repo for more complex issues
 
 ### Versions
 

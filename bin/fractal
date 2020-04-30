@@ -20,6 +20,7 @@ const FractalCli = new Liftoff({
     moduleName: '@frctl/fractal',
     configName: 'fractal',
     extensions: {
+        '.config.js': null,
         '.js': null
     }
     // ,
@@ -30,7 +31,7 @@ const FractalCli = new Liftoff({
  * Figure out what the Fractal CLI config file is called.
  *
  * - See if there is a package.json file present that contains a specific filename
- * - Otherwise look for the default fractal.js
+ * - Otherwise look for the default fractal.config.js or fractal.js
  */
 
 let config = {};
@@ -86,6 +87,10 @@ FractalCli.launch(config, function(env){
                 cli: cliPackage.version,
                 local: env.modulePackage.version
             });
+        }
+
+        if (Path.basename(configPath) === 'fractal.js') {
+            console.log(`Deprecated configuration file name! Rename fractal.js to fractal.config.js.`);
         }
 
     } else {
