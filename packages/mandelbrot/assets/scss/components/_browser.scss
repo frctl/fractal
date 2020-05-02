@@ -75,17 +75,17 @@
     }
 
     .Code {
-        background-color: $color-background-offset;
-
-        pre {
-            background-color: $color-background-offset;
-            padding: 0;
-        }
+        width: 100%;
+        padding: 0;
     }
 
     > .Meta {
         flex-basis: 100%;
     }
+}
+
+.Browser-code {
+    padding: 0;
 }
 
 .Browser-isEmptyNote {

@@ -23,7 +23,7 @@
                             {% if resource.isBinary and resource.isImage %}
                                 <img src="{{ path(frctl.theme.urlFromRoute('component-resource', {handle: compHandle, asset:resource.base} )) }}">
                             {% elif not resource.isBinary %}
-                            <code class="Code Code--lang-{{ resource.lang }} FileBrowser-code">
+                            <code class="Code Code--lang-{{ resource.lang }} FileBrowser-code hljs">
                                 <pre>{{ resource.contents | highlight(resource.lang) }}</pre>
                             </code>
                             {% else %}

@@ -1,5 +1,5 @@
 <div class="Browser-panel Browser-code" data-role="tab-panel" id="browser-{{ entity.id }}-panel-view">
-    <code class="Code Code--lang-{{ entity.editorMode | default(entity.lang) }}">
+    <code class="Code Code--lang-{{ entity.editorMode | default(entity.lang) }} hljs">
         <pre>{{ entity.getPreviewContent() | async | trim | highlight(entity.editorMode | default(entity.lang)) | linkRefs(entity) }}</pre>
     </code>
 </div>

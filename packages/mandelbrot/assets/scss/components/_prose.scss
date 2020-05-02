@@ -1,6 +1,7 @@
 .Prose {
     @include font(body);
     max-width: 44em;
+    width: 100%;
     font-feature-settings: "liga", "dlig", "kern", "onum";
     hanging-punctuation: first;
 
@@ -68,21 +69,10 @@
         opacity: 0.75;
     }
 
-    code {
-        padding: 0.125rem;
-        background-color: rgba($color-text, 0.075);
-    }
-
-    pre > code {
-        padding: 0;
-        background: 0;
-    }
-
     pre {
         padding: 0.125rem 0.5rem;
         margin: 1rem -0.5rem;
         overflow: auto;
-        background-color: rgba($color-text, 0.075);
     }
 
     img {
