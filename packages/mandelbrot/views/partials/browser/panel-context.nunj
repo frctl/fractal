@@ -1,5 +1,5 @@
 <div class="Browser-panel Browser-code" data-role="tab-panel" id="browser-{{ entity.id }}-panel-context">
-    <code class="Code Code--lang-{{ frctl.theme.get('format') }}">
+    <code class="Code Code--lang-{{ frctl.theme.get('format') }} hljs">
         {% if not entity.isCollated or entity.isVariant or entity.variants().size == 1 %}
             {% if entity.hasContext() | async %}
             <pre>{{ entity.getResolvedContext()  | async | format(frctl.theme.get('format')) | highlight(frctl.theme.get('format')) }}</pre>

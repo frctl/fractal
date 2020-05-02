@@ -61,7 +61,7 @@ $color-link: ${skin.links};
 }
 
 function bundleCss(watch) {
-    return src('./assets/scss/skins/*.scss')
+    return src(['./assets/scss/skins/*.scss', './assets/scss/highlight.scss'])
         .pipe(stylelint({
             reporters: [{formatter: 'string', console: true}]
         }))
