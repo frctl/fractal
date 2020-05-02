@@ -11,18 +11,15 @@ const frctl      = window.frctl || {};
 const events     = require('./events');
 const utils      = require('./utils');
 const framer     = require('./components/frame');
-const Tree       = require('./components/tree');
 const Pen        = require('./components/pen');
-const Search     = require('./components/search');
+const Navigation = require('./components/navigation');
+
+const nav        = new Navigation($('.Navigation'));
+const frame      = framer($('#frame'));
 
 global.fractal = {
     events: events
 };
-
-const frame     = framer($('#frame'));
-const navTrees  = $.map($('[data-behaviour="tree"]'), t => new Tree(t));
-const search    = $.map($('[data-behaviour="search"]'), s => new Search(s, navTrees));
-let pens        = [];
 
 loadPen();
 
@@ -46,6 +43,6 @@ events.on('main-content-loaded', loadPen);
 
 function loadPen(){
     setTimeout(function(){
-        pens = $.map($('[data-behaviour="pen"]'), p => new Pen(p));
+        $.map($('[data-behaviour="pen"]'), p => new Pen(p));
     }, 1);
 }

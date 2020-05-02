@@ -1,16 +1,50 @@
 .Navigation-search {
-    padding: 1em;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.Search {
+    position: relative;
+}
+
+.Search-clearButton {
+    width: 2rem;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    line-height: 0;
+    opacity: 0.5;
+
+    &:hover,
+    &:focus {
+        opacity: 1;
+    }
+
+    svg {
+        width: 18px;
+        height: 18px;
+    }
 }
 
 .Search-label {
-    @include font(label);
+    display: block;
     margin-bottom: 0.5rem;
     color: $color-sidebar-heading;
+
+    @include font(label);
+    @include visuallyhidden;
 }
 
 .Search-input {
     width: 100%;
+    padding: 0.3125rem 2rem 0.3125rem 0.5625rem;
+    appearance: none;
     border-radius: 3px;
     border: 1px solid $color-frame-border;
-    padding: .5em;
+
+    // Hide native "clear" button in IE
+    &::-ms-clear {
+        display: none;
+    }
 }

@@ -24,8 +24,12 @@ module.exports = function(options){
             builtOn: 'Built on',
             search: {
                 label: 'Search',
-                placeholder: 'Enter keyword...',
+                placeholder: 'Search…',
+                clear: 'Clear search',
             },
+            tree: {
+                collapse: 'Collapse tree'
+            }
         }
     });
 

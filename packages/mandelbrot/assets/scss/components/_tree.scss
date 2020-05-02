@@ -2,11 +2,37 @@
     white-space: nowrap;
 }
 
+.Tree-header {
+    display: flex;
+    align-items: center;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    margin-bottom: 0.5rem;
+}
+
 .Tree-title {
     @include font(label);
-    @include padding-inline(start, 1rem);
-    margin-bottom: 0.5rem;
+    flex: 1 1 auto;
     color: $color-sidebar-heading;
+}
+
+.Tree-collapse {
+    flex-shrink: 0;
+    margin-left: 0.5rem;
+    line-height: 0;
+    padding: 0;
+    color: $color-sidebar-heading;
+    opacity: 0.75;
+
+    &:hover,
+    &:focus {
+        opacity: 1;
+    }
+
+    svg {
+        width: 16px;
+        height: 16px;
+    }
 }
 
 .Tree-collection {
@@ -35,7 +61,6 @@
     @include font(caption);
     padding-top: 0.375rem;
     padding-bottom: 0.375rem;
-    cursor: pointer;
     touch-action: manipulation;
     user-select: none;
     color: $color-text;

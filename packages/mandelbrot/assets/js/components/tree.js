@@ -19,6 +19,9 @@ class Tree {
         this._id = this._el[0].id;
         this._state = storage.get(`tree.${this._id}.state`, []);
         this._collections = $.map(this._el.find('[data-behaviour="collection"]'), c => new TreeCollection(c, this));
+        this._collapseButton = this._el.find('[data-behaviour="collapse-tree"]');
+
+        this._collapseButton.on('click', this.closeAll.bind(this));
 
         for (let key in this._collections) {
             const collection = this._collections[key];
@@ -26,12 +29,18 @@ class Tree {
                 this._state.push(collection.id);
             }
         }
+
         this._state = jQuery.unique(this._state);
         this._applyState();
+
         events.trigger('scroll-sidebar');
         events.on('main-content-preload', (e, url) => {
             this.selectItem(getTreeUrl(url));
         });
+    }
+
+    getElement() {
+        return this._el;
     }
 
     selectItem(url) {
@@ -48,11 +57,28 @@ class Tree {
                 collection.close(true);
             }
         }
+        this._updateCollapseButtonVisibility();
     }
 
     saveState() {
         this._state = this._collections.filter(c => c.isOpen).map(c => c.id);
         storage.set(`tree.${this._id}.state`, this._state);
+        this._updateCollapseButtonVisibility();
+    }
+
+    closeAll() {
+        this._collections.forEach(collection => {
+            collection.close();
+        });
+        this._updateCollapseButtonVisibility();
+    }
+
+    _updateCollapseButtonVisibility() {
+        if (this._collections.some((c) => c.isOpen)) {
+            this._collapseButton.removeAttr('hidden');
+        } else {
+            this._collapseButton.attr('hidden', true);
+        }
     }
 
 }
