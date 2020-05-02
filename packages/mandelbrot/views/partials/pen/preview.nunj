@@ -8,7 +8,6 @@
                 class="Preview-iframe"
                 data-role="window"
                 src="{{ previewUrl }}"
-                sandbox="allow-same-origin allow-scripts allow-forms allow-modals"
                 {% if entity.display %} style="{% for property, value in entity.display %}{{ property }}: {{ value }} !important; {% endfor %}"{% endif %}
                 marginwidth="0" marginheight="0" frameborder="0" vspace="0" hspace="0" scrolling="yes">
             </iframe>
