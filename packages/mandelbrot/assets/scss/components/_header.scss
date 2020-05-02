@@ -28,7 +28,6 @@
     width: 3rem;
     touch-action: manipulation;
     color: inherit;
-    cursor: pointer;
 
     &:hover {
         background-color: rgba($color-header-content, 0.05);
@@ -39,12 +38,10 @@
     }
 }
 
-.Header-navToggle {
-    svg {
-        display: none;
-        margin: 0 auto;
-        fill: $color-header-content;
-    }
+.Header-navToggleIcon {
+    display: none;
+    margin: 0 auto;
+    fill: $color-header-content;
 }
 
 .Frame {
@@ -57,6 +54,7 @@
     .Header-navToggleIcon--open {
         display: none;
     }
+
     .Header-navToggleIcon--closed {
         display: block;
     }

@@ -1,7 +1,11 @@
 <div class="Header">
     <button class="Header-button Header-navToggle" data-action="toggle-sidebar">
-        {% include 'icons/close-nav.svg' %}
-        {% include 'icons/open-nav.svg' %}
+        <div class="Header-navToggleIcon Header-navToggleIcon--open">
+            {% include 'icons/close.svg' %}
+        </div>
+        <div class="Header-navToggleIcon Header-navToggleIcon--closed">
+            {% include 'icons/burger.svg' %}
+        </div>
     </button>
     <a href="{{ path('/') }}" class="Header-title" data-pjax>{{ frctl.get('project.title') | default('Component Library') }}</a>
 </div>

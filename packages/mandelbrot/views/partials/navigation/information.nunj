@@ -1,7 +1,9 @@
 <div class="Navigation-group">
     <div class="Tree">
-        <div class="Tree-title">
-            {{ frctl.theme.get('labels.info') }}
+        <div class="Tree-header">
+            <div class="Tree-title">
+                {{ frctl.theme.get('labels.info') }}
+            </div>
         </div>
         <div class="Tree-aside">
             {{ frctl.theme.get('labels.builtOn') }}:

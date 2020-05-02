@@ -2,7 +2,13 @@
 
 {% macro tree(root, current, request) %}
 <div class="Tree" data-behaviour="tree" id="tree-{{ root.name }}">
-    <h3 class="Tree-title">{{ root.label }}</h3>
+    <div class="Tree-header">
+        <h3 class="Tree-title">{{ root.label }}</h3>
+
+        <button type="button" data-behaviour="collapse-tree" class="Tree-collapse" title="{{ frctl.theme.get('labels.tree.collapse') }}" aria-label="{{ frctl.theme.get('labels.tree.collapse') }}" hidden>
+            {% include 'icons/collapse.svg' %}
+        </button>
+    </div>
     <ul class="Tree-items Tree-depth-1">
         {{ leaves(root.filter('isHidden', false).items(), root, current, 2, request) }}
     </ul>

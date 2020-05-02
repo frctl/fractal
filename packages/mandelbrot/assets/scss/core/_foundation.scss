@@ -44,6 +44,7 @@ button {
     background: transparent;
     border: 0;
     padding: 0;
+    cursor: pointer;
 }
 
 button:focus {
@@ -167,4 +168,8 @@ h5,
 h6 {
     @include font(body);
     font-weight: bold;
+}
+
+mark {
+    background-color: rgba($color-link, 0.3);
 }

@@ -40,6 +40,7 @@
     "jquery": "^3.4.0",
     "jquery-pjax": "git+https://github.com/defunkt/jquery-pjax.git",
     "jquery-resizable-dom": "^0.16.0",
+    "mark.js": "^8.11.1",
     "normalize.css": "^4.1.1",
     "sass-mq": "^3.2.6",
     "select2": "4.0.3",
