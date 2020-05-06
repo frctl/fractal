@@ -15,7 +15,7 @@
         }
     }
 
-    @include mq(navCollapse) {
+    @include mq(nav-collapse) {
         background-color: $color-background-offset;
         border: 1px solid $color-frame-border;
     }
@@ -23,6 +23,7 @@
 
 .Preview-wrapper {
     @include offset-inline(start, 0);
+
     position: absolute;
     top: 0;
     bottom: 0;
@@ -36,6 +37,7 @@
 
 .Preview-resizer {
     @include offset-inline(start, 0);
+
     position: absolute;
     top: 0;
     bottom: 0;
@@ -47,7 +49,7 @@
     background-color: white;
     -webkit-overflow-scrolling: touch;
 
-    @include mq($until: navCollapse) {
+    @include mq($until: nav-collapse) {
         width: 100% !important; // override any JS-set widths
         min-width: 100%;
         border: 0;
@@ -60,6 +62,7 @@
 
 .Preview-iframe {
     @include trbl(0);
+
     position: absolute;
     z-index: 0;
     width: 100%;
@@ -68,6 +71,7 @@
 
 .Preview-overlay {
     @include trbl(0);
+
     display: none;
     position: absolute;
     height: 100%;
@@ -79,6 +83,7 @@
     @include border-inline(start, 1px solid $color-frame-border);
     @include dragHandle;
     @include offset-inline(end, 0);
+
     position: absolute;
     top: -1px;
     bottom: -1px;
@@ -89,7 +94,7 @@
     background-size: 3px 16px;
     cursor: ew-resize;
 
-    @include mq($until: navCollapse) {
+    @include mq($until: nav-collapse) {
         display: none;
     }
 }

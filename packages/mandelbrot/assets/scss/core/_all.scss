@@ -6,21 +6,22 @@ $width-sidebar: 240px;
 $handle-size: 0.625rem;
 
 $mq-breakpoints: (
-    navCollapse:  500px,
-    medium:  600px,
-    large:  800px
+    nav-collapse: 500px,
+    medium: 600px,
+    large: 800px,
 );
-
 
 // -----------------------------------------------------------------------------
 // Vendor (node_modules)
 // -----------------------------------------------------------------------------
+
 @import "normalize.css/normalize";
 @import "sass-mq/_mq";
 
 // -----------------------------------------------------------------------------
 // Core
 // -----------------------------------------------------------------------------
+
 @import "../core/mixins.scss";
 @import "../core/fonts.scss";
 @import "../core/foundation.scss";

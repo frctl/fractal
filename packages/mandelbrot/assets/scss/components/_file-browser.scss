@@ -11,6 +11,7 @@
     .select2-container {
         @include font(caption);
         @include margin-inline(start, -0.25rem);
+
         margin-bottom: -1px;
         min-width: 15em;
     }
@@ -23,6 +24,7 @@
 
 .FileBrowser-select-label {
     @include font(label);
+
     display: block;
     width: auto;
     padding: 0.25rem 0;
@@ -40,9 +42,10 @@
 
 .select2-results__option {
     @include font(caption);
+
     min-width: 15em;
 
-    &[aria-selected=true] {
+    &[aria-selected="true"] {
         background-color: rgba($color-frame-border, 0.1) !important;
     }
 }

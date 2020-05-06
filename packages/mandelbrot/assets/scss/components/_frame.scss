@@ -35,8 +35,9 @@
     flex-grow: 1;
     height: calc(100% - 3rem);
 
-    @include mq($until: navCollapse) {
+    @include mq($until: nav-collapse) {
         @include margin-inline(end, $width-sidebar);
+
         transform: translate3d(($width-sidebar * -1), 0, 0);
         transition: none;
     }
@@ -44,6 +45,7 @@
 
 .Frame-inner {
     @include trbl(0);
+
     position: absolute;
     height: 100%;
     min-width: 280px;
@@ -58,6 +60,7 @@
 
 .Frame-panel--sidebar {
     @include border-inline(end, 1px solid $color-frame-border);
+
     flex: 0 0 auto;
     width: $width-sidebar;
     min-width: $width-sidebar;
@@ -65,7 +68,7 @@
     background-color: $color-background-offset;
     padding: 1rem 0;
 
-    @include mq($until: navCollapse) {
+    @include mq($until: nav-collapse) {
         max-width: $width-sidebar;
     }
 }
@@ -90,6 +93,7 @@
 .Frame-handle {
     @include dragHandle;
     @include margin-inline(end, -$handle-size);
+
     flex: 0 0 auto;
     position: relative;
     z-index: 2;

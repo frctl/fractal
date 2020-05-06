@@ -1,31 +1,30 @@
 'use strict';
 
-const $          = global.jQuery;
-const select     = require('select2');
-const storage    = require('../storage');
-const events     = require('../events');
+const $ = global.jQuery;
+require('select2');
+const storage = require('../storage');
 
 class Browser {
-
-    constructor(el){
-
+    constructor(el) {
         const self = this;
 
-        this._el   = $(el);
-        this._tabs            = this._el.find('[data-role="tab"]');
-        this._tabPanels       = this._el.find('[data-role="tab-panel"]');
-        this._fileSwitcher    = this._el.find('[data-role="switcher"]');
-        this._codeViews       = this._el.find('[data-role="code"]');
+        this._el = $(el);
+        this._tabs = this._el.find('[data-role="tab"]');
+        this._tabPanels = this._el.find('[data-role="tab-panel"]');
+        this._fileSwitcher = this._el.find('[data-role="switcher"]');
+        this._codeViews = this._el.find('[data-role="code"]');
         this._resourcePreview = this._el.find('[data-role="resource-preview"]');
-        this._activeClass     = 'is-active';
+        this._activeClass = 'is-active';
         this._initTabs();
 
-        $(".FileBrowser-select").select2({
-            minimumResultsForSearch: Infinity
-        }).on('change', function(){
-            $(this).closest('.FileBrowser').find('[data-role="resource-preview"]').removeClass(self._activeClass);
-            $(`#${this.value}`).addClass(self._activeClass);
-        });
+        $('.FileBrowser-select')
+            .select2({
+                minimumResultsForSearch: Infinity,
+            })
+            .on('change', function () {
+                $(this).closest('.FileBrowser').find('[data-role="resource-preview"]').removeClass(self._activeClass);
+                $(`#${this.value}`).addClass(self._activeClass);
+            });
 
         this._initFileSwitcher();
     }
@@ -34,7 +33,7 @@ class Browser {
         const ac = this._activeClass;
         const tabs = this._tabs;
         const selectedIndex = Math.min(tabs.length - 1, storage.get(`browser.selectedTabIndex`, 0));
-        tabs.on('click', e => {
+        tabs.on('click', (e) => {
             const link = $(e.target).closest('a');
             const tab = link.parent();
             tabs.removeClass(ac);
@@ -48,11 +47,7 @@ class Browser {
         tabs.eq(selectedIndex).find('a').trigger('click');
     }
 
-    _initFileSwitcher() {
-
-
-
-    }
+    _initFileSwitcher() {}
 
     // _initFileSwitcher() {
     //     const ac = this._activeClass;
@@ -69,7 +64,6 @@ class Browser {
     //     }
     //     switcher.trigger('change');
     // }
-
 }
 
 module.exports = Browser;

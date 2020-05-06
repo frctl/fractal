@@ -1,7 +1,8 @@
-@import 'select2/dist/css/select2';
+@import "select2/dist/css/select2";
 
 .Browser {
     @include trbl(0);
+
     position: absolute;
     display: flex;
     flex-direction: column;
@@ -38,6 +39,7 @@
     a {
         @include font(caption);
         @include link-default($color-text, none);
+
         width: 100%;
         padding: 0.75rem 0.75rem 0.875rem;
         border-bottom: 0.125rem solid transparent;

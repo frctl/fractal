@@ -1,25 +1,24 @@
 'use strict';
 
-const $          = global.jQuery;
-const storage    = require('../storage');
-const events     = require('../events');
-const resizeable = require('jquery-resizable-dom/dist/jquery-resizable.js');
+const $ = global.jQuery;
+const storage = require('../storage');
+const events = require('../events');
+require('jquery-resizable-dom/dist/jquery-resizable.js');
 
 class Preview {
-
-    constructor(el){
-        this._el      = $(el);
-        this._id      = this._el[0].id;
-        this._handle  = this._el.find('[data-role="resize-handle"]');
-        this._iframe  = this._el.children('[data-role="window"]');
+    constructor(el) {
+        this._el = $(el);
+        this._id = this._el[0].id;
+        this._handle = this._el.find('[data-role="resize-handle"]');
+        this._iframe = this._el.children('[data-role="window"]');
         this._resizer = this._el.children('[data-role="resizer"]');
         this._init();
     }
 
     _init() {
-        const dir  = $('html').attr('dir');
+        const dir = $('html').attr('dir');
         const initialWidth = storage.get(`preview.width`, this._resizer.outerWidth());
-        let handleClicks    = 0;
+        let handleClicks = 0;
 
         if (initialWidth == this._el.outerWidth()) {
             this._resizer.css('width', '100%');
@@ -27,10 +26,10 @@ class Preview {
             this._resizer.outerWidth(initialWidth);
         }
 
-        this._handle.on('mousedown', e => {
+        this._handle.on('mousedown', () => {
             handleClicks++;
 
-            setTimeout(function() {
+            setTimeout(function () {
                 handleClicks = 0;
             }, 400);
 
@@ -56,9 +55,8 @@ class Preview {
                 this._el.removeClass('is-resizing');
                 this.enableEvents();
                 events.trigger('end-dragging');
-
             },
-            resizeWidthFrom: dir === 'rtl' ? 'left' : 'right'
+            resizeWidthFrom: dir === 'rtl' ? 'left' : 'right',
         });
     }
 

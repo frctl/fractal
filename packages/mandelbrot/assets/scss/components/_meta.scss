@@ -16,6 +16,7 @@
 
 .Meta-key {
     @include font(label);
+
     display: block;
     padding-right: 0.5rem;
     padding-bottom: 0.25rem;
@@ -24,6 +25,7 @@
 
 .Meta-value {
     @include font(caption);
+
     display: block;
     min-width: 10rem;
     padding-bottom: 0.25rem;
@@ -62,6 +64,7 @@
 
         .Meta-key {
             @include margin-inline(start, -10rem);
+
             width: 10rem;
             float: left;
         }
@@ -76,6 +79,7 @@
 
         .Meta-key {
             @include margin-inline(start, -10rem);
+
             width: 10rem;
             float: left;
         }

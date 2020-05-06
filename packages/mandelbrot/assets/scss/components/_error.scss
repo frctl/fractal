@@ -3,6 +3,7 @@
 
     pre {
         @include font(code);
+
         color: rgba($color-text, 0.75);
     }
 }
@@ -14,6 +15,7 @@
 
     .Error-title {
         @include font(label);
+
         color: #b00;
     }
 
@@ -27,5 +29,4 @@
             background-color: #fff !important;
         }
     }
-
 }

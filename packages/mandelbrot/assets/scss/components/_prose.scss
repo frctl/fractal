@@ -1,5 +1,6 @@
 .Prose {
     @include font(body);
+
     max-width: 44em;
     width: 100%;
     font-feature-settings: "liga", "dlig", "kern", "onum";
@@ -34,6 +35,7 @@
 
     h2 {
         @include font(heading);
+
         margin-bottom: 1em;
         color: $color-heading;
     }
@@ -44,6 +46,7 @@
 
     h3 {
         @include font(subHeading);
+
         margin-bottom: 0.75em;
         opacity: 0.8;
     }
@@ -66,6 +69,7 @@
     blockquote {
         @include border-inline(start, solid rgba($color-text, 0.25));
         @include padding-inline(start, 1em);
+
         opacity: 0.75;
     }
 
@@ -89,6 +93,7 @@
 
     caption {
         @include font(caption);
+
         padding: 0 0.5rem;
         font-style: italic;
         text-align: start;
@@ -102,8 +107,13 @@
         text-align: start;
 
         // text-align: start isn't fully supported for th elements
-        [dir="ltr"] & { text-align: left; }
-        [dir="rtl"] & { text-align: right; }
+        [dir="ltr"] & {
+            text-align: left;
+        }
+
+        [dir="rtl"] & {
+            text-align: right;
+        }
     }
 
     tr:nth-child(even) {
@@ -117,9 +127,8 @@
 }
 
 .Prose--condensed {
-
     > * {
-        margin-bottom: 0.50em;
+        margin-bottom: 0.5em;
     }
 
     li,
@@ -133,7 +142,6 @@
     }
 
     h3 {
-
         margin-bottom: 0.55em;
         opacity: 0.8;
     }
@@ -145,5 +153,4 @@
     hr {
         margin: 1em 0;
     }
-
 }

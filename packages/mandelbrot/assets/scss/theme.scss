@@ -1,5 +1,5 @@
-$font-family-monospace: Hack, Consolas, Monaco, "Andale Mono", monospace !default;
-$font-family-sans-serif: "Open Sans", Helvetica, Arial, sans-serif !default;
+$font-family-monospace: "Hack", "Consolas", "Monaco", "Andale Mono", monospace !default;
+$font-family-sans-serif: "Open Sans", "Helvetica", "Arial", sans-serif !default;
 
 $color-link: #28f !default;
 $color-text: #535363 !default;
@@ -18,4 +18,4 @@ $color-frame-border: rgba($color-text, 0.25) !default;
 
 $color-sidebar-heading: rgba($color-text, 0.75) !default;
 
-$highlight-theme: 'github' !default;
+$highlight-theme: "github" !default;

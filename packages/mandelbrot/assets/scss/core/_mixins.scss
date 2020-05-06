@@ -50,58 +50,62 @@
         visibility: hidden;
     }
 
-    @include mq($until: navCollapse) {
+    @include mq($until: nav-collapse) {
         pointer-events: none;
         visibility: hidden;
     }
 }
 
 // Typography
+
 @mixin font($preset) {
     @if $preset == title {
-        font: bold 1.75rem/#{(32 / 28)} $font-family-sans-serif;
+        font: bold 1.75rem /#{(32 / 28)} $font-family-sans-serif;
         font-feature-settings: "dlig" 1;
         letter-spacing: -0.025em;
     }
 
     @if $preset == heading {
-        font: bold 1.3125rem/#{(24 / 21)} $font-family-sans-serif;
+        font: bold 1.3125rem /#{(24 / 21)} $font-family-sans-serif;
         font-feature-settings: "dlig" 1;
     }
 
     @if $preset == subHeading {
-        font: bold 1.125rem/#{(24 / 18)} $font-family-sans-serif;
+        font: bold 1.125rem /#{(24 / 18)} $font-family-sans-serif;
         font-feature-settings: "dlig" 1;
     }
 
     @if $preset == body {
-        font: normal 1rem/#{(24 / 16)} $font-family-sans-serif;
+        font: normal 1rem /#{(24 / 16)} $font-family-sans-serif;
     }
 
     @if $preset == caption {
-        font: normal 0.875rem/#{(24 / 14)} $font-family-sans-serif;
+        font: normal 0.875rem /#{(24 / 14)} $font-family-sans-serif;
     }
 
     @if $preset == code {
-        font: normal 0.875rem/#{(24 / 14)} $font-family-monospace;
+        font: normal 0.875rem /#{(24 / 14)} $font-family-monospace;
     }
 
     @if $preset == label {
-        font: normal 0.75rem/#{(20 / 12)} $font-family-sans-serif;
+        font: normal 0.75rem /#{(20 / 12)} $font-family-sans-serif;
         letter-spacing: 0.075em;
         text-transform: uppercase;
     }
 }
 
 // Logical positioning
+
 @mixin padding-inline($position, $amount) {
     @if $position == start {
         [dir="ltr"] & {
             padding-left: $amount;
         }
+
         [dir="rtl"] & {
             padding-right: $amount;
         }
+
         padding-inline-start: $amount;
     }
 
@@ -109,9 +113,11 @@
         [dir="ltr"] & {
             padding-right: $amount;
         }
+
         [dir="rtl"] & {
             padding-left: $amount;
         }
+
         padding-inline-end: $amount;
     }
 }
@@ -121,9 +127,11 @@
         [dir="ltr"] & {
             margin-left: $amount;
         }
+
         [dir="rtl"] & {
             margin-right: $amount;
         }
+
         margin-inline-start: $amount;
     }
 
@@ -131,9 +139,11 @@
         [dir="ltr"] & {
             margin-right: $amount;
         }
+
         [dir="rtl"] & {
             margin-left: $amount;
         }
+
         margin-inline-end: $amount;
     }
 }
@@ -143,9 +153,11 @@
         [dir="ltr"] & {
             border-left: $style;
         }
+
         [dir="rtl"] & {
             border-right: $style;
         }
+
         border-inline-start: $style;
     }
 
@@ -153,9 +165,11 @@
         [dir="ltr"] & {
             border-right: $style;
         }
+
         [dir="rtl"] & {
             border-left: $style;
         }
+
         border-inline-end: $style;
     }
 }
@@ -165,9 +179,11 @@
         [dir="ltr"] & {
             border-left-color: $color;
         }
+
         [dir="rtl"] & {
             border-right-color: $color;
         }
+
         border-inline-start-color: $color;
     }
 
@@ -175,9 +191,11 @@
         [dir="ltr"] & {
             border-right-color: $color;
         }
+
         [dir="rtl"] & {
             border-left-color: $color;
         }
+
         border-inline-end-color: $color;
     }
 }
@@ -187,9 +205,11 @@
         [dir="ltr"] & {
             left: $value;
         }
+
         [dir="rtl"] & {
             right: $value;
         }
+
         offset-inline-start: $value;
     }
 
@@ -197,9 +217,11 @@
         [dir="ltr"] & {
             right: $value;
         }
+
         [dir="rtl"] & {
             left: $value;
         }
+
         offset-inline-end: $value;
     }
 }

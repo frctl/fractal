@@ -1,9 +1,7 @@
 'use strict';
 
 module.exports = {
-
     breakpoints: {
-        navCollapse: 500
-    }
-
+        navCollapse: 500,
+    },
 };
