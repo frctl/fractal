@@ -4,17 +4,16 @@ const $ = global.jQuery;
 const Mark = require('mark.js');
 
 class Search {
-
     constructor(el, trees) {
         this._el = $(el);
         this._trees = trees;
         this._input = this._el.find('[data-role="input"]');
         this._clearButton = this._el.find('[data-behaviour="clear-search"]');
-        this._marker = new Mark($.map(this._trees, t => t.getElement()[0]));
+        this._marker = new Mark($.map(this._trees, (t) => t.getElement()[0]));
 
         this._el.on('submit', (event) => {
             event.preventDefault();
-        })
+        });
 
         this._input.on('input', this.handleInput.bind(this));
 
@@ -40,7 +39,7 @@ class Search {
         this._marker.mark(key);
 
         this._trees.forEach((tree) => {
-            this.search(tree._el.children('ul'), key, tree._collections)
+            this.search(tree._el.children('ul'), key, tree._collections);
 
             // If no item match in the group, hide it completely
             const $treeEl = $(tree._el);

@@ -1,24 +1,23 @@
 'use strict';
 
-const $       = global.jQuery;
+const $ = global.jQuery;
 const storage = require('../storage');
-const events  = require('../events');
+const events = require('../events');
 
-function getTreeUrl(urlPath){
-    const parser    = document.createElement('a');
-    parser.href     = urlPath;
+function getTreeUrl(urlPath) {
+    const parser = document.createElement('a');
+    parser.href = urlPath;
     const pathParts = parser.pathname.split('/');
     pathParts.push(pathParts.pop());
     return pathParts.join('/');
 }
 
 class Tree {
-
-    constructor(el){
+    constructor(el) {
         this._el = $(el);
         this._id = this._el[0].id;
         this._state = storage.get(`tree.${this._id}.state`, []);
-        this._collections = $.map(this._el.find('[data-behaviour="collection"]'), c => new TreeCollection(c, this));
+        this._collections = $.map(this._el.find('[data-behaviour="collection"]'), (c) => new TreeCollection(c, this));
         this._collapseButton = this._el.find('[data-behaviour="collapse-tree"]');
 
         this._collapseButton.on('click', this.closeAll.bind(this));
@@ -30,7 +29,7 @@ class Tree {
             }
         }
 
-        this._state = jQuery.unique(this._state);
+        this._state = $.unique(this._state);
         this._applyState();
 
         events.trigger('scroll-sidebar');
@@ -61,13 +60,13 @@ class Tree {
     }
 
     saveState() {
-        this._state = this._collections.filter(c => c.isOpen).map(c => c.id);
+        this._state = this._collections.filter((c) => c.isOpen).map((c) => c.id);
         storage.set(`tree.${this._id}.state`, this._state);
         this._updateCollapseButtonVisibility();
     }
 
     closeAll() {
-        this._collections.forEach(collection => {
+        this._collections.forEach((collection) => {
             collection.close();
         });
         this._updateCollapseButtonVisibility();
@@ -80,47 +79,45 @@ class Tree {
             this._collapseButton.attr('hidden', true);
         }
     }
-
 }
 
 class TreeCollection {
-
-    constructor(el, tree){
-        this._tree         = tree;
-        this._el           = $(el);
-        this._toggle       = this._el.find('> [data-role="toggle"]');
+    constructor(el, tree) {
+        this._tree = tree;
+        this._el = $(el);
+        this._toggle = this._el.find('> [data-role="toggle"]');
         this._itemsWrapper = this._el.find('[data-role="items"]:not(> [data-behaviour] [data-role="items"])');
-        this._isOpen       = true;
+        this._isOpen = true;
         this._toggle.on('click', this.toggle.bind(this));
     }
 
-    get id(){
+    get id() {
         return this._el[0].id;
     }
 
-    get isOpen(){
+    get isOpen() {
         return this._isOpen;
     }
 
-    containsCurrentItem(){
-        return !! this._itemsWrapper.find('[data-state="current"]').length;
+    containsCurrentItem() {
+        return !!this._itemsWrapper.find('[data-state="current"]').length;
     }
 
-    open(silent){
+    open(silent) {
         this._el.removeClass('is-closed');
         this._toggle.attr('aria-expanded', 'true');
         this._isOpen = true;
         if (!silent) this._tree.saveState();
     }
 
-    close(silent){
+    close(silent) {
         this._el.addClass('is-closed');
         this._toggle.attr('aria-expanded', 'false');
         this._isOpen = false;
         if (!silent) this._tree.saveState();
     }
 
-    toggle(){
+    toggle() {
         this._isOpen ? this.close() : this.open();
         return false;
     }

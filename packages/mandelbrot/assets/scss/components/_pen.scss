@@ -27,7 +27,7 @@
         @include padding-inline(start, 0.5rem);
     }
 
-    @include mq($until: navCollapse) {
+    @include mq($until: nav-collapse) {
         margin: 0;
         border-bottom: 1px solid $color-frame-border;
         padding: 0.75rem;
@@ -49,6 +49,7 @@
 
 .Pen-title {
     @include font(subHeading);
+
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -73,7 +74,7 @@
     max-height: calc(100% - 3.75rem);
     margin: 0 $handle-size;
 
-    @include mq($until: navCollapse) {
+    @include mq($until: nav-collapse) {
         flex: 1 1 auto;
         height: auto !important;
         max-height: 100%;
@@ -83,6 +84,7 @@
 
 .Pen-handle {
     @include dragHandle;
+
     flex: 0 0 auto;
     height: $handle-size;
     margin: 0 $handle-size;
@@ -90,7 +92,7 @@
     background-size: 16px 3px;
     cursor: ns-resize;
 
-    @include mq($until: navCollapse) {
+    @include mq($until: nav-collapse) {
         display: none;
     }
 }
@@ -109,7 +111,7 @@
     margin-top: 0;
     border: 1px solid $color-frame-border;
 
-    @include mq($until: navCollapse) {
+    @include mq($until: nav-collapse) {
         display: none;
     }
 }

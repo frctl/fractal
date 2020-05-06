@@ -1,26 +1,19 @@
 'use strict';
 
-const {
-    dest,
-    parallel,
-    series,
-    src,
-    watch,
-} = require('gulp');
-const cleanCSS          = require('gulp-clean-css');
-const gulpif            = require('gulp-if');
-const sass              = require('gulp-sass');
-const sourcemaps        = require('gulp-sourcemaps');
-const autoprefixer      = require('gulp-autoprefixer');
-const sassGlob          = require('gulp-sass-glob');
-const stylelint         = require('gulp-stylelint');
-const uglify            = require('gulp-uglify');
-const browserify        = require('browserify');
-const watchify          = require('watchify');
-const babel             = require('babelify');
-const source            = require('vinyl-source-stream');
-const buffer            = require('vinyl-buffer');
-const del               = require('del');
+const { dest, parallel, series, src, watch } = require('gulp');
+const cleanCSS = require('gulp-clean-css');
+const gulpif = require('gulp-if');
+const sass = require('gulp-sass');
+const sourcemaps = require('gulp-sourcemaps');
+const autoprefixer = require('gulp-autoprefixer');
+const sassGlob = require('gulp-sass-glob');
+const uglify = require('gulp-uglify');
+const browserify = require('browserify');
+const watchify = require('watchify');
+const babel = require('babelify');
+const source = require('vinyl-source-stream');
+const buffer = require('vinyl-buffer');
+const del = require('del');
 
 //
 // JS
@@ -45,16 +38,17 @@ function createCssSkins(cb) {
     const skins = require('./assets/scss/skins/_skins.json');
 
     for (let skin of skins) {
-        fs.writeFileSync(`./assets/scss/skins/${skin.name}.scss`,
-`
-$color-header-background: ${skin.accent};
+        fs.writeFileSync(
+            `./assets/scss/skins/${skin.name}.scss`,
+            `$color-header-background: ${skin.accent};
 $color-header-content: ${skin.complement};
 $color-link: ${skin.links};
 
 @import "../theme";
 @import "../core/all";
 @import "../components/**/*.scss";
-`);
+`
+        );
     }
 
     cb();
@@ -62,13 +56,12 @@ $color-link: ${skin.links};
 
 function bundleCss(watch) {
     return src(['./assets/scss/skins/*.scss', './assets/scss/highlight.scss'])
-        .pipe(stylelint({
-            reporters: [{formatter: 'string', console: true}]
-        }))
         .pipe(sassGlob())
-        .pipe(sass({
-            includePaths: 'node_modules'
-        }).on('error', sass.logError))
+        .pipe(
+            sass({
+                includePaths: 'node_modules',
+            }).on('error', sass.logError)
+        )
         .pipe(autoprefixer())
         .pipe(gulpif(!watch, cleanCSS()))
         .pipe(sourcemaps.write('.'))
@@ -91,8 +84,7 @@ exports.css = css;
 // Fonts
 //
 function copyFonts() {
-    return src('./assets/fonts/**/*')
-        .pipe(dest('./dist/fonts'));
+    return src('./assets/fonts/**/*').pipe(dest('./dist/fonts'));
 }
 
 function cleanFonts() {
@@ -107,13 +99,11 @@ exports.fonts = fonts;
 // Images
 //
 function copyImg() {
-    return src('./assets/img/**/*')
-        .pipe(dest('./dist/img'));
+    return src('./assets/img/**/*').pipe(dest('./dist/img'));
 }
 
 function copyFavicon() {
-    return src('./assets/favicon.ico')
-        .pipe(dest('./dist'));
+    return src('./assets/favicon.ico').pipe(dest('./dist'));
 }
 
 function cleanImg() {
@@ -144,11 +134,10 @@ exports.default = compile;
 // Utils
 //
 function bundleJs(watch) {
-
     let bundler = browserify('./assets/js/mandelbrot.js', {
-        debug: true
+        debug: true,
     }).transform(babel, {
-        presets: ["es2015"]
+        presets: ['es2015'],
     });
 
     if (watch) {
@@ -160,7 +149,8 @@ function bundleJs(watch) {
     }
 
     function rebundle() {
-        let bundle = bundler.bundle()
+        let bundle = bundler
+            .bundle()
             .on('error', function (err) {
                 console.error(err.message);
                 // this.emit('end');
@@ -172,7 +162,8 @@ function bundleJs(watch) {
             bundle.pipe(uglify());
         }
 
-        bundle.pipe(sourcemaps.init({loadMaps: true}))
+        bundle
+            .pipe(sourcemaps.init({ loadMaps: true }))
             .pipe(sourcemaps.write('./'))
             .pipe(dest('./dist/js'));
 

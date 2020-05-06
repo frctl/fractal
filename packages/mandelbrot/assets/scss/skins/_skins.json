@@ -1,86 +1,104 @@
-[{
+[
+  {
     "name": "default",
     "accent": "#14f",
     "complement": "#fff",
     "links": "#28f"
-},{
+  },
+  {
     "name": "aqua",
     "accent": "#7df",
     "complement": "#035",
     "links": "#06a"
-},{
+  },
+  {
     "name": "black",
     "accent": "#111",
     "complement": "#fff",
     "links": "#28f"
-},{
+  },
+  {
     "name": "blue",
     "accent": "#14f",
     "complement": "#fff",
     "links": "#28f"
-},{
+  },
+  {
     "name": "fuchsia",
     "accent": "#f2d",
     "complement": "#402",
     "links": "#a06"
-},{
+  },
+  {
     "name": "green",
     "accent": "#3c4",
     "complement": "#fff",
     "links": "#172"
-},{
+  },
+  {
     "name": "grey",
     "accent": "#bbb",
     "complement": "#111",
     "links": "#28f"
-},{
+  },
+  {
     "name": "lime",
     "accent": "#bd2",
     "complement": "#330",
     "links": "#670"
-},{
+  },
+  {
     "name": "maroon",
     "accent": "#804",
     "complement": "#fde",
     "links": "#402"
-},{
+  },
+  {
     "name": "navy",
     "accent": "#024",
     "complement": "#def",
     "links": "#048"
-},{
+  },
+  {
     "name": "olive",
     "accent": "#276",
     "complement": "#efd",
     "links": "#054"
-},{
+  },
+  {
     "name": "orange",
     "accent": "#f82",
     "complement": "#510",
     "links": "#840"
-},{
+  },
+  {
     "name": "purple",
     "accent": "#a0c",
     "complement": "#fff",
     "links": "#608"
-},{
+  },
+  {
     "name": "red",
     "accent": "#f43",
     "complement": "#fff",
     "links": "#822"
-},{
+  },
+  {
     "name": "teal",
     "accent": "#3dd",
     "complement": "#033",
     "links": "#066"
-},{
+  },
+  {
     "name": "white",
     "accent": "#eee",
     "complement": "#111",
     "links": "#28f"
-},{
+  },
+  {
     "name": "yellow",
     "accent": "#fd0",
     "complement": "#530",
     "links": "#a60"
-}]
+  }
+]

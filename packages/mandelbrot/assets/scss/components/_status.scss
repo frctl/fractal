@@ -18,6 +18,7 @@
 
 .Status-label {
     @include font(label);
+
     display: inline-block;
     border-radius: 2rem;
     padding: 0.125rem 0.75rem;
