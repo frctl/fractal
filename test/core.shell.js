@@ -3,14 +3,7 @@ const expect = chai.expect;
 const mock = require('mock-fs');
 const path = require('path');
 const fs = require('fs');
-const sinon = require('sinon');
-const spawnStub = sinon.stub();
-const proxyquire = require('proxyquire');
-const shell = proxyquire('../src/core/shell', {
-    child_process: {
-        spawn: spawnStub
-    }
-});
+const shell = require('../src/core/shell');
 
 describe('Shell', function() {
 
@@ -31,8 +24,6 @@ describe('Shell', function() {
         process.cwd(originalPwd);
         // Reset the filesystem.
         mock.restore();
-        // Reset Sinon stubs.
-        spawnStub.restore;
     })
 
     it('can change directory', function() {
@@ -50,9 +41,4 @@ describe('Shell', function() {
         })
     });
 
-    it('can execute a child process', function() {
-        shell.exec('node', ['-v']);
-        const expectation = spawnStub.calledWithExactly('node', ['-v']);
-        expect(expectation).to.be.true;
-    });
 });
