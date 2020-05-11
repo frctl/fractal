@@ -75,6 +75,10 @@ const resolver = module.exports = {
                 return null;
             }
 
+            if (_.isDate(item)) {
+                return item.toJSON();
+            }
+
             if (_.isArray(item) || _.isObject(item)) {
                 return resolve(item);
             }
