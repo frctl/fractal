@@ -6,11 +6,9 @@ const co = require('co');
 const _ = require('lodash');
 const fs = Promise.promisifyAll(require('fs'));
 const readFile = Promise.promisify(fs.readFile);
-const isBinary = Promise.promisify(require('istextorbinary').isBinary);
+const isBinary = require('istextorbinary').isBinaryPromise;
 const utils = require('./utils');
 const glob = require('globby');
-
-const notBinary = ['.nunj', '.nunjucks', '.hbs', '.handlebars', '.jsx', '.twig']; // TODO: handle this in a scalable, extendable way
 
 module.exports = {
 
@@ -142,8 +140,5 @@ function dirscribe(root, opts) {
 }
 
 function checkIsBinary(file) {
-    if (_.includes(notBinary, file.ext)) {
-        return Promise.resolve(false);
-    }
     return isBinary(file.path, null);
 }
