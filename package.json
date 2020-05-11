@@ -1,19 +1,6 @@
 {
-  "name": "@frctl/fractal",
-  "version": "1.3.0",
-  "description": "A tool to help you build and document web component libraries and then integrate them into your projects.",
-  "main": "src/fractal.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/frctl/fractal.git",
-    "directory": "packages/fractal"
-  },
-  "author": "Mark Perkins <mark@clearleft.com> (http://clearleft.com/)",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/frctl/fractal/issues"
-  },
-  "homepage": "https://github.com/frctl/fractal",
+  "name": "fractal",
+  "private": true,
   "dependencies": {
     "@allmarkedup/fang": "^1.0.0",
     "@frctl/handlebars": "^1.2.0",
@@ -54,17 +41,26 @@
     "vinyl": "^1.2.0",
     "vorpal": "^1.12.0"
   },
-  "bin": {
-    "fractal": "./bin/fractal"
-  },
-  "engines": {
-    "node": ">= 10.0.0"
+  "devDependencies": {
+    "all-contributors-cli": "^6.14.1",
+    "chai": "^4.1.1",
+    "chai-as-promised": "^7.1.1",
+    "istanbul": "^0.4.4",
+    "lerna": "^3.20.2",
+    "mocha": "^5.0.3",
+    "mock-fs": "^4.6.0",
+    "nyc": "^15.0.1",
+    "pre-commit": "^1.1.3",
+    "sinon": "^9.0.1",
+    "symlink-dir": "^4.0.1"
   },
   "scripts": {
-    "test": "mocha --require test/support/env --reporter spec",
-    "coverage": "nyc --reporter=lcov --reporter=text  npm run test"
-  },
-  "publishConfig": {
-    "access": "public"
+    "clean": "lerna clean",
+    "bootstrap": "lerna bootstrap --hoist --strict --ci --force-local",
+    "pretest": "symlink-dir ./packages/fractal node_modules/@frctl/fractal",
+    "test": "lerna run test",
+    "release": "lerna version --conventional-commits --no-push",
+    "contributors:add": "all-contributors add",
+    "contributors:generate": "all-contributors generate"
   }
 }
