@@ -96,7 +96,7 @@ There are currently known issues on Windows. See the following for more informat
 
 https://github.com/frctl/fractal/issues/118#issuecomment-255254117
 
-* Note: If anyone uses Windows and wants to look into a more permanent fix, then PRs are welcome.
+-   Note: If anyone uses Windows and wants to look into a more permanent fix, then PRs are welcome.
 
 ## Examples
 
@@ -104,11 +104,21 @@ While there are no official examples or demo instances, there are lots of public
 
 ## Contributing
 
-Fractal has an active group of contributors but we are always looking for more help. If you are interested in contributing then please come and say hi on [Fractal's Discord server](https://discord.gg/vuRz4Yx) - or of course we will always welcome pull requests on any of the [frctl organisation](https://github.com/frctl) repos.
+Fractal has an active group of contributors but we are always looking for more help. If you are interested in contributing then please come and say hi on [Fractal's Discord server](https://discord.gg/vuRz4Yx).
 
 Please note we have a [code of conduct](.github/CODE_OF_CONDUCT.md), please follow it in all your interactions with the project.
 
-### Testing
+### Reporting issues & requesting features
+
+We use GitHub issues to track bugs and feature requests. Thank your for taking the time to submit your issue in one of [our repositories](https://github.com/frctl).
+
+If you rather have a question, please ask it on [our Discord server](https://discord.gg/vuRz4Yx).
+
+### Submitting pull requests
+
+We will always welcome pull requests on any of the [frctl organisation](https://github.com/frctl) repositories. Please submit PRs against `master` branch with an explanation of your intention.
+
+## Testing
 
 Fractal is a project that evolved rapidly and organically from a proof-of-concept prototype into a more stable, mature tool. Because of this it's currently pretty far behind where it should be in terms of test coverage. Any contributions on this front would be most welcome!
 
@@ -137,6 +147,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
