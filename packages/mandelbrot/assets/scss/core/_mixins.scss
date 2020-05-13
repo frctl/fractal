@@ -60,35 +60,46 @@
 
 @mixin font($preset) {
     @if $preset == title {
-        font: bold 1.75rem /#{(32 / 28)} $font-family-sans-serif;
-        font-feature-settings: "dlig" 1;
+        font-size: 1.75rem;
+        line-height: #{(32 / 28)};
+        font-weight: bold;
         letter-spacing: -0.025em;
+        font-feature-settings: "dlig" 1;
     }
 
     @if $preset == heading {
-        font: bold 1.3125rem /#{(24 / 21)} $font-family-sans-serif;
+        font-size: 1.3125rem;
+        line-height: #{(24 / 21)};
+        font-weight: bold;
         font-feature-settings: "dlig" 1;
     }
 
     @if $preset == subHeading {
-        font: bold 1.125rem /#{(24 / 18)} $font-family-sans-serif;
+        font-size: 1.125rem;
+        line-height: #{(24 / 18)};
+        font-weight: bold;
         font-feature-settings: "dlig" 1;
     }
 
     @if $preset == body {
-        font: normal 1rem /#{(24 / 16)} $font-family-sans-serif;
+        font-size: 1rem;
+        line-height: #{(24 / 16)};
     }
 
     @if $preset == caption {
-        font: normal 0.875rem /#{(24 / 14)} $font-family-sans-serif;
+        font-size: 0.875rem;
+        line-height: #{(24 / 14)};
     }
 
     @if $preset == code {
-        font: normal 0.875rem /#{(24 / 14)} $font-family-monospace;
+        font-family: $font-family-monospace;
+        font-size: 0.875rem;
+        line-height: #{(24 / 14)};
     }
 
     @if $preset == label {
-        font: normal 0.75rem /#{(20 / 12)} $font-family-sans-serif;
+        font-size: 0.75rem;
+        line-height: #{(20 / 12)};
         letter-spacing: 0.075em;
         text-transform: uppercase;
     }
