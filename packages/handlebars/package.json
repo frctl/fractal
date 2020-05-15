@@ -5,22 +5,22 @@
   "main": "src/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/frctl/handlebars.git"
+    "url": "https://github.com/frctl/fractal.git",
+    "directory": "packages/handlebars"
   },
   "author": "Mark Perkins <mark@clearleft.com> (http://clearleft.com/)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/frctl/handlebars/issues"
+    "url": "https://github.com/frctl/fractal/issues"
   },
-  "homepage": "https://github.com/frctl/handlebars",
+  "homepage": "https://github.com/frctl/fractal/tree/master/packages/handlebars",
   "dependencies": {
-    "bluebird": "^3.4.1",
-    "handlebars": "^4.0.5",
-    "lodash": "^4.12.0",
-    "promised-handlebars": "^2.0.0"
+    "bluebird": "^3.5.2",
+    "handlebars": "^4.0.13",
+    "lodash": "^4.17.11",
+    "promised-handlebars": "^2.0.1"
   },
   "peerDependencies": {
     "@frctl/fractal": "^1.1.0"
-  },
-  "devDependencies": {}
+  }
 }

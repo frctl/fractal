@@ -3,7 +3,6 @@
   "private": true,
   "dependencies": {
     "@allmarkedup/fang": "^1.0.0",
-    "@frctl/handlebars": "^1.2.0",
     "anymatch": "^2.0.0",
     "bluebird": "^3.5.2",
     "browser-sync": "^2.26.4",
@@ -33,6 +32,7 @@
     "nunjucks": "^3.2.1",
     "path-to-regexp": "^1.5.3",
     "portscanner": "^1.0.0",
+    "promised-handlebars": "^2.0.1",
     "readable-stream": "^2.1.4",
     "require-all": "^2.0.0",
     "semver": "^5.3.0",
