@@ -5,16 +5,17 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/frctl/twig.git"
+    "url": "https://github.com/frctl/fractal.git",
+    "directory": "packages/twig"
   },
   "author": "Mark Perkins <mark@clearleft.com> (http://clearleft.com/)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/frctl/twig/issues"
+    "url": "https://github.com/frctl/fractal/issues"
   },
-  "homepage": "https://github.com/frctl/twig",
+  "homepage": "https://github.com/frctl/fractal/tree/master/packages/twig",
   "dependencies": {
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.11",
     "twig": "^1.14.0"
   },
   "peerDependencies": {
