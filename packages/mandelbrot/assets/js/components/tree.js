@@ -16,7 +16,7 @@ class Tree {
     constructor(el) {
         this._el = $(el);
         this._id = this._el[0].id;
-        this._state = storage.get(`tree.${this._id}.state`, []);
+        this._state = storage.get(`tree.${this._id}.state`, [], 'session');
         this._collections = $.map(this._el.find('[data-behaviour="collection"]'), (c) => new TreeCollection(c, this));
         this._collapseButton = this._el.find('[data-behaviour="collapse-tree"]');
 
@@ -61,7 +61,7 @@ class Tree {
 
     saveState() {
         this._state = this._collections.filter((c) => c.isOpen).map((c) => c.id);
-        storage.set(`tree.${this._id}.state`, this._state);
+        storage.set(`tree.${this._id}.state`, this._state, 'session');
         this._updateCollapseButtonVisibility();
     }
 
