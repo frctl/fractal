@@ -59,7 +59,7 @@ function bundleCss(watch) {
         .pipe(sassGlob())
         .pipe(
             sass({
-                includePaths: 'node_modules',
+                includePaths: ['node_modules', '../../node_modules'],
             }).on('error', sass.logError)
         )
         .pipe(autoprefixer())

@@ -5,10 +5,11 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/frctl/mandelbrot.git"
+    "url": "https://github.com/frctl/fractal.git",
+    "directory": "packages/mandelbrot"
   },
   "bugs": {
-    "url": "https://github.com/frctl/mandelbrot/issues"
+    "url": "https://github.com/frctl/fractal/issues"
   },
   "author": "Mark Perkins <mark@clearleft.com> (http://clearleft.com/)",
   "license": "MIT",
@@ -26,7 +27,7 @@
     "@frctl/fractal": ">= 1.1.0-alpha.0 < 2"
   },
   "devDependencies": {
-    "@frctl/fractal": "^1.2.1",
+    "@frctl/fractal": "^1.3.0",
     "babel-eslint": "^10.1.0",
     "babel-preset-es2015": "^6.5.0",
     "babelify": "^7.2.0",
@@ -41,18 +42,18 @@
     "gulp-clean-css": "^4.2.0",
     "gulp-if": "^3.0.0",
     "gulp-sass": "^4.0.0",
-    "gulp-sass-glob": "^1.0.0",
+    "gulp-sass-glob": "^1.1.0",
     "gulp-sourcemaps": "^2.6.5",
     "gulp-uglify": "^3.0.2",
-    "highlight.js": "^9.1.0",
+    "highlight.js": "^9.5.0",
     "jquery": "^3.4.0",
-    "jquery-pjax": "git+https://github.com/defunkt/jquery-pjax.git",
+    "jquery-pjax": "^2.0.1",
     "jquery-resizable-dom": "^0.16.0",
     "mark.js": "^8.11.1",
     "normalize.css": "^4.1.1",
     "prettier": "^2.0.5",
     "sass-mq": "^3.2.6",
-    "select2": "4.0.3",
+    "select2": "^4.0.3",
     "stylelint": "^13.3.3",
     "stylelint-config-prettier": "^8.0.1",
     "stylelint-config-standard": "^20.0.0",
@@ -64,6 +65,6 @@
   },
   "dependencies": {
     "js-beautify": "^1.6.2",
-    "lodash": "^4.12.0"
+    "lodash": "^4.17.11"
   }
 }
