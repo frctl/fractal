@@ -12,3 +12,6 @@ sudo: false
 
 before_script:
     - npm run bootstrap
+
+git:
+    autocrlf: input
