@@ -1,7 +1,7 @@
 module.exports = {
-    parser: 'babel-eslint',
+    root: true,
     parserOptions: {
-        ecmaVersion: 6,
+        ecmaVersion: 2017,
     },
     extends: ['eslint:recommended', 'plugin:prettier/recommended'],
     env: {
@@ -9,7 +9,6 @@ module.exports = {
         node: true,
         es6: true,
     },
-    ignorePatterns: ['/**/node_modules/*', '**/dist/**'],
     overrides: [
         {
             files: ['**/test/**'],

@@ -91,7 +91,7 @@
   "scripts": {
     "clean": "lerna clean",
     "bootstrap": "lerna bootstrap --hoist --strict --ci --force-local",
-    "eslint": "eslint .",
+    "eslint": "eslint . --ignore-path .gitignore",
     "validate": "npm run eslint",
     "format": "npm run eslint -- --fix",
     "test": "npm run validate && lerna run test",
