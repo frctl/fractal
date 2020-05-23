@@ -21,7 +21,7 @@ class TwigAdapter extends Fractal.Adapter {
              * Register a Fractal template loader. Locations can be handles or paths.
              */
 
-            Twig.Templates.registerLoader('fractal', function (location, params, callback, errorCallback) {
+            Twig.Templates.registerLoader('fractal', function (location, params) {
                 if (params.precompiled) {
                     params.data = params.precompiled;
                 } else {

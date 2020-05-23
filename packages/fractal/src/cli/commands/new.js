@@ -1,7 +1,6 @@
 'use strict';
 
 const Promise = require('bluebird');
-const _ = require('lodash');
 const Path = require('path');
 const Handlebars = require('handlebars');
 const inquirer = require('inquirer');
@@ -102,7 +101,7 @@ module.exports = {
                         fs.writeJsonAsync(packageJSONPath, packageJSON),
                     ]);
                 })
-                .then((paths) => {
+                .then(() => {
                     return fs.copyAsync(exampleComponent, componentCopyTo);
                 })
                 .then((paths) => {
@@ -112,7 +111,7 @@ module.exports = {
                     }
                     return paths;
                 })
-                .then((paths) => {
+                .then(() => {
                     return Promise.all([
                         fs.writeFileAsync(fractalFilePath, fractalContents),
                         fs.writeFileAsync(docsIndexPath, indexContents),

@@ -3,7 +3,6 @@
 const _ = require('lodash');
 const Promise = require('bluebird');
 const defaults = require('../config');
-const Log = require('./core/log');
 const utils = require('./core/utils');
 const mix = require('./core/mixins/mix');
 const Configurable = require('./core/mixins/configurable');

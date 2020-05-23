@@ -12,7 +12,7 @@ const glob = require('globby');
 
 module.exports = {
     describe(dir, relDir, filter, ext) {
-        filter = filter || ((filePath) => !/(^|\/)\.[^\/\.]/g.test(filePath));
+        filter = filter || ((filePath) => !/(^|\/)\.[^/.]/g.test(filePath));
 
         return dirscribe(dir, {
             filter: filter,
@@ -57,11 +57,11 @@ function build(filePath, stat, root, ext) {
 
         p.relPath = Path.relative(root, filePath);
         p.fsName = basename;
-        p.name = _.get(p.fsName.match(/^_?(\d+\-)?(.*)/), 2, p.fsName);
+        p.name = _.get(p.fsName.match(/^_?(\d+-)?(.*)/), 2, p.fsName);
         p.path = filePath;
         p.dirs = _.compact(p.dir.split('/'));
         p.isHidden = !!(_.find(p.relPath.split('/'), (s) => s.startsWith('_')) || p.fsName.startsWith('_'));
-        p.order = parseInt(_.get(p.fsName.match(/^_?(\d+)\-.*/), 1, 1000000), 10);
+        p.order = parseInt(_.get(p.fsName.match(/^_?(\d+)-.*/), 1, 1000000), 10);
         p.ext = p.ext.toLowerCase();
         p.isFile = stat.isFile();
         p.isDirectory = stat.isDirectory();
@@ -96,11 +96,10 @@ function build(filePath, stat, root, ext) {
 
 function dirscribe(root, opts) {
     opts = opts || {};
-    const filter = opts.filter || ((i) => true);
+    const filter = opts.filter || (() => true);
     const after = opts.after || ((i) => i);
     const build = opts.build || buildDefault;
     const recursive = opts.recursive === false ? false : true;
-    const childrenKey = opts.childrenKey || 'children';
     const ext = opts.ext || undefined;
 
     function readdir(dir) {

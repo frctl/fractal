@@ -70,7 +70,7 @@ module.exports = mixin(
                 return false;
             }
 
-            _id(config) {
+            _id() {
                 return utils.md5([this.source.name, this.path, this.handle].join('-'));
             }
 
@@ -81,11 +81,11 @@ module.exports = mixin(
                 return this.name;
             }
 
-            _label(config) {
+            _label() {
                 return utils.titlize(this.name);
             }
 
-            _title(config) {
+            _title() {
                 return this.label;
             }
 

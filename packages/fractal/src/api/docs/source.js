@@ -7,7 +7,6 @@ const fs = Promise.promisifyAll(require('fs'));
 const anymatch = require('anymatch');
 const DocCollection = require('./collection');
 const Doc = require('./doc');
-const Data = require('../../core/data');
 const EntitySource = require('../../core/entities/source');
 const resolver = require('../../core/resolver');
 const md = require('../../core/markdown');
@@ -40,6 +39,7 @@ module.exports = class DocSource extends EntitySource {
         });
     }
 
+    /* eslint-disable-next-line no-unused-vars */
     render(page, context, env, opts) {
         const self = this;
 
@@ -70,7 +70,7 @@ module.exports = class DocSource extends EntitySource {
         const renderContext = context || page.context;
         const target = page.toJSON();
         return co(function* () {
-            const source = yield self.isLoaded ? Promise.resolve(self) : self.load();
+            yield self.isLoaded ? Promise.resolve(self) : self.load();
             const context = yield self.resolve(renderContext);
             const content = yield page.getContent();
             return self._render(page.filePath, content, context, {

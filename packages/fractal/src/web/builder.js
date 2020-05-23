@@ -3,7 +3,6 @@
 const Promise = require('bluebird');
 const anymatch = require('anymatch');
 const Path = require('path');
-const co = require('co');
 const _ = require('lodash');
 const fs = Promise.promisifyAll(require('fs-extra'));
 const Log = require('../core/log');
@@ -107,7 +106,6 @@ module.exports = class Builder extends mix(Emitter) {
         const resolvers = _.isFunction(this._theme.resolvers)
             ? this._theme.resolvers()
             : this._getLegacyResolvers(routes);
-        let requests = [];
 
         _.forEach(resolvers, (routeResolvers, handle) => {
             const route = _.find(routes, { handle: handle });
@@ -211,7 +209,7 @@ module.exports = class Builder extends mix(Emitter) {
                 this._updateProgress();
                 Log.debug(`Copied '${source}' ==> '${dest}'`);
             })
-            .catch((e) => {
+            .catch(() => {
                 this._updateProgress();
                 Log.error(`Error copying '${source}' ==> '${dest}'`);
                 this._errorCount++;

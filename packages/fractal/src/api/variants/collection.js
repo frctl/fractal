@@ -22,7 +22,6 @@ module.exports = class VariantCollection extends EntityCollection {
         if (this._hasSharedView()) {
             return this.default().getContent();
         }
-        const collator = this.parent.collator;
         return Promise.all(
             this.toArray().map((variant) => {
                 return variant.getContent().then((content) => {
@@ -122,7 +121,7 @@ module.exports = class VariantCollection extends EntityCollection {
         }
 
         const configuredVars = yield configured.map(
-            co.wrap(function* (conf, i) {
+            co.wrap(function (conf, i) {
                 let viewFile = null;
                 if (_.isUndefined(conf.name)) {
                     Log.error(`Could not create variant of ${component.handle} - 'name' value is missing`);

@@ -1,7 +1,5 @@
 'use strict';
 
-const utils = require('util');
-
 module.exports = {
     command: 'start',
 
@@ -39,7 +37,7 @@ module.exports = {
             return this.console.box(header, body, footer).persist();
         });
 
-        server.on('error', (err, req) => {
+        server.on('error', (err) => {
             if (err.status === '404') {
                 this.console.warn(`404: ${err.message}`);
             } else {

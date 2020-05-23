@@ -1,8 +1,6 @@
 'use strict';
 
 const _ = require('lodash');
-const utils = require('../utils');
-const Log = require('../log');
 const mix = require('../mixins/mix');
 const Heritable = require('../mixins/heritable');
 const EntityMixin = require('../mixins/entity');

@@ -1,6 +1,5 @@
 'use strict';
 
-const _ = require('lodash');
 const EntityCollection = require('../../core/entities/collection');
 
 module.exports = class DocCollection extends EntityCollection {

@@ -18,7 +18,7 @@ class Console {
     }
 
     set theme(theme) {
-        if (!theme instanceof Theme) {
+        if (!(theme instanceof Theme)) {
             throw new Error('Fractal themes must inherit from the base Theme class.');
         }
         this._theme = theme;

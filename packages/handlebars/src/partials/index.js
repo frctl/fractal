@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function (fractal) {
+module.exports = function () {
     return {
         // none added yet!
     };

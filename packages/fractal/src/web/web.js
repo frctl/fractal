@@ -61,11 +61,6 @@ module.exports = class Web extends mix(Configurable, Emitter) {
         return this._themes.get('default');
     }
 
-    _init(defaults) {
-        const opts = utils.defaultsDeep(config, defaults);
-        const theme = this._loadTheme(opts.theme);
-    }
-
     _loadTheme(theme) {
         if (!theme) {
             theme = this.defaultTheme();
@@ -77,7 +72,7 @@ module.exports = class Web extends mix(Configurable, Emitter) {
                 theme = require(theme)();
             }
         }
-        if (!theme instanceof Theme) {
+        if (!(theme instanceof Theme)) {
             throw new Error('Fractal themes must inherit from the base Theme class.');
         }
         const stat = [].concat(this.get('static'));

@@ -10,7 +10,6 @@ const Component = require('./component');
 const ComponentCollection = require('./collection');
 const File = require('../files/file');
 const FileCollection = require('../files/collection');
-const Data = require('../../core/data');
 const frfs = require('../../core/fs');
 const Log = require('../../core/log');
 const resolver = require('../../core/resolver');
@@ -35,7 +34,6 @@ module.exports = class ComponentSource extends EntitySource {
 
     getReferencesOf(target) {
         const refs = [];
-        const handles = [];
         this.source.flatten().forEach((component) => {
             if (component.id !== target.id) {
                 for (const variant of component.variants()) {
@@ -93,6 +91,7 @@ module.exports = class ComponentSource extends EntitySource {
         let source = this;
         filePath = Path.resolve(filePath);
         if (this._fileTree) {
+            /* eslint-disable-next-line no-inner-declarations */
             function findFile(items) {
                 for (const item of items) {
                     if (item.isFile && item.path === filePath) {
@@ -177,7 +176,6 @@ module.exports = class ComponentSource extends EntitySource {
         }
 
         return co(function* () {
-            const source = yield self.load();
             let rendered;
             if (entity.isComponent || entity.isVariant) {
                 if (entity.isComponent) {

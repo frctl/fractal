@@ -8,18 +8,6 @@ const fs = Promise.promisifyAll(require('fs'));
 const utils = require('./utils');
 const Log = require('./log');
 
-// module.exports = function (app) {
-
-// app.on('source:changed', function(source, data){
-//     if (data.type === 'config') {
-//         let filePath = Path.relative(__dirname, data.path);
-//         filePath = require.resolve(filePath);
-//         if (require.cache[filePath]) {
-//             delete require.cache[filePath];
-//         }
-//     }
-// });
-
 module.exports = {
     parse(data, format) {
         format = format.toLowerCase();
@@ -78,12 +66,7 @@ module.exports = {
     },
 
     writeFile(filePath, data) {
-        const pathInfo = Path.parse(Path.resolve(filePath));
         const format = utils.lang(filePath, true).mode;
         return fs.writeFileAsync(filePath, this.stringify(data, format));
     },
 };
-
-//     return module.exports;
-//
-// };

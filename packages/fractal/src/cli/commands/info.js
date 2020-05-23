@@ -9,7 +9,7 @@ module.exports = {
         scope: ['global', 'project'],
     },
 
-    action(args, done) {
+    action() {
         const cli = this.fractal.cli;
         const header = 'Fractal install info';
         const footer = null;

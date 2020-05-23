@@ -8,9 +8,8 @@ module.exports = {
         options: [['-t, --theme <package-name>', 'The name of custom UI theme to use, if required']],
     },
 
-    action(args, done) {
+    action(args) {
         const builder = this.fractal.web.builder(args.options);
-        const total = 0;
 
         builder.on('start', () => {
             this.console.success('Build started...');
@@ -20,7 +19,7 @@ module.exports = {
             this.console.update(`Exported ${completed} of ${total} items`, 'info');
         });
 
-        builder.on('error', (err, req) => {
+        builder.on('error', (err) => {
             this.console.error(err.message, err).persist();
         });
 

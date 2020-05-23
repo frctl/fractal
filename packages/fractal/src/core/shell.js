@@ -1,5 +1,4 @@
 const fs = require('fs');
-const cp = require('child_process');
 
 module.exports = {
     /**

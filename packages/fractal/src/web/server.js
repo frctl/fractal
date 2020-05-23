@@ -6,13 +6,11 @@ const anymatch = require('anymatch');
 const express = require('express');
 const chokidar = require('chokidar');
 const Path = require('path');
-const util = require('util');
 const portscanner = Promise.promisifyAll(require('portscanner'));
 const WebError = require('./error');
 const utils = require('../core/utils');
 const Log = require('../core/log');
 const mix = require('../core/mixins/mix');
-const mime = require('mime');
 const Emitter = require('../core/mixins/emitter');
 
 module.exports = class Server extends mix(Emitter) {
@@ -102,7 +100,7 @@ module.exports = class Server extends mix(Emitter) {
         });
     }
 
-    use(mount, middleware) {
+    use() {
         this._server.use.apply(this._server, Array.from(arguments));
     }
 
@@ -151,7 +149,7 @@ module.exports = class Server extends mix(Emitter) {
         this._theme.static().forEach((s) => {
             Log.debug(`Watching static directory - ${s.path}`);
             const monitor = chokidar.watch(s.path, {
-                ignored: /[\/\\]\./,
+                ignored: /[/\\]\./,
                 ignoreInitial: true,
             });
             function getFilePaths(filepath) {

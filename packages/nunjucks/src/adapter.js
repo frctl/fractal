@@ -46,8 +46,7 @@ class NunjucksAdapter extends Adapter {
 
         if (config.paths) {
             const FileSystemLoader = nunjucks.Loader.extend({
-                init(searchPaths, opts) {
-                    opts = opts || {};
+                init(searchPaths) {
                     this.searchPaths = [].concat(searchPaths);
                 },
 

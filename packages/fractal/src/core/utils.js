@@ -1,13 +1,11 @@
 'use strict';
 
-const Promise = require('bluebird');
 const Path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
 const minimist = require('minimist');
 const fang = require('@allmarkedup/fang');
 const _ = require('lodash');
-const Stream = require('stream');
 
 module.exports = {
     lang(filePath) {

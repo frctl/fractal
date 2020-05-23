@@ -104,10 +104,10 @@ module.exports = class Variant extends Entity {
      * Deprecated, do not use!
      */
     _parseReferences() {
-        const matcher = /\@[0-9a-zA-Z\-\_]*/g;
+        const matcher = /@[0-9a-zA-Z\-_]*/g;
         const content = this.content;
         const referenced = content.match(matcher) || [];
-        return _.uniq(_.compact(referenced.map((handle) => this.source.find(this.handle))));
+        return _.uniq(_.compact(referenced.map(() => this.source.find(this.handle))));
     }
 
     getPreviewContext() {

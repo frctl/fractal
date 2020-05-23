@@ -1,6 +1,5 @@
 'use strict';
 
-const _ = require('lodash');
 const mix = require('../mixins/mix');
 const Collection = require('../mixins/collection');
 const Heritable = require('../mixins/heritable');

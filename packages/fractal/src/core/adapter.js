@@ -52,7 +52,7 @@ module.exports = class Adapter extends mix(Emitter) {
     }
 
     _parseReferences(view) {
-        const matcher = new RegExp(`${utils.escapeForRegexp(this._handlePrefix)}[0-9a-zA-Z\-\_]*`, 'g');
+        const matcher = new RegExp(`${utils.escapeForRegexp(this._handlePrefix)}[0-9a-zA-Z-_]*`, 'g');
         const content = view.content;
         const referenced = content.match(matcher) || [];
         return _.uniq(_.compact(referenced.map((handle) => this._source.find(handle))));
@@ -119,7 +119,7 @@ module.exports = class Adapter extends mix(Emitter) {
         return Promise.resolve(result);
     }
 
-    render(path, str, context, meta) {
+    render() {
         throw new Error("Template engine adapter classes must provide a 'render' method.");
     }
 };

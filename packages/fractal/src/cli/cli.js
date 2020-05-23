@@ -3,7 +3,6 @@
 const _ = require('lodash');
 const chalk = require('chalk');
 const chokidar = require('chokidar');
-const minimist = require('minimist');
 const Vorpal = require('vorpal');
 const Console = require('./console');
 const Notifier = require('./notifier');
@@ -72,7 +71,7 @@ class Cli extends mix(Configurable, Emitter) {
 
         if (!_.includes(commandScope, this._scope)) {
             // command not available in this scope
-            const cmd = vorpal.command(command.replace(/\</g, '[').replace(/\>/g, ']'), config.description || ' ');
+            const cmd = vorpal.command(command.replace(/</g, '[').replace(/>/g, ']'), config.description || ' ');
             cmd
                 .action((args, done) => {
                     console.error(
@@ -156,7 +155,7 @@ class Cli extends mix(Configurable, Emitter) {
         const vorpal = this._vorpal;
         const app = this._app;
 
-        if (typeof onStdout === 'Function') {
+        if (typeof onStdout === 'function') {
             vorpal.pipe(function (output) {
                 if (output) {
                     output = output[0];
@@ -251,7 +250,7 @@ You can use the ${chalk.magenta('fractal new')} command to create a new project.
     _watchConfigFile() {
         if (this._scope === 'project' && this._configPath) {
             const monitor = chokidar.watch(this._configPath);
-            monitor.on('change', (path) => {
+            monitor.on('change', () => {
                 this.warn('Your configuration file has changed.');
                 this.warn('Exit & restart the current process to see your changes take effect.');
                 monitor.close();

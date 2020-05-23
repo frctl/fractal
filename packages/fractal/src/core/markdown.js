@@ -5,7 +5,7 @@ const _ = require('lodash');
 const highlighter = require('./highlighter');
 const renderer = new marked.Renderer();
 
-renderer.code = function (code, lang, escaped) {
+renderer.code = function (code, lang) {
     const output = highlighter(code, lang);
     if (output != null) {
         code = output;

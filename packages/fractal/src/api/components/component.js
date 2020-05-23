@@ -6,7 +6,6 @@ const utils = require('../../core/utils');
 const Data = require('../../core/data');
 const Entity = require('../../core/entities/entity');
 const VariantCollection = require('../variants/collection');
-const FileCollection = require('../files/collection');
 const AssetCollection = require('../assets/collection');
 const Asset = require('../assets/asset');
 

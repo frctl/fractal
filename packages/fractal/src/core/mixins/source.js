@@ -113,7 +113,7 @@ module.exports = mixin(
                 if (!this._monitor && sourcePath) {
                     Log.debug(`Watching ${this.name} directory - ${sourcePath}`);
                     this._monitor = chokidar.watch(sourcePath, {
-                        ignored: /[\/\\]\./,
+                        ignored: /[/\\]\./,
                         ignoreInitial: true,
                     });
                     this._monitor.on('ready', () => {

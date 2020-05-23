@@ -1,6 +1,5 @@
 'use strict';
 
-const _ = require('lodash');
 const FileCollection = require('../files/collection');
 
 module.exports = class AssetCollection extends FileCollection {

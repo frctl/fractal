@@ -37,7 +37,7 @@ module.exports = function (fractal) {
             return entity
                 .render(context)
                 .then((html) => new Handlebars.SafeString(html))
-                .catch((err) => {});
+                .catch(() => {});
         });
     };
 };

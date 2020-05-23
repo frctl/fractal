@@ -8,7 +8,6 @@ const app = require('../src/fractal')();
 const Cli = require('../src/cli');
 const Web = require('../src/web');
 const ComponentSource = require('../src/api/components');
-const DocSource = require('../src/api/docs');
 
 describe('Fractal', function () {
     before(function () {

@@ -4,7 +4,7 @@ const Promise = require('bluebird');
 const _ = require('lodash');
 const Log = require('./log');
 
-const resolver = (module.exports = {
+module.exports = {
     entity(entity) {
         if (entity.isComponent) {
             entity = entity.variants().default();
@@ -25,7 +25,7 @@ const resolver = (module.exports = {
             return Promise[resolver](_[iterator](obj, mapper));
         }
 
-        function mapper(item, key) {
+        function mapper(item) {
             if (item === undefined || item === null) {
                 return Promise.resolve(null);
             }
@@ -86,4 +86,4 @@ const resolver = (module.exports = {
 
         return resolve(context).then((ctx) => _.cloneDeep(ctx));
     },
-});
+};

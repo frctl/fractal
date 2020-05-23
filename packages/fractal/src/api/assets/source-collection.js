@@ -1,11 +1,9 @@
 'use strict';
 
 const _ = require('lodash');
-const anymatch = require('anymatch');
 const Promise = require('bluebird');
 
 const utils = require('../../core/utils');
-const Log = require('../../core/log');
 const mix = require('../../core/mixins/mix');
 const Configurable = require('../../core/mixins/configurable');
 const Emitter = require('../../core/mixins/emitter');

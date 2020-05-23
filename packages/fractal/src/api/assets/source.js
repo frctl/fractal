@@ -1,15 +1,8 @@
 'use strict';
 
-const Promise = require('bluebird');
-const _ = require('lodash');
-const anymatch = require('anymatch');
-const Path = require('path');
-
 const Asset = require('./asset');
 const AssetCollection = require('./collection');
 const fs = require('../../core/fs');
-const utils = require('../../core/utils');
-const Log = require('../../core/log');
 const mix = require('../../core/mixins/mix');
 const Source = require('../../core/mixins/source');
 const Stream = require('../../core/promise-stream');
