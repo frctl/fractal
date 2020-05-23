@@ -6,7 +6,7 @@ const Handlebars = require('handlebars');
 const inquirer = require('inquirer');
 const execa = require('execa');
 const shell = require('../../core/shell');
-const fs = Promise.promisifyAll(require('fs-extra'));
+const fs = require('fs-extra');
 const helpers = require('../../core/utils');
 
 module.exports = {
@@ -92,29 +92,29 @@ module.exports = {
             const indexContents = Handlebars.compile(fs.readFileSync(docsIndexTpl, 'utf8'))(answers);
 
             return fs
-                .ensureDirAsync(basePath)
+                .ensureDir(basePath)
                 .then(() => {
                     return Promise.all([
-                        fs.ensureDirAsync(componentsDir),
-                        fs.ensureDirAsync(docsDir),
-                        fs.ensureDirAsync(publicDir),
-                        fs.writeJsonAsync(packageJSONPath, packageJSON),
+                        fs.ensureDir(componentsDir),
+                        fs.ensureDir(docsDir),
+                        fs.ensureDir(publicDir),
+                        fs.writeJson(packageJSONPath, packageJSON),
                     ]);
                 })
                 .then(() => {
-                    return fs.copyAsync(exampleComponent, componentCopyTo);
+                    return fs.copy(exampleComponent, componentCopyTo);
                 })
                 .then((paths) => {
                     if (answers.useGit) {
                         shell.touch(Path.join(publicDir, '.gitkeep'));
-                        return fs.writeFileAsync(gitIgnorePath, 'node_modules\n');
+                        return fs.writeFile(gitIgnorePath, 'node_modules\n');
                     }
                     return paths;
                 })
                 .then(() => {
                     return Promise.all([
-                        fs.writeFileAsync(fractalFilePath, fractalContents),
-                        fs.writeFileAsync(docsIndexPath, indexContents),
+                        fs.writeFile(fractalFilePath, fractalContents),
+                        fs.writeFile(docsIndexPath, indexContents),
                     ]);
                 })
                 .finally(async () => {

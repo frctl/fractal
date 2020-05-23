@@ -4,7 +4,7 @@ const Promise = require('bluebird');
 const anymatch = require('anymatch');
 const Path = require('path');
 const _ = require('lodash');
-const fs = Promise.promisifyAll(require('fs-extra'));
+const fs = require('fs-extra');
 const Log = require('../core/log');
 const mix = require('../core/mixins/mix');
 const Emitter = require('../core/mixins/emitter');
@@ -47,7 +47,7 @@ module.exports = class Builder extends mix(Emitter) {
                 this.emit('start');
 
                 // remove and recreate build dir
-                const setup = fs.removeAsync(this._config.dest).then(() => fs.ensureDirAsync(this._config.dest));
+                const setup = fs.remove(this._config.dest).then(() => fs.ensureDir(this._config.dest));
 
                 return setup.then(() => {
                     let jobs = [];
@@ -199,7 +199,7 @@ module.exports = class Builder extends mix(Emitter) {
             this._jobsCount++;
         }
         return fs
-            .copyAsync(source, dest, {
+            .copy(source, dest, {
                 clobber: true,
                 filter: function (path) {
                     return !anymatch(ignored, path);
@@ -218,7 +218,7 @@ module.exports = class Builder extends mix(Emitter) {
 
     _write(contents, dest) {
         dest = _.trimEnd(Path.join(this._config.dest, dest), Path.sep);
-        return fs.ensureDirAsync(Path.parse(dest).dir).then(() => fs.writeFileAsync(dest, contents));
+        return fs.ensureDir(Path.parse(dest).dir).then(() => fs.writeFile(dest, contents));
     }
 
     _updateProgress() {
