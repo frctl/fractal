@@ -5,8 +5,6 @@
       "message": "chore: publish"
     }
   },
-  "packages": [
-    "packages/*"
-  ],
+  "packages": ["packages/*", "examples/*"],
   "version": "independent"
 }
