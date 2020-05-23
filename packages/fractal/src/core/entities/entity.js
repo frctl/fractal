@@ -8,7 +8,6 @@ const Heritable = require('../mixins/heritable');
 const EntityMixin = require('../mixins/entity');
 
 module.exports = class Entity extends mix(Heritable, EntityMixin) {
-
     constructor(name, config, parent) {
         super();
         this.isEntity = true;
@@ -32,7 +31,7 @@ module.exports = class Entity extends mix(Heritable, EntityMixin) {
     }
 
     hasContext() {
-        return this.getResolvedContext().then(context => Object.keys(context).length);
+        return this.getResolvedContext().then((context) => Object.keys(context).length);
     }
 
     setContext(data) {
@@ -57,9 +56,8 @@ module.exports = class Entity extends mix(Heritable, EntityMixin) {
             Object.defineProperty(this.prototype, key, {
                 enumerable: true,
                 writable: true,
-                value: opts
+                value: opts,
             });
         }
     }
-
 };

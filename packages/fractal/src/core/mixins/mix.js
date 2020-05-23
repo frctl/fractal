@@ -4,7 +4,6 @@ const _ = require('lodash');
 const mix = require('mixwith').mix;
 
 class Base {
-
     constructor() {
         Object.defineProperty(this, '_mixedIn', {
             enumerable: false,
@@ -22,7 +21,6 @@ class Base {
         this._mixedIn.push(name);
         this._mixedIn = _.uniq(this._mixedIn);
     }
-
 }
 
 module.exports = function () {

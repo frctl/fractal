@@ -11,7 +11,6 @@ const Theme = require('./theme');
 const Engine = require('./engine');
 
 module.exports = class Web extends mix(Configurable, Emitter) {
-
     constructor(app) {
         super(app);
         this.config(app.get('web'));

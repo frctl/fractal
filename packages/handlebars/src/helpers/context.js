@@ -2,9 +2,8 @@
 
 const Handlebars = require('handlebars');
 
-module.exports = function(fractal){
-
-    return function context(handle){
+module.exports = function (fractal) {
+    return function context(handle) {
         const source = fractal.components;
         const entity = source.find(handle);
         if (!entity) {
@@ -13,5 +12,4 @@ module.exports = function(fractal){
         const context = entity.isComponent ? entity.variants().default().getContext() : entity.getContext();
         return new Handlebars.SafeString(JSON.stringify(context, null, 4));
     };
-
 };

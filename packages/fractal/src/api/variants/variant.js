@@ -6,7 +6,6 @@ const utils = require('../../core/utils');
 const Entity = require('../../core/entities/entity');
 
 module.exports = class Variant extends Entity {
-
     constructor(config, view, resources, parent) {
         super(config.name, config, parent);
         this.isVariant = true;
@@ -86,14 +85,19 @@ module.exports = class Variant extends Entity {
      * Deprecated, do not use!
      */
     renderWithGlobals(context, globals, preview, collate) {
-        return this.source.render(this, context, {
-            request: globals._request || {},
-            server: globals._env.server,
-            builder: globals._env.builder,
-        }, {
-            preview: preview,
-            collate: collate,
-        });
+        return this.source.render(
+            this,
+            context,
+            {
+                request: globals._request || {},
+                server: globals._env.server,
+                builder: globals._env.builder,
+            },
+            {
+                preview: preview,
+                collate: collate,
+            }
+        );
     }
 
     /*
@@ -103,7 +107,7 @@ module.exports = class Variant extends Entity {
         const matcher = /\@[0-9a-zA-Z\-\_]*/g;
         const content = this.content;
         const referenced = content.match(matcher) || [];
-        return _.uniq(_.compact(referenced.map(handle => this.source.find(this.handle))));
+        return _.uniq(_.compact(referenced.map((handle) => this.source.find(this.handle))));
     }
 
     getPreviewContext() {
@@ -139,7 +143,7 @@ module.exports = class Variant extends Entity {
     }
 
     getContent() {
-        return this._view.read().then(c => c.toString());
+        return this._view.read().then((c) => c.toString());
     }
 
     getContentSync() {
@@ -173,5 +177,4 @@ module.exports = class Variant extends Entity {
         parent.source.emit('variant:created', variant);
         return variant;
     }
-
 };

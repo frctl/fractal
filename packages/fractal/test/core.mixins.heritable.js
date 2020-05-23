@@ -1,17 +1,15 @@
 'use strict';
 
-const chai      = require('chai');
-const expect    = chai.expect;
+const chai = require('chai');
+const expect = chai.expect;
 
-const mix       = require('../src/core/mixins/mix');
+const mix = require('../src/core/mixins/mix');
 const Heritable = mix(require('../src/core/mixins/heritable'));
 
-describe('Heritable', function(){
-
+describe('Heritable', function () {
     let heritable;
 
-    before(function(){
-        heritable = new Heritable;
+    before(function () {
+        heritable = new Heritable();
     });
-
 });

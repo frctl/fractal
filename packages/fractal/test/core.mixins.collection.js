@@ -10,17 +10,16 @@ const Stream = require('../src/core/array-stream');
 
 const items = [
     {
-        type: "component",
-        id: 1
+        type: 'component',
+        id: 1,
     },
     {
-        type: "component",
-        id: 2
-    }
+        type: 'component',
+        id: 2,
+    },
 ];
 
 describe('Collection', function () {
-
     describe('new instance', function () {
         it('returns a Collection instance', function () {
             const collection = new Collection();
@@ -66,7 +65,7 @@ describe('Collection', function () {
             const collection = new Collection();
             collection.setItems([{ id: 3 }]);
             expect(collection.size).to.equal(1);
-            collection.setItems(items)
+            collection.setItems(items);
             const collectionItems = collection.items();
             expect(collection.size).to.equal(2);
             expect(collectionItems[0].id).to.equal(1);
@@ -105,7 +104,7 @@ describe('Collection', function () {
         it('is chainable', function () {
             const collection = new Collection();
             collection.setItems(items);
-            const ret = collection.removeItem(items[0]);;
+            const ret = collection.removeItem(items[0]);
             expect(ret).to.equal(collection);
         });
     });
@@ -117,7 +116,7 @@ describe('Collection', function () {
             expect(collection.toJSON()).to.be.an('object');
             expect(collection.toJSON()).to.not.be.instanceof(Collection);
         });
-        it('...with a \'isCollection\' property', function () {
+        it("...with a 'isCollection' property", function () {
             const collection = new Collection();
             collection.setItems(items);
             expect(collection.toJSON().isCollection).to.be.true;
@@ -130,14 +129,11 @@ describe('Collection', function () {
         it('calls toJSON() on items if they have a toJSON method', function () {
             const collection = new Collection();
             const collectionItem = {
-                type: "component",
+                type: 'component',
                 id: 3,
-                toJSON: function () { }
+                toJSON: function () {},
             };
-            collection.setItems([
-                ...items,
-                collectionItem,
-            ]);
+            collection.setItems([...items, collectionItem]);
             sinon.spy(collectionItem, 'toJSON');
             collection.toJSON();
             expect(collectionItem.toJSON.called).to.be.true;
@@ -148,7 +144,7 @@ describe('Collection', function () {
         it('returns a Stream instance', function () {
             const collection = new Collection();
             expect(collection.toStream()).to.be.instanceOf(Stream);
-        })
+        });
     });
 
     describe('.each()', function () {
@@ -263,14 +259,14 @@ describe('Collection', function () {
             const newCollection = collection.collections();
             expect(newCollection).to.not.equal(collection);
         });
-        it('...containing only items with a type of \'collection\'', function () {
+        it("...containing only items with a type of 'collection'", function () {
             const collection = new Collection();
             collection.setItems([
                 ...items,
                 {
                     id: 3,
                     isCollection: true,
-                }
+                },
             ]);
             const newCollection = collection.collections();
             expect(newCollection.size).to.equal(1);
@@ -300,7 +296,7 @@ describe('Collection', function () {
         it('sorts items by specified key descending when argument is object', function () {
             const collection = new Collection();
             collection.setItems([items[0], items[1]]);
-            const ret = collection.orderBy({ 'id': 'desc' });
+            const ret = collection.orderBy({ id: 'desc' });
             expect(ret.first()).to.equal(items[1]);
         });
         it('returns a new collection', function () {
@@ -309,7 +305,6 @@ describe('Collection', function () {
             const ret = collection.orderBy('id');
             expect(ret).to.not.equal(collection);
         });
-
     });
 
     describe('.find()', function () {
@@ -354,7 +349,7 @@ describe('Collection', function () {
             const itemWithHandle = {
                 type: 'component',
                 id: 3,
-                handle: 'component'
+                handle: 'component',
             };
             collection.setItems([itemWithHandle]);
             expect(collection.find('@component')).to.equal(itemWithHandle);
@@ -364,7 +359,7 @@ describe('Collection', function () {
             const itemWithHandle = {
                 type: 'component',
                 id: 3,
-                handle: 'component'
+                handle: 'component',
             };
             collection.setItems([itemWithHandle]);
             expect(collection.find('id', 3)).to.equal(itemWithHandle);
@@ -428,7 +423,7 @@ describe('Collection', function () {
             collection.setItems([...items, subCollection]);
             const ret = collection.flatten();
             expect(ret.find(subCollection)).to.equal(undefined);
-            expect(ret.filter({ 'isCollection': true }).size).to.equal(0);
+            expect(ret.filter({ isCollection: true }).size).to.equal(0);
         });
         it('returns new collection', function () {
             const collection = new Collection();
@@ -446,7 +441,7 @@ describe('Collection', function () {
                 flatten: function () {
                     return this;
                 },
-                toArray: function () { },
+                toArray: function () {},
             };
             collection.setItems([...items, collectionItem]);
             sinon.spy(collectionItem, 'flatten');
@@ -510,5 +505,4 @@ describe('Collection', function () {
         collection.setItems(items);
         expect(collection[Symbol.iterator]).to.be.a('function');
     });
-
 });

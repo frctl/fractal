@@ -1,22 +1,20 @@
 'use strict';
 
-const chai   = require('chai');
+const chai = require('chai');
 const expect = chai.expect;
 
-const Console  = require('../src/cli/console');
+const Console = require('../src/cli/console');
 
-describe('Console', function(){
-
+describe('Console', function () {
     let logger;
 
-    before(function(){
+    before(function () {
         logger = new Console({
-            log: function(){}
+            log: function () {},
         });
     });
 
-    describe('.theme()', function(){
+    describe('.theme()', function () {
         it('sets a theme');
     });
-
 });

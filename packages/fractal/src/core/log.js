@@ -4,7 +4,6 @@ const mix = require('./mixins/mix');
 const Emitter = require('./mixins/emitter');
 
 class Log extends mix(Emitter) {
-
     log(msg, data) {
         this.emit('log', msg, data);
     }
@@ -28,7 +27,6 @@ class Log extends mix(Emitter) {
     warn(msg, data) {
         this.emit('warn', msg, data);
     }
-
 }
 
 module.exports = new Log();

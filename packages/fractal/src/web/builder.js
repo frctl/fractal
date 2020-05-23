@@ -12,7 +12,6 @@ const Emitter = require('../core/mixins/emitter');
 const throat = require('throat');
 
 module.exports = class Builder extends mix(Emitter) {
-
     constructor(theme, engine, config, app) {
         super(app);
 
@@ -37,58 +36,58 @@ module.exports = class Builder extends mix(Emitter) {
     }
 
     start() {
-
         this._validate();
         this._reset();
 
         // Make sure the sources have loaded
-        return this._app.load().then(() => {
+        return this._app
+            .load()
+            .then(() => {
+                this._buildRequests();
 
-            this._buildRequests();
+                this.emit('start');
 
-            this.emit('start');
+                // remove and recreate build dir
+                const setup = fs.removeAsync(this._config.dest).then(() => fs.ensureDirAsync(this._config.dest));
 
-            // remove and recreate build dir
-            const setup = fs.removeAsync(this._config.dest).then(() => fs.ensureDirAsync(this._config.dest));
+                return setup.then(() => {
+                    let jobs = [];
 
-            return setup.then(() => {
+                    // 1. Start any static copy jobs
+                    jobs.push(
+                        this._static.map((p) => this._throttle(() => this._copy(p.path, Path.join(Path.sep, p.mount))))
+                    );
 
-                let jobs = [];
+                    // 2. Run the requests in parallel
+                    this._requests.forEach((r) => {
+                        let req = this._throttle(() => this._onRequest(r));
+                        if (req) {
+                            this._jobsCount++;
+                            jobs.push(req);
+                        }
+                    });
 
-                // 1. Start any static copy jobs
-                jobs.push(this._static.map(p => this._throttle(() => this._copy(p.path, Path.join(Path.sep, p.mount)))));
-
-                // 2. Run the requests in parallel
-                this._requests.forEach(r => {
-                    let req = this._throttle(() => this._onRequest(r));
-                    if (req) {
-                        this._jobsCount++;
-                        jobs.push(req);
-                    }
+                    return Promise.all(_.flatten(jobs));
                 });
-
-                return Promise.all(_.flatten(jobs));
+            })
+            .then(() => {
+                const stats = {
+                    errorCount: this._errorCount,
+                };
+                this.emit('end', stats);
+                return stats;
+            })
+            .catch((e) => {
+                this.emit('error', e);
+                throw e;
             });
-
-        }).then(() => {
-            const stats = {
-                errorCount: this._errorCount,
-            };
-            this.emit('end', stats);
-            return stats;
-        }).catch(e => {
-            this.emit('error', e);
-            throw e;
-        });
     }
 
     stop() {
         // can we stop it once running?
     }
 
-    use() {
-
-    }
+    use() {}
 
     _reset() {
         this._errorCount = 0;
@@ -105,11 +104,13 @@ module.exports = class Builder extends mix(Emitter) {
 
     _buildRequests() {
         const routes = this._theme.routes();
-        const resolvers = _.isFunction(this._theme.resolvers) ? this._theme.resolvers() : this._getLegacyResolvers(routes);
+        const resolvers = _.isFunction(this._theme.resolvers)
+            ? this._theme.resolvers()
+            : this._getLegacyResolvers(routes);
         let requests = [];
 
         _.forEach(resolvers, (routeResolvers, handle) => {
-            const route = _.find(routes, {handle: handle});
+            const route = _.find(routes, { handle: handle });
 
             if (!route) {
                 Log.debug(`No route found for handle '${handle}'`);
@@ -124,7 +125,6 @@ module.exports = class Builder extends mix(Emitter) {
                     this._requests.push(req);
                 }
             }
-
         });
     }
 
@@ -137,16 +137,17 @@ module.exports = class Builder extends mix(Emitter) {
     }
 
     _onRequest(req) {
-
         if (req.route.redirect && this._theme.redirectView) {
             req.route.context = {
-                redirectUrl: req.route.redirect
+                redirectUrl: req.route.redirect,
             };
             req.route.view = this._theme.redirectView();
         }
 
         if (req.route.static) {
-            const staticPath = _.isFunction(req.route.static) ? req.route.static(req.params, this._app) : req.route.static;
+            const staticPath = _.isFunction(req.route.static)
+                ? req.route.static(req.params, this._app)
+                : req.route.static;
             return this._copy(unescape(staticPath), unescape(req.url), false);
         }
 
@@ -163,24 +164,25 @@ module.exports = class Builder extends mix(Emitter) {
             };
 
             return this._render(req.route.view, context)
-                    .then(contents => this._write(contents, dest) )
-                    .then(() => {
-                        this.emit('exported', req);
-                        Log.debug(`Exported '${req.url}' ==> '${dest}'`);
-                        this._updateProgress();
-                    })
-                    .catch(err => this._onError(err, req, dest));
+                .then((contents) => this._write(contents, dest))
+                .then(() => {
+                    this.emit('exported', req);
+                    Log.debug(`Exported '${req.url}' ==> '${dest}'`);
+                    this._updateProgress();
+                })
+                .catch((err) => this._onError(err, req, dest));
         }
-
     }
 
     _onError(err, req, dest) {
         this._errorCount++;
         this._updateProgress();
         this.emit('error', new Error(`Failed to export url ${req.url} - ${err.message}`));
-        return this._render(this._theme.errorView(), { error: err }).then(contents => this._write(contents, dest)).catch(err => {
-            this.emit('error', err);
-        });
+        return this._render(this._theme.errorView(), { error: err })
+            .then((contents) => this._write(contents, dest))
+            .catch((err) => {
+                this.emit('error', err);
+            });
     }
 
     _render(view, context) {
@@ -198,19 +200,22 @@ module.exports = class Builder extends mix(Emitter) {
         if (addToJobCount !== false) {
             this._jobsCount++;
         }
-        return fs.copyAsync(source, dest, {
-            clobber: true,
-            filter: function(path){
-                return ! anymatch(ignored, path);
-            }
-        }).then(() => {
-            this._updateProgress();
-            Log.debug(`Copied '${source}' ==> '${dest}'`);
-        }).catch(e => {
-            this._updateProgress();
-            Log.error(`Error copying '${source}' ==> '${dest}'`);
-            this._errorCount++;
-        });
+        return fs
+            .copyAsync(source, dest, {
+                clobber: true,
+                filter: function (path) {
+                    return !anymatch(ignored, path);
+                },
+            })
+            .then(() => {
+                this._updateProgress();
+                Log.debug(`Copied '${source}' ==> '${dest}'`);
+            })
+            .catch((e) => {
+                this._updateProgress();
+                Log.error(`Error copying '${source}' ==> '${dest}'`);
+                this._errorCount++;
+            });
     }
 
     _write(contents, dest) {
@@ -229,7 +234,11 @@ module.exports = class Builder extends mix(Emitter) {
         }
         for (const stat of this._theme.static()) {
             if (stat.path == this._config.dest) {
-                throw new Error(`Your build destination directory (${Path.resolve(stat.path)}) cannot be the same as any of your static assets directories.`);
+                throw new Error(
+                    `Your build destination directory (${Path.resolve(
+                        stat.path
+                    )}) cannot be the same as any of your static assets directories.`
+                );
             }
         }
     }
@@ -248,5 +257,4 @@ module.exports = class Builder extends mix(Emitter) {
             route: route,
         };
     }
-
 };

@@ -15,7 +15,6 @@ const Source = require('../../core/mixins/source');
 const Stream = require('../../core/promise-stream');
 
 module.exports = class AssetSource extends mix(Source) {
-
     constructor(name, config, app) {
         super();
         this.isHidden = config.hidden || false;
@@ -27,11 +26,14 @@ module.exports = class AssetSource extends mix(Source) {
     }
 
     assets() {
-        return this.newSelf(this.toArray().filter(i => i.isAsset));
+        return this.newSelf(this.toArray().filter((i) => i.isAsset));
     }
 
     toVinylArray() {
-        return this.filter('isAsset').flatten().map(asset => asset.toVinyl()).toArray();
+        return this.filter('isAsset')
+            .flatten()
+            .map((asset) => asset.toVinyl())
+            .toArray();
     }
 
     toVinylStream() {
@@ -54,7 +56,7 @@ module.exports = class AssetSource extends mix(Source) {
         self.isCollection = true;
         self.isSource = true;
         self.isAssetSource = true;
-        self.items = this.toArray().map(i => (i.toJSON ? i.toJSON() : i));
+        self.items = this.toArray().map((i) => (i.toJSON ? i.toJSON() : i));
         return self;
     }
 
@@ -83,5 +85,4 @@ module.exports = class AssetSource extends mix(Source) {
         }
         this.setItems(convert(fileTree.children));
     }
-
 };

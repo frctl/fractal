@@ -10,7 +10,6 @@ const defaultTheme = require('./themes/default');
 const utils = require('../core/utils');
 
 class Console {
-
     constructor(logger) {
         this._logger = logger || console;
         this._theme = defaultTheme;
@@ -100,7 +99,7 @@ class Console {
         if (!_.isFunction(data.then)) {
             data = Promise.resolve(data);
         }
-        data.then(data => this.write(utils.stringify(data)));
+        data.then((data) => this.write(utils.stringify(data)));
     }
 
     box(header, body, footer) {
@@ -158,9 +157,8 @@ class Console {
     }
 
     debugMode(status) {
-        this._debugging = !! status;
+        this._debugging = !!status;
     }
-
 }
 
 module.exports = Console;

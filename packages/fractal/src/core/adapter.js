@@ -8,7 +8,6 @@ const Emitter = require('./mixins/emitter');
 const utils = require('./utils');
 
 module.exports = class Adapter extends mix(Emitter) {
-
     constructor(engine, source) {
         super();
         this._engine = engine;
@@ -17,7 +16,7 @@ module.exports = class Adapter extends mix(Emitter) {
         this._hasLoaded = false;
         this._handlePrefix = '@';
         source.on('loaded', () => this._onSourceChange());
-        source.on('updated', eventData => this._onSourceChange(eventData));
+        source.on('updated', (eventData) => this._onSourceChange(eventData));
     }
 
     get engine() {
@@ -46,14 +45,17 @@ module.exports = class Adapter extends mix(Emitter) {
 
     getView(handle) {
         let prefixMatcher = new RegExp(`^${utils.escapeForRegexp(this._handlePrefix)}`);
-        return _.find(this._views, view => (view.handle.replace(prefixMatcher, '') === handle.replace(prefixMatcher, '')));
+        return _.find(
+            this._views,
+            (view) => view.handle.replace(prefixMatcher, '') === handle.replace(prefixMatcher, '')
+        );
     }
 
     _parseReferences(view) {
         const matcher = new RegExp(`${utils.escapeForRegexp(this._handlePrefix)}[0-9a-zA-Z\-\_]*`, 'g');
         const content = view.content;
         const referenced = content.match(matcher) || [];
-        return _.uniq(_.compact(referenced.map(handle => this._source.find(handle))));
+        return _.uniq(_.compact(referenced.map((handle) => this._source.find(handle))));
     }
 
     _loadViews() {
@@ -101,12 +103,12 @@ module.exports = class Adapter extends mix(Emitter) {
             }
             const touched = _.filter(this._views, ['path', Path.resolve(eventData.path)]);
             if (eventData.event === 'change') {
-                touched.forEach(view => this._updateView(view));
+                touched.forEach((view) => this._updateView(view));
                 return this._views;
             } else if (eventData.event === 'unlink') {
-                const touchedPaths = _.map(touched, view => view.path);
-                this._views = _.reject(this._views, v => _.includes(touchedPaths, v.path));
-                touched.forEach(view => this.emit('view:removed', view));
+                const touchedPaths = _.map(touched, (view) => view.path);
+                this._views = _.reject(this._views, (v) => _.includes(touchedPaths, v.path));
+                touched.forEach((view) => this.emit('view:removed', view));
                 return this._views;
             }
         }
@@ -118,8 +120,6 @@ module.exports = class Adapter extends mix(Emitter) {
     }
 
     render(path, str, context, meta) {
-        throw new Error('Template engine adapter classes must provide a \'render\' method.');
+        throw new Error("Template engine adapter classes must provide a 'render' method.");
     }
-
-
 };

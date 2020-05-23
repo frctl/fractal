@@ -11,7 +11,6 @@ const AssetCollection = require('../assets/collection');
 const Asset = require('../assets/asset');
 
 module.exports = class Component extends Entity {
-
     constructor(config, files, resources, parent) {
         super(config.name, config, parent);
         this.isComponent = true;
@@ -35,7 +34,9 @@ module.exports = class Component extends Entity {
         if (config.handle) {
             return utils.slugify(config.handle).toLowerCase();
         }
-        return utils.slugify(this.parent.getProp('prefix') ? `${this.parent.getProp('prefix')}-${config.name}` : config.name).toLowerCase();
+        return utils
+            .slugify(this.parent.getProp('prefix') ? `${this.parent.getProp('prefix')}-${config.name}` : config.name)
+            .toLowerCase();
     }
 
     get isCollated() {
@@ -76,14 +77,19 @@ module.exports = class Component extends Entity {
      * Deprecated, do not use!
      */
     renderWithGlobals(context, globals, preview, collate) {
-        return this.source.render(this, context, {
-            request: globals._request || {},
-            server: globals._env.server,
-            builder: globals._env.builder,
-        }, {
-            preview: preview,
-            collate: collate,
-        });
+        return this.source.render(
+            this,
+            context,
+            {
+                request: globals._request || {},
+                server: globals._env.server,
+                builder: globals._env.builder,
+            },
+            {
+                preview: preview,
+                collate: collate,
+            }
+        );
     }
 
     getPreviewContext() {
@@ -109,19 +115,28 @@ module.exports = class Component extends Entity {
             if (groups) {
                 for (const key in groups) {
                     const group = groups[key];
-                    const items = this._resources.match(group.match).items().map(file => new Asset(file._file, this.source.relPath, this.source));
-                    const files = new AssetCollection({
-                        name: key,
-                        label: group.label,
-                        title: group.label,
-                    }, items);
+                    const items = this._resources
+                        .match(group.match)
+                        .items()
+                        .map((file) => new Asset(file._file, this.source.relPath, this.source));
+                    const files = new AssetCollection(
+                        {
+                            name: key,
+                            label: group.label,
+                            title: group.label,
+                        },
+                        items
+                    );
                     collections.push(files);
                 }
             }
-            this._resourceCollections = new AssetCollection({
-                name: 'resources',
-                label: 'Resources',
-            }, collections);
+            this._resourceCollections = new AssetCollection(
+                {
+                    name: 'resources',
+                    label: 'Resources',
+                },
+                collections
+            );
         }
         return this._resourceCollections;
     }
@@ -169,10 +184,16 @@ module.exports = class Component extends Entity {
         parent.source.emit('component:beforeCreate', config, files, resources, parent);
         config.raw = files.config ? yield Data.readFile(files.config.path) : null;
         const comp = new Component(config, files, resources, parent);
-        const variants = yield VariantCollection.create(comp, files.view, config.variants, files.varViews, files.varReadmes, config);
+        const variants = yield VariantCollection.create(
+            comp,
+            files.view,
+            config.variants,
+            files.varViews,
+            files.varReadmes,
+            config
+        );
         comp.setVariants(variants);
         parent.source.emit('component:created', comp);
         return comp;
     }
-
 };

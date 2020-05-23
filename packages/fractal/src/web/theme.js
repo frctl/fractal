@@ -11,7 +11,6 @@ const Configurable = require('../core/mixins/configurable');
 const Emitter = require('../core/mixins/emitter');
 
 module.exports = class Theme extends mix(Configurable, Emitter) {
-
     constructor(viewPaths, options) {
         super();
 
@@ -145,7 +144,6 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
         }
         return null;
     }
-
 };
 
 function cleanUrlPath(urlPath) {

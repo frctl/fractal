@@ -2,7 +2,6 @@ const fs = require('fs');
 const cp = require('child_process');
 
 module.exports = {
-
     /**
      * Change the current working directory.
      *
@@ -21,5 +20,4 @@ module.exports = {
         const handle = fs.openSync(filename, 'w');
         fs.closeSync(handle);
     },
-
 };

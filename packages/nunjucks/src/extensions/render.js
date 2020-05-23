@@ -3,10 +3,8 @@
 const nunjucks = require('nunjucks');
 const utils = require('@frctl/fractal').utils;
 
-module.exports = function(fractal){
-
+module.exports = function (fractal) {
     function RenderExtension() {
-
         this.tags = ['render'];
 
         this.parse = function (parser, nodes) {
@@ -17,7 +15,6 @@ module.exports = function(fractal){
         };
 
         this.run = function () {
-
             const source = fractal.components;
             const args = Array.from(arguments);
             const rootContext = args[0].ctx;
@@ -37,20 +34,21 @@ module.exports = function(fractal){
                 context = utils.defaultsDeep(context, defaultContext);
             }
 
-            source.resolve(context).then(context => {
+            source.resolve(context).then((context) => {
                 // fix env for rendered components
                 let env = JSON.parse(JSON.stringify(rootContext._env));
                 context._env = env;
-                entity.render(context).then(html => {
-                    callback(null, new nunjucks.runtime.SafeString(html));
-                }).catch(err => {
-                    callback(err);
-                });
+                entity
+                    .render(context)
+                    .then((html) => {
+                        callback(null, new nunjucks.runtime.SafeString(html));
+                    })
+                    .catch((err) => {
+                        callback(err);
+                    });
             });
         };
-
-    };
+    }
 
     return new RenderExtension();
-
 };

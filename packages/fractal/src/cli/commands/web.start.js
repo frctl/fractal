@@ -3,7 +3,6 @@
 const utils = require('util');
 
 module.exports = {
-
     command: 'start',
 
     config: {
@@ -21,9 +20,11 @@ module.exports = {
 
         server.on('ready', () => {
             const header = 'Fractal web UI server is running!';
-            const footer = this.fractal.cli.isInteractive() ? 'Use the \'stop\' command to stop the server.' : 'Use ^C to stop the server.';
+            const footer = this.fractal.cli.isInteractive()
+                ? "Use the 'stop' command to stop the server."
+                : 'Use ^C to stop the server.';
             const serverUrl = server.urls.server;
-            const format = str => this.console.theme.format(str, 'success', true);
+            const format = (str) => this.console.theme.format(str, 'success', true);
             let body = '';
 
             if (!server.isSynced) {
@@ -49,10 +50,9 @@ module.exports = {
         server.on('destroy', () => done());
         server.on('stopped', () => done());
 
-        server.start(args.options.sync).catch(e => {
+        server.start(args.options.sync).catch((e) => {
             this.console.error(e);
             done();
         });
     },
-
 };

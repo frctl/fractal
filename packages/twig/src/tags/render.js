@@ -25,16 +25,16 @@ module.exports = function (fractal, config) {
                 token.stack = Twig.expression.compile.apply(this, [
                     {
                         type: Twig.expression.type.expression,
-                        value: handle
-                    }
+                        value: handle,
+                    },
                 ]).stack;
 
                 if (context !== undefined) {
                     token.contextStack = Twig.expression.compile.apply(this, [
                         {
                             type: Twig.expression.type.expression,
-                            value: context.trim()
-                        }
+                            value: context.trim(),
+                        },
                     ]).stack;
                 }
 
@@ -59,26 +59,30 @@ module.exports = function (fractal, config) {
                     throw new Error(`Could not render component '${handle}' - component not found.`);
                 }
 
-                let innerContext = _.cloneDeep(entity.isComponent ? entity.variants().default().getContext() : entity.getContext());
+                let innerContext = _.cloneDeep(
+                    entity.isComponent ? entity.variants().default().getContext() : entity.getContext()
+                );
 
                 if (token.contextStack !== undefined) {
-                    innerContext = utils.defaultsDeep(Twig.expression.parse.apply(this, [token.contextStack, context]), innerContext);
+                    innerContext = utils.defaultsDeep(
+                        Twig.expression.parse.apply(this, [token.contextStack, context]),
+                        innerContext
+                    );
                 }
 
                 let template;
 
                 if (file instanceof Twig.Template) {
                     template = file;
-                }
-                else {
+                } else {
                     template = this.template.importFile(file);
                 }
 
                 return {
                     chain: chain,
-                    output: template.render(innerContext)
+                    output: template.render(innerContext),
                 };
-            }
+            },
         };
     };
 };

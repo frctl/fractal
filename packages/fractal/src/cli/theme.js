@@ -4,7 +4,6 @@ const _ = require('lodash');
 const chalk = require('chalk');
 
 module.exports = class Theme {
-
     constructor(config) {
         config = config || {};
         this._delimiter = {
@@ -14,7 +13,7 @@ module.exports = class Theme {
         this._styles = {
             log: {
                 prefix: null,
-                format: s => s,
+                format: (s) => s,
             },
             debug: {
                 prefix: '⚑',
@@ -63,7 +62,7 @@ module.exports = class Theme {
     format(str, style, strip) {
         style = style || 'log';
         const prefix = _.get(this._styles, `${style}.prefix`, '');
-        const formatter = _.get(this._styles, `${style}.format`, str => str);
+        const formatter = _.get(this._styles, `${style}.format`, (str) => str);
         const suffix = _.get(this._styles, `${style}.suffix`, '');
         return formatter(strip ? _.trim(str) : `${prefix ? prefix + ' ' : ''}${str}${suffix ? ' ' + suffix : ''}`);
     }
@@ -73,8 +72,7 @@ module.exports = class Theme {
     }
 
     delimiter() {
-        const formatter = this._delimiter.format || (s => s);
+        const formatter = this._delimiter.format || ((s) => s);
         return formatter(this._delimiter.text);
     }
-
 };

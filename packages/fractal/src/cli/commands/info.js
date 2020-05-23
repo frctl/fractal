@@ -1,7 +1,6 @@
 'use strict';
 
 module.exports = {
-
     command: 'info',
 
     config: {
@@ -23,5 +22,4 @@ module.exports = {
 
         return this.console.box(header, body, footer).unslog();
     },
-
 };

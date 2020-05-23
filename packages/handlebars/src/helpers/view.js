@@ -2,9 +2,8 @@
 
 const Handlebars = require('handlebars');
 
-module.exports = function(fractal){
-
-    return function view(handle){
+module.exports = function (fractal) {
+    return function view(handle) {
         const source = fractal.components;
         let entity = source.find(handle);
         if (!entity) {
@@ -13,7 +12,6 @@ module.exports = function(fractal){
         if (entity.isComponent) {
             entity = entity.variants().default();
         }
-        return entity.getContent().then(content => new Handlebars.SafeString(content));
+        return entity.getContent().then((content) => new Handlebars.SafeString(content));
     };
-
 };

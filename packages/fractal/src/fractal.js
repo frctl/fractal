@@ -10,7 +10,6 @@ const Configurable = require('./core/mixins/configurable');
 const Emitter = require('./core/mixins/emitter');
 
 class Fractal extends mix(Configurable, Emitter) {
-
     /**
      * Constructor.
      * @return {Fractal}
@@ -94,17 +93,17 @@ class Fractal extends mix(Configurable, Emitter) {
     }
 
     watch() {
-        this._sources().forEach(s => s.watch());
+        this._sources().forEach((s) => s.watch());
         return this;
     }
 
     unwatch() {
-        this._sources().forEach(s => s.unwatch());
+        this._sources().forEach((s) => s.unwatch());
         return this;
     }
 
     load() {
-        return Promise.all(this._sources().map(s => s.load()));
+        return Promise.all(this._sources().map((s) => s.load()));
     }
 
     _sources() {

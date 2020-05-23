@@ -10,7 +10,6 @@ const utils = require('../../core/utils');
 const EntityCollection = require('../../core/entities/collection');
 
 module.exports = class VariantCollection extends EntityCollection {
-
     constructor(config, items, parent) {
         super(config.name, config, items, parent);
     }
@@ -24,26 +23,30 @@ module.exports = class VariantCollection extends EntityCollection {
             return this.default().getContent();
         }
         const collator = this.parent.collator;
-        return Promise.all(this.toArray().map(variant => {
-            return variant.getContent().then(content => {
-                return `<!-- ${variant.label} -->\n${content.trim()}\n`;
-            });
-        })).then(contents => contents.join('\n'));
+        return Promise.all(
+            this.toArray().map((variant) => {
+                return variant.getContent().then((content) => {
+                    return `<!-- ${variant.label} -->\n${content.trim()}\n`;
+                });
+            })
+        ).then((contents) => contents.join('\n'));
     }
 
     getCollatedContentSync() {
         if (this._hasSharedView()) {
             return this.default().getContentSync();
         }
-        return (this.toArray().map(variant => {
-            const content = variant.getContentSync();
-            return `<!-- ${variant.label} -->\n${content.trim()}\n`;
-        })).join('\n');
+        return this.toArray()
+            .map((variant) => {
+                const content = variant.getContentSync();
+                return `<!-- ${variant.label} -->\n${content.trim()}\n`;
+            })
+            .join('\n');
     }
 
     getCollatedContext() {
         const collated = {};
-        this.toArray().forEach(variant => {
+        this.toArray().forEach((variant) => {
             collated[`${variant.label}`] = variant.getResolvedContext();
         });
         return Promise.props(collated);
@@ -53,11 +56,11 @@ module.exports = class VariantCollection extends EntityCollection {
         if (this._hasSharedView()) {
             return this.default().references;
         }
-        return _.uniq(_.flatten(this.toArray().map(variant => variant.references)));
+        return _.uniq(_.flatten(this.toArray().map((variant) => variant.references)));
     }
 
     get referencedBy() {
-        return _.uniqBy(_.flatten(this.toArray().map(variant => variant.referencedBy)), 'id');
+        return _.uniqBy(_.flatten(this.toArray().map((variant) => variant.referencedBy)), 'id');
     }
 
     _hasSharedView() {
@@ -71,7 +74,6 @@ module.exports = class VariantCollection extends EntityCollection {
     }
 
     static *create(component, defaultView, configured, views, readmes, opts) {
-
         configured = configured || [];
         views = views || [];
         readmes = readmes || [];
@@ -92,79 +94,93 @@ module.exports = class VariantCollection extends EntityCollection {
         }
 
         function findReadme(name) {
-            const readmeName = `${opts.viewName}${source.get('splitter')}${name}.${source.get('files.notes')}`.toLowerCase();
-            return _.find(readmes, f => f.name.toLowerCase() === readmeName);
+            const readmeName = `${opts.viewName}${source.get('splitter')}${name}.${source.get(
+                'files.notes'
+            )}`.toLowerCase();
+            return _.find(readmes, (f) => f.name.toLowerCase() === readmeName);
         }
 
         if (!hasDefaultConfigured) {
-            variants.push(Variant.create({
-                name: component.defaultName,
-                handle: `${component.handle}${source.get('splitter')}${component.defaultName}`.toLowerCase(),
-                view: opts.view,
-                viewPath: Path.join(opts.dir, opts.view),
-                dir: opts.dir,
-                isDefault: true,
-                isHidden: false,
-                order: 1,
-                readme: findReadme(component.defaultName),
-            }, defaultView, resources, component));
+            variants.push(
+                Variant.create(
+                    {
+                        name: component.defaultName,
+                        handle: `${component.handle}${source.get('splitter')}${component.defaultName}`.toLowerCase(),
+                        view: opts.view,
+                        viewPath: Path.join(opts.dir, opts.view),
+                        dir: opts.dir,
+                        isDefault: true,
+                        isHidden: false,
+                        order: 1,
+                        readme: findReadme(component.defaultName),
+                    },
+                    defaultView,
+                    resources,
+                    component
+                )
+            );
         }
 
-        const configuredVars = yield configured.map(co.wrap(function* (conf, i) {
-            let viewFile = null;
-            if (_.isUndefined(conf.name)) {
-                Log.error(`Could not create variant of ${component.handle} - 'name' value is missing`);
-                return null;
-            }
-            conf.name = utils.slugify(conf.name.toLowerCase());
+        const configuredVars = yield configured.map(
+            co.wrap(function* (conf, i) {
+                let viewFile = null;
+                if (_.isUndefined(conf.name)) {
+                    Log.error(`Could not create variant of ${component.handle} - 'name' value is missing`);
+                    return null;
+                }
+                conf.name = utils.slugify(conf.name.toLowerCase());
 
-            const p = _.defaults(conf, {
-                dir: opts.dir,
-                parent: component,
-            });
-            if (!p.view) {
-                // no view file specified
-                const viewName = `${opts.viewName}${source.get('splitter')}${p.name}`.toLowerCase();
-                viewFile = _.find(views, f => f.name.toLowerCase() === viewName);
-                p.view = viewFile ? viewFile.base : opts.view;
-            } else {
-                viewFile = _.find(views, f => f.base.toLowerCase() === p.view);
-            }
-            viewFile = viewFile || defaultView;
-            p.isDefault = (p.name === component.defaultName);
-            p.order = conf.order || p.isDefault ? 1 : i + (hasDefaultConfigured ? 1 : 2);
-            p.viewPath = Path.join(p.dir, p.view);
-            p.handle = `${component.handle}${source.get('splitter')}${p.name}`.toLowerCase();
-            p.isHidden = _.isUndefined(conf.hidden) ? viewFile.isHidden : conf.hidden;
-            p.readme = findReadme(p.name);
+                const p = _.defaults(conf, {
+                    dir: opts.dir,
+                    parent: component,
+                });
+                if (!p.view) {
+                    // no view file specified
+                    const viewName = `${opts.viewName}${source.get('splitter')}${p.name}`.toLowerCase();
+                    viewFile = _.find(views, (f) => f.name.toLowerCase() === viewName);
+                    p.view = viewFile ? viewFile.base : opts.view;
+                } else {
+                    viewFile = _.find(views, (f) => f.base.toLowerCase() === p.view);
+                }
+                viewFile = viewFile || defaultView;
+                p.isDefault = p.name === component.defaultName;
+                p.order = conf.order || p.isDefault ? 1 : i + (hasDefaultConfigured ? 1 : 2);
+                p.viewPath = Path.join(p.dir, p.view);
+                p.handle = `${component.handle}${source.get('splitter')}${p.name}`.toLowerCase();
+                p.isHidden = _.isUndefined(conf.hidden) ? viewFile.isHidden : conf.hidden;
+                p.readme = findReadme(p.name);
 
-            return Variant.create(p, viewFile, resources.filter(isRelated(p.handle)), component);
-        }));
+                return Variant.create(p, viewFile, resources.filter(isRelated(p.handle)), component);
+            })
+        );
 
         variants = variants.concat(configuredVars);
 
-        const usedViews = variants.map(v => v.view);
+        const usedViews = variants.map((v) => v.view);
 
-        views.filter(f => !_.includes(usedViews, f.base)).forEach(viewFile => {
-            const name = utils.slugify(viewFile.name.split(source.get('splitter'))[1]).toLowerCase();
-            const p = {
-                name: name,
-                handle:   `${component.handle}${source.get('splitter')}${name}`,
-                view: viewFile.base,
-                viewPath: viewFile.path,
-                order: viewFile.order,
-                dir: opts.dir,
-                isHidden: viewFile.isHidden,
-                readme: findReadme(name),
-            };
-            variants.push(
-                Variant.create(p, viewFile, resources.filter(isRelated(p.handle)), component)
-            );
-        });
+        views
+            .filter((f) => !_.includes(usedViews, f.base))
+            .forEach((viewFile) => {
+                const name = utils.slugify(viewFile.name.split(source.get('splitter'))[1]).toLowerCase();
+                const p = {
+                    name: name,
+                    handle: `${component.handle}${source.get('splitter')}${name}`,
+                    view: viewFile.base,
+                    viewPath: viewFile.path,
+                    order: viewFile.order,
+                    dir: opts.dir,
+                    isHidden: viewFile.isHidden,
+                    readme: findReadme(name),
+                };
+                variants.push(Variant.create(p, viewFile, resources.filter(isRelated(p.handle)), component));
+            });
 
-        return new VariantCollection({
-            name: `${component.name}-variants`,
-        }, _.orderBy(yield variants, ['order', 'name']), component);
+        return new VariantCollection(
+            {
+                name: `${component.name}-variants`,
+            },
+            _.orderBy(yield variants, ['order', 'name']),
+            component
+        );
     }
-
 };

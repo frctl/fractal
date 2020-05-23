@@ -16,7 +16,6 @@ const mime = require('mime');
 const Emitter = require('../core/mixins/emitter');
 
 module.exports = class Server extends mix(Emitter) {
-
     constructor(theme, engine, config, app) {
         super(app);
         this._app = app;
@@ -53,19 +52,18 @@ module.exports = class Server extends mix(Emitter) {
     }
 
     get isListening() {
-        return !! this._instance;
+        return !!this._instance;
     }
 
     start(sync) {
-        sync = _.isUndefined(sync) ? (this._config.sync || false) : sync;
+        sync = _.isUndefined(sync) ? this._config.sync || false : sync;
 
         return this._app.load().then(() => {
-
             if (this._config.watch && !sync) {
                 this._app.watch();
             }
 
-            return Promise.props(findPorts(this._config.port, sync)).then(ports => {
+            return Promise.props(findPorts(this._config.port, sync)).then((ports) => {
                 this._ports = ports;
                 this._sync = sync;
 
@@ -86,7 +84,7 @@ module.exports = class Server extends mix(Emitter) {
                         resolve(this._instance);
                     });
 
-                    this._instance.destroy = cb => {
+                    this._instance.destroy = (cb) => {
                         this._instance.close(cb);
                         for (const key in this._connections) {
                             this._connections[key].destroy();
@@ -94,7 +92,7 @@ module.exports = class Server extends mix(Emitter) {
                         this._instance.emit('destroy');
                     };
 
-                    this._instance.on('connection', conn => {
+                    this._instance.on('connection', (conn) => {
                         const key = `${conn.remoteAddress}:${conn.remotePort}`;
                         this._connections[key] = conn;
                         conn.on('close', () => delete this._connections[key]);
@@ -131,12 +129,12 @@ module.exports = class Server extends mix(Emitter) {
             port: this._ports.sync,
             server: false,
             proxy: {
-                target: this._urls.server
+                target: this._urls.server,
             },
             socket: {
                 port: this._ports.sync,
             },
-            watchOptions: {}
+            watchOptions: {},
         });
         let watchers = {};
 
@@ -150,17 +148,17 @@ module.exports = class Server extends mix(Emitter) {
         });
 
         // listen out for changes in the static assets directories
-        this._theme.static().forEach(s => {
+        this._theme.static().forEach((s) => {
             Log.debug(`Watching static directory - ${s.path}`);
             const monitor = chokidar.watch(s.path, {
                 ignored: /[\/\\]\./,
-                ignoreInitial: true
+                ignoreInitial: true,
             });
-            function getFilePaths(filepath){
+            function getFilePaths(filepath) {
                 return Path.join(s.mount || '/', filepath.replace(s.path, ''));
             }
-            monitor.on('change', filepath => reload(filepath, getFilePaths(filepath)));
-            monitor.on('add', filepath => reload(filepath, getFilePaths(filepath)));
+            monitor.on('change', (filepath) => reload(filepath, getFilePaths(filepath)));
+            monitor.on('add', (filepath) => reload(filepath, getFilePaths(filepath)));
             watchers[s.path] = monitor;
         });
 
@@ -173,7 +171,7 @@ module.exports = class Server extends mix(Emitter) {
         // cleanup
         this._instance.on('destroy', () => {
             syncServer.exit();
-            _.forEach(watchers, w => {
+            _.forEach(watchers, (w) => {
                 w.close();
             });
             watchers = {};
@@ -186,9 +184,9 @@ module.exports = class Server extends mix(Emitter) {
             }
             const urls = bs.getOption('urls');
             this._urls.sync = {
-                'local': urls.get('local'),
-                'external': urls.get('external'),
-                'ui': urls.get('ui'),
+                local: urls.get('local'),
+                external: urls.get('external'),
+                ui: urls.get('ui'),
             };
             this.emit('ready');
             resolve(this._instance);
@@ -218,7 +216,9 @@ module.exports = class Server extends mix(Emitter) {
         }
 
         if (match.route.static) {
-            const staticPath = _.isFunction(match.route.static) ? match.route.static(match.params, this._app) : match.route.static;
+            const staticPath = _.isFunction(match.route.static)
+                ? match.route.static(match.params, this._app)
+                : match.route.static;
             return res.sendFile(decodeURI(staticPath));
         }
 
@@ -236,8 +236,8 @@ module.exports = class Server extends mix(Emitter) {
         };
 
         this._render(match.route.view, context)
-            .then(v => res.send(v))
-            .catch(err => next(err));
+            .then((v) => res.send(v))
+            .catch((err) => next(err));
     }
 
     _onError(err, req, res, next) {
@@ -250,8 +250,8 @@ module.exports = class Server extends mix(Emitter) {
         }
 
         this._render(this._theme.errorView(), { error: err })
-            .then(v => res.send(v))
-            .catch(err => next(err));
+            .then((v) => res.send(v))
+            .catch((err) => next(err));
 
         this.emit('error', err, res.locals.__request);
     }
@@ -278,7 +278,7 @@ module.exports = class Server extends mix(Emitter) {
             next();
         });
 
-        this._theme.static().forEach(s => {
+        this._theme.static().forEach((s) => {
             this._server.use(`/${_.trimStart(s.mount, '/')}`, express.static(s.path));
         });
 
@@ -286,7 +286,6 @@ module.exports = class Server extends mix(Emitter) {
 
         this._server.use(this._onError.bind(this));
     }
-
 };
 
 function findPorts(serverPort, useSync) {
@@ -315,7 +314,7 @@ function findPorts(serverPort, useSync) {
         const syncPort = findPort(from, until, ip);
         return {
             sync: syncPort,
-            server: syncPort.then(port => {
+            server: syncPort.then((port) => {
                 return findPort(port + 1, port + range, ip);
             }),
         };

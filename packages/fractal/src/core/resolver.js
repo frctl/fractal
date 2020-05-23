@@ -4,8 +4,7 @@ const Promise = require('bluebird');
 const _ = require('lodash');
 const Log = require('./log');
 
-const resolver = module.exports = {
-
+const resolver = (module.exports = {
     entity(entity) {
         if (entity.isComponent) {
             entity = entity.variants().default();
@@ -21,13 +20,12 @@ const resolver = module.exports = {
                 return Promise.resolve(null);
             }
             const iterator = _.isArray(obj) ? 'map' : 'mapValues';
-            const resolver = iterator == 'map' ? 'all': 'props';
+            const resolver = iterator == 'map' ? 'all' : 'props';
 
             return Promise[resolver](_[iterator](obj, mapper));
         }
 
         function mapper(item, key) {
-
             if (item === undefined || item === null) {
                 return Promise.resolve(null);
             }
@@ -40,7 +38,7 @@ const resolver = module.exports = {
                 return item.replace(/^\\@/, '@');
             }
 
-	        if (_.isString(item) && _.startsWith(item, '@@')) {
+            if (_.isString(item) && _.startsWith(item, '@@')) {
                 const entity = source.find(item.substring(1));
                 const fullRenderedComponent = source.engine().render(entity.viewPath, entity.content, entity.context, {
                     self: entity.toJSON(),
@@ -62,7 +60,7 @@ const resolver = module.exports = {
                         }
                         return context;
                     } else {
-                        return resolve(entity.context).then(entityContext => {
+                        return resolve(entity.context).then((entityContext) => {
                             let clonedContext = _.cloneDeep(entityContext);
                             if (parts.length) {
                                 return _.get(clonedContext, parts.join('.'), null);
@@ -86,7 +84,6 @@ const resolver = module.exports = {
             return item;
         }
 
-        return resolve(context).then(ctx => _.cloneDeep(ctx));
-    }
-
-};
+        return resolve(context).then((ctx) => _.cloneDeep(ctx));
+    },
+});
