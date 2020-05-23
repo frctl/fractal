@@ -9,3 +9,6 @@ node_js:
     - "lts/dubnium"
     - "lts/erbium"
 sudo: false
+
+before_script:
+    - npm run bootstrap

@@ -118,6 +118,16 @@ If you rather have a question, please ask it on [our Discord server](https://dis
 
 We will always welcome pull requests on any of the [frctl organisation](https://github.com/frctl) repositories. Please submit PRs against `master` branch with an explanation of your intention.
 
+We use [conventional commits](https://www.conventionalcommits.org/), which means that every pull request title should conform to the standard.
+
+### Development
+
+This repository is a monorepo managed by Lerna. There is only one lockfile in root. This means that all packages must be installed in root, manually added to the packages' package.json files and then bootstrapped with lerna.
+
+To do some work, run the following commands in root:
+1. `npm ci`
+2. `npm run bootstrap`
+
 ## Testing
 
 Fractal is a project that evolved rapidly and organically from a proof-of-concept prototype into a more stable, mature tool. Because of this it's currently pretty far behind where it should be in terms of test coverage. Any contributions on this front would be most welcome!
