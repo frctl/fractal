@@ -1,17 +1,15 @@
 'use strict';
 
 const Promise = require('bluebird');
-const _ = require('lodash');
 const Path = require('path');
 const Handlebars = require('handlebars');
 const inquirer = require('inquirer');
-const execa = require("execa");
+const execa = require('execa');
 const shell = require('../../core/shell');
 const fs = Promise.promisifyAll(require('fs-extra'));
 const helpers = require('../../core/utils');
 
 module.exports = {
-
     command: 'new <path>',
 
     config: {
@@ -41,7 +39,7 @@ module.exports = {
             {
                 type: 'input',
                 name: 'projectTitle',
-                message: 'What\'s the title of your project?',
+                message: "What's the title of your project?",
                 default: helpers.titlize(args.path),
             },
             {
@@ -93,39 +91,45 @@ module.exports = {
             const fractalContents = Handlebars.compile(fs.readFileSync(fractalFileTpl, 'utf8'))(answers);
             const indexContents = Handlebars.compile(fs.readFileSync(docsIndexTpl, 'utf8'))(answers);
 
-            return fs.ensureDirAsync(basePath).then(() => {
-                return Promise.all([
-                    fs.ensureDirAsync(componentsDir),
-                    fs.ensureDirAsync(docsDir),
-                    fs.ensureDirAsync(publicDir),
-                    fs.writeJsonAsync(packageJSONPath, packageJSON),
-                ]);
-            }).then(paths => {
-                return fs.copyAsync(exampleComponent, componentCopyTo);
-            }).then(paths => {
-                if (answers.useGit) {
-                    shell.touch(Path.join(publicDir, '.gitkeep'));
-                    return fs.writeFileAsync(gitIgnorePath, 'node_modules\n');
-                }
-                return paths;
-            }).then(paths => {
-                return Promise.all([
-                    fs.writeFileAsync(fractalFilePath, fractalContents),
-                    fs.writeFileAsync(docsIndexPath, indexContents),
-                ]);
-            }).finally(async () => {
-                console.log('Installing NPM dependencies - this may take some time!');
-                shell.cd(basePath);
-                const { stdout } = await execa('npm', ['install']);
-                console.log(stdout);
-                console.success('Your new Fractal project has been set up.');
-                done();
-            }).catch(e => {
-                fs.remove(basePath);
-                console.error(e);
-                done();
-            });
+            return fs
+                .ensureDirAsync(basePath)
+                .then(() => {
+                    return Promise.all([
+                        fs.ensureDirAsync(componentsDir),
+                        fs.ensureDirAsync(docsDir),
+                        fs.ensureDirAsync(publicDir),
+                        fs.writeJsonAsync(packageJSONPath, packageJSON),
+                    ]);
+                })
+                .then(() => {
+                    return fs.copyAsync(exampleComponent, componentCopyTo);
+                })
+                .then((paths) => {
+                    if (answers.useGit) {
+                        shell.touch(Path.join(publicDir, '.gitkeep'));
+                        return fs.writeFileAsync(gitIgnorePath, 'node_modules\n');
+                    }
+                    return paths;
+                })
+                .then(() => {
+                    return Promise.all([
+                        fs.writeFileAsync(fractalFilePath, fractalContents),
+                        fs.writeFileAsync(docsIndexPath, indexContents),
+                    ]);
+                })
+                .finally(async () => {
+                    console.log('Installing NPM dependencies - this may take some time!');
+                    shell.cd(basePath);
+                    const { stdout } = await execa('npm', ['install']);
+                    console.log(stdout);
+                    console.success('Your new Fractal project has been set up.');
+                    done();
+                })
+                .catch((e) => {
+                    fs.remove(basePath);
+                    console.error(e);
+                    done();
+                });
         });
     },
-
 };

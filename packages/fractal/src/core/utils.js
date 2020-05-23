@@ -1,16 +1,13 @@
 'use strict';
 
-const Promise = require('bluebird');
 const Path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
 const minimist = require('minimist');
 const fang = require('@allmarkedup/fang');
 const _ = require('lodash');
-const Stream = require('stream');
 
 module.exports = {
-
     lang(filePath) {
         const name = Path.parse(filePath).ext.replace('.', '').toUpperCase();
         switch (name) {
@@ -28,12 +25,14 @@ module.exports = {
                     color: null,
                 };
             default:
-                return fang(filePath) || {
-                    name: name,
-                    mode: 'plaintext',
-                    scope: null,
-                    color: null,
-                };
+                return (
+                    fang(filePath) || {
+                        name: name,
+                        mode: 'plaintext',
+                        scope: null,
+                        color: null,
+                    }
+                );
         }
     },
 
@@ -41,7 +40,7 @@ module.exports = {
         return _.startCase(str);
     },
 
-    slugify: str => _.deburr(str).replace(/\s+/g, '-').toLowerCase(),
+    slugify: (str) => _.deburr(str).replace(/\s+/g, '-').toLowerCase(),
 
     toJSON(item) {
         const obj = {};
@@ -78,18 +77,22 @@ module.exports = {
     },
 
     stringify(data, indent) {
-        return JSON.stringify(data, function (key, val) {
-            if (this[key] instanceof Buffer) {
-                return '<Buffer>';
-            }
-            if (this[key] instanceof Function) {
-                return '<Function>';
-            }
-            if (_.isPlainObject(this[key]) && !_.size(this[key])) {
-                return '{}';
-            }
-            return val;
-        }, indent || 4);
+        return JSON.stringify(
+            data,
+            function (key, val) {
+                if (this[key] instanceof Buffer) {
+                    return '<Buffer>';
+                }
+                if (this[key] instanceof Function) {
+                    return '<Function>';
+                }
+                if (_.isPlainObject(this[key]) && !_.size(this[key])) {
+                    return '{}';
+                }
+                return val;
+            },
+            indent || 4
+        );
     },
 
     fileExistsSync(path) {
@@ -102,7 +105,7 @@ module.exports = {
     },
 
     isPromise(value) {
-        return (value && _.isFunction(value.then));
+        return value && _.isFunction(value.then);
     },
 
     md5(str) {
@@ -122,28 +125,29 @@ module.exports = {
     },
 
     /*
-    * Non-array merging version of _.defaultsDeep
-    *
-    * utils.defaultsDeep(src, defaults);
-    */
+     * Non-array merging version of _.defaultsDeep
+     *
+     * utils.defaultsDeep(src, defaults);
+     */
 
     defaultsDeep() {
-
         let output = {};
 
-        _.toArray(arguments).reverse().forEach(item => {
-            _.mergeWith(output, item, (objectValue, sourceValue) => {
-                if (_.isArray(sourceValue)) {
-                    return sourceValue;
-                }
-                if (!_.isPlainObject(sourceValue) || ! _.isPlainObject(objectValue)) {
-                    return sourceValue;
-                }
-                if (_.isUndefined(sourceValue)) {
-                    return objectValue;
-                }
+        _.toArray(arguments)
+            .reverse()
+            .forEach((item) => {
+                _.mergeWith(output, item, (objectValue, sourceValue) => {
+                    if (_.isArray(sourceValue)) {
+                        return sourceValue;
+                    }
+                    if (!_.isPlainObject(sourceValue) || !_.isPlainObject(objectValue)) {
+                        return sourceValue;
+                    }
+                    if (_.isUndefined(sourceValue)) {
+                        return objectValue;
+                    }
+                });
             });
-        });
 
         return output;
     },
@@ -166,7 +170,10 @@ module.exports = {
             return Path.relative(fromPath, toPath).replace(/\\/g, '/');
         }
 
-        return Path.relative(fromPath, toPath).replace(/\\/g, '/').replace(/^\.\.\//, '').replace('.PLACEHOLDER', ext);
+        return Path.relative(fromPath, toPath)
+            .replace(/\\/g, '/')
+            .replace(/^\.\.\//, '')
+            .replace('.PLACEHOLDER', ext);
 
         function getStaticPagePath(url) {
             if (url == '/') {
@@ -176,5 +183,4 @@ module.exports = {
             return `${parts.dir}/${parts.name}.PLACEHOLDER`;
         }
     },
-
 };

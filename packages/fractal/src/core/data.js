@@ -8,20 +8,7 @@ const fs = Promise.promisifyAll(require('fs'));
 const utils = require('./utils');
 const Log = require('./log');
 
-// module.exports = function (app) {
-
-    // app.on('source:changed', function(source, data){
-    //     if (data.type === 'config') {
-    //         let filePath = Path.relative(__dirname, data.path);
-    //         filePath = require.resolve(filePath);
-    //         if (require.cache[filePath]) {
-    //             delete require.cache[filePath];
-    //         }
-    //     }
-    // });
-
 module.exports = {
-
     parse(data, format) {
         format = format.toLowerCase();
         if (format === 'js' || format === 'javascript') {
@@ -62,25 +49,24 @@ module.exports = {
                 }
                 return Promise.resolve(data);
             } catch (err) {
-                Log.error(`Error parsing data file ${filePath.split('/')[filePath.split('/').length - 1]}: ${err.message}`);
+                Log.error(
+                    `Error parsing data file ${filePath.split('/')[filePath.split('/').length - 1]}: ${err.message}`
+                );
                 return Promise.resolve({});
             }
         } else {
-            return fs.readFileAsync(filePath, 'utf8').then(contents => this.parse(contents, format)).catch(err => {
-                Log.error(`Error loading data file ${filePath}: ${err.message}`);
-                return {};
-            });
+            return fs
+                .readFileAsync(filePath, 'utf8')
+                .then((contents) => this.parse(contents, format))
+                .catch((err) => {
+                    Log.error(`Error loading data file ${filePath}: ${err.message}`);
+                    return {};
+                });
         }
     },
 
     writeFile(filePath, data) {
-        const pathInfo = Path.parse(Path.resolve(filePath));
         const format = utils.lang(filePath, true).mode;
         return fs.writeFileAsync(filePath, this.stringify(data, format));
     },
-
 };
-
-//     return module.exports;
-//
-// };

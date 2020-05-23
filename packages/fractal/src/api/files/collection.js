@@ -1,13 +1,11 @@
 'use strict';
 
-const _ = require('lodash');
 const anymatch = require('anymatch');
 const mix = require('../../core/mixins/mix');
 const Collection = require('../../core/mixins/collection');
 const Stream = require('../../core/promise-stream');
 
 module.exports = class FileCollection extends mix(Collection) {
-
     constructor(config, items) {
         super();
         this.setItems(items);
@@ -16,7 +14,7 @@ module.exports = class FileCollection extends mix(Collection) {
     }
 
     files() {
-        return this.newSelf(this.toArray().filter(i => i.isFile));
+        return this.newSelf(this.toArray().filter((i) => i.isFile));
     }
 
     match(test) {
@@ -42,7 +40,10 @@ module.exports = class FileCollection extends mix(Collection) {
     }
 
     toVinylArray() {
-        return this.filter('isFile').flatten().map(file => file.toVinyl()).toArray();
+        return this.filter('isFile')
+            .flatten()
+            .map((file) => file.toVinyl())
+            .toArray();
     }
 
     toVinylStream() {
@@ -59,5 +60,4 @@ module.exports = class FileCollection extends mix(Collection) {
         self.name = this.name || null;
         return self;
     }
-
 };

@@ -91,7 +91,10 @@
   "scripts": {
     "clean": "lerna clean",
     "bootstrap": "lerna bootstrap --hoist --strict --ci --force-local",
-    "test": "lerna run test",
+    "eslint": "eslint . --ignore-path .gitignore",
+    "validate": "npm run eslint",
+    "format": "npm run eslint -- --fix",
+    "test": "npm run validate && lerna run test",
     "release": "lerna version --conventional-commits --no-push",
     "contributors:add": "all-contributors add",
     "contributors:generate": "all-contributors generate"

@@ -1,11 +1,9 @@
 'use strict';
 
-const _ = require('lodash');
 const Path = require('path');
 const File = require('../files/file');
 
 module.exports = class Asset extends File {
-
     constructor(file, relativeTo, source) {
         super(file, relativeTo);
         this.isAsset = true;
@@ -26,5 +24,4 @@ module.exports = class Asset extends File {
         self[`is${this.ext.replace(/^\./, '').toUpperCase()}`] = true;
         return self;
     }
-
 };

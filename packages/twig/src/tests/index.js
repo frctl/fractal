@@ -1,9 +1,5 @@
 'use strict';
 
-module.exports = function(fractal){
-
-    return {
-        
-    }
-
+module.exports = function () {
+    return {};
 };

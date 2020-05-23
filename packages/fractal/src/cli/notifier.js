@@ -1,10 +1,8 @@
 'use strict';
 
-const _ = require('lodash');
 const chalk = require('chalk');
 
 class Notifier {
-
     constructor(console, interactive) {
         this._console = console;
         this._interactive = interactive;
@@ -12,10 +10,13 @@ class Notifier {
 
     updateAvailable(details) {
         this._console.br();
-        this._console.box(null,
-`Fractal update available! ${chalk.dim(details.current)} → ${chalk.green(details.latest)}
+        this._console
+            .box(
+                null,
+                `Fractal update available! ${chalk.dim(details.current)} → ${chalk.green(details.latest)}
 Run ${chalk.cyan('npm i -g ' + details.name)} to update.`
-        ).unslog();
+            )
+            .unslog();
         this._console.br();
     }
 

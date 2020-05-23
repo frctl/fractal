@@ -1,8 +1,6 @@
 'use strict';
 
-const Promise = require('bluebird');
-
-module.exports = function (app, engine) {
+module.exports = function () {
     return {
         name: 'isError',
         filter(item) {

@@ -2,7 +2,7 @@
 
 const WebError = require('../../error');
 
-module.exports = function (app, engine) {
+module.exports = function () {
     return {
         name: 'throw',
         value(code, message) {

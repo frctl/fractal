@@ -2,9 +2,9 @@
 
 const markdown = require('../../../core/markdown');
 
-module.exports = function (app, engine) {
+module.exports = function () {
     return {
         name: 'markdown',
-        filter: str => markdown(str),
+        filter: (str) => markdown(str),
     };
 };

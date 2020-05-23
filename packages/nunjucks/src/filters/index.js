@@ -1,9 +1,7 @@
 'use strict';
 
-module.exports = function(fractal){
-
+module.exports = function (fractal) {
     return {
         path: require('./path.js')(fractal),
-    }
-
+    };
 };

@@ -1,14 +1,11 @@
 'use strict';
 
-const Handlebars = require('handlebars');
-const _          = require('lodash');
+const _ = require('lodash');
 
-module.exports = function(fractal){
-
-    return function render(handle){
+module.exports = function (fractal) {
+    return function render(handle) {
         let context;
         let source = fractal.components;
-        const opts = arguments[arguments.length-1].hash;
         if (arguments.length >= 3) {
             context = arguments[1];
         } else if (arguments.length == 2) {
@@ -23,5 +20,4 @@ module.exports = function(fractal){
         const defaultContext = entity.isComponent ? entity.variants().default().getContext() : entity.getContext();
         return _.defaultsDeep(context || {}, defaultContext);
     };
-
 };

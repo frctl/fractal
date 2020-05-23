@@ -2,10 +2,8 @@
 
 const nunjucks = require('nunjucks');
 
-module.exports = function(fractal){
-
+module.exports = function (fractal) {
     function ViewExtension() {
-
         this.tags = ['view'];
 
         this.parse = function (parser, nodes) {
@@ -28,15 +26,16 @@ module.exports = function(fractal){
             if (entity.isComponent) {
                 entity = entity.variants().default();
             }
-            entity.getContent().then(content => {
-                callback(null, new nunjucks.runtime.SafeString(content));
-            }).catch(err => {
-                callback(err);
-            });
-
+            entity
+                .getContent()
+                .then((content) => {
+                    callback(null, new nunjucks.runtime.SafeString(content));
+                })
+                .catch((err) => {
+                    callback(err);
+                });
         };
-    };
+    }
 
     return new ViewExtension();
-
 };

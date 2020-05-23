@@ -1,7 +1,6 @@
 'use strict';
 
 module.exports = {
-
     command: 'info',
 
     config: {
@@ -10,7 +9,7 @@ module.exports = {
         scope: ['global', 'project'],
     },
 
-    action(args, done) {
+    action() {
         const cli = this.fractal.cli;
         const header = 'Fractal install info';
         const footer = null;
@@ -23,5 +22,4 @@ module.exports = {
 
         return this.console.box(header, body, footer).unslog();
     },
-
 };

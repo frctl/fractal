@@ -7,13 +7,11 @@ const fs = Promise.promisifyAll(require('fs'));
 const anymatch = require('anymatch');
 const DocCollection = require('./collection');
 const Doc = require('./doc');
-const Data = require('../../core/data');
 const EntitySource = require('../../core/entities/source');
 const resolver = require('../../core/resolver');
 const md = require('../../core/markdown');
 
 module.exports = class DocSource extends EntitySource {
-
     constructor(app) {
         super('docs', app);
     }
@@ -31,14 +29,17 @@ module.exports = class DocSource extends EntitySource {
     }
 
     toc(page, maxDepth) {
-        return page.getContent().then(content => {
-            return this.resolve(page.context || {}).then(context => {
-                const meta = {env: {}};
-                return this.engine().render(page.filePath, content, context, meta).then(rendered => md.toc(rendered, maxDepth, this.get('markdown')));
+        return page.getContent().then((content) => {
+            return this.resolve(page.context || {}).then((context) => {
+                const meta = { env: {} };
+                return this.engine()
+                    .render(page.filePath, content, context, meta)
+                    .then((rendered) => md.toc(rendered, maxDepth, this.get('markdown')));
             });
         });
     }
 
+    /* eslint-disable-next-line no-unused-vars */
     render(page, context, env, opts) {
         const self = this;
 
@@ -56,7 +57,7 @@ module.exports = class DocSource extends EntitySource {
                     throw new Error(`Cannot find page ${str}`);
                 }
             } else {
-                return fs.readFileAsync(page, 'utf8').then(content => {
+                return fs.readFileAsync(page, 'utf8').then((content) => {
                     return this.resolve(context).then((ctx) => {
                         return self._render(page, content, ctx, {
                             env: env,
@@ -69,7 +70,7 @@ module.exports = class DocSource extends EntitySource {
         const renderContext = context || page.context;
         const target = page.toJSON();
         return co(function* () {
-            const source = yield (self.isLoaded ? Promise.resolve(self) : self.load());
+            yield self.isLoaded ? Promise.resolve(self) : self.load();
             const context = yield self.resolve(renderContext);
             const content = yield page.getContent();
             return self._render(page.filePath, content, context, {
@@ -104,7 +105,9 @@ module.exports = class DocSource extends EntitySource {
     }
 
     _render(path, content, context, meta) {
-        return this.engine().render(path, content, context, meta).then(rendered => (this.get('markdown') ? md(rendered, this.get('markdown')) : rendered));
+        return this.engine()
+            .render(path, content, context, meta)
+            .then((rendered) => (this.get('markdown') ? md(rendered, this.get('markdown')) : rendered));
     }
 
     _parse(fileTree) {
@@ -113,14 +116,17 @@ module.exports = class DocSource extends EntitySource {
         const build = co.wrap(function* (dir, parent) {
             let collection;
             const children = dir.children || [];
-            const configs = children.filter(f => source.isConfig(f));
+            const configs = children.filter((f) => source.isConfig(f));
 
-            const dirConfig = yield EntitySource.getConfig(_.find(configs, f => f.name.startsWith(dir.name)), {
-                name: dir.name,
-                isHidden: dir.isHidden,
-                order: dir.order,
-                dir: dir,
-            });
+            const dirConfig = yield EntitySource.getConfig(
+                _.find(configs, (f) => f.name.startsWith(dir.name)),
+                {
+                    name: dir.name,
+                    isHidden: dir.isHidden,
+                    order: dir.order,
+                    dir: dir,
+                }
+            );
 
             if (!parent) {
                 collection = source;
@@ -130,10 +136,10 @@ module.exports = class DocSource extends EntitySource {
                 collection.setProps(dirConfig);
             }
 
-            const items = yield children.map(item => {
+            const items = yield children.map((item) => {
                 if (source.isPage(item)) {
                     const nameMatch = `${item.name}.`;
-                    const configFile = _.find(configs, f => f.name.startsWith(nameMatch));
+                    const configFile = _.find(configs, (f) => f.name.startsWith(nameMatch));
                     const contents = item.read();
                     const config = EntitySource.getConfig(configFile, {
                         name: item.name,
@@ -143,7 +149,9 @@ module.exports = class DocSource extends EntitySource {
                         filePath: item.path,
                         file: item,
                     });
-                    return Promise.join(config, contents, (config, contents) => Doc.create(config, contents, collection));
+                    return Promise.join(config, contents, (config, contents) =>
+                        Doc.create(config, contents, collection)
+                    );
                 } else if (item.isDirectory) {
                     return build(item, collection);
                 }

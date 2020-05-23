@@ -1,9 +1,7 @@
 'use strict';
 
-module.exports = function(fractal, config){
-
+module.exports = function (fractal, config) {
     return {
-        render: require('./render.js')(fractal, config)
-    }
-
+        render: require('./render.js')(fractal, config),
+    };
 };

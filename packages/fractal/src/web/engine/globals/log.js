@@ -1,9 +1,6 @@
 'use strict';
 
-const _ = require('lodash');
-const Path = require('path');
-
-module.exports = function (app, engine) {
+module.exports = function (app) {
     return {
         name: 'log',
         value(item, type) {

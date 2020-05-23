@@ -2,7 +2,6 @@
 
 const Promise = require('bluebird');
 const _ = require('lodash');
-const anymatch = require('anymatch');
 
 const utils = require('../utils');
 const Log = require('../log');
@@ -13,7 +12,6 @@ const Source = require('../mixins/source');
 const Heritable = require('../mixins/heritable');
 
 module.exports = class EntitySource extends mix(Source, Heritable) {
-
     constructor(name, app) {
         super();
         this._engine = null;
@@ -28,7 +26,7 @@ module.exports = class EntitySource extends mix(Source, Heritable) {
      * @return {Collection}
      */
     entities() {
-        return this.newSelf(this.toArray().filter(i => ! i.isCollection));
+        return this.newSelf(this.toArray().filter((i) => !i.isCollection));
     }
 
     engine(adapter) {
@@ -45,7 +43,9 @@ module.exports = class EntitySource extends mix(Source, Heritable) {
             adapter = adapter({});
         }
         if (!_.isFunction(adapter.register)) {
-            throw new Error('Template engine adaptor factory functions must return an object with a \'register\' method.');
+            throw new Error(
+                "Template engine adaptor factory functions must return an object with a 'register' method."
+            );
         }
         const engine = adapter.register(this, this._app);
         if (!(engine instanceof Adapter)) {
@@ -91,7 +91,7 @@ module.exports = class EntitySource extends mix(Source, Heritable) {
         self.fullPath = this.fullPath;
         self.isCollection = true;
         self.isSource = true;
-        self.items = this.toArray().map(i => (i.toJSON ? i.toJSON() : i));
+        self.items = this.toArray().map((i) => (i.toJSON ? i.toJSON() : i));
         return self;
     }
 
@@ -100,11 +100,11 @@ module.exports = class EntitySource extends mix(Source, Heritable) {
         if (!file) {
             return Promise.resolve(defaults);
         }
-        return Data.readFile(file.path).then(c => utils.defaultsDeep(c, defaults)).catch(err => {
-            Log.error(`Error parsing data file ${file.path}: ${err}`);
-            return defaults;
-        });
+        return Data.readFile(file.path)
+            .then((c) => utils.defaultsDeep(c, defaults))
+            .catch((err) => {
+                Log.error(`Error parsing data file ${file.path}: ${err}`);
+                return defaults;
+            });
     }
-
-
 };

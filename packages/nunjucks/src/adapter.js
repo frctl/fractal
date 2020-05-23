@@ -1,16 +1,14 @@
 'use strict';
 
-const _        = require('lodash');
-const Promise  = require('bluebird');
+const _ = require('lodash');
+const Promise = require('bluebird');
 const nunjucks = require('nunjucks');
-const path     = require('path');
-const fs       = require('fs');
-const Adapter  = require('@frctl/fractal').Adapter;
+const path = require('path');
+const fs = require('fs');
+const Adapter = require('@frctl/fractal').Adapter;
 
 class NunjucksAdapter extends Adapter {
-
     constructor(source, config, app) {
-
         super(null, source);
 
         const loaders = [];
@@ -34,10 +32,10 @@ class NunjucksAdapter extends Adapter {
                     return {
                         src: view.content,
                         path: view.content,
-                        noCache: true
+                        noCache: true,
                     };
                 }
-            }
+            },
         });
         loaders.push(new StringLoader());
 
@@ -47,11 +45,8 @@ class NunjucksAdapter extends Adapter {
          */
 
         if (config.paths) {
-
             const FileSystemLoader = nunjucks.Loader.extend({
-
-                init(searchPaths, opts) {
-                    opts = opts || {};
+                init(searchPaths) {
                     this.searchPaths = [].concat(searchPaths);
                 },
 
@@ -59,7 +54,7 @@ class NunjucksAdapter extends Adapter {
                     let fullpath = null;
                     const paths = this.searchPaths;
 
-                    for(let i = 0; i < paths.length; i++) {
+                    for (let i = 0; i < paths.length; i++) {
                         const basePath = path.resolve(paths[i]);
                         const p = path.resolve(paths[i], name);
 
@@ -69,16 +64,16 @@ class NunjucksAdapter extends Adapter {
                         }
                     }
 
-                    if(!fullpath) {
+                    if (!fullpath) {
                         return null;
-                    };
+                    }
 
                     return {
                         src: fs.readFileSync(fullpath, 'utf-8'),
                         path: fullpath,
-                        noCache: true
+                        noCache: true,
                     };
-                 }
+                },
             });
             loaders.push(new FileSystemLoader(config.paths));
         }
@@ -100,46 +95,42 @@ class NunjucksAdapter extends Adapter {
         setEnv('_config', this._app.config(), context);
         return this.engine.renderStringAsync(str, context);
     }
-
 }
 
 function setEnv(key, value, context) {
-    if (_.isUndefined(context[key]) && ! _.isUndefined(value)) {
+    if (_.isUndefined(context[key]) && !_.isUndefined(value)) {
         context[key] = value;
     }
 }
 
-module.exports = function(config) {
-
+module.exports = function (config) {
     config = config || {};
 
     return {
-
         register(source, app) {
-
             const adapter = new NunjucksAdapter(source, config, app);
             const nj = adapter.engine;
 
             if (!config.pristine) {
-                _.each(require('./filters')(app) || {}, function(filter, name){
+                _.each(require('./filters')(app) || {}, function (filter, name) {
                     addFilter(name, filter);
                 });
-                _.each(require('./extensions')(app) || {}, function(ext, name){
+                _.each(require('./extensions')(app) || {}, function (ext, name) {
                     nj.addExtension(name, ext);
                 });
             }
 
-            _.each(config.filters || {}, function(filter, name){
+            _.each(config.filters || {}, function (filter, name) {
                 addFilter(name, filter);
             });
-            _.each(config.extensions || {}, function(ext, name){
+            _.each(config.extensions || {}, function (ext, name) {
                 nj.addExtension(name, ext);
             });
-            _.each(config.globals || {}, function(value, name){
+            _.each(config.globals || {}, function (value, name) {
                 nj.addGlobal(name, value);
             });
 
-            function addFilter(name, filter){
+            function addFilter(name, filter) {
                 if (typeof filter === 'function') {
                     nj.addFilter(name, filter);
                 } else if (typeof filter === 'object') {
@@ -148,7 +139,6 @@ module.exports = function(config) {
             }
 
             return adapter;
-        }
-    }
-
+        },
+    };
 };

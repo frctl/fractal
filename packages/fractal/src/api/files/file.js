@@ -6,9 +6,7 @@ const VinylFile = require('vinyl');
 const mime = require('mime');
 const utils = require('../../core/utils');
 
-
 module.exports = class File {
-
     constructor(file, relativeTo) {
         this.isFile = true;
         this.id = utils.md5(file.path);
@@ -43,7 +41,7 @@ module.exports = class File {
     }
 
     getContent() {
-        return this._file.read().then(c => c.toString());
+        return this._file.read().then((c) => c.toString());
     }
 
     getContentSync() {
@@ -85,5 +83,4 @@ module.exports = class File {
             isImage: this.isImage,
         };
     }
-
 };

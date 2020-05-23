@@ -1,17 +1,12 @@
 'use strict';
 
 const _ = require('lodash');
-const Path = require('path');
-const Promise = require('bluebird');
-const fs = Promise.promisifyAll(require('fs-extra'));
 const pr = require('path-to-regexp');
 const mix = require('../core/mixins/mix');
-const WebError = require('./error');
 const Configurable = require('../core/mixins/configurable');
 const Emitter = require('../core/mixins/emitter');
 
 module.exports = class Theme extends mix(Configurable, Emitter) {
-
     constructor(viewPaths, options) {
         super();
 
@@ -145,9 +140,8 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
         }
         return null;
     }
-
 };
 
 function cleanUrlPath(urlPath) {
-    return urlPath.replace(/\%2F/g, '/');
+    return urlPath.replace(/%2F/g, '/');
 }

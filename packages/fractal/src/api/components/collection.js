@@ -1,10 +1,8 @@
 'use strict';
 
-const _ = require('lodash');
 const EntityCollection = require('../../core/entities/collection');
 
 module.exports = class ComponentCollection extends EntityCollection {
-
     constructor(config, items, parent) {
         super(config.name, config, items, parent);
     }
@@ -20,5 +18,4 @@ module.exports = class ComponentCollection extends EntityCollection {
     variants() {
         return this.source.variants.apply(this, arguments);
     }
-
 };
