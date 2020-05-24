@@ -76,7 +76,7 @@ FractalCli.launch(config, function(env){
         }
 
         if (! app || ! app.__fractal) {
-            // looks like the configuration file is not correctly module.export'ing a fractal intance
+            // looks like the configuration file is not correctly module.export'ing a fractal instance
             console.log(`${chalk.red('Configuration error')}: The CLI configuration file is not exporting an instance of Fractal.`);
             return;
         }

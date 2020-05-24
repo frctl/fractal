@@ -9,7 +9,7 @@ In order to get a locale aware date for the 'last updated' text, install the
 
 ## Customize theme labels
 
-Some theme-specific labels can be overriden via config options:
+Some theme-specific labels can be overridden via config options:
 
 ```
 const theme = require('@frctl/mandelbrot')({
