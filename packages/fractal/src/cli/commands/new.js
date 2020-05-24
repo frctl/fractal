@@ -86,6 +86,10 @@ module.exports = {
                 dependencies: {
                     '@frctl/fractal': `^${fractal.get('version')}`,
                 },
+                scripts: {
+                    'fractal:start': 'fractal start --sync',
+                    'fractal:build': 'fractal build',
+                },
             };
 
             const fractalContents = Handlebars.compile(fs.readFileSync(fractalFileTpl, 'utf8'))(answers);
