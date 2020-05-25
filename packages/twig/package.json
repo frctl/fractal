@@ -15,11 +15,9 @@
   },
   "homepage": "https://github.com/frctl/fractal/tree/master/packages/twig",
   "dependencies": {
+    "@frctl/core": "^0.0.0",
     "lodash": "^4.17.11",
     "twig": "^1.14.0"
-  },
-  "devDependencies": {
-    "@frctl/fractal": "^1.3.0"
   },
   "peerDependencies": {
     "@frctl/fractal": "^1.1.0-beta.1"

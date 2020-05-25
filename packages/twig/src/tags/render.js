@@ -2,7 +2,7 @@
 
 const _ = require('lodash');
 const path = require('path');
-const utils = require('@frctl/fractal').utils;
+const utils = require('@frctl/core').utils;
 const adapterUtils = require('../utils');
 
 /**

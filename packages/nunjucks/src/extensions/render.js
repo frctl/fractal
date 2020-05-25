@@ -1,7 +1,7 @@
 'use strict';
 
 const nunjucks = require('nunjucks');
-const utils = require('@frctl/fractal').utils;
+const utils = require('@frctl/core').utils;
 
 module.exports = function (fractal) {
     function RenderExtension() {

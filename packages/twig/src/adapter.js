@@ -1,6 +1,6 @@
 'use strict';
 
-const Fractal = require('@frctl/fractal');
+const Fractal = require('@frctl/core');
 const _ = require('lodash');
 const Path = require('path');
 const utils = Fractal.utils;
