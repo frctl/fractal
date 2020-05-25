@@ -7,11 +7,11 @@ const Vorpal = require('vorpal');
 const Console = require('./console');
 const Notifier = require('./notifier');
 const requireAll = require('require-all');
-const Log = require('../core/log');
-const mix = require('../core/mixins/mix');
-const Configurable = require('../core/mixins/configurable');
-const Emitter = require('../core/mixins/emitter');
-const utils = require('../core/utils');
+const Log = require('@frctl/core').Log;
+const mix = require('@frctl/core').mixins.mix;
+const Configurable = require('@frctl/core').mixins.configurable;
+const Emitter = require('@frctl/core').mixins.emitter;
+const utils = require('@frctl/core').utils;
 
 class Cli extends mix(Configurable, Emitter) {
     constructor(app) {

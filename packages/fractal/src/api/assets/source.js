@@ -2,10 +2,10 @@
 
 const Asset = require('./asset');
 const AssetCollection = require('./collection');
-const fs = require('../../core/fs');
-const mix = require('../../core/mixins/mix');
-const Source = require('../../core/mixins/source');
-const Stream = require('../../core/promise-stream');
+const fs = require('@frctl/core').fs;
+const mix = require('@frctl/core').mixins.mix;
+const Source = require('@frctl/core').mixins.source;
+const Stream = require('@frctl/core').PromiseStream;
 
 module.exports = class AssetSource extends mix(Source) {
     constructor(name, config, app) {

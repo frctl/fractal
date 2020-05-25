@@ -3,10 +3,10 @@
 const _ = require('lodash');
 const Promise = require('bluebird');
 const defaults = require('../config');
-const utils = require('./core/utils');
-const mix = require('./core/mixins/mix');
-const Configurable = require('./core/mixins/configurable');
-const Emitter = require('./core/mixins/emitter');
+const utils = require('@frctl/core').utils;
+const mix = require('@frctl/core').mixins.mix;
+const Configurable = require('@frctl/core').mixins.configurable;
+const Emitter = require('@frctl/core/').mixins.emitter;
 
 class Fractal extends mix(Configurable, Emitter) {
     /**
@@ -124,9 +124,9 @@ module.exports.create = create;
 module.exports.Fractal = Fractal;
 module.exports.WebTheme = require('./web/theme');
 module.exports.CliTheme = require('./cli/theme');
-module.exports.Adapter = require('./core/adapter');
-module.exports.log = require('./core/log');
-module.exports.utils = require('./core/utils');
+module.exports.Adapter = require('@frctl/core').Adapter;
+module.exports.log = require('@frctl/core').Log;
+module.exports.utils = require('@frctl/core').utils;
 
 module.exports.core = {
     Component: require('./api/components/component.js'),

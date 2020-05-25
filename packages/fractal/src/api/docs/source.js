@@ -7,9 +7,9 @@ const fs = Promise.promisifyAll(require('fs'));
 const anymatch = require('anymatch');
 const DocCollection = require('./collection');
 const Doc = require('./doc');
-const EntitySource = require('../../core/entities/source');
-const resolver = require('../../core/resolver');
-const md = require('../../core/markdown');
+const EntitySource = require('@frctl/core').entities.Source;
+const resolver = require('@frctl/core').resolver;
+const md = require('@frctl/core').markdown;
 
 module.exports = class DocSource extends EntitySource {
     constructor(app) {

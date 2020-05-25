@@ -4,8 +4,8 @@ const Path = require('path');
 const Promise = require('bluebird');
 const matter = require('gray-matter');
 const _ = require('lodash');
-const utils = require('../../core/utils');
-const Entity = require('../../core/entities/entity');
+const utils = require('@frctl/core').utils;
+const Entity = require('@frctl/core').entities.Entity;
 
 module.exports = class Doc extends Entity {
     constructor(config, content, parent) {

@@ -1,6 +1,6 @@
 'use strict';
 
-const highlight = require('../../../core/highlighter');
+const highlight = require('@frctl/core').highlighter;
 
 module.exports = function () {
     return {

@@ -3,7 +3,7 @@
 const chai = require('chai');
 const expect = chai.expect;
 
-const utils = require('../src/core/utils');
+const utils = require('../src/utils');
 
 describe('Utils', function () {
     describe('.mergeProp()', function () {

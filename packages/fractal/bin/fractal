@@ -8,7 +8,7 @@ const Liftoff        = require('liftoff');
 const chalk          = require('chalk');
 const updateNofifier = require('update-notifier');
 const cliPackage     = require('../package.json');
-const utils          = require('../src/core/utils');
+const utils          = require('@frctl/core').utils;
 const Fractal        = require('../.').Fractal;
 
 const notifier = updateNofifier({

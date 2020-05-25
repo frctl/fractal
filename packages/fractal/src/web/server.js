@@ -8,10 +8,10 @@ const chokidar = require('chokidar');
 const Path = require('path');
 const portscanner = Promise.promisifyAll(require('portscanner'));
 const WebError = require('./error');
-const utils = require('../core/utils');
-const Log = require('../core/log');
-const mix = require('../core/mixins/mix');
-const Emitter = require('../core/mixins/emitter');
+const utils = require('@frctl/core').utils;
+const Log = require('@frctl/core').Log;
+const mix = require('@frctl/core').mixins.mix;
+const Emitter = require('@frctl/core').mixins.emitter;
 
 module.exports = class Server extends mix(Emitter) {
     constructor(theme, engine, config, app) {

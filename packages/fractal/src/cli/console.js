@@ -7,7 +7,7 @@ const Table = require('cli-table3');
 const slog = require('log-update');
 const Theme = require('./theme');
 const defaultTheme = require('./themes/default');
-const utils = require('../core/utils');
+const utils = require('@frctl/core').utils;
 
 class Console {
     constructor(logger) {

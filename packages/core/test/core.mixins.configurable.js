@@ -3,8 +3,8 @@
 const chai = require('chai');
 const expect = chai.expect;
 
-const mix = require('../src/core/mixins/mix');
-const Configurable = mix(require('../src/core/mixins/configurable'));
+const mix = require('../src/mixins/mix');
+const Configurable = mix(require('../src/mixins/configurable'));
 
 describe('Configurable', function () {
     let config;

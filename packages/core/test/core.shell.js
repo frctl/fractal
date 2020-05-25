@@ -3,7 +3,7 @@ const expect = chai.expect;
 const mock = require('mock-fs');
 const path = require('path');
 const fs = require('fs');
-const shell = require('../src/core/shell');
+const shell = require('../src/shell');
 
 describe('Shell', function () {
     let originalPwd;
