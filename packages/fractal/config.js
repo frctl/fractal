@@ -10,7 +10,7 @@ module.exports = {
         version: null,
     },
     components: {
-        engine: '@frctl/handlebars',
+        engine: require('@frctl/handlebars'),
         path: null,
         label: 'components',
         title: 'Components',
@@ -61,7 +61,7 @@ module.exports = {
         },
     },
     docs: {
-        engine: '@frctl/handlebars',
+        engine: require('@frctl/handlebars'),
         path: null,
         label: 'documentation',
         title: 'Documentation',
