@@ -64,17 +64,18 @@
     "gulp-sass-glob": "^1.1.0",
     "gulp-sourcemaps": "^2.6.5",
     "gulp-uglify": "^3.0.2",
+    "husky": "^4.2.5",
     "istanbul": "^0.4.4",
     "jquery": "^3.4.0",
     "jquery-pjax": "^2.0.1",
     "jquery-resizable-dom": "^0.16.0",
     "lerna": "^3.20.2",
+    "lint-staged": "^10.2.6",
     "mark.js": "^8.11.1",
     "mocha": "^5.0.3",
     "mock-fs": "^4.6.0",
     "normalize.css": "^4.1.1",
     "nyc": "^15.0.1",
-    "pre-commit": "^1.1.3",
     "prettier": "^2.0.5",
     "sass-mq": "^3.2.6",
     "select2": "^4.0.3",
@@ -93,11 +94,21 @@
     "clean": "lerna clean",
     "bootstrap": "lerna bootstrap --hoist --strict --ci --force-local",
     "eslint": "eslint . --ignore-path .gitignore",
-    "validate": "npm run eslint",
+    "stylelint": "stylelint --ignore-path .gitignore \"**/*.scss\"",
+    "validate": "npm run eslint && npm run stylelint",
     "format": "npm run eslint -- --fix",
     "test": "npm run validate && lerna run test",
     "release": "lerna version --conventional-commits --no-push",
     "contributors:add": "all-contributors add",
     "contributors:generate": "all-contributors generate"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": "eslint --cache --fix",
+    "*.{css,scss}": "stylelint --fix"
   }
 }
