@@ -17,3 +17,17 @@ npm run build
 ```
 
 to build a static version in the `dist` folder.
+
+## Tests
+
+To run the tests suite once, run:
+
+```
+npm test
+```
+
+To start the test runner in watch mode, run:
+
+```
+npm run test:dev
+```

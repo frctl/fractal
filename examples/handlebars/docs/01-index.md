@@ -1,5 +1,15 @@
 ---
-title: Fractal default example
+title: Project Overview
+context:
+    items:
+        - Finish the docs
+        - Write tests
+        - Make the tea
 ---
 
-This is your index page. You can edit its contents at `docs/01-index.hbs`
+This is some documentation for the project. Still to do:
+
+{{#each items}}
+
+-   {{ this }}
+    {{/each}}
