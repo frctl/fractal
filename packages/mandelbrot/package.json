@@ -17,8 +17,7 @@
     "start": "gulp watch",
     "build": "gulp",
     "prepack": "npm run build",
-    "stylelint": "stylelint \"assets/scss/**/*.scss\"",
-    "test": "npm run stylelint"
+    "test": "npm run build"
   },
   "peerDependencies": {
     "@frctl/fractal": ">= 1.1.0-alpha.0 < 2"
@@ -48,11 +47,6 @@
     "prettier": "^2.0.5",
     "sass-mq": "^3.2.6",
     "select2": "^4.0.3",
-    "stylelint": "^13.3.3",
-    "stylelint-config-prettier": "^8.0.1",
-    "stylelint-config-standard": "^20.0.0",
-    "stylelint-prettier": "^1.1.2",
-    "stylelint-scss": "^3.17.1",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0",
     "watchify": "^3.7.0"
