@@ -59,7 +59,10 @@
     @include link-default($color-heading, none);
 
     svg {
+        --fill: rgb(var(--skin-links));
+
         fill: $color-link;
+        fill: var(--fill, $color-link);
         opacity: 0.75;
     }
 

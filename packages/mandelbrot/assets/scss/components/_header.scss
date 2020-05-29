@@ -1,12 +1,17 @@
 .Header {
+    --background-color: rgb(var(--skin-accent));
+    --color: rgb(var(--skin-complement));
+
     display: flex;
     align-items: center;
     position: relative;
     z-index: 10;
     background-color: $color-header-background;
+    background-color: var(--background-color, $color-header-background);
     box-shadow: inset 0 -1px 0 0 rgba(black, 0.25), 0 2px 0 rgba(black, 0.1);
     text-overflow: ellipsis;
     color: $color-header-content;
+    color: var(--color, $color-header-content);
 }
 
 .Header-title {
@@ -21,7 +26,9 @@
 }
 
 .Header-button {
+    --border-color: rgba(var(--skin-complement), 0.25);
     @include border-inline(end, 1px solid rgba($color-header-content, 0.25));
+    @include border-inline(end, 1px solid var(--border-color, rgba($color-header-content, 0.25)));
 
     display: block;
     flex-shrink: 0;
@@ -32,18 +39,23 @@
     color: inherit;
 
     &:hover {
+        --background-color: rgba(var(--skin-complement), 0.05);
+
         background-color: rgba($color-header-content, 0.05);
+        background-color: var(--background-color, rgba($color-header-content, 0.05));
     }
 
     &:active {
+        --background-color: rgba(var(--skin-complement), 0.1);
+
         background-color: rgba($color-header-content, 0.1);
+        background-color: var(--background-color, rgba($color-header-content, 0.1));
     }
 }
 
 .Header-navToggleIcon {
     display: none;
     margin: 0 auto;
-    fill: $color-header-content;
 }
 
 .Frame {

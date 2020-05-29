@@ -32,12 +32,21 @@ module.exports = function (options) {
             },
         },
     });
+    config.skin =
+        typeof config.skin === 'string'
+            ? {
+                  name: config.skin,
+              }
+            : {
+                  name: 'default',
+                  ...config.skin,
+              };
 
     const uiStyles = []
         .concat(config.styles)
         .concat(config.stylesheet)
         .filter((url) => url)
-        .map((url) => (url === 'default' ? `/${config.static.mount}/css/${config.skin}.css` : url));
+        .map((url) => (url === 'default' ? `/${config.static.mount}/css/${config.skin.name}.css` : url));
     const highlightStyles = []
         .concat(config.highlightStyles)
         .filter((url) => url)
