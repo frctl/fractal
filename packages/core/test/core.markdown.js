@@ -3,7 +3,7 @@
 const chai = require('chai');
 const expect = chai.expect;
 
-const md = require('../src/core/markdown');
+const md = require('../src/markdown');
 
 describe('Markdown renderer', function () {
     it('does not directly mutate the supplied configuration object', function () {

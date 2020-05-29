@@ -15,7 +15,7 @@ const Configurable = require('../mixins/configurable');
 const Collection = require('../mixins/collection');
 const Emitter = require('../mixins/emitter');
 const Stream = require('../promise-stream');
-const resolver = require('../../core/resolver');
+const resolver = require('../resolver');
 
 module.exports = mixin(
     (superclass) =>

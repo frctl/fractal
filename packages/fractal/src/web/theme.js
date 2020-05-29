@@ -2,9 +2,9 @@
 
 const _ = require('lodash');
 const pr = require('path-to-regexp');
-const mix = require('../core/mixins/mix');
-const Configurable = require('../core/mixins/configurable');
-const Emitter = require('../core/mixins/emitter');
+const mix = require('@frctl/core').mixins.mix;
+const Configurable = require('@frctl/core').mixins.configurable;
+const Emitter = require('@frctl/core').mixins.emitter;
 
 module.exports = class Theme extends mix(Configurable, Emitter) {
     constructor(viewPaths, options) {

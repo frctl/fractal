@@ -4,9 +4,9 @@ const chai = require('chai');
 const sinon = require('sinon');
 const expect = chai.expect;
 
-const mix = require('../src/core/mixins/mix');
-const Collection = mix(require('../src/core/mixins/collection'));
-const Stream = require('../src/core/array-stream');
+const mix = require('../src/mixins/mix');
+const Collection = mix(require('../src/mixins/collection'));
+const Stream = require('../src/array-stream');
 
 const items = [
     {

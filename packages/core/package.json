@@ -1,0 +1,43 @@
+{
+  "name": "@frctl/core",
+  "version": "0.0.0",
+  "description": "Core module of Fractal.",
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/frctl/fractal.git",
+    "directory": "packages/core"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/frctl/fractal/issues"
+  },
+  "homepage": "https://github.com/frctl/fractal/tree/master/packages/core",
+  "dependencies": {
+    "@allmarkedup/fang": "^1.0.0",
+    "anymatch": "^2.0.0",
+    "bluebird": "^3.5.2",
+    "chokidar": "^3.3.1",
+    "co": "^4.6.0",
+    "globby": "^6.0.0",
+    "highlight.js": "^9.5.0",
+    "istextorbinary": "^3.3.0",
+    "js-yaml": "^3.13.1",
+    "lodash": "^4.17.11",
+    "marked": "^0.7.0",
+    "minimist": "^1.2.2",
+    "mixwith": "^0.1.1",
+    "readable-stream": "^2.1.4"
+  },
+  "devDependencies": {
+    "chai": "^4.1.1",
+    "mocha": "^5.0.3",
+    "mock-fs": "^4.6.0",
+    "nyc": "^15.0.1",
+    "sinon": "^9.0.1"
+  },
+  "scripts": {
+    "test": "mocha --require test/support/env --reporter spec",
+    "coverage": "nyc --reporter=lcov --reporter=text  npm run test"
+  }
+}

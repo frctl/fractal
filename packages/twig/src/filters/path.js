@@ -1,7 +1,7 @@
 'use strict';
 
 const _ = require('lodash');
-const utils = require('@frctl/fractal').utils;
+const utils = require('@frctl/core').utils;
 
 module.exports = function (fractal) {
     return function (path) {

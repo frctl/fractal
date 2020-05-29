@@ -10,10 +10,10 @@ const Component = require('./component');
 const ComponentCollection = require('./collection');
 const File = require('../files/file');
 const FileCollection = require('../files/collection');
-const frfs = require('../../core/fs');
-const Log = require('../../core/log');
-const resolver = require('../../core/resolver');
-const EntitySource = require('../../core/entities/source');
+const frfs = require('@frctl/core').fs;
+const Log = require('@frctl/core').Log;
+const resolver = require('@frctl/core').resolver;
+const EntitySource = require('@frctl/core').entities.Source;
 
 module.exports = class ComponentSource extends EntitySource {
     constructor(app) {

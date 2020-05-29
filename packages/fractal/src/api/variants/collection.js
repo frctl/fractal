@@ -5,9 +5,9 @@ const _ = require('lodash');
 const Path = require('path');
 const co = require('co');
 const Variant = require('./variant');
-const Log = require('../../core/log');
-const utils = require('../../core/utils');
-const EntityCollection = require('../../core/entities/collection');
+const Log = require('@frctl/core').Log;
+const utils = require('@frctl/core').utils;
+const EntityCollection = require('@frctl/core').entities.Collection;
 
 module.exports = class VariantCollection extends EntityCollection {
     constructor(config, items, parent) {

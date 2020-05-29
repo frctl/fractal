@@ -5,7 +5,7 @@ const _ = require('lodash');
 const Promise = require('bluebird');
 const promisedHbs = require('promised-handlebars');
 const Handlebars = require('handlebars');
-const Adapter = require('@frctl/fractal').Adapter;
+const Adapter = require('@frctl/core').Adapter;
 
 class HandlebarsAdapter extends Adapter {
     constructor(hbs, source, app) {

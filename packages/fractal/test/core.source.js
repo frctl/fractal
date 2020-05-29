@@ -4,7 +4,7 @@ const chai = require('chai');
 const expect = chai.expect;
 
 const fractal = require('../src/fractal')();
-const Source = require('../src/core/entities/source');
+const Source = require('@frctl/core').entities.Source;
 
 describe('EntitySource', function () {
     let source;

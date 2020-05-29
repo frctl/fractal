@@ -3,10 +3,10 @@
 const _ = require('lodash');
 const Promise = require('bluebird');
 
-const utils = require('../../core/utils');
-const mix = require('../../core/mixins/mix');
-const Configurable = require('../../core/mixins/configurable');
-const Emitter = require('../../core/mixins/emitter');
+const utils = require('@frctl/core').utils;
+const mix = require('@frctl/core').mixins.mix;
+const Configurable = require('@frctl/core').mixins.configurable;
+const Emitter = require('@frctl/core').mixins.emitter;
 const Source = require('./source');
 
 module.exports = class AssetSourceCollection extends mix(Configurable, Emitter) {

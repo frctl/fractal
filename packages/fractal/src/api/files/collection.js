@@ -1,9 +1,9 @@
 'use strict';
 
 const anymatch = require('anymatch');
-const mix = require('../../core/mixins/mix');
-const Collection = require('../../core/mixins/collection');
-const Stream = require('../../core/promise-stream');
+const mix = require('@frctl/core').mixins.mix;
+const Collection = require('@frctl/core').mixins.collection;
+const Stream = require('@frctl/core').PromiseStream;
 
 module.exports = class FileCollection extends mix(Collection) {
     constructor(config, items) {

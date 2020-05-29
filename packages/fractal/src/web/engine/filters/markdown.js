@@ -1,6 +1,6 @@
 'use strict';
 
-const markdown = require('../../../core/markdown');
+const markdown = require('@frctl/core').markdown;
 
 module.exports = function () {
     return {
