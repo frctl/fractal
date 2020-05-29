@@ -6,7 +6,7 @@ const expect = chai.expect;
 const pkg = require('../package.json');
 const app = require('../src/fractal')();
 const Cli = require('../src/cli');
-const Web = require('../src/web');
+const Web = require('@frctl/web').Web;
 const ComponentSource = require('../src/api/components');
 
 describe('Fractal', function () {

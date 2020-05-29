@@ -46,7 +46,7 @@ module.exports = class Engine {
 
         viewsPath = [].concat(viewsPath);
 
-        const views = viewsPath.concat([Path.join(__dirname, '../../../views/web')]);
+        const views = viewsPath.concat([Path.join(__dirname, '../../views')]);
 
         const loader = new nunjucks.FileSystemLoader(views, {
             watch: false,
