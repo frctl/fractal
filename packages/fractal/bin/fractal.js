@@ -2,17 +2,15 @@
 
 'use strict';
 
-const Path           = require('path');
-const semver         = require('semver');
-const Liftoff        = require('liftoff');
-const chalk          = require('chalk');
+const Path = require('path');
+const semver = require('semver');
+const Liftoff = require('liftoff');
+const chalk = require('chalk');
 const updateNofifier = require('update-notifier');
-const cliPackage     = require('../package.json');
-const utils          = require('@frctl/core').utils;
-const Fractal        = require('../.').Fractal;
+const cliPackage = require('../package.json');
 
 const notifier = updateNofifier({
-    pkg: cliPackage
+    pkg: cliPackage,
 });
 
 const FractalCli = new Liftoff({
@@ -21,8 +19,8 @@ const FractalCli = new Liftoff({
     configName: 'fractal',
     extensions: {
         '.config.js': null,
-        '.js': null
-    }
+        '.js': null,
+    },
     // ,
     // v8flags: ['--harmony']
 });
@@ -40,10 +38,11 @@ try {
     if (projectPackage.fractal && projectPackage.fractal.main) {
         config.configPath = Path.join(process.cwd(), projectPackage.fractal.main);
     }
-} catch(e){}
+} catch (e) {
+    console.error(e);
+}
 
-FractalCli.launch(config, function(env){
-
+FractalCli.launch(config, function (env) {
     let app;
     let scope = 'global';
     let configPath = env.configPath;
@@ -53,8 +52,8 @@ FractalCli.launch(config, function(env){
         try {
             app = require(configPath);
             scope = 'project';
-        } catch(e) {
-            console.log(e.stack);
+        } catch (e) {
+            console.error(e.stack);
             return;
         }
     }
@@ -69,15 +68,21 @@ FractalCli.launch(config, function(env){
     if (scope === 'project') {
         if (semver.lt(env.modulePackage.version, `1.0.0`)) {
             // Project is using a legacy version of Fractal, load it the old way...
-            console.log(`Fractal version mismatch! Global: ${cliPackage.version} / Local: ${env.modulePackage.version}`);
+            console.log(
+                `Fractal version mismatch! Global: ${cliPackage.version} / Local: ${env.modulePackage.version}`
+            );
             let frctl = require(env.modulePath);
             frctl.run();
             return;
         }
 
-        if (! app || ! app.__fractal) {
+        if (!app || !app.__fractal) {
             // looks like the configuration file is not correctly module.export'ing a fractal instance
-            console.log(`${chalk.red('Configuration error')}: The CLI configuration file is not exporting an instance of Fractal.`);
+            console.log(
+                `${chalk.red(
+                    'Configuration error'
+                )}: The CLI configuration file is not exporting an instance of Fractal.`
+            );
             return;
         }
 
@@ -85,14 +90,13 @@ FractalCli.launch(config, function(env){
         if (semver.gt(cliPackage.version, env.modulePackage.version)) {
             app.cli.notify.versionMismatch({
                 cli: cliPackage.version,
-                local: env.modulePackage.version
+                local: env.modulePackage.version,
             });
         }
 
         if (Path.basename(configPath) === 'fractal.js') {
             console.log(`Deprecated configuration file name! Rename fractal.js to fractal.config.js.`);
         }
-
     } else {
         // Global context
         app = require('../.').create();
@@ -105,7 +109,7 @@ FractalCli.launch(config, function(env){
     if (notifier.update) {
         process.on('exit', function () {
             app.cli.notify.updateAvailable(notifier.update);
-    	});
+        });
     }
 
     /*
