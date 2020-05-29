@@ -4,8 +4,8 @@ const chai = require('chai');
 const expect = chai.expect;
 
 const app = require('../src/fractal')();
-const Theme = require('../src/web/theme');
-const Server = require('../src/web/server');
+const Theme = require('@frctl/web').Theme;
+const Server = require('@frctl/web').Server;
 
 describe('Server', function () {
     let server;

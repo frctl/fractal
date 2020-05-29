@@ -103,7 +103,7 @@ module.exports = {
     },
     cli: {},
     web: {
-        theme: '@frctl/mandelbrot',
+        theme: require('@frctl/mandelbrot')(),
         server: {
             sync: false,
             watch: false,

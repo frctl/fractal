@@ -65,7 +65,7 @@ class Fractal extends mix(Configurable, Emitter) {
 
     get web() {
         if (!this._web) {
-            const Web = require('./web');
+            const Web = require('@frctl/web').Web;
             this._web = new Web(this);
         }
         return this._web;
@@ -122,7 +122,7 @@ module.exports = create;
 
 module.exports.create = create;
 module.exports.Fractal = Fractal;
-module.exports.WebTheme = require('./web/theme');
+module.exports.WebTheme = require('@frctl/web').Theme;
 module.exports.CliTheme = require('./cli/theme');
 module.exports.Adapter = require('@frctl/core').Adapter;
 module.exports.log = require('@frctl/core').Log;

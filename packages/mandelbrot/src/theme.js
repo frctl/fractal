@@ -2,7 +2,7 @@
 
 const Path = require('path');
 const _ = require('lodash');
-const Theme = require('@frctl/fractal').WebTheme;
+const Theme = require('@frctl/web').Theme;
 const packageJSON = require('../package.json');
 
 module.exports = function (options) {

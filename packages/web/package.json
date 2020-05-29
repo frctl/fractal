@@ -1,0 +1,33 @@
+{
+  "name": "@frctl/web",
+  "version": "0.0.0",
+  "description": "Web module of Fractal.",
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/frctl/fractal.git",
+    "directory": "packages/web"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/frctl/fractal/issues"
+  },
+  "homepage": "https://github.com/frctl/fractal/tree/master/packages/web",
+  "dependencies": {
+    "@frctl/core": "^0.0.0",
+    "anymatch": "^2.0.0",
+    "bluebird": "^3.5.2",
+    "browser-sync": "^2.26.4",
+    "chokidar": "^3.3.1",
+    "express": "^4.14.0",
+    "fs-extra": "^9.0.0",
+    "js-yaml": "^3.13.1",
+    "lodash": "^4.17.11",
+    "nunjucks": "^3.2.1",
+    "path-to-regexp": "^1.5.3",
+    "portscanner": "^1.0.0",
+    "require-all": "^2.0.0",
+    "throat": "^3.0.0"
+  },
+  "devDependencies": {}
+}
