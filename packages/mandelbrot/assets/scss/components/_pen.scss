@@ -29,7 +29,6 @@
 
     @include mq($until: nav-collapse) {
         margin: 0;
-        border-bottom: 1px solid $color-frame-border;
         padding: 0.75rem;
 
         .Status .Status-label {
@@ -75,10 +74,7 @@
     margin: 0 $handle-size;
 
     @include mq($until: nav-collapse) {
-        flex: 1 1 auto;
-        height: auto !important;
-        max-height: 100%;
-        margin: 0;
+        max-height: calc(100% - 4.75rem);
     }
 }
 
@@ -94,6 +90,7 @@
 
     @include mq($until: nav-collapse) {
         display: none;
+        height: $handle-size + 1rem;
     }
 }
 
@@ -110,8 +107,4 @@
     margin: $handle-size;
     margin-top: 0;
     border: 1px solid $color-frame-border;
-
-    @include mq($until: nav-collapse) {
-        display: none;
-    }
 }
