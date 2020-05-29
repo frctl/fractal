@@ -1,5 +1,7 @@
 .Preview {
     position: relative;
+    background-color: $color-background-offset;
+    border: 1px solid $color-frame-border;
 
     &.is-disabled {
         .Preview-overlay {
@@ -13,11 +15,6 @@
         * {
             cursor: grabbing !important;
         }
-    }
-
-    @include mq(nav-collapse) {
-        background-color: $color-background-offset;
-        border: 1px solid $color-frame-border;
     }
 }
 
@@ -33,6 +30,10 @@
     min-width: 200px;
     max-width: calc(100% + #{$handle-size});
     background-color: transparent;
+
+    @include mq($until: nav-collapse) {
+        width: 100% !important;
+    }
 }
 
 .Preview-resizer {
