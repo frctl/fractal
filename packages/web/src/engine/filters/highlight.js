@@ -1,10 +1,8 @@
 'use strict';
 
-const highlight = require('@frctl/core').highlighter;
-
-module.exports = function () {
+module.exports = function (app) {
     return {
         name: 'highlight',
-        filter: (str, lang) => highlight(str, lang),
+        filter: (str, lang) => app.get('web.highlighter')(str, lang),
     };
 };

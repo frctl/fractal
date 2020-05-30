@@ -128,5 +128,6 @@ module.exports = {
         assets: {
             mount: 'assets',
         },
+        highlighter: require('@frctl/core').highlighter,
     },
 };
