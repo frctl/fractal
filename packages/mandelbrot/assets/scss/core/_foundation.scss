@@ -5,7 +5,10 @@
 }
 
 ::selection {
+    --background-color: rgba(var(--skin-links), 0.2);
+
     background-color: rgba($color-link, 0.2);
+    background-color: var(--background-color, rgba($color-link, 0.2));
 }
 
 html {
@@ -70,15 +73,22 @@ ul {
 }
 
 a {
-    color: $color-link;
+    --color: rgba(var(--skin-links), 0.9);
+
+    color: rgba($color-link, 0.9);
+    color: var(--color, rgba($color-link, 0.9));
     transition: all 0.15s ease-out;
 
     &:active {
         color: $color-link;
+        color: var(--color, rgba($color-link, 0.9));
     }
 
     &:hover {
-        color: darken($color-link, 15%);
+        --color: rgb(var(--skin-links));
+
+        color: $color-link;
+        color: var(--color, $color-link);
     }
 }
 
@@ -172,5 +182,8 @@ h6 {
 }
 
 mark {
+    --background-color: rgba(var(--skin-links), 0.3);
+
     background-color: rgba($color-link, 0.3);
+    background-color: var(--background-color, rgba($color-link, 0.3));
 }

@@ -52,7 +52,10 @@
 
     &.is-active {
         a {
+            --border-color: rgb(var(--skin-links));
+
             border-bottom-color: $color-link;
+            border-bottom-color: var(--border-color, $color-link);
             font-weight: bolder;
         }
     }

@@ -35,8 +35,11 @@
     border-color: $color-frame-border;
 
     .select2-container--focus & {
+        --border-color: rgb(var(--skin-links));
+
         outline: none;
         border-color: $color-link;
+        border-color: var(--border-color, $color-link);
     }
 }
 
@@ -51,8 +54,13 @@
 }
 
 .select2-results__option--highlighted[aria-selected] {
+    --background-color: rgb(var(--skin-accent));
+    --color: rgb(var(--skin-complement));
+
     background-color: $color-header-background !important;
+    background-color: var(--background-color, $color-header-background) !important;
     color: $color-header-content !important;
+    color: var(--color, $color-header-content) !important;
 }
 
 .FileBrowser-item {

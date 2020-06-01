@@ -1,3 +1,16 @@
+<style>
+    :root {
+        {% if frctl.theme.get('skin.accent') %}
+        --skin-accent: {{ frctl.theme.get('skin.accent')|hexToRgb }};
+        {% endif %}
+        {% if frctl.theme.get('skin.complement') %}
+        --skin-complement: {{ frctl.theme.get('skin.complement')|hexToRgb }};
+        {% endif %}
+        {% if frctl.theme.get('skin.links') %}
+        --skin-links: {{ frctl.theme.get('skin.links')|hexToRgb }};
+        {% endif %}
+    }
+</style>
 {% for stylesheet in frctl.theme.get('styles') %}
 <link rel="stylesheet" href="{{ path(stylesheet) }}?cachebust={{ frctl.theme.get('version') }}" type="text/css">
 {% endfor %}
