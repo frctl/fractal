@@ -20,9 +20,8 @@ describe('tree', () => {
         expect(cmp.notes).toBe('Component Notes\n');
     });
 
-    // FIXME: This behavior seems broken
-    // it('loads notes from readme file for variants', async () => {
-    //     const cmp = await fractal.components.find('@notes-files--alt');
-    //     expect(cmp.notes).toBe('Component Notes for variant\n');
-    // });
+    it('loads notes from readme file for variants', async () => {
+        const cmp = await fractal.components.find('@notes-files--alt');
+        expect(cmp.notes).toBe('Component Notes for variant\n');
+    });
 });
