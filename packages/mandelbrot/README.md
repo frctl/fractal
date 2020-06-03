@@ -2,22 +2,33 @@
 
 The default web UI theme for Fractal.
 
-See the Fractal [documentation](http://fractal.build/guide) for details on configuration and usage.
+[![NPM Version](https://img.shields.io/npm/v/@frctl/mandelbrot.svg?style=flat-square)](https://www.npmjs.com/package/@frctl/mandelbrot)
+
+See the Fractal [documentation](https://fractal.build/guide) for details on [configuration and usage](https://fractal.build/guide/web/default-theme.html).
 
 In order to get a locale aware date for the 'last updated' text, install the
 [full-icu](https://github.com/unicode-org/full-icu-npm) module.
 
-## Customize theme labels
+## Development
 
-Some theme-specific labels can be overridden via config options:
+[Follow these instructions](https://github.com/frctl/fractal#development) to setup the development environement, then go to the Mandelbrot package directory:
 
 ```
-const theme = require('@frctl/mandelbrot')({
-    labels: {
-        info: 'Information',
-        builtOn: 'Built on',
-    },
-});
-
-fractal.web.theme(theme);
+cd packages/mandelbrot
 ```
+
+In there, run:
+
+```
+npm start
+```
+
+To start Gulp in watch mode and automatically recompile Mandelbrot’s CSS & JS files on save.
+
+You can also build the files once with:
+
+```
+npm run build
+```
+
+You can see your changes in one of our [example Fractal instances](https://github.com/frctl/fractal/tree/master/examples).
