@@ -95,7 +95,8 @@ module.exports = class VariantCollection extends EntityCollection {
         function findReadme(name) {
             const readmeName = `${opts.viewName}${source.get('splitter')}${name}.${source.get(
                 'files.notes'
-            )}`.toLowerCase();
+            )}.md`.toLowerCase();
+
             return _.find(readmes, (f) => f.name.toLowerCase() === readmeName);
         }
 
