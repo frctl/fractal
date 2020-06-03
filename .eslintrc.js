@@ -32,5 +32,11 @@ module.exports = {
                 mocha: true,
             },
         },
+        {
+            files: ['*.spec.js'],
+            env: {
+                jest: true,
+            },
+        },
     ],
 };
