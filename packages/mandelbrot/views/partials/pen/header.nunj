@@ -1,6 +1,6 @@
 <div class="Pen-panel Pen-header">
     <h1 class="Pen-title">
-        <a class="Pen-previewLink" href="{{ previewUrl }}" title="Component preview">
+        <a class="Pen-previewLink" href="{{ previewUrl }}" title="{{ frctl.theme.get('labels.components.preview.label') }}">
             {{ entity.title }}
             {% include "icons/open-in-browser.svg" %}
         </a>

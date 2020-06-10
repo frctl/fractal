@@ -4,7 +4,7 @@
             {% if entity.hasContext() | async %}
             <pre>{{ entity.getResolvedContext()  | async | format(frctl.theme.get('format')) | highlight(frctl.theme.get('format')) }}</pre>
             {% else %}
-            <pre>{{ '/* No context defined for this component. */' | highlight('js') }}</pre>
+            <pre>{{ ('/* ' + frctl.theme.get('labels.components.context.empty') + ' */') | highlight('js') }}</pre>
             {% endif %}
         {% else %}
         {% for variant in entity.variants().items() %}
@@ -13,7 +13,7 @@
 {{ '<span class="hljs-comment">/* ' + variant.label + ' */</span>' }}
 {{ variant.getResolvedContext()  | async | format(frctl.theme.get('format')) | highlight(frctl.theme.get('format')) }}
 {%- else -%}
-    {{ '<span class="hljs-comment">/* ' + variant.label + ': No context defined */</span>' }}
+    {{ '<span class="hljs-comment">/* ' + variant.label + ': ' + frctl.theme.get('labels.components.context.empty') + ' */</span>' }}
 {%- endif %}
 
 </pre>
