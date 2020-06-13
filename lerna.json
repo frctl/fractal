@@ -1,10 +1,10 @@
 {
   "command": {
     "version": {
-      "allowBranch": "master",
+      "allowBranch": "main",
       "message": "chore: publish"
     }
   },
-  "packages": ["packages/*", "examples/*"],
+  "packages": ["packages/*"],
   "version": "independent"
 }
