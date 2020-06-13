@@ -1,17 +1,17 @@
 language: node_js
 
 os:
-    - windows
-    - linux
-    - osx
+  - windows
+  - linux
+  - osx
 
 node_js:
-    - "lts/dubnium"
-    - "lts/erbium"
+  - 'lts/dubnium'
+  - 'lts/erbium'
 sudo: false
 
 before_script:
-    - npm run bootstrap
+  - npm run bootstrap
 
 git:
-    autocrlf: input
+  autocrlf: input

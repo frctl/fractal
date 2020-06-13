@@ -1,7 +1,7 @@
 {
   "command": {
     "version": {
-      "allowBranch": "master",
+      "allowBranch": "main",
       "message": "chore: publish"
     }
   },

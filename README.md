@@ -28,7 +28,7 @@
     <img src="https://img.shields.io/npm/dm/@frctl/fractal" alt="">
   </a>
   <!-- License -->
-  <a href="https://github.com/frctl/fractal/blob/master/LICENSE" title="MIT license">
+  <a href="https://github.com/frctl/fractal/blob/main/LICENSE" title="MIT license">
     <img alt="GitHub" src="https://img.shields.io/github/license/frctl/fractal">
   </a>
 </div>
@@ -108,7 +108,7 @@ If you rather have a question, please ask it on [our Discord server](https://dis
 
 ### Submitting pull requests
 
-We will always welcome pull requests on any of the [frctl organisation](https://github.com/frctl) repositories. Please submit PRs against `master` branch with an explanation of your intention.
+We will always welcome pull requests on any of the [frctl organisation](https://github.com/frctl) repositories. Please submit PRs against `main` branch with an explanation of your intention.
 
 We use [conventional commits](https://www.conventionalcommits.org/), which means that every pull request title should conform to the standard.
 
@@ -156,6 +156,6 @@ This project follows the [all-contributors](https://github.com/all-contributors/
 
 ## License
 
-[MIT](https://github.com/frctl/fractal/blob/master/LICENSE)
+[MIT](https://github.com/frctl/fractal/blob/main/LICENSE)
 
 [docs]: https://fractal.build

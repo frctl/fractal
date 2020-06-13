@@ -13,7 +13,7 @@
   "bugs": {
     "url": "https://github.com/frctl/fractal/issues"
   },
-  "homepage": "https://github.com/frctl/fractal/tree/master/packages/twig",
+  "homepage": "https://github.com/frctl/fractal/tree/main/packages/twig",
   "dependencies": {
     "@frctl/core": "^0.0.0",
     "lodash": "^4.17.11",
