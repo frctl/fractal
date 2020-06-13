@@ -31,4 +31,4 @@ You can also build the files once with:
 npm run build
 ```
 
-You can see your changes in one of our [example Fractal instances](https://github.com/frctl/fractal/tree/master/examples).
+You can see your changes in one of our [example Fractal instances](https://github.com/frctl/fractal/tree/main/examples).
