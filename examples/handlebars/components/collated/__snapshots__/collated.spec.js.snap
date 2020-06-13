@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`tree renders collated components collated 1`] = `
+exports[`collated renders collated components collated 1`] = `
 "<!-- Start: @collated--default -->
 <div>
     Collated component default

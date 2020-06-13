@@ -1,6 +1,6 @@
 const fractal = require('../../fractal.config.js');
 
-describe('tree', () => {
+describe('collated', () => {
     beforeEach(async () => {
         await fractal.load();
     });
