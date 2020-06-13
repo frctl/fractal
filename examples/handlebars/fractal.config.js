@@ -34,3 +34,10 @@ fractal.web.set('static.path', path.join(__dirname, 'public'));
  * Tell the Fractal where to output the build files.
  */
 fractal.web.set('builder.dest', path.join(__dirname, 'dist'));
+
+/*
+ * Customize Mandelbrot
+ */
+fractal.web.set('theme', {
+    panels: ['html', 'view', 'context', 'resources', 'info', 'notes'],
+});

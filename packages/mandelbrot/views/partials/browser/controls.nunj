@@ -13,7 +13,9 @@
         {% endfor %}
         {% else %}
         <li class="Browser-tab Browser-tab--{{ panel }}{% if loop.first %} is-active {% endif %}" data-role="tab">
-            <a href="#browser-{{ entity.id }}-panel-{{ panel }}">{% if panel == 'html' %}HTML{% else %}{{ panel | capitalize }}{% endif %}</a>
+            <a href="#browser-{{ entity.id }}-panel-{{ panel }}">
+                {{ frctl.theme.get('labels.panels.' + panel) | default(panel | capitalize) }}
+            </a>
         </li>
         {% endif %}
         {% endfor %}

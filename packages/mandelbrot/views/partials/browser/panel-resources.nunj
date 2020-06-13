@@ -5,7 +5,7 @@
     <div class="FileBrowser">
 
         <div class="FileBrowser-selectWrapper">
-            <label class="FileBrowser-select-label" for="filebrowser-select">File:</label>
+            <label class="FileBrowser-select-label" for="filebrowser-select">{{ frctl.theme.get('labels.components.resources.file') }}:</label>
             <select class="FileBrowser-select" id="filebrowser-select">
                 {% for resource in collection.items() %}
                 <option value="file-{{ resource.id }}">{{ resource.base }}</option>
@@ -17,7 +17,7 @@
         <div class="FileBrowser-item{% if loop.index == 1 %} is-active{% endif %}" id="file-{{ resource.id }}" data-role="resource-preview">
             <ul class="Meta">
                 <li class="Meta-item">
-                    <strong class="Meta-key">Content:</strong>
+                    <strong class="Meta-key">{{ frctl.theme.get('labels.components.resources.content') }}:</strong>
                     <span class="Meta-value">
                         <div class="FileBrowser-itemPreview">
                             {% if resource.isBinary and resource.isImage %}
@@ -27,21 +27,21 @@
                                 <pre>{{ resource.contents | highlight(resource.lang) }}</pre>
                             </code>
                             {% else %}
-                            <p><em>Previews are currently not available for this file type.</em></p>
+                            <p><em>{{ frctl.theme.get('labels.components.resources.previewUnavailable') }}</em></p>
                             {% endif %}
                         </div>
                     </span>
                 </li>
                 <li class="Meta-item">
-                    <strong class="Meta-key">URL:</strong>
+                    <strong class="Meta-key">{{ frctl.theme.get('labels.components.resources.url') }}:</strong>
                     <span class="Meta-value"><a data-no-pjax href="{{ path(frctl.theme.urlFromRoute('component-resource', {handle: compHandle, asset:resource.base} )) }}"><span>{{ frctl.theme.urlFromRoute('component-resource', {handle: compHandle, asset:resource.base} ) }}</span></a></span>
                 </li>
                 <li class="Meta-item">
-                    <strong class="Meta-key">Filesystem Path:</strong>
+                    <strong class="Meta-key">{{ frctl.theme.get('labels.components.resources.path') }}:</strong>
                     <span class="Meta-value">{{ resource.path | componentPath }}</span>
                 </li>
                 <li class="Meta-item">
-                    <strong class="Meta-key">Size:</strong>
+                    <strong class="Meta-key">{{ frctl.theme.get('labels.components.resources.size') }}:</strong>
                     <span class="Meta-value">{{ resource.stat.size | fileSize(0) }}</span>
                 </li>
             </ul>

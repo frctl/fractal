@@ -3,7 +3,7 @@
         {% if entity.notes %}
         {{ frctl.docs.renderString(entity.notes, renderEnv) | async }}
         {% else %}
-        <p class="Browser-isEmptyNote">There are no notes for this item.</p>
+        <p class="Browser-isEmptyNote">{{ frctl.theme.get('labels.components.notes.empty') }}</p>
         {% endif %}
     </div>
 </div>
