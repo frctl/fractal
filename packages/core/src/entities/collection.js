@@ -9,6 +9,7 @@ module.exports = class EntityCollection extends mix(Heritable, Collection, Entit
     constructor(name, config, items, parent) {
         super();
         this.initEntity(name, config, parent);
+        this.initCollection(config);
         this.setHeritable(parent);
         this.setItems(items);
 
@@ -20,6 +21,10 @@ module.exports = class EntityCollection extends mix(Heritable, Collection, Entit
         });
 
         this.setProps(config);
+    }
+
+    get isRoot() {
+        return this.root;
     }
 
     /**
@@ -34,6 +39,7 @@ module.exports = class EntityCollection extends mix(Heritable, Collection, Entit
     toJSON() {
         const self = super.toJSON();
         self.isCollection = true;
+        self.isRoot = this.isRoot;
         self.items = this.toArray().map((i) => (i.toJSON ? i.toJSON() : i));
         return self;
     }
