@@ -40,14 +40,15 @@ module.exports = {
 
             if (_.isString(item) && _.startsWith(item, '@@')) {
                 const entity = source.find(item.substring(1));
-                return resolve(entity.context).then(entityContext => {
-                    const fullRenderedComponent = source.engine().render(entity.viewPath, entity.content, entityContext, {
-                        self: entity.toJSON(),
-                        env: {},
-                    });
+                return resolve(entity.context).then((entityContext) => {
+                    const fullRenderedComponent = source
+                        .engine()
+                        .render(entity.viewPath, entity.content, entityContext, {
+                            self: entity.toJSON(),
+                            env: {},
+                        });
                     return fullRenderedComponent;
                 });
-
             }
 
             if (_.isString(item) && _.startsWith(item, '@')) {
