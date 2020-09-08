@@ -203,7 +203,7 @@ module.exports = class Server extends mix(Emitter) {
 
         Log.debug(`Request for '${req.url}'`);
 
-        const match = this._theme.matchRoute(req.path);
+        const match = this._theme.matchRoute(req.path.replace(this._config.ext, ''));
 
         if (!match) {
             return next(new WebError(404, `No matching route found for ${req.path}`));
