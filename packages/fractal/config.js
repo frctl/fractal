@@ -108,7 +108,6 @@ module.exports = {
             sync: false,
             watch: false,
             port: null,
-            ext: '.html',
             syncOptions: {},
         },
         builder: {

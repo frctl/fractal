@@ -21,7 +21,7 @@ module.exports = function (fractal) {
             path = tpl(context);
         }
 
-        if (!root || !root._env || root._env.server) {
+        if (!root || !root._env || (root._env.server || root.server)) {
             return path;
         }
 
