@@ -17,7 +17,7 @@
   "dependencies": {
     "@frctl/core": "^0.0.0",
     "bluebird": "^3.5.2",
-    "handlebars": "^4.0.13",
+    "handlebars": "^4.7.6",
     "lodash": "^4.17.11",
     "promised-handlebars": "^2.0.1"
   },
