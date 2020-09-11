@@ -15,9 +15,9 @@
         </li>
         {% endif %}
         {% if entity.isComponent %}
-        {% set variants = entity.variants() %}
+        {% set variants = entity.variants().filter('isHidden', false) %}
         {% else %}
-        {% set variants = entity.parent.variants() %}
+        {% set variants = entity.parent.variants().filter('isHidden', false) %}
         {% endif %}
         {% if variants.size > 1 %}
         <li class="Meta-item">
