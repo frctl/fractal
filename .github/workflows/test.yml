@@ -20,7 +20,7 @@ jobs:
       with:
         node-version: ${{ matrix.node }}
     - run: npm ci
-    - run: npm urn bootstrap
+    - run: npm run bootstrap
     - run: npm test
       env:
         CI: true
