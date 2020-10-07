@@ -199,7 +199,29 @@ module.exports = mixin(
             }
 
             _getTree() {
-                return fs.describe(this.fullPath, this.relPath, undefined, this.get('ext'));
+                const exclude = this.get('exclude');
+                const matchers = [];
+
+                function addMatcher(matcher) {
+                    if (_.isString(matcher)) {
+                        matchers.push(`${matcher}`);
+                    }
+                }
+
+                if (_.isArray(exclude)) {
+                    for (const excludeItem of exclude) {
+                        addMatcher(`${excludeItem}`);
+                    }
+                } else {
+                    addMatcher(`${exclude}`);
+                }
+
+                return fs.describe(
+                    this.fullPath,
+                    this.relPath,
+                    exclude ? (filePath) => !anymatch(matchers, filePath) : undefined,
+                    this.get('ext')
+                );
             }
 
             _parse() {
