@@ -22,6 +22,10 @@ class TwigAdapter extends Fractal.Adapter {
              */
 
             Twig.Templates.registerLoader('fractal', function (location, params) {
+                if (self.views.length === 0) {
+                    self._loadViews();
+                }
+
                 if (params.precompiled) {
                     params.data = params.precompiled;
                 } else {
