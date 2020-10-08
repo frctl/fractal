@@ -1,7 +1,7 @@
 <div class="Browser-panel Browser-notes" data-role="tab-panel" id="browser-{{ entity.id }}-panel-notes">
     <div class="Prose Prose--condensed">
         {% if entity.notes %}
-        {{ frctl.docs.renderString(entity.notes, renderEnv) | async }}
+        {{ frctl.docs.renderString(entity.notes, null, renderEnv) | async }}
         {% else %}
         <p class="Browser-isEmptyNote">{{ frctl.theme.get('labels.components.notes.empty') }}</p>
         {% endif %}
