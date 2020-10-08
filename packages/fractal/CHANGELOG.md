@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.3.1-wombatpatch.0 (2020-10-08)
+
+
+### Bug Fixes
+
+* properly load notes from readme files for components variants ([#630](https://github.com/frctl/fractal/issues/630)) ([d2f6dcf](https://github.com/frctl/fractal/commit/d2f6dcffeefe25f3e9f0d272c0b0bdd9590779bf)), closes [#629](https://github.com/frctl/fractal/issues/629)
+
+
+### Features
+
+* allow overriding/extending highlighter ([#628](https://github.com/frctl/fractal/issues/628)) ([ad1689b](https://github.com/frctl/fractal/commit/ad1689bb82f8ba87911a66f8117482d8c247055d))
+* **CLI:** add start/build npm scripts to package.json for new projects ([#620](https://github.com/frctl/fractal/issues/620)) ([1c923d8](https://github.com/frctl/fractal/commit/1c923d86f70eef8c85d662e72beaf81098a2bb38))
+
+
+
+
+
 ## 1.3.0
 
 ### Bug Fixes
