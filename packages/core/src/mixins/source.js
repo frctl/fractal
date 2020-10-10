@@ -202,24 +202,18 @@ module.exports = mixin(
                 const exclude = this.get('exclude');
                 const matchers = [];
 
-                function addMatcher(matcher) {
-                    if (_.isString(matcher)) {
-                        matchers.push(`${matcher}`);
-                    }
-                }
-
                 if (_.isArray(exclude)) {
                     for (const excludeItem of exclude) {
-                        addMatcher(`${excludeItem}`);
+                        matchers.push(`${excludeItem}`);
                     }
                 } else {
-                    addMatcher(`${exclude}`);
+                    matchers.push(`${exclude}`);
                 }
 
                 return fs.describe(
                     this.fullPath,
                     this.relPath,
-                    exclude ? (filePath) => !anymatch(matchers, filePath) : undefined,
+                    matchers.length ? (filePath) => !anymatch(matchers, filePath) : undefined,
                     this.get('ext')
                 );
             }
