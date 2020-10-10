@@ -199,7 +199,14 @@ module.exports = mixin(
             }
 
             _getTree() {
-                return fs.describe(this.fullPath, this.relPath, undefined, this.get('ext'));
+                const exclude = this.get('exclude');
+
+                return fs.describe(
+                    this.fullPath,
+                    this.relPath,
+                    exclude ? (filePath) => !anymatch(exclude, filePath) : undefined,
+                    this.get('ext')
+                );
             }
 
             _parse() {
