@@ -200,20 +200,11 @@ module.exports = mixin(
 
             _getTree() {
                 const exclude = this.get('exclude');
-                const matchers = [];
-
-                if (_.isArray(exclude)) {
-                    for (const excludeItem of exclude) {
-                        matchers.push(`${excludeItem}`);
-                    }
-                } else {
-                    matchers.push(`${exclude}`);
-                }
 
                 return fs.describe(
                     this.fullPath,
                     this.relPath,
-                    matchers.length ? (filePath) => !anymatch(matchers, filePath) : undefined,
+                    exclude ? (filePath) => !anymatch(exclude, filePath) : undefined,
                     this.get('ext')
                 );
             }
