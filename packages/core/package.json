@@ -39,5 +39,8 @@
   "scripts": {
     "test": "mocha --require test/support/env --reporter spec",
     "coverage": "nyc --reporter=lcov --reporter=text  npm run test"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

@@ -21,5 +21,8 @@
   },
   "peerDependencies": {
     "@frctl/fractal": "^1.1.0-beta.1"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

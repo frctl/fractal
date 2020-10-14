@@ -29,5 +29,8 @@
     "require-all": "^2.0.0",
     "throat": "^3.0.0"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "publishConfig": {
+    "access": "public"
+  }
 }
