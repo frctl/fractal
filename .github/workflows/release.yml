@@ -15,11 +15,9 @@ jobs:
     - run: git config user.email github-actions@github.com
     - run: npm ci
     - run: npm run bootstrap
-    - run: npx lerna version --conventional-commits --create-release github
+    - run: npx lerna version --conventional-commits --create-release github --yes
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - run: echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-    - run: npx lerna publish from-git --yes
-
+    - run: npx lerna publish from-git --yes --no-verify-access
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
