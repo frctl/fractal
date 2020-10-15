@@ -137,10 +137,10 @@ module.exports = class VariantCollection extends EntityCollection {
                 if (!p.view) {
                     // no view file specified
                     const viewName = `${opts.viewName}${source.get('splitter')}${p.name}`.toLowerCase();
-                    viewFile = _.find(views, (f) => f.name.toLowerCase() === viewName);
+                    viewFile = _.find(views, (f) => f.name.toLowerCase() === viewName.toLowerCase());
                     p.view = viewFile ? viewFile.base : opts.view;
                 } else {
-                    viewFile = _.find(views, (f) => f.base.toLowerCase() === p.view);
+                    viewFile = _.find(views, (f) => f.base.toLowerCase() === p.view.toLowerCase());
                 }
                 viewFile = viewFile || defaultView;
                 p.isDefault = p.name === component.defaultName;
