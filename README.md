@@ -11,9 +11,9 @@
 
 <br />
 <div align="center">
-  <!-- Travis -->
-  <a href="https://travis-ci.org/frctl/fractal">
-    <img src="https://img.shields.io/travis/frctl/fractal?label=travis%20ci" alt="">
+  <!-- Github Actions -->
+  <a href="https://github.com/frctl/fractal/actions" title="Build status">
+    <img src="https://img.shields.io/github/workflow/status/frctl/fractal/test/main" alt="">
   </a>
   <!-- NPM Version -->
   <a href="https://www.npmjs.com/package/@frctl/fractal" title="Current version">

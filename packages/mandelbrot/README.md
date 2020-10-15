@@ -1,8 +1,8 @@
-# Mandelbrot
+# @frctl/mandelbrot
 
-The default web UI theme for Fractal.
+The default web UI theme for [Fractal](http://github.com/frctl/fractal).
 
-[![NPM Version](https://img.shields.io/npm/v/@frctl/mandelbrot.svg?style=flat-square)](https://www.npmjs.com/package/@frctl/mandelbrot)
+[![NPM Version](https://img.shields.io/npm/v/@frctl/mandelbrot)](https://www.npmjs.com/package/@frctl/mandelbrot)
 
 See the Fractal [documentation](https://fractal.build/guide) for details on [configuration and usage](https://fractal.build/guide/web/default-theme.html).
 
@@ -32,3 +32,7 @@ npm run build
 ```
 
 You can see your changes in one of our [example Fractal instances](https://github.com/frctl/fractal/tree/main/examples).
+
+## License
+
+[MIT](https://github.com/frctl/fractal/blob/main/LICENSE)
