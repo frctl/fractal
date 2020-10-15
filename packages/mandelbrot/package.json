@@ -54,5 +54,8 @@
     "@frctl/web": "^0.0.0",
     "js-beautify": "^1.6.2",
     "lodash": "^4.17.11"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

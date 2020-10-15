@@ -100,7 +100,6 @@
     "validate": "npm run eslint && npm run stylelint",
     "format": "npm run eslint -- --fix",
     "test": "npm run validate && lerna run test",
-    "release": "lerna version --conventional-commits --no-push",
     "contributors:add": "all-contributors add",
     "contributors:generate": "all-contributors generate"
   },
