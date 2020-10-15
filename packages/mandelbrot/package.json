@@ -1,6 +1,6 @@
 {
   "name": "@frctl/mandelbrot",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "The default theme for Fractal.",
   "main": "index.js",
   "repository": {
@@ -51,7 +51,7 @@
     "watchify": "^3.7.0"
   },
   "dependencies": {
-    "@frctl/web": "^0.0.0",
+    "@frctl/web": "^0.1.0",
     "js-beautify": "^1.6.2",
     "lodash": "^4.17.11"
   },

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.1](https://github.com/frctl/fractal/compare/@frctl/handlebars@1.2.0...@frctl/handlebars@1.2.1) (2020-10-15)
+
+
+### Bug Fixes
+
+* **handlebars:** fix handlebars render tag overwriting default context ([#648](https://github.com/frctl/fractal/issues/648)) ([035191c](https://github.com/frctl/fractal/commit/035191c7b2cd97d928143b312f428b75b1629ff6))
+
+
+
+
+
 ## 1.2.0
 
 ### Features

@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.5.0](https://github.com/frctl/fractal/compare/@frctl/mandelbrot@1.4.0...@frctl/mandelbrot@1.5.0) (2020-10-15)
+
+
+### Bug Fixes
+
+* **mandelbrot:** hide hidden variants in info panel ([#649](https://github.com/frctl/fractal/issues/649)) ([179c4fd](https://github.com/frctl/fractal/commit/179c4fd78e64ecb90e5716df67cb83b767d19ea6))
+* **mandelbrot:** make relative path links from notes accessible both from local server as deployed server ([#659](https://github.com/frctl/fractal/issues/659)) ([9311ef5](https://github.com/frctl/fractal/commit/9311ef5a3ca429c473686bc9cfa20ef7c85db582))
+
+
+### Features
+
+* **Mandelbrot:** allow to customize all the theme labels ([#636](https://github.com/frctl/fractal/issues/636)) ([5735ef7](https://github.com/frctl/fractal/commit/5735ef7a9745cbf2fe4e4ca7eb31837fb2a4494e)), closes [#633](https://github.com/frctl/fractal/issues/633)
+* allow customizing Mandelbrot skin with hex codes ([#627](https://github.com/frctl/fractal/issues/627)) ([f4ef6f9](https://github.com/frctl/fractal/commit/f4ef6f9064ae3a459e975947bc7c990afb098e08))
+* allow resizing pen preview height on narrow screens ([#626](https://github.com/frctl/fractal/issues/626)) ([519335b](https://github.com/frctl/fractal/commit/519335b303aa0489d83297e543252b53a5985e73))
+
+
+
+
+
 ## 1.4.0
 
 ### Bug Fixes
