@@ -80,7 +80,7 @@
     "nyc": "^15.0.1",
     "prettier": "^2.0.5",
     "sass-mq": "^3.2.6",
-    "select2": "^4.0.3",
+    "select2": "^4.0.13",
     "sinon": "^9.0.1",
     "stylelint": "^13.3.3",
     "stylelint-config-prettier": "^8.0.1",

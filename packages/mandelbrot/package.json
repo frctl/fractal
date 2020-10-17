@@ -45,7 +45,7 @@
     "normalize.css": "^4.1.1",
     "prettier": "^2.0.5",
     "sass-mq": "^3.2.6",
-    "select2": "^4.0.3",
+    "select2": "^4.0.13",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0",
     "watchify": "^3.7.0"

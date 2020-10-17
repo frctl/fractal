@@ -1,7 +1,7 @@
 'use strict';
 
 const $ = global.jQuery;
-require('select2');
+require('select2')();
 const storage = require('../storage');
 
 class Browser {
