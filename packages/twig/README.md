@@ -1,6 +1,8 @@
-# Twig Adapter
+# @frctl/twig
 
-An adapter to let you use [Twig](https://github.com/twigjs/twig.js) templates with [Fractal](http://github.com/frctl/fractal).
+[Twig](https://github.com/twigjs/twig.js) template enginge adapter for [Fractal](http://github.com/frctl/fractal).
+
+[![NPM Version](https://img.shields.io/npm/v/@frctl/twig)](https://www.npmjs.com/package/@frctl/twig)
 
 Requires Fractal v1.1.0 or greater.
 

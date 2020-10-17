@@ -1,8 +1,8 @@
-# Nunjucks Adapter
+# @frctl/nunjucks
 
-An adapter to let you use [Nunjucks](http://mozilla.github.io/nunjucks/) templates with [Fractal](http://github.com/frctl/fractal).
+[Nunjucks](http://mozilla.github.io/nunjucks/) template engine adapter for [Fractal](http://github.com/frctl/fractal).
 
-[![NPM Version](https://img.shields.io/npm/v/@frctl/nunjucks.svg?style=flat-square)](https://www.npmjs.com/package/@frctl/nunjucks)
+[![NPM Version](https://img.shields.io/npm/v/@frctl/nunjucks)](https://www.npmjs.com/package/@frctl/nunjucks)
 
 ## 🚨 Breaking changes in v2.0
 

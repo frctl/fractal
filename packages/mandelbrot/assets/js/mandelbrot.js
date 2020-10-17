@@ -14,8 +14,10 @@ const framer = require('./components/frame');
 const Pen = require('./components/pen');
 const Navigation = require('./components/navigation');
 
-new Navigation($('.Navigation'));
+// frame needs to be initalized before navigation because it
+// needs to add an event listener before Navigation->Tree triggers it
 const frame = framer($('#frame'));
+new Navigation($('.Navigation'));
 
 global.fractal = {
     events: events,
