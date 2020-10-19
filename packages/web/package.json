@@ -1,6 +1,6 @@
 {
   "name": "@frctl/web",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Web module of Fractal.",
   "main": "src/index.js",
   "repository": {
@@ -14,7 +14,7 @@
   },
   "homepage": "https://github.com/frctl/fractal/tree/main/packages/web",
   "dependencies": {
-    "@frctl/core": "^0.1.0",
+    "@frctl/core": "^0.1.1",
     "anymatch": "^2.0.0",
     "bluebird": "^3.5.2",
     "browser-sync": "^2.26.12",

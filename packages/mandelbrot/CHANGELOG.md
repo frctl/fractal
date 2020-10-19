@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.1](https://github.com/frctl/fractal/compare/@frctl/mandelbrot@1.5.0...@frctl/mandelbrot@1.5.1) (2020-10-19)
+
+
+### Bug Fixes
+
+* **mandelbrot:** Properly initialize assets tab file select ([#669](https://github.com/frctl/fractal/issues/669)) ([dfaefa5](https://github.com/frctl/fractal/commit/dfaefa56ff1e76110381303c53ca742aacfcf660)), closes [#668](https://github.com/frctl/fractal/issues/668)
+* initialize frame before navigation ([#667](https://github.com/frctl/fractal/issues/667)) ([33f4f59](https://github.com/frctl/fractal/commit/33f4f595705f906eba7634137a2045dfa4496220))
+
+
+
+
+
 # [1.5.0](https://github.com/frctl/fractal/compare/@frctl/mandelbrot@1.4.0...@frctl/mandelbrot@1.5.0) (2020-10-15)
 
 

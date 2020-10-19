@@ -1,6 +1,6 @@
 {
   "name": "@frctl/handlebars-example",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "scripts": {
     "start": "fractal start --sync",
@@ -9,9 +9,9 @@
     "test:dev": "npm run test -- --watch"
   },
   "dependencies": {
-    "@frctl/fractal": "^1.4.0",
-    "@frctl/handlebars": "^1.2.1",
-    "@frctl/mandelbrot": "^1.5.0"
+    "@frctl/fractal": "^1.4.1",
+    "@frctl/handlebars": "^1.2.2",
+    "@frctl/mandelbrot": "^1.5.1"
   },
   "devDependencies": {
     "jest": "^26.0.1",
