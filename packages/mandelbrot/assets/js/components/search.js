@@ -19,7 +19,7 @@ class Search {
 
         if (this._clearButton) {
             this._clearButton.on('click', () => {
-                this._input.val('').trigger('input');
+                this._input.val('').trigger('input').focus();
             });
         }
     }
