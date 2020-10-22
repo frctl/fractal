@@ -17,7 +17,7 @@
     "@frctl/core": "^0.1.1",
     "anymatch": "^2.0.0",
     "bluebird": "^3.5.2",
-    "browser-sync": "^2.26.12",
+    "browser-sync": "^2.26.13",
     "chokidar": "^3.4.2",
     "express": "^4.14.0",
     "fs-extra": "^9.0.0",
