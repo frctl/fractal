@@ -1,6 +1,5 @@
 'use strict';
 
-const $ = global.jQuery;
 const Mark = require('mark.js');
 
 class Search {

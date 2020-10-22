@@ -1,6 +1,5 @@
 'use strict';
 
-const $ = global.jQuery;
 const Tree = require('./tree');
 const Search = require('./search');
 

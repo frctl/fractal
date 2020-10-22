@@ -1,10 +1,7 @@
 'use strict';
 
-import 'core-js/features/array/find';
-
-global.jQuery = require('jquery');
+require('jquery');
 require('jquery-pjax');
-const $ = global.jQuery;
 const doc = $(document);
 const frctl = window.frctl || {};
 

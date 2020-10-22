@@ -1,6 +1,5 @@
 'use strict';
 
-const $ = global.jQuery;
 const config = require('./config');
 
 module.exports = {

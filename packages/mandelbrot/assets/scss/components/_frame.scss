@@ -80,7 +80,7 @@
     overflow: auto;
 
     &.is-loading {
-        background-image: url("../img/loader.svg");
+        background-image: url("../../img/loader.svg");
         background-repeat: no-repeat;
         background-position: 50%;
 
@@ -99,7 +99,7 @@
     z-index: 2;
     height: 100%;
     width: $handle-size;
-    background: transparent url("../img/icon-drag--vertical.svg") no-repeat 50% 45%;
+    background: transparent url("../../img/icon-drag--vertical.svg") no-repeat 50% 45%;
     background-size: 3px 16px;
     cursor: ew-resize;
 }

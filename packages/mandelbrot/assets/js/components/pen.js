@@ -1,11 +1,10 @@
 'use strict';
 
-const $ = global.jQuery;
 const storage = require('../storage');
 const events = require('../events');
 const Preview = require('./preview');
 const Browser = require('./browser');
-require('jquery-resizable-dom/dist/jquery-resizable.js');
+require('jquery-resizable-dom');
 
 class Pen {
     constructor(el) {
@@ -48,7 +47,7 @@ class Pen {
         });
 
         this._previewPanel.resizable({
-            handleSelector: this._handle,
+            handleSelector: '[data-role="resize-handle"]',
             resizeWidth: false,
             onDragStart: () => {
                 this._el.addClass('is-resizing');
