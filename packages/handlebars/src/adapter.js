@@ -55,7 +55,7 @@ module.exports = function (config) {
 
             const invokePartial = hbs.VM.invokePartial;
             hbs.VM.invokePartial = function () {
-                const args = Array.from(arguments);
+                const args = _.cloneDeep(Array.from(arguments));
                 const identifier = args[2].name;
                 let entity;
                 if (identifier.indexOf('@') === 0) {
