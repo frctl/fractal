@@ -1,3 +1,4 @@
+{% if frctl.theme.get('information').length %}
 <div class="Navigation-group">
     <div class="Tree">
         <div class="Tree-header">
@@ -23,3 +24,4 @@
         </dl>
     </div>
 </div>
+{% endif %}
