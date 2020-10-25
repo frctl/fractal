@@ -1,11 +1,11 @@
 'use strict';
 
-const $ = global.jQuery;
-const storage = require('../storage');
-const events = require('../events');
-require('jquery-resizable-dom/dist/jquery-resizable.js');
+import 'jquery-resizable-dom';
 
-class Preview {
+import storage from '../storage';
+import events from '../events';
+
+export default class Preview {
     constructor(el) {
         this._el = $(el);
         this._id = this._el[0].id;
@@ -40,7 +40,7 @@ class Preview {
         });
 
         this._resizer.resizable({
-            handleSelector: this._handle,
+            handleSelector: '> [data-role="resize-handle"]',
             resizeHeight: false,
             onDragStart: () => {
                 this._el.addClass('is-resizing');
@@ -68,5 +68,3 @@ class Preview {
         this._el.removeClass('is-disabled');
     }
 }
-
-module.exports = Preview;
