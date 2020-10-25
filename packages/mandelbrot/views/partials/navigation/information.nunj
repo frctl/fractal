@@ -2,9 +2,9 @@
 <div class="Navigation-group">
     <div class="Tree">
         <div class="Tree-header">
-            <div class="Tree-title">
+            <h3 class="Tree-title">
                 {{ frctl.theme.get('labels.info') }}
-            </div>
+            </h3>
         </div>
         <dl class="Tree-aside">
             {% for term in frctl.theme.get('information') %}
