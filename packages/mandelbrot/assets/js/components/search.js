@@ -1,8 +1,8 @@
 'use strict';
 
-const Mark = require('mark.js');
+import Mark from 'mark.js';
 
-class Search {
+export default class Search {
     constructor(el, trees) {
         this._el = $(el);
         this._trees = trees;
@@ -86,5 +86,3 @@ class Search {
         });
     }
 }
-
-module.exports = Search;

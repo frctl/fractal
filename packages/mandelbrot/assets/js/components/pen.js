@@ -1,12 +1,13 @@
 'use strict';
 
-const storage = require('../storage');
-const events = require('../events');
-const Preview = require('./preview');
-const Browser = require('./browser');
-require('jquery-resizable-dom');
+import 'jquery-resizable-dom';
 
-class Pen {
+import storage from '../storage';
+import events from '../events';
+import Preview from './preview';
+import Browser from './browser';
+
+export default class Pen {
     constructor(el) {
         this._el = $(el);
         this._id = this._el[0].id;
@@ -89,5 +90,3 @@ class Pen {
         });
     }
 }
-
-module.exports = Pen;

@@ -5,7 +5,7 @@ const storages = {
     session: sessionStorage,
 };
 
-module.exports = {
+export default {
     get(name, fallback, storage = 'local') {
         const result = storages[storage].getItem(name);
         return result ? JSON.parse(result) : fallback;

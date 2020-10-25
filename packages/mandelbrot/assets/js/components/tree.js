@@ -1,7 +1,7 @@
 'use strict';
 
-const storage = require('../storage');
-const events = require('../events');
+import storage from '../storage';
+import events from '../events';
 
 function getTreeUrl(urlPath) {
     const parser = document.createElement('a');
@@ -11,7 +11,7 @@ function getTreeUrl(urlPath) {
     return pathParts.join('/');
 }
 
-class Tree {
+export default class Tree {
     constructor(el) {
         this._el = $(el);
         this._id = this._el[0].id;
@@ -80,7 +80,7 @@ class Tree {
     }
 }
 
-class TreeCollection {
+export class TreeCollection {
     constructor(el, tree) {
         this._tree = tree;
         this._el = $(el);
@@ -121,5 +121,3 @@ class TreeCollection {
         return false;
     }
 }
-
-module.exports = Tree;

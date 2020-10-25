@@ -1,8 +1,8 @@
 'use strict';
 
-const config = require('./config');
+import config from './config';
 
-module.exports = {
+export default {
     debounce(func, wait, immediate) {
         var timeout;
         return function () {

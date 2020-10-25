@@ -1,10 +1,11 @@
 'use strict';
 
-const storage = require('../storage');
-const events = require('../events');
-require('jquery-resizable-dom');
+import 'jquery-resizable-dom';
 
-class Preview {
+import storage from '../storage';
+import events from '../events';
+
+export default class Preview {
     constructor(el) {
         this._el = $(el);
         this._id = this._el[0].id;
@@ -67,5 +68,3 @@ class Preview {
         this._el.removeClass('is-disabled');
     }
 }
-
-module.exports = Preview;

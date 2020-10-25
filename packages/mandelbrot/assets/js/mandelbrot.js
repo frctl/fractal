@@ -1,15 +1,16 @@
 'use strict';
 
-require('jquery');
-require('jquery-pjax');
+import 'jquery';
+import 'jquery-pjax';
+
+import events from './events';
+import utils from './utils';
+import framer from './components/frame';
+import Pen from './components/pen';
+import Navigation from './components/navigation';
+
 const doc = $(document);
 const frctl = window.frctl || {};
-
-const events = require('./events');
-const utils = require('./utils');
-const framer = require('./components/frame');
-const Pen = require('./components/pen');
-const Navigation = require('./components/navigation');
 
 // frame needs to be initalized before navigation because it
 // needs to add an event listener before Navigation->Tree triggers it

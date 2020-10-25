@@ -1,9 +1,9 @@
 'use strict';
 
-require('select2');
-const storage = require('../storage');
+import 'select2';
+import storage from '../storage';
 
-class Browser {
+export default class Browser {
     constructor(el) {
         const self = this;
 
@@ -64,5 +64,3 @@ class Browser {
     //     switcher.trigger('change');
     // }
 }
-
-module.exports = Browser;
