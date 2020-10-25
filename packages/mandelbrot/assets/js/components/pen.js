@@ -47,7 +47,7 @@ class Pen {
         });
 
         this._previewPanel.resizable({
-            handleSelector: '[data-role="resize-handle"]',
+            handleSelector: '.Pen-handle[data-role="resize-handle"]',
             resizeWidth: false,
             onDragStart: () => {
                 this._el.addClass('is-resizing');
