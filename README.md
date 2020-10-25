@@ -20,7 +20,7 @@
     <img src="https://img.shields.io/npm/v/@frctl/fractal.svg" alt="">
   </a>
   <!-- Discord -->
-  <a href=https://discord.gg/vuRz4Yx" title="Chat with us on Discord">
+  <a href="https://discord.gg/vuRz4Yx" title="Chat with us on Discord">
     <img src="https://img.shields.io/badge/discord-join-7289DA" alt="">
   </a>
   <!-- NPM Downloads -->
