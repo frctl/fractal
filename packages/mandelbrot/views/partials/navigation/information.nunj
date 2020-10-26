@@ -1,15 +1,27 @@
+{% if frctl.theme.get('information').length %}
 <div class="Navigation-group">
     <div class="Tree">
         <div class="Tree-header">
-            <div class="Tree-title">
+            <h3 class="Tree-title">
                 {{ frctl.theme.get('labels.info') }}
-            </div>
+            </h3>
         </div>
-        <div class="Tree-aside">
-            {{ frctl.theme.get('labels.builtOn') }}:
-            <time datetime="{{ frctl.theme.get('now').toISOString() }}">
-                {{ frctl.theme.get('now').toLocaleDateString(frctl.theme.get('lang')) }}
-            </time>
-        </div>
+        <dl class="Tree-aside">
+            {% for term in frctl.theme.get('information') %}
+                <div>
+                    <dt class="Tree-asideTerm">{{ term.label }}:</dt>
+                    <dd class="Tree-asideDescription">
+                        {% if term.type == 'time' %}
+                            <time datetime="{{ term.value.toISOString() }}">
+                                {{ term.format(term.value) }}
+                            </time>
+                        {% else %}
+                            {{ term.format(term.value) }}
+                        {% endif %}
+                    </dd>
+                </div>
+            {% endfor %}
+        </dl>
     </div>
 </div>
+{% endif %}
