@@ -19,8 +19,7 @@
     {% for item in items %}
         {% if item.isCollection or (item.isComponent and not item.isCollated and item.variants().filter('isHidden', false).size > 1) %}
             {# skip root collections because they are pulled out of the tree #}
-            {% if item.isCollection and item.isRoot %}
-            {% else %}
+            {% if not (item.isCollection and item.isRoot) %}
             <li class="Tree-item Tree-collection Tree-depth-{{ depth }}" data-behaviour="collection" id="tree-{{ root.name }}-collection-{{ item.handle }}">
                 <button class="Tree-collectionLabel" data-role="toggle" aria-expanded="true" aria-controls="tree-{{ root.name }}-collection-{{ item.handle }}-items">
                     {{ item.label }}
