@@ -18,19 +18,22 @@
 {% macro leaves(items, root, current, depth, request) %}
     {% for item in items %}
         {% if item.isCollection or (item.isComponent and not item.isCollated and item.variants().filter('isHidden', false).size > 1) %}
-        <li class="Tree-item Tree-collection Tree-depth-{{ depth }}" data-behaviour="collection" id="tree-{{ root.name }}-collection-{{ item.handle }}">
-            <button class="Tree-collectionLabel" data-role="toggle" aria-expanded="true" aria-controls="tree-{{ root.name }}-collection-{{ item.handle }}-items">
-                {{ item.label }}
-            </button>
-            <ul class="Tree-collectionItems" data-role="items" id="tree-{{ root.name }}-collection-{{ item.handle }}-items">
-            {% if item.isComponent and not item.isCollated %}
-            {% set items = item.variants().filter('isHidden', false).items() %}
-            {% else %}
-            {% set items = item.filter('isHidden', false).items() %}
+            {# skip root collections because they are pulled out of the tree #}
+            {% if not (item.isCollection and item.isRoot) %}
+            <li class="Tree-item Tree-collection Tree-depth-{{ depth }}" data-behaviour="collection" id="tree-{{ root.name }}-collection-{{ item.handle }}">
+                <button class="Tree-collectionLabel" data-role="toggle" aria-expanded="true" aria-controls="tree-{{ root.name }}-collection-{{ item.handle }}-items">
+                    {{ item.label }}
+                </button>
+                <ul class="Tree-collectionItems" data-role="items" id="tree-{{ root.name }}-collection-{{ item.handle }}-items">
+                {% if item.isComponent and not item.isCollated %}
+                {% set items = item.variants().filter('isHidden', false).items() %}
+                {% else %}
+                {% set items = item.filter('isHidden', false).items() %}
+                {% endif %}
+                {{ leaves(items, root, current, (depth + 1), request) }}
+                </ul>
+            </li>
             {% endif %}
-            {{ leaves(items, root, current, (depth + 1), request) }}
-            </ul>
-        </li>
         {% else %}
         {% set isCurrent = true if (current and (current.id == item.id)) else false %}
         <li class="Tree-item Tree-entity{% if isCurrent %} is-current{% endif %}"{% if isCurrent %} data-state="current"{% endif %} data-role="item">
