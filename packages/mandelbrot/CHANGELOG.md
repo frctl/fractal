@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.6.0](https://github.com/frctl/fractal/compare/@frctl/mandelbrot@1.5.1...@frctl/mandelbrot@1.6.0) (2020-11-03)
+
+
+### Features
+
+* allow custom information properties ([#678](https://github.com/frctl/fractal/issues/678)) ([2941791](https://github.com/frctl/fractal/commit/29417917d71abb5e10c1feeaf42305b61256c8e6))
+* allow pulling collections to root ([#642](https://github.com/frctl/fractal/issues/642)) ([d2cfa1b](https://github.com/frctl/fractal/commit/d2cfa1b6a76ca2328967374c62f4e35ca10cb758))
+* focus search input after clearing it ([#672](https://github.com/frctl/fractal/issues/672)) ([1c00083](https://github.com/frctl/fractal/commit/1c00083ab5d3758371c95afa87d506eea934df52))
+
+
+
+
+
 ## [1.5.1](https://github.com/frctl/fractal/compare/@frctl/mandelbrot@1.5.0...@frctl/mandelbrot@1.5.1) (2020-10-19)
 
 

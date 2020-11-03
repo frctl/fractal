@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/frctl/fractal/compare/@frctl/handlebars-example@0.1.1...@frctl/handlebars-example@0.2.0) (2020-11-03)
+
+
+### Bug Fixes
+
+* do not modify parent scope when including subcomponent ([#677](https://github.com/frctl/fractal/issues/677)) ([864ad04](https://github.com/frctl/fractal/commit/864ad04faf3dfa4d2397091d991d2edb6e20d52f))
+
+
+### Features
+
+* allow pulling collections to root ([#642](https://github.com/frctl/fractal/issues/642)) ([d2cfa1b](https://github.com/frctl/fractal/commit/d2cfa1b6a76ca2328967374c62f4e35ca10cb758))
+
+
+
+
+
 ## [0.1.1](https://github.com/frctl/fractal/compare/@frctl/handlebars-example@0.1.0...@frctl/handlebars-example@0.1.1) (2020-10-19)
 
 **Note:** Version bump only for package @frctl/handlebars-example

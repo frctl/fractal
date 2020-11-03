@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.5.0](https://github.com/frctl/fractal/compare/@frctl/fractal@1.4.1...@frctl/fractal@1.5.0) (2020-11-03)
+
+
+### Bug Fixes
+
+* update file extension of docs index in new command ([#681](https://github.com/frctl/fractal/issues/681)) ([6cfa943](https://github.com/frctl/fractal/commit/6cfa943784c6462231ffd51e8afb30b0803c03bb)), closes [/github.com/frctl/fractal/commit/b23ecbaa433fb57fae20136ac7ea7e10469a34ff#diff-bce2cc04110d03fb1499379830faa44a173d254ad7f6f3fda808728746b291e5](https://github.com//github.com/frctl/fractal/commit/b23ecbaa433fb57fae20136ac7ea7e10469a34ff/issues/diff-bce2cc04110d03fb1499379830faa44a173d254ad7f6f3fda808728746b291e5)
+
+
+### Features
+
+* allow pulling collections to root ([#642](https://github.com/frctl/fractal/issues/642)) ([d2cfa1b](https://github.com/frctl/fractal/commit/d2cfa1b6a76ca2328967374c62f4e35ca10cb758))
+
+
+
+
+
 ## [1.4.1](https://github.com/frctl/fractal/compare/@frctl/fractal@1.4.0...@frctl/fractal@1.4.1) (2020-10-19)
 
 **Note:** Version bump only for package @frctl/fractal

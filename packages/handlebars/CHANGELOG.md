@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.3](https://github.com/frctl/fractal/compare/@frctl/handlebars@1.2.2...@frctl/handlebars@1.2.3) (2020-11-03)
+
+
+### Bug Fixes
+
+* do not modify parent scope when including subcomponent ([#677](https://github.com/frctl/fractal/issues/677)) ([864ad04](https://github.com/frctl/fractal/commit/864ad04faf3dfa4d2397091d991d2edb6e20d52f))
+
+
+
+
+
 ## [1.2.2](https://github.com/frctl/fractal/compare/@frctl/handlebars@1.2.1...@frctl/handlebars@1.2.2) (2020-10-19)
 
 **Note:** Version bump only for package @frctl/handlebars
