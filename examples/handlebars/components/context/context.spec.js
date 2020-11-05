@@ -34,4 +34,9 @@ describe('tree', () => {
         const ctx = await fractal.components.find('@reference-key').getResolvedContext();
         expect(ctx.text).toBe('JS Context');
     });
+
+    it('loads fully rendered component from another component context key', async () => {
+        const ctx = await fractal.components.find('@reference-full').getResolvedContext();
+        expect(ctx.text).toBe('JS Context');
+    });
 });
