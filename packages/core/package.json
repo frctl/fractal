@@ -1,6 +1,6 @@
 {
   "name": "@frctl/core",
-  "version": "0.0.1-wombatpatch.0",
+  "version": "0.2.0",
   "description": "Core module of Fractal.",
   "main": "src/index.js",
   "repository": {
@@ -39,5 +39,8 @@
   "scripts": {
     "test": "mocha --require test/support/env --reporter spec",
     "coverage": "nyc --reporter=lcov --reporter=text  npm run test"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

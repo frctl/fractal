@@ -24,7 +24,7 @@ module.exports = {
         const basePath = baseDir.startsWith('/') ? baseDir : Path.join(process.cwd(), baseDir);
         const viewsPath = Path.join(__dirname, '../../../views/cli/new');
         const fractalFileTpl = Path.join(viewsPath, 'fractal.hbs');
-        const docsIndexTpl = Path.join(viewsPath, 'docs/index.hbs');
+        const docsIndexTpl = Path.join(viewsPath, 'docs/index.md');
         const exampleComponent = Path.join(viewsPath, 'components/example');
 
         if (helpers.fileExistsSync(basePath)) {

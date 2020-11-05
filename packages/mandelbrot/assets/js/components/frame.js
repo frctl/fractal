@@ -1,11 +1,10 @@
 'use strict';
 
-const $ = global.jQuery;
-const storage = require('../storage');
-const utils = require('../utils');
-const events = require('../events');
+import storage from '../storage';
+import utils from '../utils';
+import events from '../events';
 
-module.exports = function (element) {
+export default function (element) {
     const win = $(window);
     const doc = $(document);
     const el = $(element);
@@ -45,7 +44,7 @@ module.exports = function (element) {
     });
 
     sidebar.resizable({
-        handleSelector: handle,
+        handleSelector: '[data-role="frame-resize-handle"]',
         resizeHeight: false,
         onDragStart: () => {
             el.addClass('is-resizing');
@@ -157,4 +156,4 @@ module.exports = function (element) {
             main.removeClass('is-loading');
         },
     };
-};
+}

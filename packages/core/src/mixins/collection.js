@@ -14,6 +14,10 @@ module.exports = mixin(
                 this.isCollection = true;
             }
 
+            initCollection(config) {
+                this.root = config.root || false;
+            }
+
             /**
              * Return the length of the items set
              * @return {Number}
@@ -132,6 +136,14 @@ module.exports = mixin(
                 return this.newSelf(this.toArray().filter((i) => i.isCollection));
             }
 
+            rootCollections() {
+                return this.newSelf(
+                    this.flattenDeep('collections')
+                        .toArray()
+                        .filter((i) => i.isCollection && i.isRoot)
+                );
+            }
+
             orderBy() {
                 let args;
                 if (arguments.length === 1 && _.isObject(arguments[0]) && !_.isArrayLikeObject(arguments[0])) {
@@ -172,11 +184,18 @@ module.exports = mixin(
                 }
             }
 
-            flatten() {
+            flatten(type = 'items') {
+                if (type === 'collections') {
+                    return this.newSelf(this.flattenCollections(this.toArray()));
+                }
                 return this.newSelf(this.flattenItems(this.toArray()));
             }
 
-            flattenDeep() {
+            flattenDeep(type = 'items') {
+                if (type === 'collections') {
+                    return this.newSelf(this.flattenCollections(this.toArray(), true));
+                }
+
                 return this.newSelf(this.flattenItems(this.toArray(), true));
             }
 
@@ -209,6 +228,27 @@ module.exports = mixin(
                 return ret;
             }
 
+            /**
+             * Filters both entities and collections, not just entities in collections.
+             */
+            filterAll() {
+                const args = Array.from(arguments);
+                args.unshift(this.toArray());
+                return this.newSelf(this.filterAllItems.apply(this, args));
+            }
+
+            filterAllItems(items) {
+                const predicate = Array.prototype.slice.call(arguments, 1);
+                const matcher = this._makePredicate.apply(null, predicate);
+                const ret = [];
+                for (const item of items) {
+                    if (matcher(item)) {
+                        ret.push(item);
+                    }
+                }
+                return ret;
+            }
+
             flattenItems(items, deep) {
                 let ret = [];
                 for (const item of items) {
@@ -219,6 +259,20 @@ module.exports = mixin(
                             ret = _.concat(ret, item.flatten().toArray());
                         } else {
                             ret.push(item);
+                        }
+                    }
+                }
+                return ret;
+            }
+
+            flattenCollections(items, deep) {
+                let ret = [];
+                for (const item of items) {
+                    if (item.isCollection) {
+                        ret.push(item);
+
+                        if (deep) {
+                            ret = _.concat(ret, this.flattenCollections(item.toArray(), deep));
                         }
                     }
                 }

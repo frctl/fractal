@@ -1,21 +1,21 @@
 'use strict';
 
-import 'core-js/features/array/find';
+import 'jquery';
+import 'jquery-pjax';
 
-global.jQuery = require('jquery');
-require('jquery-pjax');
-const $ = global.jQuery;
+import events from './events';
+import utils from './utils';
+import framer from './components/frame';
+import Pen from './components/pen';
+import Navigation from './components/navigation';
+
 const doc = $(document);
 const frctl = window.frctl || {};
 
-const events = require('./events');
-const utils = require('./utils');
-const framer = require('./components/frame');
-const Pen = require('./components/pen');
-const Navigation = require('./components/navigation');
-
-new Navigation($('.Navigation'));
+// frame needs to be initalized before navigation because it
+// needs to add an event listener before Navigation->Tree triggers it
 const frame = framer($('#frame'));
+new Navigation($('.Navigation'));
 
 global.fractal = {
     events: events,

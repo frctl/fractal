@@ -1,3 +1,3 @@
 'use strict';
 
-module.exports = global.jQuery({});
+export default global.jQuery({});

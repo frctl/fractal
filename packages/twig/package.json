@@ -1,6 +1,6 @@
 {
   "name": "@frctl/twig",
-  "version": "1.2.1-wombatpatch.0",
+  "version": "1.2.3",
   "description": "Twig template adapter for Fractal.",
   "main": "index.js",
   "repository": {
@@ -15,11 +15,14 @@
   },
   "homepage": "https://github.com/frctl/fractal/tree/main/packages/twig",
   "dependencies": {
-    "@frctl/core": "^0.0.1-wombatpatch.0",
+    "@frctl/core": "^0.2.0",
     "lodash": "^4.17.11",
     "twig": "^1.14.0"
   },
   "peerDependencies": {
     "@frctl/fractal": "^1.1.0-beta.1"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

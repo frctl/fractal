@@ -3,17 +3,43 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 1.3.1-wombatpatch.0 (2020-10-08)
+# [1.5.0](https://github.com/frctl/fractal/compare/@frctl/fractal@1.4.1...@frctl/fractal@1.5.0) (2020-11-03)
 
 
 ### Bug Fixes
 
+* update file extension of docs index in new command ([#681](https://github.com/frctl/fractal/issues/681)) ([6cfa943](https://github.com/frctl/fractal/commit/6cfa943784c6462231ffd51e8afb30b0803c03bb)), closes [/github.com/frctl/fractal/commit/b23ecbaa433fb57fae20136ac7ea7e10469a34ff#diff-bce2cc04110d03fb1499379830faa44a173d254ad7f6f3fda808728746b291e5](https://github.com//github.com/frctl/fractal/commit/b23ecbaa433fb57fae20136ac7ea7e10469a34ff/issues/diff-bce2cc04110d03fb1499379830faa44a173d254ad7f6f3fda808728746b291e5)
+
+
+### Features
+
+* allow pulling collections to root ([#642](https://github.com/frctl/fractal/issues/642)) ([d2cfa1b](https://github.com/frctl/fractal/commit/d2cfa1b6a76ca2328967374c62f4e35ca10cb758))
+
+
+
+
+
+## [1.4.1](https://github.com/frctl/fractal/compare/@frctl/fractal@1.4.0...@frctl/fractal@1.4.1) (2020-10-19)
+
+**Note:** Version bump only for package @frctl/fractal
+
+
+
+
+
+# [1.4.0](https://github.com/frctl/fractal/compare/@frctl/fractal@1.3.0...@frctl/fractal@1.4.0) (2020-10-15)
+
+
+### Bug Fixes
+
+* fix resolving camelCased variant templates ([#652](https://github.com/frctl/fractal/issues/652)) ([c81c69a](https://github.com/frctl/fractal/commit/c81c69ae5237f3027e70089a6918221513d7f106))
 * properly load notes from readme files for components variants ([#630](https://github.com/frctl/fractal/issues/630)) ([d2f6dcf](https://github.com/frctl/fractal/commit/d2f6dcffeefe25f3e9f0d272c0b0bdd9590779bf)), closes [#629](https://github.com/frctl/fractal/issues/629)
 
 
 ### Features
 
 * allow overriding/extending highlighter ([#628](https://github.com/frctl/fractal/issues/628)) ([ad1689b](https://github.com/frctl/fractal/commit/ad1689bb82f8ba87911a66f8117482d8c247055d))
+* filter excluded files/directories in the file system parsing stage ([#661](https://github.com/frctl/fractal/issues/661)) ([7c09c27](https://github.com/frctl/fractal/commit/7c09c27ca970dc2bca79ea4f1acafb1d7209642d))
 * **CLI:** add start/build npm scripts to package.json for new projects ([#620](https://github.com/frctl/fractal/issues/620)) ([1c923d8](https://github.com/frctl/fractal/commit/1c923d86f70eef8c85d662e72beaf81098a2bb38))
 
 

@@ -76,7 +76,6 @@ module.exports = function (options) {
                   name: 'default',
                   ...config.skin,
               };
-
     const uiStyles = []
         .concat(config.styles)
         .concat(config.stylesheet)
@@ -87,6 +86,24 @@ module.exports = function (options) {
         .filter((url) => url)
         .map((url) => (url === 'default' ? `/${config.static.mount}/css/highlight.css` : url));
 
+    config.information = (
+        config.information || [
+            {
+                label: config.labels.builtOn,
+                value: new Date(),
+                type: 'time',
+                format: (value) => {
+                    return value.toLocaleDateString(config.lang);
+                },
+            },
+        ]
+    ).map((item) => ({
+        format: (value) => {
+            return value;
+        },
+        type: 'string',
+        ...item,
+    }));
     config.panels = config.panels || ['html', 'view', 'context', 'resources', 'info', 'notes'];
     config.nav = config.nav || ['search', 'components', 'docs', 'assets', 'information'];
     config.styles = [].concat(uiStyles).concat(highlightStyles);
@@ -95,7 +112,6 @@ module.exports = function (options) {
         .filter((url) => url)
         .map((url) => (url === 'default' ? `/${config.static.mount}/js/mandelbrot.js` : url));
     config.favicon = config.favicon || `/${config.static.mount}/favicon.ico`;
-    config.now = new Date();
 
     const theme = new Theme(Path.join(__dirname, '..', 'views'), config);
 

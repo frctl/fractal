@@ -1,5 +1,9 @@
-{% if frctl.components.size %}
-<div class="Navigation-group">
-{{ nav.tree(frctl.components, entity, request) }}
-</div>
-{% endif %}
+{% set rootCollections = frctl.components.rootCollections().filter('isHidden', false) %}
+{% for collection in rootCollections %}
+    {# collection must have either entities (non-collection items) or non-root collections #}
+    {% if collection.entities().size > 0 or collection.collections().filterAll('isRoot', false).size > 0  %}
+    <div class="Navigation-group">
+        {{ nav.tree(collection, entity, request) }}
+    </div>
+    {% endif %}
+{% endfor %}

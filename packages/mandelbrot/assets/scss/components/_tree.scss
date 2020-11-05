@@ -46,11 +46,11 @@
 
         .Tree-collectionLabel::before {
             [dir="ltr"] & {
-                background-image: url("../img/icon-navigation-closed-ltr.svg");
+                background-image: url("../../img/icon-navigation-closed-ltr.svg");
             }
 
             [dir="rtl"] & {
-                background-image: url("../img/icon-navigation-closed-rtl.svg");
+                background-image: url("../../img/icon-navigation-closed-rtl.svg");
             }
         }
     }
@@ -86,7 +86,7 @@
         top: 0.75rem;
         width: 0.75rem;
         height: 0.75rem;
-        background-image: url("../img/icon-navigation-opened.svg");
+        background-image: url("../../img/icon-navigation-opened.svg");
         background-size: 0.5rem;
         background-repeat: no-repeat;
         background-position: 50%;
@@ -141,4 +141,9 @@
     margin: 0 1rem 0;
     padding-top: 0.375rem;
     opacity: 0.7;
+}
+
+.Tree-asideTerm,
+.Tree-asideDescription {
+    display: inline;
 }

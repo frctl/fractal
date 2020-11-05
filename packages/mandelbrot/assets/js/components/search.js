@@ -1,9 +1,8 @@
 'use strict';
 
-const $ = global.jQuery;
-const Mark = require('mark.js');
+import Mark from 'mark.js';
 
-class Search {
+export default class Search {
     constructor(el, trees) {
         this._el = $(el);
         this._trees = trees;
@@ -19,7 +18,7 @@ class Search {
 
         if (this._clearButton) {
             this._clearButton.on('click', () => {
-                this._input.val('').trigger('input');
+                this._input.val('').trigger('input').focus();
             });
         }
     }
@@ -87,5 +86,3 @@ class Search {
         });
     }
 }
-
-module.exports = Search;
