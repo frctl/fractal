@@ -1,0 +1,24 @@
+<header class="relative py-3 md:py-6 bg-white">
+    <div class="container">
+        <nav class="relative flex items-center justify-between">
+            <a href="#" class="flex items-center hover:opacity-75 transition duration-150 ease-in-out">
+                <img class="h-8 sm:h-10 w-auto mr-4" src="{{ '/fractal.svg' | path }}" alt="">
+                <span class="text-xl md:text-2xl font-bold">{{ title }}</span>
+            </a>
+
+            <div class="-mr-2 flex items-center sm:hidden">
+                <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out" aria-label="Main menu">
+                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="hidden sm:flex sm:space-x-10">
+                {% for link in links %}
+                    <a href="{{ link.url }}" class="font-bold text-lg text-gray-700 hover:text-gray-900 transition duration-150 ease-in-out">{{ link.label }}</a>
+                {% endfor %}
+            </div>
+        </nav>
+    </div>
+</header>

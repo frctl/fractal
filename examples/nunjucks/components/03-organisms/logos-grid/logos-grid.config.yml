@@ -1,0 +1,15 @@
+context:
+  class: bg-gray-700
+  logos:
+    - link: https://clearleft.com/
+      src: /logos/clearleft.svg
+      alt: Clearleft
+    - link: https://madebykind.com/
+      src: /logos/kind.svg
+      alt: Kind
+    - link: https://www.liip.ch/
+      src: /logos/Liip.svg
+      alt: Liip
+    - link: https://slab.com/
+      src: /logos/slab.svg
+      alt: Slab

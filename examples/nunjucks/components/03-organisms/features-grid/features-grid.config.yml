@@ -1,0 +1,17 @@
+context:
+  features:
+    - icon: globe
+      title: Competitive
+      body: Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem quisquam suscipit culpa sit vero eius voluptate? Repellendus fugit beatae eveniet!
+    - icon: key
+      title: Accessible
+      body: Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellendus doloribus reprehenderit fuga. Eligendi provident ipsa dolor, consequatur soluta obcaecati? Error!
+    - icon: user
+      title: Personnal
+    - icon: gift
+      body: Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem quisquam suscipit culpa sit vero eius voluptate? Repellendus fugit beatae eveniet!
+    - icon: bulb
+      title: Original
+      body: Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellendus doloribus reprehenderit fuga. Eligendi provident ipsa dolor, consequatur soluta obcaecati? Error!
+    - icon: lightning
+      title: Fast

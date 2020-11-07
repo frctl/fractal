@@ -1,0 +1,22 @@
+{% extends "@section-wrapper" %}
+
+{% block content %}
+    <div class="flex flex-col md:flex-row gap-y-6 md:gap-y-0 md:gap-x-8 lg:gap-x-12 items-center">
+        {% if component %}
+            <div class="flex-shrink-0 md:w-2/5 lg:w-1/2{% if componentClass %} {{ componentClass }}{% endif %}">
+                {% render '@' + component.handle, component.context|default({}), true %}
+            </div>
+        {% endif %}
+
+        <div class="md:max-w-md mx-auto">
+            <h2 class="text-2xl sm:text-3xl lg:text-4xl leading-9 font-bold mb-3 lg:mb-6">{{ title }}</h2>
+            <p class="lg:text-lg text-gray-600">{{ body }}</p>
+
+            {% if button %}
+                <div class="mt-4 lg:mt-6">
+                    {% render '@button--link', button, true %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "@section-wrapper" %}
+
+{% block content %}
+    <header class="max-w-3xl mx-auto sm:text-center">
+        <h2 class="text-2xl sm:text-3xl lg:text-4xl leading-9 font-bold mb-3">{{ title }}</h2>
+        <p class="text-lg text-gray-600">{{ body }}</p>
+    </header>
+
+    {% if component %}
+        <div class="mt-6 md:mt-8 lg:mt-10">
+            {% render '@' + component.handle, component.context, true %}
+        </div>
+    {% endif %}
+
+    {% if button %}
+        <div class="mt-6 md:mt-8 lg:mt-10 sm:text-center">
+            {% render '@button', button, true %}
+        </div>
+    {% endif %}
+{% endblock %}

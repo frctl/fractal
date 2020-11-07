@@ -1,0 +1,10 @@
+<{% if href %}a href="{{ href }}"{% else %}button type="button"{% endif %}
+    class="inline-block
+    {% block class -%}
+        px-8 py-3 font-medium text-center rounded-lg shadow hover:shadow-md transform hover:-translate-y-1 transition-all duration-200 transition-ease-out
+        {%- if class -%} {{ class }}{%- endif -%}
+    {%- endblock class -%}
+">
+    {{ label }}
+    {%- block after -%}{%- endblock after %}
+</{% if href %}a{% else %}button{% endif %}>

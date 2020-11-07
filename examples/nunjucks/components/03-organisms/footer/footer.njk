@@ -1,0 +1,18 @@
+<footer class="bg-gray-800 py-8">
+    <div class="container">
+        <div class="md:flex md:items-center md:justify-between lg:px-8">
+            <div class="flex justify-center space-x-6 md:order-2">
+                {% for socialNetwork in socialNetworks %}
+                    <a href="{{ socialNetwork.link }}" target="_blank" rel="noopener" class="text-gray-400 hover:text-white focus:text-gray-500 transition-colors duration-200 ease-out" aria-label="{{ socialNetwork.name }}" title="{{ socialNetwork.name }}">
+                        {% render '@icon', { id: socialNetwork.icon, size: 'w-6 h-6', type: 'fill' }, true %}
+                    </a>
+                {% endfor %}
+            </div>
+            <div class="mt-8 md:mt-0 md:order-1">
+                <p class="text-center text-base leading-6 text-gray-400">
+                    &copy; 2020 · MIT License
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>

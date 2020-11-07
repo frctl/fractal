@@ -1,0 +1,9 @@
+context:
+  title: Fractal
+  links:
+    - label: About
+      href: '#'
+    - label: GitHub
+      href: '#'
+    - label: Chat
+      href: '#'

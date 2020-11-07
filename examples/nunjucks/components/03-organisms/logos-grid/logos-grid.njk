@@ -1,0 +1,13 @@
+{% extends "@section-wrapper" %}
+
+{% block content %}
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-8">
+        {% for logo in logos %}
+            <div class="flex justify-center">
+                <a href="{{ logo.link }}" target="_blank" rel="noopener" class="opacity-50 transition-opacity duration-200 ease-out hover:opacity-100">
+                    <img class="h-8 lg:h-10 xl:h-12" src="{{ logo.src }}" alt="{{ logo.alt }}"></a>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

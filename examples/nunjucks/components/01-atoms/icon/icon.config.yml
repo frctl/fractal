@@ -1,0 +1,9 @@
+context:
+  id: key
+  size: w-12 h-12
+  type: stroke
+variants:
+  - name: tiny
+    context:
+      id: chevron-right
+      size: w-4 h-4

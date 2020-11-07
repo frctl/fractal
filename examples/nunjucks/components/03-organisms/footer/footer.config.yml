@@ -1,0 +1,12 @@
+status: wip
+context:
+  socialNetworks:
+    - name: Twitter
+      icon: twitter
+      link: https://twitter.com/frctl
+    - name: GitHub
+      icon: github
+      link: https://github.com/frctl
+    - name: Discord
+      icon: discord
+      link: https://discord.gg/vuRz4Yx

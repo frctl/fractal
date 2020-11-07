@@ -1,0 +1,8 @@
+context:
+  src: '/illustrations/work.svg'
+variants:
+  - name: default
+    label: Responsive
+  - name: full
+    context:
+      class: w-full

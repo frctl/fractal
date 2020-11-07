@@ -1,0 +1,29 @@
+context:
+  class: bg-pink-200
+  bodyClass: text-pink-500
+  title: A tool to <span class="text-pink-600">empower your components</span> library.
+  body: Lorem ipsum dolor sit amet consectetur adipisicing elit. In, qui, possimus natus autem a minus quaerat voluptate laboriosam, aut harum esse deserunt.
+  buttons:
+    primary:
+      href: '#'
+      label: Get started
+      class: w-full
+    secondary:
+      href: '#'
+      label: Learn more
+      class: w-full
+  component:
+    handle: image
+    context:
+      src: /pictures/bubbles.jpg
+      class: w-full h-64 md:h-full md:w-auto object-cover
+variants:
+  - name: accent
+    context:
+      class: bg-teal-200
+      bodyClass: text-teal-500
+      title: Atoms.<br><span class="text-teal-600">Molecules.</span><br>Organisms.
+      buttons: null
+      component:
+        context:
+          src: /pictures/feathers.jpg

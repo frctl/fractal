@@ -1,0 +1,10 @@
+{% extends '@base-button' %}
+
+{%- block class -%}
+    text-pink-600 hover:text-pink-500 focus:text-pink-500 font-bold uppercase tracking-wide transition-all duration-200 ease-out group
+    {%- if class -%} {{ class }}{%- endif -%}
+{%- endblock class -%}
+
+{%- block after -%}
+    {% render '@icon--tiny', { id: 'chevron-right', class: 'ml-2 transition-all duration-200 ease-out transform group-hover:translate-x-1' }, true %}
+{%- endblock after -%}

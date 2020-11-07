@@ -1,0 +1,28 @@
+{
+  "name": "@frctl/nunjucks-example",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "clean": "rimraf dist",
+    "start": "concurrently 'fractal start --sync' 'webpack --mode development --watch'",
+    "build": "npm run clean && npm run build:webpack && npm run build:fractal",
+    "build:webpack": "NODE_ENV=production webpack --mode production",
+    "build:fractal": "fractal build"
+  },
+  "dependencies": {
+    "@frctl/fractal": "^1.5.0",
+    "@frctl/mandelbrot": "^1.6.0",
+    "@frctl/nunjucks": "^2.0.5",
+    "concurrently": "^5.3.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.0.1",
+    "css-loader": "^5.0.0",
+    "mini-css-extract-plugin": "^1.1.1",
+    "postcss-loader": "^4.0.4",
+    "rimraf": "^3.0.2",
+    "tailwindcss": "^1.9.6",
+    "webpack": "^5.2.0",
+    "webpack-cli": "^4.1.0"
+  }
+}

@@ -1,0 +1,8 @@
+{% extends '@page-layout' %}
+
+{% block content %}
+    {% render '@hero' %}
+    {% render '@section' %}
+    {% render '@section--left', { class: 'bg-white' }, true %}
+    {% render '@section--right', { class: 'bg-white border-t border-gray-200' }, true %}
+{% endblock content %}
