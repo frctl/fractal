@@ -22,9 +22,14 @@
     padding: 0.75rem;
     align-items: center;
 
-    .Status {
+    .Pen-preview-size {
         @include margin-inline(start, auto);
-        @include padding-inline(start, 0.5rem);
+
+        white-space: nowrap;
+    }
+
+    .Status {
+        @include margin-inline(start, 1rem);
     }
 
     @include mq($until: nav-collapse) {
@@ -47,6 +52,8 @@
 }
 
 .Pen-title {
+    @include padding-inline(end, 0.5rem);
+
     @include font(subHeading);
 
     overflow: hidden;
