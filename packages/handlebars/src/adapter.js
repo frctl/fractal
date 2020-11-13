@@ -55,7 +55,7 @@ module.exports = function (config) {
 
             const invokePartial = hbs.VM.invokePartial;
             hbs.VM.invokePartial = function () {
-                const args = _.cloneDeep(Array.from(arguments));
+                const args = Array.from(arguments);
                 const identifier = args[2].name;
                 let entity;
                 if (identifier.indexOf('@') === 0) {
@@ -63,6 +63,8 @@ module.exports = function (config) {
                 } else {
                     entity = app.components.find('viewPath', identifier);
                 }
+
+                args[2].data = _.cloneDeep(args[2].data);
 
                 if (entity) {
                     args[2].data.root._self = entity.isComponent
