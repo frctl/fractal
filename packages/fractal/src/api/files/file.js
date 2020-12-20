@@ -25,7 +25,7 @@ module.exports = class File {
         this.editorScope = file.lang.scope;
         this.githubColor = file.lang.color;
         this.isBinary = file.isBinary;
-        this.mime = mime.lookup(this.ext);
+        this.mime = mime.getType(this.ext);
     }
 
     getContext() {
