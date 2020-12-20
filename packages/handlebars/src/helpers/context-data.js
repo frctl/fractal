@@ -1,6 +1,7 @@
 'use strict';
 
 const _ = require('lodash');
+const utils = require('@frctl/core').utils;
 
 module.exports = function (fractal) {
     return function render(handle) {
@@ -17,7 +18,10 @@ module.exports = function (fractal) {
         if (!entity) {
             throw new Error(`Could not get context for component '${handle}' - component not found.`);
         }
-        const defaultContext = entity.isComponent ? entity.variants().default().getContext() : entity.getContext();
-        return _.defaultsDeep(context || {}, defaultContext);
+        const defaultContext = _.cloneDeep(
+            entity.isComponent ? entity.variants().default().getContext() : entity.getContext()
+        );
+
+        return utils.defaultsDeep(context || {}, defaultContext);
     };
 };
