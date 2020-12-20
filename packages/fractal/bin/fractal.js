@@ -39,7 +39,8 @@ try {
         config.configPath = Path.join(process.cwd(), projectPackage.fractal.main);
     }
 } catch (e) {
-    console.error(e);
+    // don't do anything with the error since not having a package.json
+    // is expected when it can't be required
 }
 
 FractalCli.launch(config, function (env) {
