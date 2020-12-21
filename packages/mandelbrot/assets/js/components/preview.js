@@ -6,12 +6,16 @@ import storage from '../storage';
 import events from '../events';
 
 export default class Preview {
-    constructor(el) {
+    constructor(el, previewSizeEl) {
         this._el = $(el);
         this._id = this._el[0].id;
         this._handle = this._el.find('[data-role="resize-handle"]');
-        this._iframe = this._el.children('[data-role="window"]');
         this._resizer = this._el.children('[data-role="resizer"]');
+        this._previewSize = previewSizeEl;
+
+        this._updateSize = this._updateSize.bind(this);
+
+        this._updateIframeRefs();
         this._init();
     }
 
@@ -25,6 +29,8 @@ export default class Preview {
         } else {
             this._resizer.outerWidth(initialWidth);
         }
+
+        events.on('main-content-loaded', this._updateIframeRefs.bind(this));
 
         this._handle.on('mousedown', () => {
             handleClicks++;
@@ -58,6 +64,27 @@ export default class Preview {
             },
             resizeWidthFrom: dir === 'rtl' ? 'left' : 'right',
         });
+    }
+
+    _updateIframeRefs() {
+        this._iframe = this._el.find('[data-role="window"]');
+        this._previewIframeWindow = this._iframe ? this._iframe.get(0).contentWindow : null;
+
+        if (this._iframe) {
+            this._iframe.on('load', this._updateSize);
+        }
+
+        if (this._previewIframeWindow) {
+            this._previewIframeWindow.addEventListener('resize', this._updateSize);
+        }
+    }
+
+    _updateSize() {
+        if (this._previewSize) {
+            this._previewSize.text(
+                `${this._previewIframeWindow.innerWidth} × ${this._previewIframeWindow.innerHeight}`
+            );
+        }
     }
 
     disableEvents() {
