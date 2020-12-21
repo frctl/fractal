@@ -18,7 +18,7 @@
     "anymatch": "^2.0.0",
     "bluebird": "^3.5.2",
     "browser-sync": "^2.26.13",
-    "chokidar": "^3.4.2",
+    "chokidar": "^3.4.3",
     "express": "^4.14.0",
     "fs-extra": "^9.0.0",
     "js-yaml": "^3.13.1",
