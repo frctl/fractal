@@ -31,7 +31,7 @@
     "mixwith": "^0.1.1",
     "nunjucks": "^3.2.1",
     "path-to-regexp": "^1.5.3",
-    "portscanner": "^1.0.0",
+    "portscanner": "^2.2.0",
     "promised-handlebars": "^2.0.1",
     "readable-stream": "^2.1.4",
     "require-all": "^2.0.0",
