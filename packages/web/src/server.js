@@ -6,7 +6,7 @@ const anymatch = require('anymatch');
 const express = require('express');
 const chokidar = require('chokidar');
 const Path = require('path');
-const portscanner = Promise.promisifyAll(require('portscanner'));
+const getPort = require('get-port');
 const WebError = require('./error');
 const utils = require('@frctl/core').utils;
 const Log = require('@frctl/core').Log;
@@ -286,8 +286,7 @@ module.exports = class Server extends mix(Emitter) {
     }
 };
 
-function findPorts(serverPort, useSync) {
-    const findPort = portscanner.findAPortNotInUseAsync;
+async function findPorts(serverPort, useSync) {
     const ip = '127.0.0.1';
     const from = 3000;
     const range = 50;
@@ -301,20 +300,31 @@ function findPorts(serverPort, useSync) {
     if (useSync && serverPort) {
         return {
             sync: Promise.resolve(serverPort),
-            server: findPort(serverPort + 1, parseInt(serverPort, 10) + range, ip),
+            server: getPort({
+                port: getPort.makeRange(serverPort + 1, parseInt(serverPort, 10) + range),
+                host: ip,
+            }),
         };
     } else if (!useSync && !serverPort) {
         return {
             sync: Promise.resolve(null),
-            server: findPort(from, until, ip),
+            server: getPort({
+                port: getPort.makeRange(from, until),
+                host: ip,
+            }),
         };
     } else if (useSync && !serverPort) {
-        const syncPort = findPort(from, until, ip);
+        const syncPort = await getPort({
+            port: getPort.makeRange(from, until),
+            host: ip,
+        });
+        const serverPort = await getPort({
+            port: getPort.makeRange(syncPort + 1, syncPort + range),
+            host: ip,
+        });
         return {
             sync: syncPort,
-            server: syncPort.then((port) => {
-                return findPort(port + 1, port + range, ip);
-            }),
+            server: serverPort,
         };
     }
 }
