@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.4](https://github.com/frctl/fractal/compare/@frctl/handlebars@1.2.3...@frctl/handlebars@1.2.4) (2020-11-13)
+
+
+### Bug Fixes
+
+* clone only data for mutations ([#688](https://github.com/frctl/fractal/issues/688)) ([315ba80](https://github.com/frctl/fractal/commit/315ba8010ed33a7e3314376c108b39f68c7d4435))
+
+
+
+
+
 ## [1.2.3](https://github.com/frctl/fractal/compare/@frctl/handlebars@1.2.2...@frctl/handlebars@1.2.3) (2020-11-03)
 
 

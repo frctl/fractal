@@ -27,7 +27,7 @@
     "path-to-regexp": "^1.5.3",
     "portscanner": "^1.0.0",
     "require-all": "^2.0.0",
-    "throat": "^3.0.0"
+    "throat": "^5.0.0"
   },
   "publishConfig": {
     "access": "public"
