@@ -25,7 +25,7 @@
     "lodash": "^4.17.11",
     "nunjucks": "^3.2.1",
     "path-to-regexp": "^1.5.3",
-    "portscanner": "^1.0.0",
+    "portscanner": "^2.2.0",
     "require-all": "^2.0.0",
     "throat": "^5.0.0"
   },
