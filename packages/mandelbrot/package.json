@@ -51,7 +51,7 @@
     "sass-loader": "^10.1.0",
     "sass-mq": "^3.2.6",
     "select2": "^4.0.13",
-    "webpack": "^5.2.0",
+    "webpack": "^5.11.0",
     "webpack-cli": "^4.1.0"
   },
   "dependencies": {
