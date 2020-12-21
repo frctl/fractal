@@ -14,12 +14,13 @@ export default class Pen {
         this._previewPanel = this._el.find('[data-behaviour="preview"]');
         this._browser = this._el.find('[data-behaviour="browser"]');
         this._handle = this._el.children('[data-role="resize-handle"]');
+        this._previewSize = this._el.find('[data-role="preview-size"]');
         this._init();
     }
 
     _init() {
         const initialHeight = storage.get(`pen.previewHeight`, this._el.outerHeight() / 2);
-        const preview = new Preview(this._previewPanel);
+        const preview = new Preview(this._previewPanel, this._previewSize);
         new Browser(this._browser);
         let state = storage.get(`pen.previewState`, 'open');
         let handleClicks = 0;
