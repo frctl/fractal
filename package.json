@@ -37,7 +37,7 @@
     "require-all": "^2.0.0",
     "semver": "^5.3.0",
     "throat": "^5.0.0",
-    "twig": "^1.14.0",
+    "twig": "^1.15.4",
     "update-notifier": "^2.0.0",
     "vinyl": "^1.2.0",
     "vorpal": "^1.12.0"
