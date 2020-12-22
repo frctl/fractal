@@ -85,7 +85,7 @@
     "sass-mq": "^3.2.6",
     "select2": "^4.0.13",
     "sinon": "^9.0.1",
-    "stylelint": "^13.3.3",
+    "stylelint": "^13.8.0",
     "stylelint-config-prettier": "^8.0.1",
     "stylelint-config-standard": "^20.0.0",
     "stylelint-prettier": "^1.1.2",
