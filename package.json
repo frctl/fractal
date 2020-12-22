@@ -22,7 +22,7 @@
     "istextorbinary": "^3.3.0",
     "js-beautify": "^1.13.0",
     "js-yaml": "^3.14.1",
-    "liftoff": "^2.3.0",
+    "liftoff": "^3.1.0",
     "lodash": "^4.17.11",
     "log-update": "^1.0.2",
     "marked": "^1.2.7",
