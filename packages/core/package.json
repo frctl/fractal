@@ -22,10 +22,10 @@
     "globby": "^11.0.1",
     "highlight.js": "^10.4.1",
     "istextorbinary": "^3.3.0",
-    "js-yaml": "^3.13.1",
+    "js-yaml": "^3.14.1",
     "lodash": "^4.17.11",
     "marked": "^1.2.7",
-    "minimist": "^1.2.2",
+    "minimist": "^1.2.5",
     "mixwith": "^0.1.1",
     "readable-stream": "^3.6.0"
   },
