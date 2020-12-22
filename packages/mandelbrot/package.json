@@ -47,7 +47,7 @@
     "postcss-loader": "^4.0.4",
     "resolve-url-loader": "^3.1.2",
     "rimraf": "^3.0.2",
-    "sass": "^1.27.0",
+    "sass": "^1.30.0",
     "sass-loader": "^10.1.0",
     "sass-mq": "^3.2.6",
     "select2": "^4.0.13",
