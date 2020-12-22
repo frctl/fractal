@@ -21,7 +21,7 @@
     "inquirer": "^1.1.2",
     "istextorbinary": "^3.3.0",
     "js-beautify": "^1.13.0",
-    "js-yaml": "^3.13.1",
+    "js-yaml": "^3.14.1",
     "liftoff": "^2.3.0",
     "lodash": "^4.17.11",
     "log-update": "^1.0.2",
