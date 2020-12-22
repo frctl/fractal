@@ -86,7 +86,7 @@
     "select2": "^4.0.13",
     "sinon": "^9.2.2",
     "stylelint": "^13.8.0",
-    "stylelint-config-prettier": "^8.0.1",
+    "stylelint-config-prettier": "^8.0.2",
     "stylelint-config-standard": "^20.0.0",
     "stylelint-prettier": "^1.1.2",
     "stylelint-scss": "^3.17.1",
