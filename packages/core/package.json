@@ -16,7 +16,7 @@
   "dependencies": {
     "@allmarkedup/fang": "^1.0.0",
     "anymatch": "^2.0.0",
-    "bluebird": "^3.5.2",
+    "bluebird": "^3.7.2",
     "chokidar": "^3.4.3",
     "co": "^4.6.0",
     "globby": "^11.0.1",
