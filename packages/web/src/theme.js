@@ -1,7 +1,7 @@
 'use strict';
 
 const _ = require('lodash');
-const pr = require('path-to-regexp');
+const { pathToRegexp, compile } = require('path-to-regexp');
 const mix = require('@frctl/core').mixins.mix;
 const Configurable = require('@frctl/core').mixins.configurable;
 const Emitter = require('@frctl/core').mixins.emitter;
@@ -83,8 +83,10 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
         const keys = [];
         opts.path = path;
         opts.handle = opts.handle || path;
-        opts.matcher = pr(path, keys);
+        opts.matcher = pathToRegexp(path, keys);
         this.addResolver(opts.handle, resolvers || null);
+        // pathToRegexp mutates keys variable
+        opts.keys = keys;
         this._routes.set(opts.handle, _.clone(opts));
         return this;
     }
@@ -108,8 +110,8 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
             if (match) {
                 match.shift();
                 const params = {};
-                for (let i = 0; i < route.matcher.keys.length; i++) {
-                    params[route.matcher.keys[i].name] = match[i];
+                for (let i = 0; i < route.keys.length; i++) {
+                    params[route.keys[i].name] = match[i];
                 }
                 return {
                     route: route,
@@ -135,7 +137,7 @@ module.exports = class Theme extends mix(Configurable, Emitter) {
             if (!noRedirect && route.redirect) {
                 return route.redirect;
             }
-            const compiler = pr.compile(route.path);
+            const compiler = compile(route.path);
             return cleanUrlPath(compiler(params));
         }
         return null;
