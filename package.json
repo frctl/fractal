@@ -27,7 +27,7 @@
     "log-update": "^1.0.2",
     "marked": "^1.2.7",
     "mime": "^2.4.7",
-    "minimist": "^1.2.2",
+    "minimist": "^1.2.5",
     "mixwith": "^0.1.1",
     "nunjucks": "^3.2.2",
     "path-to-regexp": "^6.2.0",
