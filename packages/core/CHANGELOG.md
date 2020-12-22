@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.1](https://github.com/frctl/fractal/compare/@frctl/core@0.2.0...@frctl/core@0.2.1) (2020-12-22)
+
+
+### Bug Fixes
+
+* resolve the context for fully rendered subcomponents ([#646](https://github.com/frctl/fractal/issues/646)) ([2bda749](https://github.com/frctl/fractal/commit/2bda749f003b29ee9f24021db639602aae1868df))
+
+
+
+
+
 # [0.2.0](https://github.com/frctl/fractal/compare/@frctl/core@0.1.1...@frctl/core@0.2.0) (2020-11-03)
 
 

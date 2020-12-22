@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.5](https://github.com/frctl/fractal/compare/@frctl/handlebars@1.2.4...@frctl/handlebars@1.2.5) (2020-12-22)
+
+
+### Bug Fixes
+
+* do not modify used component context when using contextData helper ([#695](https://github.com/frctl/fractal/issues/695)) ([e6ff838](https://github.com/frctl/fractal/commit/e6ff8383b4ebc2b93d70a8a176c30c49d3581139))
+
+
+
+
+
 ## [1.2.4](https://github.com/frctl/fractal/compare/@frctl/handlebars@1.2.3...@frctl/handlebars@1.2.4) (2020-11-13)
 
 

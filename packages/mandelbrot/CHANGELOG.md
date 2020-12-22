@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.7.0](https://github.com/frctl/fractal/compare/@frctl/mandelbrot@1.6.0...@frctl/mandelbrot@1.7.0) (2020-12-22)
+
+
+### Features
+
+* display preview iframe size ([#685](https://github.com/frctl/fractal/issues/685)) ([c217848](https://github.com/frctl/fractal/commit/c2178482593bd670324b8cfa0a3f067f3a5523b6)), closes [#606](https://github.com/frctl/fractal/issues/606)
+
+
+
+
+
 # [1.6.0](https://github.com/frctl/fractal/compare/@frctl/mandelbrot@1.5.1...@frctl/mandelbrot@1.6.0) (2020-11-03)
 
 

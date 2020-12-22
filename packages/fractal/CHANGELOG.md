@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.2](https://github.com/frctl/fractal/compare/@frctl/fractal@1.5.1...@frctl/fractal@1.5.2) (2020-12-22)
+
+
+### Bug Fixes
+
+* remove console.error when looking for a package.json file ([#691](https://github.com/frctl/fractal/issues/691)) ([b46536b](https://github.com/frctl/fractal/commit/b46536bb3d6a5851154c80a38764c1cc2d8d7ebc))
+
+
+
+
+
 ## [1.5.1](https://github.com/frctl/fractal/compare/@frctl/fractal@1.5.0...@frctl/fractal@1.5.1) (2020-11-13)
 
 **Note:** Version bump only for package @frctl/fractal
