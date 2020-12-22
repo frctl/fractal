@@ -16,7 +16,7 @@
   "dependencies": {
     "@allmarkedup/fang": "^1.0.0",
     "anymatch": "^2.0.0",
-    "bluebird": "^3.5.2",
+    "bluebird": "^3.7.2",
     "chokidar": "^3.4.3",
     "co": "^4.6.0",
     "globby": "^11.0.1",
@@ -34,7 +34,7 @@
     "mocha": "^8.2.1",
     "mock-fs": "^4.6.0",
     "nyc": "^15.0.1",
-    "sinon": "^9.0.1"
+    "sinon": "^9.2.2"
   },
   "scripts": {
     "test": "mocha --require test/support/env --reporter spec",
