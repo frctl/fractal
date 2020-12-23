@@ -6,10 +6,10 @@ const Path = require('path');
 const semver = require('semver');
 const Liftoff = require('liftoff');
 const chalk = require('chalk');
-const updateNofifier = require('update-notifier');
+const updateNotifier = require('update-notifier');
 const cliPackage = require('../package.json');
 
-const notifier = updateNofifier({
+const notifier = updateNotifier({
     pkg: cliPackage,
 });
 
