@@ -39,7 +39,7 @@
     "throat": "^5.0.0",
     "twig": "^1.15.4",
     "update-notifier": "^5.0.1",
-    "vinyl": "^1.2.0",
+    "vinyl": "^2.2.1",
     "vorpal": "^1.12.0"
   },
   "devDependencies": {
