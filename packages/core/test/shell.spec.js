@@ -31,10 +31,8 @@ describe('Shell', () => {
         expect(process.cwd()).toBe(`${cwd}${path.sep}shelltest`);
     });
 
-    it('does not change directory if no dirName is specified', () => {
-        const cwd = process.cwd();
-        shell.cd();
-        expect(process.cwd()).toBe(cwd);
+    it('does not throw if directory is not specified', () => {
+        expect(() => shell.cd()).not.toThrow();
     });
 
     it('can create a file', async () => {
