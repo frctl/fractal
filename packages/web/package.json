@@ -22,11 +22,11 @@
     "express": "^4.14.0",
     "fs-extra": "^9.0.1",
     "js-yaml": "^3.14.1",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.20",
     "nunjucks": "^3.2.2",
     "path-to-regexp": "^6.2.0",
     "portscanner": "^2.2.0",
-    "require-all": "^2.0.0",
+    "require-all": "^3.0.0",
     "throat": "^5.0.0"
   },
   "publishConfig": {

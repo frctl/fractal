@@ -23,7 +23,7 @@
     "highlight.js": "^10.4.1",
     "istextorbinary": "^5.12.0",
     "js-yaml": "^3.14.1",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.20",
     "marked": "^1.2.7",
     "minimist": "^1.2.5",
     "mixwith": "^0.1.1",
