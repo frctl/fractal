@@ -21,7 +21,7 @@
     "co": "^4.6.0",
     "globby": "^11.0.1",
     "highlight.js": "^10.4.1",
-    "istextorbinary": "^3.3.0",
+    "istextorbinary": "^5.12.0",
     "js-yaml": "^3.14.1",
     "lodash": "^4.17.11",
     "marked": "^1.2.7",
