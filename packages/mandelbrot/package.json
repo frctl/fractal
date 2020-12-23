@@ -33,7 +33,7 @@
     "copy-webpack-plugin": "^7.0.0",
     "core-js": "^3.8.1",
     "css-loader": "^5.0.0",
-    "expose-loader": "^1.0.1",
+    "expose-loader": "^1.0.3",
     "file-loader": "^6.1.1",
     "globby": "^11.0.1",
     "highlight.js": "^10.4.1",
