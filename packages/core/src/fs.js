@@ -6,7 +6,7 @@ const co = require('co');
 const _ = require('lodash');
 const fs = Promise.promisifyAll(require('fs'));
 const readFile = Promise.promisify(fs.readFile);
-const isBinary = require('istextorbinary').isBinaryPromise;
+const isBinary = require('istextorbinary').isBinary;
 const utils = require('./utils');
 const glob = require('globby');
 
@@ -141,5 +141,9 @@ function dirscribe(root, opts) {
 }
 
 function checkIsBinary(file) {
-    return isBinary(file.path, null);
+    try {
+        return Promise.resolve(isBinary(file.path, null));
+    } catch (err) {
+        return Promise.reject(err);
+    }
 }
