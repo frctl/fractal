@@ -42,9 +42,15 @@
     appearance: none;
     border-radius: 3px;
     border: 1px solid $color-frame-border;
+    line-height: 1.5;
 
     // Hide native "clear" button in IE
     &::-ms-clear {
         display: none;
+    }
+
+    // Hide native clear button in chromium/webkit browsers
+    &::-webkit-search-cancel-button {
+        -webkit-appearance: none;
     }
 }
