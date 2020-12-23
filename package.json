@@ -34,7 +34,7 @@
     "portscanner": "^2.2.0",
     "promised-handlebars": "^2.0.1",
     "readable-stream": "^3.6.0",
-    "require-all": "^2.0.0",
+    "require-all": "^3.0.0",
     "semver": "^5.3.0",
     "throat": "^5.0.0",
     "twig": "^1.15.4",
