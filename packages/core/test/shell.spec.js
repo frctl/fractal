@@ -1,14 +1,14 @@
-const chai = require('chai');
-const expect = chai.expect;
-const mock = require('mock-fs');
 const path = require('path');
-const fs = require('fs');
+
+const fs = require('fs-extra');
+const mock = require('mock-fs');
+
 const shell = require('../src/shell');
 
-describe('Shell', function () {
+describe('Shell', () => {
     let originalPwd;
 
-    beforeEach(function () {
+    beforeEach(() => {
         originalPwd = process.cwd();
         mock({
             shelltest: {
@@ -18,25 +18,28 @@ describe('Shell', function () {
         });
     });
 
-    afterEach(function () {
+    afterEach(() => {
         // Ensure the current working directory is the same as when we started the test suite.
         process.cwd(originalPwd);
         // Reset the filesystem.
         mock.restore();
     });
 
-    it('can change directory', function () {
+    it('can change directory', () => {
         const cwd = process.cwd();
         shell.cd('shelltest');
-        expect(process.cwd()).to.equal(`${cwd}${path.sep}shelltest`);
+        expect(process.cwd()).toBe(`${cwd}${path.sep}shelltest`);
     });
 
-    it('can create a file', function (done) {
+    it('does not change directory if no dirName is specified', () => {
+        const cwd = process.cwd();
+        shell.cd();
+        expect(process.cwd()).toBe(cwd);
+    });
+
+    it('can create a file', async () => {
         shell.touch('test-file.md');
-        fs.stat(path.join(process.cwd(), 'test-file.md'), function (error, stats) {
-            if (error) done(error);
-            expect(stats.isFile()).to.be.true;
-            done();
-        });
+        const stats = await fs.stat(path.join(process.cwd(), 'test-file.md'));
+        expect(stats.isFile()).toBe(true);
     });
 });
