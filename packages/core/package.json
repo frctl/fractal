@@ -30,7 +30,7 @@
     "readable-stream": "^3.6.0"
   },
   "devDependencies": {
-    "chai": "^4.1.1",
+    "chai": "^4.2.0",
     "mocha": "^8.2.1",
     "mock-fs": "^4.6.0",
     "nyc": "^15.0.1",
