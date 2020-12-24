@@ -2,7 +2,7 @@
   "name": "fractal",
   "private": true,
   "dependencies": {
-    "@allmarkedup/fang": "^1.0.0",
+    "@allmarkedup/fang": "^2.0.0",
     "anymatch": "^2.0.0",
     "bluebird": "^3.7.2",
     "browser-sync": "^2.26.13",
