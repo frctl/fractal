@@ -82,7 +82,7 @@
     "rimraf": "^3.0.2",
     "sass": "^1.30.0",
     "sass-loader": "^10.1.0",
-    "sass-mq": "^3.2.6",
+    "sass-mq": "^5.0.1",
     "select2": "^4.0.13",
     "sinon": "^9.2.2",
     "stylelint": "^13.8.0",
