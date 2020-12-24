@@ -9,30 +9,30 @@ const _ = require('lodash');
 
 module.exports = {
     lang(filePath) {
-        const name = Path.parse(filePath).ext.replace('.', '').toUpperCase();
+        const name = Path.extname(filePath).toUpperCase();
         switch (name) {
-            case 'NUNJUCKS':
-            case 'NUNJS':
-            case 'NUNJ':
-            case 'NJK':
-            case 'NJ':
-            case 'JINJA2':
-            case 'J2':
+            case '.NUNJUCKS':
+            case '.NUNJS':
+            case '.NUNJ':
+            case '.NJ':
+            case '.JINJA2':
+            case '.J2':
                 return {
                     name: 'HTML+Django',
                     mode: 'django',
                     scope: 'text.html.django',
                     color: null,
                 };
-            default:
-                return (
-                    fang(filePath) || {
-                        name: name,
-                        mode: 'plaintext',
-                        scope: null,
-                        color: null,
-                    }
-                );
+            default: {
+                const result = fang(filePath) || {};
+
+                return {
+                    name: result.name || name,
+                    mode: result.ace_mode || 'plaintext',
+                    scope: result.tm_scope || null,
+                    color: result.color || null,
+                };
+            }
         }
     },
 
