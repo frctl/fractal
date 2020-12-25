@@ -39,10 +39,10 @@ module.exports = class DocSource extends EntitySource {
         });
     }
 
-    /* eslint-disable-next-line no-unused-vars */
     render(page, context, env, opts) {
         const self = this;
 
+        /* eslint-disable-next-line no-unused-vars */
         opts = opts || {};
         env = env || {};
 
