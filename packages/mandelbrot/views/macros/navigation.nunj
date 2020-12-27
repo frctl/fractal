@@ -17,7 +17,8 @@
 
 {% macro leaves(items, root, current, depth, request) %}
     {% for item in items %}
-        {% if item.isCollection or (item.isComponent and not item.isCollated and item.variants().filter('isHidden', false).size > 1) %}
+        {% set isNotCollated = (item.isComponent and not item.isCollated and item.variants().filter('isHidden', false).size > 1) %}
+        {% if item.isCollection %}
             {# skip root collections because they are pulled out of the tree #}
             {% if not (item.isCollection and item.isRoot) %}
             <li class="Tree-item Tree-collection Tree-depth-{{ depth }}" data-behaviour="collection" id="tree-{{ root.name }}-collection-{{ item.handle }}">
@@ -35,9 +36,10 @@
             </li>
             {% endif %}
         {% else %}
-        {% set isCurrent = true if (current and (current.id == item.id)) else false %}
+        {% set urlItem = item.variants().filter('isHidden', false).first() if isNotCollated else item %}
+        {% set isCurrent = true if (current and (current.id == item.id) or (current.parent.id == item.id)) else false %}
         <li class="Tree-item Tree-entity{% if isCurrent %} is-current{% endif %}"{% if isCurrent %} data-state="current"{% endif %} data-role="item">
-            <a class="Tree-entityLink" href="{{ path( (item | url), request) }}"{% if item.tags and item.tags.length > 1 %} data-tags="{{ item.tags | dump | replace("null,", "") | escape  }}"{% endif %} data-pjax>
+            <a class="Tree-entityLink" href="{{ path( (urlItem | url), request) }}"{% if item.tags and item.tags.length > 1 %} data-tags="{{ item.tags | dump | replace("null,", "") | escape  }}"{% endif %} data-pjax data-handle="{{ item.handle if item.isComponent else item.parent.handle }}">
                 <span>{{ item.label }}</span>
                 {% if item.status %}{{ status.unlabelled(item.status) }}{% endif %}
             </a>

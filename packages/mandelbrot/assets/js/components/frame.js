@@ -5,8 +5,6 @@ import utils from '../utils';
 import events from '../events';
 
 export default function (element) {
-    const win = $(window);
-    const doc = $(document);
     const el = $(element);
     const dir = $('html').attr('dir');
     const body = el.find('> [data-role="body"]');
@@ -14,15 +12,11 @@ export default function (element) {
     const sidebar = body.children('[data-role="sidebar"]');
     const main = body.children('[data-role="main"]');
     const handle = body.children('[data-role="frame-resize-handle"]');
-    const sidebarMin = parseInt(sidebar.css('min-width'), 10);
 
-    let sidebarWidth = utils.isSmallScreen() ? sidebarMin : storage.get(`frame.sidebar`, sidebar.outerWidth());
     let sidebarState = utils.isSmallScreen() ? 'closed' : storage.get(`frame.state`, 'open');
     let dragOccuring = false;
     let isInitialClose = false;
     let handleClicks = 0;
-
-    sidebar.outerWidth(sidebarWidth);
 
     if (sidebarState === 'closed') {
         isInitialClose = true;
@@ -43,25 +37,6 @@ export default function (element) {
         }
     });
 
-    sidebar.resizable({
-        handleSelector: '[data-role="frame-resize-handle"]',
-        resizeHeight: false,
-        onDragStart: () => {
-            el.addClass('is-resizing');
-            events.trigger('start-dragging');
-        },
-        onDragEnd: () => {
-            setSidebarWidth(sidebar.outerWidth());
-            el.removeClass('is-resizing');
-            events.trigger('end-dragging');
-            if (sidebarState === 'closed') {
-                dragOccuring = false;
-                openSidebar();
-            }
-        },
-        resizeWidthFrom: dir === 'rtl' ? 'left' : 'right',
-    });
-
     sidebar.on(
         'scroll',
         utils.debounce(() => {
@@ -70,12 +45,6 @@ export default function (element) {
     );
 
     toggle.on('click', toggleSidebar);
-
-    win.on('resize', () => {
-        if (sidebarState == 'open' && doc.outerWidth() < sidebarWidth + 50) {
-            // setSidebarWidth(doc.outerWidth() - 50);
-        }
-    });
 
     // Global event listeners
 
@@ -118,9 +87,6 @@ export default function (element) {
 
     function openSidebar() {
         if (dragOccuring || sidebarState == 'open') return;
-        if (utils.isSmallScreen()) {
-            setSidebarWidth(sidebarMin);
-        }
         body.css({
             marginRight: 0,
             marginLeft: 0,
@@ -135,12 +101,6 @@ export default function (element) {
     function toggleSidebar() {
         sidebarState == 'open' ? closeSidebar() : openSidebar();
         return false;
-    }
-
-    function setSidebarWidth(width) {
-        sidebarWidth = width;
-        sidebar.outerWidth(width);
-        storage.set(`frame.sidebar`, width);
     }
 
     return {

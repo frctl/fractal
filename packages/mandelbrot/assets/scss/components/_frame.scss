@@ -7,16 +7,6 @@
     width: 100%;
     min-width: 280px;
     overflow: hidden;
-
-    &.is-resizing {
-        cursor: grabbing;
-
-        .Frame-body,
-        .Frame-panel {
-            user-select: none;
-            pointer-events: none;
-        }
-    }
 }
 
 .Frame--full {
@@ -59,14 +49,10 @@
 }
 
 .Frame-panel--sidebar {
-    @include border-inline(end, 1px solid $color-frame-border);
-
     flex: 0 0 auto;
-    width: $width-sidebar;
     min-width: $width-sidebar;
     max-width: ($width-sidebar * 2);
     background-color: $color-background-offset;
-    padding: 1rem 0;
 
     @include mq($until: nav-collapse) {
         max-width: $width-sidebar;
@@ -88,18 +74,4 @@
             display: none;
         }
     }
-}
-
-.Frame-handle {
-    @include dragHandle;
-    @include margin-inline(end, -$handle-size);
-
-    flex: 0 0 auto;
-    position: relative;
-    z-index: 2;
-    height: 100%;
-    width: $handle-size;
-    background: transparent url("../../img/icon-drag--vertical.svg") no-repeat 50% 45%;
-    background-size: 3px 16px;
-    cursor: ew-resize;
 }

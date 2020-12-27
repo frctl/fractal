@@ -1,5 +1,17 @@
-<nav class="Navigation">
+<nav class="Navigation" data-behaviour="navigation">
+    <div class="Navigation-panel">
     {% for navPartial in frctl.theme.get('nav') %}
         {% include 'partials/navigation/' + navPartial + '.nunj' %}
     {% endfor %}
+    </div>
+    {% set isVisible = false %}
+    {% if entity and (entity.isComponent or entity.isVariant) %}
+        {% set item = entity.parent if entity.isVariant else entity %}
+        {% if item.variants().filter('isHidden', false).size > 1 %}
+            {% set isVisible = true %}
+        {% endif %}
+    {% endif %}
+    <div class="Navigation-panel Navigation-panel--variants{% if isVisible %} is-visible{% endif %}">
+        {% include 'partials/navigation/variants.nunj' %}
+    </div>
 </nav>
