@@ -1,6 +1,5 @@
 'use strict';
 
-import 'select2';
 import storage from '../storage';
 
 export default class Browser {
@@ -16,14 +15,10 @@ export default class Browser {
         this._activeClass = 'is-active';
         this._initTabs();
 
-        $('.FileBrowser-select')
-            .select2({
-                minimumResultsForSearch: Infinity,
-            })
-            .on('change', function () {
-                $(this).closest('.FileBrowser').find('[data-role="resource-preview"]').removeClass(self._activeClass);
-                $(`#${this.value}`).addClass(self._activeClass);
-            });
+        $('.FileBrowser-select').on('change', function () {
+            $(this).closest('.FileBrowser').find('[data-role="resource-preview"]').removeClass(self._activeClass);
+            $(`#${this.value}`).addClass(self._activeClass);
+        });
 
         this._initFileSwitcher();
     }

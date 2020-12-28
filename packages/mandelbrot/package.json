@@ -18,6 +18,7 @@
     "start": "webpack --mode development --watch",
     "prebuild": "npm run clean",
     "build": "webpack --mode production",
+    "build:analyze": "webpack --mode production --analyze",
     "prepack": "npm run build",
     "test": "npm run build"
   },
@@ -50,9 +51,9 @@
     "sass": "^1.30.0",
     "sass-loader": "^10.1.0",
     "sass-mq": "^5.0.1",
-    "select2": "^4.0.13",
     "webpack": "^5.11.0",
-    "webpack-cli": "^4.2.0"
+    "webpack-bundle-analyzer": "^4.3.0",
+    "webpack-cli": "^4.3.0"
   },
   "dependencies": {
     "@frctl/web": "^0.1.3",

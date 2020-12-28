@@ -3,24 +3,18 @@ module.exports = {
     parserOptions: {
         ecmaVersion: 2017,
     },
-    extends: [
-        'eslint:recommended',
-        'plugin:prettier/recommended',
-        'plugin:import/recommended'
-    ],
+    extends: ['eslint:recommended', 'plugin:prettier/recommended', 'plugin:import/recommended'],
     env: {
         browser: true,
         node: true,
         es6: true,
     },
-    plugins: [
-        'import',
-    ],
+    plugins: ['import'],
     rules: {
         'import/no-unresolved': [
             'error',
             {
-                commonjs: true
+                commonjs: true,
             },
         ],
         'import/no-extraneous-dependencies': 'error',
