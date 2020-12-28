@@ -4,9 +4,7 @@
   "private": true,
   "scripts": {
     "start": "fractal start --sync",
-    "build": "fractal build",
-    "test": "jest",
-    "test:dev": "npm run test -- --watch"
+    "build": "fractal build"
   },
   "dependencies": {
     "@frctl/fractal": "^1.5.2",
@@ -14,7 +12,6 @@
     "@frctl/mandelbrot": "^1.7.0"
   },
   "devDependencies": {
-    "jest": "^26.6.3",
     "node-fetch": "^2.6.1"
   }
 }
