@@ -133,6 +133,15 @@ describe('Utils', function () {
             expect(result.undefinedItem).to.equal('not undefined');
         });
     });
+
+    describe('.lang()', function () {
+        it('returns correct info for scss', function () {
+            const lang = utils.lang('file.scss');
+            expect(lang.name).to.eql('SCSS');
+            expect(lang.mode).to.eql('scss');
+            expect(lang.scope).to.eql('source.scss');
+        });
+    });
 });
 
 class MyClass {

@@ -61,7 +61,7 @@ npm install @frctl/fractal --save-dev
 
 Then create your `fractal.config.js` file in the project root, and configure using the [official documentation][docs].
 
-Then you can either run `node_modules/.bin/fractal start` to start up the project, or create an alias under the `scripts` section in your package.json as a shortcut.
+Then you can either run `npx fractal start` to start up the project, or create an alias under the `scripts` section in your package.json as a shortcut.
 
 e.g.
 
