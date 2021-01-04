@@ -21,7 +21,7 @@
     "chokidar": "^3.4.3",
     "express": "^4.17.1",
     "fs-extra": "^9.0.1",
-    "js-yaml": "^3.14.1",
+    "js-yaml": "^4.0.0",
     "lodash": "^4.17.20",
     "nunjucks": "^3.2.2",
     "path-to-regexp": "^6.2.0",
