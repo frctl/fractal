@@ -52,7 +52,7 @@
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "copy-webpack-plugin": "^7.0.0",
-    "core-js": "^3.8.1",
+    "core-js": "^3.8.2",
     "css-loader": "^5.0.1",
     "eslint": "^7.17.0",
     "eslint-config-prettier": "^7.1.0",
