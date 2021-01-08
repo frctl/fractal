@@ -17,7 +17,7 @@
     "@allmarkedup/fang": "^2.0.0",
     "anymatch": "^2.0.0",
     "bluebird": "^3.7.2",
-    "chokidar": "^3.4.3",
+    "chokidar": "^3.5.0",
     "co": "^4.6.0",
     "globby": "^11.0.2",
     "highlight.js": "^10.5.0",
