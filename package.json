@@ -46,7 +46,7 @@
     "@babel/core": "^7.12.10",
     "@babel/preset-env": "^7.12.11",
     "all-contributors-cli": "^6.19.0",
-    "autoprefixer": "^10.1.0",
+    "autoprefixer": "^10.2.1",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.2.2",
     "chai": "^4.2.0",
