@@ -22,7 +22,7 @@
     "anymatch": "^2.0.0",
     "bluebird": "^3.7.2",
     "chalk": "^4.1.0",
-    "chokidar": "^3.4.3",
+    "chokidar": "^3.5.0",
     "cli-table3": "^0.6.0",
     "co": "^4.6.0",
     "columnify": "^1.5.4",
@@ -45,7 +45,7 @@
     "chai": "^4.2.0",
     "mocha": "^8.2.1",
     "nyc": "^15.1.0",
-    "sinon": "^9.2.2"
+    "sinon": "^9.2.3"
   },
   "bin": {
     "fractal": "./bin/fractal.js"
@@ -54,7 +54,7 @@
     "node": ">= 10.0.0"
   },
   "scripts": {
-    "test": "mocha --require test/support/env --reporter spec",
+    "test:mocha": "mocha --require test/support/env --reporter spec --exclude **/*.spec.js",
     "coverage": "nyc --reporter=lcov --reporter=text  npm run test"
   },
   "publishConfig": {

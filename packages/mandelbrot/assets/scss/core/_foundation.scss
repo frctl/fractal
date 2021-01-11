@@ -17,7 +17,9 @@ html {
     width: 100%;
     background: $color-background;
     box-sizing: border-box;
-    font: 16px / #{(24/16)} $font-family-sans-serif;
+    font-size: 16px;
+    line-height: (24/16);
+    font-family: $font-family-sans-serif;
     color: $color-text;
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;

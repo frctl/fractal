@@ -16,7 +16,7 @@ module.exports = {
         } else if (format === 'json') {
             return JSON.parse(data);
         } else if (format === 'yaml') {
-            return yaml.safeLoad(data);
+            return yaml.load(data);
         }
         throw new Error('Data format not recognised');
     },
@@ -28,7 +28,7 @@ module.exports = {
         } else if (format === 'json') {
             return JSON.stringify(data, null, 4);
         } else if (format === 'yaml') {
-            return yaml.safeDump(data);
+            return yaml.dump(data);
         }
         throw new Error('Data format not recognised');
     },
