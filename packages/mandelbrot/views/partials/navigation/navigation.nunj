@@ -1,5 +1,5 @@
 <nav class="Navigation" data-behaviour="navigation">
-    <div class="Navigation-panel">
+    <div class="Navigation-panel Navigation-panel--main">
     {% for navPartial in frctl.theme.get('nav') %}
         {% include 'partials/navigation/' + navPartial + '.nunj' %}
     {% endfor %}

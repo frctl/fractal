@@ -53,7 +53,6 @@ export default class Tree {
         if (this._el.parents('.Navigation-panel--variants').length) {
             this._el.find(`.Tree-item.is-current`).removeClass('is-current');
         } else {
-            console.log(this._el.find(`.Tree-item.is-current:not([data-handle="${handle}"])`));
             this._el
                 .find(`.Tree-item.is-current > .Tree-entityLink:not([data-handle="${handle}"])`)
                 .parent()

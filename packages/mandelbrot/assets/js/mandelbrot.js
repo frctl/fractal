@@ -12,8 +12,6 @@ import Navigation from './components/navigation';
 const doc = $(document);
 const frctl = window.frctl || {};
 
-// frame needs to be initalized before navigation because it
-// needs to add an event listener before Navigation->Tree triggers it
 const frame = framer($('#frame'));
 $.map($('[data-behaviour="navigation"]'), (n) => new Navigation(n));
 

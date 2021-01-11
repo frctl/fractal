@@ -37,13 +37,6 @@ export default function (element) {
         }
     });
 
-    sidebar.on(
-        'scroll',
-        utils.debounce(() => {
-            storage.set(`frame.scrollPos`, sidebar.scrollTop());
-        }, 50)
-    );
-
     toggle.on('click', toggleSidebar);
 
     // Global event listeners
@@ -54,10 +47,6 @@ export default function (element) {
         setTimeout(function () {
             dragOccuring = false;
         }, 200);
-    });
-    events.on('scroll-sidebar', function () {
-        const scrollPos = storage.get(`frame.scrollPos`, 0);
-        sidebar.scrollTop(scrollPos);
     });
 
     events.on('data-changed', function () {
