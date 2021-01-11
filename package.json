@@ -75,7 +75,7 @@
     "node-fetch": "^2.6.1",
     "normalize.css": "^8.0.1",
     "nyc": "^15.1.0",
-    "postcss": "^8.2.3",
+    "postcss": "^8.2.4",
     "postcss-loader": "^4.1.0",
     "prettier": "^2.2.1",
     "resolve-url-loader": "^3.1.2",
