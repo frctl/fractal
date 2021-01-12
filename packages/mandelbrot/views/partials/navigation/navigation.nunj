@@ -1,17 +1,25 @@
-<nav class="Navigation" data-behaviour="navigation">
+{% set isVariantPanelVisible = false %}
+{% if entity and (entity.isComponent or entity.isVariant) %}
+    {% set item = entity.parent if entity.isVariant else entity %}
+    {% if item.variants().filter('isHidden', false).size > 1 %}
+        {% set isVariantPanelVisible = true %}
+    {% endif %}
+{% endif %}
+
+<nav class="Navigation{% if isVariantPanelVisible %} in-variants-panel{% endif %}" data-behaviour="navigation">
     <div class="Navigation-panel Navigation-panel--main">
     {% for navPartial in frctl.theme.get('nav') %}
         {% include 'partials/navigation/' + navPartial + '.nunj' %}
     {% endfor %}
     </div>
-    {% set isVisible = false %}
-    {% if entity and (entity.isComponent or entity.isVariant) %}
-        {% set item = entity.parent if entity.isVariant else entity %}
-        {% if item.variants().filter('isHidden', false).size > 1 %}
-            {% set isVisible = true %}
-        {% endif %}
-    {% endif %}
-    <div class="Navigation-panel Navigation-panel--variants{% if isVisible %} is-visible{% endif %}">
+
+    <div class="Navigation-panel Navigation-panel--variants{% if isVariantPanelVisible %} is-visible{% endif %}">
+        <div class="Navigation-backButtonWrapper">
+            <button class="Navigation-backButton" data-role="back">
+                {% include 'icons/arrow-left.svg' %}
+                {{ frctl.theme.get('labels.navigation.back') }}
+            </button>
+        </div>
         {% include 'partials/navigation/variants.nunj' %}
     </div>
 </nav>

@@ -13,7 +13,7 @@ const doc = $(document);
 const frctl = window.frctl || {};
 
 const frame = framer($('#frame'));
-$.map($('[data-behaviour="navigation"]'), (n) => new Navigation(n));
+const nav = new Navigation($('[data-behaviour="navigation"]'));
 
 global.fractal = {
     events: events,
@@ -31,7 +31,9 @@ if (frctl.env == 'server') {
         }
     )
         .on('pjax:start', function (e, xhr, options) {
-            if (utils.isSmallScreen()) {
+            const handle = $(e.relatedTarget).data('handle');
+            const hasVariantPanel = nav.hasVariantPanel(handle);
+            if (utils.isSmallScreen() && (nav.isVariantPanelVisible() || !hasVariantPanel)) {
                 frame.closeSidebar();
             }
             frame.startLoad();

@@ -12,6 +12,8 @@ export default class Navigation {
         this._el = $(el);
         this._mainPanel = this._el.find('.Navigation-panel--main');
         this._variantPanel = this._el.find('.Navigation-panel--variants');
+        this._backButton = this._el.find('[data-role="back"]');
+        this._links = this._el.find('.Tree-entityLink');
 
         this._mainPanel.on(
             'scroll',
@@ -26,34 +28,68 @@ export default class Navigation {
         });
 
         events.on('main-content-preload', (e, url) => {
-            this.toggleVariantPanel(getHandleFromUrl(url));
+            const handle = getHandleFromUrl(url);
+
+            if (!handle || !this.hasVariantPanel(handle)) {
+                this.hideVariantPanel();
+            } else if (this.hasVariantPanel(handle)) {
+                this.toggleVariantPanel(handle);
+            }
         });
 
         // trees need to be initialized after "scroll-sidebar" event handler is bound
         this.navTrees = $.map(this._el.find('[data-behaviour="tree"]'), (t) => new Tree(t));
         $.map(this._el.find('[data-behaviour="search"]'), (s) => new Search(s, this.navTrees));
+
+        this._backButton.on('click', () => {
+            this.hideVariantPanel();
+        });
+
+        this._links.on('click', (e) => {
+            const handle = $(e.currentTarget).data('handle');
+            const isVariantPanelVisible = this.isVariantPanelVisible();
+
+            if (this.hasVariantPanel(handle)) {
+                this.toggleVariantPanel(handle);
+
+                if (utils.isSmallScreen() && !isVariantPanelVisible) {
+                    e.preventDefault();
+
+                    setTimeout(() => {
+                        this.showVariantPanel();
+                    }, 100);
+                }
+            }
+        });
     }
 
     showVariantPanel() {
-        this._variantPanel.addClass('is-visible');
+        this._el.addClass('in-variants-panel');
     }
 
     hideVariantPanel() {
-        this._variantPanel.removeClass('is-visible');
+        this._el.removeClass('in-variants-panel');
+    }
+
+    hasVariantPanel(handle) {
+        return this._variantPanel.find(`.Navigation-group[data-component="${handle}"`).length;
     }
 
     toggleVariantPanel(handle) {
-        const variantGroup = this._variantPanel.find(`.Navigation-group[data-component="${handle}"`);
-        if (variantGroup.length) {
+        if (this.hasVariantPanel(handle)) {
             this.showVariantPanel();
-            this.selectVariantGroup(variantGroup);
+            this.selectVariantGroup(handle);
         } else {
             this.hideVariantPanel();
         }
     }
 
-    selectVariantGroup(element) {
+    selectVariantGroup(handle) {
         this._variantPanel.find('.Navigation-group.is-visible').removeClass('is-visible');
-        element.addClass('is-visible');
+        this._variantPanel.find(`.Navigation-group[data-component="${handle}"`).addClass('is-visible');
+    }
+
+    isVariantPanelVisible() {
+        return this._el.hasClass('in-variants-panel');
     }
 }
