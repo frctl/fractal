@@ -1,3 +1,10 @@
 context:
+  text: Default Context
   container:
     text: Default Context
+variants:
+  - name: variant
+    context:
+      text: Variant Context
+      container:
+        text: Variant Context

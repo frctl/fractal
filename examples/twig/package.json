@@ -12,6 +12,7 @@
     "@frctl/mandelbrot": "^1.7.0"
   },
   "devDependencies": {
+    "@frctl/adapter-tests": "^0.0.0",
     "node-fetch": "^2.6.1"
   }
 }
