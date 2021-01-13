@@ -16,7 +16,6 @@ module.exports = {
      * @param {string} filename The filename of the file to create.
      */
     touch(filename) {
-        const handle = fs.openSync(filename, 'w');
-        fs.closeSync(handle);
+        fs.closeSync(fs.openSync(filename, 'w'));
     },
 };
