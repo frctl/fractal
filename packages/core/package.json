@@ -33,12 +33,13 @@
     "chai": "^4.2.0",
     "fs-extra": "^9.0.1",
     "mocha": "^8.2.1",
+    "mock-argv": "^1.1.10",
     "mock-fs": "^4.13.0",
     "nyc": "^15.1.0",
     "sinon": "^9.2.3"
   },
   "scripts": {
-    "test:mocha": "mocha --require test/support/env --reporter spec --exclude **/*.spec.js",
+    "test:mocha": "mocha --require test/support/env --reporter spec --exclude '**/*.spec.js'",
     "coverage": "nyc --reporter=lcov --reporter=text  npm run test"
   },
   "publishConfig": {
