@@ -69,7 +69,7 @@
     "lerna": "^3.22.1",
     "lint-staged": "^10.5.3",
     "mark.js": "^8.11.1",
-    "mini-css-extract-plugin": "^1.3.3",
+    "mini-css-extract-plugin": "^1.3.4",
     "mocha": "^8.2.1",
     "mock-fs": "^4.13.0",
     "node-fetch": "^2.6.1",
