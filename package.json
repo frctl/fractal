@@ -27,7 +27,7 @@
     "lodash": "^4.17.20",
     "log-update": "^4.0.0",
     "marked": "^1.2.7",
-    "mime": "^2.4.7",
+    "mime": "^2.5.0",
     "minimist": "^1.2.5",
     "mixwith": "^0.1.1",
     "nunjucks": "^3.2.2",
