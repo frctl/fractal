@@ -36,7 +36,7 @@
     "readable-stream": "^3.6.0",
     "require-all": "^3.0.0",
     "semver": "^7.3.4",
-    "throat": "^5.0.0",
+    "throat": "^6.0.0",
     "twig": "^1.15.4",
     "update-notifier": "^5.0.1",
     "vinyl": "^2.2.1",
@@ -80,7 +80,7 @@
     "prettier": "^2.2.1",
     "resolve-url-loader": "^3.1.2",
     "rimraf": "^3.0.2",
-    "sass": "^1.32.4",
+    "sass": "^1.32.5",
     "sass-loader": "^10.1.1",
     "sass-mq": "^5.0.1",
     "sinon": "^9.2.3",
@@ -91,7 +91,7 @@
     "stylelint-scss": "^3.18.0",
     "webpack": "^5.15.0",
     "webpack-bundle-analyzer": "^4.3.0",
-    "webpack-cli": "^4.3.1"
+    "webpack-cli": "^4.4.0"
   },
   "scripts": {
     "clean": "lerna clean",
