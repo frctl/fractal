@@ -27,7 +27,7 @@
     "co": "^4.6.0",
     "columnify": "^1.5.4",
     "execa": "^5.0.0",
-    "fs-extra": "^9.0.1",
+    "fs-extra": "^9.1.0",
     "gray-matter": "^4.0.2",
     "handlebars": "^4.7.6",
     "inquirer": "^7.3.3",
