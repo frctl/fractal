@@ -11,17 +11,6 @@
 
 {% block content %}
 
-{% if frctl.env.server and frctl.env.sync %}
-    {% set rendered = false %}
-{% else %}
-    {% set rendered = entity.render(null, renderEnv, { preview: true, collate: true }) | async(true) %}
-    {% if rendered | isError %}
-        {% set error = rendered %}
-        {% set renderError %}{{ errors.renderError('component', error.message) }}{% endset %}
-        {% set rendered = false %}
-    {% endif %}
-{%- endif %}
-
 <div class="Pen" data-behaviour="pen" id="pen-{{ entity.id }}">
 
     {% block penContent %}
