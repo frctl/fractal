@@ -65,7 +65,10 @@ module.exports = function (theme, env, app) {
     });
 
     env.engine.addFilter('linkRefs', function (str, item) {
-        if (!(item.isComponent || item.isVariant) || !item.references.length) {
+        if (!(item.isComponent || item.isVariant)) {
+            return str;
+        }
+        if (!item.references.length) {
             return str;
         }
         const refs = item.references;
