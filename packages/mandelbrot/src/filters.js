@@ -68,6 +68,9 @@ module.exports = function (theme, env, app) {
         if (!(item.isComponent || item.isVariant)) {
             return str;
         }
+        if (!item.references.length) {
+            return str;
+        }
         const refs = item.references;
         return str.replace(new RegExp(`(${refs.map((r) => `@${r.handle}`).join('|')})`, 'g'), (handle) => {
             try {
