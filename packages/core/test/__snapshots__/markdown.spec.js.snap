@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Markdown renderer renders code correctly 1`] = `
+"<pre><code class=\\"hljs\\"><span class=\\"hljs-built_in\\">module</span>.<span class=\\"hljs-built_in\\">exports</span> = {
+    foo: <span class=\\"hljs-string\\">&#x27;bar&#x27;</span>,
+};</code></pre>"
+`;
+
+exports[`Markdown renderer renders code with lang correctly 1`] = `
+"<pre><code class=\\"hljs language-js\\"><span class=\\"hljs-built_in\\">module</span>.exports = {
+    <span class=\\"hljs-attr\\">foo</span>: <span class=\\"hljs-string\\">&#x27;bar&#x27;</span>,
+};</code></pre>"
+`;
+
+exports[`Markdown renderer renders markdown correctly 1`] = `
+"<p><strong>foo</strong></p>
+"
+`;
