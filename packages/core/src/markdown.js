@@ -27,6 +27,7 @@ module.exports = function markdown(content, mdConfig) {
     return marked(_.toString(content), mdConfig);
 };
 
+// TODO: remove if noone understands what this is for
 module.exports.toc = function (content, maxDepth, mdConfig) {
     maxDepth = maxDepth || 6;
     mdConfig = mdConfig && _.isObject(mdConfig) ? mdConfig : {};
