@@ -1,7 +1,7 @@
 module.exports = {
     root: true,
     parserOptions: {
-        ecmaVersion: 2017,
+        ecmaVersion: 2018,
     },
     extends: ['eslint:recommended', 'plugin:prettier/recommended', 'plugin:import/recommended'],
     env: {

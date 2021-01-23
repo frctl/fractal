@@ -1,0 +1,32 @@
+{
+  "name": "@frctl/react",
+  "version": "0.0.0",
+  "description": "React template adapter for Fractal.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/frctl/fractal.git",
+    "directory": "packages/react"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/frctl/fractal/issues"
+  },
+  "homepage": "https://github.com/frctl/fractal/tree/main/packages/react",
+  "dependencies": {
+    "lodash": "^4.17.20"
+  },
+  "devDependencies": {
+    "@frctl/core": "^0.2.1",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
+  },
+  "peerDependencies": {
+    "@frctl/fractal": ">= 1.1.7 < 2",
+    "react": ">= 16.6.0 < 18",
+    "react-dom": ">= 16.6.0 < 18"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
