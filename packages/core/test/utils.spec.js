@@ -48,6 +48,10 @@ describe('Utils', () => {
         it('returns slugified string', () => {
             expect(utils.slugify('Not A Slug')).toEqual('not-a-slug');
         });
+
+        it('replaces special characters', () => {
+            expect(utils.slugify('slug-šäöüõ-slug')).toEqual('slug-saouo-slug');
+        });
     });
 
     describe('.escapeForRegexp()', () => {
