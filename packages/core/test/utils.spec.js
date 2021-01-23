@@ -132,6 +132,7 @@ describe('Utils', () => {
         it('returns same hash for same string', () => {
             const first = utils.md5('string');
             const second = utils.md5('string');
+            expect(first).toEqual('b45cffe084dd3d20d928bee85e7b0f21');
             expect(first).toEqual(second);
         });
     });
