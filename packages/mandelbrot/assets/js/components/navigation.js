@@ -54,10 +54,6 @@ export default class Navigation {
 
                 if (utils.isSmallScreen() && !isVariantPanelVisible) {
                     e.preventDefault();
-
-                    setTimeout(() => {
-                        this.showVariantPanel();
-                    }, 100);
                 }
             }
         });
