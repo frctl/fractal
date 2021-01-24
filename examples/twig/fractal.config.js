@@ -4,6 +4,7 @@
  * Require the path module
  */
 const path = require('path');
+const mandelbrot = require('@frctl/mandelbrot');
 
 /*
  * Require the Fractal module
@@ -42,6 +43,8 @@ fractal.web.set('builder.dest', path.join(__dirname, 'dist'));
 /*
  * Customize Mandelbrot
  */
-fractal.web.set('theme', {
-    panels: ['html', 'view', 'context', 'resources', 'info', 'notes'],
+const customTheme = mandelbrot({
+    // See https://fractal.build/guide/web/default-theme.html#configuration
 });
+
+fractal.web.theme(customTheme);
