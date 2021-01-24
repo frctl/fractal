@@ -15,7 +15,7 @@
 
     <div class="Navigation-panel Navigation-panel--variants{% if isVariantPanelVisible %} is-visible{% endif %}">
         <div class="Navigation-backButtonWrapper">
-            <button class="Navigation-backButton" data-role="back">
+            <button class="Navigation-backButton" data-role="back" type="button">
                 {% include 'icons/arrow-left.svg' %}
                 {{ frctl.theme.get('labels.navigation.back') }}
             </button>
