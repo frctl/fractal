@@ -21,3 +21,8 @@ Second man:  Okay",
   },
 }
 `;
+
+exports[`tree loads fully rendered component from another component context key 1`] = `
+"<p>JS Context</p>
+"
+`;

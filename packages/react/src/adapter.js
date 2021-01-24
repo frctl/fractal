@@ -118,6 +118,10 @@ function setEnv(key, value, context) {
 module.exports = function (config = {}) {
     return {
         register(source, app) {
+            require('@babel/register')({
+                presets: ['@babel/preset-react'],
+            });
+
             return new ReactAdapter(source, app, {
                 ...DEFAULT_OPTIONS,
                 ...config,

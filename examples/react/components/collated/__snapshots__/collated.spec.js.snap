@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`collated renders collated components collated 1`] = `
+"<!-- Start: @collated--default -->
+<div data-reactroot=\\"\\">Collated component default</div>
+<!-- End: @collated--default -->
+
+<!-- Start: @collated--one -->
+<div data-reactroot=\\"\\">Collated component one</div>
+<!-- End: @collated--one -->
+
+<!-- Start: @collated--two -->
+<div data-reactroot=\\"\\">Collated component two</div>
+<!-- End: @collated--two -->
+
+<!-- Start: @collated--three -->
+<div data-reactroot=\\"\\">Collated component three</div>
+<!-- End: @collated--three -->
+"
+`;

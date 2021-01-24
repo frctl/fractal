@@ -11,7 +11,7 @@ npm install @frctl/react --save-dev
 Require the adapter in your Fractal configuration file:
 ```js
 // Require the adapter factory:
-const createReactAdapter = require('@gotoandplay/fractal-tsx-adapter');
+const createReactAdapter = require('@frctl/react');
 // Create the adapter instance:
 const reactAdapter = createReactAdapter({/* options */});
 // Register the adapter as engine:
@@ -25,7 +25,7 @@ fractal.components.engine(reactAdapter);
 Specify which method to use for rendering your components. Note that preview layouts are always rendered with `renderToStaticMarkup`.
 
 ```js
-const tsxAdapter = createReactAdapter({
+const reactAdapter = createReactAdapter({
   // default is 'renderToString'
   renderMethod: 'renderToStaticMarkup',
 });
@@ -36,7 +36,7 @@ const tsxAdapter = createReactAdapter({
 Enable/disable server side rendering of components.
 
 ```js
-const tsxAdapter = createReactAdapter({
+const reactAdapter = createReactAdapter({
   // default is true
   ssr: false,
 });
@@ -52,7 +52,7 @@ Note you need to do the same wrapping when hydrating the component client-side.
 
 ```js
 const SomeComponent = require('some-react-component');
-const tsxAdapter = createReactAdapter({
+const reactAdapter = createReactAdapter({
   // default is []
   wrapperElements: [
     {
