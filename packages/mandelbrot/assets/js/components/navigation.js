@@ -10,10 +10,10 @@ import Search from './search';
 export default class Navigation {
     constructor(el) {
         this._el = $(el);
-        this._mainPanel = this._el.find('.Navigation-panel--main');
-        this._variantPanel = this._el.find('.Navigation-panel--variants');
+        this._mainPanel = this._el.find('[data-role="main-panel"]');
+        this._variantPanel = this._el.find('[data-role="variant-panel"]');
         this._backButton = this._el.find('[data-role="back"]');
-        this._links = this._el.find('.Tree-entityLink');
+        this._links = this._el.find('[data-role="tree-link"]');
 
         this._mainPanel.on(
             'scroll',
@@ -72,7 +72,7 @@ export default class Navigation {
     }
 
     hasVariantPanel(handle) {
-        return this._variantPanel.find(`.Navigation-group[data-component="${handle}"]`).length;
+        return this._variantPanel.find(`[data-role="variant-group"][data-component="${handle}"]`).length;
     }
 
     toggleVariantPanel(handle) {
@@ -85,8 +85,8 @@ export default class Navigation {
     }
 
     selectVariantGroup(handle) {
-        this._variantPanel.find('.Navigation-group.is-visible').removeClass('is-visible');
-        this._variantPanel.find(`.Navigation-group[data-component="${handle}"]`).addClass('is-visible');
+        this._variantPanel.find('[data-role="variant-group"].is-visible').removeClass('is-visible');
+        this._variantPanel.find(`[data-role="variant-group"][data-component="${handle}"]`).addClass('is-visible');
     }
 
     isVariantPanelVisible() {

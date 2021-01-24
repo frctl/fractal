@@ -7,13 +7,13 @@
 {% endif %}
 
 <nav class="Navigation{% if isVariantPanelVisible %} in-variants-panel{% endif %}" data-behaviour="navigation">
-    <div class="Navigation-panel Navigation-panel--main">
+    <div class="Navigation-panel Navigation-panel--main" data-role="main-panel">
     {% for navPartial in frctl.theme.get('nav') %}
         {% include 'partials/navigation/' + navPartial + '.nunj' %}
     {% endfor %}
     </div>
 
-    <div class="Navigation-panel Navigation-panel--variants{% if isVariantPanelVisible %} is-visible{% endif %}">
+    <div class="Navigation-panel Navigation-panel--variants{% if isVariantPanelVisible %} is-visible{% endif %}" data-role="variant-panel">
         <div class="Navigation-backButtonWrapper">
             <button class="Navigation-backButton" data-role="back" type="button">
                 {% include 'icons/arrow-left.svg' %}

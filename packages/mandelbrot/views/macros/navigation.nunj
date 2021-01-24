@@ -39,7 +39,7 @@
         {% set urlItem = item.variants().filter('isHidden', false).first() if isNotCollated else item %}
         {% set isCurrent = true if (current and (current.id == item.id) or (current.parent.id == item.id)) else false %}
         <li class="Tree-item Tree-entity{% if isCurrent %} is-current{% endif %}"{% if isCurrent %} data-state="current"{% endif %} data-role="item">
-            <a class="Tree-entityLink" href="{{ path( (urlItem | url), request) }}"{% if item.tags and item.tags.length > 1 %} data-tags="{{ item.tags | dump | replace("null,", "") | escape  }}"{% endif %} data-pjax data-handle="{{ item.handle if item.isComponent else item.parent.handle }}">
+            <a class="Tree-entityLink" href="{{ path( (urlItem | url), request) }}" data-role="tree-link"{% if item.tags and item.tags.length > 1 %} data-tags="{{ item.tags | dump | replace("null,", "") | escape  }}"{% endif %} data-pjax data-handle="{{ item.handle if item.isComponent else item.parent.handle }}">
                 <span>{{ item.label }}</span>
                 {% if item.status %}{{ status.unlabelled(item.status) }}{% endif %}
             </a>
