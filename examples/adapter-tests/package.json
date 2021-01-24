@@ -1,0 +1,8 @@
+{
+  "name": "@frctl/adapter-tests",
+  "version": "0.0.0",
+  "private": true,
+  "main": "src/index.js",
+  "dependencies": {},
+  "devDependencies": {}
+}

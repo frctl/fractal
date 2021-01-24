@@ -8,6 +8,7 @@ module.exports = {
         browser: true,
         node: true,
         es6: true,
+        jest: true,
     },
     plugins: ['import'],
     rules: {
@@ -30,6 +31,7 @@ module.exports = {
             files: ['*.spec.js'],
             env: {
                 jest: true,
+                mocha: false,
             },
         },
     ],
