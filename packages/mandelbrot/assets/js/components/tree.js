@@ -50,7 +50,7 @@ export default class Tree {
 
     selectItem(url) {
         const handle = getHandleFromUrl(url);
-        if (this._el.parents('.Navigation-panel--variants').length) {
+        if (this._el.parents('[data-role="variant-panel"]').length) {
             this._el.find(`.Tree-item.is-current`).removeClass('is-current');
         } else {
             this._el
