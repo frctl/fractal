@@ -13,7 +13,7 @@ const fractal = (module.exports = require('@frctl/fractal').create());
 /*
  * Give your project a title.
  */
-fractal.set('project.title', 'Fractal Twig example');
+fractal.set('project.title', 'Fractal React example');
 
 /*
  * Tell Fractal where to look for documentation pages.

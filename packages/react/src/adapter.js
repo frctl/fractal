@@ -119,7 +119,7 @@ module.exports = function (config = {}) {
     return {
         register(source, app) {
             require('@babel/register')({
-                presets: ['@babel/preset-react'],
+                presets: ['@babel/preset-react', '@babel/preset-env'],
             });
 
             return new ReactAdapter(source, app, {

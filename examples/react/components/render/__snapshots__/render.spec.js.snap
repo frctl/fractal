@@ -2,6 +2,8 @@
 
 exports[`render renders component if ssr is turned off but enabled in component meta 1`] = `"Render <!-- -->something"`;
 
+exports[`render renders component using ES6 import/export syntax 1`] = `"Render something"`;
+
 exports[`render renders component with renderToStaticMarkup method 1`] = `"Render something"`;
 
 exports[`render renders default template for default variant 1`] = `"Render <!-- -->something"`;

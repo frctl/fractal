@@ -26,4 +26,9 @@ describe('render', () => {
         const render = await fractal.components.find('@render').render();
         expect(render).toMatchSnapshot();
     });
+
+    it('renders component using ES6 import/export syntax', async () => {
+        const render = await fractal.components.find('@render--es6-import-export').render();
+        expect(render).toMatchSnapshot();
+    });
 });
