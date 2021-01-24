@@ -22,6 +22,10 @@
     .Navigation.in-variants-panel & {
         @include mq($until: nav-collapse) {
             transform: translateX(-100%);
+
+            html[dir="rtl"] & {
+                transform: translateX(100%);
+            }
         }
     }
 }
