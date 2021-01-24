@@ -2,6 +2,6 @@
 
 export default {
     breakpoints: {
-        navCollapse: 500,
+        navCollapse: 760,
     },
 };
