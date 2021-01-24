@@ -1,11 +1,9 @@
 .Code {
     display: block;
     background-color: $color-background-offset;
-    -webkit-overflow-scrolling: touch;
 
     pre {
         padding: 0.75rem;
-        -webkit-overflow-scrolling: touch;
 
         a {
             color: #28f;

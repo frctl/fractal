@@ -12,7 +12,6 @@
     width: 240px;
     height: 100%;
     overflow: auto;
-    -webkit-overflow-scrolling: touch;
     padding: 1rem 0;
 
     @include mq($until: nav-collapse) {

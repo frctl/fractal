@@ -48,7 +48,6 @@
     max-width: calc(100% - #{$handle-size} + 1px);
     min-width: 180px;
     background-color: white;
-    -webkit-overflow-scrolling: touch;
 
     @include mq($until: nav-collapse) {
         width: 100% !important; // override any JS-set widths
