@@ -72,7 +72,7 @@ export default class Navigation {
     }
 
     hasVariantPanel(handle) {
-        return this._variantPanel.find(`.Navigation-group[data-component="${handle}"`).length;
+        return this._variantPanel.find(`.Navigation-group[data-component="${handle}"]`).length;
     }
 
     toggleVariantPanel(handle) {
@@ -86,7 +86,7 @@ export default class Navigation {
 
     selectVariantGroup(handle) {
         this._variantPanel.find('.Navigation-group.is-visible').removeClass('is-visible');
-        this._variantPanel.find(`.Navigation-group[data-component="${handle}"`).addClass('is-visible');
+        this._variantPanel.find(`.Navigation-group[data-component="${handle}"]`).addClass('is-visible');
     }
 
     isVariantPanelVisible() {
