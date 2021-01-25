@@ -84,7 +84,7 @@
     "sass": "^1.32.5",
     "sass-loader": "^10.1.1",
     "sass-mq": "^5.0.1",
-    "sinon": "^9.2.3",
+    "sinon": "^9.2.4",
     "stylelint": "^13.9.0",
     "stylelint-config-prettier": "^8.0.2",
     "stylelint-config-standard": "^20.0.0",
