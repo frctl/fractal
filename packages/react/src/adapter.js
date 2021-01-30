@@ -6,6 +6,8 @@ const ReactDOM = require('react-dom/server');
 
 const { Adapter } = require('@frctl/core');
 
+const clearModule = require('./clear-module');
+
 const DEFAULT_OPTIONS = {
     renderMethod: 'renderToString',
     ssr: true,
@@ -28,12 +30,21 @@ class ReactAdapter extends Adapter {
         }
 
         this.options = options;
-    }
 
-    require(path) {
-        let component = require(path);
+        this.on('view:added', (view) => {
+            // ensure that all component templates are required by this adapter first
+            requireModule(view.path);
+        });
 
-        return component.default || component;
+        this.on('view:removed', (view) => {
+            // remove from cache if component is deleted
+            clearModule(view.path);
+        });
+        this.on('view:updated', (view) => {
+            // update cache if component is updated
+            clearModule(view.path);
+            requireModule(view.path);
+        });
     }
 
     getWrapperComponent(component) {
@@ -41,7 +52,7 @@ class ReactAdapter extends Adapter {
             const comp = this._app.components.flatten().find(component);
 
             if (comp) {
-                return this.require(comp.viewPath);
+                return requireModule(comp.viewPath);
             } else {
                 console.error(`${component} not found!`);
             }
@@ -71,7 +82,7 @@ class ReactAdapter extends Adapter {
         setEnv('_env', meta.env, context);
         setEnv('_config', this._app.config(), context);
 
-        const component = this.require(path);
+        const component = requireModule(path);
 
         if (this.options.ssr || meta.env.ssr) {
             const element = React.createElement(component, context);
@@ -90,7 +101,7 @@ class ReactAdapter extends Adapter {
         setEnv('_env', meta.env, context);
         setEnv('_config', this._app.config(), context);
 
-        const component = this.require(path);
+        const component = requireModule(path);
         const element = React.createElement(component, context);
         // DOCTYPE is not allowed to be a part of a React component, so it must be prepended here.
         const html = '<!DOCTYPE html>' + ReactDOM.renderToStaticMarkup(element);
@@ -128,4 +139,10 @@ module.exports = function (config = {}) {
             });
         },
     };
+};
+
+const requireModule = (path) => {
+    let component = require(path);
+
+    return component.default || component;
 };
