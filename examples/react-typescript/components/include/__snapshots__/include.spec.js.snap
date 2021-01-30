@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`include does not modify _self when including child component 1`] = `"include-parent--self<!-- -->include child<!-- -->include-parent--self"`;
+
+exports[`include includes child component 1`] = `"include parent<!-- -->include child"`;

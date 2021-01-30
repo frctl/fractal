@@ -75,14 +75,14 @@ const reactAdapter = createReactAdapter({
 
 ### babelOptions
 
-Override babel configuration. Babel is used for parsing component templates.
+Override babel configuration, for example, to use TypeScript components. Babel is used for parsing component templates.
 ```js
 const SomeComponent = require('some-react-component');
 const reactAdapter = createReactAdapter({
   // default is { presets: ['@babel/preset-react', '@babel/preset-env'] }
   babelOptions: {
-    presets: ['@babel/preset-react', '@babel/preset-env'],
-    plugins: [/* add additional plugins */],
+    presets: ['@babel/preset-react', '@babel/preset-env', '@babel/preset-typescript'],
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
 });
 ```

@@ -10,11 +10,18 @@ const path = require('path');
  */
 const fractal = (module.exports = require('@frctl/fractal').create());
 const mandelbrot = require('@frctl/mandelbrot');
+const createReactAdapter = require('@frctl/react');
+const reactAdapter = createReactAdapter({
+    babelOptions: {
+        presets: ['@babel/preset-react', '@babel/preset-env', '@babel/preset-typescript'],
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    },
+});
 
 /*
  * Give your project a title.
  */
-fractal.set('project.title', 'Fractal React example');
+fractal.set('project.title', 'Fractal React+TypeScript example');
 
 /*
  * Tell Fractal where to look for documentation pages.
@@ -25,8 +32,8 @@ fractal.docs.set('path', path.join(__dirname, 'docs'));
  * Tell Fractal where to look for components.
  */
 fractal.components.set('path', path.join(__dirname, 'components'));
-fractal.components.set('ext', '.jsx');
-fractal.components.engine(require('@frctl/react'));
+fractal.components.set('ext', '.tsx');
+fractal.components.engine(reactAdapter);
 
 /*
  * Tell the Fractal web preview plugin where to look for static assets.
