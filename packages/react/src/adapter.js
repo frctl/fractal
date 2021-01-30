@@ -8,12 +8,6 @@ const { Adapter } = require('@frctl/core');
 
 const clearModule = require('./clear-module');
 
-const DEFAULT_OPTIONS = {
-    renderMethod: 'renderToString',
-    ssr: true,
-    wrapperElements: [],
-};
-
 /*
  * React Adapter
  * -------------
@@ -123,20 +117,29 @@ function setEnv(key, value, context) {
     }
 }
 
+const DEFAULT_OPTIONS = {
+    renderMethod: 'renderToString',
+    ssr: true,
+    wrapperElements: [],
+    babelOptions: {
+        presets: ['@babel/preset-react', '@babel/preset-env'],
+    },
+};
+
 /*
  * Adapter factory
  */
 module.exports = function (config = {}) {
     return {
         register(source, app) {
-            require('@babel/register')({
-                presets: ['@babel/preset-react', '@babel/preset-env'],
-            });
-
-            return new ReactAdapter(source, app, {
+            const options = {
                 ...DEFAULT_OPTIONS,
                 ...config,
-            });
+            };
+
+            require('@babel/register')(options.babelOptions);
+
+            return new ReactAdapter(source, app, options);
         },
     };
 };
