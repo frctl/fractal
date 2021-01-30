@@ -31,4 +31,10 @@ describe('render', () => {
         const render = await fractal.components.find('@render--es6-import-export').render();
         expect(render).toMatchSnapshot();
     });
+
+    it('renders with preview layout', async () => {
+        const render = await fractal.components.find('@render').render(undefined, undefined, { preview: true });
+        expect(render).toMatch(new RegExp('^<!DOCTYPE html>?'));
+        expect(render).toMatchSnapshot();
+    });
 });

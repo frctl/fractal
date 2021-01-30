@@ -15,3 +15,5 @@ exports[`render renders specified camelCased template for variant 1`] = `"Render
 exports[`render renders specified template for variant 1`] = `"Render variant-2 <!-- -->something"`;
 
 exports[`render renders variant template for variant with the same name 1`] = `"Render variant-2 <!-- -->something"`;
+
+exports[`render renders with preview layout 1`] = `"<!DOCTYPE html><html><body><div id=\\"root\\">Render something</div></body></html>"`;
