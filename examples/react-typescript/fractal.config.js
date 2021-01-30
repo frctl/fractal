@@ -16,6 +16,14 @@ const reactAdapter = createReactAdapter({
         presets: ['@babel/preset-react', '@babel/preset-env', '@babel/preset-typescript'],
         extensions: ['.js', '.jsx', '.ts', '.tsx'],
     },
+    wrapperElements: [
+        {
+            component: '@wrapper-provider',
+            props: {
+                getValue: (value) => `wrapped ${value}`,
+            },
+        },
+    ],
 });
 
 /*

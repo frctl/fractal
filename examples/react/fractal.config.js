@@ -10,6 +10,17 @@ const path = require('path');
  */
 const fractal = (module.exports = require('@frctl/fractal').create());
 const mandelbrot = require('@frctl/mandelbrot');
+const createReactAdapter = require('@frctl/react');
+const reactAdapter = createReactAdapter({
+    wrapperElements: [
+        {
+            component: '@wrapper-provider',
+            props: {
+                getValue: (value) => `wrapped ${value}`,
+            },
+        },
+    ],
+});
 
 /*
  * Give your project a title.
@@ -26,7 +37,7 @@ fractal.docs.set('path', path.join(__dirname, 'docs'));
  */
 fractal.components.set('path', path.join(__dirname, 'components'));
 fractal.components.set('ext', '.jsx');
-fractal.components.engine(require('@frctl/react'));
+fractal.components.engine(reactAdapter);
 
 /*
  * Tell the Fractal web preview plugin where to look for static assets.
