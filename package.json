@@ -38,7 +38,7 @@
     "semver": "^7.3.4",
     "throat": "^5.0.0",
     "twig": "^1.15.4",
-    "update-notifier": "^5.0.1",
+    "update-notifier": "^5.1.0",
     "vinyl": "^2.2.1",
     "vorpal": "^1.12.0"
   },
