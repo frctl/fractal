@@ -14,23 +14,6 @@
             </span>
         </li>
         {% endif %}
-        {% if entity.isComponent %}
-        {% set variants = entity.variants().filter('isHidden', false) %}
-        {% else %}
-        {% set variants = entity.parent.variants().filter('isHidden', false) %}
-        {% endif %}
-        {% if variants.size > 1 %}
-        <li class="Meta-item">
-            <strong class="Meta-key">{{ frctl.theme.get('labels.components.variants') }} <em class="Meta-count">({{ variants.size }})</em>:</strong>
-            <span class="Meta-value Meta-value--linkList">
-            {% for variant in variants.items() %}
-                <a href="{{ path(frctl.theme.urlFromRoute('component', { handle: variant.handle })) }}">
-                    <span>{{ variant.label }}</span>
-                </a>{% if not loop.last %}, {% endif %}
-            {% endfor %}
-            </span>
-        </li>
-        {% endif %}
         <li class="Meta-item">
             <strong class="Meta-key">{{ frctl.theme.get('labels.components.preview.label') }}:</strong>
             <span class="Meta-value">

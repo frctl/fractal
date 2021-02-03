@@ -1,6 +1,43 @@
 .Navigation {
-    display: inline-block;
+    display: flex;
+    position: relative;
     width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.Navigation-panel {
+    @include border-inline(end, 1px solid $color-frame-border);
+
+    width: 240px;
+    height: 100%;
+    overflow: auto;
+    padding: 1rem 0;
+
+    @include mq($until: nav-collapse) {
+        transition: 0.3s ease transform;
+        flex: 1 0 auto;
+    }
+
+    .Navigation.in-variants-panel & {
+        @include mq($until: nav-collapse) {
+            transform: translateX(-100%);
+
+            [dir="rtl"] & {
+                transform: translateX(100%);
+            }
+        }
+    }
+}
+
+.Navigation-panel--variants {
+    @include mq($from: nav-collapse) {
+        display: none;
+
+        .Navigation.in-variants-panel & {
+            display: block;
+        }
+    }
 }
 
 .Navigation-group {
@@ -8,5 +45,46 @@
 
     & + & {
         margin-top: 1.5rem;
+    }
+
+    .Navigation-panel--variants & {
+        display: none;
+        margin-top: 0;
+
+        &.is-visible {
+            display: block;
+        }
+    }
+}
+
+.Navigation-backButtonWrapper {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-bottom: 1em;
+
+    @include mq($from: nav-collapse) {
+        display: none;
+    }
+}
+
+.Navigation-backButton {
+    @include font(label);
+
+    display: block;
+    border: 1px solid $color-frame-border;
+    padding: 0.3125rem 0.5625rem;
+    border-radius: 3px;
+    font-weight: bold;
+    line-height: 18px;
+    color: inherit;
+
+    svg {
+        width: 18px;
+        height: 18px;
+        vertical-align: top;
+
+        [dir="rtl"] & {
+            transform: rotate(180deg);
+        }
     }
 }
