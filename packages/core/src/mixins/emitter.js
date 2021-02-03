@@ -1,15 +1,14 @@
 'use strict';
 
 const _ = require('lodash');
-const mixin = require('mixwith').Mixin;
-const EventEmitter = require('events').EventEmitter;
+const { Mixin } = require('mixwith');
+const { EventEmitter } = require('events');
 
-module.exports = mixin((superclass) => {
+module.exports = Mixin((superclass) => {
     const Emitter = class extends superclass {
         constructor() {
             super();
             super.addMixedIn('Emitter');
-            this.on('error', () => {});
         }
     };
 
