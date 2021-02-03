@@ -12,10 +12,8 @@ import Navigation from './components/navigation';
 const doc = $(document);
 const frctl = window.frctl || {};
 
-// frame needs to be initalized before navigation because it
-// needs to add an event listener before Navigation->Tree triggers it
 const frame = framer($('#frame'));
-new Navigation($('.Navigation'));
+const nav = new Navigation($('[data-behaviour="navigation"]'));
 
 global.fractal = {
     events: events,
@@ -33,7 +31,9 @@ if (frctl.env == 'server') {
         }
     )
         .on('pjax:start', function (e, xhr, options) {
-            if (utils.isSmallScreen()) {
+            const handle = $(e.relatedTarget).data('handle');
+            const hasVariantPanel = nav.hasVariantPanel(handle);
+            if (utils.isSmallScreen() && (nav.isVariantPanelVisible() || !hasVariantPanel)) {
                 frame.closeSidebar();
             }
             frame.startLoad();

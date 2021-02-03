@@ -3,12 +3,19 @@
 import storage from '../storage';
 import events from '../events';
 
-function getTreeUrl(urlPath) {
+export function getTreeUrl(urlPath) {
     const parser = document.createElement('a');
     parser.href = urlPath;
     const pathParts = parser.pathname.split('/');
     pathParts.push(pathParts.pop());
     return pathParts.join('/');
+}
+
+export function getHandleFromUrl(url) {
+    const fullUrl = getTreeUrl(url);
+    const [handle] = fullUrl.split('/').slice(-1);
+    const [componentName] = handle.split('--');
+    return componentName;
 }
 
 export default class Tree {
@@ -42,7 +49,16 @@ export default class Tree {
     }
 
     selectItem(url) {
-        this._el.find('.is-current').removeClass('is-current');
+        const handle = getHandleFromUrl(url);
+        if (this._el.parents('[data-role="variant-panel"]').length) {
+            this._el.find(`.Tree-item.is-current`).removeClass('is-current');
+        } else {
+            this._el
+                .find(`.Tree-item.is-current > .Tree-entityLink:not([data-handle="${handle}"])`)
+                .parent()
+                .removeClass('is-current');
+        }
+
         this._el.find(`[href="${url}"]`).parent().addClass('is-current');
     }
 
