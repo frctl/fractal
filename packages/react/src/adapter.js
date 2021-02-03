@@ -4,7 +4,7 @@ const _ = require('lodash');
 const React = require('react');
 const ReactDOM = require('react-dom/server');
 
-const { Adapter } = require('@frctl/core');
+const { Adapter, utils } = require('@frctl/core');
 
 const clearModule = require('./clear-module');
 
@@ -132,10 +132,7 @@ const DEFAULT_OPTIONS = {
 module.exports = function (config = {}) {
     return {
         register(source, app) {
-            const options = {
-                ...DEFAULT_OPTIONS,
-                ...config,
-            };
+            const options = utils.defaultsDeep(config, DEFAULT_OPTIONS);
 
             require('@babel/register')(options.babelOptions);
 

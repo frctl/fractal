@@ -28,11 +28,6 @@ const reactAdapter = createReactAdapter({
 fractal.set('project.title', 'Fractal React example');
 
 /*
- * Tell Fractal where to look for documentation pages.
- */
-fractal.docs.set('path', path.join(__dirname, 'docs'));
-
-/*
  * Tell Fractal where to look for components.
  */
 fractal.components.set('path', path.join(__dirname, 'components'));
