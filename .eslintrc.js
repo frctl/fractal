@@ -36,7 +36,7 @@ module.exports = {
         },
         {
             files: ['**/*.jsx'],
-            extends: ['eslint:recommended', 'plugin:react/recommended', 'plugin:prettier/recommended'],
+            extends: ['plugin:react/recommended'],
             settings: {
                 react: {
                     version: 'detect',
