@@ -1,0 +1,10 @@
+{% if frctl.components.size %}
+    {% for item in frctl.components.flatten() %}
+        {% if item.variants().filter('isHidden', false).size > 1 %}
+            {% set isVisible = true if (entity and ((entity.id == item.id) or entity.parent.id == item.id)) else false %}
+            <div class="Navigation-group{% if isVisible %} is-visible{% endif %}" data-role="variant-group" data-component="{{ item.handle }}">
+                {{ nav.tree(item.variants(), entity, request) }}
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
