@@ -42,22 +42,6 @@ module.exports = {
 
     slugify: (str) => _.deburr(str).replace(/\s+/g, '-').toLowerCase(),
 
-    toJSON(item) {
-        const obj = {};
-        _.forOwn(item, (value, key) => {
-            if (!key.startsWith('_')) {
-                if (value instanceof Buffer) {
-                    obj[key] = '<Buffer>';
-                } else if (value && typeof value.toJSON === 'function') {
-                    obj[key] = value.toJSON();
-                } else {
-                    obj[key] = value;
-                }
-            }
-        });
-        return obj;
-    },
-
     escapeForRegexp(str) {
         return str.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
     },
@@ -102,10 +86,6 @@ module.exports = {
         } catch (e) {
             return false;
         }
-    },
-
-    isPromise(value) {
-        return value && _.isFunction(value.then);
     },
 
     md5(str) {

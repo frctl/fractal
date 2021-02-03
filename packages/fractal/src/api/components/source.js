@@ -4,7 +4,7 @@ const Promise = require('bluebird');
 const Path = require('path');
 const _ = require('lodash');
 const co = require('co');
-const fs = Promise.promisifyAll(require('fs'));
+const fs = require('fs-extra');
 const anymatch = require('anymatch');
 const Component = require('./component');
 const ComponentCollection = require('./collection');
@@ -170,7 +170,7 @@ module.exports = class ComponentSource extends EntitySource {
                     throw new Error(`Cannot find component ${str}`);
                 }
             } else {
-                return fs.readFileAsync(entity, 'utf8').then((content) => {
+                return fs.readFile(entity, 'utf8').then((content) => {
                     return this.engine().render(entity, content, context, {
                         env: env,
                         self: {

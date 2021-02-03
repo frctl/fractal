@@ -4,8 +4,7 @@ const Promise = require('bluebird');
 const Path = require('path');
 const co = require('co');
 const _ = require('lodash');
-const fs = Promise.promisifyAll(require('fs'));
-const readFile = Promise.promisify(fs.readFile);
+const fs = require('fs-extra');
 const isBinary = require('istextorbinary').isBinary;
 const utils = require('./utils');
 const glob = require('globby');
@@ -43,7 +42,7 @@ module.exports = {
     },
 
     find(filePath) {
-        return fs.statAsync(filePath).then((stat) => {
+        return fs.stat(filePath).then((stat) => {
             return build(filePath, stat, Path.parse(filePath).dir);
         });
     },
@@ -77,7 +76,7 @@ function build(filePath, stat, root, ext) {
                 return contents.toString();
             };
             p.read = function () {
-                const read = p.isBinary ? readFile(filePath) : readFile(filePath, 'utf8');
+                const read = p.isBinary ? fs.readFile(filePath) : fs.readFile(filePath, 'utf8');
                 return read.then(function (contents) {
                     return contents.toString();
                 });
@@ -104,16 +103,20 @@ function dirscribe(root, opts) {
 
     function readdir(dir) {
         return fs
-            .readdirAsync(dir)
-            .filter((file) => filter(Path.join(dir, file)))
-            .map((filePath) => objectify(Path.join(dir, filePath)))
+            .readdir(dir)
+            .then((files) => {
+                const filteredDir = files
+                    .filter((file) => filter(Path.join(dir, file)))
+                    .map((filePath) => objectify(Path.join(dir, filePath)));
+                return Promise.all(filteredDir);
+            })
             .then(after);
     }
 
     function objectify(filePath) {
         let statCache;
         return fs
-            .statAsync(filePath)
+            .stat(filePath)
             .then(function (stat) {
                 statCache = stat;
                 return build(filePath, stat, root, ext);
