@@ -11,7 +11,7 @@ const Async = (props) => {
 
 Async.propTypes = {
     xkcd: PropTypes.shape({
-        num: PropTypes.string,
+        num: PropTypes.number,
         img: PropTypes.string,
         title: PropTypes.string,
     }),

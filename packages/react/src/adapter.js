@@ -24,20 +24,24 @@ class ReactAdapter extends Adapter {
         }
 
         this.options = options;
+        this.nameCache = {};
 
         this.on('view:added', (view) => {
             // ensure that all component templates are required by this adapter first
-            requireModule(view.path);
+            const component = requireModule(view.path);
+            this.nameCache[view.handle] = component.name;
         });
 
         this.on('view:removed', (view) => {
             // remove from cache if component is deleted
             clearModule(view.path);
+            delete this.nameCache[view.handle];
         });
         this.on('view:updated', (view) => {
             // update cache if component is updated
             clearModule(view.path);
-            requireModule(view.path);
+            const component = requireModule(view.path);
+            this.nameCache[view.handle] = component.name;
         });
     }
 
@@ -90,8 +94,12 @@ class ReactAdapter extends Adapter {
     }
 
     renderLayout(path, str, context, meta = {}) {
+        const target = {
+            ...meta.target,
+            componentName: this.nameCache[`@${meta.target.handle}`],
+        };
         setEnv('_self', meta.self, context);
-        setEnv('_target', meta.target, context);
+        setEnv('_target', target, context);
         setEnv('_env', meta.env, context);
         setEnv('_config', this._app.config(), context);
 
