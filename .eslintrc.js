@@ -35,7 +35,7 @@ module.exports = {
             },
         },
         {
-            files: ['**/*.jsx', '**/*.tsx'],
+            files: ['**/*.jsx'],
             extends: ['eslint:recommended', 'plugin:react/recommended', 'plugin:prettier/recommended'],
             settings: {
                 react: {
@@ -45,35 +45,6 @@ module.exports = {
             parserOptions: {
                 ecmaFeatures: { jsx: true },
             },
-        },
-        {
-            files: ['**/*.ts', '**/*.tsx'],
-            extends: [
-                'eslint:recommended',
-                'plugin:prettier/recommended',
-                'plugin:@typescript-eslint/eslint-recommended',
-                'plugin:@typescript-eslint/recommended',
-            ],
-            parser: '@typescript-eslint/parser',
-            parserOptions: {
-                project: './tsconfig.json',
-            },
-            plugins: ['import', '@typescript-eslint'],
-            settings: {
-                'import/resolver': {
-                    typescript: {},
-                },
-            },
-        },
-        {
-            files: ['**/*.tsx'],
-            extends: [
-                'eslint:recommended',
-                'plugin:react/recommended',
-                'plugin:prettier/recommended',
-                'plugin:@typescript-eslint/eslint-recommended',
-                'plugin:@typescript-eslint/recommended',
-            ],
         },
     ],
 };
