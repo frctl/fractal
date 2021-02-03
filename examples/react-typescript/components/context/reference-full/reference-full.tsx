@@ -5,7 +5,7 @@ interface ReferenceFullProps {
 }
 
 const ReferenceFull = (props: ReferenceFullProps): JSX.Element => {
-    return <p>{props.reference}</p>;
+    return <div>{props.reference}</div>;
 };
 
 export default ReferenceFull;

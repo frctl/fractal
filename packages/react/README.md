@@ -59,14 +59,14 @@ const reactAdapter = createReactAdapter({
       component: SomeComponent,
       props: {
         some: 'prop',
-        yin: 'yang,
+        yin: 'yang',
       },
     },
     {
       component: '@fractal-component',
       props: {
         some: 'prop',
-        yin: 'yang,
+        yin: 'yang',
       },
     },
   ],

@@ -2,7 +2,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 
 const ReferenceFull = (props) => {
-    return <p>{props.reference}</p>;
+    return <div>{props.reference}</div>;
 };
 
 ReferenceFull.propTypes = {
