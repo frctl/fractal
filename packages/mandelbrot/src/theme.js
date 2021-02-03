@@ -27,6 +27,9 @@ module.exports = function (options) {
                 placeholder: 'Search…',
                 clear: 'Clear search',
             },
+            navigation: {
+                back: 'Back',
+            },
             tree: {
                 collapse: 'Collapse tree',
             },
