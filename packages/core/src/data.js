@@ -4,7 +4,7 @@ const Promise = require('bluebird');
 const yaml = require('js-yaml');
 const _ = require('lodash');
 const Path = require('path');
-const fs = Promise.promisifyAll(require('fs'));
+const fs = require('fs-extra');
 const utils = require('./utils');
 const Log = require('./log');
 
@@ -56,7 +56,7 @@ module.exports = {
             }
         } else {
             return fs
-                .readFileAsync(filePath, 'utf8')
+                .readFile(filePath, 'utf8')
                 .then((contents) => this.parse(contents, format))
                 .catch((err) => {
                     Log.error(`Error loading data file ${filePath}: ${err.message}`);
@@ -67,6 +67,6 @@ module.exports = {
 
     writeFile(filePath, data) {
         const format = utils.lang(filePath, true).mode;
-        return fs.writeFileAsync(filePath, this.stringify(data, format));
+        return fs.writeFile(filePath, this.stringify(data, format));
     },
 };
