@@ -23,7 +23,7 @@
         @include mq($until: nav-collapse) {
             transform: translateX(-100%);
 
-            html[dir="rtl"] & {
+            [dir="rtl"] & {
                 transform: translateX(100%);
             }
         }
@@ -82,5 +82,9 @@
         width: 18px;
         height: 18px;
         vertical-align: top;
+
+        [dir="rtl"] & {
+            transform: rotate(180deg);
+        }
     }
 }
