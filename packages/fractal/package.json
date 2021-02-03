@@ -37,7 +37,7 @@
     "mime": "^2.5.0",
     "require-all": "^3.0.0",
     "semver": "^7.3.4",
-    "update-notifier": "^5.0.1",
+    "update-notifier": "^5.1.0",
     "vinyl": "^2.2.1",
     "vorpal": "^1.12.0"
   },
@@ -45,7 +45,7 @@
     "chai": "^4.2.0",
     "mocha": "^8.2.1",
     "nyc": "^15.1.0",
-    "sinon": "^9.2.3"
+    "sinon": "^9.2.4"
   },
   "bin": {
     "fractal": "./bin/fractal.js"

@@ -3,7 +3,7 @@
 const Promise = require('bluebird');
 const _ = require('lodash');
 const co = require('co');
-const fs = Promise.promisifyAll(require('fs'));
+const fs = require('fs-extra');
 const anymatch = require('anymatch');
 const DocCollection = require('./collection');
 const Doc = require('./doc');
@@ -57,7 +57,7 @@ module.exports = class DocSource extends EntitySource {
                     throw new Error(`Cannot find page ${str}`);
                 }
             } else {
-                return fs.readFileAsync(page, 'utf8').then((content) => {
+                return fs.readFile(page, 'utf8').then((content) => {
                     return this.resolve(context).then((ctx) => {
                         return self._render(page, content, ctx, {
                             env: env,
