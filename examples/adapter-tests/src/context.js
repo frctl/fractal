@@ -31,6 +31,6 @@ module.exports = function context(fractal) {
 
     it('loads fully rendered component from another component context key', async () => {
         const ctx = await fractal.components.find('@reference-full').getResolvedContext();
-        expect(ctx.reference).toBe('<p>JS Context</p>\n');
+        expect(ctx.reference).toMatchSnapshot();
     });
 };

@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`render renders component if ssr is turned off but enabled in component meta 1`] = `"Render <!-- -->something"`;
+
+exports[`render renders component using ES6 import/export syntax 1`] = `"Render something"`;
+
+exports[`render renders component with renderToStaticMarkup method 1`] = `"Render something"`;
+
+exports[`render renders default template for default variant 1`] = `"Render <!-- -->something"`;
+
+exports[`render renders default template for regular variant 1`] = `"Render <!-- -->variant-1"`;
+
+exports[`render renders specified camelCased template for variant 1`] = `"Render camelCaseVariant <!-- -->something"`;
+
+exports[`render renders specified template for variant 1`] = `"Render variant-2 <!-- -->something"`;
+
+exports[`render renders variant template for variant with the same name 1`] = `"Render variant-2 <!-- -->something"`;
+
+exports[`render renders with preview layout 1`] = `"<!DOCTYPE html><html><head><meta name=\\"componentName\\" value=\\"Render\\"/></head><body><div id=\\"root\\">Render something</div></body></html>"`;

@@ -1,0 +1,4 @@
+variants:
+  - name: another
+    context:
+      level: 2
