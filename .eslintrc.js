@@ -1,7 +1,7 @@
 module.exports = {
     root: true,
     parserOptions: {
-        ecmaVersion: 2017,
+        ecmaVersion: 2018,
     },
     extends: ['eslint:recommended', 'plugin:prettier/recommended', 'plugin:import/recommended'],
     env: {
@@ -32,6 +32,18 @@ module.exports = {
             env: {
                 jest: true,
                 mocha: false,
+            },
+        },
+        {
+            files: ['**/*.jsx'],
+            extends: ['plugin:react/recommended'],
+            settings: {
+                react: {
+                    version: 'detect',
+                },
+            },
+            parserOptions: {
+                ecmaFeatures: { jsx: true },
             },
         },
     ],
