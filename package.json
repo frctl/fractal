@@ -50,8 +50,8 @@
   "devDependencies": {
     "@babel/core": "^7.12.13",
     "@babel/preset-env": "^7.12.13",
-    "@babel/preset-react": "^7.12.10",
-    "@babel/register": "^7.12.10",
+    "@babel/preset-react": "^7.12.13",
+    "@babel/register": "^7.12.13",
     "all-contributors-cli": "^6.19.0",
     "autoprefixer": "^10.2.4",
     "babel-eslint": "^10.1.0",
