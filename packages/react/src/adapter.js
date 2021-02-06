@@ -94,12 +94,12 @@ class ReactAdapter extends Adapter {
     }
 
     renderLayout(path, str, context, meta = {}) {
-        const target = {
-            ...meta.target,
+        const adapter = {
             componentName: this.nameCache[`@${meta.target.handle}`],
         };
+        setEnv('_adapter', adapter, context);
         setEnv('_self', meta.self, context);
-        setEnv('_target', target, context);
+        setEnv('_target', meta.target, context);
         setEnv('_env', meta.env, context);
         setEnv('_config', this._app.config(), context);
 

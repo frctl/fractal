@@ -22,7 +22,7 @@ fractal.components.engine(reactAdapter);
 
 This adapter only handles server-side rendering of the components. If client-side hydration/rendering is needed, this build pipeline has to be setup outside of Fractal.
 
-The adapter sets `_target.componentName` prop in preview layouts that corresponds to the rendered component name and can be used to hydrate the markup client-side.
+The adapter sets `_adapter.componentName` prop in preview layouts that corresponds to the rendered component name and can be used to hydrate the markup client-side.
 
 ## Options
 

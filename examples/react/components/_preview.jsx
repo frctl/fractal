@@ -5,7 +5,7 @@ const Preview = (props) => {
     return (
         <html>
             <head>
-                <meta name="componentName" value={props._target.componentName} />
+                <meta name="componentName" value={props._adapter.componentName} />
             </head>
             <body>
                 <div id="root" dangerouslySetInnerHTML={{ __html: props.yield }} />
@@ -16,7 +16,7 @@ const Preview = (props) => {
 
 Preview.propTypes = {
     yield: PropTypes.string,
-    _target: PropTypes.shape({
+    _adapter: PropTypes.shape({
         componentName: PropTypes.string,
     }),
 };
