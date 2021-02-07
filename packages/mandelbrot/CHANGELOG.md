@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.8.0](https://github.com/frctl/fractal/compare/@frctl/mandelbrot@1.7.0...@frctl/mandelbrot@1.8.0) (2021-02-07)
+
+
+### Bug Fixes
+
+* skip linkRefs if there are no references ([#825](https://github.com/frctl/fractal/issues/825)) ([2376aab](https://github.com/frctl/fractal/commit/2376aab5682ba2d01c19172ead8665953af34924))
+
+
+### Features
+
+* split variant navigation into another panel ([#775](https://github.com/frctl/fractal/issues/775)) ([a0a54fb](https://github.com/frctl/fractal/commit/a0a54fb09d421ebb07a106e9f8fe498447743472))
+* style native select instead of using a plugin ([#774](https://github.com/frctl/fractal/issues/774)) ([818246d](https://github.com/frctl/fractal/commit/818246d6ffd5f2063f94bdaf837089617e3cf769))
+* use system font stacks ([#768](https://github.com/frctl/fractal/issues/768)) ([ce266da](https://github.com/frctl/fractal/commit/ce266daa9fef9f5faa2086733f8f05bc8d77aa27))
+
+
+### Performance Improvements
+
+* avoid extraneous render ([#826](https://github.com/frctl/fractal/issues/826)) ([65b71d9](https://github.com/frctl/fractal/commit/65b71d9d927da55bd20f48059136374489c70e23))
+
+
+
+
+
 # [1.7.0](https://github.com/frctl/fractal/compare/@frctl/mandelbrot@1.6.0...@frctl/mandelbrot@1.7.0) (2020-12-22)
 
 

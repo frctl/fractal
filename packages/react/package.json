@@ -1,6 +1,6 @@
 {
   "name": "@frctl/react",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "React template adapter for Fractal.",
   "main": "index.js",
   "repository": {
@@ -17,7 +17,7 @@
     "@babel/core": "^7.12.13",
     "@babel/preset-react": "^7.12.13",
     "@babel/register": "^7.12.13",
-    "@frctl/core": "^0.2.1",
+    "@frctl/core": "^0.2.2",
     "lodash": "^4.17.20",
     "parent-module": "^2.0.0",
     "resolve-from": "^5.0.0"

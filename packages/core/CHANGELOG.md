@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.2](https://github.com/frctl/fractal/compare/@frctl/core@0.2.1...@frctl/core@0.2.2) (2021-02-07)
+
+
+### Performance Improvements
+
+* ignore excluded directories from file watcher ([#842](https://github.com/frctl/fractal/issues/842)) ([8b3ae0e](https://github.com/frctl/fractal/commit/8b3ae0e06f3a5e3aba127ad24bb71447b5ed813d))
+
+
+
+
+
 ## [0.2.1](https://github.com/frctl/fractal/compare/@frctl/core@0.2.0...@frctl/core@0.2.1) (2020-12-22)
 
 
