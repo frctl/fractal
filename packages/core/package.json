@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "chai": "^4.3.0",
-    "mocha": "^8.2.1",
+    "mocha": "^8.3.0",
     "mock-argv": "^1.1.10",
     "mock-fs": "^4.13.0",
     "nyc": "^15.1.0",
