@@ -85,7 +85,7 @@
     "node-fetch": "^2.6.1",
     "normalize.css": "^8.0.1",
     "nyc": "^15.1.0",
-    "postcss": "^8.2.5",
+    "postcss": "^8.2.6",
     "postcss-loader": "^5.0.0",
     "prettier": "^2.2.1",
     "regenerator-runtime": "^0.13.7",
