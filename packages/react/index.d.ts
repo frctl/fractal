@@ -6,9 +6,6 @@ export interface PathProviderProps extends PathContext {
     children: React.ReactNode;
 }
 
-export namespace components {
-    const PathProvider: React.ComponentType<PathProviderProps> & {
-        PathContext: React.Context<PathContext>,
-        usePath: () => PathContext,
-    };
-}
+export const PathProvider: React.ComponentType<PathProviderProps>
+export const PathContext: React.Context<PathContext>;
+export const usePath: () => PathContext;
