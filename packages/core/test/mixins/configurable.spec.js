@@ -36,7 +36,7 @@ describe('Configurable', () => {
     });
 
     describe('.config()', () => {
-        it('returns config with no parameteres', () => {
+        it('returns config with no parameters', () => {
             config.set('bar', 'foo');
             expect(config.config()).toEqual({ bar: 'foo' });
         });
