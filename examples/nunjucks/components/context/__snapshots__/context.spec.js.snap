@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`context asynchronously loads context 1`] = `
+Object {
+  "xkcd": Object {
+    "alt": "Proper User Policy apparently means Simon Says.",
+    "day": "28",
+    "img": "https://imgs.xkcd.com/comics/sandwich.png",
+    "link": "",
+    "month": "8",
+    "news": "",
+    "num": 149,
+    "safe_title": "Sandwich",
+    "title": "Sandwich",
+    "transcript": "[[ A man is sitting on a couch, talking to another man.  They are both stick figures. ]]
+First man:  Make me a sandwich.
+Second man:  What?  Make it yourself.
+First man:  Sudo make me a sandwich.
+Second man:  Okay",
+    "year": "2006",
+  },
+}
+`;
+
+exports[`context loads fully rendered component from another component context key 1`] = `
+"<p>JS Context</p>
+"
+`;
