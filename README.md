@@ -93,6 +93,7 @@ This option is not recommended until a global Fractal install is capable of offl
 ## Examples
 
 - Official demo (using Nunjucks): [demo.fractal.build](https://demo.fractal.build/)
+
   Repository: [demo.fractal.build](https://github.com/frctl/demo.fractal.build)
 - Official examples are available in the [examples](./examples) directory. Although we primarily use them for developing and testing Fractal, they probably are a great resource for users as well.
 - Additional public examples can be found on the [Awesome Fractal](https://github.com/frctl/awesome-fractal) repo.
