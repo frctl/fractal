@@ -7,6 +7,7 @@ const ReactDOM = require('react-dom/server');
 const { Adapter, utils } = require('@frctl/core');
 
 const clearModule = require('./clear-module');
+const PathProvider = require('./components/path-provider');
 
 /*
  * React Adapter
@@ -59,19 +60,25 @@ class ReactAdapter extends Adapter {
         return component;
     }
 
-    renderParentElements(children) {
-        if (this.options.wrapperElements.length) {
-            return this.options.wrapperElements.reverse().reduce((currentElement, wrapperObject) => {
-                const wrapperComponent = this.getWrapperComponent(wrapperObject.component);
+    renderParentElements(children, meta) {
+        const wrapperElements = [
+            {
+                component: PathProvider,
+                props: {
+                    get: (path) => this.getPath(path, meta),
+                },
+            },
+            ...this.options.wrapperElements,
+        ];
 
-                return React.createElement(wrapperComponent, {
-                    ...wrapperObject.props,
-                    children: currentElement,
-                });
-            }, children);
-        }
+        return wrapperElements.reverse().reduce((currentElement, wrapperObject) => {
+            const wrapperComponent = this.getWrapperComponent(wrapperObject.component);
 
-        return children;
+            return React.createElement(wrapperComponent, {
+                ...wrapperObject.props,
+                children: currentElement,
+            });
+        }, children);
     }
 
     render(path, str, context, meta = {}) {
@@ -84,7 +91,7 @@ class ReactAdapter extends Adapter {
 
         if (this.options.ssr || meta.env.ssr) {
             const element = React.createElement(component, context);
-            const parentElements = this.renderParentElements(element);
+            const parentElements = this.renderParentElements(element, meta);
             const html = this._renderMethod(parentElements);
 
             return Promise.resolve(html);
@@ -105,10 +112,25 @@ class ReactAdapter extends Adapter {
 
         const component = requireModule(path);
         const element = React.createElement(component, context);
+        const parentElements = this.renderParentElements(element, meta);
         // DOCTYPE is not allowed to be a part of a React component, so it must be prepended here.
-        const html = '<!DOCTYPE html>' + ReactDOM.renderToStaticMarkup(element);
+        const html = '<!DOCTYPE html>' + ReactDOM.renderToStaticMarkup(parentElements);
 
         return Promise.resolve(html);
+    }
+
+    getPath(assetPath, root) {
+        const fractal = this._source._app;
+
+        if (!root || !root.env || root.env.server) {
+            return assetPath;
+        }
+
+        return utils.relUrlPath(
+            assetPath,
+            _.get(root.env.request || root.request, 'path', '/'),
+            fractal.web.get('builder.urls')
+        );
     }
 }
 
