@@ -31,15 +31,13 @@ module.exports = function (fractal) {
             context = utils.defaultsDeep(context, defaultContext);
         }
 
-        return source.resolve(context).then((context) => {
-            // fix env for rendered components
-            let env = JSON.parse(JSON.stringify(root._env));
-            _.set(context, '_env', env);
+        // fix env for rendered components
+        let env = JSON.parse(JSON.stringify(root._env));
+        _.set(context, '_env', env);
 
-            return entity
-                .render(context)
-                .then((html) => new Handlebars.SafeString(html))
-                .catch(() => {});
-        });
+        return entity
+            .render(context)
+            .then((html) => new Handlebars.SafeString(html))
+            .catch(() => {});
     };
 };
