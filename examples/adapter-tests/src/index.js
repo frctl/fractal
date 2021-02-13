@@ -7,3 +7,4 @@ module.exports.notes = require('./notes');
 module.exports.include = require('./include');
 module.exports.context = require('./context');
 module.exports.collated = require('./collated');
+module.exports.path = require('./path');
