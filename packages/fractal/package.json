@@ -1,6 +1,6 @@
 {
   "name": "@frctl/fractal",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "description": "A tool to help you build and document web component libraries and then integrate them into your projects.",
   "main": "src/fractal.js",
   "repository": {
@@ -15,10 +15,10 @@
   },
   "homepage": "https://github.com/frctl/fractal",
   "dependencies": {
-    "@frctl/core": "^0.2.2",
-    "@frctl/handlebars": "^1.2.6",
-    "@frctl/mandelbrot": "^1.8.0",
-    "@frctl/web": "^0.1.4",
+    "@frctl/core": "^0.2.3",
+    "@frctl/handlebars": "^1.2.7",
+    "@frctl/mandelbrot": "^1.8.1",
+    "@frctl/web": "^0.1.5",
     "anymatch": "^2.0.0",
     "bluebird": "^3.7.2",
     "chalk": "^4.1.0",
