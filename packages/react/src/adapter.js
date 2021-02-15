@@ -89,7 +89,7 @@ class ReactAdapter extends Adapter {
 
         const component = requireModule(path);
 
-        if (this.options.ssr || meta.env.ssr) {
+        if (this.options.ssr || meta.env.ssr || meta.self.meta.ssr) {
             const element = React.createElement(component, context);
             const parentElements = this.renderParentElements(element, meta);
             const html = this._renderMethod(parentElements);
