@@ -52,7 +52,7 @@
     "@babel/preset-env": "^7.12.16",
     "@babel/preset-react": "^7.12.13",
     "@babel/register": "^7.12.13",
-    "all-contributors-cli": "^6.19.0",
+    "all-contributors-cli": "^6.20.0",
     "autoprefixer": "^10.2.4",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^26.6.3",
