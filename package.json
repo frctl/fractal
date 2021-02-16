@@ -17,7 +17,7 @@
     "get-port": "^5.1.1",
     "globby": "^11.0.2",
     "gray-matter": "^4.0.2",
-    "handlebars": "^4.7.6",
+    "handlebars": "^4.7.7",
     "highlight.js": "^10.6.0",
     "inquirer": "^7.3.3",
     "istextorbinary": "^5.12.0",
