@@ -21,7 +21,7 @@
     "@frctl/core": "^0.2.3",
     "bluebird": "^3.7.2",
     "lodash": "^4.17.20",
-    "nunjucks": "^3.2.2"
+    "nunjucks": "^3.2.3"
   },
   "publishConfig": {
     "access": "public"
