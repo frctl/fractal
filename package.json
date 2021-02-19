@@ -26,6 +26,7 @@
     "liftoff": "^3.1.0",
     "lodash": "^4.17.20",
     "log-update": "^4.0.0",
+    "lru-cache": "^6.0.0",
     "marked": "^2.0.0",
     "mime": "^2.5.2",
     "minimist": "^1.2.5",
