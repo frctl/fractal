@@ -27,4 +27,9 @@ module.exports = function renderTag(fractal) {
         const context = await fractal.components.find('@render-tag-comp-1').variants().default().getContext();
         expect(context).toEqual({ container: { text: 'Default Context' }, text: 'Default Context' });
     });
+
+    it('does not resolve escaped component handle to context object', async () => {
+        const render = await fractal.components.find('@render-tag-comp-2--escaped-handle').render();
+        expect(render).toBe('@render-tag-comp-1\n\n');
+    });
 };

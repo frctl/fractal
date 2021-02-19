@@ -1,6 +1,6 @@
 {
   "name": "@frctl/fractal",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "description": "A tool to help you build and document web component libraries and then integrate them into your projects.",
   "main": "src/fractal.js",
   "repository": {
@@ -15,10 +15,10 @@
   },
   "homepage": "https://github.com/frctl/fractal",
   "dependencies": {
-    "@frctl/core": "^0.2.2",
-    "@frctl/handlebars": "^1.2.6",
-    "@frctl/mandelbrot": "^1.8.0",
-    "@frctl/web": "^0.1.4",
+    "@frctl/core": "^0.2.3",
+    "@frctl/handlebars": "^1.2.7",
+    "@frctl/mandelbrot": "^1.8.1",
+    "@frctl/web": "^0.1.5",
     "anymatch": "^2.0.0",
     "bluebird": "^3.7.2",
     "chalk": "^4.1.0",
@@ -29,12 +29,12 @@
     "execa": "^5.0.0",
     "fs-extra": "^9.1.0",
     "gray-matter": "^4.0.2",
-    "handlebars": "^4.7.6",
+    "handlebars": "^4.7.7",
     "inquirer": "^7.3.3",
     "liftoff": "^3.1.0",
     "lodash": "^4.17.20",
     "log-update": "^4.0.0",
-    "mime": "^2.5.0",
+    "mime": "^2.5.2",
     "require-all": "^3.0.0",
     "semver": "^7.3.4",
     "update-notifier": "^5.1.0",
@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "chai": "^4.3.0",
-    "mocha": "^8.2.1",
+    "mocha": "^8.3.0",
     "nyc": "^15.1.0",
     "sinon": "^9.2.4"
   },

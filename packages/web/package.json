@@ -1,6 +1,6 @@
 {
   "name": "@frctl/web",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Web module of Fractal.",
   "main": "src/index.js",
   "repository": {
@@ -14,7 +14,7 @@
   },
   "homepage": "https://github.com/frctl/fractal/tree/main/packages/web",
   "dependencies": {
-    "@frctl/core": "^0.2.2",
+    "@frctl/core": "^0.2.3",
     "anymatch": "^2.0.0",
     "bluebird": "^3.7.2",
     "browser-sync": "^2.26.14",
@@ -24,7 +24,7 @@
     "get-port": "^5.1.1",
     "js-yaml": "^4.0.0",
     "lodash": "^4.17.20",
-    "nunjucks": "^3.2.2",
+    "nunjucks": "^3.2.3",
     "path-to-regexp": "^6.2.0",
     "require-all": "^3.0.0",
     "throat": "^6.0.1"

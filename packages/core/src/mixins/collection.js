@@ -15,7 +15,7 @@ module.exports = mixin(
             }
 
             initCollection(config) {
-                this.root = config.root || false;
+                this.isRoot = config.root || false;
             }
 
             /**

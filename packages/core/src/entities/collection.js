@@ -23,10 +23,6 @@ module.exports = class EntityCollection extends mix(Heritable, Collection, Entit
         this.setProps(config);
     }
 
-    get isRoot() {
-        return this.root;
-    }
-
     /**
      * Return a new collection that only includes
      * non-collection-type items

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.7](https://github.com/frctl/fractal/compare/@frctl/handlebars@1.2.6...@frctl/handlebars@1.2.7) (2021-02-14)
+
+
+### Bug Fixes
+
+* **handlebars:** fix render tag resolving escaped component handles to context object ([#884](https://github.com/frctl/fractal/issues/884)) ([467d942](https://github.com/frctl/fractal/commit/467d942f089d81b955e4ce514d3c69bd1ce9c177))
+
+
+
+
+
 ## [1.2.6](https://github.com/frctl/fractal/compare/@frctl/handlebars@1.2.5...@frctl/handlebars@1.2.6) (2021-02-07)
 
 **Note:** Version bump only for package @frctl/handlebars
