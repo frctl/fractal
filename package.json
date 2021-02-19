@@ -27,7 +27,7 @@
     "lodash": "^4.17.20",
     "log-update": "^4.0.0",
     "marked": "^2.0.0",
-    "mime": "^2.5.0",
+    "mime": "^2.5.2",
     "minimist": "^1.2.5",
     "mixwith": "^0.1.1",
     "nunjucks": "^3.2.3",
@@ -101,7 +101,7 @@
     "stylelint-config-standard": "^20.0.0",
     "stylelint-prettier": "^1.1.2",
     "stylelint-scss": "^3.19.0",
-    "webpack": "^5.21.2",
+    "webpack": "^5.22.0",
     "webpack-bundle-analyzer": "^4.4.0",
     "webpack-cli": "^4.5.0"
   },
