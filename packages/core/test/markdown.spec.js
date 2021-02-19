@@ -1,3 +1,5 @@
+const highlighter = require('../src/highlighter');
+
 const md = require('../src/markdown');
 
 const code = `
@@ -31,10 +33,12 @@ describe('Markdown renderer', () => {
     it('renders code correctly', () => {
         const result = md(code);
         expect(result).toMatchSnapshot();
+        highlighter._cache.reset();
     });
 
     it('renders code with lang correctly', () => {
         const result = md(codeWithLang);
         expect(result).toMatchSnapshot();
+        highlighter._cache.reset();
     });
 });
