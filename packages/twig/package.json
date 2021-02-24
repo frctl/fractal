@@ -16,7 +16,7 @@
   "homepage": "https://github.com/frctl/fractal/tree/main/packages/twig",
   "dependencies": {
     "@frctl/core": "^0.2.3",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "twig": "^1.15.4"
   },
   "peerDependencies": {
