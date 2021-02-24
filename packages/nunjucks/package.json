@@ -20,7 +20,7 @@
   "dependencies": {
     "@frctl/core": "^0.2.3",
     "bluebird": "^3.7.2",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "nunjucks": "^3.2.3"
   },
   "publishConfig": {
