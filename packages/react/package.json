@@ -18,9 +18,9 @@
     "@babel/core": "^7.12.17",
     "@babel/preset-env": "^7.12.17",
     "@babel/preset-react": "^7.12.13",
-    "@babel/register": "^7.12.13",
+    "@babel/register": "^7.13.0",
     "@frctl/core": "^0.2.3",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "parent-module": "^2.0.0",
     "prop-types": "^15.7.2",
     "resolve-from": "^5.0.0"
