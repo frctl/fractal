@@ -16,9 +16,9 @@
   "homepage": "https://github.com/frctl/fractal/tree/main/packages/react",
   "dependencies": {
     "@babel/core": "^7.12.17",
-    "@babel/preset-env": "^7.12.17",
+    "@babel/preset-env": "^7.13.5",
     "@babel/preset-react": "^7.12.13",
-    "@babel/register": "^7.12.13",
+    "@babel/register": "^7.13.0",
     "@frctl/core": "^0.2.3",
     "lodash": "^4.17.21",
     "parent-module": "^2.0.0",
