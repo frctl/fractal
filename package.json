@@ -51,7 +51,7 @@
     "@babel/core": "^7.13.1",
     "@babel/preset-env": "^7.13.5",
     "@babel/preset-react": "^7.12.13",
-    "@babel/register": "^7.13.0",
+    "@babel/register": "^7.13.8",
     "all-contributors-cli": "^6.20.0",
     "autoprefixer": "^10.2.4",
     "babel-eslint": "^10.1.0",
