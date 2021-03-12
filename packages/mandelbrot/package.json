@@ -38,7 +38,7 @@
     "file-loader": "^6.2.0",
     "globby": "^11.0.2",
     "highlight.js": "^10.6.0",
-    "jquery": "^3.5.1",
+    "jquery": "^3.6.0",
     "jquery-pjax": "^2.0.1",
     "jquery-resizable-dom": "^0.35.0",
     "mark.js": "^8.11.1",
