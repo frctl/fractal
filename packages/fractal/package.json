@@ -29,12 +29,12 @@
     "execa": "^5.0.0",
     "fs-extra": "^9.1.0",
     "gray-matter": "^4.0.2",
-    "handlebars": "^4.7.6",
+    "handlebars": "^4.7.7",
     "inquirer": "^7.3.3",
     "liftoff": "^3.1.0",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "log-update": "^4.0.0",
-    "mime": "^2.5.0",
+    "mime": "^2.5.2",
     "require-all": "^3.0.0",
     "semver": "^7.3.4",
     "update-notifier": "^5.1.0",
@@ -42,7 +42,7 @@
     "vorpal": "^1.12.0"
   },
   "devDependencies": {
-    "chai": "^4.3.0",
+    "chai": "^4.3.3",
     "mocha": "^8.3.0",
     "nyc": "^15.1.0",
     "sinon": "^9.2.4"
