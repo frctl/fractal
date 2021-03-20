@@ -23,7 +23,7 @@ fractal.components.engine(reactAdapter);
 The adapter exposes a React Context Provider component called PathProvider to allow usage of relative paths in static HTML exports. The rendered components and preview layouts are automatically wrapped with it.
 
 ```js
-const { PathProvider, PathContext, usePath } = require('@frctl/react');
+const { PathProvider, PathContext, usePath } = require('@frctl/react/components');
 
 const Button = (props) => {
   // use via useContext hook

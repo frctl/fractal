@@ -6,8 +6,8 @@ const ReactDOM = require('react-dom/server');
 
 const { Adapter, utils } = require('@frctl/core');
 
+const PathProvider = require('../components/path-provider');
 const clearModule = require('./clear-module');
-const PathProvider = require('./components/path-provider');
 
 /*
  * React Adapter
