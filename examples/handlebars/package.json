@@ -1,15 +1,15 @@
 {
   "name": "@frctl/handlebars-example",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "private": true,
   "scripts": {
     "start": "fractal start --sync",
     "build": "fractal build"
   },
   "dependencies": {
-    "@frctl/fractal": "^1.5.4",
-    "@frctl/handlebars": "^1.2.7",
-    "@frctl/mandelbrot": "^1.8.1"
+    "@frctl/fractal": "^1.5.5",
+    "@frctl/handlebars": "^1.2.8",
+    "@frctl/mandelbrot": "^1.8.2"
   },
   "devDependencies": {
     "@frctl/adapter-tests": "^0.2.0",
