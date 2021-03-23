@@ -18,7 +18,7 @@
     "globby": "^11.0.2",
     "gray-matter": "^4.0.2",
     "handlebars": "^4.7.7",
-    "highlight.js": "^10.6.0",
+    "highlight.js": "^10.7.1",
     "inquirer": "^7.3.3",
     "istextorbinary": "^5.12.0",
     "js-beautify": "^1.13.1",
