@@ -74,6 +74,17 @@ const reactAdapter = createReactAdapter({
 });
 ```
 
+You can force server-side rendering on specific components by setting `meta.ssr` to `true` in your component config. This will override the setting only for this component.
+
+```js
+// icon.config.js
+module.exports = {
+  meta: {
+    ssr: true,
+  }
+}
+```
+
 ### wrapperElements
 
 By default the render method renders only the component exported in the component template file.
