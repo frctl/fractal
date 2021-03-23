@@ -10,11 +10,27 @@ module.exports = mixin(
             constructor() {
                 super();
                 super.addMixedIn('Heritable');
+                /**
+                 * @type {Map<string, *>}
+                 * @private
+                 */
                 this._props = new Map();
+                /**
+                 * @type {Heritable | null}
+                 * @private
+                 */
                 this._parent = null;
+                /**
+                 * @type {Set<string> | null}
+                 * @private
+                 */
                 this._heritable = null;
             }
 
+            /**
+             * @param {string[] | Heritable | undefined} arg
+             * @return {this}
+             */
             setHeritable(arg) {
                 if (!_.isArray(arg)) {
                     this._parent = arg;
@@ -38,10 +54,14 @@ module.exports = mixin(
                 return this;
             }
 
+            /**
+             * @return {string[]}
+             */
             getHeritable() {
                 if (this._heritable) {
                     return Array.from(this._heritable);
                 }
+                // TODO: how to get here?
                 if (this._parent && _.isFunction(this._parent.getHeritable)) {
                     return this._parent.getHeritable();
                 }
@@ -52,6 +72,7 @@ module.exports = mixin(
              * Sets a property.
              * @param {String} key
              * @param {*} value
+             * @return {this}
              */
             setProp(key, value) {
                 if (_.includes(this.getHeritable(), key)) {
@@ -63,7 +84,8 @@ module.exports = mixin(
             /**
              * Iterates over a supplied object and sets properties
              * based on the object's key:value pairs
-             * @param {Object} obj An object of properties to set
+             * @param {Object.<string, *>} obj An object of properties to set
+             * @return {this}
              */
             setProps(obj) {
                 _.forEach(obj, (value, key) => {
@@ -86,6 +108,9 @@ module.exports = mixin(
                 return this._props.get(key);
             }
 
+            /**
+             * @return {Object.<string, *>}
+             */
             getProps() {
                 const props = {};
                 for (const key of this.getHeritable()) {
