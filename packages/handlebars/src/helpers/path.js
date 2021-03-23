@@ -9,6 +9,10 @@ module.exports = function (fractal) {
         const options = Array.from(arguments).pop();
         const root = options.data.root;
 
+        // TODO: what is this for?
+        // Handlebars supports subexpressions, so this should not be necessary.
+        // Other template adapters do not have this implemented either.
+        // Remove in next major release if noone understands.
         if (path.includes('{{')) {
             let context = _.defaults(
                 {},
