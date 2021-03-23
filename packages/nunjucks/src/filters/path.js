@@ -5,6 +5,8 @@ const utils = require('@frctl/core').utils;
 
 module.exports = function (fractal) {
     return function (path) {
+        if (!path) return path;
+
         let env = this.lookup('_env');
         let request = env.request || this.lookup('_request') || this.ctx.request;
 
