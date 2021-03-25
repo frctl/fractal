@@ -36,7 +36,7 @@
     "log-update": "^4.0.0",
     "mime": "^2.5.2",
     "require-all": "^3.0.0",
-    "semver": "^7.3.4",
+    "semver": "^7.3.5",
     "update-notifier": "^5.1.0",
     "vinyl": "^2.2.1",
     "vorpal": "^1.12.0"
