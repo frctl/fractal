@@ -135,7 +135,10 @@ module.exports = mixin(
                             this.emit('changed', data);
                             this._app.emit('source:changed', this, data);
 
-                            if (event === 'change' && data.isTemplate) {
+                            if (event === 'change' && data.isResource) {
+                                this.emit('updated', data);
+                                this._app.emit('source:updated', this, data);
+                            } else if (event === 'change' && data.isTemplate) {
                                 // re-resolve context in case the changed template is used as fully rendered component in context
                                 this._resolveTreeContext(this._fileTree).then(() => {
                                     this.emit('updated', data);
