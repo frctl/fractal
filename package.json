@@ -115,12 +115,8 @@
     "test": "npm run validate && npm run test:unit && lerna run test:mocha",
     "test:unit": "jest",
     "contributors:add": "all-contributors add",
-    "contributors:generate": "all-contributors generate"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
+    "contributors:generate": "all-contributors generate",
+    "prepare": "husky install"
   },
   "lint-staged": {
     "*.js": "eslint --cache --fix",
