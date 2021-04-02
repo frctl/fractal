@@ -7,3 +7,4 @@ dist
 /fractal.js
 .idea/
 .nyc_output
+.eslintcache
