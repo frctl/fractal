@@ -26,7 +26,7 @@
   },
   "devDependencies": {
     "react": "^17.0.1",
-    "react-dom": "^17.0.1"
+    "react-dom": "^17.0.2"
   },
   "peerDependencies": {
     "@frctl/fractal": ">= 1.1.7 < 2",
