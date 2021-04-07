@@ -45,7 +45,7 @@
     "chai": "^4.3.3",
     "mocha": "^8.3.0",
     "nyc": "^15.1.0",
-    "sinon": "^9.2.4"
+    "sinon": "^10.0.0"
   },
   "bin": {
     "fractal": "./bin/fractal.js"
