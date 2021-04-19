@@ -57,7 +57,7 @@
   },
   "dependencies": {
     "@frctl/web": "^0.1.7",
-    "js-beautify": "^1.13.1",
+    "js-beautify": "^1.13.13",
     "lodash": "^4.17.21"
   },
   "publishConfig": {
