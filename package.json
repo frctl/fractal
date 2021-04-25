@@ -99,7 +99,7 @@
     "stylelint": "^13.13.0",
     "stylelint-config-prettier": "^8.0.2",
     "stylelint-config-standard": "^20.0.0",
-    "stylelint-prettier": "^1.1.2",
+    "stylelint-prettier": "^1.2.0",
     "stylelint-scss": "^3.19.0",
     "webpack": "^5.35.1",
     "webpack-bundle-analyzer": "^4.4.1",
