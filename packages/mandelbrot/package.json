@@ -52,7 +52,7 @@
     "sass-loader": "^11.0.1",
     "sass-mq": "^5.0.1",
     "webpack": "^5.35.1",
-    "webpack-bundle-analyzer": "^4.4.0",
+    "webpack-bundle-analyzer": "^4.4.1",
     "webpack-cli": "^4.6.0"
   },
   "dependencies": {
