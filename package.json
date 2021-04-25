@@ -6,7 +6,7 @@
     "anymatch": "^3.1.2",
     "bluebird": "^3.7.2",
     "browser-sync": "^2.26.14",
-    "chalk": "^4.1.0",
+    "chalk": "^4.1.1",
     "chokidar": "^3.5.1",
     "cli-table3": "^0.6.0",
     "co": "^4.6.0",
@@ -103,7 +103,7 @@
     "stylelint-scss": "^3.19.0",
     "webpack": "^5.35.1",
     "webpack-bundle-analyzer": "^4.4.0",
-    "webpack-cli": "^4.5.0"
+    "webpack-cli": "^4.6.0"
   },
   "scripts": {
     "clean": "lerna clean",
