@@ -133,9 +133,12 @@ describe('EntitySource', () => {
     describe('.toJSON()', () => {
         it('returns a plain object', () => {
             source.setItems(items);
-            expect(source.toJSON()).toBeObject();
-            expect(source.toJSON()).not.toBeInstanceOf(Source);
-            expect(source.toJSON()).toMatchSnapshot();
+            const json = source.toJSON();
+            expect(json).toBeObject();
+            expect(json).not.toBeInstanceOf(Source);
+            // full path differs in every environment, so better to exclude from snapshot
+            json.fullPath = '';
+            expect(json).toMatchSnapshot();
         });
         it('calls toJSON() on items if they have a toJSON method', () => {
             const toJSON = jest.fn();

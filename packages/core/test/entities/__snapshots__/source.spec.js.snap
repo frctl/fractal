@@ -2,7 +2,7 @@
 
 exports[`EntitySource .toJSON() returns a plain object 1`] = `
 Object {
-  "fullPath": "/home/mihkel/dev/frctl/fractal/fooPath",
+  "fullPath": "",
   "isCollection": true,
   "isLoaded": false,
   "isSource": true,
