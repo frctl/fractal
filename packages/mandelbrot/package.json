@@ -43,7 +43,7 @@
     "jquery-pjax": "^2.0.1",
     "jquery-resizable-dom": "^0.35.0",
     "mark.js": "^8.11.1",
-    "mini-css-extract-plugin": "^1.5.0",
+    "mini-css-extract-plugin": "^1.5.1",
     "normalize.css": "^8.0.1",
     "postcss": "^8.2.13",
     "postcss-loader": "^5.2.0",
