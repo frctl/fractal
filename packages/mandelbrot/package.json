@@ -33,7 +33,7 @@
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.2.2",
     "copy-webpack-plugin": "^8.1.1",
-    "core-js": "^3.11.0",
+    "core-js": "^3.11.1",
     "css-loader": "^5.2.4",
     "expose-loader": "^2.0.0",
     "file-loader": "^6.2.0",
@@ -52,7 +52,7 @@
     "sass": "^1.32.11",
     "sass-loader": "^11.0.1",
     "sass-mq": "^5.0.1",
-    "webpack": "^5.36.0",
+    "webpack": "^5.36.1",
     "webpack-bundle-analyzer": "^4.4.1",
     "webpack-cli": "^4.6.0"
   },
