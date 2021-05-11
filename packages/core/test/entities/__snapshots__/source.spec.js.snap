@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EntitySource .toJSON() returns a plain object 1`] = `
+Object {
+  "fullPath": "",
+  "isCollection": true,
+  "isLoaded": false,
+  "isSource": true,
+  "isWatching": false,
+  "items": Array [
+    Object {
+      "id": 1,
+      "type": "component",
+    },
+    Object {
+      "id": 2,
+      "type": "component",
+    },
+  ],
+  "label": "Foo",
+  "name": "foo",
+  "path": "./fooPath",
+  "relPath": "fooPath",
+  "title": "Foo",
+  "viewExt": undefined,
+}
+`;
