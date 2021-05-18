@@ -6,8 +6,8 @@ const ReactDOM = require('react-dom/server');
 
 const { Adapter, utils } = require('@frctl/core');
 
+const PathProvider = require('../components/path-provider');
 const clearModule = require('./clear-module');
-const PathProvider = require('./components/path-provider');
 
 /*
  * React Adapter
@@ -89,7 +89,7 @@ class ReactAdapter extends Adapter {
 
         const component = requireModule(path);
 
-        if (this.options.ssr || meta.env.ssr) {
+        if (this.options.ssr || meta.env.ssr || meta.self.meta.ssr) {
             const element = React.createElement(component, context);
             const parentElements = this.renderParentElements(element, meta);
             const html = this._renderMethod(parentElements);

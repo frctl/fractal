@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.9.0](https://github.com/frctl/fractal/compare/@frctl/mandelbrot@1.8.2...@frctl/mandelbrot@1.9.0) (2021-03-23)
+
+
+### Features
+
+* update highlight.js ([#941](https://github.com/frctl/fractal/issues/941)) ([d8f7ae3](https://github.com/frctl/fractal/commit/d8f7ae36854032000f799e248d7a40bc146d6864))
+
+
+
+
+
+## [1.8.2](https://github.com/frctl/fractal/compare/@frctl/mandelbrot@1.8.1...@frctl/mandelbrot@1.8.2) (2021-03-20)
+
+**Note:** Version bump only for package @frctl/mandelbrot
+
+
+
+
+
+## [1.8.1](https://github.com/frctl/fractal/compare/@frctl/mandelbrot@1.8.0...@frctl/mandelbrot@1.8.1) (2021-02-14)
+
+**Note:** Version bump only for package @frctl/mandelbrot
+
+
+
+
+
 # [1.8.0](https://github.com/frctl/fractal/compare/@frctl/mandelbrot@1.7.0...@frctl/mandelbrot@1.8.0) (2021-02-07)
 
 

@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/frctl/fractal/compare/@frctl/core@0.2.4...@frctl/core@0.3.0) (2021-03-23)
+
+
+### Features
+
+* update highlight.js ([#941](https://github.com/frctl/fractal/issues/941)) ([d8f7ae3](https://github.com/frctl/fractal/commit/d8f7ae36854032000f799e248d7a40bc146d6864))
+
+
+
+
+
+## [0.2.4](https://github.com/frctl/fractal/compare/@frctl/core@0.2.3...@frctl/core@0.2.4) (2021-03-20)
+
+**Note:** Version bump only for package @frctl/core
+
+
+
+
+
+## [0.2.3](https://github.com/frctl/fractal/compare/@frctl/core@0.2.2...@frctl/core@0.2.3) (2021-02-14)
+
+**Note:** Version bump only for package @frctl/core
+
+
+
+
+
 ## [0.2.2](https://github.com/frctl/fractal/compare/@frctl/core@0.2.1...@frctl/core@0.2.2) (2021-02-07)
 
 

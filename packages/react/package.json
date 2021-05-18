@@ -1,9 +1,8 @@
 {
   "name": "@frctl/react",
-  "version": "0.1.0",
+  "version": "0.3.1",
   "description": "React template adapter for Fractal.",
   "main": "index.js",
-  "types": "index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/frctl/fractal.git",
@@ -15,19 +14,19 @@
   },
   "homepage": "https://github.com/frctl/fractal/tree/main/packages/react",
   "dependencies": {
-    "@babel/core": "^7.12.16",
-    "@babel/preset-env": "^7.12.16",
-    "@babel/preset-react": "^7.12.13",
-    "@babel/register": "^7.12.13",
-    "@frctl/core": "^0.2.2",
-    "lodash": "^4.17.20",
+    "@babel/core": "^7.14.0",
+    "@babel/preset-env": "^7.14.1",
+    "@babel/preset-react": "^7.13.13",
+    "@babel/register": "^7.13.16",
+    "@frctl/core": "^0.3.0",
+    "lodash": "^4.17.21",
     "parent-module": "^2.0.0",
     "prop-types": "^15.7.2",
     "resolve-from": "^5.0.0"
   },
   "devDependencies": {
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1"
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
   },
   "peerDependencies": {
     "@frctl/fractal": ">= 1.1.7 < 2",

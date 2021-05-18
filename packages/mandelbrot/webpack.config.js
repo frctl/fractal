@@ -31,7 +31,7 @@ module.exports = {
             patterns: [
                 {
                     from: './assets/img/**/*',
-                    to: './img/[name].[ext]',
+                    to: './img/[name][ext]',
                 },
                 {
                     from: './assets/favicon.ico',

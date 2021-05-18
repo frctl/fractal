@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.6](https://github.com/frctl/fractal/compare/@frctl/fractal@1.5.5...@frctl/fractal@1.5.6) (2021-03-23)
+
+**Note:** Version bump only for package @frctl/fractal
+
+
+
+
+
+## [1.5.5](https://github.com/frctl/fractal/compare/@frctl/fractal@1.5.4...@frctl/fractal@1.5.5) (2021-03-20)
+
+**Note:** Version bump only for package @frctl/fractal
+
+
+
+
+
+## [1.5.4](https://github.com/frctl/fractal/compare/@frctl/fractal@1.5.3...@frctl/fractal@1.5.4) (2021-02-14)
+
+**Note:** Version bump only for package @frctl/fractal
+
+
+
+
+
 ## [1.5.3](https://github.com/frctl/fractal/compare/@frctl/fractal@1.5.2...@frctl/fractal@1.5.3) (2021-02-07)
 
 **Note:** Version bump only for package @frctl/fractal
@@ -102,7 +126,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 -   add all current LTS versions of Node to the Travis build matrix (#538)
 -   move snyk to devDependencies (#553)
 -   bump minimist from 1.2.0 to 1.2.2 (#554)
--   update sinon and move it to devDependencies (#555)
 -   package.json & package-lock.json to reduce vulnerabilities (#552)
 -   update anymatch, chokidar and nunjucks (#564)
 -   bump minimist from 1.2.2 to 1.2.3 (#567)
