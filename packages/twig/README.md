@@ -28,21 +28,6 @@ To use Twig for docs, set the docs engine to `@frctl/twig`:
 fractal.docs.engine(twigAdapter);
 ```
 
-However, due to the way this adapter currently extends Twig, it is necessary to *set the docs engine before setting the components engine*.
-
-```js
-/*
- * Require the Twig adapter
- */
-const twigAdapter = require('@frctl/twig')();
-
-// first set docs engine
-fractal.docs.engine(twigAdapter);
-
-// then set components engine
-fractal.components.engine(twigAdapter);
-```
-
 
 ## Extending with a custom config
 ```js

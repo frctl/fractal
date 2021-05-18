@@ -5,7 +5,7 @@ module.exports = {
     tabWidth: 4,
     overrides: [
         {
-            files: ['*.json', '*.yml', '.all-contributorsrc'],
+            files: ['*.json', '*.yml'],
             options: {
                 tabWidth: 2,
             },

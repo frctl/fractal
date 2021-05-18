@@ -22,13 +22,13 @@ describe('Collection', () => {
     });
 
     describe('.initCollection', () => {
-        it('sets root propery to what is provided via config', () => {
+        it('sets root property to what is provided via config', () => {
             const collection = new Collection();
             collection.initCollection({ root: true });
             expect(collection.isRoot).toBeTrue();
         });
 
-        it('sets root propery to false by default', () => {
+        it('sets root property to false by default', () => {
             const collection = new Collection();
             collection.initCollection({});
             expect(collection.isRoot).toBeFalse();

@@ -11,6 +11,7 @@ class TwigAdapter extends Fractal.Adapter {
         super(Twig, source);
         this._app = app;
         this._config = config;
+        this._loaderName = `fractal-${source.name}`;
 
         source.set('engine', '@frctl/twig');
 
@@ -20,8 +21,7 @@ class TwigAdapter extends Fractal.Adapter {
             /*
              * Register a Fractal template loader. Locations can be handles or paths.
              */
-
-            Twig.Templates.registerLoader('fractal', function (location, params) {
+            Twig.Templates.registerLoader(self._loaderName, function (location, params) {
                 if (params.precompiled) {
                     params.data = params.precompiled;
                 } else {
@@ -136,7 +136,7 @@ class TwigAdapter extends Fractal.Adapter {
 
             try {
                 let template = self.engine.twig({
-                    method: self._config.method,
+                    method: self._config.method === 'fractal' ? self._loaderName : self._config.method,
                     async: false,
                     rethrow: true,
                     name:

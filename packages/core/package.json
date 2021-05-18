@@ -15,24 +15,24 @@
   "homepage": "https://github.com/frctl/fractal/tree/main/packages/core",
   "dependencies": {
     "@allmarkedup/fang": "^2.0.0",
-    "anymatch": "^2.0.0",
+    "anymatch": "^3.1.2",
     "bluebird": "^3.7.2",
     "chokidar": "^3.5.1",
     "co": "^4.6.0",
     "fs-extra": "^9.1.0",
-    "globby": "^11.0.2",
-    "highlight.js": "^10.7.1",
+    "globby": "^11.0.3",
+    "highlight.js": "^10.7.2",
     "istextorbinary": "^5.12.0",
-    "js-yaml": "^4.0.0",
+    "js-yaml": "^4.1.0",
     "lodash": "^4.17.21",
-    "marked": "^2.0.0",
+    "marked": "^2.0.3",
     "minimist": "^1.2.5",
     "mixwith": "^0.1.1",
     "readable-stream": "^3.6.0"
   },
   "devDependencies": {
-    "mock-argv": "^1.1.13",
-    "mock-fs": "^4.13.0"
+    "mock-argv": "^1.1.15",
+    "mock-fs": "^4.14.0"
   },
   "publishConfig": {
     "access": "public"
