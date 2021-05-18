@@ -101,7 +101,7 @@
     "stylelint-config-standard": "^22.0.0",
     "stylelint-prettier": "^1.2.0",
     "stylelint-scss": "^3.19.0",
-    "webpack": "^5.36.2",
+    "webpack": "^5.37.0",
     "webpack-bundle-analyzer": "^4.4.1",
     "webpack-cli": "^4.7.0"
   },
@@ -112,7 +112,7 @@
     "stylelint": "stylelint --ignore-path .gitignore \"**/*.scss\"",
     "validate": "npm run eslint && npm run stylelint",
     "format": "npm run eslint -- --fix",
-    "test": "npm run validate && npm run test:unit && lerna run test:mocha",
+    "test": "npm run validate && npm run test:unit",
     "test:unit": "jest",
     "contributors:add": "all-contributors add",
     "contributors:generate": "all-contributors generate",
