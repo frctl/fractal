@@ -17,18 +17,17 @@ const fractal = (module.exports = require('@frctl/fractal').create());
 fractal.set('project.title', 'Fractal Twig example');
 
 /*
- * Tell Fractal where to look for documentation pages.
- * TODO: docs.engine should be able to be set after components, see https://github.com/frctl/fractal/issues/607
- */
-fractal.docs.set('path', path.join(__dirname, 'docs'));
-fractal.docs.engine(require('@frctl/twig'));
-
-/*
  * Tell Fractal where to look for components.
  */
 fractal.components.set('path', path.join(__dirname, 'components'));
 fractal.components.set('ext', '.twig');
 fractal.components.engine(require('@frctl/twig'));
+
+/*
+ * Tell Fractal where to look for documentation pages.
+ */
+fractal.docs.set('path', path.join(__dirname, 'docs'));
+fractal.docs.engine(require('@frctl/twig'));
 
 /*
  * Tell the Fractal web preview plugin where to look for static assets.
