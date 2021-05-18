@@ -80,7 +80,7 @@
     "lint-staged": "^10.5.4",
     "mark.js": "^8.11.1",
     "mini-css-extract-plugin": "^1.6.0",
-    "mocha": "^8.3.2",
+    "mocha": "^8.4.0",
     "mock-argv": "^1.1.15",
     "mock-fs": "^4.14.0",
     "node-fetch": "^2.6.1",
