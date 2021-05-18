@@ -132,31 +132,9 @@ Existing tests can be run using the `npm test` command.
 
 ## Contributors ✨
 
-Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+Thanks goes to [all wonderful people](https://github.com/frctl/fractal/graphs/contributors) who have helped us out.
 
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
-<table>
-  <tr>
-    <td align="center"><a href="http://allmarkedup.com"><img src="https://avatars1.githubusercontent.com/u/126726?v=4" width="100px;" alt=""/><br /><sub><b>Mark Perkins</b></sub></a><br /><a href="#question-allmarkedup" title="Answering Questions">💬</a> <a href="https://github.com/frctl/fractal/issues?q=author%3Aallmarkedup" title="Bug reports">🐛</a> <a href="https://github.com/frctl/fractal/commits?author=allmarkedup" title="Code">💻</a> <a href="#content-allmarkedup" title="Content">🖋</a> <a href="#design-allmarkedup" title="Design">🎨</a> <a href="https://github.com/frctl/fractal/commits?author=allmarkedup" title="Documentation">📖</a> <a href="#infra-allmarkedup" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/frctl/fractal/pulls?q=is%3Apr+reviewed-by%3Aallmarkedup" title="Reviewed Pull Requests">👀</a></td>
-    <td align="center"><a href="https://github.com/dkhuntrods"><img src="https://avatars0.githubusercontent.com/u/852397?v=4" width="100px;" alt=""/><br /><sub><b>dkhuntrods</b></sub></a><br /><a href="https://github.com/frctl/fractal/commits?author=dkhuntrods" title="Code">💻</a> <a href="#content-dkhuntrods" title="Content">🖋</a> <a href="https://github.com/frctl/fractal/commits?author=dkhuntrods" title="Documentation">📖</a> <a href="#eventOrganizing-dkhuntrods" title="Event Organizing">📋</a> <a href="#ideas-dkhuntrods" title="Ideas, Planning, & Feedback">🤔</a> <a href="#projectManagement-dkhuntrods" title="Project Management">📆</a></td>
-    <td align="center"><a href="https://github.com/Chapabu"><img src="https://avatars0.githubusercontent.com/u/1395471?v=4" width="100px;" alt=""/><br /><sub><b>Matt Chapman</b></sub></a><br /><a href="#question-Chapabu" title="Answering Questions">💬</a> <a href="https://github.com/frctl/fractal/issues?q=author%3AChapabu" title="Bug reports">🐛</a> <a href="https://github.com/frctl/fractal/commits?author=Chapabu" title="Code">💻</a> <a href="#ideas-Chapabu" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-Chapabu" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#maintenance-Chapabu" title="Maintenance">🚧</a> <a href="https://github.com/frctl/fractal/pulls?q=is%3Apr+reviewed-by%3AChapabu" title="Reviewed Pull Requests">👀</a></td>
-    <td align="center"><a href="http://eida.st"><img src="https://avatars1.githubusercontent.com/u/1892091?v=4" width="100px;" alt=""/><br /><sub><b>Mihkel Eidast</b></sub></a><br /><a href="#question-risker" title="Answering Questions">💬</a> <a href="https://github.com/frctl/fractal/issues?q=author%3Arisker" title="Bug reports">🐛</a> <a href="https://github.com/frctl/fractal/commits?author=risker" title="Code">💻</a> <a href="#maintenance-risker" title="Maintenance">🚧</a> <a href="https://github.com/frctl/fractal/pulls?q=is%3Apr+reviewed-by%3Arisker" title="Reviewed Pull Requests">👀</a></td>
-    <td align="center"><a href="http://www.benoitburgener.ch"><img src="https://avatars1.githubusercontent.com/u/793344?v=4" width="100px;" alt=""/><br /><sub><b>Benoît Burgener</b></sub></a><br /><a href="#question-LeBenLeBen" title="Answering Questions">💬</a> <a href="https://github.com/frctl/fractal/issues?q=author%3ALeBenLeBen" title="Bug reports">🐛</a> <a href="https://github.com/frctl/fractal/commits?author=LeBenLeBen" title="Code">💻</a> <a href="https://github.com/frctl/fractal/commits?author=LeBenLeBen" title="Documentation">📖</a> <a href="#ideas-LeBenLeBen" title="Ideas, Planning, & Feedback">🤔</a> <a href="#maintenance-LeBenLeBen" title="Maintenance">🚧</a> <a href="https://github.com/frctl/fractal/pulls?q=is%3Apr+reviewed-by%3ALeBenLeBen" title="Reviewed Pull Requests">👀</a></td>
-    <td align="center"><a href="https://github.com/levito"><img src="https://avatars0.githubusercontent.com/u/70500?v=4" width="100px;" alt=""/><br /><sub><b>Veit Lehmann</b></sub></a><br /><a href="https://github.com/frctl/fractal/commits?author=levito" title="Code">💻</a></td>
-  </tr>
-  <tr>
-    <td align="center"><a href="https://github.com/Schleuse"><img src="https://avatars1.githubusercontent.com/u/2717384?v=4" width="100px;" alt=""/><br /><sub><b>René Schleusner</b></sub></a><br /><a href="https://github.com/frctl/fractal/commits?author=Schleuse" title="Code">💻</a></td>
-  </tr>
-</table>
-
-<!-- markdownlint-enable -->
-<!-- prettier-ignore-end -->
-
-<!-- ALL-CONTRIBUTORS-LIST:END -->
-
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+Contributions of any kind welcome!
 
 ## License
 
