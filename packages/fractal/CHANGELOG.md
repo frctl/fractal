@@ -126,7 +126,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 -   add all current LTS versions of Node to the Travis build matrix (#538)
 -   move snyk to devDependencies (#553)
 -   bump minimist from 1.2.0 to 1.2.2 (#554)
--   update sinon and move it to devDependencies (#555)
 -   package.json & package-lock.json to reduce vulnerabilities (#552)
 -   update anymatch, chokidar and nunjucks (#564)
 -   bump minimist from 1.2.2 to 1.2.3 (#567)
