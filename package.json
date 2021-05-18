@@ -112,7 +112,7 @@
     "stylelint": "stylelint --ignore-path .gitignore \"**/*.scss\"",
     "validate": "npm run eslint && npm run stylelint",
     "format": "npm run eslint -- --fix",
-    "test": "npm run validate && npm run test:unit && lerna run test:mocha",
+    "test": "npm run validate && npm run test:unit",
     "test:unit": "jest",
     "contributors:add": "all-contributors add",
     "contributors:generate": "all-contributors generate",
