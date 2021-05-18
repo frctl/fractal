@@ -1,54 +1,53 @@
-'use strict';
-
-const chai = require('chai');
-const expect = chai.expect;
+const { Web } = require('@frctl/web');
 
 const pkg = require('../package.json');
 const app = require('../src/fractal')();
 const Cli = require('../src/cli');
-const Web = require('@frctl/web').Web;
 const ComponentSource = require('../src/api/components');
+const DocSource = require('../src/api/docs/source');
 
-describe('Fractal', function () {
-    before(function () {
+describe('Fractal', () => {
+    beforeEach(() => {
         app.web;
         app.cli;
         app.docs;
         app.components;
     });
 
-    it('is an event emitter', function () {
-        expect(app.hasMixedIn('Emitter')).to.be.true;
+    it('is an event emitter', () => {
+        expect(app.hasMixedIn('Emitter')).toBe(true);
     });
-    it('is configurable', function () {
-        expect(app.hasMixedIn('Configurable')).to.be.true;
+    it('is configurable', () => {
+        expect(app.hasMixedIn('Configurable')).toBe(true);
     });
 
-    describe('.cli', function () {
-        it('is a command line interface handler', function () {
-            expect(app.cli).to.be.instanceof(Cli);
+    describe('.cli', () => {
+        it('is a command line interface handler', () => {
+            expect(app.cli).toBeInstanceOf(Cli);
         });
     });
 
-    describe('.web', function () {
-        it('is a web interface handler', function () {
-            expect(app.web).to.be.instanceof(Web);
+    describe('.web', () => {
+        it('is a web interface handler', () => {
+            expect(app.web).toBeInstanceOf(Web);
         });
     });
 
-    describe('.components', function () {
-        it('is a component source instance', function () {
-            expect(app.components).to.be.instanceof(ComponentSource);
+    describe('.components', () => {
+        it('is a component source instance', () => {
+            expect(app.components).toBeInstanceOf(ComponentSource);
         });
     });
 
-    describe('.docs', function () {
-        it('is a documentation source instance');
+    describe('.docs', () => {
+        it('is a documentation source instance', () => {
+            expect(app.docs).toBeInstanceOf(DocSource);
+        });
     });
 
-    describe('.version', function () {
-        it('matches the version number set in the package.json file', function () {
-            expect(app.version).to.equal(pkg.version);
+    describe('.version', () => {
+        it('matches the version number set in the package.json file', () => {
+            expect(app.version).toEqual(pkg.version);
         });
     });
 
@@ -67,8 +66,8 @@ describe('Fractal', function () {
     //         const componentLoadSpy = sinon.spy(components, 'load');
     //         const pageLoadSpy      = sinon.spy(docs, 'load');
     //         return fractal.load().then(() => {
-    //             expect(componentLoadSpy.calledOnce).to.be.true;
-    //             expect(pageLoadSpy.calledOnce).to.be.true;;
+    //             expect(componentLoadSpy.calledOnce).toBe(true);
+    //             expect(pageLoadSpy.calledOnce).toBe(true);;
     //         });
     //     });
     // });
