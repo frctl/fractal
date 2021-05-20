@@ -1,14 +1,14 @@
 {
   "name": "@frctl/twig-example",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "private": true,
   "scripts": {
     "start": "fractal start --sync",
     "build": "fractal build"
   },
   "dependencies": {
-    "@frctl/fractal": "^1.5.7",
-    "@frctl/mandelbrot": "^1.9.1",
+    "@frctl/fractal": "^1.5.8",
+    "@frctl/mandelbrot": "^1.9.2",
     "@frctl/twig": "^1.2.9"
   },
   "devDependencies": {
