@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.9.1](https://github.com/frctl/fractal/compare/@frctl/mandelbrot@1.9.0...@frctl/mandelbrot@1.9.1) (2021-05-20)
+
+
+### Bug Fixes
+
+* **mandelbrot:** bump @frctl/fractal peerDependency minimum version ([#974](https://github.com/frctl/fractal/issues/974)) ([0b9dcdc](https://github.com/frctl/fractal/commit/0b9dcdc4b6689e0b1ba4a04d57862e927f249117))
+* **mandelbrot:** move @frctl/web from deps to devDeps ([#969](https://github.com/frctl/fractal/issues/969)) ([6bbcd34](https://github.com/frctl/fractal/commit/6bbcd34b5edae30c6f09cdf1a44aeb9094c19600))
+
+
+
+
+
 # [1.9.0](https://github.com/frctl/fractal/compare/@frctl/mandelbrot@1.8.2...@frctl/mandelbrot@1.9.0) (2021-03-23)
 
 

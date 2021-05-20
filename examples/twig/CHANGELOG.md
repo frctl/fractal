@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.3](https://github.com/frctl/fractal/compare/@frctl/twig-example@0.2.2...@frctl/twig-example@0.2.3) (2021-05-20)
+
+
+### Bug Fixes
+
+* **twig:** fix duplicate fractal loader name when extending Twig ([#887](https://github.com/frctl/fractal/issues/887)) ([5d4e7eb](https://github.com/frctl/fractal/commit/5d4e7eb890064546e996a4a76faf6d13d96ffe15))
+
+
+
+
+
 ## [0.2.2](https://github.com/frctl/fractal/compare/@frctl/twig-example@0.2.1...@frctl/twig-example@0.2.2) (2021-03-23)
 
 **Note:** Version bump only for package @frctl/twig-example

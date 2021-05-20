@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.1](https://github.com/frctl/fractal/compare/@frctl/core@0.3.0...@frctl/core@0.3.1) (2021-05-20)
+
+
+### Performance Improvements
+
+* skip file system and components parsing when template/resource is changed ([#949](https://github.com/frctl/fractal/issues/949)) ([10c4420](https://github.com/frctl/fractal/commit/10c44202ab1da459d9ddada1e278b813f4d2d559))
+
+
+
+
+
 # [0.3.0](https://github.com/frctl/fractal/compare/@frctl/core@0.2.4...@frctl/core@0.3.0) (2021-03-23)
 
 

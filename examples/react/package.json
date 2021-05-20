@@ -1,15 +1,15 @@
 {
   "name": "@frctl/react-example",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "private": true,
   "scripts": {
     "start": "fractal start --sync",
     "build": "fractal build"
   },
   "dependencies": {
-    "@frctl/fractal": "^1.5.6",
-    "@frctl/mandelbrot": "^1.9.0",
-    "@frctl/react": "^0.3.1"
+    "@frctl/fractal": "^1.5.7",
+    "@frctl/mandelbrot": "^1.9.1",
+    "@frctl/react": "^0.3.2"
   },
   "devDependencies": {
     "@frctl/adapter-tests": "^0.2.0",
