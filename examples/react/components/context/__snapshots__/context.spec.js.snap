@@ -2,6 +2,7 @@
 
 exports[`tree asynchronously loads context 1`] = `
 Object {
+  "foo": "bar",
   "xkcd": Object {
     "alt": "Proper User Policy apparently means Simon Says.",
     "day": "28",
