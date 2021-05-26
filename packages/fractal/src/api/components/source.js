@@ -338,6 +338,13 @@ module.exports = class ComponentSource extends EntitySource {
         }
 
         if (_.get(indentifier, 'isFile')) {
+            // If the wrapper is a file, try to resolve it to an existing component so it could access its context.
+            // This happens when using a wrapper template in root of components dir.
+            let entity = this.find('viewPath', indentifier.path);
+            if (entity) {
+                return yield this._getWrapper(`@${entity.handle}`);
+            }
+
             // using a file
             let content = yield indentifier.getContent();
             return {

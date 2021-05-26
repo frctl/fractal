@@ -33,6 +33,7 @@ fractal.set('project.title', 'Fractal React example');
 fractal.components.set('path', path.join(__dirname, 'components'));
 fractal.components.set('ext', '.jsx');
 fractal.components.engine(reactAdapter);
+fractal.components.set('default.context.foo', 'bar');
 
 /*
  * Tell the Fractal web preview plugin where to look for static assets.
