@@ -6,6 +6,7 @@ const Preview = (props) => {
         <html>
             <head>
                 <meta name="componentName" value={props._adapter.componentName} />
+                <meta name="defaultContextData" value={props.foo} />
             </head>
             <body>
                 <div id="root" dangerouslySetInnerHTML={{ __html: props.yield }} />
@@ -15,6 +16,7 @@ const Preview = (props) => {
 };
 
 Preview.propTypes = {
+    foo: PropTypes.string,
     yield: PropTypes.string,
     _adapter: PropTypes.shape({
         componentName: PropTypes.string,

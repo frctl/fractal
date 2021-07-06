@@ -16,4 +16,4 @@ exports[`render renders specified template for variant 1`] = `"Render variant-2 
 
 exports[`render renders variant template for variant with the same name 1`] = `"Render variant-2 <!-- -->something"`;
 
-exports[`render renders with preview layout 1`] = `"<!DOCTYPE html><html><head><meta name=\\"componentName\\" value=\\"Render\\"/></head><body><div id=\\"root\\">Render something</div></body></html>"`;
+exports[`render renders with preview layout 1`] = `"<!DOCTYPE html><html><head><meta name=\\"componentName\\" value=\\"Render\\"/><meta name=\\"defaultContextData\\" value=\\"bar\\"/></head><body><div id=\\"root\\">Render something</div></body></html>"`;
