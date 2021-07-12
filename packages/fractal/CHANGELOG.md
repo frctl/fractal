@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.9](https://github.com/frctl/fractal/compare/@frctl/fractal@1.5.8...@frctl/fractal@1.5.9) (2021-07-12)
+
+
+### Bug Fixes
+
+* try to resolve file preview to a component ([#1044](https://github.com/frctl/fractal/issues/1044)) ([f5b915a](https://github.com/frctl/fractal/commit/f5b915a927cbd3261d81609ad8360781c677bb35))
+
+
+
+
+
 ## [1.5.8](https://github.com/frctl/fractal/compare/@frctl/fractal@1.5.7...@frctl/fractal@1.5.8) (2021-05-20)
 
 **Note:** Version bump only for package @frctl/fractal

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.3](https://github.com/frctl/fractal/compare/@frctl/react@0.3.2...@frctl/react@0.3.3) (2021-07-12)
+
+
+### Bug Fixes
+
+* **react:** fix infinite loop when checking for module dependent paths ([#1058](https://github.com/frctl/fractal/issues/1058)) ([50742dc](https://github.com/frctl/fractal/commit/50742dc6f8db1548da782ca3a70ac1043962ee3d))
+
+
+
+
+
 ## [0.3.2](https://github.com/frctl/fractal/compare/@frctl/react@0.3.1...@frctl/react@0.3.2) (2021-05-20)
 
 **Note:** Version bump only for package @frctl/react

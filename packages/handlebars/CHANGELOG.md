@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.11](https://github.com/frctl/fractal/compare/@frctl/handlebars@1.2.10...@frctl/handlebars@1.2.11) (2021-07-12)
+
+
+### Bug Fixes
+
+* **handlebars:** fix main file path ([#1060](https://github.com/frctl/fractal/issues/1060)) ([74212fb](https://github.com/frctl/fractal/commit/74212fbb2c2e757154121d5d78a2d1c2857e1cfc))
+
+
+
+
+
 ## [1.2.10](https://github.com/frctl/fractal/compare/@frctl/handlebars@1.2.9...@frctl/handlebars@1.2.10) (2021-05-20)
 
 **Note:** Version bump only for package @frctl/handlebars
