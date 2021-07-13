@@ -10,13 +10,13 @@ module.exports = function (theme, env, app) {
             if (!item.path) {
                 return '/';
             }
-            return theme.urlFromRoute('page', { path: item.path });
+            return theme.urlFromRoute('page', { path: item.path }).replace(/:/g, '%3A');
         } else if (item.isComponent || item.isVariant) {
-            return theme.urlFromRoute('component', { handle: item.handle });
+            return theme.urlFromRoute('component', { handle: item.handle }).replace(/:/g, '%3A');
         } else if (item.isAssetSource) {
-            return theme.urlFromRoute('asset-source', { name: item.name });
+            return theme.urlFromRoute('asset-source', { name: item.name }).replace(/:/g, '%3A');
         } else if (item.isAsset) {
-            return Path.join('/', app.get('web.assets.mount'), item.srcPath);
+            return Path.join('/', app.get('web.assets.mount'), item.srcPath).replace(/:/g, '%3A');
         }
         throw new Error(`Cannot generate URL for ${item}`);
     });
