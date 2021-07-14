@@ -11,6 +11,9 @@ module.exports = function (fractal) {
         }
 
         let request = env.request || this.context._request;
-        return utils.relUrlPath(path, _.get(request, 'path', '/'), fractal.web.get('builder.urls'));
+        return utils.relUrlPath(path, _.get(request, 'path', '/'), {
+            ...fractal.web.get('builder.urls'),
+            relativeToCurrentFolder: true,
+        });
     };
 };

@@ -29,10 +29,9 @@ module.exports = function (fractal) {
             return path;
         }
 
-        return utils.relUrlPath(
-            path,
-            _.get(root._env.request || root._request, 'path', '/'),
-            fractal.web.get('builder.urls')
-        );
+        return utils.relUrlPath(path, _.get(root._env.request || root._request, 'path', '/'), {
+            ...fractal.web.get('builder.urls'),
+            relativeToCurrentFolder: true,
+        });
     };
 };

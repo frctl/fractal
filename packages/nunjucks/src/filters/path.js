@@ -10,6 +10,9 @@ module.exports = function (fractal) {
 
         return !env || env.server
             ? path
-            : utils.relUrlPath(path, _.get(request, 'path', '/'), fractal.web.get('builder.urls'));
+            : utils.relUrlPath(path, _.get(request, 'path', '/'), {
+                  ...fractal.web.get('builder.urls'),
+                  relativeToCurrentFolder: true,
+              });
     };
 };
