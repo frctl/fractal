@@ -298,6 +298,46 @@ describe('Utils', () => {
         it('returns correct path to file with extension', () => {
             expect(utils.relUrlPath('/path/to/image.png', '/path/b', opts)).toEqual('to/image.png');
         });
+
+        // for static builds
+        const opts2 = {
+            ext: '.html',
+            relativeToCurrentFolder: true,
+        };
+        const opts3 = {
+            relativeToCurrentFolder: true,
+        };
+        it('returns correct relative path from current directory for same directory', () => {
+            expect(utils.relUrlPath('/path/to/a', '/path/to/b', opts2)).toEqual('./a.html');
+        });
+
+        it('returns correct relative path from the current directory for parent directory', () => {
+            expect(utils.relUrlPath('/path/to/a', '/path/b', opts2)).toEqual('./to/a.html');
+        });
+
+        it('returns toPath if it is full url even if `relativeToCurrentFolder` is true', () => {
+            expect(utils.relUrlPath('https://fractal.build', '/path/b', opts2)).toEqual('https://fractal.build');
+        });
+
+        it('returns toPath with extension if it is already a relative path from current directory', () => {
+            expect(utils.relUrlPath('./path/to/a', '/path/b', opts2)).toEqual('./path/to/a.html');
+        });
+
+        it('returns toPath without extension if it is already a relative path from current directory', () => {
+            expect(utils.relUrlPath('./path/to/a', '/path/b', opts3)).toEqual('./path/to/a');
+        });
+
+        it('returns correct path to root from current directory', () => {
+            expect(utils.relUrlPath('/', '/path/b', opts3)).toEqual('./../..');
+        });
+
+        it('returns correct path to root with extension from current directory', () => {
+            expect(utils.relUrlPath('/', '/path/b', opts2)).toEqual('./../index.html');
+        });
+
+        it('returns correct path to file with extension from current directory', () => {
+            expect(utils.relUrlPath('/path/to/image.png', '/path/b', opts2)).toEqual('./to/image.png');
+        });
     });
 });
 
