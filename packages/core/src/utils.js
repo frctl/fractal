@@ -146,14 +146,28 @@ module.exports = {
         fromPath = getStaticPagePath(fromPath).replace(/\\/g, '/');
         toPath = ('/' + _.trim(Path.extname(toPath) ? toPath : getStaticPagePath(toPath), '/')).replace(/\\/g, '/');
 
+        let outputPath;
+
         if (toPath == '/') {
-            return Path.relative(fromPath, toPath).replace(/\\/g, '/');
+            outputPath = Path.relative(fromPath, toPath).replace(/\\/g, '/');
+        } else {
+            outputPath = Path.relative(fromPath, toPath)
+                .replace(/\\/g, '/')
+                .replace(/^\.\.\//, '')
+                .replace('.PLACEHOLDER', ext);
         }
 
-        return Path.relative(fromPath, toPath)
-            .replace(/\\/g, '/')
-            .replace(/^\.\.\//, '')
-            .replace('.PLACEHOLDER', ext);
+        // for static builds, we want urls relative to the current directory
+        // eg: ./btn.html
+        // so that any use of `:` within a handle generates links as `./foo:btn.html`
+        // and not just `foo:btn.html` as browsers may try to interpret the `:`
+        // as an application link, like `<a href="twitter://user?screen_name=clearleft">open</a>``
+        // which would open the twitter app.
+        // links like `foo:btn.html` the browser tries to open an app "foo", fails and emits:
+        // `Failed to launch 'foo:btn' because the scheme does not have a registered handler`
+        // and halts navigation. Adding the `./`, giving it a relative path to the current folder
+        // stops the browser interpreting the link as an app link, behaves as a normal link
+        return opts && opts.relativeToCurrentFolder ? `./${outputPath}` : outputPath;
 
         function getStaticPagePath(url) {
             if (url == '/') {
