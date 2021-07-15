@@ -140,7 +140,7 @@ module.exports = {
         const ext = opts.ext || '';
 
         if (toPath.startsWith('.')) {
-            return ext === '' ? toPath : toPath + ext;
+            return Path.extname(toPath) || ext === '' ? toPath : toPath + ext;
         }
 
         fromPath = getStaticPagePath(fromPath).replace(/\\/g, '/');
