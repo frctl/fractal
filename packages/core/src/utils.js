@@ -167,7 +167,7 @@ module.exports = {
         // `Failed to launch 'foo:btn' because the scheme does not have a registered handler`
         // and halts navigation. Adding the `./`, giving it a relative path to the current folder
         // stops the browser interpreting the link as an app link, behaves as a normal link
-        return opts && opts.relativeToCurrentFolder ? `./${outputPath}` : outputPath;
+        return opts && opts.relativeToCurrentFolder && !outputPath.startsWith('.') ? `./${outputPath}` : outputPath;
 
         function getStaticPagePath(url) {
             if (url == '/') {

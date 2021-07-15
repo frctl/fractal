@@ -328,11 +328,11 @@ describe('Utils', () => {
         });
 
         it('returns correct path to root from current directory', () => {
-            expect(utils.relUrlPath('/', '/path/b', opts3)).toEqual('./../..');
+            expect(utils.relUrlPath('/', '/path/b', opts3)).toEqual('../..');
         });
 
         it('returns correct path to root with extension from current directory', () => {
-            expect(utils.relUrlPath('/', '/path/b', opts2)).toEqual('./../index.html');
+            expect(utils.relUrlPath('/', '/path/b', opts2)).toEqual('../index.html');
         });
 
         it('returns correct path to file with extension from current directory', () => {
