@@ -299,6 +299,10 @@ describe('Utils', () => {
             expect(utils.relUrlPath('/path/to/image.png', '/path/b', opts)).toEqual('to/image.png');
         });
 
+        it('returns correct relative path to file with extension', () => {
+            expect(utils.relUrlPath('../to/image.png', '/path/b', opts)).toEqual('../to/image.png');
+        });
+
         // for static builds
         const opts2 = {
             ext: '.html',
@@ -337,6 +341,10 @@ describe('Utils', () => {
 
         it('returns correct path to file with extension from current directory', () => {
             expect(utils.relUrlPath('/path/to/image.png', '/path/b', opts2)).toEqual('./to/image.png');
+        });
+
+        it('returns correct relative path to file with extension from current directory', () => {
+            expect(utils.relUrlPath('../to/image.png', '/path/b', opts2)).toEqual('../to/image.png');
         });
     });
 });
