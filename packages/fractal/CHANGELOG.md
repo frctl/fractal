@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.10](https://github.com/frctl/fractal/compare/@frctl/fractal@1.5.9...@frctl/fractal@1.5.10) (2021-07-19)
+
+
+### Bug Fixes
+
+* add relative path to component links in static builds ([#1062](https://github.com/frctl/fractal/issues/1062)) ([2f84d3b](https://github.com/frctl/fractal/commit/2f84d3b84498c238d28c2ca1021daf89aff879be))
+
+
+
+
+
 ## [1.5.9](https://github.com/frctl/fractal/compare/@frctl/fractal@1.5.8...@frctl/fractal@1.5.9) (2021-07-12)
 
 

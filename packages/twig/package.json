@@ -1,6 +1,6 @@
 {
   "name": "@frctl/twig",
-  "version": "1.2.9",
+  "version": "1.2.10",
   "description": "Twig template adapter for Fractal.",
   "main": "index.js",
   "repository": {
@@ -15,7 +15,7 @@
   },
   "homepage": "https://github.com/frctl/fractal/tree/main/packages/twig",
   "dependencies": {
-    "@frctl/core": "^0.3.1",
+    "@frctl/core": "^0.3.2",
     "lodash": "^4.17.21",
     "twig": "^1.15.4"
   },

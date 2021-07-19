@@ -1,15 +1,15 @@
 {
   "name": "@frctl/nunjucks-example",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "private": true,
   "scripts": {
     "start": "fractal start --sync",
     "build": "fractal build"
   },
   "dependencies": {
-    "@frctl/fractal": "^1.5.9",
-    "@frctl/mandelbrot": "^1.9.2",
-    "@frctl/nunjucks": "^2.0.11"
+    "@frctl/fractal": "^1.5.10",
+    "@frctl/mandelbrot": "^1.9.3",
+    "@frctl/nunjucks": "^2.0.12"
   },
   "devDependencies": {
     "@frctl/adapter-tests": "^0.1.0",

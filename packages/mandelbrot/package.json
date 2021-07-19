@@ -1,6 +1,6 @@
 {
   "name": "@frctl/mandelbrot",
-  "version": "1.9.2",
+  "version": "1.9.3",
   "description": "The default theme for Fractal.",
   "main": "index.js",
   "repository": {
@@ -28,7 +28,7 @@
   "devDependencies": {
     "@babel/core": "^7.14.0",
     "@babel/preset-env": "^7.14.1",
-    "@frctl/web": "^0.1.8",
+    "@frctl/web": "^0.1.9",
     "autoprefixer": "^10.2.5",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.2.2",
