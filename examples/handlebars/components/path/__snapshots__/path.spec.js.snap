@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`path converts absolute path to relative for builder 1`] = `
-"some-path.html
+"./some-path.html
 "
 `;
 
