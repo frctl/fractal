@@ -151,7 +151,8 @@ module.exports = {
         if (toPath == '/') {
             outputPath = Path.relative(fromPath, toPath).replace(/\\/g, '/');
         } else {
-            outputPath = Path.relative(fromPath, toPath)
+            const relativePath = Path.relative(fromPath, toPath);
+            outputPath = (relativePath ? relativePath : Path.basename(toPath))
                 .replace(/\\/g, '/')
                 .replace(/^\.\.\//, '')
                 .replace('.PLACEHOLDER', ext);

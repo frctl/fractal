@@ -323,7 +323,7 @@ describe('Utils', () => {
             expect(utils.relUrlPath('https://fractal.build', '/path/b', opts2)).toEqual('https://fractal.build');
         });
 
-        it('returns toPath with extension if it is already a relative path from current directory', () => {
+        it('returns toPath with extension if it is already a path from current directory', () => {
             expect(utils.relUrlPath('./path/to/a', '/path/b', opts2)).toEqual('./path/to/a.html');
         });
 
@@ -337,6 +337,10 @@ describe('Utils', () => {
 
         it('returns correct path to root with extension from current directory', () => {
             expect(utils.relUrlPath('/', '/path/b', opts2)).toEqual('../index.html');
+        });
+
+        it('returns self with extension if it is already a path from self', () => {
+            expect(utils.relUrlPath('/path/to/a', '/path/to/a', opts2)).toEqual('./a.html');
         });
 
         it('returns correct path to file with extension from current directory', () => {
