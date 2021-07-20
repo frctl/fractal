@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.13](https://github.com/frctl/fractal/compare/@frctl/nunjucks@2.0.12...@frctl/nunjucks@2.0.13) (2021-07-20)
+
+**Note:** Version bump only for package @frctl/nunjucks
+
+
+
+
+
 ## [2.0.12](https://github.com/frctl/fractal/compare/@frctl/nunjucks@2.0.11...@frctl/nunjucks@2.0.12) (2021-07-19)
 
 **Note:** Version bump only for package @frctl/nunjucks

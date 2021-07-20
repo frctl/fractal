@@ -1,6 +1,6 @@
 {
   "name": "@frctl/nunjucks",
-  "version": "2.0.12",
+  "version": "2.0.13",
   "description": "Nunjucks template adapter for Fractal.",
   "main": "index.js",
   "repository": {
@@ -18,7 +18,7 @@
     "@frctl/fractal": ">= 1.1.0-alpha.0 < 2"
   },
   "dependencies": {
-    "@frctl/core": "^0.3.2",
+    "@frctl/core": "^0.3.3",
     "bluebird": "^3.7.2",
     "lodash": "^4.17.21",
     "nunjucks": "^3.2.3"
