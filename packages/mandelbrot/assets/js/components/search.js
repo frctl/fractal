@@ -18,7 +18,7 @@ export default class Search {
 
         if (this._clearButton) {
             this._clearButton.on('click', () => {
-                this._input.val('').trigger('input').focus();
+                this._input.val('').trigger('input').trigger('focus');
             });
         }
     }
@@ -35,20 +35,26 @@ export default class Search {
         }
 
         this._marker.unmark();
-        this._marker.mark(key);
 
-        this._trees.forEach((tree) => {
-            this.search(tree._el.children('ul'), key, tree._collections);
+        this._marker.mark(key, {
+            done: () => {
+                this._trees.forEach((tree) => {
+                    const $treeGroup = tree._el.parent('.Navigation-group');
 
-            // If no item match in the group, hide it completely
-            const $treeEl = $(tree._el);
-            const $treeGroup = $treeEl.parent('.Navigation-group');
+                    $treeGroup.removeClass('has-search-results');
 
-            if ($treeEl.find('> ul > li:not([hidden])').length === 0) {
-                $treeGroup.attr('hidden', true);
-            } else {
-                $treeGroup.removeAttr('hidden');
-            }
+                    if (!tree._el.has('mark').length && !!key) {
+                        $treeGroup.attr('hidden', true);
+                    } else {
+                        $treeGroup.removeAttr('hidden');
+                        if (key) {
+                            $treeGroup.addClass('has-search-results');
+                        }
+
+                        this.search(tree._el.children('ul'), key, tree._collections);
+                    }
+                });
+            },
         });
     }
 
@@ -57,16 +63,16 @@ export default class Search {
 
         items.each((_index, item) => {
             const $li = $(item);
-            const collectionLabel = $li.parents('.Tree-collection').find('> .Tree-collectionLabel').text();
-            const itemLabel = $li.text();
             const childrenWithTags = $li.find('[data-tags]');
             const tagAttributes = childrenWithTags.length > 0 ? childrenWithTags.attr('data-tags') : '';
-
-            const collectionLabelMatches = collectionLabel.toUpperCase().indexOf(key) !== -1;
-            const itemLabelMatches = itemLabel.toUpperCase().indexOf(key) !== -1;
             const tagAttributesMatch = tagAttributes.toUpperCase().indexOf(key) !== -1;
 
-            if (collectionLabelMatches || itemLabelMatches || tagAttributesMatch) {
+            if (
+                $li.has('mark').length ||
+                $li.parents('.Tree-collection').has('mark').length ||
+                $li.parents('.Tree').find('.Tree-title').has('mark').length ||
+                tagAttributesMatch
+            ) {
                 $li.parents('.Tree-collection').each((_index, parent) => {
                     const collection = collections.find((c) => c._el[0] === parent);
 

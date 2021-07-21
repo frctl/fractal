@@ -82,7 +82,10 @@ export default class Navigation {
 
     selectVariantGroup(handle) {
         this._variantPanel.find('[data-role="variant-group"].is-visible').removeClass('is-visible');
-        this._variantPanel.find(`[data-role="variant-group"][data-component="${handle}"]`).addClass('is-visible');
+        this._variantPanel
+            .find(`[data-role="variant-group"][data-component="${handle}"]`)
+            .addClass('is-visible')
+            .removeAttr('hidden');
     }
 
     isVariantPanelVisible() {
