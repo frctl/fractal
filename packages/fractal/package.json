@@ -45,7 +45,7 @@
     "fractal": "./bin/fractal.js"
   },
   "engines": {
-    "node": ">= 10.0.0"
+    "node": ">= 12.0.0"
   },
   "publishConfig": {
     "access": "public"
