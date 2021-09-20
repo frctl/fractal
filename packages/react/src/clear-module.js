@@ -46,16 +46,21 @@ const clearModule = (moduleId) => {
     }
 };
 
-const isModuleDependentOnPath = (module, filePath) => {
+const isModuleDependentOnPath = (module, filePath, checkedDependencies = []) => {
+    checkedDependencies.push(module.id);
     let i = module.children.length;
 
     while (i--) {
         const parentChild = module.children[i];
         if (parentChild.id === filePath) {
             return true;
-        } else if (parentChild.children.length && !parentChild.id.includes('node_modules')) {
+        } else if (
+            parentChild.children.length &&
+            !parentChild.id.includes('node_modules') &&
+            !checkedDependencies.includes(parentChild.id)
+        ) {
             // Deep check if module is dependent on path
-            return isModuleDependentOnPath(parentChild, filePath);
+            return isModuleDependentOnPath(parentChild, filePath, checkedDependencies);
         }
     }
 
