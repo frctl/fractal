@@ -34,7 +34,7 @@ module.exports = mixin(
                 this._app = parent.source._app;
                 this.name = utils.slugify(name.toLowerCase());
                 this.handle = this._handle(config);
-                this.label = config.label || this._label(config);
+                this.label = config.label || this._label(name);
                 this.title = config.title || this._title(config);
                 this.order = _.isNaN(parseInt(config.order, 10)) ? 10000 : parseInt(config.order, 10);
                 this._isHidden = config.isHidden || config.hidden || false;
@@ -81,8 +81,8 @@ module.exports = mixin(
                 return this.name;
             }
 
-            _label() {
-                return utils.titlize(this.name);
+            _label(name) {
+                return utils.titlize(name);
             }
 
             _title() {
