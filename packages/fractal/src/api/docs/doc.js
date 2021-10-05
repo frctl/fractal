@@ -23,8 +23,8 @@ module.exports = class Doc extends Entity {
         return this.name === 'index';
     }
 
-    _label(config) {
-        return config.label || (this.isIndex ? this.source.get('indexLabel') : utils.titlize(config.name));
+    _label(name) {
+        return this.label || (this.isIndex ? this.source.get('indexLabel') : utils.titlize(name));
     }
 
     _handle(config) {
