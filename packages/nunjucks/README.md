@@ -20,7 +20,7 @@ npm i @frctl/nunjucks --save
 
 ```javascript
 fractal.components.engine("@frctl/nunjucks"); // register the Nunjucks adapter for your components
-fractal.components.set("ext", ".njk"); // look for files with a .nunj file extension
+fractal.components.set("ext", ".njk"); // look for files with a .njk file extension
 ```
 
 ## Customisation
