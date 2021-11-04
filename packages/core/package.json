@@ -1,6 +1,6 @@
 {
   "name": "@frctl/core",
-  "version": "0.3.0",
+  "version": "0.3.3",
   "description": "Core module of Fractal.",
   "main": "src/index.js",
   "repository": {
@@ -31,8 +31,8 @@
     "readable-stream": "^3.6.0"
   },
   "devDependencies": {
-    "mock-argv": "^1.1.13",
-    "mock-fs": "^4.13.0"
+    "mock-argv": "^1.1.15",
+    "mock-fs": "^4.14.0"
   },
   "publishConfig": {
     "access": "public"

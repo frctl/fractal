@@ -14,9 +14,9 @@ jobs:
         os: [ubuntu-latest, windows-latest]
         node: [10, 12, 14]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.4
       - name: Use Node.js ${{ matrix.node }}
-        uses: actions/setup-node@v2.1.5
+        uses: actions/setup-node@v2.2.0
         with:
           node-version: ${{ matrix.node }}
       - run: npm ci

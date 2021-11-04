@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.8](https://github.com/frctl/fractal/compare/@frctl/handlebars-example@0.3.7...@frctl/handlebars-example@0.3.8) (2021-07-20)
+
+**Note:** Version bump only for package @frctl/handlebars-example
+
+
+
+
+
+## [0.3.7](https://github.com/frctl/fractal/compare/@frctl/handlebars-example@0.3.6...@frctl/handlebars-example@0.3.7) (2021-07-19)
+
+
+### Bug Fixes
+
+* add relative path to component links in static builds ([#1062](https://github.com/frctl/fractal/issues/1062)) ([2f84d3b](https://github.com/frctl/fractal/commit/2f84d3b84498c238d28c2ca1021daf89aff879be))
+
+
+
+
+
+## [0.3.6](https://github.com/frctl/fractal/compare/@frctl/handlebars-example@0.3.5...@frctl/handlebars-example@0.3.6) (2021-07-12)
+
+**Note:** Version bump only for package @frctl/handlebars-example
+
+
+
+
+
+## [0.3.5](https://github.com/frctl/fractal/compare/@frctl/handlebars-example@0.3.4...@frctl/handlebars-example@0.3.5) (2021-05-20)
+
+**Note:** Version bump only for package @frctl/handlebars-example
+
+
+
+
+
+## [0.3.4](https://github.com/frctl/fractal/compare/@frctl/handlebars-example@0.3.3...@frctl/handlebars-example@0.3.4) (2021-05-20)
+
+**Note:** Version bump only for package @frctl/handlebars-example
+
+
+
+
+
 ## [0.3.3](https://github.com/frctl/fractal/compare/@frctl/handlebars-example@0.3.2...@frctl/handlebars-example@0.3.3) (2021-03-23)
 
 **Note:** Version bump only for package @frctl/handlebars-example

@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.11](https://github.com/frctl/fractal/compare/@frctl/fractal@1.5.10...@frctl/fractal@1.5.11) (2021-07-20)
+
+**Note:** Version bump only for package @frctl/fractal
+
+
+
+
+
+## [1.5.10](https://github.com/frctl/fractal/compare/@frctl/fractal@1.5.9...@frctl/fractal@1.5.10) (2021-07-19)
+
+
+### Bug Fixes
+
+* add relative path to component links in static builds ([#1062](https://github.com/frctl/fractal/issues/1062)) ([2f84d3b](https://github.com/frctl/fractal/commit/2f84d3b84498c238d28c2ca1021daf89aff879be))
+
+
+
+
+
+## [1.5.9](https://github.com/frctl/fractal/compare/@frctl/fractal@1.5.8...@frctl/fractal@1.5.9) (2021-07-12)
+
+
+### Bug Fixes
+
+* try to resolve file preview to a component ([#1044](https://github.com/frctl/fractal/issues/1044)) ([f5b915a](https://github.com/frctl/fractal/commit/f5b915a927cbd3261d81609ad8360781c677bb35))
+
+
+
+
+
+## [1.5.8](https://github.com/frctl/fractal/compare/@frctl/fractal@1.5.7...@frctl/fractal@1.5.8) (2021-05-20)
+
+**Note:** Version bump only for package @frctl/fractal
+
+
+
+
+
+## [1.5.7](https://github.com/frctl/fractal/compare/@frctl/fractal@1.5.6...@frctl/fractal@1.5.7) (2021-05-20)
+
+**Note:** Version bump only for package @frctl/fractal
+
+
+
+
+
 ## [1.5.6](https://github.com/frctl/fractal/compare/@frctl/fractal@1.5.5...@frctl/fractal@1.5.6) (2021-03-23)
 
 **Note:** Version bump only for package @frctl/fractal
@@ -126,7 +172,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 -   add all current LTS versions of Node to the Travis build matrix (#538)
 -   move snyk to devDependencies (#553)
 -   bump minimist from 1.2.0 to 1.2.2 (#554)
--   update sinon and move it to devDependencies (#555)
 -   package.json & package-lock.json to reduce vulnerabilities (#552)
 -   update anymatch, chokidar and nunjucks (#564)
 -   bump minimist from 1.2.2 to 1.2.3 (#567)

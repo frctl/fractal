@@ -1,8 +1,8 @@
 {
   "name": "@frctl/handlebars",
-  "version": "1.2.9",
+  "version": "1.2.13",
   "description": "Use Handlebars templates with Fractal.",
-  "main": "src/index.js",
+  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/frctl/fractal.git",
@@ -15,7 +15,7 @@
   },
   "homepage": "https://github.com/frctl/fractal/tree/main/packages/handlebars",
   "dependencies": {
-    "@frctl/core": "^0.3.0",
+    "@frctl/core": "^0.3.3",
     "bluebird": "^3.7.2",
     "handlebars": "^4.7.7",
     "lodash": "^4.17.21",
