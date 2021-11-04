@@ -51,7 +51,8 @@
         display: none;
         margin-top: 0;
 
-        &.is-visible {
+        &.is-visible:not([hidden]),
+        &.has-search-results {
             display: block;
         }
     }
