@@ -1,7 +1,7 @@
 {% set isVariantPanelVisible = false %}
 {% if entity and (entity.isComponent or entity.isVariant) %}
     {% set item = entity.parent if entity.isVariant else entity %}
-    {% if item.variants().filter('isHidden', false).size > 1 %}
+    {% if item.variants().filter('isHidden', false).size > 1 and frctl.theme.get('navigation') == 'split' %}
         {% set isVariantPanelVisible = true %}
     {% endif %}
 {% endif %}
@@ -13,6 +13,7 @@
     {% endfor %}
     </div>
 
+    {% if frctl.theme.get('navigation') == 'split' %}
     <div class="Navigation-panel Navigation-panel--variants{% if isVariantPanelVisible %} is-visible{% endif %}" data-role="variant-panel">
         <div class="Navigation-backButtonWrapper">
             <button class="Navigation-backButton" data-role="back" type="button">
@@ -22,4 +23,5 @@
         </div>
         {% include 'partials/navigation/variants.nunj' %}
     </div>
+    {% endif %}
 </nav>
