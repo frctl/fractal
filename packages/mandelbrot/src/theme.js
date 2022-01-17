@@ -8,7 +8,6 @@ const packageJSON = require('../package.json');
 module.exports = function (options) {
     const config = _.defaultsDeep(_.clone(options || {}), {
         skin: 'default',
-        // TODO: needs documenting: 'default' or 'split'
         navigation: 'default',
         rtl: false,
         lang: 'en',
