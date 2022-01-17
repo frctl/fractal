@@ -1,7 +1,3 @@
-.Tree {
-    white-space: nowrap;
-}
-
 .Tree-header {
     display: flex;
     align-items: center;
@@ -131,6 +127,7 @@
 
         .Tree-entityLink {
             @include padding-inline(start, ($i * 1rem));
+            @include padding-inline(end, ($i * 1rem));
         }
     }
 }
