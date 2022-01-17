@@ -35,7 +35,7 @@
 
 <br />
 
-Fractal is a tool to help you **build** and **document** web component libraries and design systems.
+Fractal is a tool to help you **build** and **document** website component libraries and design systems.
 
 [Read the full Fractal documentation][docs]
 
