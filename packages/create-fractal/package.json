@@ -1,0 +1,33 @@
+{
+  "name": "@frctl/create-fractal",
+  "version": "0.0.0",
+  "description": "New Fractal pattern library initializer.",
+  "bin": "./src/index.js",
+  "main": "./src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/frctl/fractal.git",
+    "directory": "packages/create-fractal"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/frctl/fractal/issues"
+  },
+  "homepage": "https://github.com/frctl/fractal",
+  "dependencies": {
+    "@frctl/core": "^0.3.3",
+    "execa": "^5.0.0",
+    "fs-extra": "^9.1.0",
+    "handlebars": "^4.7.7",
+    "inquirer": "^7.3.3"
+  },
+  "devDependencies": {
+    "@frctl/fractal": "^1.5.11"
+  },
+  "engines": {
+    "node": ">= 10.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
