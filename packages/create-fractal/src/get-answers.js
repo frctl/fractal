@@ -2,15 +2,12 @@ const { utils } = require('@frctl/core');
 const inquirer = require('inquirer');
 
 // In the future, use template parameter to ask special questions depending on template name.
-module.exports = async ({
-    template,
-    targetDir,
-}) => {
+module.exports = async ({ targetDir }) => {
     const questions = [
         {
             type: 'input',
             name: 'projectTitle',
-            message: 'What\'s the title of your project?',
+            message: "What's the title of your project?",
             default: utils.titlize(targetDir),
         },
         {

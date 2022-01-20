@@ -6,11 +6,7 @@ const Handlebars = require('handlebars');
 
 const pkg = require('../package.json');
 
-module.exports = async ({
- targetPath,
- templatePath,
- answers,
-}) => {
+module.exports = async ({ targetPath, templatePath, answers }) => {
     const componentsDir = path.join(targetPath, answers.componentsDir);
     const docsDir = path.join(targetPath, answers.docsDir);
     const publicDir = path.join(targetPath, answers.publicDir);
