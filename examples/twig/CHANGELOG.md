@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.8](https://github.com/frctl/fractal/compare/@frctl/twig-example@0.2.7...@frctl/twig-example@0.2.8) (2022-01-26)
+
+**Note:** Version bump only for package @frctl/twig-example
+
+
+
+
+
 ## [0.2.7](https://github.com/frctl/fractal/compare/@frctl/twig-example@0.2.6...@frctl/twig-example@0.2.7) (2021-07-20)
 
 **Note:** Version bump only for package @frctl/twig-example

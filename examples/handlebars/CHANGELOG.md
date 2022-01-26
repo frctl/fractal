@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.9](https://github.com/frctl/fractal/compare/@frctl/handlebars-example@0.3.8...@frctl/handlebars-example@0.3.9) (2022-01-26)
+
+
+### Bug Fixes
+
+* wrap long text in navigation tree ([#1101](https://github.com/frctl/fractal/issues/1101)) ([b7b0a4e](https://github.com/frctl/fractal/commit/b7b0a4eff65a1bc601391cb483af38ea87109eb9))
+
+
+
+
+
 ## [0.3.8](https://github.com/frctl/fractal/compare/@frctl/handlebars-example@0.3.7...@frctl/handlebars-example@0.3.8) (2021-07-20)
 
 **Note:** Version bump only for package @frctl/handlebars-example

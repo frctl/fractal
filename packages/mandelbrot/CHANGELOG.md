@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.10.0](https://github.com/frctl/fractal/compare/@frctl/mandelbrot@1.9.4...@frctl/mandelbrot@1.10.0) (2022-01-26)
+
+
+### Bug Fixes
+
+* wrap long text in navigation tree ([#1101](https://github.com/frctl/fractal/issues/1101)) ([b7b0a4e](https://github.com/frctl/fractal/commit/b7b0a4eff65a1bc601391cb483af38ea87109eb9))
+
+
+### Features
+
+* improve variants searchability ([#984](https://github.com/frctl/fractal/issues/984)) ([96f5099](https://github.com/frctl/fractal/commit/96f5099fef5836f4b91c6865b2bf21c5f6430e6b))
+* make navigation style configurable ([#1100](https://github.com/frctl/fractal/issues/1100)) ([b69ff91](https://github.com/frctl/fractal/commit/b69ff914064285c72b1a709ad3fc2925fdc6d087))
+
+
+
+
+
 ## [1.9.4](https://github.com/frctl/fractal/compare/@frctl/mandelbrot@1.9.3...@frctl/mandelbrot@1.9.4) (2021-07-20)
 
 **Note:** Version bump only for package @frctl/mandelbrot

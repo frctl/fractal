@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.4](https://github.com/frctl/fractal/compare/@frctl/core@0.3.3...@frctl/core@0.3.4) (2022-01-26)
+
+
+### Bug Fixes
+
+* don't lowercase name before titlizing to generate label ([#1081](https://github.com/frctl/fractal/issues/1081)) ([daf5c69](https://github.com/frctl/fractal/commit/daf5c69a455e320f43ccdba830ee46ab40929ad5))
+
+
+
+
+
 ## [0.3.3](https://github.com/frctl/fractal/compare/@frctl/core@0.3.2...@frctl/core@0.3.3) (2021-07-20)
 
 
