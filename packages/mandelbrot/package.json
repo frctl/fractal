@@ -32,7 +32,7 @@
     "autoprefixer": "^10.2.5",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.2.2",
-    "copy-webpack-plugin": "^8.1.1",
+    "copy-webpack-plugin": "^10.2.4",
     "core-js": "^3.12.1",
     "css-loader": "^5.2.4",
     "expose-loader": "^2.0.0",
