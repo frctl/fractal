@@ -8,5 +8,4 @@
         </div>
     </button>
     <a href="{{ path('/') }}" class="Header-title" data-pjax>{{ frctl.get('project.title') | default('Component Library') }}</a>
-    navigation type: {{ frctl.theme.get('navigation') }}
 </div>
