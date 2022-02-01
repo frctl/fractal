@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.10.1](https://github.com/frctl/fractal/compare/@frctl/mandelbrot@1.10.0...@frctl/mandelbrot@1.10.1) (2022-02-01)
+
+
+### Bug Fixes
+
+* remove printed out navigation type from header ([#1142](https://github.com/frctl/fractal/issues/1142)) ([b6b92dc](https://github.com/frctl/fractal/commit/b6b92dcb0550dabb606e3edfc71e75a5c86ec17d))
+
+
+
+
+
 # [1.10.0](https://github.com/frctl/fractal/compare/@frctl/mandelbrot@1.9.4...@frctl/mandelbrot@1.10.0) (2022-01-26)
 
 
