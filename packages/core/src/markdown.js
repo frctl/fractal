@@ -1,6 +1,6 @@
 'use strict';
 
-const marked = require('marked');
+const { marked } = require('marked');
 const _ = require('lodash');
 const highlighter = require('./highlighter');
 const renderer = new marked.Renderer();
