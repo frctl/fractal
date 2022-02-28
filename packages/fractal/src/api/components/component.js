@@ -24,7 +24,8 @@ module.exports = class Component extends Entity {
         this._notes = config.notes || config.readme || null;
         this._resources = resources;
         this._resourceCollections = null;
-        this._variants = new VariantCollection({ name: `${this.name}-variants` }, [], parent);
+        this._variantsName = config.variantsName || `${this.name}-variants`;
+        this._variants = new VariantCollection({ name: this.variantsName }, [], parent);
         this._referencedBy = null;
         this._references = null;
     }
@@ -66,6 +67,10 @@ module.exports = class Component extends Entity {
 
     get notes() {
         return _.get(this._notes, 'isFile') ? this._notes.getContentSync() : this._notes;
+    }
+
+    get variantsName() {
+        return this._variantsName;
     }
 
     render(context, env, opts) {

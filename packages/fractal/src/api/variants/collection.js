@@ -177,7 +177,7 @@ module.exports = class VariantCollection extends EntityCollection {
 
         return new VariantCollection(
             {
-                name: `${component.name}-variants`,
+                name: component.variantsName,
             },
             _.orderBy(yield variants, ['order', 'name']),
             component
