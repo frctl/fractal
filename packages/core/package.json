@@ -26,7 +26,7 @@
     "js-yaml": "^4.1.0",
     "lodash": "^4.17.21",
     "marked": "^2.0.3",
-    "minimist": "^1.2.5",
+    "minimist": "^1.2.6",
     "mixwith": "^0.1.1",
     "readable-stream": "^3.6.0"
   },

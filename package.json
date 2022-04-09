@@ -28,7 +28,7 @@
     "log-update": "^4.0.0",
     "marked": "^2.0.3",
     "mime": "^2.5.2",
-    "minimist": "^1.2.5",
+    "minimist": "^1.2.6",
     "mixwith": "^0.1.1",
     "nunjucks": "^3.2.3",
     "parent-module": "^2.0.0",
