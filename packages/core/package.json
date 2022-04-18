@@ -19,7 +19,7 @@
     "bluebird": "^3.7.2",
     "chokidar": "^3.5.1",
     "co": "^4.6.0",
-    "fs-extra": "^9.1.0",
+    "fs-extra": "^10.1.0",
     "globby": "^11.0.3",
     "highlight.js": "^10.7.2",
     "istextorbinary": "^5.15.0",
