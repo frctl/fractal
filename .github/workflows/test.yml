@@ -11,8 +11,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
-        node: [10, 12, 14, 16]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node: [14, 16, 18]
     steps:
       - uses: actions/checkout@v2.4.0
       - name: Use Node.js ${{ matrix.node }}
@@ -20,7 +20,6 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - run: npm ci
-      - run: npm run bootstrap
       - run: npm test
         env:
           CI: true
