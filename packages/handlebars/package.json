@@ -16,7 +16,6 @@
   "homepage": "https://github.com/frctl/fractal/tree/main/packages/handlebars",
   "dependencies": {
     "@frctl/core": "^0.3.4",
-    "bluebird": "^3.7.2",
     "handlebars": "^4.7.7",
     "lodash": "^4.17.21",
     "promised-handlebars": "^2.0.1"

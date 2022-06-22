@@ -1,6 +1,5 @@
 'use strict';
 
-const Promise = require('bluebird');
 const Path = require('path');
 const nunjucks = require('nunjucks');
 const _ = require('lodash');
@@ -9,6 +8,7 @@ const WebError = require('../error');
 const extensions = requireAll(`${__dirname}/extensions`);
 const filters = requireAll(`${__dirname}/filters`);
 const globals = requireAll(`${__dirname}/globals`);
+const promisifyAll = require('util-promisifyall');
 
 const templateError = nunjucks.lib.TemplateError;
 let lastError = null;
@@ -53,7 +53,7 @@ module.exports = class Engine {
             noCache: true,
         });
 
-        this._engine = Promise.promisifyAll(
+        this._engine = promisifyAll(
             new nunjucks.Environment(loader, {
                 autoescape: false,
             })

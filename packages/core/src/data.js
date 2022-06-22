@@ -1,6 +1,5 @@
 'use strict';
 
-const Promise = require('bluebird');
 const yaml = require('js-yaml');
 const _ = require('lodash');
 const Path = require('path');

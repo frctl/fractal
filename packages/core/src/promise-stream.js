@@ -1,6 +1,5 @@
 'use strict';
 
-const Promise = require('bluebird');
 const Readable = require('readable-stream').Readable;
 
 module.exports = class PromiseStream extends Readable {
