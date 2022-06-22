@@ -12,7 +12,7 @@
     "@frctl/nunjucks": "^2.0.14"
   },
   "devDependencies": {
-    "@frctl/adapter-tests": "^0.1.0",
+    "@frctl/adapter-tests": "^0.2.0",
     "node-fetch": "^2.6.1"
   }
 }

@@ -16,7 +16,8 @@
     "*.{css,scss}": "stylelint --fix"
   },
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "examples/*"
   ],
   "dependencies": {
     "@allmarkedup/fang": "^2.0.0",
