@@ -40,7 +40,7 @@ jobs:
       - run: npm -g install npm
         if: matrix.node == 14
       - run: npm ci
-      - run: npm test:unit
+      - run: npm run test:unit
       - run: npx nx run-many --target=test --all
         env:
           CI: true
