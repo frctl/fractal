@@ -1,6 +1,5 @@
 'use strict';
 
-const Promise = require('bluebird');
 const Path = require('path');
 const co = require('co');
 const _ = require('lodash');

@@ -5,6 +5,7 @@ unreleased
 ----------
 
 * [patch] fix: sync for docs [frctl#1181](https://github.com/frctl/fractal/pull/1181)
+* [patch] removed `bluebird` where possible [frctl#c58cd9c](https://github.com/frctl/fractal/pull/1206/commits/c58cd9ce63d662d14fc10bd347f5343096efc89c)
 
 
 0.0.5

@@ -1,7 +1,6 @@
 'use strict';
 
 const _ = require('lodash');
-const Promise = require('bluebird');
 const defaults = require('./config');
 const utils = require('../core').utils;
 const mix = require('../core').mixins.mix;
@@ -23,12 +22,6 @@ class Fractal extends mix(Configurable, Emitter) {
         this._docs = null;
         this._assets = null;
         this._engine = null;
-
-        if (this.debug) {
-            Promise.config({
-                longStackTraces: true,
-            });
-        }
     }
 
     get components() {

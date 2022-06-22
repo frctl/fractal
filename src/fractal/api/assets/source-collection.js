@@ -1,7 +1,6 @@
 'use strict';
 
 const _ = require('lodash');
-const Promise = require('bluebird');
 
 const utils = require('../../../core').utils;
 const mix = require('../../../core').mixins.mix;
