@@ -4,5 +4,6 @@
 module.exports = {
     testEnvironment: 'node',
     setupFilesAfterEnv: ['./tests/setup.js'],
-    testMatch: ['<rootDir>/**/*.(feature|spec).ts'],
+    testMatch: ['<rootDir>/**/*.spec.js'],
+    testPathIgnorePatterns: ['/node_modules/', '/dist/'],
 };
