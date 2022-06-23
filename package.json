@@ -8,7 +8,7 @@
     "validate": "npm run eslint && npm run stylelint",
     "format": "npm run eslint -- --fix",
     "test": "npm run validate && npm run test:unit && nx run-many --target=test --all",
-    "test:unit": "jest",
+    "test:unit": "npx jest",
     "prepare": "husky install"
   },
   "lint-staged": {
