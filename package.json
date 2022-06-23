@@ -8,7 +8,7 @@
     "validate": "npm run eslint && npm run stylelint",
     "format": "npm run eslint -- --fix",
     "test": "npm run validate && npm run test:unit && nx run-many --target=test --all",
-    "test:unit": "npx jest",
+    "test:unit": "jest",
     "prepare": "husky install"
   },
   "lint-staged": {
@@ -75,7 +75,6 @@
     "babel-loader": "^8.2.2",
     "copy-webpack-plugin": "^8.1.1",
     "core-js": "^3.12.1",
-    "cross-env": "^7.0.3",
     "css-loader": "^5.2.4",
     "eslint": "^7.26.0",
     "eslint-config-prettier": "^8.3.0",
