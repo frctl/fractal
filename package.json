@@ -22,7 +22,7 @@
     "format": "npm run eslint -- --fix",
     "compile-assets": "faucet",
     "test": "npm run validate && npm run test:unit",
-    "test:unit": "jest"
+    "test:unit": "npx jest"
   },
   "dependencies": {
     "@allmarkedup/fang": "^2.0.0",
