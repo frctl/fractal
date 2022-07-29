@@ -4,6 +4,12 @@ fractal-fork version history
 unreleased
 ----------
 
+* tbd
+
+
+0.0.4
+-----
+
 * [patch] fixed url to `loader.svg` in CSS assets
 * [patch] added example for `handlebars` adapter
 
