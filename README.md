@@ -1,45 +1,49 @@
-<!-- markdownlint-disable MD033 MD041 -->
-<p align=center>
-  <a href="https://fractal.build/" align=center>
-    <img
-        src="https://d33wubrfki0l68.cloudfront.net/5d2e88eb1e2b69f3f8b3a3372b6e4b3b4f095130/2159b/hero.png"
-        alt=""
-        width="110px">
-  </a>
-  <h1 align="center">Fractal</h1>
-</p>
+fractal-fork
+============
 
-<br />
-<div align="center">
-  <!-- Github Actions -->
-  <a href="https://github.com/frctl/fractal/actions" title="Build status">
-    <img src="https://img.shields.io/github/workflow/status/frctl/fractal/test/main" alt="">
-  </a>
-  <!-- NPM Version -->
-  <a href="https://www.npmjs.com/package/@frctl/fractal" title="Current version">
-    <img src="https://img.shields.io/npm/v/@frctl/fractal.svg" alt="">
-  </a>
-  <!-- Discord -->
-  <a href="https://discord.gg/vuRz4Yx" title="Chat with us on Discord">
-    <img src="https://img.shields.io/badge/discord-join-7289DA" alt="">
-  </a>
-  <!-- NPM Downloads -->
-  <a href="https://www.npmjs.com/package/@frctl/fractal" title="NPM monthly downloads">
-    <img src="https://img.shields.io/npm/dm/@frctl/fractal" alt="">
+<p>
+  <a href="https://www.npmjs.com/package/fractal-fork" title="Current version">
+    <img src="https://img.shields.io/npm/v/fractal-fork.svg" alt="">
   </a>
   <!-- License -->
   <a href="https://github.com/frctl/fractal/blob/main/LICENSE" title="MIT license">
     <img alt="GitHub" src="https://img.shields.io/github/license/frctl/fractal">
   </a>
-</div>
+</p>
 
-<br />
+This is a fork of the open-source [Fractal][docs] tool for helping you **build** and **document** website component libraries and design systems.
 
-Fractal is a tool to help you **build** and **document** website component libraries and design systems.
+Those familiar with [Fractal][docs] will know that it is a great tool for developing lightweight frontend components without being dependent on any heavy JavaScript framework.
+
+Unfortunately, Fractal has suffered over the years with out-of-date dependencies and is now officially
+[unmaintained](https://github.com/frctl/fractal/issues/1167).
+I use Fractal frequently and successfully in customer projects and therefore have the desire to maintain a _version_ of Fractal with up-to-date dependencies, but I do not use all of the features of the official branch, so I am providing this fork instead.
+
+**The goal of this fork is to maximize maintainability for customer projects and _not_ to provide complete feature parity with the official branch.** The project is therefore developed with the following concrete goals:
+
+1. Maximize maintainability by reducing size of source code
+2. Minimize number of dependencies
+
+I use real Fractal projects to test any changes that I make to the source code. However, this also means that **any feature that I do not personally use for any Fractal projects is at risk of being removed in the future** (especially if it uses dependencies which are poorly maintained).
+
+## Migration Guide from `@frctl/fractal` to `fractal-fork`
+
+The changes to offical Fractal branch are listed here as follows:
+
+* `fractal-fork` uses a single repository for ease of deployment. To migrate from `@frctl/fractal` to `fractal-fork` do the following:
+  * Replace `require('@frctl/core')` with `require('fractal-fork').core`
+  * Replace `require('@frctl/fractal')` with `require('fractal-fork').fractal`
+  * Replace `require('@frctl/handlebars')` with `require('fractal-fork').handlebars`
+  * Replace `require('@frctl/mandelbrot')` with `require('fractal-fork').mandelbrot`
+  * Replace `require('@frctl/web')` with `require('fractal-fork').web`
+* Replace the `fractal` command in your package.json scripts with `fractal-fork`
+* `fractal-fork` does not support the `twig`, `nunjucts`, or `react` adapters (if you still need them, it should be possible for you to maintain a separate fork for those adapters)
+* `fractal-fork` does not support the `new` CLI command (it's a command I've rarely used because I usually create the repository structure and `fractal.config.js` by hand and the CLI was one area which had horrible dependencies which needed to be removed)
+
 
 [Read the full Fractal documentation][docs]
 
-## Introduction
+## Introduction to Fractal
 
 Component (or pattern) libraries are a way of designing and building websites in a modular fashion, breaking up the UI into small, reusable chunks that can then later be assembled in a variety of ways to build anything from larger components right up to whole pages.
 
@@ -47,19 +51,16 @@ Fractal helps you assemble, preview and document website component libraries, or
 
 Check out the [documentation][docs] for more information.
 
-## Requirements
-
-You'll need a [supported LTS version](https://github.com/nodejs/Release) of Node. Fractal may work on unsupported versions, but there is no active support from Fractal and new features may not be backwards compatible with EOL versions of Node.
 
 ## Getting started
 
 ### Install into your project (recommended)
 
 ```shell
-npm install @frctl/fractal --save-dev
+npm install fractal-fork --save-dev
 ```
 
-Then create your `fractal.config.js` file in the project root, and configure using the [official documentation][docs].
+Then create your `fractal.config.js` file in the project root, and configure using the [official documentation][docs] but keeping in mind the changes to imports listed out in [the migration guide](#migration-guide-from-frctlfractal-to-fractal-fork)
 
 Then you can either run `npx fractal start` to start up the project, or create an alias under the `scripts` section in your package.json as a shortcut.
 
@@ -67,8 +68,8 @@ e.g.
 
 ```json
 "scripts": {
-    "fractal:start": "fractal start --sync",
-    "fractal:build": "fractal build"
+    "fractal:start": "fractal-fork start --sync",
+    "fractal:build": "fractal-fork build"
 }
 ```
 
@@ -78,38 +79,6 @@ then
 npm run fractal:start
 ```
 
-### Installing globally
-
-```shell
-npm i -g @frctl/fractal
-```
-
-This will also give you global access to the `fractal` command which you can use to scaffold a new Fractal project with `fractal new`.
-
-The downside is that it's then difficult to use different Fractal versions on different projects.
-
-This option is not recommended until a global Fractal install is capable of offloading to a project specific version.
-
-## Examples
-
-- Official demo (using Nunjucks): [demo.fractal.build](https://demo.fractal.build/)
-
-  Repository: [demo.fractal.build](https://github.com/frctl/demo.fractal.build)
-- Official examples are available in the [examples](./examples) directory. Although we primarily use them for developing and testing Fractal, they probably are a great resource for users as well.
-- Additional public examples can be found on the [Awesome Fractal](https://github.com/frctl/awesome-fractal) repo.
-
-## Contributing
-
-Fractal has an active group of contributors but we are always looking for more help. If you are interested in contributing then please come and say hi on [Fractal's Discord server](https://discord.gg/vuRz4Yx).
-
-Please note we have a [code of conduct](.github/CODE_OF_CONDUCT.md), please follow it in all your interactions with the project.
-
-### Reporting issues & requesting features
-
-We use GitHub issues to track bugs and feature requests. Thank your for taking the time to submit your issue in one of [our repositories](https://github.com/frctl).
-
-If you rather have a question, please ask it on [our Discord server](https://discord.gg/vuRz4Yx).
-
 ### Submitting pull requests
 
 We will always welcome pull requests on any of the [frctl organisation](https://github.com/frctl) repositories. Please submit PRs against `main` branch with an explanation of your intention.
@@ -118,23 +87,9 @@ We use [conventional commits](https://www.conventionalcommits.org/), which means
 
 ### Development
 
-This repository is a monorepo managed by Lerna. There is only one lockfile in root. This means that all packages must be installed in root, manually added to the packages' package.json files and then bootstrapped with lerna.
-
-To do some work, run the following commands in root:
-1. `npm ci`
-2. `npm run bootstrap`
-
 ## Testing
 
-Fractal is a project that evolved rapidly and organically from a proof-of-concept prototype into a more stable, mature tool. Because of this it's currently pretty far behind where it should be in terms of test coverage. Any contributions on this front would be most welcome!
-
 Existing tests can be run using the `npm test` command.
-
-## Contributors ✨
-
-Thanks goes to [all wonderful people](https://github.com/frctl/fractal/graphs/contributors) who have helped us out.
-
-Contributions of any kind welcome!
 
 ## License
 

@@ -3,5 +3,5 @@
 
 module.exports = {
     testEnvironment: 'node',
-    setupFilesAfterEnv: ['./tests/setup.js'],
+    setupFilesAfterEnv: ['./test/setup.js'],
 };

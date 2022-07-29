@@ -1,3 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`wrapper renders with wrapper elements 1`] = `"wrapped consumer"`;

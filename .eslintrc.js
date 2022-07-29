@@ -9,6 +9,7 @@ module.exports = {
         node: true,
         es6: true,
         jest: true,
+        jquery: true,
     },
     plugins: ['import'],
     rules: {
@@ -25,18 +26,6 @@ module.exports = {
             files: ['*.spec.js'],
             env: {
                 jest: true,
-            },
-        },
-        {
-            files: ['**/*.jsx'],
-            extends: ['plugin:react/recommended'],
-            settings: {
-                react: {
-                    version: 'detect',
-                },
-            },
-            parserOptions: {
-                ecmaFeatures: { jsx: true },
             },
         },
     ],
