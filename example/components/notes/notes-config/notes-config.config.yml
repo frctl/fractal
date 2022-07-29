@@ -1,0 +1,4 @@
+notes: Component Notes
+variants:
+  - name: alt
+    notes: Component Notes for variant

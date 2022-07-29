@@ -1,0 +1,14 @@
+{
+  "name": "fractal-fork-handlebars-example",
+  "private": true,
+  "scripts": {
+    "start": "fractal-fork start --sync",
+    "build": "fractal-fork build"
+  },
+  "dependencies": {
+    "fractal-fork": ".."
+  },
+  "devDependencies": {
+    "node-fetch": "^2.6.1"
+  }
+}

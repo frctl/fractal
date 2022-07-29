@@ -60,7 +60,9 @@ Check out the [documentation][docs] for more information.
 npm install fractal-fork --save-dev
 ```
 
-Then create your `fractal.config.js` file in the project root, and configure using the [official documentation][docs] but keeping in mind the changes to imports listed out in [the migration guide](#migration-guide-from-frctlfractal-to-fractal-fork)
+Then create your `fractal.config.js` file in the project root, and configure using the [official documentation][docs] but keeping in mind the changes to imports listed out in [the migration guide](#migration-guide-from-frctlfractal-to-fractal-fork).
+
+An example pattern library using the `fractal-fork` library can be found in the `example` folder.
 
 Then you can either run `npx fractal start` to start up the project, or create an alias under the `scripts` section in your package.json as a shortcut.
 

@@ -5,6 +5,7 @@ unreleased
 ----------
 
 * [patch] fixed url to `loader.svg` in CSS assets
+* [patch] added example for `handlebars` adapter
 
 
 0.0.3
