@@ -4,6 +4,12 @@ fractal-fork version history
 unreleased
 ----------
 
+* tbd
+
+
+0.0.1
+-----
+
 * [major] restructured project from monorepository to single repository
   * Replace `require('@frctl/core')` with `require('fractal-fork').core`
   * Replace `require('@frctl/fractal')` with `require('fractal-fork').fractal`
