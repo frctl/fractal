@@ -123,12 +123,6 @@ class Console {
         }
     }
 
-    columns(data, options) {
-        const columnify = require('columnify');
-        this.write(columnify(data, options));
-        return this;
-    }
-
     slog() {
         this._slogging = true;
         return this;

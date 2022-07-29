@@ -5,9 +5,7 @@ const Path = require('path');
 const co = require('co');
 const _ = require('lodash');
 const fs = require('fs-extra');
-const isBinary = require('istextorbinary').isBinary;
 const utils = require('./utils');
-const glob = require('globby');
 
 module.exports = {
     describe(dir, relDir, filter, ext) {
@@ -21,7 +19,8 @@ module.exports = {
         });
     },
 
-    globDescribe(dir, relDir, match) {
+    async globDescribe(dir, relDir, match) {
+        const glob = await import("globby");
         return glob(match, {
             cwd: dir,
         }).then((matches) => {
@@ -49,7 +48,7 @@ module.exports = {
 };
 
 function build(filePath, stat, root, ext) {
-    return co(function* () {
+    return co(function () {
         const p = Path.parse(filePath);
         // use basename instead of p.name to account for double extensions, like ".html.twig"
         const basename = Path.basename(filePath, ext);
@@ -67,16 +66,15 @@ function build(filePath, stat, root, ext) {
         p.stat = stat;
         if (p.isFile) {
             p.lang = utils.lang(filePath);
-            p.isBinary = yield checkIsBinary(p);
             p.readBuffer = function () {
                 return fs.readFileSync(filePath);
             };
             p.readSync = function () {
-                const contents = p.isBinary ? fs.readFileSync(filePath) : fs.readFileSync(filePath, 'utf8');
+                const contents = fs.readFileSync(filePath, 'utf8');
                 return contents.toString();
             };
             p.read = function () {
-                const read = p.isBinary ? fs.readFile(filePath) : fs.readFile(filePath, 'utf8');
+                const read = fs.readFile(filePath, 'utf8');
                 return read.then(function (contents) {
                     return contents.toString();
                 });
@@ -141,12 +139,4 @@ function dirscribe(root, opts) {
     }
 
     return objectify(root);
-}
-
-function checkIsBinary(file) {
-    try {
-        return Promise.resolve(isBinary(file.path, null));
-    } catch (err) {
-        return Promise.reject(err);
-    }
 }

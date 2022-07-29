@@ -36,7 +36,7 @@ try {
     // is expected when it can't be required
 }
 
-FractalCli.launch(config, function (env) {
+FractalCli.prepare(config, function (env) {
     let app;
     let configPath = env.configPath;
 

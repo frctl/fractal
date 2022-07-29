@@ -4,7 +4,9 @@ fractal-fork version history
 unreleased
 ----------
 
-* tbd
+* [patch] upgraded following dependencies: `liftoff`, `globby`
+* [patch] removed `istextorbinary` to check if a file is binary and always parse with `utf-8`
+* [patch] removed `columnify` since `console.columns` method is never used
 
 
 0.0.2
