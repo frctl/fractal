@@ -16,7 +16,7 @@
   },
   "homepage": "https://github.com/joyheron/fractal",
   "scripts": {
-    "eslint": "eslint . --ignore-path .gitignore",
+    "eslint": "eslint src",
     "stylelint": "stylelint --ignore-path .gitignore \"**/*.scss\"",
     "validate": "npm run eslint && npm run stylelint",
     "format": "npm run eslint -- --fix",

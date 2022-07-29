@@ -7,21 +7,24 @@
 
 3. Update CHANGELOG with new version number
 
-4. commit as "v#.#.#"
+4. Test and compile assets
+
+        npm test
+        npm run compile-assets
+
+5. commit as "v#.#.#"
 
         $ git commit -m "v`node -p -e 'require("./package.json").version'`"
 
-3. tag as "v#.#.#"
+6. tag as "v#.#.#"
 
         $ git tag -am "v`node -p -e 'require("./package.json").version'`" \
                 "v`node -p -e 'require("./package.json").version'`"
 
-4. publish
+7. publish
 
-        npm test
-        npm run compile-assets
         npm publish
 
-5. push to git
+8. push to git
 
         $ git push --follow-tags
