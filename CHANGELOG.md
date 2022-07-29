@@ -4,6 +4,12 @@ fractal-fork version history
 unreleased
 ----------
 
+* tbd
+
+
+0.0.2
+-----
+
 * [patch] removed `dist` folder from repository so that it can be published
 
 
