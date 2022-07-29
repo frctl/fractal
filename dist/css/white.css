@@ -891,7 +891,7 @@ mark {
   overflow: auto;
 }
 .Frame-panel--main.is-loading {
-  background-image: url("../../img/loader.svg");
+  background-image: url("/themes/mandelbrot/img/loader.svg");
   background-repeat: no-repeat;
   background-position: 50%;
 }

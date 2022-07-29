@@ -65,7 +65,7 @@
     overflow: auto;
 
     &.is-loading {
-        background-image: url("../../img/loader.svg");
+        background-image: asset-url("loader.svg");
         background-repeat: no-repeat;
         background-position: 50%;
 

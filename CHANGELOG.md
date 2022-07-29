@@ -4,7 +4,7 @@ fractal-fork version history
 unreleased
 ----------
 
-* tbd
+* [patch] fixed url to `loader.svg` in CSS assets
 
 
 0.0.3
