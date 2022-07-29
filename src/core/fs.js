@@ -20,7 +20,7 @@ module.exports = {
     },
 
     async globDescribe(dir, relDir, match) {
-        const glob = await import("globby");
+        const glob = await import('globby');
         return glob(match, {
             cwd: dir,
         }).then((matches) => {

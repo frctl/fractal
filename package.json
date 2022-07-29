@@ -1,6 +1,6 @@
 {
   "name": "fractal-fork",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A fork of the popular Fractal Pattern Library",
   "main": "src/index.js",
   "repository": {
@@ -61,6 +61,7 @@
     "@babel/core": "^7.14.0",
     "@babel/preset-env": "^7.14.1",
     "@babel/preset-react": "^7.13.13",
+    "babel-eslint": "^10.1.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.22.1",
