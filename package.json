@@ -19,7 +19,7 @@
     "gray-matter": "^4.0.3",
     "handlebars": "^4.7.7",
     "highlight.js": "^10.7.2",
-    "inquirer": "^7.3.3",
+    "inquirer": "^9.1.0",
     "istextorbinary": "^5.15.0",
     "js-beautify": "^1.13.13",
     "js-yaml": "^4.1.0",
