@@ -4,7 +4,7 @@ fractal-fork version history
 unreleased
 ----------
 
-* tbd
+* [patch] fix: sync for docs [frctl#1181](https://github.com/frctl/fractal/pull/1181)
 
 
 0.0.5
