@@ -1,6 +1,6 @@
 {
   "name": "@frctl/core",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "Core module of Fractal.",
   "main": "src/index.js",
   "repository": {
