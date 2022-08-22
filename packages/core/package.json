@@ -25,7 +25,7 @@
     "istextorbinary": "^5.15.0",
     "js-yaml": "^4.1.0",
     "lodash": "^4.17.21",
-    "marked": "^2.0.3",
+    "marked": "^4.0.19",
     "minimist": "^1.2.5",
     "mixwith": "^0.1.1",
     "readable-stream": "^3.6.0"
