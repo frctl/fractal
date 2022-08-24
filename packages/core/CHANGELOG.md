@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.5](https://github.com/frctl/fractal/compare/@frctl/core@0.3.4...@frctl/core@0.3.5) (2022-08-17)
+
+
+### Bug Fixes
+
+* sync for docs ([#1181](https://github.com/frctl/fractal/issues/1181)) ([ac748d6](https://github.com/frctl/fractal/commit/ac748d6b481765093d7663e6c291ec8b5fe24d2c))
+
+
+
+
+
 ## [0.3.4](https://github.com/frctl/fractal/compare/@frctl/core@0.3.3...@frctl/core@0.3.4) (2022-01-26)
 
 

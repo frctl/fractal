@@ -1,6 +1,6 @@
 {
   "name": "@frctl/handlebars",
-  "version": "1.2.14",
+  "version": "1.2.15",
   "description": "Use Handlebars templates with Fractal.",
   "main": "index.js",
   "repository": {
