@@ -35,7 +35,7 @@ jobs:
         # to OpenSSL updates. We'll need to handle this before Node 18 hits LTS.
         node: [14, 16, 18]
 
-    name: Test (Node ${{ matrix.node }})
+    name: Test (Node ${{ matrix.node }}, ${{ matrix.os }})
 
     steps:
       - uses: actions/checkout@v2.4.0
@@ -62,7 +62,7 @@ jobs:
         # to OpenSSL updates. We'll need to handle this before Node 18 hits LTS.
         node: [14, 16, 18]
 
-    name: Build examples (Node ${{ matrix.node }})
+    name: Build examples (Node ${{ matrix.node }}, ${{ matrix.os }})
 
     needs:
       - test
