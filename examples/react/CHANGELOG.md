@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.10](https://github.com/frctl/fractal/compare/@frctl/react-example@0.2.9...@frctl/react-example@0.2.10) (2022-08-17)
+
+**Note:** Version bump only for package @frctl/react-example
+
+
+
+
+
 ## [0.2.9](https://github.com/frctl/fractal/compare/@frctl/react-example@0.2.8...@frctl/react-example@0.2.9) (2022-02-01)
 
 **Note:** Version bump only for package @frctl/react-example
