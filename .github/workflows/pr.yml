@@ -1,16 +1,19 @@
 name: Pull Request
 
-on: pull_request
+on:
+  pull_request_target:
+    types:
+      - opened
+      - edited
+      - synchronize
 
 jobs:
   conventional:
+    name: Validate PR title
+
     runs-on: ubuntu-latest
 
     steps:
-      - name: Conventional PR
-        uses: Namchee/conventional-pr@v0.11.0
-        with:
-          access_token: ${{ secrets.GITHUB_TOKEN }}
-          label: 'invalid conventional commit title'
-          close: false
-          issue: false
+      - uses: amannn/action-semantic-pull-request@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
