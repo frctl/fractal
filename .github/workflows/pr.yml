@@ -11,3 +11,6 @@ jobs:
         uses: Namchee/conventional-pr@v0.11.0
         with:
           access_token: ${{ secrets.GITHUB_TOKEN }}
+          label: 'invalid conventional commit title'
+          close: false
+          issue: false
