@@ -19,9 +19,9 @@
   },
   "dependencies": {
     "@frctl/core": "^0.3.5",
-    "bluebird": "^3.7.2",
     "lodash": "^4.17.21",
-    "nunjucks": "^3.2.3"
+    "nunjucks": "^3.2.3",
+    "util-promisifyall": "^1.0.6"
   },
   "publishConfig": {
     "access": "public"

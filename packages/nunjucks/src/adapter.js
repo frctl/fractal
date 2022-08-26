@@ -1,11 +1,11 @@
 'use strict';
 
 const _ = require('lodash');
-const Promise = require('bluebird');
 const nunjucks = require('nunjucks');
 const path = require('path');
 const fs = require('fs');
 const Adapter = require('@frctl/core').Adapter;
+const promisifyAll = require('util-promisifyall');
 
 class NunjucksAdapter extends Adapter {
     constructor(source, config, app) {
@@ -82,7 +82,7 @@ class NunjucksAdapter extends Adapter {
          * Instantiate the Nunjucks environment instance.
          */
 
-        let nj = Promise.promisifyAll(new nunjucks.Environment(loaders, config.env || {}));
+        let nj = promisifyAll(new nunjucks.Environment(loaders, config.env || {}));
 
         this._engine = nj;
     }

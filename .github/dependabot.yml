@@ -13,3 +13,6 @@ updates:
     schedule:
       # Check for updates to GitHub Actions every weekday
       interval: "daily"
+    # Setting this to 0 means we only get security updates, and not all
+    # major/minor/patch releases.
+    open-pull-requests-limit: 0

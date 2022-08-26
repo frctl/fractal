@@ -1,6 +1,5 @@
 'use strict';
 
-const Promise = require('bluebird');
 const _ = require('lodash');
 const chokidar = require('chokidar');
 const anymatch = require('anymatch');

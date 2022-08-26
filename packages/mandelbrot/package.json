@@ -19,8 +19,7 @@
     "prebuild": "npm run clean",
     "build": "webpack --mode production",
     "build:analyze": "webpack --mode production --analyze",
-    "prepack": "npm run build",
-    "test": "npm run build"
+    "prepack": "npm run build"
   },
   "peerDependencies": {
     "@frctl/fractal": ">= 1.5 < 2"

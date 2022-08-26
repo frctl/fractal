@@ -1,8 +1,8 @@
 'use strict';
 
-const Promise = require('bluebird');
 const _ = require('lodash');
 const Log = require('./log');
+const Bluebird = require('bluebird');
 
 module.exports = {
     entity(entity) {
@@ -22,7 +22,7 @@ module.exports = {
             const iterator = _.isArray(obj) ? 'map' : 'mapValues';
             const resolver = iterator == 'map' ? 'all' : 'props';
 
-            return Promise[resolver](_[iterator](obj, mapper));
+            return Bluebird[resolver](_[iterator](obj, mapper));
         }
 
         function mapper(item) {

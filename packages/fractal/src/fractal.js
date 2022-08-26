@@ -1,7 +1,6 @@
 'use strict';
 
 const _ = require('lodash');
-const Promise = require('bluebird');
 const defaults = require('../config');
 const utils = require('@frctl/core').utils;
 const mix = require('@frctl/core').mixins.mix;

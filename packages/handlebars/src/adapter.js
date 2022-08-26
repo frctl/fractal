@@ -2,7 +2,6 @@
 
 const path = require('path');
 const _ = require('lodash');
-const Promise = require('bluebird');
 const promisedHbs = require('promised-handlebars');
 const Handlebars = require('handlebars');
 const Adapter = require('@frctl/core').Adapter;
