@@ -23,7 +23,7 @@
     "@frctl/mandelbrot": "^1.10.2",
     "@frctl/web": "^0.1.12",
     "anymatch": "^3.1.2",
-    "chalk": "^4.1.1",
+    "chalk": "^5.0.1",
     "chokidar": "^3.5.1",
     "cli-table3": "^0.6.0",
     "co": "^4.6.0",
