@@ -2,7 +2,7 @@
   "name": "fractal",
   "private": true,
   "scripts": {
-    "build": "turbo run test",
+    "build": "turbo run build",
     "clean": "turbo run clean",
     "lint": "turbo run lint",
     "test": "npx jest",
