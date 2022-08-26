@@ -5,7 +5,7 @@
     "build": "turbo run test",
     "clean": "turbo run clean",
     "lint": "turbo run lint",
-    "test": "turbo run test",
+    "test": "npx jest",
     "eslint": "eslint . --ignore-path .gitignore",
     "stylelint": "stylelint --ignore-path .gitignore \"**/*.scss\"",
     "prepare": "husky install"
