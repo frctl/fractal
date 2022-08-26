@@ -76,6 +76,6 @@ jobs:
       - run: npm -g install npm
         if: matrix.node == 14
       - run: npm ci
-      - run: npm build
+      - run: npm run build
         env:
           CI: true
