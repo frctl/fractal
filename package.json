@@ -29,7 +29,6 @@
     "anymatch": "^3.1.2",
     "bluebird": "^3.7.2",
     "browser-sync": "^2.27.10",
-    "chalk": "^4.1.1",
     "chokidar": "^3.5.3",
     "cli-table3": "^0.6.2",
     "co": "^4.6.0",

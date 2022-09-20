@@ -2,7 +2,6 @@
 
 const chokidar = require('chokidar');
 const Console = require('./console');
-const Notifier = require('./notifier');
 const Log = require('../../core').Log;
 const mix = require('../../core').mixins.mix;
 const Emitter = require('../../core').mixins.emitter;
@@ -19,8 +18,6 @@ class Cli extends mix(Emitter) {
 
         this.console = new Console();
         this.console.debugMode(app.debug);
-
-        this.notify = new Notifier(this.console, this._interactive);
 
         for (const method of ['log', 'error', 'warn', 'debug', 'success']) {
             this[method] = function () {

@@ -1,14 +1,12 @@
 'use strict';
 
 const _ = require('lodash');
-const chalk = require('chalk');
 
 module.exports = class Theme {
     constructor(config) {
         config = config || {};
         this._delimiter = {
             text: 'fractal ➤',
-            format: chalk.magenta,
         };
         this._styles = {
             log: {
@@ -17,22 +15,18 @@ module.exports = class Theme {
             },
             debug: {
                 prefix: '⚑',
-                format: chalk.dim,
             },
             info: {
                 prefix: '⚑',
             },
             warn: {
                 prefix: '‼︎',
-                format: chalk.yellow,
             },
             error: {
                 prefix: '✘',
-                format: chalk.red,
             },
             success: {
                 prefix: '✔',
-                format: chalk.green,
             },
         };
 

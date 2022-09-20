@@ -4,7 +4,8 @@ fractal-fork version history
 unreleased
 ----------
 
-* tbd
+* [patch] removed `chalk` dependency (CLI is now uncolored)
+* [patch] removed `cli/notifier` since it is no longer used in the CLI
 
 
 0.0.4

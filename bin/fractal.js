@@ -4,7 +4,6 @@
 
 const Path = require('path');
 const Liftoff = require('liftoff');
-const chalk = require('chalk');
 
 const FractalCli = new Liftoff({
     processTitle: 'fractal',
@@ -58,8 +57,8 @@ FractalCli.prepare(config, function (env) {
 
     if (!app || !app.__fractal) {
         // looks like the configuration file is not correctly module.export'ing a fractal instance
-        console.log(
-            `${chalk.red('Configuration error')}: The CLI configuration file is not exporting an instance of Fractal.`
+        console.error(
+            `Configuration error: The CLI configuration file is not exporting an instance of Fractal.`
         );
         return;
     }

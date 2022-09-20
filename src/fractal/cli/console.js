@@ -2,7 +2,6 @@
 
 const Promise = require('bluebird');
 const _ = require('lodash');
-const chalk = require('chalk');
 const Table = require('cli-table3');
 const slog = require('log-update');
 const Theme = require('./themes/default');
@@ -97,7 +96,7 @@ class Console {
     box(header, body, footer) {
         const table = new Table({
             head: [],
-            chars: { mid: chalk.dim('─'), 'left-mid': '│', 'mid-mid': chalk.dim('─'), 'right-mid': '│' },
+            chars: { mid: '─', 'left-mid': '│', 'mid-mid': '─', 'right-mid': '│' },
         });
         if (header) {
             table.push([header]);
@@ -107,7 +106,7 @@ class Console {
             table.push([line]);
         }
         if (footer) {
-            table.push([chalk.dim(footer)]);
+            table.push([footer]);
         }
         this.unslog().write(table.toString(), null);
         return this;
