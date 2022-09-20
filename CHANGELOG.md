@@ -6,6 +6,7 @@ unreleased
 
 * [patch] removed `chalk` dependency (CLI is now uncolored)
 * [patch] removed `cli/notifier` since it is no longer used in the CLI
+* [patch] upgraded various dependencies
 
 
 0.0.4
