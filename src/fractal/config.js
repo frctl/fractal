@@ -107,7 +107,7 @@ module.exports = {
         server: {
             sync: false,
             watch: false,
-            port: null,
+            port: 3000,
             syncOptions: {},
         },
         builder: {

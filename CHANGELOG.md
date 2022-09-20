@@ -6,6 +6,7 @@ unreleased
 
 * [patch] removed `chalk` dependency - CLI is no longer colored
 * [patch] removed `log-update` dependency - CLI no longer updated in place
+* [patch] removed `get-ports` dependency -- automatic port discovery is no longer supported
 * [patch] removed `cli/notifier` since it is no longer used in the CLI
 * [patch] upgraded various dependencies
 

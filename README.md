@@ -39,6 +39,8 @@ The changes to offical Fractal branch are listed here as follows:
 * Replace the `fractal` command in your package.json scripts with `fractal-fork`
 * `fractal-fork` does not support the `twig`, `nunjucts`, or `react` adapters (if you still need them, it should be possible for you to maintain a separate fork for those adapters)
 * `fractal-fork` does not support the `new` CLI command (it's a command I've rarely used because I usually create the repository structure and `fractal.config.js` by hand and the CLI was one area which had horrible dependencies which needed to be removed)
+* The CLI output for `fractal-fork` is much less pretty -- there are no colors and the console never overwrites previous log output. This means particularly for the `build` command that the console output is much longer
+* Automatic port discovery is not supported for `fractal-fork`. If a port is blocked, `fractal-fork` will quit with an error and it is the developer's responsibility to set a different port via `--port`.
 
 
 [Read the full Fractal documentation][docs]

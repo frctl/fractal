@@ -13,7 +13,7 @@ module.exports = {
         ],
     },
 
-    action(args, done) {
+    action(args) {
         const server = this.fractal.web.server(args.options);
 
         server.on('ready', () => {
@@ -43,12 +43,8 @@ module.exports = {
             }
         });
 
-        server.on('destroy', () => done());
-        server.on('stopped', () => done());
-
         server.start(args.options.sync).catch((e) => {
             this.console.error(e);
-            done();
         });
     },
 };

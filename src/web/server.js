@@ -6,7 +6,6 @@ const anymatch = require('anymatch');
 const express = require('express');
 const chokidar = require('chokidar');
 const Path = require('path');
-const getPort = require('get-port');
 const WebError = require('./error');
 const utils = require('../core').utils;
 const Log = require('../core').Log;
@@ -61,40 +60,46 @@ module.exports = class Server extends mix(Emitter) {
                 this._app.watch();
             }
 
-            return Promise.props(findPorts(this._config.port, sync)).then((ports) => {
-                this._ports = ports;
-                this._sync = sync;
+            this._ports = findPorts(this._config.port, sync);
+            this._sync = sync;
 
-                return new Promise((resolve, reject) => {
-                    this._instance = this._server.listen(ports.server, (err) => {
-                        if (err) {
-                            return reject(err);
-                        }
+            return new Promise((resolve, reject) => {
+                this._instance = this._server.listen(this._ports.server, (err) => {
+                    if (err) {
+                        return reject(err);
+                    }
 
-                        this._urls.server = `http://localhost:${ports.server}`;
+                    this._urls.server = `http://localhost:${this._ports.server}`;
 
-                        if (this._sync) {
-                            return this._startSync(resolve, reject);
-                        }
+                    if (this._sync) {
+                        return this._startSync(resolve, reject);
+                    }
 
-                        this.emit('ready');
+                    this.emit('ready');
 
-                        resolve(this._instance);
-                    });
+                    resolve(this._instance);
+                });
 
-                    this._instance.destroy = (cb) => {
-                        this._instance.close(cb);
-                        for (const key in this._connections) {
-                            this._connections[key].destroy();
-                        }
-                        this._instance.emit('destroy');
-                    };
+                this._instance.on('error', (err) => {
+                    this._instance.close(err);
+                    if (this._config.watch) {
+                        this._app.unwatch();
+                    }
+                    reject(err);
+                });
 
-                    this._instance.on('connection', (conn) => {
-                        const key = `${conn.remoteAddress}:${conn.remotePort}`;
-                        this._connections[key] = conn;
-                        conn.on('close', () => delete this._connections[key]);
-                    });
+                this._instance.destroy = (cb) => {
+                    this._instance.close(cb);
+                    for (const key in this._connections) {
+                        this._connections[key].destroy();
+                    }
+                    this._instance.emit('destroy');
+                };
+
+                this._instance.on('connection', (conn) => {
+                    const key = `${conn.remoteAddress}:${conn.remotePort}`;
+                    this._connections[key] = conn;
+                    conn.on('close', () => delete this._connections[key]);
                 });
             });
         });
@@ -286,45 +291,17 @@ module.exports = class Server extends mix(Emitter) {
     }
 };
 
-async function findPorts(serverPort, useSync) {
-    const ip = '127.0.0.1';
-    const from = 3000;
-    const range = 50;
-    const until = from + range;
-    if (!useSync && serverPort) {
+function findPorts(serverPort, useSync) {
+    serverPort = serverPort || 3000;
+
+    if (!useSync) {
         return {
-            sync: Promise.resolve(null),
-            server: Promise.resolve(serverPort),
-        };
-    }
-    if (useSync && serverPort) {
-        return {
-            sync: Promise.resolve(serverPort),
-            server: getPort({
-                port: getPort.makeRange(serverPort + 1, parseInt(serverPort, 10) + range),
-                host: ip,
-            }),
-        };
-    } else if (!useSync && !serverPort) {
-        return {
-            sync: Promise.resolve(null),
-            server: getPort({
-                port: getPort.makeRange(from, until),
-                host: ip,
-            }),
-        };
-    } else if (useSync && !serverPort) {
-        const syncPort = await getPort({
-            port: getPort.makeRange(from, until),
-            host: ip,
-        });
-        const serverPort = await getPort({
-            port: getPort.makeRange(syncPort + 1, syncPort + range),
-            host: ip,
-        });
-        return {
-            sync: syncPort,
+            sync: null,
             server: serverPort,
         };
     }
+    return {
+        sync: serverPort,
+        server: serverPort + 1,
+    };
 }
