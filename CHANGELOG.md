@@ -4,6 +4,12 @@ fractal-fork version history
 unreleased
 ----------
 
+* tbd
+
+
+0.0.5
+-----
+
 * [patch] removed `chalk` dependency - CLI is no longer colored
 * [patch] removed `log-update` dependency - CLI no longer updated in place
 * [patch] removed `get-ports` dependency -- automatic port discovery is no longer supported
