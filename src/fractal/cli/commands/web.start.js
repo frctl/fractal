@@ -32,7 +32,7 @@ module.exports = {
                 body += `\nBrowserSync UI: ${format(syncUrls.ui)}`;
             }
 
-            return this.console.box(header, body, footer).persist();
+            return this.console.box(header, body, footer);
         });
 
         server.on('error', (err) => {

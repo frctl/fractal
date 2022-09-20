@@ -16,24 +16,23 @@ module.exports = {
         });
 
         builder.on('progress', (completed, total) => {
-            this.console.update(`Exported ${completed} of ${total} items`, 'info');
+            this.console.write(`Exported ${completed} of ${total} items`, 'info');
         });
 
         builder.on('error', (err) => {
-            this.console.error(err.message, err).persist();
+            this.console.error(err.message, err);
         });
 
         return builder
             .build()
             .then((data) => {
-                this.console.persist();
                 const e = data.errorCount;
                 this.console[e ? 'warn' : 'success'](
                     `Build finished with ${e === 0 ? 'no' : e} error${e == 1 ? '' : 's'}.`
-                ).unslog();
+                );
             })
             .catch((e) => {
-                this.console.error(e).unslog().br();
+                this.console.error(e).br();
             });
     },
 };

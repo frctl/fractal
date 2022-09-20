@@ -4,7 +4,8 @@ fractal-fork version history
 unreleased
 ----------
 
-* [patch] removed `chalk` dependency (CLI is now uncolored)
+* [patch] removed `chalk` dependency - CLI is no longer colored
+* [patch] removed `log-update` dependency - CLI no longer updated in place
 * [patch] removed `cli/notifier` since it is no longer used in the CLI
 * [patch] upgraded various dependencies
 

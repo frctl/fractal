@@ -3,7 +3,6 @@
 const Promise = require('bluebird');
 const _ = require('lodash');
 const Table = require('cli-table3');
-const slog = require('log-update');
 const Theme = require('./themes/default');
 const utils = require('../../core').utils;
 
@@ -11,7 +10,6 @@ class Console {
     constructor() {
         this._logger = console;
         this._theme = new Theme();
-        this._slogging = false;
         this._debugging = false;
     }
 
@@ -20,7 +18,6 @@ class Console {
     }
 
     br() {
-        slog.clear();
         this.write('');
         return this;
     }
@@ -32,10 +29,6 @@ class Console {
 
     debug(text, data) {
         if (this._debugging) {
-            if (this._slogging) {
-                this.unslog();
-                this.br();
-            }
             this.write(text, 'debug');
             if (data) this.dump(data);
         }
@@ -52,25 +45,7 @@ class Console {
         return this;
     }
 
-    update(text, type) {
-        slog(type ? this._format(text, type) : text);
-        return this;
-    }
-
-    clear() {
-        slog.clear();
-        return this;
-    }
-
-    persist() {
-        slog.done();
-        return this;
-    }
-
     error(err, data) {
-        if (this.isSlogging()) {
-            this.unslog().br();
-        }
         this.write(err, 'error');
         if ((data || err instanceof Error) && this._debugging) {
             data = data || err;
@@ -108,33 +83,14 @@ class Console {
         if (footer) {
             table.push([footer]);
         }
-        this.unslog().write(table.toString(), null);
+        this.write(table.toString(), null);
         return this;
     }
 
     write(str, type) {
         str = _.isString(str) ? str : str.toString();
         str = type ? this._format(str, type) : str;
-        if (this.isSlogging()) {
-            slog(str);
-        } else {
-            this._logger.log(str);
-        }
-    }
-
-    slog() {
-        this._slogging = true;
-        return this;
-    }
-
-    unslog() {
-        this._slogging = false;
-        slog.clear();
-        return this;
-    }
-
-    isSlogging() {
-        return this._slogging;
+        this._logger.log(str);
     }
 
     _format(text, type) {
