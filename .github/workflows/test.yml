@@ -1,0 +1,52 @@
+name: test
+
+on: [push]
+
+jobs:
+  lint:
+    runs-on: 'ubuntu-latest'
+
+    strategy:
+      matrix:
+        node: [14, 16, 18]
+
+    name: Lint (Node ${{ matrix.node }})
+
+    steps:
+      - uses: actions/checkout@v2.4.0
+      - name: Use Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v2.5.1
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm -g install npm
+        if: matrix.node == 14
+      - run: npm ci
+      - run: npm run stylelint
+      - run: npm run eslint
+
+  test:
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        # No point testing on Node 18 as Webpack 4 will always fail with it due
+        # to OpenSSL updates. We'll need to handle this before Node 18 hits LTS.
+        node: [14, 16, 18]
+
+    name: Test (Node ${{ matrix.node }}, ${{ matrix.os }})
+
+    steps:
+      - uses: actions/checkout@v2.4.0
+      - name: Use Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v2.5.1
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm -g install npm
+        if: matrix.node == 14
+      - run: npm ci
+      - run: npm test
+        env:
+          CI: true
+
