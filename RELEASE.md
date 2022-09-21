@@ -8,21 +8,28 @@
 2. Increase version number in `package.json` and run `npm install` to update
    `package-lock.json`
 
-3. Update CHANGELOG with new version number
+3. Run `npm install` in `example/` directory to update `package-lock.json` there
+   as well
 
-4. commit as "v#.#.#"
+        cd example/
+        npm install
+        cd ..
+
+4. Update CHANGELOG with new version number
+
+5. commit as "v#.#.#"
 
         $ git commit -m "v`node -p -e 'require("./package.json").version'`"
 
-5. tag as "v#.#.#"
+6. tag as "v#.#.#"
 
         $ git tag -am "v`node -p -e 'require("./package.json").version'`" \
                 "v`node -p -e 'require("./package.json").version'`"
 
-6. publish
+7. publish
 
         npm publish
 
-7. push to git
+8. push to git
 
         $ git push --follow-tags
