@@ -1,6 +1,6 @@
 {
   "name": "fractal-fork",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "A fork of the popular Fractal Pattern Library",
   "main": "src/index.js",
   "repository": {
