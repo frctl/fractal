@@ -891,7 +891,7 @@ mark {
   overflow: auto;
 }
 .Frame-panel--main.is-loading {
-  background-image: url("/themes/mandelbrot/img/loader.svg");
+  background-image: url("../img/loader.svg");
   background-repeat: no-repeat;
   background-position: 50%;
 }
@@ -1277,7 +1277,7 @@ mark {
   flex: 0 0 auto;
   height: 0.625rem;
   margin: 0 0.625rem;
-  background: transparent url("/themes/mandelbrot/img/icon-drag--horizontal.svg") no-repeat 50% 50%;
+  background: transparent url("../img/icon-drag--horizontal.svg") no-repeat 50% 50%;
   background-size: 16px 3px;
   cursor: ns-resize;
 }
@@ -1420,7 +1420,7 @@ mark {
   z-index: 100;
   height: calc(100% + 2px);
   width: 0.625rem;
-  background: transparent url("/themes/mandelbrot/img/icon-drag--vertical.svg") no-repeat 50%;
+  background: transparent url("../img/icon-drag--vertical.svg") no-repeat 50%;
   background-size: 3px 16px;
   cursor: ew-resize;
 }
@@ -1769,10 +1769,10 @@ mark {
   display: none;
 }
 [dir=ltr] .Tree-collection.is-closed .Tree-collectionLabel::before {
-  background-image: url("/themes/mandelbrot/img/icon-navigation-closed-ltr.svg");
+  background-image: url("../img/icon-navigation-closed-ltr.svg");
 }
 [dir=rtl] .Tree-collection.is-closed .Tree-collectionLabel::before {
-  background-image: url("/themes/mandelbrot/img/icon-navigation-closed-rtl.svg");
+  background-image: url("../img/icon-navigation-closed-rtl.svg");
 }
 
 .Tree-collectionLabel {
@@ -1802,7 +1802,7 @@ mark {
   top: 0.75rem;
   width: 0.75rem;
   height: 0.75rem;
-  background-image: url("/themes/mandelbrot/img/icon-navigation-opened.svg");
+  background-image: url("../img/icon-navigation-opened.svg");
   background-size: 0.5rem;
   background-repeat: no-repeat;
   background-position: 50%;

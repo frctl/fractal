@@ -4,7 +4,7 @@ fractal-fork version history
 unreleased
 ----------
 
-* tbd
+* [patch] fixed url to svg images in CSS assets
 
 
 0.0.6

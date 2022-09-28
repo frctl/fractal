@@ -52,7 +52,7 @@ module.exports = {
     manifest: {
         target: './dist/manifest.json',
         key: 'short',
-        baseURI: '/themes/mandelbrot/',
+        baseURI: '../',
         webRoot: './dist',
     },
 };
