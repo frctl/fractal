@@ -69,7 +69,6 @@ export default class Search {
 
             if (
                 $li.has('mark').length ||
-                $li.parents('.Tree-collection').has('mark').length ||
                 $li.parents('.Tree').find('.Tree-title').has('mark').length ||
                 tagAttributesMatch
             ) {
