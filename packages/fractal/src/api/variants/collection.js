@@ -42,12 +42,12 @@ module.exports = class VariantCollection extends EntityCollection {
             .join('\n');
     }
 
-    getCollatedContext() {
+    async getCollatedContext() {
         const collated = {};
-        this.toArray().forEach((variant) => {
-            collated[`${variant.label}`] = variant.getResolvedContext();
-        });
-        return Promise.props(collated);
+        for (const variant of this.toArray()) {
+            collated[`${variant.label}`] = await variant.getResolvedContext();
+        }
+        return collated;
     }
 
     get references() {
