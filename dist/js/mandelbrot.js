@@ -1,6 +1,33 @@
 (function () {
 'use strict';
 
+function _iterableToArrayLimit(arr, i) {
+  var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"];
+  if (null != _i) {
+    var _s,
+      _e,
+      _x,
+      _r,
+      _arr = [],
+      _n = !0,
+      _d = !1;
+    try {
+      if (_x = (_i = _i.call(arr)).next, 0 === i) {
+        if (Object(_i) !== _i) return;
+        _n = !1;
+      } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0);
+    } catch (err) {
+      _d = !0, _e = err;
+    } finally {
+      try {
+        if (!_n && null != _i.return && (_r = _i.return(), Object(_r) !== _r)) return;
+      } finally {
+        if (_d) throw _e;
+      }
+    }
+    return _arr;
+  }
+}
 function _typeof(obj) {
   "@babel/helpers - typeof";
 
@@ -21,7 +48,7 @@ function _defineProperties(target, props) {
     descriptor.enumerable = descriptor.enumerable || false;
     descriptor.configurable = true;
     if ("value" in descriptor) descriptor.writable = true;
-    Object.defineProperty(target, descriptor.key, descriptor);
+    Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor);
   }
 }
 function _createClass(Constructor, protoProps, staticProps) {
@@ -38,30 +65,6 @@ function _slicedToArray(arr, i) {
 function _arrayWithHoles(arr) {
   if (Array.isArray(arr)) return arr;
 }
-function _iterableToArrayLimit(arr, i) {
-  var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"];
-  if (_i == null) return;
-  var _arr = [];
-  var _n = true;
-  var _d = false;
-  var _s, _e;
-  try {
-    for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) {
-      _arr.push(_s.value);
-      if (i && _arr.length === i) break;
-    }
-  } catch (err) {
-    _d = true;
-    _e = err;
-  } finally {
-    try {
-      if (!_n && _i["return"] != null) _i["return"]();
-    } finally {
-      if (_d) throw _e;
-    }
-  }
-  return _arr;
-}
 function _unsupportedIterableToArray(o, minLen) {
   if (!o) return;
   if (typeof o === "string") return _arrayLikeToArray(o, minLen);
@@ -77,6 +80,20 @@ function _arrayLikeToArray(arr, len) {
 }
 function _nonIterableRest() {
   throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+function _toPrimitive(input, hint) {
+  if (typeof input !== "object" || input === null) return input;
+  var prim = input[Symbol.toPrimitive];
+  if (prim !== undefined) {
+    var res = prim.call(input, hint || "default");
+    if (typeof res !== "object") return res;
+    throw new TypeError("@@toPrimitive must return a primitive value.");
+  }
+  return (hint === "string" ? String : Number)(input);
+}
+function _toPropertyKey(arg) {
+  var key = _toPrimitive(arg, "string");
+  return typeof key === "symbol" ? key : String(key);
 }
 
 /*!
@@ -3175,8 +3192,8 @@ function _nonIterableRest() {
             return _promise.then(null, fn);
           },
           // Keep pipe for back-compat
-          pipe: function /* fnDone, fnFail, fnProgress */
-          pipe() {
+          pipe: function pipe( /* fnDone, fnFail, fnProgress */
+          ) {
             var fns = arguments;
             return jQuery.Deferred(function (newDefer) {
               jQuery.each(tuples, function (_i, tuple) {

@@ -7,6 +7,12 @@ unreleased
 * tbd
 
 
+0.0.9
+-----
+
+* [patch] upgraded various dependencies
+
+
 0.0.8
 -----
 
