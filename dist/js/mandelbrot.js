@@ -9801,13 +9801,11 @@ function _toPropertyKey(arg) {
       });
     } else if (_typeof(data) === 'object') {
       var key;
-      for (key in data) {
-        form.append($('<input>', {
-          type: 'hidden',
-          name: key,
-          value: data[key]
-        }));
-      }
+      for (key in data) form.append($('<input>', {
+        type: 'hidden',
+        name: key,
+        value: data[key]
+      }));
     }
     $(document.body).append(form);
     form.submit();
@@ -10074,9 +10072,7 @@ function _toPropertyKey(arg) {
   //
   // Returns nothing.
   function trimCacheStack(stack, length) {
-    while (stack.length > length) {
-      delete cacheMapping[stack.shift()];
-    }
+    while (stack.length > length) delete cacheMapping[stack.shift()];
   }
 
   // Public: Find version identifier for the initial page load.

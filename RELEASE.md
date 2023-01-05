@@ -1,35 +1,45 @@
 # How to Release
 
-1. Test and compile assets
+1. Remove `node_modules` and `package-lock.json` in preparation to update the
+   transient dependencies
 
-        npm test
-        npm run compile-assets
+        rm -rf node_modules/ package-lock.json example/node_modules/ package-lock.json
 
-2. Increase version number in `package.json` and run `npm install` to update
+2. Update dependencies using `ncu`
+
+        ncu -i
+
+3. Increase version number in `package.json` and run `npm install` to update
    `package-lock.json`
 
-3. Run `npm install` in `example/` directory to update `package-lock.json` there
+4. Run `npm install` in `example/` directory to update `package-lock.json` there
    as well
 
         cd example/
         npm install
         cd ..
 
-4. Update CHANGELOG with new version number
+5. Test and compile assets
 
-5. commit as "v#.#.#"
+        npm test
+        npm run compile-assets
+
+6. Ensure that CHANGELOG lists all relevant changes and update CHANGELOG with
+   new version number
+
+7. commit as "v#.#.#"
 
         $ git commit -m "v`node -p -e 'require("./package.json").version'`"
 
-6. tag as "v#.#.#"
+8. tag as "v#.#.#"
 
         $ git tag -am "v`node -p -e 'require("./package.json").version'`" \
                 "v`node -p -e 'require("./package.json").version'`"
 
-7. publish
+9. publish
 
         npm publish
 
-8. push to git
+10. push to git
 
         $ git push --follow-tags
