@@ -2,7 +2,7 @@
   "name": "fractal-fork-handlebars-example",
   "private": true,
   "scripts": {
-    "start": "fractal-fork start --sync",
+    "start": "fractal-fork start",
     "build": "fractal-fork build"
   },
   "dependencies": {

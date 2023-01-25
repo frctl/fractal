@@ -105,10 +105,8 @@ module.exports = {
     web: {
         theme: require('../mandelbrot')(),
         server: {
-            sync: false,
             watch: false,
             port: 3000,
-            syncOptions: {},
         },
         builder: {
             dest: null,

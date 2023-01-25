@@ -8,7 +8,6 @@ module.exports = {
         options: [
             ['-p, --port <number>', 'The port to run the server on.'],
             ['-t, --theme <package-name>', 'The name of custom UI theme to use, if required'],
-            ['-s, --sync', 'Use BrowserSync to sync and reload pages when changes occur'],
             ['-w, --watch', 'Watch the filesystem for changes.'],
         ],
     },
@@ -21,16 +20,7 @@ module.exports = {
             const footer = 'Use ^C to stop the server.';
             const serverUrl = server.urls.server;
             const format = (str) => this.console.theme.format(str, 'success', true);
-            let body = '';
-
-            if (!server.isSynced) {
-                body += `Local URL: ${format(serverUrl)}`;
-            } else {
-                const syncUrls = server.urls.sync;
-                body += `Local URL:      ${format(syncUrls.local)}`;
-                body += `\nNetwork URL:    ${format(syncUrls.external)}`;
-                body += `\nBrowserSync UI: ${format(syncUrls.ui)}`;
-            }
+            let body = `URL: ${format(serverUrl)}`;
 
             return this.console.box(header, body, footer);
         });
@@ -43,7 +33,7 @@ module.exports = {
             }
         });
 
-        server.start(args.options.sync).catch((e) => {
+        server.start().catch((e) => {
             this.console.error(e);
         });
     },

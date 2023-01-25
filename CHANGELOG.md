@@ -4,6 +4,7 @@ fractal-fork version history
 unreleased
 ----------
 
+* [major] removed `--sync` parameter for `start` CLI command
 * [patch] removed `mock-argv` dependency
 
 
