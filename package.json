@@ -74,7 +74,6 @@
     "jquery-pjax": "^2.0.1",
     "jquery-resizable-dom": "^0.35.0",
     "mark.js": "^8.11.1",
-    "mock-argv": "^2.0.8",
     "mock-fs": "^5.2.0",
     "normalize.css": "^8.0.1",
     "sass-mq": "^6.0.0",

@@ -1,4 +1,3 @@
-const mockArgv = require('mock-argv');
 const mock = require('mock-fs');
 
 const utils = require('../../src/core/utils');
@@ -364,3 +363,19 @@ class MyOtherClass {
         this.foo = 'MyOtherClass';
     }
 }
+
+// NB: duplicated from `mock-argv` dependency
+async function mockArgv(args, func) {
+    if (typeof args === 'function') {
+      func = args
+      args = []
+    }
+
+    const oldArgv = process.argv
+    process.argv = [...oldArgv.slice(0, 2), ...args]
+    try {
+      await func()
+    } finally {
+      process.argv = oldArgv
+    }
+  }

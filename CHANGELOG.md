@@ -4,7 +4,7 @@ fractal-fork version history
 unreleased
 ----------
 
-* tbd
+* [patch] removed `mock-argv` dependency
 
 
 0.0.11
