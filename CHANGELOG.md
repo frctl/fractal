@@ -4,8 +4,15 @@ fractal-fork version history
 unreleased
 ----------
 
+* tbd
+
+
+0.1.0
+-----
+
 * [major] removed `--sync` parameter for `start` CLI command
 * [patch] removed `mock-argv` dependency
+* [patch] upgraded various dependencies
 
 
 0.0.11

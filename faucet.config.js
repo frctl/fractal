@@ -47,6 +47,7 @@ module.exports = {
             source: './src/mandelbrot/assets/js/mandelbrot.js',
             target: './dist/js/mandelbrot.js',
             esnext: true,
+            format: 'iife'
         },
     ],
     manifest: {

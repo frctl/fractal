@@ -3,7 +3,7 @@
 1. Remove `node_modules` and `package-lock.json` in preparation to update the
    transient dependencies
 
-        rm -rf node_modules/ package-lock.json example/node_modules/ package-lock.json
+        rm -rf node_modules/ package-lock.json example/node_modules/ example/package-lock.json
 
 2. Update dependencies using `ncu`
 
