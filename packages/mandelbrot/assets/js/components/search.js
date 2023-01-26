@@ -68,8 +68,11 @@ export default class Search {
             const tagAttributesMatch = tagAttributes.toUpperCase().indexOf(key) !== -1;
 
             if (
+                // Always show item with match
                 $li.has('mark').length ||
-                $li.parents('.Tree-collection').has('mark').length ||
+                // When the direct parent collection label matches
+                $li.closest('.Tree-collection').find('> .Tree-collectionLabel').has('mark').length ||
+                // When the root collection label matches
                 $li.parents('.Tree').find('.Tree-title').has('mark').length ||
                 tagAttributesMatch
             ) {
