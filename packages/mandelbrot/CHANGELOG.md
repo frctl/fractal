@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.10.3](https://github.com/frctl/fractal/compare/@frctl/mandelbrot@1.10.2...@frctl/mandelbrot@1.10.3) (2023-01-26)
+
+
+### Bug Fixes
+
+* only expand tree's with matches ([#1252](https://github.com/frctl/fractal/issues/1252)) ([9e881f8](https://github.com/frctl/fractal/commit/9e881f848e952e26d0c3767a382fea38cf490a9e))
+
+
+
+
+
 ## [1.10.2](https://github.com/frctl/fractal/compare/@frctl/mandelbrot@1.10.1...@frctl/mandelbrot@1.10.2) (2022-08-17)
 
 **Note:** Version bump only for package @frctl/mandelbrot

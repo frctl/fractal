@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.12](https://github.com/frctl/fractal/compare/@frctl/handlebars-example@0.3.11...@frctl/handlebars-example@0.3.12) (2023-01-26)
+
+**Note:** Version bump only for package @frctl/handlebars-example
+
+
+
+
+
 ## [0.3.11](https://github.com/frctl/fractal/compare/@frctl/handlebars-example@0.3.10...@frctl/handlebars-example@0.3.11) (2022-08-17)
 
 **Note:** Version bump only for package @frctl/handlebars-example
