@@ -1,6 +1,5 @@
 'use strict';
 
-const Promise = require('bluebird');
 const _ = require('lodash');
 const Path = require('path');
 const co = require('co');
@@ -43,12 +42,12 @@ module.exports = class VariantCollection extends EntityCollection {
             .join('\n');
     }
 
-    getCollatedContext() {
-        const collated = {};
-        this.toArray().forEach((variant) => {
-            collated[`${variant.label}`] = variant.getResolvedContext();
-        });
-        return Promise.props(collated);
+    async getCollatedContext() {
+        const variantEntries = this.toArray().map(async (variant) => {
+            const context = await variant.getResolvedContext();
+            return [variant.label, context];
+        })
+        return Object.fromEntries(await Promise.all(variantEntries));
     }
 
     get references() {

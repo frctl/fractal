@@ -1,6 +1,5 @@
 'use strict';
 
-const Promise = require('bluebird');
 const Path = require('path');
 const Handlebars = require('handlebars');
 const inquirer = require('inquirer');

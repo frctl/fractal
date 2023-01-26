@@ -1,6 +1,5 @@
 'use strict';
 
-const Promise = require('bluebird');
 const _ = require('lodash');
 const co = require('co');
 const fs = require('fs-extra');
@@ -149,7 +148,7 @@ module.exports = class DocSource extends EntitySource {
                         filePath: item.path,
                         file: item,
                     });
-                    return Promise.join(config, contents, (config, contents) =>
+                    return Promise.all([config, contents]).then(([config, contents]) =>
                         Doc.create(config, contents, collection)
                     );
                 } else if (item.isDirectory) {

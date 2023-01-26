@@ -1,7 +1,6 @@
 'use strict';
 
 const Path = require('path');
-const Promise = require('bluebird');
 const matter = require('gray-matter');
 const _ = require('lodash');
 const utils = require('@frctl/core').utils;

@@ -1,6 +1,5 @@
 'use strict';
 
-const Promise = require('bluebird');
 const _ = require('lodash');
 const anymatch = require('anymatch');
 const express = require('express');
@@ -61,7 +60,7 @@ module.exports = class Server extends mix(Emitter) {
                 this._app.watch();
             }
 
-            return Promise.props(findPorts(this._config.port, sync)).then((ports) => {
+            return findPorts(this._config.port, sync).then((ports) => {
                 this._ports = ports;
                 this._sync = sync;
 
@@ -286,6 +285,12 @@ module.exports = class Server extends mix(Emitter) {
     }
 };
 
+/**
+ *
+ * @param {number?} serverPort
+ * @param {boolean} useSync
+ * @returns {Promise<{sync: number|null, server: number}>}
+ */
 async function findPorts(serverPort, useSync) {
     const ip = '127.0.0.1';
     const from = 3000;
@@ -293,22 +298,22 @@ async function findPorts(serverPort, useSync) {
     const until = from + range;
     if (!useSync && serverPort) {
         return {
-            sync: Promise.resolve(null),
-            server: Promise.resolve(serverPort),
+            sync: null,
+            server: serverPort,
         };
     }
     if (useSync && serverPort) {
         return {
-            sync: Promise.resolve(serverPort),
-            server: getPort({
+            sync: serverPort,
+            server: await getPort({
                 port: getPort.makeRange(serverPort + 1, parseInt(serverPort, 10) + range),
                 host: ip,
             }),
         };
     } else if (!useSync && !serverPort) {
         return {
-            sync: Promise.resolve(null),
-            server: getPort({
+            sync: null,
+            server: await getPort({
                 port: getPort.makeRange(from, until),
                 host: ip,
             }),
