@@ -94,7 +94,7 @@
     "stylelint-config-standard": "^22.0.0",
     "stylelint-prettier": "^1.2.0",
     "stylelint-scss": "^3.19.0",
-    "webpack": "^5.37.0",
+    "webpack": "^5.76.2",
     "webpack-bundle-analyzer": "^4.4.1",
     "webpack-cli": "^4.7.0"
   },
