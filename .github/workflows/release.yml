@@ -4,7 +4,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2.4.0
+    - uses: actions/checkout@v3.5.2
       with:
         fetch-depth: '0'
         token: ${{ secrets.ADMIN_TOKEN }}
