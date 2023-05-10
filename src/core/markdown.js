@@ -24,6 +24,7 @@ module.exports = function markdown(content, mdConfig) {
     mdConfig = _.cloneDeep(mdConfig && _.isObject(mdConfig) ? mdConfig : {});
     mdConfig.renderer = renderer;
 
+    marked.use({ mangle: false, headerIds: false });
     return marked(_.toString(content), mdConfig);
 };
 
