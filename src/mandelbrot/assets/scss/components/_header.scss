@@ -29,6 +29,7 @@
 
 .Header-button {
     --border-color: rgba(var(--skin-complement), 0.25);
+
     @include border-inline(end, 1px solid rgba($color-header-content, 0.25));
     @include border-inline(end, 1px solid var(--border-color, rgba($color-header-content, 0.25)));
 

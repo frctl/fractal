@@ -1,9 +1,7 @@
 module.exports = {
-    extends: ['stylelint-config-standard-scss', 'stylelint-config-prettier'],
-    plugins: ['stylelint-scss', 'stylelint-prettier'],
+    extends: ['stylelint-config-standard-scss'],
+    plugins: ['stylelint-scss'],
     rules: {
-        'prettier/prettier': true,
-        indentation: 4,
         'at-rule-no-unknown': null,
         'scss/at-rule-no-unknown': true,
         'no-descending-specificity': null,
@@ -13,5 +11,6 @@ module.exports = {
         'color-function-notation': null,
         'value-keyword-case': ['lower', { camelCaseSvgKeywords: true }],
         'selector-not-notation': 'simple',
+        'declaration-block-no-redundant-longhand-properties': null,
     },
 };
