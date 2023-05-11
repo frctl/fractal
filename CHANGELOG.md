@@ -4,6 +4,12 @@ fractal-fork version history
 unreleased
 ----------
 
+* TBD
+
+
+0.1.1
+-----
+
 * [patch] upgraded `marked`
 * [patch] upgraded various dependencies
 
