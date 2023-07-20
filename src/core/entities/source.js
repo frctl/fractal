@@ -43,7 +43,7 @@ module.exports = class EntitySource extends mix(Source, Heritable) {
         }
         if (!_.isFunction(adapter.register)) {
             throw new Error(
-                "Template engine adaptor factory functions must return an object with a 'register' method."
+                "Template engine adaptor factory functions must return an object with a 'register' method.",
             );
         }
         const engine = adapter.register(this, this._app);

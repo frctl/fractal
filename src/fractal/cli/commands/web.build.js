@@ -28,7 +28,7 @@ module.exports = {
             .then((data) => {
                 const e = data.errorCount;
                 this.console[e ? 'warn' : 'success'](
-                    `Build finished with ${e === 0 ? 'no' : e} error${e == 1 ? '' : 's'}.`
+                    `Build finished with ${e === 0 ? 'no' : e} error${e == 1 ? '' : 's'}.`,
                 );
             })
             .catch((e) => {

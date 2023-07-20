@@ -29,7 +29,7 @@ if (frctl.env == 'server') {
         {
             fragment: '#pjax-container',
             timeout: 10000,
-        }
+        },
     )
         .on('pjax:start', function (e, xhr, options) {
             const handle = $(e.relatedTarget).data('handle');

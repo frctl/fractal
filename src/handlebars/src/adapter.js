@@ -12,13 +12,13 @@ class HandlebarsAdapter extends Adapter {
         this._app = app;
         this.on('view:added', (view) => this.engine.registerPartial(view.handle, view.content));
         this.on('view:added', (view) =>
-            this.engine.registerPartial(path.relative(source.get('path'), view.path), view.content)
+            this.engine.registerPartial(path.relative(source.get('path'), view.path), view.content),
         );
         this.on('view:removed', (view) => this.engine.unregisterPartial(view.handle));
         this.on('view:removed', (view) => this.engine.unregisterPartial(path.relative(source.get('path'), view.path)));
         this.on('view:updated', (view) => this.engine.registerPartial(view.handle, view.content));
         this.on('view:updated', (view) =>
-            this.engine.registerPartial(path.relative(source.get('path'), view.path), view.content)
+            this.engine.registerPartial(path.relative(source.get('path'), view.path), view.content),
         );
     }
 

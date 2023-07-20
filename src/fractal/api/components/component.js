@@ -87,7 +87,7 @@ module.exports = class Component extends Entity {
             {
                 preview: preview,
                 collate: collate,
-            }
+            },
         );
     }
 
@@ -124,7 +124,7 @@ module.exports = class Component extends Entity {
                             label: group.label,
                             title: group.label,
                         },
-                        items
+                        items,
                     );
                     collections.push(files);
                 }
@@ -134,7 +134,7 @@ module.exports = class Component extends Entity {
                     name: 'resources',
                     label: 'Resources',
                 },
-                collections
+                collections,
             );
         }
         return this._resourceCollections;
@@ -189,7 +189,7 @@ module.exports = class Component extends Entity {
             config.variants,
             files.varViews,
             files.varReadmes,
-            config
+            config,
         );
         comp.setVariants(variants);
         parent.source.emit('component:created', comp);

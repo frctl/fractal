@@ -75,7 +75,7 @@ module.exports = {
                 }
                 return val;
             },
-            indent || 4
+            indent || 4,
         );
     },
 

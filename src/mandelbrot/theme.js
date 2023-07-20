@@ -148,7 +148,7 @@ module.exports = function (options) {
         },
         function (app) {
             return app.assets.visible().map((asset) => ({ name: asset.name }));
-        }
+        },
     );
 
     theme.addRoute(
@@ -157,7 +157,7 @@ module.exports = function (options) {
             handle: 'preview',
             view: 'pages/components/preview.nunj',
         },
-        getHandles
+        getHandles,
     );
 
     theme.addRoute(
@@ -166,7 +166,7 @@ module.exports = function (options) {
             handle: 'render',
             view: 'pages/components/render.nunj',
         },
-        getHandles
+        getHandles,
     );
 
     theme.addRoute(
@@ -175,7 +175,7 @@ module.exports = function (options) {
             handle: 'component',
             view: 'pages/components/detail.nunj',
         },
-        getHandles
+        getHandles,
     );
 
     theme.addRoute(
@@ -190,7 +190,7 @@ module.exports = function (options) {
                 throw new Error('Component not found');
             },
         },
-        getResources
+        getResources,
     );
 
     theme.addRoute(
@@ -204,7 +204,7 @@ module.exports = function (options) {
                 .filter((d) => !d.isHidden && d.path !== '')
                 .flatten()
                 .map((page) => ({ path: page.path }));
-        }
+        },
     );
 
     theme.on('init', function (env, app) {
@@ -242,7 +242,7 @@ module.exports = function (options) {
                             handle: comp.handle,
                             asset: res.base,
                         };
-                    })
+                    }),
             );
         });
         return params;

@@ -96,7 +96,7 @@ module.exports = class Variant extends Entity {
             {
                 preview: preview,
                 collate: collate,
-            }
+            },
         );
     }
 

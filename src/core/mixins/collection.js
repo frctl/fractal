@@ -140,7 +140,7 @@ module.exports = mixin(
                 return this.newSelf(
                     this.flattenDeep('collections')
                         .toArray()
-                        .filter((i) => i.isCollection && i.isRoot)
+                        .filter((i) => i.isCollection && i.isRoot),
                 );
             }
 
@@ -321,5 +321,5 @@ module.exports = mixin(
                 }
                 return _.iteratee(arguments[0]);
             }
-        }
+        },
 );

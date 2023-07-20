@@ -7,6 +7,12 @@ unreleased
 * TBD
 
 
+0.1.2
+-----
+
+* [patch] upgraded various dependencies
+
+
 0.1.1
 -----
 

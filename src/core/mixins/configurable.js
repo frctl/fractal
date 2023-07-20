@@ -31,5 +31,5 @@ module.exports = mixin(
                 }
                 return _.get(this._config, config, defaultVal || undefined);
             }
-        }
+        },
 );

@@ -19,7 +19,7 @@ export default class Navigation {
             'scroll',
             utils.debounce(() => {
                 storage.set(`navigation.mainPanel.scrollPos`, this._mainPanel.scrollTop());
-            }, 50)
+            }, 50),
         );
 
         events.on('scroll-sidebar', () => {

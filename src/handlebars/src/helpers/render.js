@@ -23,7 +23,7 @@ module.exports = function (fractal) {
             throw new Error(`Could not render component '${handle}' - component not found.`);
         }
         const defaultContext = _.cloneDeep(
-            entity.isComponent ? entity.variants().default().getContext() : entity.getContext()
+            entity.isComponent ? entity.variants().default().getContext() : entity.getContext(),
         );
         if (!context) {
             context = defaultContext;

@@ -82,7 +82,7 @@ export default class Preview {
     _updateSize() {
         if (this._previewSize) {
             this._previewSize.text(
-                `${this._previewIframeWindow.innerWidth} × ${this._previewIframeWindow.innerHeight}`
+                `${this._previewIframeWindow.innerWidth} × ${this._previewIframeWindow.innerHeight}`,
             );
         }
     }

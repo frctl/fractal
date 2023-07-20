@@ -49,7 +49,7 @@ module.exports = {
                 return Promise.resolve(data);
             } catch (err) {
                 Log.error(
-                    `Error parsing data file ${filePath.split('/')[filePath.split('/').length - 1]}: ${err.message}`
+                    `Error parsing data file ${filePath.split('/')[filePath.split('/').length - 1]}: ${err.message}`,
                 );
                 return Promise.resolve({});
             }

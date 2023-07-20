@@ -170,7 +170,7 @@ module.exports = mixin(
                         `**/${this.get('files.config')}.{js,json,yaml,yml}`,
                         `**/_${this.get('files.config')}.{js,json,yaml,yml}`,
                     ],
-                    this._getPath(file)
+                    this._getPath(file),
                 );
             }
 
@@ -216,7 +216,7 @@ module.exports = mixin(
                     this.fullPath,
                     this.relPath,
                     exclude ? (filePath) => !anymatch(exclude, filePath) : undefined,
-                    this.get('ext')
+                    this.get('ext'),
                 );
             }
 
@@ -235,5 +235,5 @@ module.exports = mixin(
                 const filePath = _.isString(file) ? file : file.path;
                 return filePath.toLowerCase();
             }
-        }
+        },
 );

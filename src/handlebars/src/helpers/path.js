@@ -17,7 +17,7 @@ module.exports = function (fractal) {
             let context = _.defaults(
                 {},
                 this,
-                _.pickBy(root, (item, key) => key.startsWith('_'))
+                _.pickBy(root, (item, key) => key.startsWith('_')),
             );
             const tpl = Handlebars.compile(path, {
                 data: false,
@@ -32,7 +32,7 @@ module.exports = function (fractal) {
         return utils.relUrlPath(
             path,
             _.get(root._env.request || root._request, 'path', '/'),
-            fractal.web.get('builder.urls')
+            fractal.web.get('builder.urls'),
         );
     };
 };

@@ -46,7 +46,7 @@ module.exports = class Adapter extends mix(Emitter) {
         let prefixMatcher = new RegExp(`^${utils.escapeForRegexp(this._handlePrefix)}`);
         return _.find(
             this._views,
-            (view) => view.handle.replace(prefixMatcher, '') === handle.replace(prefixMatcher, '')
+            (view) => view.handle.replace(prefixMatcher, '') === handle.replace(prefixMatcher, ''),
         );
     }
 

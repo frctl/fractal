@@ -102,5 +102,5 @@ module.exports = mixin(
                     // config: this.config,
                 };
             }
-        }
+        },
 );
