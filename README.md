@@ -17,14 +17,14 @@ Those familiar with [Fractal][docs] will know that it is a great tool for develo
 
 Unfortunately, Fractal has suffered over the years with out-of-date dependencies and is now officially
 [unmaintained](https://github.com/frctl/fractal/issues/1167).
-I use Fractal frequently and successfully in customer projects and therefore have the desire to maintain a _version_ of Fractal with up-to-date dependencies, but I do not use all of the features of the official branch, so I am providing this fork instead.
+We have used Fractal successfully in customer projects and therefore have the desire to maintain a _version_ of Fractal with up-to-date dependencies. Since we do not use all of the features of the official branch, we are am providing this fork instead.
 
 **The goal of this fork is to maximize maintainability for customer projects and _not_ to provide complete feature parity with the official branch.** The project is therefore developed with the following concrete goals:
 
 1. Maximize maintainability by reducing size of source code
 2. Minimize number of dependencies
 
-I use real Fractal projects to test any changes that I make to the source code. However, this also means that **any feature that I do not personally use for any Fractal projects is at risk of being removed in the future** (especially if it uses dependencies which are poorly maintained).
+We use real Fractal projects to test any changes that we make to the source code. However, this also means that **any feature that we do not personally use for any Fractal projects is at risk of being removed in the future** (especially if it uses dependencies which are poorly maintained).
 
 ## Migration Guide from `@frctl/fractal` to `fractal-fork`
 
@@ -40,7 +40,7 @@ The changes to offical Fractal branch are listed here as follows:
 * Automatic port discovery is not supported for `fractal-fork`. If a port is blocked, `fractal-fork` will quit with an error and it is the developer's responsibility to set a different port via `--port`.
 * `fractal-fork` does not support the `--sync` option for the `start` command. This simplifies the implementation and avoids security vulnerabilities introduces by the `browser-sync` dependency
 * `fractal-fork` does not support the `twig`, `nunjucts`, or `react` adapters (if you still need them, it should be possible for you to maintain a separate fork for those adapters)
-* `fractal-fork` does not support the `new` CLI command (it's a command I've rarely used because I usually create the repository structure and `fractal.config.js` by hand and the CLI was one area which had horrible dependencies which needed to be removed)
+* `fractal-fork` does not support the `new` CLI command (it's a command that is rarely used because it is only necessary to create the repository once. The alternative is to create the repository structure and `fractal.config.js` by hand. The CLI command was one area which had horrible dependencies which needed to be removed)
 * The CLI output for `fractal-fork` is much less pretty -- there are no colors and the console never overwrites previous log output. This means particularly for the `build` command that the console output is much longer
 
 
@@ -86,9 +86,7 @@ npm run fractal:start
 
 ### Submitting pull requests
 
-We will always welcome pull requests on any of the [frctl organisation](https://github.com/frctl) repositories. Please submit PRs against `main` branch with an explanation of your intention.
-
-We use [conventional commits](https://www.conventionalcommits.org/), which means that every pull request title should conform to the standard.
+We welcome pull requests, but cannot guarantee that they will be reviewed in a timely way. Please submit PRs against `main` branch with an explanation of your intention.
 
 ### Development
 
