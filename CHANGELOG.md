@@ -4,7 +4,7 @@ fractal-fork version history
 unreleased
 ----------
 
-* TBD
+* [major] changed package name from `fractal-fork` to `@innoq/fractal-fork`
 
 
 0.1.2

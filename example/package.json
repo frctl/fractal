@@ -6,6 +6,6 @@
     "build": "fractal-fork build"
   },
   "dependencies": {
-    "fractal-fork": ".."
+    "@innoq/fractal-fork": ".."
   }
 }

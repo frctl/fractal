@@ -4,12 +4,12 @@
  * Require the path module
  */
 const path = require('path');
-const mandelbrot = require('fractal-fork').mandelbrot;
+const mandelbrot = require('..').mandelbrot;
 
 /*
  * Require the Fractal module
  */
-const fractal = (module.exports = require('fractal-fork').fractal.create());
+const fractal = (module.exports = require('..').fractal.create());
 
 /*
  * Give your project a title.

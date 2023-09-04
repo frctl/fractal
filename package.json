@@ -1,5 +1,5 @@
 {
-  "name": "fractal-fork",
+  "name": "@innoq/fractal-fork",
   "version": "0.1.2",
   "description": "A fork of the popular Fractal Pattern Library",
   "main": "src/index.js",
