@@ -38,7 +38,7 @@
 
 9. publish
 
-        npm publish
+        npm publish --scope @innoq --access public
 
 10. push to git
 
