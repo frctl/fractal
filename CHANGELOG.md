@@ -5,6 +5,7 @@ unreleased
 ----------
 
 * [major] changed package name from `fractal-fork` to `@innoq/fractal-fork`
+* [major] drop support for Node 14
 
 
 0.1.2
