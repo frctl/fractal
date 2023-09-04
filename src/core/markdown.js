@@ -13,7 +13,7 @@ renderer.code = function (code, lang) {
     if (!lang) {
         return `<pre><code class="hljs">${code}</code></pre>`;
     }
-    return `<pre><code class="hljs ${this.options.langPrefix}${escape(lang, true)}">${code}</code></pre>`;
+    return `<pre><code class="hljs language-${escape(lang, true)}">${code}</code></pre>`;
 };
 
 /*
@@ -24,7 +24,6 @@ module.exports = function markdown(content, mdConfig) {
     mdConfig = _.cloneDeep(mdConfig && _.isObject(mdConfig) ? mdConfig : {});
     mdConfig.renderer = renderer;
 
-    marked.use({ mangle: false, headerIds: false });
     return marked(_.toString(content), mdConfig);
 };
 

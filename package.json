@@ -41,7 +41,7 @@
     "js-yaml": "^4.1.0",
     "liftoff": "^4.0.0",
     "lodash": "^4.17.21",
-    "marked": "^5.1.1",
+    "marked": "^8.0.0",
     "mime": "^3.0.0",
     "minimist": "^1.2.8",
     "mixwith": "^0.1.1",

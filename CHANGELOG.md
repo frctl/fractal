@@ -4,7 +4,7 @@ fractal-fork version history
 unreleased
 ----------
 
-* tbd
+* [patch] upgraded `marked`
 
 
 1.0.2
