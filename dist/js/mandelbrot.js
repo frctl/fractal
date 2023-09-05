@@ -1,41 +1,41 @@
 (function () {
 'use strict';
 
-function _iterableToArrayLimit(arr, i) {
-  var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"];
-  if (null != _i) {
-    var _s,
-      _e,
-      _x,
-      _r,
-      _arr = [],
-      _n = !0,
-      _d = !1;
+function _iterableToArrayLimit(r, l) {
+  var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];
+  if (null != t) {
+    var e,
+      n,
+      i,
+      u,
+      a = [],
+      f = !0,
+      o = !1;
     try {
-      if (_x = (_i = _i.call(arr)).next, 0 === i) {
-        if (Object(_i) !== _i) return;
-        _n = !1;
-      } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0);
-    } catch (err) {
-      _d = !0, _e = err;
+      if (i = (t = t.call(r)).next, 0 === l) {
+        if (Object(t) !== t) return;
+        f = !1;
+      } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0);
+    } catch (r) {
+      o = !0, n = r;
     } finally {
       try {
-        if (!_n && null != _i.return && (_r = _i.return(), Object(_r) !== _r)) return;
+        if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return;
       } finally {
-        if (_d) throw _e;
+        if (o) throw n;
       }
     }
-    return _arr;
+    return a;
   }
 }
-function _typeof(obj) {
+function _typeof(o) {
   "@babel/helpers - typeof";
 
-  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
-    return typeof obj;
-  } : function (obj) {
-    return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-  }, _typeof(obj);
+  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {
+    return typeof o;
+  } : function (o) {
+    return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
+  }, _typeof(o);
 }
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -97,14 +97,14 @@ function _toPropertyKey(arg) {
 }
 
 /*!
- * jQuery JavaScript Library v3.7.0
+ * jQuery JavaScript Library v3.7.1
  * https://jquery.com/
  *
  * Copyright OpenJS Foundation and other contributors
  * Released under the MIT license
  * https://jquery.org/license
  *
- * Date: 2023-05-11T18:29Z
+ * Date: 2023-08-28T13:37Z
  */
 (function (global, factory) {
 
@@ -203,7 +203,7 @@ function _toPropertyKey(arg) {
   // Defining this global in .eslintrc.json would create a danger of using the global
   // unguarded in another place, it seems safer to define global only for this module
 
-  var version = "3.7.0",
+  var version = "3.7.1",
     rhtmlSuffix = /HTML$/i,
     // Define a local copy of jQuery
     jQuery = function jQuery(selector, context) {
@@ -430,9 +430,14 @@ function _toPropertyKey(arg) {
           // Do not traverse comment nodes
           ret += jQuery.text(node);
         }
-      } else if (nodeType === 1 || nodeType === 9 || nodeType === 11) {
+      }
+      if (nodeType === 1 || nodeType === 11) {
         return elem.textContent;
-      } else if (nodeType === 3 || nodeType === 4) {
+      }
+      if (nodeType === 9) {
+        return elem.documentElement.textContent;
+      }
+      if (nodeType === 3 || nodeType === 4) {
         return elem.nodeValue;
       }
 
@@ -1012,12 +1017,16 @@ function _toPropertyKey(arg) {
       matches = documentElement.matches || documentElement.webkitMatchesSelector || documentElement.msMatchesSelector;
 
       // Support: IE 9 - 11+, Edge 12 - 18+
-      // Accessing iframe documents after unload throws "permission denied" errors (see trac-13936)
+      // Accessing iframe documents after unload throws "permission denied" errors
+      // (see trac-13936).
+      // Limit the fix to IE & Edge Legacy; despite Edge 15+ implementing `matches`,
+      // all IE 9+ and Edge Legacy versions implement `msMatchesSelector` as well.
+      if (documentElement.msMatchesSelector &&
       // Support: IE 11+, Edge 17 - 18+
       // IE/Edge sometimes throw a "Permission denied" error when strict-comparing
       // two documents; shallow comparisons work.
       // eslint-disable-next-line eqeqeq
-      if (preferredDoc != document && (subWindow = document.defaultView) && subWindow.top !== subWindow) {
+      preferredDoc != document && (subWindow = document.defaultView) && subWindow.top !== subWindow) {
         // Support: IE 9 - 11+, Edge 12 - 18+
         subWindow.addEventListener("unload", unloadHandler);
       }
@@ -2344,12 +2353,12 @@ function _toPropertyKey(arg) {
     jQuery.expr[":"] = jQuery.expr.pseudos;
     jQuery.unique = jQuery.uniqueSort;
 
-    // These have always been private, but they used to be documented
-    // as part of Sizzle so let's maintain them in the 3.x line
-    // for backwards compatibility purposes.
+    // These have always been private, but they used to be documented as part of
+    // Sizzle so let's maintain them for now for backwards compatibility purposes.
     find.compile = compile;
     find.select = select;
     find.setDocument = setDocument;
+    find.tokenize = tokenize;
     find.escape = jQuery.escapeSelector;
     find.getText = jQuery.text;
     find.isXML = jQuery.isXMLDoc;
@@ -5043,7 +5052,7 @@ function _toPropertyKey(arg) {
         if (hasScripts) {
           doc = scripts[scripts.length - 1].ownerDocument;
 
-          // Reenable scripts
+          // Re-enable scripts
           jQuery.map(scripts, restoreScript);
 
           // Evaluate executable scripts on first document insertion
@@ -5436,7 +5445,7 @@ function _toPropertyKey(arg) {
           tr = document.createElement("tr");
           trChild = document.createElement("div");
           table.style.cssText = "position:absolute;left:-11111px;border-collapse:separate";
-          tr.style.cssText = "border:1px solid";
+          tr.style.cssText = "box-sizing:content-box;border:1px solid";
 
           // Support: Chrome 86+
           // Height set through cssText does not get applied.
@@ -5448,7 +5457,7 @@ function _toPropertyKey(arg) {
           // In our bodyBackground.html iframe,
           // display for all div elements is set to "inline",
           // which causes a problem only in Android 8 Chrome 86.
-          // Ensuring the div is display: block
+          // Ensuring the div is `display: block`
           // gets around this issue.
           trChild.style.display = "block";
           documentElement.appendChild(table).appendChild(tr).appendChild(trChild);
@@ -8966,7 +8975,7 @@ function _toPropertyKey(arg) {
       return arguments.length === 1 ? this.off(selector, "**") : this.off(types, selector || "**", fn);
     },
     hover: function hover(fnOver, fnOut) {
-      return this.mouseenter(fnOver).mouseleave(fnOut || fnOver);
+      return this.on("mouseenter", fnOver).on("mouseleave", fnOut || fnOver);
     }
   });
   jQuery.each(("blur focus focusin focusout resize scroll click dblclick " + "mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave " + "change select submit keydown keypress keyup contextmenu").split(" "), function (_i, name) {

@@ -1,6 +1,6 @@
 {
   "name": "@innoq/fractal-fork",
-  "version": "0.1.2",
+  "version": "1.0.0",
   "description": "A fork of the popular Fractal Pattern Library",
   "main": "src/index.js",
   "repository": {

@@ -4,8 +4,16 @@ fractal-fork version history
 unreleased
 ----------
 
+* tbd
+
+
+1.0.0
+-----
+
 * [major] changed package name from `fractal-fork` to `@innoq/fractal-fork`
-* [major] drop support for Node 14
+  * modify package name in `package.json` to `@innoq/fractal-fork`
+  * replace all `require('fractal-fork')` imports with `require('@innoq/fractal-fork')`
+* [major] dropped support for Node 14
 
 
 0.1.2
