@@ -4,7 +4,7 @@ fractal-fork version history
 unreleased
 ----------
 
-* tbd
+* [patch] updated documentation and links to repository
 
 
 1.0.0
