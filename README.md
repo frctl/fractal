@@ -2,8 +2,8 @@
 ============
 
 <p>
-  <a href="https://www.npmjs.com/package/fractal-fork" title="Current version">
-    <img src="https://img.shields.io/npm/v/fractal-fork.svg" alt="">
+  <a href="https://www.npmjs.com/package/@innoq/fractal-fork" title="Current version">
+    <img src="https://img.shields.io/npm/v/%40innoq%2Ffractal-fork" alt="">
   </a>
   <!-- License -->
   <a href="https://github.com/frctl/fractal/blob/main/LICENSE" title="MIT license">
